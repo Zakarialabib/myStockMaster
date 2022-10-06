@@ -18,7 +18,7 @@ class Supplier extends Model
         'country',
         'address',
         'created_at',
-        'updated_at',
+        'tax_number',
     ];
 
     public $filterable = [
@@ -30,10 +30,27 @@ class Supplier extends Model
         'country',
         'address',
         'created_at',
+        'tax_number',
+    ];
+
+    protected $fillable = [
+        'supplier_name',
+        'supplier_email',
+        'supplier_phone',
+        'city',
+        'country',
+        'address',
+    ];
+
+    protected $dates = [
+        'created_at',
         'updated_at',
     ];
 
-    protected $guarded = [];
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 
-   
+    
 }

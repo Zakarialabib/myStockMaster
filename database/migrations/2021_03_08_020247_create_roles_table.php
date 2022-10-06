@@ -19,6 +19,7 @@ class CreateRolesTable extends Migration {
 			$table->integer('id', true);
 			$table->string('name', 192);
 			$table->string('label', 192)->nullable();
+			$table->string('guard_name', 192)->nullable();
 			$table->text('description')->nullable();
 			$table->integer('status')->default(0);
 			$table->timestamps(6);

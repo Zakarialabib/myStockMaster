@@ -119,7 +119,7 @@ class Category extends Component
 
         toast('Product Category Created!', 'success');
     }
-    # optimize edit modal 
+
     public function editModal(CategoryModel $category)
     {
         abort_if(Gate::denies('access_product_categories'), 403);
@@ -165,7 +165,11 @@ class Category extends Component
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
-        $category->delete();
+        if ($category->products()->isNotEmpty()) {
+            return back()->withErrors('Can\'t delete beacuse there are products associated with this category.');
+        } else {
+            $category->delete();
+        }
     }
 
 

@@ -1,5 +1,5 @@
 <tr {{ $attributes->merge([
-    'class' => 'whitespace-nowrap text-sm text-zinc-800',
+    'class' => 'border-b border-blue-50 whitespace-nowrap text-sm text-zinc-800',
 ]) }}>
     {{ $slot }}
 </tr>

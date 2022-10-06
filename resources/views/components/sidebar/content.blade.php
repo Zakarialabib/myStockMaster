@@ -3,7 +3,7 @@
     <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('admin.dashboard')">
         <x-slot name="icon">
             <span class="inline-block mr-3">
-                <x-icons.empty-circle class="text-gray-200 w-5 h-5" aria-hidden="true" />
+                <x-icons.dashboard class="w-5 h-5" aria-hidden="true" />
             </span>
         </x-slot>
     </x-sidebar.link>
@@ -41,6 +41,7 @@
                 :active="request()->routeIs('adjustments.index')" />
         </x-sidebar.dropdown>
     @endcan
+
     @can('access_quotations')
         <x-sidebar.dropdown title="{{ __('Quotations') }}" :active="Str::startsWith(
             request()
@@ -55,6 +56,7 @@
                 :active="request()->routeIs('quotations.index')" />
         </x-sidebar.dropdown>
     @endcan
+    
     @can('access_purchases')
         <x-sidebar.dropdown title="{{ __('Purchases') }}" :active="Str::startsWith(
             request()

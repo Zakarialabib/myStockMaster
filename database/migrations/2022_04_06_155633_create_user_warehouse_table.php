@@ -18,10 +18,8 @@ class CreateUserWarehouseTable extends Migration {
 	{
 		Schema::create('user_warehouse', function(Blueprint $table)
 		{
-			$table->engine = 'InnoDB';
 			$table->integer('user_id')->index('user_warehouse_user_id');
-			$table->integer('warehouse_id')->index('user_warehouse_warehouse_id');
-			
+			$table->integer('warehouse_id')->index('user_warehouse_warehouse_id');	
 		});
 	}
 

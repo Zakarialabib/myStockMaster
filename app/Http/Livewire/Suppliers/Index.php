@@ -3,11 +3,159 @@
 namespace App\Http\Livewire\Suppliers;
 
 use Livewire\Component;
+use App\Http\Livewire\WithSorting;
+use Illuminate\Support\Facades\Gate;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use App\Models\Supplier;
+use App\Models\Wallet;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    public function render()
+    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+
+    public $supplier;
+
+    public int $perPage;
+
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import','createModal','showModal','editModal'];
+
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal;
+
+    public array $orderable;
+
+    public $selectPage;
+
+    public string $search = '';
+
+    public array $selected = [];
+
+    public array $paginationOptions;
+
+    protected $queryString = [
+        'search' => [
+            'except' => '',
+        ],
+        'sortBy' => [
+            'except' => 'id',
+        ],
+        'sortDirection' => [
+            'except' => 'desc',
+        ],
+    ];
+
+    public function getSelectedCountProperty()
     {
-        return view('livewire.suppliers.index');
+        return count($this->selected);
     }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public array $rules = [
+        'supplier.supplier_name' => ['required', 'string', 'max:255'],
+        'supplier.supplier_email' => ['nullable', 'string', 'max:255'],
+        'supplier.supplier_phone' => ['required'],
+        'supplier.address' => ['nullable', 'string', 'max:255'],
+        'supplier.city' => ['nullable', 'string', 'max:255'],
+        'supplier.country' => ['nullable', 'string', 'max:255'],
+        'supplier.tax_number' => ['nullable', 'string', 'max:255'],
+    ];
+
+    public function mount()
+    {
+        $this->selectPage = false;
+        $this->sortBy            = 'id';
+        $this->sortDirection     = 'desc';
+        $this->perPage           = 100;
+        $this->paginationOptions = config('project.pagination.options');        $this->orderable = (new Supplier())->orderable;
+    }
+
+    public function render()
+    {   
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        $query = Supplier::advancedFilter([
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
+
+        $suppliers = $query->paginate($this->perPage);
+
+        return view('livewire.suppliers.index', compact('suppliers'));
+    }
+
+    public function createModal()
+    {
+        abort_if(Gate::denies('supplier_create'), 403);
+        
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        $supplier = Supplier::create($this->supplier);
+
+        $this->alert('success', 'Supplier created successfully.');
+
+        $this->createModal = false;
+
+    }
+
+    public function showModal(Supplier $supplier)
+    {
+        $this->supplier = $supplier;
+        $this->showModal = true;
+    }
+
+    public function editModal(Supplier $supplier)
+    {
+        abort_if(Gate::denies('supplier_edit'), 403);
+        
+        $this->supplier = $supplier;
+        $this->editModal = true;
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $this->supplier->save();
+
+        $this->alert('success', 'Supplier Updated Successfully');
+
+        $this->editModal = false;
+
+    }
+
+    public function delete(Supplier $supplier)
+    {
+        abort_if(Gate::denies('supplier_delete'), 403);
+
+        $supplier->delete();
+
+        $this->resetPage();
+
+        $this->alert('warning', 'Supplier Deleted Successfully');
+    }
+
+    public function deleteSelected()
+    {
+        abort_if(Gate::denies('supplier_delete'), 403);
+
+        Supplier::whereIn('id', $this->selected)->delete();
+
+        $this->selected = [];
+    }
+    
 }

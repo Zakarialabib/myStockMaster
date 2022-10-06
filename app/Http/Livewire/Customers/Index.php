@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Customers;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
@@ -11,14 +10,24 @@ use Livewire\WithPagination;
 use App\Models\Customer;
 use App\Exports\CustomerExport;
 use App\Imports\CustomerImport;
+use App\Models\Wallet;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+
+    public $customer;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import','createModal','showModal','editModal'];
+
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal; 
 
     public array $orderable;
 
@@ -52,15 +61,20 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
     public function resetSelected()
     {
         $this->selected = [];
     }
+
+    public array $rules = [
+        'customer.customer_name' => 'required|string|max:255',
+        'customer.customer_email' => 'nullable|max:255',
+        'customer.customer_phone' => 'required|numeric',
+        'customer.city' => 'nullable',
+        'customer.country' => 'nullable',
+        'customer.address' => 'nullable',
+        'customer.tax_number' => 'nullable',
+    ];
 
     public function mount()
     {
@@ -101,36 +115,60 @@ class Index extends Component
         abort_if(Gate::denies('customer_delete'), 403);
 
         $customer->delete();
+
+        $this->reset();
+
+        $this->alert('warning', 'Customer deleted successfully');
+    }
+    
+    public function createModal()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        Customer::create($this->customer);
+
+        $this->createModal = false;
+
+        $this->alert('success', 'Customer created successfully.');
     }
 
     public function showModal(Customer $customer)
     {
         abort_if(Gate::denies('customer_show'), 403);
 
-        $this->emit('showModal', $customer);
+        $this->customer = $customer;
+
+        $this->showModal = true;
     }
 
     public function editModal(Customer $customer)
     {
         abort_if(Gate::denies('customer_edit'), 403);
 
-        $this->emit('editModal', $customer);
+        $this->customer = $customer;
+
+        $this->editModal = true;
+
     }
 
-    public function restore(Customer $customer)
+    public function update()
     {
-        abort_if(Gate::denies('customer_delete'), 403);
+        $this->validate();
 
-        $customer->restore();
+        $this->customer->save();
+
+        $this->editModal = false;
+
+        $this->alert('success', 'Customer updated successfully.');
     }
-
-    public function forceDelete(Customer $customer)
-    {
-        abort_if(Gate::denies('customer_delete'), 403);
-
-        $customer->forceDelete();
-    }
-
+    
     public function downloadSelected()
     {
         abort_if(Gate::denies('customer_access'), 403);

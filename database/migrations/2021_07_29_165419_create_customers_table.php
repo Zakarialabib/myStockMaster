@@ -16,12 +16,13 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('customer_name', 192);
-            $table->string('customer_email', 192);
             $table->string('customer_phone', 192);
-            $table->string('city');
-            $table->string('country');
-            $table->text('address');
+            $table->string('customer_email', 192)->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->text('address')->nullable();
             $table->string('tax_number', 192)->nullable();
+            $table->bigInteger('wallet_id')->unsigned()->nullable()->index('customers_wallet_id_foreign');
             $table->timestamps();
         });
     }

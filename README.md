@@ -4,18 +4,27 @@ Mystock is a simple inventory management system built with Laravel 9 and Tailwin
 
 MYSTOCK also has a simple POS system that allows you to sell your products, easy & simple reporting system that allows you to generate reports for your sales and purchases.
 
+## Roadmap
+
+Refactoring the code to use the new Laravel 9 features, livewire capacities, & tailwind responsiveness.
+
 ## Features
 
--   Inventory Management
+-   Dashboard
+-   Products Management
+-   Category Management
+-   Brand Management
+-   Unit Management
 -   Sales Management
 -   Purchase Management
+-   Quatation Management
 -   POS System
--   Reports
+-   Reporting System
 -   User Management
 -   Role Management
 -   Permission Management
--   Settings
--   Dashboard
+-   Warehouse Management
+-   Settings Management
 
 ## Changelog
 
@@ -30,6 +39,10 @@ MYSTOCK also has a simple POS system that allows you to sell your products, easy
 - 1.0.8 - Added Purchase Management
 - 1.0.9 - Added Sales Management
 - 1.0.10 - Added POS System
+- 1.0.11 - Optimization of Product Category Management (Livewire modals)
+- 1.0.12 - Optimization of Customer management (Livewire modals)
+- 1.0.13 - Optimization of Supplier management (Livewire modals)
+- 1.0.14 - Fixing migrations and seeds
 
 ## Requirements
 
@@ -53,8 +66,8 @@ MYSTOCK also has a simple POS system that allows you to sell your products, easy
 6.  Run `php artisan migrate --seed`
 7.  Run `php artisan serve`
 8.  Login with the following credentials
-    -   Email: `
-    -   Password: `
+    -   Email: `admin@ggmail.com'
+    -   Password: `password'
 9.  Enjoy!
 
 ## License
@@ -69,46 +82,15 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Screenshots
 
-![Dashboard](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Products](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Sales](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Purchases](https://i.imgur.com/8Z7Z7ZM.png)
-
-![POS](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Reports](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Users](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Roles](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Permissions](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Settings](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Profile](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Change Password](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Change Profile](https://i.imgur.com/8Z7Z7ZM.png)
-
-![Change Settings](https://i.imgur.com/8Z7Z7ZM.png)
+Soon
 
 ## Contact
 
--   [Twitter](https://twitter.com/)
--   [Facebook](https://facebook.com/)
--   [Instagram](https://instagram.com/)
--   [LinkedIn](https://linkedin.com/)
--   [GitHub](
--   [Website](https://)
+-   [Twitter](https://twitter.com/zakarialabib)
+-   [LinkedIn](https://www.linkedin.com/in/zakaria-labib/)
+-   [GitHub](https://www.github.com/zakarialabib/)
 
 ## Donate
 
-If you like this project, please consider supporting it by donating.
-
--   [PayPal](https://paypal.me/)
+If you like this project, leave a star and share it with your friends. You can also support me by donating.
 

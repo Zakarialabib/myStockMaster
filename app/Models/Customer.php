@@ -33,6 +33,23 @@ class Customer extends Model
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'city',
+        'country',
+        'address',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 
 }

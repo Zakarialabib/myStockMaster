@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
-class UsersSeeder extends Seeder
+class SuperUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,24 +16,26 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        $users = [
-            [
+        $user = User::create([
             'id'             => 1,
             'firstname'      => 'Admin',
 			'lastname'     => 'Admin',
 			'username'    => 'admin',
-			'email'      => 'admin1@gmail.com',
+			'email'      => 'admin@gmail.com',
             'password'       => bcrypt('password'),
             'avatar'        => 'avatar.png',
 			'phone'      => '0123456789',
 			'role_id'     => 1,
 			'statut'    => 1,
             'is_all_warehouses' => 1,
-                'remember_token' => null,
-                'created_at' => now(),
-            ],
-        ];
+            'remember_token' => null,
+            'created_at' => now(),
+        ]);
 
-        User::insert($users);
+        $superAdmin = Role::create([
+            'name' => 'Super Admin'
+        ]);
+
+        $user->assignRole($superAdmin);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use App\Models\Currency;
 
-class CurrencyDatabaseSeeder extends Seeder
+class CurrencySeeder extends Seeder
 {
 
     /**
@@ -17,9 +17,9 @@ class CurrencyDatabaseSeeder extends Seeder
      */
     public function run() {
         Currency::create([
-            'currency_name'      => 'US Dollar',
-            'code'               => Str::upper('USD'),
-            'symbol'             => '$',
+            'currency_name'      => 'Dirham Marocain',
+            'code'               => Str::upper('MAD'),
+            'symbol'             => 'DH',
             'thousand_separator' => ',',
             'decimal_separator'  => '.',
             'exchange_rate'      => null

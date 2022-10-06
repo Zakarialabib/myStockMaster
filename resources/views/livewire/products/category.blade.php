@@ -112,7 +112,7 @@
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                 <form wire:submit.prevent="create">
-                    <x-card>
+                    <div>
                         <x-input id="category_code" type="text" name="category_code"
                             wire:model.defer="category.category_code" hidden />
 
@@ -120,6 +120,7 @@
                             <x-label for="category_name" :value="__('Name')" />
                             <x-input id="category_name" class="block mt-1 w-full" type="text" name="category_name"
                                 wire:model.defer="category.category_name" />
+                            <x-input-error :messages="$errors->get('category.category_name')" for="category.category_name" class="mt-2" />
                         </div>
 
                         <div class="w-full flex justify-end">
@@ -130,7 +131,7 @@
                                 {{ __('Cancel') }}
                             </x-primary-button>
                         </div>
-                    </x-card>
+                    </div>
                 </form>
             </x-slot>
         </x-modal>
@@ -146,18 +147,19 @@
                 <!-- Validation Errors -->
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
                 <form wire:submit.prevent="update">
-                    <x-card>
-
+                    <div class="space-y-4">
                         <div class="mt-4">
                             <x-label for="category_code" :value="__('Code')" />
                             <x-input id="category_code" class="block mt-1 w-full" type="text" name="category_code"
                                 wire:model.defer="category.category_code" />
+                            <x-input-error :messages="$errors->get('category.category_code')" for="category.category_code" class="mt-2" />
                         </div>
 
                         <div class="mt-4">
                             <x-label for="category_name" :value="__('Name')" />
                             <x-input id="category_name" class="block mt-1 w-full" type="text" name="category_name"
                                 wire:model.defer="category.category_name" />
+                            <x-input-error :messages="$errors->get('category.category_name')" for="category.category_name" class="mt-2" />
                         </div>
 
                         <div class="w-full flex justify-end">
@@ -168,7 +170,7 @@
                                 {{ __('Cancel') }}
                             </x-primary-button>
                         </div>
-                    </x-card>
+                    </div>
                 </form>
             </x-slot>
         </x-modal>
@@ -181,7 +183,7 @@
             </x-slot>
 
             <x-slot name="content">
-                <x-card>
+                <div>
                     <div class="mb-4">
                         <label for="category_code">{{ __('Category Code') }} <span
                                 class="text-red-500">*</span></label>
@@ -200,30 +202,32 @@
                             {{ __('Close') }}
                         </x-primary-button>
                     </div>
-                </x-card>
+                </div>
             </x-slot>
         </x-modal>
         <!-- End Show Modal -->
     </div>
+</div>
 
-    @push('page_scripts')
-        <script>
-            document.addEventListener('livewire:load', function() {
-                window.livewire.on('deleteModal', categoryId => {
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.livewire.emit('delete', categoryId)
-                        }
-                    })
+
+@push('page_scripts')
+    <script>
+        document.addEventListener('livewire:load', function() {
+            window.livewire.on('deleteModal', categoryId => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('delete', categoryId)
+                    }
                 })
             })
-        </script>
-    @endpush
+        })
+    </script>
+@endpush

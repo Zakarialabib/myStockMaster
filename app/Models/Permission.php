@@ -16,6 +16,7 @@ class Permission extends Model
         'created_at',
         'updated_at',
     ];
+
     public $filterable = [
         'id',
         'name',
@@ -25,12 +26,15 @@ class Permission extends Model
     ];
 
     protected $guarded = ['id'];
+
     protected $fillable = array('name', 'label', 'description');
 
     public function roles()
     {
         return $this->belongsToMany(Role::class);
     }
+
+
     /**
      * Determine if the permission belongs to the role.
      *
@@ -44,4 +48,6 @@ class Permission extends Model
         }
         return !!$role->intersect($this->roles)->count();
     }
+
+
 }

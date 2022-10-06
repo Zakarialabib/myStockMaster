@@ -24,10 +24,10 @@ class CreateSettingsTable extends Migration
             $table->string('notification_email');
             $table->text('footer_text');
             $table->text('company_address');
-            $table->integer('client_id')->nullable();
-            $table->integer('warehouse_id')->nullable();
+            $table->integer('default_client_id')->nullable();
+            $table->integer('default_warehouse_id')->nullable();
             $table->string('default_language', 192)->default('fr');
-            $table->boolean('is_invoice_footer')->after('logo')->default(0);
+            $table->boolean('is_invoice_footer')->default(0);
             $table->string('invoice_footer', 192)->nullable();
             $table->string('company_tax', 192)->nullable();
             $table->timestamps();

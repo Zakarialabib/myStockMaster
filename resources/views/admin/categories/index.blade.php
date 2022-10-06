@@ -64,17 +64,10 @@
 @endsection
 
 @section('content')
-    <div>
-        <div class="card bg-white dark:bg-dark-eval-1">
-            <div class="p-6 rounded-t rounded-r mb-0 border-b border-blueGray-200">
-                <div class="">
-                    @include('utils.alerts')
-
-                    <div>
-                        <livewire:products.category />
-                    </div>
-                </div>
-            </div>
+   <x-card>
+        @include('utils.alerts')
+        <div>
+            <livewire:products.category />
         </div>
-    </div>
+   </x-card>
 @endsection

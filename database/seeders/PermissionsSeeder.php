@@ -17,188 +17,190 @@ class PermissionsSeeder extends Seeder
         $permissions = [
             [
                 'id'    => 1,
-                'title' => 'user_management_access',
+                'name' => 'user_management_access',
             ],
             [
                 'id'    => 2,
-                'title' => 'permission_create',
+                'name' => 'permission_create',
             ],
             [
                 'id'    => 3,
-                'title' => 'permission_edit',
+                'name' => 'permission_edit',
             ],
             [
                 'id'    => 4,
-                'title' => 'permission_show',
+                'name' => 'permission_show',
             ],
             [
                 'id'    => 5,
-                'title' => 'permission_delete',
+                'name' => 'permission_delete',
             ],
             [
                 'id'    => 6,
-                'title' => 'permission_access',
+                'name' => 'permission_access',
             ],
             [
                 'id'    => 7,
-                'title' => 'role_create',
+                'name' => 'role_create',
             ],
             [
                 'id'    => 8,
-                'title' => 'role_edit',
+                'name' => 'role_edit',
             ],
             [
                 'id'    => 9,
-                'title' => 'role_show',
+                'name' => 'role_show',
             ],
             [
                 'id'    => 10,
-                'title' => 'role_delete',
+                'name' => 'role_delete',
             ],
             [
                 'id'    => 11,
-                'title' => 'role_access',
+                'name' => 'role_access',
             ],
             [
                 'id'    => 12,
-                'title' => 'user_create',
+                'name' => 'user_create',
             ],
             [
                 'id'    => 13,
-                'title' => 'user_edit',
+                'name' => 'user_edit',
             ],
             [
                 'id'    => 14,
-                'title' => 'user_show',
+                'name' => 'user_show',
             ],
             [
                 'id'    => 15,
-                'title' => 'user_delete',
+                'name' => 'user_delete',
             ],
             [
                 'id'    => 16,
-                'title' => 'user_access',
+                'name' => 'user_access',
             ],
             [
                 'id'    => 17,
-                'title' => 'subscription_management_access',
+                'name' => 'subscription_management_access',
             ],
             [
                 'id'    => 18,
-                'title' => 'client_product_management',
+                'name' => 'client_product_management',
             ],
             [
                 'id'    => 19,
-                'title' => 'admin_dashboard',
+                'name' => 'admin_dashboard',
             ],
             [
                 'id'    => 20,
-                'title' => 'client_dashboard',
+                'name' => 'client_dashboard',
             ],
             [
                 'id'    => 21,
-                'title' => 'user_alert_show',
+                'name' => 'user_alert_show',
             ],
             [
                 'id'    => 22,
-                'title' => 'user_alert_edit',
+                'name' => 'user_alert_edit',
             ],
             [
                 'id'    => 23,
-                'title' => 'user_alert_create',
+                'name' => 'user_alert_create',
             ],
             [
                 'id'    => 24,
-                'title' => 'user_alert_access',
+                'name' => 'user_alert_access',
             ],	 
             [
                 'id'    => 25,
-                'title' => 'admin_product_delete',
+                'name' => 'admin_product_delete',
             ],
             [
                 'id'    => 26,
-                'title' => 'admin_settings_management',
+                'name' => 'admin_settings_management',
             ],
             [
                 'id'    => 27,
-                'title' => 'admin_stock_management',
+                'name' => 'admin_stock_management',
             ],
             [
                 'id'    => 28,
-                'title' => 'admin_payment_management',
+                'name' => 'admin_payment_management',
             ],
             [
                 'id'    => 29,
-                'title' => 'admin_order_management',
+                'name' => 'admin_order_management',
             ],
             [
                 'id'    => 30,
-                'title' => 'client_product_management',
+                'name' => 'client_product_management',
             ],
             [
                 'id'    => 31,
-                'title' => 'admin_page_management',
+                'name' => 'admin_page_management',
             ],
             [
                 'id'    => 32,
-                'title' => 'admin_user_alert_delete',
+                'name' => 'admin_user_alert_delete',
             ],
             [
                 'id'    => 33,
-                'title' => 'admin_order_delete',
+                'name' => 'admin_order_delete',
             ],
             [
                 'id'    => 34,
-                'title' => 'admin_subscription_create',
+                'name' => 'admin_subscription_create',
             ],
             [
                 'id'    => 35,
-                'title' => 'admin_subscription_edit',
+                'name' => 'admin_subscription_edit',
             ],
             [
                 'id'    => 36,
-                'title' => 'admin_subscription_delete',
+                'name' => 'admin_subscription_delete',
             ],
             [
                 'id'    => 37,
-                'title' => 'vendor_dashboard',
+                'name' => 'vendor_dashboard',
             ],
             [
                 'id'    => 38,
-                'title' => 'vendor_order_management',
+                'name' => 'vendor_order_management',
             ],
             [
                 'id'    => 39,
-                'title' => 'vendor_product_management',
+                'name' => 'vendor_product_management',
             ],
             [
                 'id'    => 40,
-                'title' => 'admin_phone_management',
+                'name' => 'admin_phone_management',
             ],
             [
                 'id'    => 41,
-                'title' => 'admin_order_payments',
+                'name' => 'admin_order_payments',
             ],
             [
                 'id'    => 42,
-                'title' => 'admin_brand_management',
+                'name' => 'admin_brand_management',
             ],
             [
                 'id'    => 43,
-                'title' => 'admin_phone_create',
+                'name' => 'admin_phone_create',
             ],
             [
                 'id'    => 44,
-                'title' => 'admin_phone_edit',
+                'name' => 'admin_phone_edit',
             ],
             [
                 'id'    => 45,
-                'title' => 'admin_phone_show',
+                'name' => 'admin_phone_show',
             ],
             [
                 'id'    => 46,
-                'title' => 'admin_reports',
+                'name' => 'admin_reports',
             ],
+            
+            
         ];
 
         Permission::insert($permissions);

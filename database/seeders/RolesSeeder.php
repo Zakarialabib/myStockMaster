@@ -17,12 +17,12 @@ class RolesSeeder extends Seeder
         $roles = [
             [
                 'id'    => 1,
-                'title' => 'Administrator',
-            ],
-            [
-                'id'    => 2,
-                'title' => 'Vendor',
-            ],
+                'name' => 'Administrator',
+                'label' => 'Administrator',
+                'description' => 'Administrator',
+                'status' => 1,
+                'created_at' => now(),
+            ]
         ];
 
         Role::insert($roles);
