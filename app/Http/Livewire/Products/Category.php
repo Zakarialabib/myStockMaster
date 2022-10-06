@@ -14,7 +14,21 @@ class Category extends Component
 {
     use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
 
+    public $category;
+    public $category_code;
+    public $category_name;
+
+    public $listeners = ['show', 'confirmDelete', 'delete','createModal','showModal','editModal'];
+
     public int $perPage;
+
+    public $show;
+    
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal; 
 
     public array $orderable;
 
@@ -34,6 +48,11 @@ class Category extends Component
         'sortDirection' => [
             'except' => 'desc',
         ],
+    ];
+
+    public array $rules = [
+        'category.category_code' => '',
+        'category.category_name' => 'required',
     ];
 
     public function getSelectedCountProperty()
@@ -65,22 +84,6 @@ class Category extends Component
         $this->orderable         = (new CategoryModel())->orderable;
     }
 
-    public function deleteSelected()
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        CategoryModel::whereIn('id', $this->selected)->delete();
-
-        $this->resetSelected();
-    }
-
-    public function delete(CategoryModel $category)
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $category->delete();
-    }
-
     public function render()
     {
         abort_if(Gate::denies('access_product_categories'), 403);
@@ -95,6 +98,76 @@ class Category extends Component
 
         return view('livewire.products.category', compact('categories'));
     }
+
+    public function createModal()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->createModal = true;
+
+    }
+
+    public function create()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->validate();
+
+        CategoryModel::create($this->category);
+
+        $this->createModal = false;
+
+        toast('Product Category Created!', 'success');
+    }
+    # optimize edit modal 
+    public function editModal(CategoryModel $category)
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->category = $category;
+
+        $this->editModal = true;
+    }
+
+    public function update()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->validate();
+
+        $this->category->save();
+
+        $this->editModal = false;
+
+        toast('Product Category Updated!', 'success');
+    }
+
+    // Show modal
+    
+    public function showModal(CategoryModel $category)
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->showModal = true;
+        $this->emit('showModal', $category);
+    }
+
+    public function deleteSelected()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        CategoryModel::whereIn('id', $this->selected)->delete();
+
+        $this->resetSelected();
+    }
+    
+    public function delete(CategoryModel $category)
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $category->delete();
+    }
+
 
 }
 

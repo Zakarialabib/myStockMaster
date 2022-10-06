@@ -1,9 +1,11 @@
 <x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3 overflow-auto">
 
     <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('admin.dashboard')">
-        {{-- <x-slot name="icon">
-            <x-icons.dashboard class="flex-shrink-0 w-8 h-8 block my-0 mx-auto" aria-hidden="true" />
-        </x-slot> --}}
+        <x-slot name="icon">
+            <span class="inline-block mr-3">
+                <x-icons.empty-circle class="text-gray-200 w-5 h-5" aria-hidden="true" />
+            </span>
+        </x-slot>
     </x-sidebar.link>
 
     <x-sidebar.dropdown title="{{ __('Products') }}" :active="Str::startsWith(
@@ -24,7 +26,7 @@
             <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
         @endcan
     </x-sidebar.dropdown>
-    
+
     @can('access_adjustments')
         <x-sidebar.dropdown title="{{ __('Adjustments') }}" :active="Str::startsWith(
             request()
@@ -157,8 +159,8 @@
                 :active="request()->routeIs('sales-return-report.index')" />
             <x-sidebar.sublink title="{{ __('Payment Report') }}" href="{{ route('payments-report.index') }}"
                 :active="request()->routeIs('payments-report.index')" />
-            <x-sidebar.sublink title="{{ __('Purchases Return Report') }}" href="{{ route('purchases-return-report.index') }}"
-                :active="request()->routeIs('purchases-return-report.index')" />
+            <x-sidebar.sublink title="{{ __('Purchases Return Report') }}"
+                href="{{ route('purchases-return-report.index') }}" :active="request()->routeIs('purchases-return-report.index')" />
             <x-sidebar.sublink title="{{ __('Profit Report') }}" href="{{ route('profit-loss-report.index') }}"
                 :active="request()->routeIs('profit-loss-report.index')" />
 
@@ -200,8 +202,10 @@
         </x-sidebar.dropdown>
     @endcan
 
-    <x-sidebar.link title="{{ __('Logout') }}" onclick="event.preventDefault();
-                        document.getElementById('logoutform').submit();" href="#">
+    <x-sidebar.link title="{{ __('Logout') }}"
+        onclick="event.preventDefault();
+                        document.getElementById('logoutform').submit();"
+        href="#">
         {{-- <x-slot name="icon">
             <x-heroicon-o-logout class="flex-shrink-0 w-8 h-8 block my-0 mx-auto" aria-hidden="true" />
         </x-slot> --}}

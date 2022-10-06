@@ -24,7 +24,7 @@
     @endonce
 @endpush
 
-@push('scripts')
+@push('page_scripts')
     @once
         <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     @endonce

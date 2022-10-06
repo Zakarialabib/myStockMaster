@@ -2,7 +2,7 @@
     <div class="dropzone" {{ $attributes }}></div>
 </div>
 
-@push('scripts')
+@push('page_scripts')
     <script>
         Dropzone.options[_.camelCase("{{ $attributes['id'] }}")] = {
     url: "{{ $attributes['action'] }}",

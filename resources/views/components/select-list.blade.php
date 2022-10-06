@@ -17,7 +17,7 @@
     </div>
 </div>
 
-@push('scripts')
+@push('page_scripts')
 <script>
     document.addEventListener("livewire:load", () => {
         let el = $('#{{ $attributes['id'] }}')

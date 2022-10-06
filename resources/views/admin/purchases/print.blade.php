@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ public_path('b3/bootstrap.min.css') }}">
 </head>
 <body>
-<div class="container-fluid">
+<div class="container px-4 mx-auto">
     <div class="row">
         <div class="col-xs-12">
             <div style="text-align: center;margin-bottom: 25px;">
@@ -19,7 +19,7 @@
                 </h4>
             </div>
             <div class="card">
-                <div class="card-body">
+                <div class="p-4">
                     <div class="row mb-4">
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Company Info:</h4>

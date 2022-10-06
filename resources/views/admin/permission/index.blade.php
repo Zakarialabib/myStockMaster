@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 @section('title', __('Permission List'))
 @section('content')
 <div class="card bg-white dark:bg-dark-eval-1">

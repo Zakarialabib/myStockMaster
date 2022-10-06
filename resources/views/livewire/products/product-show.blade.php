@@ -8,9 +8,9 @@
         </div>
         <div class="modal-body">
 
-            <div class="container-fluid mb-4">
+            <div class="container px-4 mx-auto mb-4">
                 <div class="row mb-3">
-                    <div class="col-lg-6">
+                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(
                             $product->product_code,
                             $product->product_barcode_symbology,
@@ -18,7 +18,7 @@
                             110,
                         ) !!}
                     </div>
-                    <div class="col-lg-6">
+                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         @forelse($product->getMedia('images') as $media)
                             <img src="{{ $media->getUrl() }}" alt="Product Image" class="img-fluid img-thumbnail mb-2">
                         @empty
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="w-full px-4">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped mb-0">
                                 <tr>

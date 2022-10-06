@@ -13,12 +13,12 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
             <div class="col-12">
                 @include('utils.alerts')
                 <div class="card">
-                    <div class="card-body">
+                    <div class="p-4">
                         <!-- Button trigger modal -->
                         <button type="button" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded" data-toggle="modal" data-target="#categoryCreateModal">
                             Add Category <i class="bi bi-plus"></i>
@@ -48,13 +48,13 @@
                 <form action="{{ route('expense-categories.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="category_name">Category Name <span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="category_name" required>
+                        <div class="mb-4">
+                            <label for="category_name">{{__('Category')}} Name <span class="text-red-500">*</span></label>
+                            <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="text" name="category_name" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-4">
                             <label for="category_description">Description</label>
-                            <textarea class="form-control" name="category_description" id="category_description" rows="5"></textarea>
+                            <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="category_description" id="category_description" rows="5"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

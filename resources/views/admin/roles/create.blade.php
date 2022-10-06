@@ -19,30 +19,30 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
-            <div class="col-md-12">
+            <div class="w-full px-4">
                 @include('utils.alerts')
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf
-                    <div class="form-group">
+                    <div class="mb-4">
                         <button type="submit" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Create Role <i class="bi bi-check"></i>
                         </button>
                     </div>
                     <div class="card">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="name">Role Name <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="name" required>
+                        <div class="p-4">
+                            <div class="mb-4">
+                                <label for="name">Role Name <span class="text-red-500">*</span></label>
+                                <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="text" name="name" required>
                             </div>
 
                             <hr>
 
-                            <div class="form-group">
-                                <label for="permissions">Permissions <span class="text-danger">*</span></label>
+                            <div class="mb-4">
+                                <label for="permissions">Permissions <span class="text-red-500">*</span></label>
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-4">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="select-all">
                                     <label class="custom-control-label" for="select-all">Give All Permissions</label>
@@ -51,12 +51,12 @@
 
                             <div class="row">
                                 <!-- Dashboard Permissions -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Dashboard
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -104,12 +104,12 @@
                                 </div>
 
                                 <!-- User Management Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             User Mangement
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -133,12 +133,12 @@
                                 </div>
 
                                 <!-- Products Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Products
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -169,7 +169,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_products" name="permissions[]"
                                                                value="edit_products" {{ old('edit_products') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_products">Edit</label>
+                                                        <label class="custom-control-label" for="edit_products">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -202,12 +202,12 @@
                                 </div>
 
                                 <!-- Adjustments Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Adjustments
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -238,7 +238,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_adjustments" name="permissions[]"
                                                                value="edit_adjustments" {{ old('edit_adjustments') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_adjustments">Edit</label>
+                                                        <label class="custom-control-label" for="edit_adjustments">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -255,12 +255,12 @@
                                 </div>
 
                                 <!-- Quotations Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Quotaions
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -291,7 +291,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_quotations" name="permissions[]"
                                                                value="edit_quotations" {{ old('edit_quotations') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_quotations">Edit</label>
+                                                        <label class="custom-control-label" for="edit_quotations">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -324,12 +324,12 @@
                                 </div>
 
                                 <!-- Expenses Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Expenses
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -352,7 +352,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_expenses" name="permissions[]"
                                                                value="edit_expenses" {{ old('edit_expenses') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_expenses">Edit</label>
+                                                        <label class="custom-control-label" for="edit_expenses">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -377,12 +377,12 @@
                                 </div>
 
                                 <!-- Customers Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Customers
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -413,7 +413,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_customers" name="permissions[]"
                                                                value="edit_customers" {{ old('edit_customers') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_customers">Edit</label>
+                                                        <label class="custom-control-label" for="edit_customers">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -430,12 +430,12 @@
                                 </div>
 
                                 <!-- Suppliers Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Suppliers
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -466,7 +466,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_suppliers" name="permissions[]"
                                                                value="edit_suppliers" {{ old('edit_suppliers') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_suppliers">Edit</label>
+                                                        <label class="custom-control-label" for="edit_suppliers">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -483,12 +483,12 @@
                                 </div>
 
                                 <!-- Sales Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Sales
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -519,7 +519,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_sales" name="permissions[]"
                                                                value="edit_sales" {{ old('edit_sales') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_sales">Edit</label>
+                                                        <label class="custom-control-label" for="edit_sales">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -552,12 +552,12 @@
                                 </div>
 
                                 <!-- Sale Returns Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Sale Returns
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -588,7 +588,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_sale_returns" name="permissions[]"
                                                                value="edit_sale_returns" {{ old('edit_sale_returns') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_sale_returns">Edit</label>
+                                                        <label class="custom-control-label" for="edit_sale_returns">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -613,12 +613,12 @@
                                 </div>
 
                                 <!-- Purchases Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Purchases
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -649,7 +649,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_purchases" name="permissions[]"
                                                                value="edit_purchases" {{ old('edit_purchases') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_purchases">Edit</label>
+                                                        <label class="custom-control-label" for="edit_purchases">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -674,12 +674,12 @@
                                 </div>
 
                                 <!-- Purchases Returns Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Purchase Returns
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -710,7 +710,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_purchase_returns" name="permissions[]"
                                                                value="edit_purchase_returns" {{ old('edit_purchase_returns') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_purchase_returns">Edit</label>
+                                                        <label class="custom-control-label" for="edit_purchase_returns">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -735,12 +735,12 @@
                                 </div>
 
                                 <!-- Currencies Permission -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Currencies
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -763,7 +763,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="edit_currencies" name="permissions[]"
                                                                value="edit_currencies" {{ old('edit_currencies') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_currencies">Edit</label>
+                                                        <label class="custom-control-label" for="edit_currencies">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -780,12 +780,12 @@
                                 </div>
 
                                 <!-- Reports -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Reports
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
@@ -801,12 +801,12 @@
                                 </div>
 
                                 <!-- Settings -->
-                                <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Settings
                                         </div>
-                                        <div class="card-body">
+                                        <div class="p-4">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">

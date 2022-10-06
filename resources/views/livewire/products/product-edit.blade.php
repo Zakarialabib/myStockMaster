@@ -13,32 +13,32 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="form-row">
+                            <div class="p-4">
+                                <div class="flex flex-wrap -mx-1">
                                     <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                        <div class="form-group">
+                                        <div class="mb-4">
                                             <label for="product_name" autofocus>{{ __('Product Name') }} <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="product_name" required
+                                            <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_name" required
                                                 value="{{ $product->product_name }}">
                                         </div>
                                     </div>
                                     <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                        <div class="form-group">
+                                        <div class="mb-4">
                                             <label for="product_code">{{ __('Code') }} <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="product_code" required
+                                            <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_code" required
                                                 value="{{ $product->product_code }}">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
+                                <div class="flex flex-wrap -mx-1">
+                                    <div class="w-full px-4">
+                                        <div class="mb-4">
                                             <label for="category_id">{{ __('Category') }} <span
                                                     class="text-danger">*</span></label>
-                                            <select class="form-control" name="category_id" id="category_id" required>
+                                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="category_id" id="category_id" required>
                                                 @foreach (\App\Models\Category::all() as $category)
                                                     <option
                                                         {{ $category->id == $product->category->id ? 'selected' : '' }}
@@ -50,41 +50,41 @@
                                     </div>
 
 
-                                    <div class="form-row">
+                                    <div class="flex flex-wrap -mx-1">
                                         <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                            <div class="form-group">
+                                            <div class="mb-4">
                                                 <label for="product_cost">{{ __('Cost') }} <span
                                                         class="text-danger">*</span></label>
-                                                <input id="product_cost" type="text" class="form-control"
+                                                <input id="product_cost" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                                     min="0" name="product_cost" required
                                                     value="{{ $product->product_cost }}">
                                             </div>
                                         </div>
                                         <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                            <div class="form-group">
+                                            <div class="mb-4">
                                                 <label for="product_price">{{ __('Price') }} <span
                                                         class="text-danger">*</span></label>
-                                                <input id="product_price" type="text" class="form-control"
+                                                <input id="product_price" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                                     min="0" name="product_price" required
                                                     value="{{ $product->product_price }}">
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="form-row">
+                                    <div class="flex flex-wrap -mx-1">
                                         <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                            <div class="form-group">
+                                            <div class="mb-4">
                                                 <label for="product_quantity">{{ __('Quantity') }} <span
                                                         class="text-danger">*</span></label>
-                                                <input type="number" class="form-control" name="product_quantity"
+                                                <input type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_quantity"
                                                     required value="{{ $product->product_quantity }}" min="1">
                                             </div>
                                         </div>
                                         <div class="lg:w-1/2 sm:w-1/2 px-2">
-                                            <div class="form-group">
+                                            <div class="mb-4">
                                                 <label for="product_stock_alert">{{ __('Alert Quantity') }} <span
                                                         class="text-danger">*</span></label>
-                                                <input type="number" class="form-control" name="product_stock_alert"
+                                                <input type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_stock_alert"
                                                     required value="{{ $product->product_stock_alert }}"
                                                     min="0">
                                             </div>
@@ -106,20 +106,20 @@
                                                 aria-labelledby="flush-headingOne"
                                                 data-bs-parent="#accordionFlushExample">
                                                 <div class="accordion-body">
-                                                    <div class="form-row">
+                                                    <div class="flex flex-wrap -mx-1">
                                                         <div class="col-md-4">
-                                                            <div class="form-group">
+                                                            <div class="mb-4">
                                                                 <label for="product_order_tax">{{__('Tax')}} (%)</label>
-                                                                <input type="number" class="form-control"
+                                                                <input type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                                                     name="product_order_tax"
                                                                     value="{{ $product->product_order_tax }}"
                                                                     min="0" max="100">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <div class="form-group">
+                                                            <div class="mb-4">
                                                                 <label for="product_tax_type">{{__('Tax type')}}</label>
-                                                                <select class="form-control" name="product_tax_type"
+                                                                <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_tax_type"
                                                                     id="product_tax_type">
                                                                     <option value="" selected>{{__('None')}}</option>
                                                                     <option
@@ -132,23 +132,23 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <div class="form-group">
+                                                            <div class="mb-4">
                                                                 <label for="product_unit">{{__('Unit')}} <i
                                                                         class="bi bi-question-circle-fill text-info"
                                                                         data-toggle="tooltip" data-placement="top"
                                                                         title="This text will be placed after Product Quantity."></i>
-                                                                    <span class="text-danger">*</span></label>
-                                                                <input type="text" class="form-control"
+                                                                    <span class="text-red-500">*</span></label>
+                                                                <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                                                     name="product_unit"
                                                                     value="{{ old('product_unit') ?? $product->product_unit }}"
                                                                     required>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="mb-4">
                                                         <label for="barcode_symbology">{{__('Barcode Symbology')}} <span
                                                                 class="text-danger">*</span></label>
-                                                        <select class="form-control" name="product_barcode_symbology"
+                                                        <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="product_barcode_symbology"
                                                             id="barcode_symbology" required>
                                                             <option selected
                                                                 {{ $product->product_barcode_symbology == 'C128' ? 'selected' : '' }}
@@ -170,9 +170,9 @@
                                                                 value="EAN8">EAN-8</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="mb-4">
                                                         <label for="product_note">{{__('Note')}}</label>
-                                                        <textarea name="product_note" id="product_note" rows="4 " class="form-control">{{ $product->product_note }}</textarea>
+                                                        <textarea name="product_note" id="product_note" rows="4 " class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">{{ $product->product_note }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -182,10 +182,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="form-group">
+                            <div class="p-4">
+                                <div class="mb-4">
                                     <label for="image">{{__('Product Images')}} <i
                                             class="bi bi-question-circle-fill text-info" data-toggle="tooltip"
                                             data-placement="top"
@@ -201,9 +201,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12">
+                <div class="w-full px-4">
                     @include('utils.alerts')
-                    <div class="form-group">
+                    <div class="mb-4">
                         <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">{{__('Update')}}<i class="bi bi-check"></i></button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Close')}}</button>
                     </div>

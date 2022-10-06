@@ -11,41 +11,41 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
+            <div class="w-full px-4">
+                <x-card>
+                    <div class="p-4">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>Customer Name</th>
+                                    <th>{{__('Customer Name')}}</th>
                                     <td>{{ $customer->customer_name }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Customer Email</th>
+                                    <th>{{__('Customer Email')}}</th>
                                     <td>{{ $customer->customer_email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Customer Phone</th>
+                                    <th>{{__('Customer Phone')}}</th>
                                     <td>{{ $customer->customer_phone }}</td>
                                 </tr>
                                 <tr>
-                                    <th>City</th>
+                                    <th>{{__('City')}}</th>
                                     <td>{{ $customer->city }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Country</th>
+                                    <th>{{__('Country')}}</th>
                                     <td>{{ $customer->country }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Address</th>
+                                    <th>{{__('Address')}}</th>
                                     <td>{{ $customer->address }}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
-                </div>
+                </x-card>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ class Helper {
     {
         return Carbon::now()->format('ymd') . mt_rand(10000000, 99999999);
     }
+    
     public static function slug($string, $separator = '-') {
         $_transliteration = [
             '/ä|æ|ǽ/' => 'ae',

@@ -1,4 +1,4 @@
-<x-app-layout>
+@extends('layouts.app')
 
     @section('title', 'Print Barcode')
 
@@ -8,8 +8,8 @@
             <li class="breadcrumb-item active">{{ __('Print Barcode') }}</li>
         </ol>
     @endsection
-
-    <div class="container-fluid">
+@section('content')
+    <div class="container px-4 mx-auto">
         <div class="row">
             <div class="col-12">
                 <livewire:search-product />
@@ -17,9 +17,9 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-md-12">
-                <livewire:products.barcode-page />
+            <div class="w-full px-4">
+                <livewire:products.barcode />
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

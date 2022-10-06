@@ -28,23 +28,23 @@
                             <input type="hidden" value="{{ $global_tax }}" name="tax_percentage">
                             <input type="hidden" value="{{ $global_discount }}" name="discount_percentage">
                             <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
-                            <div class="form-row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="total_amount">Total Amount <span class="text-danger">*</span></label>
-                                        <input id="total_amount" type="text" class="form-control" name="total_amount" value="{{ $total_amount }}" readonly required>
+                            <div class="flex flex-wrap -mx-1">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
+                                        <label for="total_amount">Total Amount <span class="text-red-500">*</span></label>
+                                        <input id="total_amount" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="total_amount" value="{{ $total_amount }}" readonly required>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="paid_amount">Received Amount <span class="text-danger">*</span></label>
-                                        <input id="paid_amount" type="text" class="form-control" name="paid_amount" value="{{ $total_amount }}" required>
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
+                                        <label for="paid_amount">Received Amount <span class="text-red-500">*</span></label>
+                                        <input id="paid_amount" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="paid_amount" value="{{ $total_amount }}" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="payment_method">Payment Method <span class="text-danger">*</span></label>
-                                <select class="form-control" name="payment_method" id="payment_method" required>
+                            <div class="mb-4">
+                                <label for="payment_method">Payment Method <span class="text-red-500">*</span></label>
+                                <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="payment_method" id="payment_method" required>
                                     <option value="Cash">Cash</option>
                                     <option value="Credit Card">Credit Card</option>
                                     <option value="Bank Transfer">Bank Transfer</option>
@@ -52,9 +52,9 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-4">
                                 <label for="note">Note (If Needed)</label>
-                                <textarea name="note" id="note" rows="5" class="form-control"></textarea>
+                                <textarea name="note" id="note" rows="5" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-5">

@@ -1,115 +1,229 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="relative flex w-full flex-wrap items-stretch space-x-2 mb-3 ">
             <select wire:model="perPage"
-                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                class="w-20 border border-gray-300 rounded-md shadow-sm py-2 px-4 bg-white text-sm leading-5 font-medium text-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                    placeholder="{{ __('Search') }}" />
+            <button wire:click="deleteSelected"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                {{ __('Delete Selected') }}
+            </button>
+
+            <div>
+                <input wire:model="search" type="text"
+                    class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
+                    placeholder="Search..." />
+                <span
+                    class="z-10 h-full leading-snug font-normal absolute text-center text-gray-400 bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-3">
+                    <i class="fas fa-search"></i>
+                </span>
             </div>
         </div>
-    </div>
-    <div wire:loading.delay>
-        Loading...
-    </div>
 
-    <x-table>
-        <x-slot name="thead">
-            <x-table.th>#</x-table.th>
-            <x-table.th>
-                {{ __('Code') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Name') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Products count') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Actions') }}
-            </x-table.th>
-            </tr>
-        </x-slot>
-        <x-table.tbody>
-            @forelse($categories as $category)
-                <x-table.tr>
-                    <x-table.td>
-                        <input type="checkbox" value="{{ $category->id }}" wire:model="selected">
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $category->category_code }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $category->category_name }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $category->products_count }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{-- <button type="button" class="uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-2 rounded"
-                            wire:click="$emit('showModal', 'products.product-show', {{ $category->id }})">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button type="button" class="uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-2 rounded"
-                            wire:click="$emit('showModal', 'products.product-edit', {{ $category->id }})">
-                            <i class="bi bi-pencil"></i> --}}
-                        <a href="{{ route('product-categories.edit', $category->id) }}" class="btn btn-info btn-sm">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <button id="delete" class="btn btn-danger btn-sm"
-                            onclick="
-    event.preventDefault();
-    if (confirm('Are you sure? It will delete the data permanently!')) {
-        document.getElementById('destroy{{ $category->id }}').submit();
-    }
-    ">
-                            <i class="bi bi-trash"></i>
-                            <form id="destroy{{ $category->id }}" class="d-none"
-                                action="{{ route('product-categories.destroy', $category->id) }}" method="POST">
-                                @csrf
-                                @method('delete')
-                            </form>
-                        </button>
-                        </button>
-                    </x-table.td>
-                </x-table.tr>
-            @empty
-                <x-table.tr>
-                    <x-table.td colspan="10" class="text-center">
-                        {{ __('No entries found.') }}
-                    </x-table.td>
-                </x-table.tr>
-            @endforelse
-        </x-table.tbody>
-    </x-table>
-
-    <div class="p-4">
-        <div class="pt-3">
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-            @endif
-            {{ $categories->links() }}
+        <div wire:loading.delay>
+            <x-loading />
         </div>
-    </div>
-</div>
 
-<script>
-    Livewire.on('confirm', e => {
-        if (!confirm("{{ __('Are you sure') }}")) {
-            return
-        }
-        @this[e.callback](...e.argv)
-    });
-</script>
+        <x-table>
+            <x-slot name="thead">
+                <x-table.th class="pr-0 w-8">
+                    <input wire:model="selectPage" type="checkbox" />
+                </x-table.th>
+                <x-table.th>
+                    {{ __('Code') }}
+                </x-table.th>
+                <x-table.th>
+                    {{ __('Name') }}
+                </x-table.th>
+                <x-table.th>
+                    {{ __('Products count') }}
+                </x-table.th>
+                <x-table.th>
+                    {{ __('Actions') }}
+                </x-table.th>
+                </tr>
+            </x-slot>
+            <x-table.tbody>
+                @forelse($categories as $category)
+                    <x-table.tr>
+                        <x-table.td>
+                            <input type="checkbox" value="{{ $category->id }}" wire:model="selected">
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $category->category_code }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $category->category_name }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $category->products_count }}
+                        </x-table.td>
+                        <x-table.td>
+                            <button wire:click="$emit('showModal', {{ $category->id }})"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button wire:click="$emit('editModal', {{ $category->id }})"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button wire:click="$emit('deleteModal', {{ $category->id }})"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </x-table.td>
+                    </x-table.tr>
+                @empty
+                    <x-table.tr>
+                        <x-table.td colspan="10" class="text-center">
+                            {{ __('No entries found.') }}
+                        </x-table.td>
+                    </x-table.tr>
+                @endforelse
+            </x-table.tbody>
+        </x-table>
+
+        <div class="p-4">
+            <div class="pt-3">
+                @if ($this->selectedCount)
+                    <p class="text-sm leading-5">
+                        <span class="font-medium">
+                            {{ $this->selectedCount }}
+                        </span>
+                        {{ __('Entries selected') }}
+                    </p>
+                @endif
+                {{ $categories->links() }}
+            </div>
+        </div>
+
+
+        <!-- Create Modal -->
+        <x-modal wire:model="createModal">
+            <x-slot name="title">
+                {{ __('Create Category') }}
+            </x-slot>
+
+            <x-slot name="content">
+                <!-- Validation Errors -->
+                <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
+                <form wire:submit.prevent="create">
+                    <x-card>
+                        <x-input id="category_code" type="text" name="category_code"
+                            wire:model.defer="category.category_code" hidden />
+
+                        <div class="mt-4">
+                            <x-label for="category_name" :value="__('Name')" />
+                            <x-input id="category_name" class="block mt-1 w-full" type="text" name="category_name"
+                                wire:model.defer="category.category_name" />
+                        </div>
+
+                        <div class="w-full flex justify-end">
+                            <x-primary-button wire:click="create" wire:loading.attr="disabled">
+                                {{ __('Create') }}
+                            </x-primary-button>
+                            <x-primary-button type="button" wire:click="$set('createModal', false)">
+                                {{ __('Cancel') }}
+                            </x-primary-button>
+                        </div>
+                    </x-card>
+                </form>
+            </x-slot>
+        </x-modal>
+        <!-- End Create Modal -->
+
+        <!-- Edit Modal -->
+        <x-modal wire:model="editModal">
+            <x-slot name="title">
+                {{ __('Edit Category') }}
+            </x-slot>
+
+            <x-slot name="content">
+                <!-- Validation Errors -->
+                <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                <form wire:submit.prevent="update">
+                    <x-card>
+
+                        <div class="mt-4">
+                            <x-label for="category_code" :value="__('Code')" />
+                            <x-input id="category_code" class="block mt-1 w-full" type="text" name="category_code"
+                                wire:model.defer="category.category_code" />
+                        </div>
+
+                        <div class="mt-4">
+                            <x-label for="category_name" :value="__('Name')" />
+                            <x-input id="category_name" class="block mt-1 w-full" type="text" name="category_name"
+                                wire:model.defer="category.category_name" />
+                        </div>
+
+                        <div class="w-full flex justify-end">
+                            <x-primary-button wire:click="update" wire:loading.attr="disabled">
+                                {{ __('Update') }}
+                            </x-primary-button>
+                            <x-primary-button type="button" wire:click="$set('editModal', false)">
+                                {{ __('Cancel') }}
+                            </x-primary-button>
+                        </div>
+                    </x-card>
+                </form>
+            </x-slot>
+        </x-modal>
+        <!-- End Edit Modal -->
+
+        <!-- Show Modal -->
+        <x-modal wire:model="showModal">
+            <x-slot name="title">
+                {{ __('Show Category') }}
+            </x-slot>
+
+            <x-slot name="content">
+                <x-card>
+                    <div class="mb-4">
+                        <label for="category_code">{{ __('Category Code') }} <span
+                                class="text-red-500">*</span></label>
+                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            type="text" name="category_code" value="{{ $category->category_code }}" disabled>
+                    </div>
+                    <div class="mb-4">
+                        <label for="category_name">{{ __('Category Name') }} <span
+                                class="text-red-500">*</span></label>
+                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            type="text" name="category_name" value="{{ $category->category_name }}" disabled>
+                    </div>
+
+                    <div class="w-full flex justify-end">
+                        <x-primary-button type="button" wire:click="$set('showModal', false)">
+                            {{ __('Close') }}
+                        </x-primary-button>
+                    </div>
+                </x-card>
+            </x-slot>
+        </x-modal>
+        <!-- End Show Modal -->
+    </div>
+
+    @push('page_scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', categoryId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', categoryId)
+                        }
+                    })
+                })
+            })
+        </script>
+    @endpush

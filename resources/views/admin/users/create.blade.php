@@ -17,52 +17,52 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid mb-4">
+    <div class="container px-4 mx-auto mb-4">
         <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-lg-12">
+                <div class="w-full px-4">
                     @include('utils.alerts')
-                    <div class="form-group">
+                    <div class="mb-4">
                         <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Create User <i class="bi bi-check"></i></button>
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="name">Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="name" required>
+                        <div class="p-4">
+                            <div class="flex flex-wrap -mx-1">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
+                                        <label for="name">Name <span class="text-red-500">*</span></label>
+                                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="text" name="name" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="email">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email" required>
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
+                                        <label for="email">{{__('Email')}} <span class="text-red-500">*</span></label>
+                                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="email" name="email" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="password">Password <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="password" name="password" required>
+                            <div class="flex flex-wrap -mx-1">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
+                                        <label for="password">Password <span class="text-red-500">*</span></label>
+                                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="password" name="password" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                    <div class="mb-4">
                                         <label for="password_confirmation">Confirm Password <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" type="password" name="password_confirmation"
+                                        <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="password" name="password_confirmation"
                                                required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="role">Role <span class="text-danger">*</span></label>
-                                <select class="form-control" name="role" id="role" required>
+                            <div class="mb-4">
+                                <label for="role">Role <span class="text-red-500">*</span></label>
+                                <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="role" id="role" required>
                                     <option value="" selected disabled>Select Role</option>
                                     @foreach(\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)
                                         <option value="{{ $role->name }}">{{ $role->name }}</option>
@@ -70,9 +70,9 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="is_active">Status <span class="text-danger">*</span></label>
-                                <select class="form-control" name="is_active" id="is_active" required>
+                            <div class="mb-4">
+                                <label for="is_active">Status <span class="text-red-500">*</span></label>
+                                <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="is_active" id="is_active" required>
                                     <option value="" selected disabled>Select Status</option>
                                     <option value="1">Active</option>
                                     <option value="2">Deactive</option>
@@ -81,11 +81,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="image">Profile Image <span class="text-danger">*</span></label>
+                        <div class="p-4">
+                            <div class="mb-4">
+                                <label for="image">Profile Image <span class="text-red-500">*</span></label>
                                 <input id="image" type="file" name="image" data-max-file-size="500KB">
                             </div>
                         </div>

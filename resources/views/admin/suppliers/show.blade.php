@@ -11,11 +11,11 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="w-full px-4">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="p-4">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
@@ -31,15 +31,15 @@
                                     <td>{{ $supplier->supplier_phone }}</td>
                                 </tr>
                                 <tr>
-                                    <th>City</th>
+                                    <th>{{__('City')}}</th>
                                     <td>{{ $supplier->city }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Country</th>
+                                    <th>{{__('Country')}}</th>
                                     <td>{{ $supplier->country }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Address</th>
+                                    <th>{{__('Address')}}</th>
                                     <td>{{ $supplier->address }}</td>
                                 </tr>
                             </table>

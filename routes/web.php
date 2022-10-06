@@ -6,8 +6,8 @@ use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseCategoryController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoriesController;
@@ -15,15 +15,17 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchasePaymentsController;
 use App\Http\Controllers\PurchaseReturnController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalePaymentsController;
-use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\PosController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,10 +64,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('expenses', ExpenseController::class);
 
     //Customers
-    Route::resource('customers', CustomerController::class);
+    Route::resource('customers', CustomersController::class);
     
     //Suppliers
-    Route::resource('suppliers', SupplierController::class);
+    Route::resource('suppliers', SuppliersController::class);
 
      //Print Barcode
      Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
@@ -153,27 +155,21 @@ Route::group(['middleware' => 'auth'], function () {
         ->name('purchase-return-payments.destroy');
 
     //Profit Loss Report
-    Route::get('/profit-loss-report', 'ReportsController@profitLossReport')
-        ->name('profit-loss-report.index');
+    Route::get('/profit-loss-report', [ReportsController::class, 'profitLossReport'])->name('profit-loss-report.index');
     //Payments Report
-    Route::get('/payments-report', 'ReportsController@paymentsReport')
-        ->name('payments-report.index');
+    Route::get('/payments-report', [ReportsController::class, 'paymentsReport'])->name('payments-report.index');
     //Sales Report
-    Route::get('/sales-report', 'ReportsController@salesReport')
-        ->name('sales-report.index');
+    Route::get('/sales-report', [ReportsController::class, 'salesReport'])->name('sales-report.index');
     //Purchases Report
-    Route::get('/purchases-report', 'ReportsController@purchasesReport')
-        ->name('purchases-report.index');
+    Route::get('/purchases-report', [ReportsController::class, 'purchasesReport'])->name('purchases-report.index');
     //Sales Return Report
-    Route::get('/sales-return-report', 'ReportsController@salesReturnReport')
-        ->name('sales-return-report.index');
+    Route::get('/sales-return-report', [ReportsController::class, 'salesReturnReport'])->name('sales-return-report.index');
     //Purchases Return Report
-    Route::get('/purchases-return-report', 'ReportsController@purchasesReturnReport')
-        ->name('purchases-return-report.index');
+    Route::get('/purchases-return-report', [ReportsController::class, 'purchasesReturnReport'])->name('purchases-return-report.index');
     
     //POS
-    Route::get('/app/pos', 'PosController@index')->name('app.pos.index');
-    Route::post('/app/pos', 'PosController@store')->name('app.pos.store');
+    Route::get('/pos', [PosController::class, 'index'])->name('app.pos.index');
+    Route::post('/app/pos', [PosController::class, 'store'])->name('app.pos.store');
 
     //Generate PDF
     Route::get('/sales/pdf/{id}', function ($id) {
@@ -227,7 +223,7 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('sale-returns.pdf');
 
     //Sale Returns
-    Route::resource('sale-returns', SaleReturnController::class);
+    Route::resource('sale-returns', SalesReturnController::class);
     
     //Payments
     Route::get('/sale-return-payments/{sale_return_id}', 'SaleReturnPaymentsController@index')

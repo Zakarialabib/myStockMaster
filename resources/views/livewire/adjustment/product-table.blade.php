@@ -19,7 +19,7 @@
             <thead>
             <tr class="align-middle">
                 <th class="align-middle">#</th>
-                <th class="align-middle">Product Name</th>
+                <th class="align-middle">{{__('Product Name')}}</th>
                 <th class="align-middle">Code</th>
                 <th class="align-middle">Stock</th>
                 <th class="align-middle">{{__('Quantity')}}</th>
@@ -41,23 +41,23 @@
                         </td>
                         <input type="hidden" name="product_ids[]" value="{{ $product['product']['id'] ?? $product['id'] }}">
                         <td class="align-middle">
-                            <input type="number" name="quantities[]" min="1" class="form-control" value="{{ $product['quantity'] ?? 1 }}">
+                            <input type="number" name="quantities[]" min="1" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $product['quantity'] ?? 1 }}">
                         </td>
                         <td class="align-middle">
                             @if(isset($product['type']))
                                 @if($product['type'] == 'add')
-                                    <select name="types[]" class="form-control">
+                                    <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                                         <option value="add" selected>(+) Addition</option>
                                         <option value="sub">(-) Subtraction</option>
                                     </select>
                                 @elseif($product['type'] == 'sub')
-                                    <select name="types[]" class="form-control">
+                                    <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                                         <option value="sub" selected>(-) Subtraction</option>
                                         <option value="add">(+) Addition</option>
                                     </select>
                                 @endif
                             @else
-                                <select name="types[]" class="form-control">
+                                <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                                     <option value="add">(+) Addition</option>
                                     <option value="sub">(-) Subtraction</option>
                                 </select>
@@ -73,7 +73,7 @@
             @else
                 <tr>
                     <td colspan="7" class="text-center">
-                        <span class="text-danger">
+                        <span class="text-red-500">
                             Please search & select products!
                         </span>
                     </td>

@@ -11,9 +11,9 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="w-full px-4">
                 <div class="card">
                     <div class="card-header d-flex flex-wrap align-items-center">
                         <div>
@@ -26,7 +26,7 @@
                             <i class="bi bi-save"></i> Save
                         </a>
                     </div>
-                    <div class="card-body">
+                    <div class="p-4">
                         <div class="row mb-4">
                             <div class="col-sm-4 mb-3 mb-md-0">
                                 <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
@@ -103,7 +103,7 @@
                             </table>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4 col-sm-5 ml-md-auto">
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
                                 <table class="table">
                                     <tbody>
                                     <tr>

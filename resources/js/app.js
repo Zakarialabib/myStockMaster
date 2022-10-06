@@ -1,10 +1,13 @@
 import './bootstrap';
-import "./chart-config";
 import '../css/app.css'; 
 import "../css/theme.css";
 import "../css/select.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import "select2/dist/css/select2.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fortawesome/fontawesome-free/js/all.min.js';
+
+// import "./chart-config";
 // require('../../vendor/bastinald/laravel-livewire-modals/resources/js/modals');
 
 import swal from 'sweetalert2';

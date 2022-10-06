@@ -73,7 +73,7 @@
                     @else
                         <tr>
                             <td colspan="8" class="text-center">
-                        <span class="text-danger">
+                        <span class="text-red-500">
                             Please search & select products!
                         </span>
                             </td>
@@ -117,23 +117,23 @@
 
     <input type="hidden" name="total_amount" value="{{ $total_with_shipping }}">
 
-    <div class="form-row">
-        <div class="col-lg-4">
-            <div class="form-group">
+    <div class="flex flex-wrap -mx-1">
+        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="mb-4">
                 <label for="tax_percentage">Order Tax (%)</label>
-                <input wire:model.lazy="global_tax" type="number" class="form-control" name="tax_percentage" min="0" max="100" value="{{ $global_tax }}" required>
+                <input wire:model.lazy="global_tax" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="tax_percentage" min="0" max="100" value="{{ $global_tax }}" required>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="form-group">
+        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="mb-4">
                 <label for="discount_percentage">Discount (%)</label>
-                <input wire:model.lazy="global_discount" type="number" class="form-control" name="discount_percentage" min="0" max="100" value="{{ $global_discount }}" required>
+                <input wire:model.lazy="global_discount" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="discount_percentage" min="0" max="100" value="{{ $global_discount }}" required>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="form-group">
+        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="mb-4">
                 <label for="shipping_amount">Shipping</label>
-                <input wire:model.lazy="shipping" type="number" class="form-control" name="shipping_amount" min="0" value="0" required step="0.01">
+                <input wire:model.lazy="shipping" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="shipping_amount" min="0" value="0" required step="0.01">
             </div>
         </div>
     </div>

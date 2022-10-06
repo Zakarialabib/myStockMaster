@@ -12,7 +12,7 @@
     </div>
 </div>
 
-@push('scripts')
+@push('page_scripts')
     <script>
         document.addEventListener("livewire:load", () => {
     function update(value) {

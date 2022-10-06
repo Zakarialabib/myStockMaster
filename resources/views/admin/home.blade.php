@@ -1,69 +1,85 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    @section('title', 'Home')
+@section('title', 'Home')
 
-    @section('breadcrumb')
-        <ol class="breadcrumb border-0 m-0">
-            <li class="breadcrumb-item active">{{ __('Home') }}</li>
-        </ol>
-    @endsection
-
-    <div class="container-fluid">
+@section('breadcrumb')
+<section class="py-2 px-6">
+    <div class="flex flex-wrap items-center">
+        <div class="mb-5 lg:mb-0">
+            <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
+            <div class="flex items-center">
+                <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                    <span class="inline-block mr-2">
+                        <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M14.6666 5.66667L9.66662 1.28333C9.20827 0.873372 8.6149 0.646725 7.99996 0.646725C7.38501 0.646725 6.79164 0.873372 6.33329 1.28333L1.33329 5.66667C1.0686 5.9034 0.857374 6.1938 0.713683 6.51854C0.569993 6.84328 0.497134 7.1949 0.499957 7.55V14.8333C0.499957 15.4964 0.763349 16.1323 1.23219 16.6011C1.70103 17.0699 2.33692 17.3333 2.99996 17.3333H13C13.663 17.3333 14.2989 17.0699 14.7677 16.6011C15.2366 16.1323 15.5 15.4964 15.5 14.8333V7.54167C15.5016 7.18797 15.4282 6.83795 15.2845 6.51474C15.1409 6.19152 14.9303 5.90246 14.6666 5.66667V5.66667ZM9.66662 15.6667H6.33329V11.5C6.33329 11.279 6.42109 11.067 6.57737 10.9107C6.73365 10.7545 6.94561 10.6667 7.16662 10.6667H8.83329C9.0543 10.6667 9.26626 10.7545 9.42255 10.9107C9.57883 11.067 9.66662 11.279 9.66662 11.5V15.6667ZM13.8333 14.8333C13.8333 15.0543 13.7455 15.2663 13.5892 15.4226C13.4329 15.5789 13.221 15.6667 13 15.6667H11.3333V11.5C11.3333 10.837 11.0699 10.2011 10.6011 9.73223C10.1322 9.26339 9.49633 9 8.83329 9H7.16662C6.50358 9 5.8677 9.26339 5.39886 9.73223C4.93002 10.2011 4.66662 10.837 4.66662 11.5V15.6667H2.99996C2.77894 15.6667 2.56698 15.5789 2.4107 15.4226C2.25442 15.2663 2.16662 15.0543 2.16662 14.8333V7.54167C2.16677 7.42335 2.19212 7.30641 2.24097 7.19865C2.28982 7.09089 2.36107 6.99476 2.44996 6.91667L7.44996 2.54167C7.60203 2.40807 7.79753 2.33439 7.99996 2.33439C8.20238 2.33439 8.39788 2.40807 8.54996 2.54167L13.55 6.91667C13.6388 6.99476 13.7101 7.09089 13.7589 7.19865C13.8078 7.30641 13.8331 7.42335 13.8333 7.54167V14.8333Z"
+                                fill="currentColor"></path>
+                        </svg></span>
+                    <span>{{ __('Home') }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+@endsection
+@section('content')
+    <div class="container px-4 mx-auto">
         @can('show_total_stats')
-            <div class="row">
-                <div class="col-md-6 col-lg-3">
-                    <div class="card border-0">
-                        <div class="card-body p-0 d-flex align-items-center shadow-sm">
-                            <div class="bg-gradient-primary p-4 mfe-3 rounded-left">
+            <div class="flex flex-wrap -m-4">
+                <div class="w-full lg:w-1/4 p-4">
+                    <div class="p-6 rounded bg-white">
+                        <div class="flex mb-2">
+                            <span class="inline-block mr-2">
                                 <i class="bi bi-bar-chart font-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="text-value text-primary">{{ format_currency($revenue) }}</div>
-                                <div class="text-muted text-uppercase font-weight-bold small">{{ __('Revenue') }}</div>
-                            </div>
+                            </span>
+                            <h3 class="text-sm text-gray-600">
+                                {{ __('Revenue') }}
+                            </h3>
+                            <h2 class="mb-2 text-3xl font-bold">{{ format_currency($revenue) }}</h2>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="card border-0">
-                        <div class="card-body p-0 d-flex align-items-center shadow-sm">
-                            <div class="bg-gradient-warning p-4 mfe-3 rounded-left">
+                <div class="w-full lg:w-1/4 p-4">
+                    <div class="p-6 rounded bg-white">
+                        <div class="flex mb-2">
+                            <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-left font-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="text-value text-warning">{{ format_currency($sale_returns) }}</div>
-                                <div class="text-muted text-uppercase font-weight-bold small">{{ __('Sales Return') }}</div>
-                            </div>
+                            </span>
+                            <h3 class="text-sm text-gray-600">
+                                {{ __('Sales Return') }}
+                            </h3>
+                            <h2 class="mb-2 text-3xl font-bold">{{ format_currency($sale_returns) }}</h2>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="card border-0">
-                        <div class="card-body p-0 d-flex align-items-center shadow-sm">
-                            <div class="bg-gradient-success p-4 mfe-3 rounded-left">
+                <div class="w-full lg:w-1/4 p-4">
+                    <div class="p-6 rounded bg-white">
+                        <div class="flex mb-2">
+                            <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-right font-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="text-value text-success">{{ format_currency($purchase_returns) }}</div>
-                                <div class="text-muted text-uppercase font-weight-bold small">{{ __('Purchases Return') }}
-                                </div>
-                            </div>
+                            </span>
+                            <h3 class="text-sm text-gray-600">
+                                {{ __('Purchases Return') }}
+                            </h3>
+                            <h2 class="mb-2 text-3xl font-bold">{{ format_currency($purchase_returns) }}</h2>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
-                    <div class="card border-0">
-                        <div class="card-body p-0 d-flex align-items-center shadow-sm">
-                            <div class="bg-gradient-info p-4 mfe-3 rounded-left">
+
+                <div class="w-full lg:w-1/4 p-4">
+                    <div class="p-6 rounded bg-white">
+                        <div class="flex mb-2">
+                            <span class="inline-block mr-2">
                                 <i class="bi bi-trophy font-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="text-value text-info">{{ format_currency($profit) }}</div>
-                                <div class="text-muted text-uppercase font-weight-bold small">{{ __('Profit') }}</div>
-                            </div>
+                            </span>
+                            <h3 class="text-sm text-gray-600">
+                                {{ __('Profit') }}
+                            </h3>
+                            <h2 class="mb-2 text-3xl font-bold">{{ format_currency($profit) }}</h2>
                         </div>
                     </div>
                 </div>
@@ -71,21 +87,21 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="row mb-4">
+            <div class="flex flex-wrap mb-4">
                 @can('show_weekly_sales_purchases')
-                    <div class="col-lg-7">
+                    <div class="lg:w-3/5 sm:w-full px-2">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-header">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
                             </div>
-                            <div class="card-body">
+                            <div class="p-4">
                                 <canvas id="salesPurchasesChart"></canvas>
                             </div>
                         </div>
                     </div>
                 @endcan
                 @can('show_month_overview')
-                    <div class="col-lg-5">
+                    <div class="lg:w-2/5 sm:w-full px-2">
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-header">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
@@ -103,12 +119,12 @@
 
         @can('show_monthly_cashflow')
             <div class="row">
-                <div class="col-lg-12">
+                <div class="w-full px-4">
                     <div class="card border-0 shadow-sm">
                         <div class="card-header">
                             {{ __('Monthly Cash Flow (Payment Sent & Received)') }}
                         </div>
-                        <div class="card-body">
+                        <div class="p-4">
                             <canvas id="paymentChart"></canvas>
                         </div>
                     </div>
@@ -116,14 +132,14 @@
             </div>
         @endcan
     </div>
-</x-app-layout>
+@endsection
 
 @section('third_party_scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"
         integrity="sha512-asxKqQghC1oBShyhiBwA+YgotaSYKxGP1rcSYTDrB0U6DxwlJjU59B67U8+5/++uFjcuVM8Hh5cokLjZlhm3Vg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{ asset('js/chart-config.js') }}"></script>
 @endsection
 
 @push('page_scripts')
-    <script src="{{ asset('js/chart-config.js') }}"></script>
 @endpush

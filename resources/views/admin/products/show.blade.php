@@ -11,9 +11,9 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid mb-4">
+    <div class="container px-4 mx-auto mb-4">
         <div class="row mb-3">
-            <div class="col-md-12">
+            <div class="w-full px-4">
                 {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(
                     $product->product_code,
                     $product->product_barcode_symbology,
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-9">
                 <div class="card h-100">
-                    <div class="card-body">
+                    <div class="p-4">
                         <x-table>
                             <x-table.tr>
                                 <x-table.th>{{__('Product Code')}}</x-table.th>
@@ -94,7 +94,7 @@
 
             <div class="col-lg-3">
                 <div class="card h-100">
-                    <div class="card-body">
+                    <div class="p-4">
                         @forelse($product->getMedia('images') as $media)
                             <img src="{{ $media->getUrl() }}" alt="Product Image" class="img-fluid img-thumbnail mb-2">
                         @empty

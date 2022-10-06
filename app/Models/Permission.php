@@ -3,9 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Support\HasAdvancedFilter;
 
 class Permission extends Model
 {
+    use HasAdvancedFilter;
+
+    public $orderable = [
+        'id',
+        'name',
+        'guard_name',
+        'created_at',
+        'updated_at',
+    ];
+    public $filterable = [
+        'id',
+        'name',
+        'guard_name',
+        'created_at',
+        'updated_at',
+    ];
+
     protected $guarded = ['id'];
     protected $fillable = array('name', 'label', 'description');
 

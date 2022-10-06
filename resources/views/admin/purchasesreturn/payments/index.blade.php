@@ -14,12 +14,12 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container px-4 mx-auto">
         <div class="row">
             <div class="col-12">
                 @include('utils.alerts')
                 <div class="card">
-                    <div class="card-body">
+                    <div class="p-4">
                         <div class="table-responsive">
                             
                         </div>

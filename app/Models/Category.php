@@ -4,10 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
     use HasAdvancedFilter;
+
+    public function __construct(array $attributes = array())
+    {
+        $this->setRawAttributes(array(
+            'category_code' => Str::random(8)
+        ), true);
+        parent::__construct($attributes);
+    }
 
     public $orderable = [
         'id' , 'category_code' ,'category_name',
