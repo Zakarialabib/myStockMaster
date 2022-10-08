@@ -9,10 +9,10 @@
             </select>
             @can('role_delete')
                 <button
-                    class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                     type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled"
                     {{ $this->selectedCount ? '' : 'disabled' }}>
-                    {{__('Delete')}}
+                            <i class="fas fa-trash"></i>
                 </button>
             @endcan
         </div>
@@ -48,7 +48,7 @@
                             <input type="checkbox" value="{{ $role->id }}" wire:model="selected">
                         </x-table.td>
                         <x-table.td>
-                            {{ $role->title }}
+                            {{ $role->name }}
                         </x-table.td>
                         <x-table.td class="flex flex-wrap">
                             @foreach ($role->permissions as $key => $entry)
@@ -57,26 +57,25 @@
                         </x-table.td>
                         <x-table.td>
                             <div class="inline-flex">
-                                @can('role_show')
-                                    <a class="btn btn-sm text-white bg-blue-500 border-blue-800 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300 mr-2"
-                                        href="{{ route('admin.roles.show', $role) }}">
-                                        {{__('Show')}}
-                                    </a>
-                                @endcan
-                                @can('role_edit')
-                                    <a class="btn btn-sm text-white bg-green-500 border-green-800 hover:bg-green-600 active:bg-green-700 focus:ring-green-300mr-2"
-                                        href="{{ route('admin.roles.edit', $role) }}">
-                                        {{__('Edit')}}
-                                    </a>
-                                @endcan
-                                @can('role_delete')
-                                    <button
-                                        class="btn btn-sm text-white bg-red-500 border-red-800 hover:bg-red-600 active:bg-red-700 focus:ring-red-300 mr-2"
-                                        type="button" wire:click="confirm('delete', {{ $role->id }})"
-                                        wire:loading.attr="disabled">
-                                        {{__('Delete')}}
-                                    </button>
-                                @endcan
+                                <x-primary-button
+                                    class="bg-blue-500 border-blue-800 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300 mr-2"
+                                    wire:click="showModal({{ $role->id }})" wire:loading.attr="disabled">
+                                    <i class="fas fa-eye"></i>
+                                </x-primary-button>
+
+                                <x-primary-button
+                                    class="bg-green-500 border-green-800 hover:bg-green-600 active:bg-green-700 focus:ring-green-300mr-2"
+                                    wire:click="editModal({{ $role->id }})" wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                </x-primary-button>
+
+                                <x-primary-button
+                                    class=" bg-red-500 border-red-800 hover:bg-red-600 active:bg-red-700 focus:ring-red-300 mr-2"
+                                    type="button" wire:click="confirm('delete', {{ $role->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                </x-primary-button>
+
                             </div>
                         </x-table.td>
                     </x-table.tr>
@@ -104,15 +103,132 @@
             {{ $roles->links() }}
         </div>
     </div>
+
+    <x-modal>
+        <x-slot name="title">
+            {{ __('show') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <x-table>
+                <x-slot name="thead">
+                    <x-table.th>#</x-table.th>
+                    <x-table.th>{{ __('Title') }}</x-table.th>
+                    <x-table.th>{{ __('Permissions') }}</x-table.th>
+                </x-slot>
+                <x-table.tbody>
+                    <x-table.tr>
+                        <x-table.td>
+                            {{ $role->id }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ $role->title }}
+                        </x-table.td>
+                        <x-table.td class="flex flex-wrap">
+                            @foreach ($role->permissions as $key => $entry)
+                                <span class="badge badge-relationship">{{ $entry->title }}</span>
+                            @endforeach
+                        </x-table.td>
+                    </x-table.tr>
+                </x-table.tbody>
+            </x-table>
+        </x-slot>
+    </x-modal>
+
+
+
+    <x-modal wire:model="editModal">
+        <x-slot name="title">
+            {{ __('edit') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="update">
+                <div class="form-group">
+                    <label for="title">{{ __('Title') }}</label>
+                    <input type="text" class="form-control" id="title" wire:model="role.title">
+                    @error('role.title')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <x-select-list
+                        class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                        required id="permissions" name="permissions" wire:model="permissions" :options="$this->listsForFields['permissions']"
+                        multiple />
+                </div>
+                <div class="w-full flex justify-end">
+                    <x-primary-button type="submit" wire:loading.attr="disabled">
+                        {{ __('Save') }}
+                    </x-primary-button>
+
+                    <x-primary-button class="ml-2" wire:click="$set('editModal', false)" wire:loading.attr="disabled">
+                        {{ __('Cancel') }}
+                    </x-primary-button>
+
+                </div>
+            </form>
+
+        </x-slot>
+    </x-modal>
+
+    <x-modal wire:model="createModal">
+        <x-slot name="title">
+            {{ __('create') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="store">
+                <div class="form-group">
+                    <label for="title">{{ __('Title') }}</label>
+                    <input type="text" class="form-control" id="title" wire:model="role.title">
+                    @error('role.title')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <x-select-list
+                        class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                        required id="permissions" name="permissions" wire:model="permissions" :options="$this->listsForFields['permissions']"
+                        multiple />
+                </div>
+                <div class="w-full flex justify-end">
+                    <x-primary-button type="submit" wire:loading.attr="disabled">
+                        {{ __('Save') }}
+                    </x-primary-button>
+
+                    <x-primary-button class="ml-2" wire:click="$set('createModal', false)"
+                        wire:loading.attr="disabled">
+                        {{ __('Cancel') }}
+                    </x-primary-button>
+
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
 </div>
+
+
 
 @push('page_scripts')
     <script>
-        Livewire.on('confirm', e => {
-            if (!confirm("{{ __('Are you sure') }}")) {
-                return
-            }
-            @this[e.callback](...e.argv)
-        });
+        document.addEventListener('livewire:load', function() {
+            window.livewire.on('deleteModal', roleId => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('delete', roleId)
+                    }
+                })
+            })
+        })
     </script>
 @endpush
+

@@ -8,12 +8,12 @@
                 @endforeach
             </select>
             {{-- @can('permission_delete') --}}
-                <button
-                    class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                    type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled"
-                    {{ $this->selectedCount ? '' : 'disabled' }}>
-                    {{__('Delete')}}
-                </button>
+            <button
+                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled"
+                {{ $this->selectedCount ? '' : 'disabled' }}>
+                {{ __('Delete') }}
+            </button>
             {{-- @endcan --}}
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
@@ -32,86 +32,82 @@
         <x-slot name="thead">
             <x-table.th>#</x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
-                    {{__('Name')}}
-                    @include('components.table.sort', ['field' => 'name'])
-                </div>
-            </x-table.th>
-            <x-table.th sortable wire:click="sortBy('description')" :direction="$sorts['description'] ?? null">
-                    {{__('Description')}}
-                    @include('components.table.sort', ['field' => 'description'])
-            </x-table.th>
-            <x-table.th sortable wire:click="sortBy('created_at')" :direction="$sorts['created_at'] ?? null">
-                    {{__('Created At')}}
-                    @include('components.table.sort', ['field' => 'created_at'])
-            </x-table.th>
-            <x-table.th sortable wire:click="sortBy('updated_at')" :direction="$sorts['updated_at'] ?? null">   
-                    {{__('Updated At')}}
-                @include('components.table.sort', ['field' => 'updated_at'])
-            </x-table.th>
-            <x-table.th>{{__('Actions')}}</x-table.th>
-        </x-slot>
-        <x-slot name="tbody">
-            @forelse ($adjustments as $adjustment)
-                <x-table.tr wire:key="row-{{ $adjustment->id }}">
-                    <x-table.td>
-                        <input wire:model="selected" value="{{ $adjustment->id }}" />
-                    </x-table.td>
-                    <x-table.td>{{ $adjustment->name }}</x-table.td>
-                    <x-table.td>{{ $adjustment->description }}</x-table.td>
-                    <x-table.td>{{ $adjustment->created_at->format('d/m/Y') }}</x-table.td>
-                    <x-table.td>{{ $adjustment->updated_at->format('d/m/Y') }}</x-table.td>
-                    <x-table.td>
-                        <div class="flex justify-center">
-                            {{-- @can('permission_show') --}}
-                                <a href="{{ route('adjustments.show', $adjustment->id) }}"
-                                    class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                                    type="button">
-                                    {{__('Show')}}
-                                </a>
-                            {{-- @endcan
-                            @can('permission_edit') --}}
-                                <a href="{{ route('adjustments.edit', $adjustment->id) }}"
-                                    class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                                    type="button">
-                                    {{__('Edit')}}
-                                </a>
-                            {{-- @endcan
-                            @can('permission_delete') --}}
-                                <button
-                                    class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                                    type="button" wire:click="confirm('delete', {{ $adjustment->id }})"
-                                    wire:loading.attr="disabled">
-                                    {{__('Delete')}}
-                            </button>
-                            {{-- @endcan --}}
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
-            @empty
-                <x-table.tr>
-                    <x-table.td colspan="6">
-                        <div class="flex justify-center">
-                            {{__('No results found for the query')}} "{{ $search }}".
-                        </div>
-                    </x-table.td>
-                </x-table.tr>   
-            @endforelse
-        </x-slot>
-    </x-table>
+                {{ __('Name') }}
+                @include('components.table.sort', ['field' => 'name'])
+</div>
+</x-table.th>
+<x-table.th sortable wire:click="sortBy('description')" :direction="$sorts['description'] ?? null">
+    {{ __('Description') }}
+    @include('components.table.sort', ['field' => 'description'])
+</x-table.th>
+<x-table.th sortable wire:click="sortBy('created_at')" :direction="$sorts['created_at'] ?? null">
+    {{ __('Created At') }}
+    @include('components.table.sort', ['field' => 'created_at'])
+</x-table.th>
+<x-table.th sortable wire:click="sortBy('updated_at')" :direction="$sorts['updated_at'] ?? null">
+    {{ __('Updated At') }}
+    @include('components.table.sort', ['field' => 'updated_at'])
+</x-table.th>
+<x-table.th>{{ __('Actions') }}</x-table.th>
+</x-slot>
+<x-slot name="tbody">
+    @forelse ($adjustments as $adjustment)
+        <x-table.tr wire:key="row-{{ $adjustment->id }}">
+            <x-table.td>
+                <input wire:model="selected" value="{{ $adjustment->id }}" />
+            </x-table.td>
+            <x-table.td>{{ $adjustment->name }}</x-table.td>
+            <x-table.td>{{ $adjustment->description }}</x-table.td>
+            <x-table.td>{{ $adjustment->created_at->format('d/m/Y') }}</x-table.td>
+            <x-table.td>{{ $adjustment->updated_at->format('d/m/Y') }}</x-table.td>
+            <x-table.td>
+                <div class="flex justify-center">
 
-    <div class="p-4">
-        <div class="pt-3">
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-            @endif
-            {{ $adjustments->links() }}
-        </div>
+                    <a href="{{ route('adjustments.show', $adjustment->id) }}"
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        wire:loading.attr="disabled">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    <a href="{{ route('adjustments.edit', $adjustment->id) }}"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        wire:loading.attr="disabled">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <button type="button" wire:click="confirm('delete', {{ $adjustment->id }})"
+                        wire:loading.attr="disabled"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </x-table.td>
+        </x-table.tr>
+    @empty
+        <x-table.tr>
+            <x-table.td colspan="6">
+                <div class="flex justify-center">
+                    {{ __('No results found for the query') }} "{{ $search }}".
+                </div>
+            </x-table.td>
+        </x-table.tr>
+    @endforelse
+</x-slot>
+</x-table>
+
+<div class="p-4">
+    <div class="pt-3">
+        @if ($this->selectedCount)
+            <p class="text-sm leading-5">
+                <span class="font-medium">
+                    {{ $this->selectedCount }}
+                </span>
+                {{ __('Entries selected') }}
+            </p>
+        @endif
+        {{ $adjustments->links() }}
     </div>
+</div>
 </div>
 
 @push('page_scripts')

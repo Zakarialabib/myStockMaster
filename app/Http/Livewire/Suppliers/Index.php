@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Supplier;
+use App\Exports\SupplierExport;
+use App\Imports\SupplierImport;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -96,6 +98,12 @@ class Index extends Component
     public function createModal()
     {
         abort_if(Gate::denies('supplier_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->supplier = new Supplier();
         
         $this->createModal = true;
     }
@@ -104,7 +112,7 @@ class Index extends Component
     {
         $this->validate();
 
-        $supplier = Supplier::create($this->supplier);
+        $this->supplier->save();
 
         $this->alert('success', 'Supplier created successfully.');
 
@@ -121,8 +129,13 @@ class Index extends Component
     public function editModal(Supplier $supplier)
     {
         abort_if(Gate::denies('supplier_edit'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
         
         $this->supplier = $supplier;
+
         $this->editModal = true;
     }
 
@@ -157,5 +170,33 @@ class Index extends Component
 
         $this->selected = [];
     }
+
+    public function import()
+    {
+        abort_if(Gate::denies('supplier_import'), 403);
+
+        $this->validate([
+            'import_file' => 'required',
+        ]);
+
+        $this->validate([
+            'import_file' => [
+                'required',
+                'file',
+            ],
+        ]);
+
+        Supplier::import(new SupplierImport, request()->file('import_file'));
+
+        $this->alert('success', 'Supplier Imported Successfully');
+    }
+
+    public function export()
+    {
+        abort_if(Gate::denies('supplier_export'), 403);
+
+        return (new SupplierExport)->download('supplier.xlsx');
+    }
+
     
 }

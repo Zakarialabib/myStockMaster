@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\BarcodeController;
@@ -25,6 +25,8 @@ use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\WarehouseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('currencies', CurrencyController::class)->except('show'); 
     
     //Expense Category
-    Route::resource('expense-categories', ExpenseCategoryController::class)->except('show', 'create');
+    Route::resource('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
     
     //Expense
     Route::resource('expenses', ExpenseController::class);
@@ -68,6 +70,12 @@ Route::group(['middleware' => 'auth'], function () {
     
     //Suppliers
     Route::resource('suppliers', SuppliersController::class);
+
+    //Warehouses
+    Route::resource('warehouses', WarehouseController::class);
+
+    //Brands
+    Route::resource('brands', BrandsController::class);
 
      //Print Barcode
      Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');

@@ -12,7 +12,7 @@
 
                 <x-slot name="trigger">
                     <x-primary-button class="flex items-center">
-                        {{__('Actions')}}
+                        {{ __('Actions') }}
                     </x-primary-button>
                 </x-slot>
 
@@ -97,19 +97,21 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-end">
-                            <x-primary-button wire:click="editModal({{ $customer->id }})"
-                                wire:loading.attr="disabled">
-                                {{ __('Edit') }}
-                            </x-primary-button>
                             <x-primary-button wire:click="showModal({{ $customer->id }})"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                 wire:loading.attr="disabled">
-                                {{ __('Show') }}
+                                <i class="fas fa-eye"></i>
+                            </x-primary-button>
+                            <x-primary-button wire:click="editModal({{ $customer->id }})"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
                             </x-primary-button>
                             <button
-                                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
                                 type="button" wire:click="$emit('deleteModal', {{ $customer->id }})"
-                                wire:loading.attr="disabled">
-                                {{ __('Delete') }}
+                                wire:loading.attr="disabled"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </x-table.td>
@@ -127,8 +129,18 @@
         </x-table.tbody>
     </x-table>
 
-    <div class="px-6 py-3">
-        {{ $customers->links() }}
+    <div class="p-4">
+        <div class="pt-3">
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
+            {{ $customers->links() }}
+        </div>
     </div>
 
 

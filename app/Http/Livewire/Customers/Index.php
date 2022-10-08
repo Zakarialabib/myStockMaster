@@ -5,21 +5,23 @@ namespace App\Http\Livewire\Customers;
 use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Customer;
 use App\Exports\CustomerExport;
+use App\Support\HasAdvancedFilter;
 use App\Imports\CustomerImport;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
 
     public $customer;
 
     public int $perPage;
+
+    public int $selectPage;
 
     public $listeners = ['confirmDelete', 'delete', 'export', 'import','createModal','showModal','editModal'];
 
@@ -30,8 +32,6 @@ class Index extends Component
     public $editModal; 
 
     public array $orderable;
-
-    public $selectPage;
 
     public string $search = '';
 
@@ -125,6 +125,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->customer = new Customer();
+
         $this->createModal = true;
     }
 
@@ -132,7 +138,7 @@ class Index extends Component
     {
         $this->validate();
 
-        Customer::create($this->customer);
+        $this->customer->save();
 
         $this->createModal = false;
 
@@ -151,6 +157,10 @@ class Index extends Component
     public function editModal(Customer $customer)
     {
         abort_if(Gate::denies('customer_edit'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
 
         $this->customer = $customer;
 

@@ -3,20 +3,28 @@
 namespace App\Http\Livewire\Currency;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Support\HasAdvancedFilter;
 use App\Models\Currency;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+
+    public $currency;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal;
 
     public array $orderable;
 
@@ -58,6 +66,13 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public array $rules = [
+        'currency.currency_name' => 'required|string|max:255',
+        'currency.code' => 'required|string|max:255',
+        'currency.symbol' => 'required|string|max:255',
+        'currency.exchange_rate' => 'required|numeric',
+    ];
+
     public function mount()
     {
         $this->sortBy            = 'id';
@@ -81,18 +96,58 @@ class Index extends Component
         return view('livewire.currency.index', compact('currencies'));
     }
 
+    public function createModal()
+    {
+        abort_if(Gate::denies('currency_create'), 403);
+
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        abort_if(Gate::denies('currency_create'), 403);
+        
+        $this->currency = new Currency();
+
+        $this->showModal = true;
+
+        $this->alert('success', 'Currency created successfully!');
+    }
+
     public function showModal(Currency $currency)
     {
         abort_if(Gate::denies('currency_show'), 403);
 
-        $this->emit('showModal', $currency);
+        $this->currency = $currency;
+
+        $this->showModal = true;
     }
 
     public function editModal(Currency $currency)
     {
         abort_if(Gate::denies('currency_edit'), 403);
 
-        $this->emit('editModal', $currency);
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->currency = $currency;
+
+        $this->editModal = true;
+
+    }
+
+    public function update(Currency $currency)
+    {
+        abort_if(Gate::denies('currency_edit'), 403);
+
+        $this->validate();
+
+        $currency->update($this->currency);
+
+        $this->showModal = false;
+
+        $this->alert('success', 'Currency updated successfully!');
     }
 
     public function delete(Currency $currency)
@@ -100,6 +155,8 @@ class Index extends Component
         abort_if(Gate::denies('currency_delete'), 403);
 
         $currency->delete();
+
+        $this->alert('success', 'Currency deleted successfully!');
     }
     
 }

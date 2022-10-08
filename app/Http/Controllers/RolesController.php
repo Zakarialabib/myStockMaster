@@ -12,14 +12,14 @@ class RolesController extends Controller
     public function index() {
         abort_if(Gate::denies('access_user_management'), 403);
 
-        return view('user::roles.index');
+        return view('admin.roles.index');
     }
 
 
     public function create() {
         abort_if(Gate::denies('access_user_management'), 403);
 
-        return view('user::roles.create');
+        return view('admin.roles.create');
     }
 
 
@@ -46,7 +46,7 @@ class RolesController extends Controller
     public function edit(Role $role) {
         abort_if(Gate::denies('access_user_management'), 403);
 
-        return view('user::roles.edit', compact('role'));
+        return view('admin.roles.edit', compact('role'));
     }
 
 

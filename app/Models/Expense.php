@@ -8,7 +8,6 @@ use App\Support\HasAdvancedFilter;
 
 class Expense extends Model
 {
-
     use HasAdvancedFilter;
 
     public $orderable = [

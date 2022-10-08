@@ -12,28 +12,28 @@ class RoleController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_access'), 403);
 
         return view('admin.roles.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_create'), 403);
 
         return view('admin.roles.create');
     }
 
     public function edit(Role $role)
     {
-        abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_edit'), 403);
 
         return view('admin.roles.edit', compact('role'));
     }
 
     public function show(Role $role)
     {
-        abort_if(Gate::denies('role_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_show'), 403);
 
         $role->load('permissions');
 

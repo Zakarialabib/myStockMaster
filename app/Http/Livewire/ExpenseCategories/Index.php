@@ -3,21 +3,30 @@
 namespace App\Http\Livewire\ExpenseCategories;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\ExpenseCategory;
-use Illuminate\Http\Response;
+use App\Support\HasAdvancedFilter;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+
+    public $expenseCategory;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete'];
+    public $listeners = ['show','confirmDelete', 'delete', 'createModal', 'showModal', 'editModal'];
+
+    public $show;
+
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal;
 
     public array $orderable;
 
@@ -59,6 +68,11 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public array $rules = [
+        'expenseCategory.category_name' => 'required',
+        'expenseCategory.category_description' => '',
+    ];
+
     public function mount()
     {
         $this->sortField = 'id';
@@ -83,9 +97,64 @@ class Index extends Component
         return view('livewire.expense-categories.index', compact('expenseCategories'));
     }
 
+    public function createModal()
+    {
+        abort_if(Gate::denies('expense_category_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->createModal = true;
+    }
+
+    public function showModal(ExpenseCategory $expenseCategory)
+    {
+        abort_if(Gate::denies('expense_category_show'), 403);
+
+        $this->expenseCategory = $expenseCategory;
+
+        $this->showModal = true;
+    }
+
+    public function editModal(ExpenseCategory $expenseCategory)
+    {
+        abort_if(Gate::denies('expense_category_edit'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->expenseCategory = $expenseCategory;
+
+        $this->editModal = true;
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        $this->expenseCategory->save();
+
+        $this->createModal = false;
+
+        $this->alert('success', 'Expense Category Saved Successfully.');
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $this->expenseCategory->save();
+
+        $this->editModal = false;
+
+        $this->alert('success', 'Expense Category Updated Successfully.');
+    }
+
     public function deleteSelected()
     {
-        abort_if(Gate::denies('expense_category_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('expense_category_delete'), 403);
 
         ExpenseCategory::whereIn('id', $this->selected)->delete();
 
@@ -94,8 +163,10 @@ class Index extends Component
 
     public function delete(ExpenseCategory $expenseCategory)
     {
-        abort_if(Gate::denies('expense_category_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('expense_category_delete'), 403);
 
         $expenseCategory->delete();
+
+        $this->alert('success', 'Expense Category Deleted Successfully.');
     }
 }

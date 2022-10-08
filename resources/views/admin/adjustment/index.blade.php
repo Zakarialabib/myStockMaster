@@ -3,9 +3,9 @@
 @section('title', 'Adjustments')
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
-        <div class="flex flex-wrap items-center">
-            <div class="mb-5 lg:mb-0">
+<section class="py-2 px-6">
+    <div class="flex flex-wrap items-center justify-between">
+        <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Adjustments list') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
@@ -37,21 +37,15 @@
                     </a>
                 </div>
             </div>
+            <div class="float-right">
+                <!-- Button trigger livewire modal -->
+                <x-primary-button onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-primary-button>
+            </div>
         </div>
     </section>
 @endsection
 @section('content')
-    <div class="card bg-white dark:bg-dark-eval-1">
-        <div class="p-6 rounded-t rounded-r mb-0 border-b border-blueGray-200">
-            <div class="">
-                <a href="{{ route('adjustments.create') }}"
-                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                    {{ __('Add Adjustment') }} <i class="bi bi-plus"></i>
-                </a>
-            </div>
-            <div class="p-4">
-                <livewire:adjustment.index />
-            </div>
-        </div>
+    <div class="container px-4 mx-auto">
+        <livewire:adjustment.index />
     </div>
 @endsection

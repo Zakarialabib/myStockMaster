@@ -43,6 +43,16 @@ Refactoring the code to use the new Laravel 9 features, livewire capacities, & t
 - 1.0.12 - Optimization of Customer management (Livewire modals)
 - 1.0.13 - Optimization of Supplier management (Livewire modals)
 - 1.0.14 - Fixing migrations and seeds
+- 1.0.15 - Warehouse Management
+- 1.0.16 - Added Quatation Management
+- 1.0.17 - Added Brand Management  
+- 1.0.18 - Added Import & Export Products
+- 1.0.19 - Added Import & Export Customers
+- 1.0.20 - Added Import & Export Suppliers
+- 1.0.21 - Added Import & Export Permissions
+- 1.0.22 - Added Import & Export Sales  
+- 1.0.23 - Added Import & Export Purchases
+
 
 ## Requirements
 

@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Products;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
@@ -12,7 +12,7 @@ use App\Models\Category as CategoryModel;
 
 class Category extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, LivewireAlert, WithFileUploads;
 
     public $category;
     public $category_code;
@@ -103,6 +103,10 @@ class Category extends Component
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
         $this->createModal = true;
 
     }
@@ -117,12 +121,16 @@ class Category extends Component
 
         $this->createModal = false;
 
-        toast('Product Category Created!', 'success');
+        $this->alert('success', 'Category created successfully.');
     }
 
     public function editModal(CategoryModel $category)
     {
         abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
 
         $this->category = $category;
 
@@ -139,7 +147,7 @@ class Category extends Component
 
         $this->editModal = false;
 
-        toast('Product Category Updated!', 'success');
+        $this->alert('success', 'Category updated successfully.');
     }
 
     // Show modal
@@ -148,8 +156,13 @@ class Category extends Component
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->category = $category;
+
         $this->showModal = true;
-        $this->emit('showModal', $category);
     }
 
     public function deleteSelected()
@@ -169,6 +182,8 @@ class Category extends Component
             return back()->withErrors('Can\'t delete beacuse there are products associated with this category.');
         } else {
             $category->delete();
+
+            $this->alert('success', 'Category deleted successfully.');
         }
     }
 

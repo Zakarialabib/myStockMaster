@@ -1,5 +1,5 @@
 <div class="flex flex-col justify-center items-center bg-white">
-    <div class="w-full mt-6 px-8 py-4 shadow-md overflow-hidden sm:rounded-lg">
+    <div class="w-full mt-2 py-2 px-6 shadow-md overflow-hidden sm:rounded-lg">
         {{ $slot }}
     </div>
 </div>

@@ -3,16 +3,26 @@
 namespace App\Http\Livewire\Adjustment;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Adjustment;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+
+    public $adjustment;
+
+    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal;
 
     public int $perPage;
 
@@ -56,6 +66,12 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public array $rules = [
+        'adjustment.date' => ['date', 'required'],
+        'adjustment.note' => ['string', 'max:255', 'nullable'],
+        'adjustment.reference' => ['string', 'max:255', 'nullable'],
+    ];
+
     public function mount()
     {
         $this->sortBy            = 'id';
@@ -78,6 +94,87 @@ class Index extends Component
         $adjustments = $query->paginate($this->perPage);
 
         return view('livewire.adjustment.index', compact('adjustments'));
+    }
+
+    public function createModal()
+    {
+        abort_if(Gate::denies('adjustment_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->adjustment = new Adjustment();
+
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        abort_if(Gate::denies('adjustment_create'), 403);
+
+        $this->validate();
+
+        Adjustment::create($this->adjustment);
+
+        $this->reset('createModal');
+
+        $this->alert('success', 'Adjustment created successfully.');
+    }
+
+    public function editModal(Adjustment $adjustment)
+    {
+        abort_if(Gate::denies('adjustment_edit'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->adjustment = $adjustment;
+
+        $this->editModal = true;
+    }
+
+    public function update()
+    {
+        abort_if(Gate::denies('adjustment_edit'), 403);
+
+        $this->validate();
+
+        $this->adjustment->save();
+
+        $this->editModal = false;
+
+        $this->alert('success', 'Adjustment updated successfully.');
+    }
+
+    public function showModal(Adjustment $adjustment)
+    {
+        abort_if(Gate::denies('adjustment_show'), 403);
+
+        $this->adjustment = $adjustment;
+
+        $this->showModal = true;
+    }
+
+    public function deleteSelected()
+    {
+        abort_if(Gate::denies('adjustment_delete'), 403);
+
+        Adjustment::whereIn('id', $this->selected)->delete();
+
+        $this->resetSelected();
+
+        $this->alert('success', 'Adjustment deleted successfully.');
+    }
+
+    public function delete(Adjustment $adjustment)
+    {
+        abort_if(Gate::denies('adjustment_delete'), 403);
+
+        $adjustment->delete();
+
+        $this->alert('success', 'Adjustment deleted successfully.');
     }
 
 }

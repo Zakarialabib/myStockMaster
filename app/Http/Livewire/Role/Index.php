@@ -7,14 +7,22 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithConfirmation;
 use App\Http\Livewire\WithSorting;
+use App\Support\HasAdvancedFilter;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Permission;
 
 class Index extends Component
 {
-    use WithPagination;
-    use WithSorting;
-    use WithConfirmation;
+    use WithPagination, WithSorting, HasAdvancedFilter, LivewireAlert;
+
+    public $role;
+
+    public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
+
+    public $createModal;
+
+    public $editModal;
 
     public int $perPage;
 
@@ -25,6 +33,8 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
+
+    public array $listsForFields = [];
 
     protected $queryString = [
         'search' => [
@@ -58,6 +68,17 @@ class Index extends Component
         $this->selected = [];
     }
 
+    protected function rules(): array
+    {
+        return [
+        'role.name' => 'required|string|max:255',
+        'role.label' => 'string|nullable|max:255',
+        'role.guard_name' => 'required|string|max:255',
+        'role.description' => 'string|nullable|max:255',
+        'role.status' => 'string|nullable|max:255',
+        ];
+    }
+
     public function mount()
     {
         $this->sortBy            = 'id';
@@ -65,6 +86,8 @@ class Index extends Component
         $this->perPage           = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable         = (new Role())->orderable;
+        // $this->permissions = $this->role->permissions->pluck('id')->toArray();
+        $this->initListsForFields();
     }
 
     public function render()
@@ -80,9 +103,61 @@ class Index extends Component
         return view('livewire.role.index', compact('roles'));
     }
 
+    public function createModal(Role $role)
+    {
+        abort_if(Gate::denies('role_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+        
+        $this->role = $role;
+
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        $this->role->save();
+        
+        $this->role->permissions()->sync($this->permissions);
+
+        $this->createModal = false;
+
+        $this->alert('success', 'Role created successfully.');
+    }
+    
+    public function editModal(Role $role)
+    {
+        abort_if(Gate::denies('role_edit'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->role = $role;
+
+        $this->editModal = true;
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $this->role->save();
+        
+        $this->role->permissions()->sync($this->permissions);
+
+        $this->editModal = false;
+
+        $this->alert('success', 'Role updated successfully.');
+    }
+
     public function deleteSelected()
     {
-        abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_delete'), 403);
 
         Role::whereIn('id', $this->selected)->delete();
 
@@ -91,8 +166,12 @@ class Index extends Component
 
     public function delete(Role $role)
     {
-        abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_delete'), 403);
 
         $role->delete();
+    }
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['permissions'] = Permission::pluck('name', 'id')->toArray();
     }
 }

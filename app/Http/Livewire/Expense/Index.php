@@ -3,21 +3,34 @@
 namespace App\Http\Livewire\Expense;
 
 use Livewire\Component;
-use App\Http\Livewire\WithConfirmation;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Exports\ExpenseExport;
+use App\Support\HasAdvancedFilter;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithConfirmation, WithFileUploads;
+    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+
+    public $expense;
 
     public int $perPage;
+
+    public int $selectPage;
     
-    public $listeners = ['confirmDelete', 'delete', 'export', 'showModal', 'editModal'];
+    public $listeners = ['show','confirmDelete', 'delete', 'export','createModal', 'showModal', 'editModal'];
+
+    public $show;
+    
+    public $showModal;
+
+    public $createModal;
+
+    public $editModal;
 
     public array $orderable;
 
@@ -27,9 +40,9 @@ class Index extends Component
 
     public bool $showFilters = false;
 
-    public $export;
+    public array $listsForFields = [];
 
-    public $selectAll;
+    public $export;
 
     public array $paginationOptions;
 
@@ -65,14 +78,25 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public array $rules = [
+        'expense.reference' => 'required|string|max:255',
+        'expense.category_id' => 'required|integer|exists:expense_categories,id',
+        'expense.date' => 'required|date',
+        'expense.amount' => 'required|numeric',
+        'expense.details' => 'nullable|string|max:255',
+        'expense.user_id' => '',
+        'expense.warehouse_id' => '',
+    ];
+
     public function mount()
     {
-        $this->selectAll = false;
+        $this->selectPage = false;
         $this->sortField = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Expense())->orderable;
+        $this->initListsForFields();
     }
 
     public function render()
@@ -106,26 +130,60 @@ class Index extends Component
         $expense->delete();
     }
 
+    public function createModal()
+    {
+        abort_if(Gate::denies('expense_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->createModal = true;
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        Expense::create($this->expense);
+
+        $this->alert('success', 'Expense created successfully.');
+
+        $this->createModal = false;
+    }
+
+
     public function showModal(Expense $expense)
     {
-        // abort_if(Gate::denies('customer_show'), 403);
+        abort_if(Gate::denies('customer_show'), 403);
 
-        $this->emit('showModal', $expense);
+        $this->expense = $expense;
     }
 
-    public function restore(Expense $expense)
+    public function editModal(Expense $expense)
     {
-        abort_if(Gate::denies('expense_delete'), 403);
+        abort_if(Gate::denies('expense_edit'), 403);
 
-        $expense->restore();
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->expense = $expense;
+
+        $this->editModal = true;
     }
 
-    public function forceDelete(Expense $expense)
+    public function update()
     {
-        abort_if(Gate::denies('expense_delete'), 403);
+        $this->validate();
 
-        $expense->forceDelete();
+        $this->expense->save();
+
+        $this->alert('success', 'Expense updated successfully.');
+
+        $this->editModal = false;
     }
+
 
     public function downloadSelected()
     {
@@ -159,6 +217,11 @@ class Index extends Component
         abort_if(Gate::denies('expense_download'), 403);
 
         return (new ExpenseExport([$expense]))->download('expenses.pdf');
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('category_name', 'id')->toArray();
     }
 
 }

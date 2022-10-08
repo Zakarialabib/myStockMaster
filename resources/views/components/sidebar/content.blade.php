@@ -1,4 +1,4 @@
-<x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3 overflow-auto">
+<x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3">
 
     <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('admin.dashboard')">
         <x-slot name="icon">
@@ -14,16 +14,24 @@
             ->uri(),
         'Products',
     )">
+        <x-slot name="icon">
+            <span class="inline-block mr-3">
+                <i class="fas fa-boxes w-5 h-5"></i>
+            </span>
+        </x-slot>
         @can('access_product_categories')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />
         @endcan
-        @can('create_products')
-            <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('products.create') }}" :active="request()->routeIs('products.create')" />
-        @endcan
         <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products.index') }}" :active="request()->routeIs('products.index')" />
         @can('print_barcodes')
             <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
+        @endcan
+        @can('access_product_brands')
+            <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('product-brands.index')" />
+        @endcan
+        @can('access_warehouse')
+            <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
         @endcan
     </x-sidebar.dropdown>
 
@@ -34,9 +42,11 @@
                 ->uri(),
             'Adjustments',
         )">
-            @can('create_adjustments')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('adjustments.create') }}" :active="request()->routeIs('adjustments.create')" />
-            @endcan
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-adjust w-5 h-5"></i>
+                </span>
+            </x-slot>
             <x-sidebar.sublink title="{{ __('All Adjustments') }}" href="{{ route('adjustments.index') }}"
                 :active="request()->routeIs('adjustments.index')" />
         </x-sidebar.dropdown>
@@ -49,14 +59,17 @@
                 ->uri(),
             'Quotations',
         )">
-            @can('create_quotations')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('quotations.create') }}" :active="request()->routeIs('quotations.create')" />
-            @endcan
+
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-file-invoice-dollar w-5 h-5"></i>
+                </span>
+            </x-slot>
             <x-sidebar.sublink title="{{ __('All Quotations') }}" href="{{ route('quotations.index') }}"
                 :active="request()->routeIs('quotations.index')" />
         </x-sidebar.dropdown>
     @endcan
-    
+
     @can('access_purchases')
         <x-sidebar.dropdown title="{{ __('Purchases') }}" :active="Str::startsWith(
             request()
@@ -64,11 +77,17 @@
                 ->uri(),
             'Purchases',
         )">
-            @can('create_purchases')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('purchases.create') }}" :active="request()->routeIs('purchases.create')" />
-            @endcan
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-shopping-cart w-5 h-5"></i>
+                </span>
+            </x-slot>
             <x-sidebar.sublink title="{{ __('All Purchases') }}" href="{{ route('purchases.index') }}"
                 :active="request()->routeIs('purchases.index')" />
+            @can('access_purchase_returns')
+                <x-sidebar.sublink title="{{ __('All Purchase Returns') }}" href="{{ route('purchase-returns.index') }}"
+                    :active="request()->routeIs('purchase-returns.index')" />
+            @endcan
         </x-sidebar.dropdown>
     @endcan
     @can('access_sales')
@@ -78,42 +97,21 @@
                 ->uri(),
             'Sales',
         )">
-            @can('create_sales')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('sales.create') }}" :active="request()->routeIs('sales.create')" />
-            @endcan
-            <x-sidebar.sublink title="{{ __('All Sales') }}" href="{{ route('sales.index') }}" :active="request()->routeIs('sales.index')" />
-        </x-sidebar.dropdown>
-    @endcan
-    @can('access_purchase_returns')
-        <x-sidebar.dropdown title="{{ __('Purchase Returns') }}" :active="Str::startsWith(
-            request()
-                ->route()
-                ->uri(),
-            'Purchase Returns',
-        )">
-            @can('create_purchase_returns')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('purchase-returns.create') }}"
-                    :active="request()->routeIs('purchase-returns.create')" />
-            @endcan
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-shopping-bag w-5 h-5"></i>
+                </span>
+            </x-slot>
 
-            <x-sidebar.sublink title="{{ __('All Purchase Returns') }}" href="{{ route('purchase-returns.index') }}"
-                :active="request()->routeIs('purchase-returns.index')" />
-        </x-sidebar.dropdown>
-    @endcan
-    @can('access_sale_returns')
-        <x-sidebar.dropdown title="{{ __('Sale Returns') }}" :active="Str::startsWith(
-            request()
-                ->route()
-                ->uri(),
-            'Sale Returns',
-        )">
-            @can('create_sale_returns')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('sale-returns.create') }}" :active="request()->routeIs('sale-returns.create')" />
+            <x-sidebar.sublink title="{{ __('All Sales') }}" href="{{ route('sales.index') }}" :active="request()->routeIs('sales.index')" />
+            @can('access_sale_returns')
+                <x-sidebar.sublink title="{{ __('All Sale Returns') }}" href="{{ route('sale-returns.index') }}"
+                    :active="request()->routeIs('sale-returns.index')" />
             @endcan
-            <x-sidebar.sublink title="{{ __('All Sale Returns') }}" href="{{ route('sale-returns.index') }}"
-                :active="request()->routeIs('sale-returns.index')" />
         </x-sidebar.dropdown>
     @endcan
+
+
     @can('access_expenses')
         <x-sidebar.dropdown title="{{ __('Expenses') }}" :active="Str::startsWith(
             request()
@@ -121,31 +119,20 @@
                 ->uri(),
             'Expenses',
         )">
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-money-bill-alt w-5 h-5"></i>
+                </span>
+            </x-slot>
+
             @can('access_expense_categories')
                 <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('expense-categories.index') }}"
                     :active="request()->routeIs('expense-categories.index')" />
             @endcan
-            @can('create_expenses')
-                <x-sidebar.sublink title="{{ __('Create') }}" href="{{ route('expenses.create') }}" :active="request()->routeIs('expenses.create')" />
-            @endcan
             <x-sidebar.sublink title="{{ __('All Expenses') }}" href="{{ route('expenses.index') }}" :active="request()->routeIs('expenses.index')" />
         </x-sidebar.dropdown>
     @endcan
-    @can('access_customers|access_suppliers')
-        <x-sidebar.dropdown title="{{ __('People') }}" :active="Str::startsWith(
-            request()
-                ->route()
-                ->uri(),
-            'People',
-        )">
-            @can('access_customers')
-                <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
-            @endcan
-            @can('access_suppliers')
-                <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />
-            @endcan
-        </x-sidebar.dropdown>
-    @endcan
+
     @can('access_reports')
         <x-sidebar.dropdown title="{{ __('Reports') }}" :active="Str::startsWith(
             request()
@@ -153,6 +140,12 @@
                 ->uri(),
             'Reports',
         )">
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-chart-line w-5 h-5"></i>
+                </span>
+            </x-slot>
+
             <x-sidebar.sublink title="{{ __('Purchase Report') }}" href="{{ route('purchases-report.index') }}"
                 :active="request()->routeIs('purchases-report.index')" />
             <x-sidebar.sublink title="{{ __('Sale Report') }}" href="{{ route('sales-report.index') }}"
@@ -176,6 +169,17 @@
                 ->uri(),
             'User Management',
         )">
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-users w-5 h-5"></i>
+                </span>
+            </x-slot>
+            @can('access_customers')
+                <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
+            @endcan
+            @can('access_suppliers')
+                <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />
+            @endcan
             @can('access_users')
                 <x-sidebar.sublink title="{{ __('Users') }}" href="{{ route('users.index') }}" :active="request()->routeIs('users.index')" />
             @endcan
@@ -195,6 +199,11 @@
                 ->uri(),
             'Settings',
         )">
+            <x-slot name="icon">
+                <span class="inline-block mr-3">
+                    <i class="fas fa-cog w-5 h-5"></i>
+                </span>
+            </x-slot>
             @can('access_currencies')
                 <x-sidebar.sublink title="{{ __('Currencies') }}" href="{{ route('currencies.index') }}" :active="request()->routeIs('currencies.index')" />
             @endcan

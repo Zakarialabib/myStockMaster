@@ -7,33 +7,18 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            <button
+                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
+                {{ $this->selectedCount ? '' : 'disabled' }}>
+                {{ __('Delete Selected') }}
+            </button>
 
-            <x-dropdown align="right" width="48">
-
-                <x-slot name="trigger">
-                    <x-primary-button class="flex items-center">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </x-primary-button>
-                </x-slot>
-
-                <x-slot name="content">
-
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
-                        {{ $this->selectedCount ? '' : 'disabled' }}>
-                        {{ __('Delete Selected') }}
-                    </button>
-
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('import')" wire:loading.attr="disabled">
-                        {{ __('Import') }}
-                    </button>
-                </x-slot>
-
-            </x-dropdown>
-
+            <button
+                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button" wire:click="confirm('import')" wire:loading.attr="disabled">
+                {{ __('Import') }}
+            </button>
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="my-2 my-md-0">
@@ -43,8 +28,10 @@
             </div>
         </div>
     </div>
-    <div wire:loading.delay class="flex justify-center">
-        <x-loading />
+    <div wire:loading.delay>
+        <div class="d-flex justify-content-center">
+            <x-loading />
+        </div>
     </div>
 
     <x-table>
@@ -81,18 +68,21 @@
                         {{ $supplier->address }}
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex justify-end">
-                            <x-primary-button wire:click="editModal({{ $supplier->id }})">
-                                {{ __('Edit') }}
-                            </x-primary-button>
-                            <x-primary-button wire:click="showModal({{ $supplier->id }})">
-                                {{ __('Show') }}
-                            </x-primary-button>
-                            <button
-                                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                                type="button" wire:click="$emit('deleteModal', {{ $supplier->id }})"
+                        <div class="flex justify-start">
+                            <x-primary-button wire:click="showModal({{ $supplier->id }})"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                 wire:loading.attr="disabled">
-                                {{ __('Delete') }}
+                                <i class="fas fa-eye"></i>
+                            </x-primary-button>
+                            <x-primary-button wire:click="editModal({{ $supplier->id }})"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
+                            </x-primary-button>
+                            <button type="button" wire:click="confirm('delete', {{ $supplier->id }})"
+                                wire:loading.attr="disabled"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </x-table.td>

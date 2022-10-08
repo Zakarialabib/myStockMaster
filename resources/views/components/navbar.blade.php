@@ -21,45 +21,56 @@
     <div class="flex items-center gap-3">
 
         <div class="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
-            <a class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-5 rounded" href="{{ route('app.pos.index') }}">
+            <a class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-5 rounded"
+                href="{{ route('app.pos.index') }}">
                 <i class="bi bi-cart mr-1"></i> POS System
             </a>
             {{-- @livewire('admin.cache') --}}
         </div>
-        
+
         <x-button type="button" class="hidden md:inline-flex" iconOnly variant="secondary" srText="Toggle dark mode"
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-6 h-6" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-6 h-6" />
         </x-button>
-        
+
         {{-- @livewire('admin.cache') --}}
 
         <ul class="flex-col md:flex-row list-none items-center md:flex">
-            <a class="inline-flex items-center p-2 transition-colors font-medium select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-eval-2 text-zinc-500 hover:bg-zinc-100 focus:ring-blue-500 dark:text-zinc-400 dark:hover:bg-dark-eval-2 dark:hover:text-zinc-200 rounded-md"
-                onclick="openDropdown(event,'user-dropdown')" aria-haspopup="true"
-                :aria-expanded="open ? 'true' : 'false'">
-                {{ Auth::user()->name }}
-                <x-icons.chevron-down class="text-gray-400 w-3 h-3" aria-hidden="true" />
-            </a>
-            <div data-popper-placement="bottom-start" id="user-dropdown"
-                class="bg-white text-zinc-500 focus:ring focus:ring-offset-2 focus:ring-blue-500 dark:text-zinc-400 dark:bg-dark-eval-1 dark:hover:bg-dark-eval-2 transition-colors z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48 hidden"
-                style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(617px, 58px);">
-                
-                    <a href="{{ route('settings.index') }}"
-                        class="block py-2 px-4 text-sm dark:hover:bg-zinc-600 dark:hover:text-zinc-200 w-full whitespace-nowrap">
-                        {{ __('Settings') }}
-                    </a>
+            <x-dropdown align="right" width="60">
+                <x-slot name="trigger">
+                    {{ Auth::user()->name }}
 
-                <a class="block py-2 px-4 text-sm dark:hover:bg-zinc-600 dark:hover:text-zinc-200 w-full whitespace-nowrap"
-                    href="{{ url('/logout') }}" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                    @csrf
-                </form>
-            </div>
+                    <button
+                        class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
+                        <img class="h-8 w-8 rounded-full" src="{{ auth()->user()->profile_photo_url }}"
+                            alt="{{ auth()->user()->name }}" />
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link :href="route('')"
+                    :href="route('logout')">
+                        {{ __('Settings') }}
+                    </x-dropdown-link>
+
+                    {{-- <x-dropdown-link href="{{ route('profile.show') }}">
+                        {{ __('Profile') }}
+                    </x-dropdown-link> --}}
+
+                    <div class="border-t border-gray-100"></div>
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <x-dropdown-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-dropdown-link>
+                    </form>
+                </x-slot>
+            </x-dropdown>
         </ul>
     </div>
 </nav>
