@@ -31,10 +31,10 @@
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Customer Info:</h4>
-                            <div><strong>{{ $customer->customer_name }}</strong></div>
+                            <div><strong>{{ $customer->name }}</strong></div>
                             <div>{{ $customer->address }}</div>
-                            <div>Email: {{ $customer->customer_email }}</div>
-                            <div>Phone: {{ $customer->customer_phone }}</div>
+                            <div>Email: {{ $customer->email }}</div>
+                            <div>Phone: {{ $customer->phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
@@ -67,9 +67,9 @@
                             @foreach($sale_return->saleReturnDetails as $item)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $item->product_name }} <br>
+                                        {{ $item->name }} <br>
                                         <span class="badge badge-success">
-                                                {{ $item->product_code }}
+                                                {{ $item->code }}
                                             </span>
                                     </td>
 

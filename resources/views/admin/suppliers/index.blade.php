@@ -6,7 +6,7 @@
     <section class="py-2 px-6">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
-                <h2 class="mb-1 text-2xl font-bold">{{ __('Suppliers') }}</h2>
+                <h2 class="mb-1 text-2xl font-bold">{{ __('Users') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
                         <span class="inline-block mr-2">
@@ -39,7 +39,7 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-primary-button onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-primary-button>
+                <x-button primary  onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>

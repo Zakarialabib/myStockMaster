@@ -11,9 +11,9 @@ class Supplier extends Model
 
     public $orderable = [
         'id',
-        'supplier_name',
-        'supplier_email',
-        'supplier_phone',
+        'name',
+        'email',
+        'phone',
         'city',
         'country',
         'address',
@@ -23,9 +23,9 @@ class Supplier extends Model
 
     public $filterable = [
         'id',
-        'supplier_name',
-        'supplier_email',
-        'supplier_phone',
+        'name',
+        'email',
+        'phone',
         'city',
         'country',
         'address',
@@ -34,9 +34,9 @@ class Supplier extends Model
     ];
 
     protected $fillable = [
-        'supplier_name',
-        'supplier_email',
-        'supplier_phone',
+        'name',
+        'email',
+        'phone',
         'city',
         'country',
         'address',

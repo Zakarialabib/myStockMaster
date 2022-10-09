@@ -18,17 +18,17 @@ class Product extends Model implements HasMedia
     public $orderable = [
         'id',
         'category_id',
-        'product_name',
-        'product_code',
-        'product_barcode_symbology',
-        'product_quantity',
-        'product_cost',
-        'product_price',
-        'product_unit',
-        'product_stock_alert',
-        'product_order_tax',
-        'product_tax_type',
-        'product_note',
+        'name',
+        'code',
+        'barcode_symbology',
+        'quantity',
+        'cost',
+        'price',
+        'unit',
+        'stock_alert',
+        'order_tax',
+        'tax_type',
+        'note',
         'created_at',
         'updated_at',
     ];
@@ -36,17 +36,17 @@ class Product extends Model implements HasMedia
     public $filterable = [
         'id',
         'category_id',
-        'product_name',
-        'product_code',
-        'product_barcode_symbology',
-        'product_quantity',
-        'product_cost',
-        'product_price',
-        'product_unit',
-        'product_stock_alert',
-        'product_order_tax',
-        'product_tax_type',
-        'product_note',
+        'name',
+        'code',
+        'barcode_symbology',
+        'quantity',
+        'cost',
+        'price',
+        'unit',
+        'stock_alert',
+        'order_tax',
+        'tax_type',
+        'note',
         'created_at',
         'updated_at',
     ];
@@ -81,7 +81,7 @@ class Product extends Model implements HasMedia
     }
 
     public function setProductCostAttribute($value) {
-        $this->attributes['product_cost'] = ($value * 100);
+        $this->attributes['cost'] = ($value * 100);
     }
 
     public function getProductCostAttribute($value) {
@@ -89,7 +89,7 @@ class Product extends Model implements HasMedia
     }
 
     public function setProductPriceAttribute($value) {
-        $this->attributes['product_price'] = ($value * 100);
+        $this->attributes['price'] = ($value * 100);
     }
 
     public function getProductPriceAttribute($value) {

@@ -61,7 +61,7 @@
                                             @foreach (\App\Models\Currency::all() as $currency)
                                                 <option
                                                     {{ $settings->default_currency_id == $currency->id ? 'selected' : '' }}
-                                                    value="{{ $currency->id }}">{{ $currency->currency_name }}</option>
+                                                    value="{{ $currency->id }}">{{ $currency->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

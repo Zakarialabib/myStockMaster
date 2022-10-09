@@ -6,23 +6,24 @@ use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithPagination;
-use App\Support\HasAdvancedFilter;
 use App\Models\Currency;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+    use WithPagination, WithSorting, LivewireAlert;
 
     public $currency;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    
+
+    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
 
     public $showModal;
 
-    public $createModal;
+    public $refreshIndex;
 
     public $editModal;
 
@@ -33,6 +34,8 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
+
+    public $selectPage;
 
     protected $queryString = [
         'search' => [
@@ -66,8 +69,13 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
-        'currency.currency_name' => 'required|string|max:255',
+        'currency.name' => 'required|string|max:255',
         'currency.code' => 'required|string|max:255',
         'currency.symbol' => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
@@ -91,27 +99,10 @@ class Index extends Component
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
+
         $currencies = $query->paginate($this->perPage);
 
         return view('livewire.currency.index', compact('currencies'));
-    }
-
-    public function createModal()
-    {
-        abort_if(Gate::denies('currency_create'), 403);
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('currency_create'), 403);
-        
-        $this->currency = new Currency();
-
-        $this->showModal = true;
-
-        $this->alert('success', 'Currency created successfully!');
     }
 
     public function showModal(Currency $currency)
@@ -143,7 +134,7 @@ class Index extends Component
 
         $this->validate();
 
-        $currency->update($this->currency);
+        $this->currency->save();
 
         $this->showModal = false;
 

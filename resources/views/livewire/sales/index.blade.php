@@ -11,9 +11,9 @@
             <x-dropdown align="right" width="48">
 
                 <x-slot name="trigger">
-                    <x-primary-button class="flex items-center">
+                    <x-button primary  class="flex items-center">
                         <i class="fas fa-ellipsis-v"></i>
-                    </x-primary-button>
+                    </x-button>
                 </x-slot>
 
                 <x-slot name="content">

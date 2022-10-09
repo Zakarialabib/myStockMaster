@@ -35,11 +35,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$return_purchase['supplier_name']}}</div>
-                           <div><strong>ICE:</strong> {{$return_purchase['supplier_ice']}}</div>
-                           <div><strong>Téle:</strong> {{$return_purchase['supplier_phone']}}</div>
-                           <div><strong>Adresse:</strong>   {{$return_purchase['supplier_adr']}}</div>
-                           <div><strong>Email:</strong>  {{$return_purchase['supplier_email']}}</div>
+                           <div><strong>Nom:</strong> {{$return_purchase['name']}}</div>
+                           <div><strong>ICE:</strong> {{$return_purchase['tax_number']}}</div>
+                           <div><strong>Téle:</strong> {{$return_purchase['phone']}}</div>
+                           <div><strong>Adresse:</strong>   {{$return_purchase['adress']}}</div>
+                           <div><strong>Email:</strong>  {{$return_purchase['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

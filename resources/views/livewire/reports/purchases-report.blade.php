@@ -27,9 +27,9 @@
                                 <div class="mb-4">
                                     <label>Supplier</label>
                                     <select wire:model.defer="supplier_id" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="supplier_id">
-                                        <option value="">Select Supplier</option>
+                                        <option value="">{{__('Select Supplier')}}</option>
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-4 mb-0">
+                        <div class="mb-4 md:mb-0">
                             <button type="submit" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
                                 <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
@@ -99,7 +99,7 @@
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}</td>
                                 <td>{{ $purchase->reference }}</td>
-                                <td>{{ $purchase->supplier_name }}</td>
+                                <td>{{ $purchase->name }}</td>
                                 <td>
                                     @if ($purchase->status == 'Pending')
                                         <span class="badge badge-info">

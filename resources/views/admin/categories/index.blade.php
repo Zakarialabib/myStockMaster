@@ -57,7 +57,7 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-primary-button onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-primary-button>
+                <x-button primary  onclick="Livewire.emit('createCategory', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>
@@ -67,7 +67,7 @@
    <x-card>
         @include('utils.alerts')
         <div>
-            <livewire:products.category />
+            <livewire:categories.index />
         </div>
    </x-card>
 @endsection

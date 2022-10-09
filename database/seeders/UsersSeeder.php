@@ -17,9 +17,7 @@ class UsersSeeder extends Seeder
         $users = [
             [
             'id'             => 1,
-            'firstname'      => 'Admin',
-			'lastname'     => 'Admin',
-			'username'    => 'admin',
+            'name'      => 'Admin',
 			'email'      => 'admin1@gmail.com',
             'password'       => bcrypt('password'),
             'avatar'        => 'avatar.png',
@@ -27,8 +25,8 @@ class UsersSeeder extends Seeder
 			'role_id'     => 1,
 			'statut'    => 1,
             'is_all_warehouses' => 1,
-                'remember_token' => null,
-                'created_at' => now(),
+            'remember_token' => null,
+            'created_at' => now(),
             ],
         ];
 

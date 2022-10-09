@@ -8,13 +8,15 @@ use App\Support\HasAdvancedFilter;
 class Currency extends Model
 {
     use HasAdvancedFilter;
+    
+    public $table = 'currencies';
 
     public $orderable = [
         'id',
         'name',
         'code',
         'symbol',
-        'rate',
+        'exchange_rate',
         'created_at',
         'updated_at',
     ];
@@ -24,11 +26,18 @@ class Currency extends Model
         'name',
         'code',
         'symbol',
-        'rate',
+        'exchange_rate',
         'created_at',
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'code',
+        'symbol',
+        'thousand_separator',
+        'decimal_separator',
+        'exchange_rate',
+    ];
 
 }

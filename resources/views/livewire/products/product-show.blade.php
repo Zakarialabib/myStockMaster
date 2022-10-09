@@ -3,7 +3,7 @@
 
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">{{ $product->product_name }}</h5>
+            <h5 class="modal-title">{{ $product->name }}</h5>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
         <div class="modal-body">
@@ -12,8 +12,8 @@
                 <div class="row mb-3">
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(
-                            $product->product_code,
-                            $product->product_barcode_symbology,
+                            $product->code,
+                            $product->barcode_symbology,
                             2,
                             110,
                         ) !!}
@@ -33,56 +33,56 @@
                             <table class="table table-bordered table-striped mb-0">
                                 <tr>
                                     <th>{{__('Product Code')}}</th>
-                                    <td>{{ $product->product_code }}</td>
+                                    <td>{{ $product->code }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Barcode Symbology')}}</th>
-                                    <td>{{ $product->product_barcode_symbology }}</td>
+                                    <td>{{ $product->barcode_symbology }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Name')}}</th>
-                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ $product->name }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Category')}}</th>
-                                    <td>{{ $product->category->category_name }}</td>
+                                    <td>{{ $product->category->name }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Cost')}}</th>
-                                    <td>{{ format_currency($product->product_cost) }}</td>
+                                    <td>{{ format_currency($product->cost) }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Price')}}</th>
-                                    <td>{{ format_currency($product->product_price) }}</td>
+                                    <td>{{ format_currency($product->price) }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Quantity')}}</th>
-                                    <td>{{ $product->product_quantity . ' ' . $product->product_unit }}</td>
+                                    <td>{{ $product->quantity . ' ' . $product->unit }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Stock Worth')}}</th>
                                     <td>
                                         COST::
-                                        {{ format_currency($product->product_cost * $product->product_quantity) }}
+                                        {{ format_currency($product->cost * $product->quantity) }}
                                         /
                                         PRICE::
-                                        {{ format_currency($product->product_price * $product->product_quantity) }}
+                                        {{ format_currency($product->price * $product->quantity) }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Alert Quantity')}}</th>
-                                    <td>{{ $product->product_stock_alert }}</td>
+                                    <td>{{ $product->stock_alert }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Tax (%)')}}</th>
-                                    <td>{{ $product->product_order_tax ?? 'N/A' }}</td>
+                                    <td>{{ $product->order_tax ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{__('Tax Type')}}</th>
                                     <td>
-                                        @if ($product->product_tax_type == 1)
+                                        @if ($product->tax_type == 1)
                                             Exclusive
-                                        @elseif($product->product_tax_type == 2)
+                                        @elseif($product->tax_type == 2)
                                             Inclusive
                                         @else
                                             N/A
@@ -91,7 +91,7 @@
                                 </tr>
                                 <tr>
                                     <th>Note</th>
-                                    <td>{{ $product->product_note ?? 'N/A' }}</td>
+                                    <td>{{ $product->note ?? 'N/A' }}</td>
                                 </tr>
                             </table>
                         </div>

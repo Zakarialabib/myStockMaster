@@ -34,11 +34,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$purchase['supplier_name']}}</div>
-                           <div><strong>ICE:</strong> {{$purchase['supplier_ice']}}</div>
-                           <div><strong>Téle:</strong> {{$purchase['supplier_phone']}}</div>
-                           <div><strong>Adresse:</strong>   {{$purchase['supplier_adr']}}</div>
-                           <div><strong>Email:</strong>  {{$purchase['supplier_email']}}</div>
+                           <div><strong>Nom:</strong> {{$purchase['name']}}</div>
+                           <div><strong>ICE:</strong> {{$purchase['tax_number']}}</div>
+                           <div><strong>Téle:</strong> {{$purchase['phone']}}</div>
+                           <div><strong>Adresse:</strong>   {{$purchase['adress']}}</div>
+                           <div><strong>Email:</strong>  {{$purchase['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

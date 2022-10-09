@@ -24,7 +24,7 @@
                         <select wire:model="customer_id" id="customer_id" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                             <option value="" selected>Select Customer</option>
                             @foreach($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -133,7 +133,7 @@
                 </div>
             </div>
 
-            <div class="mb-4 d-flex justify-content-center flex-wrap mb-0">
+            <div class="mb-4 d-flex justify-content-center flex-wrap md:mb-0">
                 <button wire:click="resetCart" type="button" class="btn btn-pill btn-danger mr-3"><i class="bi bi-x"></i> Reset</button>
                 <button wire:loading.attr="disabled" wire:click="proceed" type="button" class="btn btn-pill btn-primary" {{  $total_amount == 0 ? 'disabled' : '' }}><i class="bi bi-check"></i> Proceed</button>
             </div>

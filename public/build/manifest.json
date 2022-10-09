@@ -60,12 +60,12 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app.e7679e23.js",
+    "file": "assets/app.df8d3b87.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app.06f47cca.css",
-      "assets/app.83eec518.css"
+      "assets/app.8c6cde2c.css"
     ],
     "assets": [
       "assets/fa-brands-400.e4299464.eot",
@@ -86,7 +86,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app.83eec518.css",
+    "file": "assets/app.8c6cde2c.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },

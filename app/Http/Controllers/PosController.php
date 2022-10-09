@@ -43,7 +43,6 @@ class PosController extends Controller
                 'date' => now()->format('Y-m-d'),
                 'reference' => 'PSL',
                 'customer_id' => $request->customer_id,
-                'customer_name' => Customer::findOrFail($request->customer_id)->customer_name,
                 'tax_percentage' => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
                 'shipping_amount' => $request->shipping_amount * 100,
@@ -62,8 +61,8 @@ class PosController extends Controller
                 SaleDetails::create([
                     'sale_id' => $sale->id,
                     'product_id' => $cart_item->id,
-                    'product_name' => $cart_item->name,
-                    'product_code' => $cart_item->options->code,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
@@ -75,7 +74,7 @@ class PosController extends Controller
 
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
-                    'product_quantity' => $product->product_quantity - $cart_item->qty
+                    'quantity' => $product->quantity - $cart_item->qty
                 ]);
             }
 

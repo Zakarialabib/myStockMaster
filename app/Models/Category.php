@@ -11,21 +11,21 @@ class Category extends Model
     use HasAdvancedFilter;
 
     public $orderable = [
-        'id' , 'category_code' ,'category_name',
+        'id' , 'code' ,'name',
     ];
 
     public $filterable = [
-        'id' , 'category_code' ,'category_name'
+        'id' , 'code' ,'name'
     ];
 
     protected $fillable = [
-        'category_code' , 'category_name'
+        'code' , 'name'
     ];
 
     public function __construct(array $attributes = array())
     {
         $this->setRawAttributes(array(
-            'category_code' => Str::random(8)
+            'code' => Str::random(8)
         ), true);
         parent::__construct($attributes);
     }

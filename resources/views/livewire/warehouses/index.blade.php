@@ -7,10 +7,9 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            <button wire:click="deleteSelected"
-                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                {{ __('Delete Selected') }}
-            </button>
+            <x-button danger wire:click="deleteSelected" class="ml-3">
+                <i class="fas fa-trash"></i>
+            </x-button>
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
@@ -29,122 +28,110 @@
     </div>
 
     <x-table>
-        <w-slot name="thead">
+        <x-slot name="thead">
             <x-table.th class="pr-0 w-8">
-                <input wire:model="selectPage" type="checkbox" />
+                <input type="checkbox" class="rounded-tl-md rounded-bl-md" wire:model="selectPage" />
             </x-table.th>
             <x-table.th>
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
-                {{ __('Description') }}
+                {{ __('Phone') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
-            </tr>
-        </w-slot>
+        </x-slot>
+
         <x-table.tbody>
-            @forelese($warehouses as $warehouse)
-            <x-table.tr>
-                <x-table.td>
-                    <input type="checkbox" value="{{ $warehouse->id }}" wire:model="selected">
-                </x-table.td>
-                <x-table.td>
-                    {{ $warehouse->name }}
-                </x-table.td>
-                <x-table.td>
-                    {{ $warehouse->description }}
-                </x-table.td>
-                <x-table.td>
-                    <div class="flex justify-end">
-                        <x-button.link wire:click="editModal({{ $warehouse->id }})">
-                            {{ __('Edit') }}
-                        </x-button.link>
-                        <x-button.link wire:click="confirmWarehouseDeletion({{ $warehouse->id }})">
-                            {{ __('Delete') }}
-                        </x-button.link>
-                    </div>
-                </x-table.td>
-            </x-table.tr>
+
+            @forelse($warehouses as $warehouse)
+                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $warehouse->id }}">
+                    <x-table.td>
+                        <input type="checkbox" value="{{ $warehouse->id }}" wire:model="selected">
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $warehouse->name }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $warehouse->phone }}
+                    </x-table.td>
+                    <x-table.td>
+                        <div class="flex justify-start space-x-2">
+                            <x-button alert wire:click="editModal({{ $warehouse->id }})" wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
+                            </x-button>
+                            <x-button danger wire:click="$emit('deleteModal', {{ $warehouse->id }})"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-trash"></i>
+                            </x-button>
+                        </div>
+                    </x-table.td>
+                </x-table.tr>
             @empty
                 <x-table.tr>
                     <x-table.td colspan="4">
                         <div class="flex justify-center items-center">
-                            <span class="text-gray-400">{{ __('No Warehouses found') }}</span>
+                            <p class="text-gray-500">{{ __('No results found') }}</p>
                         </div>
                     </x-table.td>
                 </x-table.tr>
-                @endforelse
-            </x-table.tbody>
-        </x-table>
+            @endforelse
+        </x-table.tbody>
+    </x-table>
 
-        <div class="mt-4">
-            {{ $warehouses->links() }}
-        </div>
-
-        <x-modal wire:model="editModal">
-            <x-slot name="title">
-                {{ __('Edit Warehouse') }}
-            </x-slot>
-            <x-slot name="content">
-                <form wire:submit.prevent="update">
-                    <div class="flex flex-wrap">
-                        <div class="xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
-                            <x-input.group label="Name" for="name" :error="$errors->first('editing.name')">
-                                <x-input.text wire:model="editing.name" id="name" />
-                            </x-input.group>
-                        </div>
-                        <div class="xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
-                            <x-input.group label="Description" for="description" :error="$errors->first('editing.description')">
-                                <x-input.text wire:model="editing.description" id="description" />
-                            </x-input.group>
-                        </div>
-                    </div>
-                    <div class="w-full flex justify-end">
-                        <x-button.primary wire:click="$set('editModal', false)">
-                            {{ __('Cancel') }}
-                        </x-button.primary>
-                        <x-button.primary wire:click="update">
-                            {{ __('Save') }}
-                        </x-button.primary>
-                    </div>
-                </form>
-            </x-slot>
-        </x-modal>
-
-        <x-modal wire:model="createModal">
-            <x-slot name="title">
-                {{ __('Create Warehouse') }}
-            </x-slot>
-            <x-slot name="content">
-                <form wire:submit.prevent="create">
-                    <div class="flex flex-wrap">
-                        <div class="xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
-                            <x-input.group label="Name" for="name" :error="$errors->first('editing.name')">
-                                <x-input.text wire:model="editing.name" id="name" />
-                            </x-input.group>
-                        </div>
-                        <div class="xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
-                            <x-input.group label="Description" for="description" :error="$errors->first('editing.description')">
-                                <x-input.text wire:model="editing.description" id="description" />
-                            </x-input.group>
-                        </div>
-                    </div>
-                    <div class="w-full flex justify-end">
-                        <x-button.primary wire:click="$set('createModal', false)">
-                            {{ __('Cancel') }}
-                        </x-button.primary>
-                        <x-button.primary wire:click="create">
-                            {{ __('Save') }}
-                        </x-button.primary>
-                    </div>
-                </form>
-            </x-slot>
-        </x-modal>
+    <div class="mt-4">
+        {{ $warehouses->links() }}
     </div>
 
-    @push('page_scripts')
+    <x-modal wire:model="editModal">
+        <x-slot name="title">
+            {{ __('Edit Warehouse') }}
+        </x-slot>
+        <x-slot name="content">
+            <form wire:submit.prevent="update">
+                <div class="flex flex-wrap -mx-3 mb-6">
+                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model="warehouse.name"
+                            required />
+                    </div>
+                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                        <x-label for="phone" :value="__('Phone')" />
+                        <x-input id="phone" class="block mt-1 w-full" type="text"
+                            wire:model="warehouse.mobile" />
+                    </div>
+                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                        <x-label for="email" :value="__('Email')" />
+                        <x-input id="email" class="block mt-1 w-full" type="email" wire:model="warehouse.email" />
+                    </div>
+                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                        <x-label for="city" :value="__('City')" />
+                        <x-input id="city" class="block mt-1 w-full" type="text" wire:model="warehouse.city" />
+                    </div>
+                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                        <x-label for="country" :value="__('Country')" />
+                        <x-input id="country" class="block mt-1 w-full" type="text"
+                            wire:model="warehouse.country" />
+                    </div>
+                </div>
+                <div class="w-full flex justify-end">
+                    <x-button secondary wire:click="$set('editModal', false)">
+                        {{ __('Cancel') }}
+                    </x-button>
+                    <x-button primary class="ml-3" wire:click="update">
+                        {{ __('Save') }}
+                    </x-button>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    <livewire:warehouses.create />
+
+</div>
+
+@push('page_scripts')
     <script>
         document.addEventListener('livewire:load', function() {
             window.livewire.on('deleteModal', warehouseId => {
@@ -165,4 +152,3 @@
         })
     </script>
 @endpush
-

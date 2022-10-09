@@ -25,8 +25,8 @@
                     <tbody>
                     <tr>
                         @if(!empty($product))
-                            <td class="align-middle">{{ $product->product_name }}</td>
-                            <td class="align-middle">{{ $product->product_code }}</td>
+                            <td class="align-middle">{{ $product->name }}</td>
+                            <td class="align-middle">{{ $product->code }}</td>
                             <td class="align-middle text-center" style="width: 200px;">
                                 <input wire:model="quantity" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="number" min="1" max="100" value="{{ $quantity }}">
                             </td>
@@ -68,13 +68,13 @@
                     @foreach($barcodes as $barcode)
                         <div class="col-lg-3 col-md-4 col-sm-6" style="border: 1px solid #ffffff;border-style: dashed;background-color: #48FCFE;">
                             <p class="mt-3 mb-1" style="font-size: 15px;color: #000;">
-                                {{ $product->product_name }}
+                                {{ $product->name }}
                             </p>
                             <div>
                                 {!! $barcode !!}
                             </div>
                             <p style="font-size: 15px;color: #000;">
-                                Price:: {{ format_currency($product->product_price) }}
+                                Price:: {{ format_currency($product->price) }}
                             </p>
                         </div>
                     @endforeach

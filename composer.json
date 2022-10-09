@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-snappy": "^1.0",
+        "bumbummen99/shoppingcart": "^4.2",
         "guzzlehttp/guzzle": "^7.2",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "jantinnerezo/livewire-alert": "^2.2",

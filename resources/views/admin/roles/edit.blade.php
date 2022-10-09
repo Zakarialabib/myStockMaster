@@ -33,7 +33,7 @@
                     <div class="card">
                         <div class="p-4">
                             <div class="mb-4">
-                                <label for="name">Role Name <span class="text-red-500">*</span></label>
+                                <label for="name">{{__('Role Name')}} <span class="text-red-500">*</span></label>
                                 <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="text" name="name" required value="{{ $role->name }}">
                             </div>
 
@@ -48,13 +48,13 @@
                             <div class="mb-4">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="select-all">
-                                    <label class="custom-control-label" for="select-all">Give All Permissions</label>
+                                    <label class="custom-control-label" for="select-all">{{__('Give All Permissions')}}</label>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <!-- Dashboard Permissions -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Dashboard
@@ -107,7 +107,7 @@
                                 </div>
 
                                 <!-- User Management Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             User Mangement
@@ -136,7 +136,7 @@
                                 </div>
 
                                 <!-- Products Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Products
@@ -205,7 +205,7 @@
                                 </div>
 
                                 <!-- Adjustments Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Adjustments
@@ -258,7 +258,7 @@
                                 </div>
 
                                 <!-- Quotations Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Quotaions
@@ -327,7 +327,7 @@
                                 </div>
 
                                 <!-- Expenses Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Expenses
@@ -380,7 +380,7 @@
                                 </div>
 
                                 <!-- Customers Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Customers
@@ -433,7 +433,7 @@
                                 </div>
 
                                 <!-- Suppliers Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Suppliers
@@ -486,7 +486,7 @@
                                 </div>
 
                                 <!-- Sales Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Sales
@@ -538,7 +538,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="create_pos_sales" name="permissions[]"
                                                                value="create_pos_sales" {{ $role->hasPermissionTo('create_pos_sales') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="create_pos_sales">POS System</label>
+                                                        <label class="custom-control-label" for="create_pos_sales">{{__('POS System')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -555,7 +555,7 @@
                                 </div>
 
                                 <!-- Sale Returns Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Sale Returns
@@ -616,7 +616,7 @@
                                 </div>
 
                                 <!-- Purchases Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Purchases
@@ -677,7 +677,7 @@
                                 </div>
 
                                 <!-- Purchases Returns Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Purchase Returns
@@ -738,7 +738,7 @@
                                 </div>
 
                                 <!-- Currencies Permission -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Currencies
@@ -783,10 +783,10 @@
                                 </div>
 
                                 <!-- Reports -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
-                                            Reports
+                                            {{__('Reports')}}
                                         </div>
                                         <div class="p-4">
                                             <div class="row">
@@ -804,7 +804,7 @@
                                 </div>
 
                                 <!-- Settings -->
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6 mb-3">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
                                             Settings

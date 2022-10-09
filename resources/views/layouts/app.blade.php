@@ -39,7 +39,7 @@
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-5 px-4 sm:px-6 flex-1">
+                <main class="pt-5 pl-10 pr-5 sm:pl-5 sm:pr-3 flex-1">
                     @yield('breadcrumb')
                     @yield('content')
                 </main>

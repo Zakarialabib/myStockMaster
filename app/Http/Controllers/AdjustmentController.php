@@ -58,11 +58,11 @@ class AdjustmentController extends Controller
 
                 if ($request->types[$key] == 'add') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $request->quantities[$key]
+                        'quantity' => $product->quantity + $request->quantities[$key]
                     ]);
                 } elseif ($request->types[$key] == 'sub') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $request->quantities[$key]
+                        'quantity' => $product->quantity - $request->quantities[$key]
                     ]);
                 }
             }
@@ -112,11 +112,11 @@ class AdjustmentController extends Controller
 
                 if ($adjustedProduct->type == 'add') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $adjustedProduct->quantity
+                        'quantity' => $product->quantity - $adjustedProduct->quantity
                     ]);
                 } elseif ($adjustedProduct->type == 'sub') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $adjustedProduct->quantity
+                        'quantity' => $product->quantity + $adjustedProduct->quantity
                     ]);
                 }
 
@@ -135,11 +135,11 @@ class AdjustmentController extends Controller
 
                 if ($request->types[$key] == 'add') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $request->quantities[$key]
+                        'quantity' => $product->quantity + $request->quantities[$key]
                     ]);
                 } elseif ($request->types[$key] == 'sub') {
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $request->quantities[$key]
+                        'quantity' => $product->quantity - $request->quantities[$key]
                     ]);
                 }
             }

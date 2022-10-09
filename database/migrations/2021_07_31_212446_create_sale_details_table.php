@@ -17,8 +17,8 @@ class CreateSaleDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('sale_id');
             $table->unsignedBigInteger('product_id')->nullable();
-            $table->string('product_name');
-            $table->string('product_code');
+            $table->string('name');
+            $table->string('code');
             $table->integer('quantity');
             $table->integer('price');
             $table->integer('unit_price');

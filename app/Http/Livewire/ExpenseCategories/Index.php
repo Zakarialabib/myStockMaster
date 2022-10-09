@@ -18,13 +18,13 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['show','confirmDelete', 'delete', 'createModal', 'showModal', 'editModal'];
+    public $listeners = ['show','confirmDelete', 'delete', 'refreshIndex', 'showModal', 'editModal'];
 
     public $show;
 
     public $showModal;
 
-    public $createModal;
+    public $refreshIndex;
 
     public $editModal;
 
@@ -68,9 +68,14 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
-        'expenseCategory.category_name' => 'required',
-        'expenseCategory.category_description' => '',
+        'expenseCategory.name' => 'required',
+        'expenseCategory.description' => '',
     ];
 
     public function mount()
@@ -97,17 +102,6 @@ class Index extends Component
         return view('livewire.expense-categories.index', compact('expenseCategories'));
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('expense_category_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->createModal = true;
-    }
-
     public function showModal(ExpenseCategory $expenseCategory)
     {
         abort_if(Gate::denies('expense_category_show'), 403);
@@ -128,17 +122,6 @@ class Index extends Component
         $this->expenseCategory = $expenseCategory;
 
         $this->editModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        $this->expenseCategory->save();
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Expense Category Saved Successfully.');
     }
 
     public function update()

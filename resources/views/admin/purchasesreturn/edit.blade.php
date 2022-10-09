@@ -39,7 +39,7 @@
                                             <label for="supplier_id">Supplier <span class="text-red-500">*</span></label>
                                             <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="supplier_id" id="supplier_id" required>
                                                 @foreach(\App\Models\Supplier::all() as $supplier)
-                                                    <option {{ $purchase_return->supplier_id == $supplier->id ? 'selected' : '' }} value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                                                    <option {{ $purchase_return->supplier_id == $supplier->id ? 'selected' : '' }} value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

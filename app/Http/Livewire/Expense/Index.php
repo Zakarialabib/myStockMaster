@@ -22,13 +22,11 @@ class Index extends Component
 
     public int $selectPage;
     
-    public $listeners = ['show','confirmDelete', 'delete', 'export','createModal', 'showModal', 'editModal'];
-
-    public $show;
+    public $listeners = ['confirmDelete', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
     
     public $showModal;
 
-    public $createModal;
+    public $refreshIndex;
 
     public $editModal;
 
@@ -76,6 +74,11 @@ class Index extends Component
     public function resetSelected()
     {
         $this->selected = [];
+    }
+
+    public function refreshIndex()
+    {
+        $this->resetPage();
     }
 
     public array $rules = [
@@ -130,32 +133,9 @@ class Index extends Component
         $expense->delete();
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('expense_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        Expense::create($this->expense);
-
-        $this->alert('success', 'Expense created successfully.');
-
-        $this->createModal = false;
-    }
-
-
     public function showModal(Expense $expense)
     {
-        abort_if(Gate::denies('customer_show'), 403);
+        abort_if(Gate::denies('expense_show'), 403);
 
         $this->expense = $expense;
     }
@@ -221,7 +201,7 @@ class Index extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('category_name', 'id')->toArray();
+        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
     }
 
 }

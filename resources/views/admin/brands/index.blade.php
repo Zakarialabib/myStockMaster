@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Product Categories')
+@section('title', __('Brands'))
 
 @section('breadcrumb')
     <section class="py-2 px-6">
@@ -57,7 +57,7 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-primary-button onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-primary-button>
+                <x-button primary  onclick="Livewire.emit('createBrand', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>
@@ -67,7 +67,7 @@
    <x-card>
         @include('utils.alerts')
         <div>
-            <livewire:products.brand />
+            <livewire:brands.index />
         </div>
    </x-card>
 @endsection

@@ -18,7 +18,6 @@ class CreatePurchasesTable extends Migration
             $table->date('date');
             $table->string('reference');
             $table->unsignedBigInteger('supplier_id')->nullable();
-            $table->string('supplier_name');
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);

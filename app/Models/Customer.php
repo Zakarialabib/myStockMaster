@@ -11,9 +11,9 @@ class Customer extends Model
 
     public $orderable = [
         'id',
-        'customer_name',
-        'customer_email',
-        'customer_phone',
+        'name',
+        'email',
+        'phone',
         'city',
         'country',
         'address',
@@ -23,9 +23,9 @@ class Customer extends Model
 
     public $filterable = [
         'id',
-        'customer_name',
-        'customer_email',
-        'customer_phone',
+        'name',
+        'email',
+        'phone',
         'city',
         'country',
         'address',
@@ -34,11 +34,10 @@ class Customer extends Model
     ];
 
     protected $fillable = [
-        'customer_name',
-        'customer_email',
-        'customer_phone',
-        'city',
-        'country',
+        'name',
+        'email',
+        'phone',
+       'country',
         'address',
     ];
 

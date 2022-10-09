@@ -12,9 +12,9 @@
 <ul class="c-header-nav ml-auto mr-4">
     @can('create_pos_sales')
     <li class="c-header-nav-item mr-3">
-        <a class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-5 rounded btn-pill{{ request()->routeIs('app.pos.index') ? 'disabled' : '' }}" href="{{ route('app.pos.index') }}">
-            <i class="bi bi-cart mr-1"></i> POS System
-        </a>
+        <x-button primary href="{{ route('pos.create') }}">
+            <i class="bi bi-cart-plus"></i> {{ __('POS') }}
+        </x-button>
     </li>
     @endcan
 
@@ -24,7 +24,7 @@
             <i class="bi bi-bell" style="font-size: 20px;"></i>
             <span class="badge badge-pill badge-danger">
             @php
-                $low_quantity_products = \App\Models\Product::select('id', 'product_quantity', 'product_stock_alert', 'product_code')->whereColumn('product_quantity', '<=', 'product_stock_alert')->get();
+                $low_quantity_products = \App\Models\Product::select('id', 'quantity', 'stock_alert', 'code')->whereColumn('quantity', '<=', 'stock_alert')->get();
                 echo $low_quantity_products->count();
             @endphp
             </span>
@@ -35,7 +35,7 @@
             </div>
             @forelse($low_quantity_products as $product)
                 <a class="dropdown-item" href="{{ route('products.show', $product->id) }}">
-                    <i class="bi bi-hash mr-1 text-primary"></i> Product: "{{ $product->product_code }}" is low in quantity!
+                    <i class="bi bi-hash mr-1 text-primary"></i> Product: "{{ $product->code }}" is low in quantity!
                 </a>
             @empty
                 <a class="dropdown-item" href="#">

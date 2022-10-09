@@ -80,7 +80,7 @@ class Checkout extends Component
 
         $cart->add([
             'id'      => $product['id'],
-            'name'    => $product['product_name'],
+            'name'    => $product['name'],
             'qty'     => 1,
             'price'   => $this->calculate($product)['price'],
             'weight'  => 1,
@@ -88,15 +88,15 @@ class Checkout extends Component
                 'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
                 'sub_total'             => $this->calculate($product)['sub_total'],
-                'code'                  => $product['product_code'],
-                'stock'                 => $product['product_quantity'],
-                'unit'                  => $product['product_unit'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
                 'product_tax'           => $this->calculate($product)['product_tax'],
                 'unit_price'            => $this->calculate($product)['unit_price']
             ]
         ]);
 
-        $this->check_quantity[$product['id']] = $product['product_quantity'];
+        $this->check_quantity[$product['id']] = $product['quantity'];
         $this->quantity[$product['id']] = 1;
         $this->discount_type[$product['id']] = 'fixed';
         $this->item_discount[$product['id']] = 0;
@@ -181,20 +181,20 @@ class Checkout extends Component
         $sub_total = 0;
 
         if ($product['product_tax_type'] == 1) {
-            $price = $product['product_price'] + ($product['product_price'] * ($product['product_order_tax'] / 100));
-            $unit_price = $product['product_price'];
-            $product_tax = $product['product_price'] * ($product['product_order_tax'] / 100);
-            $sub_total = $product['product_price'] + ($product['product_price'] * ($product['product_order_tax'] / 100));
+            $price = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
+            $unit_price = $product['price'];
+            $product_tax = $product['price'] * ($product['order_tax'] / 100);
+            $sub_total = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
         } elseif ($product['product_tax_type'] == 2) {
-            $price = $product['product_price'];
-            $unit_price = $product['product_price'] - ($product['product_price'] * ($product['product_order_tax'] / 100));
-            $product_tax = $product['product_price'] * ($product['product_order_tax'] / 100);
-            $sub_total = $product['product_price'];
+            $price = $product['price'];
+            $unit_price = $product['price'] - ($product['price'] * ($product['order_tax'] / 100));
+            $product_tax = $product['price'] * ($product['order_tax'] / 100);
+            $sub_total = $product['price'];
         } else {
-            $price = $product['product_price'];
-            $unit_price = $product['product_price'];
+            $price = $product['price'];
+            $unit_price = $product['price'];
             $product_tax = 0.00;
-            $sub_total = $product['product_price'];
+            $sub_total = $product['price'];
         }
 
         return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];

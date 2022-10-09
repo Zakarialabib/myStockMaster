@@ -16,21 +16,15 @@ class User extends Authenticatable implements HasMedia
     use HasAdvancedFilter, HasApiTokens, Notifiable, InteractsWithMedia;
 
     public $orderable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'created_at',
-        'updated_at',
+        'id','name','email', 'password' , 'avatar',
+        'phone' ,'role_id','statut' ,'is_all_warehouses',
+        'created_at','updated_at',
     ];
 
     public $filterable = [
-        'id',
-        'name',
-        'email',
-        'email_verified_at',
-        'created_at',
-        'updated_at',
+        'id','name','email', 'password' , 'avatar',
+        'phone' ,'role_id','statut' ,'is_all_warehouses',
+        'created_at','updated_at','wallet_id'
     ];
 
     /**
@@ -39,9 +33,9 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'id','name','email', 'password' , 'avatar',
+        'phone' ,'role_id','statut' ,'is_all_warehouses',
+        'created_at','updated_at','wallet_id'
     ];
 
     /**

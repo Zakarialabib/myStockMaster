@@ -163,7 +163,7 @@ class ProfitLossReport extends Component
 
         foreach ($sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->product_cost;
+                $product_costs += $saleDetail->product->cost;
             }
         }
 

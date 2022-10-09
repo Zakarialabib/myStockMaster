@@ -21,11 +21,9 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','createModal','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
 
     public $showModal;
-
-    public $createModal;
 
     public $editModal;
 
@@ -38,6 +36,8 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
+
+    public $refreshIndex;
 
     protected $queryString = [
         'search' => [
@@ -61,10 +61,15 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
-        'supplier.supplier_name' => ['required', 'string', 'max:255'],
-        'supplier.supplier_email' => ['nullable', 'string', 'max:255'],
-        'supplier.supplier_phone' => ['required'],
+        'supplier.name' => ['required', 'string', 'max:255'],
+        'supplier.email' => ['nullable', 'string', 'max:255'],
+        'supplier.phone' => ['required'],
         'supplier.address' => ['nullable', 'string', 'max:255'],
         'supplier.city' => ['nullable', 'string', 'max:255'],
         'supplier.country' => ['nullable', 'string', 'max:255'],
@@ -77,7 +82,8 @@ class Index extends Component
         $this->sortBy            = 'id';
         $this->sortDirection     = 'desc';
         $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        $this->orderable = (new Supplier())->orderable;
+        $this->paginationOptions = config('project.pagination.options');        
+        $this->orderable = (new Supplier())->orderable;
     }
 
     public function render()
@@ -93,31 +99,6 @@ class Index extends Component
         $suppliers = $query->paginate($this->perPage);
 
         return view('livewire.suppliers.index', compact('suppliers'));
-    }
-
-    public function createModal()
-    {
-        abort_if(Gate::denies('supplier_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->supplier = new Supplier();
-        
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        $this->supplier->save();
-
-        $this->alert('success', 'Supplier created successfully.');
-
-        $this->createModal = false;
-
     }
 
     public function showModal(Supplier $supplier)
@@ -156,8 +137,6 @@ class Index extends Component
         abort_if(Gate::denies('supplier_delete'), 403);
 
         $supplier->delete();
-
-        $this->resetPage();
 
         $this->alert('warning', 'Supplier Deleted Successfully');
     }

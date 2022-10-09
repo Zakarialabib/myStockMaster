@@ -77,19 +77,25 @@ class Index extends Component
 
     public function mount()
     {
-        $this->perPage = config('project.per_page');
-        $this->paginationOptions = config('project.pagination_options');
+        $this->selectPage = false;
+        $this->sortField = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
     }
 
     public function render()
     {
-        $query = Purchase::with(['supplier', 'currency', 'warehouse', 'user', 'purchaseStatus', 'paymentStatus', 'paymentMethod', 'purchaseDetail', 'purchasePayment'])->search($this->search);
+        $query = Purchase::advancedFilter([
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
-        $purchases = $query->orderBy($this->sortBy, $this->sortDirection)
-            ->paginate($this->perPage);
+        $purchases = $query->paginate($this->perPage);
 
-        return view('livewire.purchase.index', compact('query', 'purchases', 'purchases'));
+        return view('livewire.purchase.index', compact('purchases'));
     }
 
     public function createModal()

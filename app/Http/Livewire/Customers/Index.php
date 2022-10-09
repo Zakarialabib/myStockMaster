@@ -23,11 +23,11 @@ class Index extends Component
 
     public int $selectPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','createModal','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
 
     public $showModal;
 
-    public $createModal;
+    public $refreshIndex;
 
     public $editModal; 
 
@@ -66,10 +66,15 @@ class Index extends Component
         $this->selected = [];
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
-        'customer.customer_name' => 'required|string|max:255',
-        'customer.customer_email' => 'nullable|max:255',
-        'customer.customer_phone' => 'required|numeric',
+        'customer.name' => 'required|string|max:255',
+        'customer.email' => 'nullable|max:255',
+        'customer.phone' => 'required|numeric',
         'customer.city' => 'nullable',
         'customer.country' => 'nullable',
         'customer.address' => 'nullable',
@@ -115,8 +120,6 @@ class Index extends Component
         abort_if(Gate::denies('customer_delete'), 403);
 
         $customer->delete();
-
-        $this->reset();
 
         $this->alert('warning', 'Customer deleted successfully');
     }

@@ -6,12 +6,12 @@
     }">
 
     <div class="flex items-center gap-3">
-        <x-button type="button" iconOnly variant="secondary" srText="Open main menu"
+        <x-button type="button" iconOnly secondary srText="Open main menu"
             @click="isSidebarOpen = !isSidebarOpen">
             <x-icons.menu x-show="!isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
             <x-icons.x x-show="isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
         </x-button>
-        <x-button type="button" class="md:hidden" iconOnly variant="secondary" srText="Toggle dark mode"
+        <x-button type="button" class="md:hidden" iconOnly secondary srText="Toggle dark mode"
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-6 h-6" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-6 h-6" />
@@ -21,14 +21,13 @@
     <div class="flex items-center gap-3">
 
         <div class="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
-            <a class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-2 px-5 rounded"
-                href="{{ route('app.pos.index') }}">
-                <i class="bi bi-cart mr-1"></i> POS System
-            </a>
+            <x-button primary href="{{'app.pos.index'}}">
+                <i class="bi bi-cart-plus"></i> {{ __('POS') }}
+            </x-button>
             {{-- @livewire('admin.cache') --}}
         </div>
 
-        <x-button type="button" class="hidden md:inline-flex" iconOnly variant="secondary" srText="Toggle dark mode"
+        <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-6 h-6" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-6 h-6" />

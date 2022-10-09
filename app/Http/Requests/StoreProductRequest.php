@@ -15,17 +15,17 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_name' => ['required', 'string', 'max:255'],
-            'product_code' => ['required', 'string', 'max:255', 'unique:products,product_code'],
-            'product_barcode_symbology' => ['required', 'string', 'max:255'],
-            'product_unit' => ['required', 'string', 'max:255'],
-            'product_quantity' => ['required', 'integer', 'min:1'],
-            'product_cost' => ['required', 'numeric', 'max:2147483647'],
-            'product_price' => ['required', 'numeric', 'max:2147483647'],
-            'product_stock_alert' => ['required', 'integer', 'min:0'],
-            'product_order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'product_tax_type' => ['nullable', 'integer'],
-            'product_note' => ['nullable', 'string', 'max:1000'],
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', 'unique:products,code'],
+            'barcode_symbology' => ['required', 'string', 'max:255'],
+            'unit' => ['required', 'string', 'max:255'],
+            'quantity' => ['required', 'integer', 'min:1'],
+            'cost' => ['required', 'numeric', 'max:2147483647'],
+            'price' => ['required', 'numeric', 'max:2147483647'],
+            'stock_alert' => ['required', 'integer', 'min:0'],
+            'order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'tax_type' => ['nullable', 'integer'],
+            'note' => ['nullable', 'string', 'max:1000'],
             'category_id' => ['required', 'integer']
         ];
     }

@@ -57,24 +57,13 @@
                         </x-table.td>
                         <x-table.td>
                             <div class="inline-flex">
-                                <x-primary-button
-                                    class="bg-blue-500 border-blue-800 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300 mr-2"
-                                    wire:click="showModal({{ $role->id }})" wire:loading.attr="disabled">
-                                    <i class="fas fa-eye"></i>
-                                </x-primary-button>
-
-                                <x-primary-button
-                                    class="bg-green-500 border-green-800 hover:bg-green-600 active:bg-green-700 focus:ring-green-300mr-2"
-                                    wire:click="editModal({{ $role->id }})" wire:loading.attr="disabled">
+                                <x-button primary wire:click="editModal({{ $role->id }})" wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
-                                </x-primary-button>
-
-                                <x-primary-button
-                                    class=" bg-red-500 border-red-800 hover:bg-red-600 active:bg-red-700 focus:ring-red-300 mr-2"
-                                    type="button" wire:click="confirm('delete', {{ $role->id }})"
+                                </x-button>
+                                <x-button danger type="button" wire:click="confirm('delete', {{ $role->id }})"
                                     wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
-                                </x-primary-button>
+                                </x-button>
 
                             </div>
                         </x-table.td>
@@ -104,39 +93,7 @@
         </div>
     </div>
 
-    <x-modal>
-        <x-slot name="title">
-            {{ __('show') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <x-table>
-                <x-slot name="thead">
-                    <x-table.th>#</x-table.th>
-                    <x-table.th>{{ __('Title') }}</x-table.th>
-                    <x-table.th>{{ __('Permissions') }}</x-table.th>
-                </x-slot>
-                <x-table.tbody>
-                    <x-table.tr>
-                        <x-table.td>
-                            {{ $role->id }}
-                        </x-table.td>
-                        <x-table.td>
-                            {{ $role->title }}
-                        </x-table.td>
-                        <x-table.td class="flex flex-wrap">
-                            @foreach ($role->permissions as $key => $entry)
-                                <span class="badge badge-relationship">{{ $entry->title }}</span>
-                            @endforeach
-                        </x-table.td>
-                    </x-table.tr>
-                </x-table.tbody>
-            </x-table>
-        </x-slot>
-    </x-modal>
-
-
-
+    
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('edit') }}
@@ -158,13 +115,13 @@
                         multiple />
                 </div>
                 <div class="w-full flex justify-end">
-                    <x-primary-button type="submit" wire:loading.attr="disabled">
+                    <x-button primary  type="submit" wire:loading.attr="disabled">
                         {{ __('Save') }}
-                    </x-primary-button>
+                    </x-button>
 
-                    <x-primary-button class="ml-2" wire:click="$set('editModal', false)" wire:loading.attr="disabled">
+                    <x-button secondary class="ml-2" wire:click="$set('editModal', false)" wire:loading.attr="disabled">
                         {{ __('Cancel') }}
-                    </x-primary-button>
+                    </x-button>
 
                 </div>
             </form>
@@ -193,14 +150,14 @@
                         multiple />
                 </div>
                 <div class="w-full flex justify-end">
-                    <x-primary-button type="submit" wire:loading.attr="disabled">
+                    <x-button primary  type="submit" wire:loading.attr="disabled">
                         {{ __('Save') }}
-                    </x-primary-button>
+                    </x-button>
 
-                    <x-primary-button class="ml-2" wire:click="$set('createModal', false)"
+                    <x-button secondary class="ml-2" wire:click="$set('createModal', false)"
                         wire:loading.attr="disabled">
                         {{ __('Cancel') }}
-                    </x-primary-button>
+                    </x-button>
 
                 </div>
             </form>

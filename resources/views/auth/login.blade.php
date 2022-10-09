@@ -2,7 +2,7 @@
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                <x-application-logo class="w-10 h-10 fill-current text-gray-500" />
             </a>
         </x-slot>
 
@@ -48,9 +48,9 @@
                     </a>
                 @endif
 
-                <x-primary-button class="ml-3">
+                <x-button primary class="ml-3">
                     {{ __('Log in') }}
-                </x-primary-button>
+                </x-button>
             </div>
         </form>
     </x-auth-card>

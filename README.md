@@ -52,6 +52,12 @@ Refactoring the code to use the new Laravel 9 features, livewire capacities, & t
 - 1.0.21 - Added Import & Export Permissions
 - 1.0.22 - Added Import & Export Sales  
 - 1.0.23 - Added Import & Export Purchases
+- 1.0.24 - Optimization of Product Create with Livewire modal
+- 1.0.25 - Optimization of User Managemenet with Livewire modal
+- 1.0.26 - Optimization of Brand Create with Livewire modal
+- 1.0.27 - Optimization of Category Create with Livewire modal
+- 1.0.28 - Optimization of Customer Create with Livewire modal
+- 1.0.29 - Optimization of Supplier Create with Livewire modal
 
 
 ## Requirements

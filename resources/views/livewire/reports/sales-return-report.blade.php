@@ -29,7 +29,7 @@
                                     <select wire:model.defer="customer_id" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="customer_id">
                                         <option value="">Select Customer</option>
                                         @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
+                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-4 mb-0">
+                        <div class="mb-4">
                             <button type="submit" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
                                 <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
@@ -99,7 +99,7 @@
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</td>
                                 <td>{{ $sale_return->reference }}</td>
-                                <td>{{ $sale_return->customer_name }}</td>
+                                <td>{{ $sale_return->customer->name }}</td>
                                 <td>
                                     @if ($sale_return->status == 'Pending')
                                         <span class="badge badge-info">

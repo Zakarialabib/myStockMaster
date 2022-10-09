@@ -23,14 +23,14 @@
                         {{ __('Quantity') }}
                     </x-table.th>
                 </x-slot>
-                <x-slot name="tbody">
+                <x-table.tbody>
                     <x-table.tr wire:loading.class.delay="opacity-50">
                         @if (!empty($product))
                             <x-table.td>
-                                {{ $product->product_name }}
+                                {{ $product->name }}
                             </x-table.td>
                             <x-table.td>
-                                {{ $product->product_code }}
+                                {{ $product->code }}
                             </x-table.td>
                             <x-table.td>
                                 {{ $product->quantity }}
@@ -43,7 +43,7 @@
                             </x-table.td>
                         @endif
                     </x-table.tr>
-                </x-slot>
+                </x-table.tbody>
             </x-table>
         </div>
 
@@ -78,13 +78,13 @@
                     <div class="col-lg-3 col-md-4 col-sm-6"
                         style="border: 1px solid #ffffff;border-style: dashed;background-color: #48FCFE;">
                         <p class="mt-3 mb-1" style="font-size: 15px;color: #000;">
-                            {{ $product->product_name }}
+                            {{ $product->name }}
                         </p>
                         <div>
                             {!! $barcode !!}
                         </div>
                         <p style="font-size: 15px;color: #000;">
-                            Price:: {{ format_currency($product->product_price) }}
+                            Price:: {{ format_currency($product->price) }}
                         </p>
                     </div>
                 @endforeach

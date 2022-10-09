@@ -34,10 +34,10 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$payment['supplier_name']}}</div>
-                           <div><strong>Téle:</strong> {{$payment['supplier_phone']}}</div>
-                           <div><strong>Adresse:</strong> {{$payment['supplier_adr']}}</div>
-                           <div><strong>Email:</strong> {{$payment['supplier_email']}}</div>
+                           <div><strong>Nom:</strong> {{$payment['name']}}</div>
+                           <div><strong>Téle:</strong> {{$payment['phone']}}</div>
+                           <div><strong>Adresse:</strong> {{$payment['adress']}}</div>
+                           <div><strong>Email:</strong> {{$payment['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

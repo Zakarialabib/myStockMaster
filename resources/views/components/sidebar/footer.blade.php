@@ -2,7 +2,7 @@
     <x-button 
         type="button" 
         iconOnly 
-        variant="secondary" 
+        secondary
         x-show="!isSidebarOpen"
         @click="isSidebarOpen = !isSidebarOpen"
         srText="Toggle sidebar"

@@ -31,10 +31,10 @@
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Supplier Info:</h4>
-                            <div><strong>{{ $supplier->supplier_name }}</strong></div>
+                            <div><strong>{{ $supplier->name }}</strong></div>
                             <div>{{ $supplier->address }}</div>
-                            <div>Email: {{ $supplier->supplier_email }}</div>
-                            <div>Phone: {{ $supplier->supplier_phone }}</div>
+                            <div>Email: {{ $supplier->email }}</div>
+                            <div>Phone: {{ $supplier->phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
@@ -67,9 +67,9 @@
                             @foreach($purchase->purchaseDetails as $item)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $item->product_name }} <br>
+                                        {{ $item->name }} <br>
                                         <span class="badge badge-success">
-                                                {{ $item->product_code }}
+                                                {{ $item->code }}
                                             </span>
                                     </td>
 

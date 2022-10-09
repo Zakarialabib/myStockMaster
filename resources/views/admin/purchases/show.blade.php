@@ -37,11 +37,11 @@
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Supplier Info:</h5>
-                                <div><strong>{{ $supplier->supplier_name }}</strong></div>
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Supplier Info')}}:</h5>
+                                <div><strong>{{ $supplier->name }}</strong></div>
                                 <div>{{ $supplier->address }}</div>
-                                <div>Email: {{ $supplier->supplier_email }}</div>
-                                <div>Phone: {{ $supplier->supplier_phone }}</div>
+                                <div>Email: {{ $supplier->email }}</div>
+                                <div>Phone: {{ $supplier->phone }}</div>
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
@@ -74,9 +74,9 @@
                                 @foreach($purchase->purchaseDetails as $item)
                                     <tr>
                                         <td class="align-middle">
-                                            {{ $item->product_name }} <br>
+                                            {{ $item->name }} <br>
                                             <span class="badge badge-success">
-                                                {{ $item->product_code }}
+                                                {{ $item->code }}
                                             </span>
                                         </td>
 

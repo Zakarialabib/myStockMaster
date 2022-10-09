@@ -11,16 +11,16 @@ class ExpenseCategory extends Model
 
     public $orderable = [
         'id',
-        'category_name',
-        'category_description',
+        'name',
+        'description',
         'created_at',
         'updated_at',
     ];
 
     public $filterable = [
         'id',
-        'category_name',
-        'category_description',
+        'name',
+        'description',
         'created_at',
         'updated_at',
     ];

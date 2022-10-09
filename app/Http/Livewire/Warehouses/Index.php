@@ -18,7 +18,7 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    public $listeners = ['refreshIndex','confirmDelete', 'delete', 'showModal', 'editModal'];
 
     public $showModal;
 
@@ -33,6 +33,8 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
+
+    public $refreshIndex;
 
     protected $queryString = [
         'search' => [
@@ -61,19 +63,22 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
         'warehouse.name' => ['string', 'required'],
-        'warehouse.address' => ['string', 'nullable'],
         'warehouse.phone' => ['string', 'nullable'],
-        'warehouse.email' => ['string', 'nullable'],
-        'warehouse.description' => ['string', 'nullable'],
-        'warehouse.status' => ['boolean', 'nullable'],
     ];
 
     public function mount()
     {
-        $this->perPage = config('project.per_page');
-        $this->paginationOptions = config('project.pagination_options');
+        $this->sortBy            = 'id';
+        $this->sortDirection     = 'desc';
+        $this->perPage           = 100;
+        $this->paginationOptions = config('project.pagination.options');        
         $this->orderable = (new Warehouse())->orderable;
     }
 
@@ -81,13 +86,15 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_access'), 403);
 
-        $query = Warehouse::with(['created_by', 'updated_by'])
-            ->search($this->search)
-            ->orderBy($this->sortBy, $this->sortDirection);
+        $query = Warehouse::advancedFilter([
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $warehouses = $query->paginate($this->perPage);
 
-        return view('livewire.warehouses.index', compact('query', 'warehouses', 'warehouses'));
+        return view('livewire.warehouses.index', compact('warehouses'));
     }
 
     public function showModal(Warehouse $warehouse)
@@ -125,22 +132,6 @@ class Index extends Component
         $this->alert('success', 'Warehouse updated successfully');
     }
 
-
-    public function createModal()
-    {
-        abort_if(Gate::denies('warehouse_create'), 403);
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('warehouse_create'), 403);
-
-        $this->warehouse = Warehouse::make();
-
-        $this->createModal = true;
-    }
 
     public function delete(Warehouse $warehouse)
     {

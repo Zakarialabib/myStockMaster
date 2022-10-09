@@ -32,11 +32,11 @@
                 @foreach($products as $key => $product)
                     <tr>
                         <td class="align-middle">{{ $key + 1 }}</td>
-                        <td class="align-middle">{{ $product['product_name'] ?? $product['product']['product_name'] }}</td>
-                        <td class="align-middle">{{ $product['product_code'] ?? $product['product']['product_code'] }}</td>
+                        <td class="align-middle">{{ $product['name'] ?? $product['product']['name'] }}</td>
+                        <td class="align-middle">{{ $product['code'] ?? $product['product']['code'] }}</td>
                         <td class="align-middle text-center">
                             <span class="badge badge-info">
-                                {{ $product['product_quantity'] ?? $product['product']['product_quantity'] }} {{ $product['product_unit'] ?? $product['product']['product_unit'] }}
+                                {{ $product['quantity'] ?? $product['product']['quantity'] }} {{ $product['unit'] ?? $product['product']['unit'] }}
                             </span>
                         </td>
                         <input type="hidden" name="product_ids[]" value="{{ $product['product']['id'] ?? $product['id'] }}">

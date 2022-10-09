@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class SaleExport implements FromQuery, WithMapping, WithHeadings
+class SaleImport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
 

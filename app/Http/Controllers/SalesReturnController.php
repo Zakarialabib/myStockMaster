@@ -48,7 +48,6 @@ class SalesReturnController extends Controller
             $sale_return = SaleReturn::create([
                 'date' => $request->date,
                 'customer_id' => $request->customer_id,
-                'customer_name' => Customer::findOrFail($request->customer_id)->customer_name,
                 'tax_percentage' => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
                 'shipping_amount' => $request->shipping_amount * 100,
@@ -67,8 +66,8 @@ class SalesReturnController extends Controller
                 SaleReturnDetail::create([
                     'sale_return_id' => $sale_return->id,
                     'product_id' => $cart_item->id,
-                    'product_name' => $cart_item->name,
-                    'product_code' => $cart_item->options->code,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
@@ -126,7 +125,7 @@ class SalesReturnController extends Controller
         foreach ($sale_return_details as $sale_return_detail) {
             $cart->add([
                 'id'      => $sale_return_detail->product_id,
-                'name'    => $sale_return_detail->product_name,
+                'name'    => $sale_return_detail->name,
                 'qty'     => $sale_return_detail->quantity,
                 'price'   => $sale_return_detail->price,
                 'weight'  => 1,
@@ -134,7 +133,7 @@ class SalesReturnController extends Controller
                     'product_discount' => $sale_return_detail->product_discount_amount,
                     'product_discount_type' => $sale_return_detail->product_discount_type,
                     'sub_total'   => $sale_return_detail->sub_total,
-                    'code'        => $sale_return_detail->product_code,
+                    'code'        => $sale_return_detail->code,
                     'stock'       => Product::findOrFail($sale_return_detail->product_id)->product_quantity,
                     'product_tax' => $sale_return_detail->product_tax_amount,
                     'unit_price'  => $sale_return_detail->unit_price
@@ -172,7 +171,6 @@ class SalesReturnController extends Controller
                 'date' => $request->date,
                 'reference' => $request->reference,
                 'customer_id' => $request->customer_id,
-                'customer_name' => Customer::findOrFail($request->customer_id)->customer_name,
                 'tax_percentage' => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
                 'shipping_amount' => $request->shipping_amount * 100,
@@ -191,8 +189,8 @@ class SalesReturnController extends Controller
                 SaleReturnDetail::create([
                     'sale_return_id' => $sale_return->id,
                     'product_id' => $cart_item->id,
-                    'product_name' => $cart_item->name,
-                    'product_code' => $cart_item->options->code,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,

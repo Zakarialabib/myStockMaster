@@ -19,7 +19,7 @@ class ProductPage extends Component
 
     public $product;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
 
     public int $perPage;
     
@@ -27,7 +27,7 @@ class ProductPage extends Component
     
     public $editModal;
     
-    public $createModal;
+    public $refreshIndex;
 
     public array $orderable;
 
@@ -71,18 +71,23 @@ class ProductPage extends Component
         $this->selected = [];
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
-        'product.product_name' => ['required', 'string', 'max:255'],
-        'product.product_code' => ['required', 'string', 'max:255', 'unique:products,product_code'],
-        'product.product_barcode_symbology' => ['required', 'string', 'max:255'],
-        'product.product_unit' => ['required', 'string', 'max:255'],
-        'product.product_quantity' => ['required', 'integer', 'min:1'],
-        'product.product_cost' => ['required', 'numeric', 'max:2147483647'],
-        'product.product_price' => ['required', 'numeric', 'max:2147483647'],
-        'product.product_stock_alert' => ['required', 'integer', 'min:0'],
-        'product.product_order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
-        'product.product_tax_type' => ['nullable', 'integer'],
-        'product.product_note' => ['nullable', 'string', 'max:1000'],
+        'product.name' => ['required', 'string', 'max:255'],
+        'product.code' => ['required', 'string', 'max:255', 'unique:products,code'],
+        'product.barcode_symbology' => ['required', 'string', 'max:255'],
+        'product.unit' => ['required', 'string', 'max:255'],
+        'product.quantity' => ['required', 'integer', 'min:1'],
+        'product.cost' => ['required', 'numeric', 'max:2147483647'],
+        'product.price' => ['required', 'numeric', 'max:2147483647'],
+        'product.stock_alert' => ['required', 'integer', 'min:0'],
+        'product.order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
+        'product.tax_type' => ['nullable', 'integer'],
+        'product.note' => ['nullable', 'string', 'max:1000'],
         'product.category_id' => ['required', 'integer']
     ];
 
@@ -162,31 +167,6 @@ class ProductPage extends Component
         $this->alert('success', 'Product updated successfully.');
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('create_products'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->product = new Product();
-
-        $this->createModal = true;  
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('create_products'), 403);
-
-        $this->validate();
-
-        $this->product->save();
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Product created successfully');
-    }
 
     public function import()
     {
@@ -221,6 +201,6 @@ class ProductPage extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['categories'] = Category::pluck('category_name', 'id')->toArray();
+        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
     }
 }

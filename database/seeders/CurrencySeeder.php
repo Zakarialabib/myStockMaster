@@ -17,7 +17,7 @@ class CurrencySeeder extends Seeder
      */
     public function run() {
         Currency::create([
-            'currency_name'      => 'Dirham Marocain',
+            'name'      => 'Dirham Marocain',
             'code'               => Str::upper('MAD'),
             'symbol'             => 'DH',
             'thousand_separator' => ',',

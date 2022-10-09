@@ -78,9 +78,9 @@
             <x-table.th />
         </x-slot>
 
-        <x-slot name="tbody">
+        <x-table.tbody>
             @forelse ($expenses as $expense)
-                <x-table.tr wire:key="row-{{ $expense->id }}">
+                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $expense->id }}">
                     <x-table.td class="pr-0">
                         <x-table.checkbox wire:model="selected" value="{{ $expense->id }}" />
                     </x-table.td>
@@ -99,21 +99,19 @@
                     <x-table.td>
                         {{ $expense->description }}
                     </x-table.td>
-                    <x-table.td class="whitespace-no-wrap row-action--icon">
-                        <x-primary-button wire:click="showModal({{ $expense->id }})"
-                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                            wire:loading.attr="disabled">
-                            <i class="fas fa-eye"></i>
-                        </x-primary-button>
-                        <x-primary-button wire:click="editModal({{ $expense->id }})"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            wire:loading.attr="disabled">
-                            <i class="fas fa-edit"></i>
-                        </x-primary-button>
-                        <a href="#" wire:click="confirm('delete', {{ $expense->id }})"
-                            wire:loading.attr="disabled"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            <i class="fas fa-trash"></i>
+                    <x-table.td>
+                        <div class="flex justify-start space-x-2">
+                            <x-button alert wire:click="showModal({{ $expense->id }})" wire:loading.attr="disabled">
+                                <i class="fas fa-eye"></i>
+                            </x-button>
+                            <x-button primary wire:click="editModal({{ $expense->id }})" wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
+                            </x-button>
+                            <x-button danger wire:click="$emit('deleteModal', {{ $expense->id }})"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-trash"></i>
+                            </x-button>
+                        </div>
                     </x-table.td>
                 </x-table.tr>
             @empty
@@ -134,7 +132,7 @@
                     </x-table.td>
                 </x-table.tr>
             @endforelse
-        </x-slot>
+        </x-table.tbody>
     </x-table>
 
     <div class="p-4">
@@ -150,9 +148,6 @@
             {{ $expenses->links() }}
         </div>
     </div>
-
-
-
 
     <x-modal wire:model="showModal">
         <x-slot name="title">
@@ -173,61 +168,13 @@
                             disabled />
                     </div>
                 </div>
-                <x-primary-button wire:click="$toggle('showModal')" wire:loading.attr="disabled">
+                <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
                     {{ __('Close') }}
-                </x-primary-button>
+                </x-button>
         </x-slot>
 
     </x-modal>
 
-    <x-modal wire:model="createModal">
-        <x-slot name="title">
-            {{ __('Create Expense') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <form wire:submit.prevent="create">
-                <div class="flex flex-wrap -mx-1">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.reference" :value="__('Reference')" />
-                        <x-input wire:model="expense.reference" id="expense.reference" class="block mt-1 w-full"
-                            type="text" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.date" :value="__('Date')" />
-                        <x-input wire:model="expense.date" id="expense.date" class="block mt-1 w-full"
-                            type="date" />
-                    </div>
-
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.expense_category_id" :value="__('Expense Category')" />
-                        <x-select-list
-                            class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                            required id="permissions" name="permissions" wire:model="permissions"
-                            :options="$this->listsForFields['expensecategories']" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.amount" :value="__('Amount')" required />
-                        <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
-                            type="number" />
-                    </div>
-                    <div class="w-full mb-4">
-                        <x-label for="expense.details" :value="__('Description')" />
-                        <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="6"
-                            wire:model="expense.details" id="expense.details"></textarea>
-                    </div>
-                </div>
-                <div class="flex items-center justify-end mt-4">
-                    <x-primary-button wire:click="$toggle('createModal')" wire:loading.attr="disabled">
-                        {{ __('Cancel') }}
-                    </x-primary-button>
-                    <x-primary-button class="ml-4" wire:click="create" wire:loading.attr="disabled">
-                        {{ __('Create') }}
-                    </x-primary-button>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
 
     <x-modal wire:model="editModal">
         <x-slot name="title">
@@ -252,8 +199,8 @@
                         <x-label for="expense.expense_category_id" :value="__('Expense Category')" />
                         <x-select-list
                             class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                            required id="permissions" name="permissions" wire:model="permissions"
-                            :options="$this->listsForFields['expensecategories']" />
+                            required id="expense_category_id" name="expense_category_id"
+                            wire:model="expense.expense_category_id" :options="$this->listsForFields['expensecategories']" />
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         <x-label for="expense.amount" :value="__('Amount')" required />
@@ -267,21 +214,21 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <x-primary-button wire:click="$toggle('editModal')" wire:loading.attr="disabled">
+                        <x-button secondary wire:click="$toggle('editModal')" wire:loading.attr="disabled">
                             {{ __('Cancel') }}
-                        </x-primary-button>
-                        <x-primary-button class="ml-4" wire:click="update" wire:loading.attr="disabled">
+                        </x-button>
+                        <x-button primary class="ml-4" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
-                        </x-primary-button>
+                        </x-button>
                     </div>
                 </div>
             </form>
         </x-slot>
     </x-modal>
 
+    <livewire:expense.create />
 
 </div>
-
 
 @push('page_scripts')
     <script>

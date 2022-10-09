@@ -38,7 +38,7 @@ class Barcode extends Component
         $this->barcodes = [];
 
         for ($i = 1; $i <= $quantity; $i++) {
-            $barcode = DNS1DFacade::getBarCodeSVG($product->product_code, $product->product_barcode_symbology,2 , 60, 'black', false);
+            $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology,2 , 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
     }
@@ -46,10 +46,10 @@ class Barcode extends Component
     public function getPdf() {
         $pdf = \PDF::loadView('product::barcode.print', [
             'barcodes' => $this->barcodes,
-            'price' => $this->product->product_price,
-            'name' => $this->product->product_name,
+            'price' => $this->product->price,
+            'name' => $this->product->name,
         ]);
-        return $pdf->stream('barcodes-'. $this->product->product_code .'.pdf');
+        return $pdf->stream('barcodes-'. $this->product->code .'.pdf');
     }
 
     public function updatedQuantity() {

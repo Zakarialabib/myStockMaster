@@ -16,7 +16,7 @@ use App\Http\Controllers\PurchasePaymentsController;
 use App\Http\Controllers\PurchaseReturnController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\SalePaymentsController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UsersController;

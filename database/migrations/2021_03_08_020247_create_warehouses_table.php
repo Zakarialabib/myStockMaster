@@ -19,7 +19,7 @@ class CreateWarehousesTable extends Migration {
 			$table->integer('id', true);
 			$table->string('name', 192);
 			$table->string('city', 192)->nullable();
-			$table->string('mobile', 192)->nullable();
+			$table->string('phone', 192)->nullable();
 			$table->string('email', 192)->nullable();
 			$table->string('country', 192)->nullable();
 			$table->timestamps(6);

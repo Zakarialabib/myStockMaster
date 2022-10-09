@@ -27,8 +27,6 @@ class QuotationController extends Controller
     public function create() {
         abort_if(Gate::denies('create_quotations'), 403);
 
-        Cart::instance('quotation')->destroy();
-
         return view('admin.quotation.create');
     }
 
@@ -38,7 +36,6 @@ class QuotationController extends Controller
             $quotation = Quotation::create([
                 'date' => $request->date,
                 'customer_id' => $request->customer_id,
-                'customer_name' => Customer::findOrFail($request->customer_id)->customer_name,
                 'tax_percentage' => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
                 'shipping_amount' => $request->shipping_amount * 100,
@@ -53,8 +50,8 @@ class QuotationController extends Controller
                 QuotationDetails::create([
                     'quotation_id' => $quotation->id,
                     'product_id' => $cart_item->id,
-                    'product_name' => $cart_item->name,
-                    'product_code' => $cart_item->options->code,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
@@ -95,7 +92,7 @@ class QuotationController extends Controller
         foreach ($quotation_details as $quotation_detail) {
             $cart->add([
                 'id'      => $quotation_detail->product_id,
-                'name'    => $quotation_detail->product_name,
+                'name'    => $quotation_detail->name,
                 'qty'     => $quotation_detail->quantity,
                 'price'   => $quotation_detail->price,
                 'weight'  => 1,
@@ -103,8 +100,8 @@ class QuotationController extends Controller
                     'product_discount' => $quotation_detail->product_discount_amount,
                     'product_discount_type' => $quotation_detail->product_discount_type,
                     'sub_total'   => $quotation_detail->sub_total,
-                    'code'        => $quotation_detail->product_code,
-                    'stock'       => Product::findOrFail($quotation_detail->product_id)->product_quantity,
+                    'code'        => $quotation_detail->code,
+                    'stock'       => Product::findOrFail($quotation_detail->product_id)->quantity,
                     'product_tax' => $quotation_detail->product_tax_amount,
                     'unit_price'  => $quotation_detail->unit_price
                 ]
@@ -125,7 +122,6 @@ class QuotationController extends Controller
                 'date' => $request->date,
                 'reference' => $request->reference,
                 'customer_id' => $request->customer_id,
-                'customer_name' => Customer::findOrFail($request->customer_id)->customer_name,
                 'tax_percentage' => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
                 'shipping_amount' => $request->shipping_amount * 100,
@@ -140,8 +136,8 @@ class QuotationController extends Controller
                 QuotationDetails::create([
                     'quotation_id' => $quotation->id,
                     'product_id' => $cart_item->id,
-                    'product_name' => $cart_item->name,
-                    'product_code' => $cart_item->options->code,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
                     'quantity' => $cart_item->qty,
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,

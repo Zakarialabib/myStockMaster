@@ -29,20 +29,20 @@
                             <div class="flex flex-wrap -mx-1">
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_name">{{ __('Product Name') }} <span
+                                        <label for="name">{{ __('Product Name') }} <span
                                                 class="text-red-500">*</span></label>
                                         <input type="text"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_name" required value="{{ old('product_name') }}">
+                                            name="name" required value="{{ old('name') }}">
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_code">{{ __('Code') }} <span
+                                        <label for="code">{{ __('Code') }} <span
                                                 class="text-red-500">*</span></label>
                                         <input type="text"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_code" required value="{{ old('product_code') }}">
+                                            name="code" required value="{{ old('code') }}">
                                     </div>
                                 </div>
 
@@ -55,7 +55,7 @@
                                             name="category_id" id="category_id" required>
                                             <option value="" selected disabled>Select Category</option>
                                             @foreach (\App\Models\Category::all() as $category)
-                                                <option value="{{ $category->id }}">{{ $category->category_name }}
+                                                <option value="{{ $category->id }}">{{ $category->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -67,7 +67,7 @@
                                                 class="text-red-500">*</span></label>
                                         <select
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_barcode_symbology" id="barcode_symbology" required>
+                                            name="barcode_symbology" id="barcode_symbology" required>
                                             <option value="" selected disabled>Select Symbology</option>
                                             <option value="C128">Code 128</option>
                                             <option value="C39">Code 39</option>
@@ -81,59 +81,59 @@
 
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_cost">{{ __('Cost') }} <span
+                                        <label for="cost">{{ __('Cost') }} <span
                                                 class="text-red-500">*</span></label>
-                                        <input id="product_cost" type="text"
+                                        <input id="cost" type="text"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_cost" required value="{{ old('product_cost') }}">
+                                            name="cost" required value="{{ old('cost') }}">
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_price">{{ __('Price') }} <span
+                                        <label for="price">{{ __('Price') }} <span
                                                 class="text-red-500">*</span></label>
-                                        <input id="product_price" type="text"
+                                        <input id="price" type="text"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_price" required value="{{ old('product_price') }}">
+                                            name="price" required value="{{ old('price') }}">
                                     </div>
                                 </div>
 
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_quantity">{{ __('Quantity') }} <span
+                                        <label for="quantity">{{ __('Quantity') }} <span
                                                 class="text-red-500">*</span></label>
                                         <input type="number"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_quantity" required value="{{ old('product_quantity') }}"
+                                            name="quantity" required value="{{ old('quantity') }}"
                                             min="1">
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="product_stock_alert">{{ __('Alert Quantity') }} <span
+                                        <label for="stock_alert">{{ __('Alert Quantity') }} <span
                                                 class="text-red-500">*</span></label>
                                         <input type="number"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_stock_alert" required value="{{ old('product_stock_alert') }}"
+                                            name="stock_alert" required value="{{ old('stock_alert') }}"
                                             min="0" max="100">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-4">
-                                        <label for="product_order_tax">{{ __('Tax (%)') }}</label>
+                                        <label for="order_tax">{{ __('Tax (%)') }}</label>
                                         <input type="number"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_order_tax" value="{{ old('product_order_tax') }}"
+                                            name="order_tax" value="{{ old('order_tax') }}"
                                             min="1">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-4">
-                                        <label for="product_tax_type">{{ __('Tax Type') }}</label>
+                                        <label for="tax_type">{{ __('Tax Type') }}</label>
                                         <select
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_tax_type" id="product_tax_type">
+                                            name="tax_type" id="tax_type">
                                             <option value="" selected disabled>{{ __('Select Tax Type') }}</option>
                                             <option value="1">{{ __('Exclusive') }}</option>
                                             <option value="2">{{ __('Inclusive') }}</option>
@@ -142,21 +142,21 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-4">
-                                        <label for="product_unit">{{ __('Unit') }} <i
+                                        <label for="unit">{{ __('Unit') }} <i
                                                 class="bi bi-question-circle-fill text-info" data-toggle="tooltip"
                                                 data-placement="top"
                                                 title="This text will be placed after Product Quantity."></i> <span
                                                 class="text-red-500">*</span></label>
                                         <input type="text"
                                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="product_unit" value="{{ old('product_unit') }}" required>
+                                            name="unit" value="{{ old('unit') }}" required>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label for="product_note">{{ __('Note') }}</label>
-                                <textarea name="product_note" id="product_note" rows="4 "
+                                <label for="note">{{ __('Note') }}</label>
+                                <textarea name="note" id="note" rows="4 "
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
                             </div>
                         </div>
@@ -243,22 +243,22 @@
     <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#product_cost').maskMoney({
+            $('#cost').maskMoney({
                 prefix: '{{ settings()->currency->symbol }}',
                 thousands: '{{ settings()->currency->thousand_separator }}',
                 decimal: '{{ settings()->currency->decimal_separator }}',
             });
-            $('#product_price').maskMoney({
+            $('#price').maskMoney({
                 prefix: '{{ settings()->currency->symbol }}',
                 thousands: '{{ settings()->currency->thousand_separator }}',
                 decimal: '{{ settings()->currency->decimal_separator }}',
             });
 
             $('#product-form').submit(function() {
-                var product_cost = $('#product_cost').maskMoney('unmasked')[0];
-                var product_price = $('#product_price').maskMoney('unmasked')[0];
-                $('#product_cost').val(product_cost);
-                $('#product_price').val(product_price);
+                var cost = $('#cost').maskMoney('unmasked')[0];
+                var price = $('#price').maskMoney('unmasked')[0];
+                $('#cost').val(cost);
+                $('#price').val(price);
             });
         });
     </script>

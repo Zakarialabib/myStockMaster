@@ -39,7 +39,7 @@
                                             <label for="customer_id">Customer <span class="text-red-500">*</span></label>
                                             <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="customer_id" id="customer_id" required>
                                                 @foreach(\App\Models\Customer::all() as $customer)
-                                                    <option {{ $quotation->customer_id == $customer->id ? 'selected' : '' }} value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
+                                                    <option {{ $quotation->customer_id == $customer->id ? 'selected' : '' }} value="{{ $customer->id }}">{{ $customer->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

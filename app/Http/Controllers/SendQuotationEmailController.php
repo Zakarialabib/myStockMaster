@@ -13,13 +13,13 @@ class SendQuotationEmailController extends Controller
 {
     public function __invoke(Quotation $quotation) {
         try {
-            Mail::to($quotation->customer->customer_email)->send(new QuotationMail($quotation));
+            Mail::to($quotation->customer->email)->send(new QuotationMail($quotation));
 
             $quotation->update([
                 'status' => 'Sent'
             ]);
 
-            toast('Sent On "' . $quotation->customer->customer_email . '"!', 'success');
+            toast('Sent On "' . $quotation->customer->email . '"!', 'success');
 
         } catch (\Exception $exception) {
             Log::error($exception);

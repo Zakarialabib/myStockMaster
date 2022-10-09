@@ -21,13 +21,13 @@ class ExpenseCategoriesController extends Controller
         abort_if(Gate::denies('access_expense_categories'), 403);
 
         $request->validate([
-            'category_name' => 'required|string|max:255|unique:expense_categories,category_name',
-            'category_description' => 'nullable|string|max:1000'
+            'name' => 'required|string|max:255|unique:expense_categories,name',
+            'description' => 'nullable|string|max:1000'
         ]);
 
         ExpenseCategory::create([
-            'category_name' => $request->category_name,
-            'category_description' => $request->category_description
+            'name' => $request->name,
+            'description' => $request->description
         ]);
 
         toast('Expense Category Created!', 'success');
@@ -47,13 +47,13 @@ class ExpenseCategoriesController extends Controller
         abort_if(Gate::denies('access_expense_categories'), 403);
 
         $request->validate([
-            'category_name' => 'required|string|max:255|unique:expense_categories,category_name,' . $expenseCategory->id,
-            'category_description' => 'nullable|string|max:1000'
+            'name' => 'required|string|max:255|unique:expense_categories,name,' . $expenseCategory->id,
+            'description' => 'nullable|string|max:1000'
         ]);
 
         $expenseCategory->update([
-            'category_name' => $request->category_name,
-            'category_description' => $request->category_description
+            'name' => $request->name,
+            'description' => $request->description
         ]);
 
         toast('Expense Category Updated!', 'info');

@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-			$table->string('firstname', 192);
-			$table->string('lastname', 192);
-			$table->string('username', 192);
+			$table->string('name', 192);
 			$table->string('email', 192);
 			$table->string('password');
 			$table->string('avatar')->nullable();
@@ -25,6 +23,9 @@ return new class extends Migration
 			$table->integer('role_id');
 			$table->boolean('statut')->default(1);
             $table->boolean('is_all_warehouses')->default(0);
+            $table->integer('wallet_id')->nullable();
+            $table->integer('default_client_id')->nullable();
+            $table->integer('default_warehouse_id')->nullable();
 			$table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
