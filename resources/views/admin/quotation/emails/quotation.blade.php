@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('b3/bootstrap.min.css') }}">
 </head>
 <body>
-<div class="container px-4 mx-auto" style="margin: 20px 0;">
+<div class="px-4 mx-auto" style="margin: 20px 0;">
     <div class="row">
         <div class="w-full px-4">
             <div style="text-align: center;margin-bottom: 25px;">

@@ -180,12 +180,12 @@ class ProductCart extends Component
         $product_tax = 0;
         $sub_total = 0;
 
-        if ($product['product_tax_type'] == 1) {
+        if ($product['tax_type'] == 1) {
             $price = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
             $unit_price = $product['price'];
             $product_tax = $product['price'] * ($product['order_tax'] / 100);
             $sub_total = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
-        } elseif ($product['product_tax_type'] == 2) {
+        } elseif ($product['tax_type'] == 2) {
             $price = $product['price'];
             $unit_price = $product['price'] - ($product['price'] * ($product['order_tax'] / 100));
             $product_tax = $product['price'] * ($product['order_tax'] / 100);

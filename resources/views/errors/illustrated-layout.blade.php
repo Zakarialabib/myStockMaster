@@ -16,7 +16,7 @@
     </head>
     <body class="antialiased font-sans">
         <section class="relative py-24 md:py-44 lg:py-64 bg-white" >
-            <div class="relative z-10 container px-4 mx-auto">
+            <div class="relative z-10 px-4 mx-auto">
               <div class="max-w-4xl mx-auto text-center">
                 <span class="inline-block py-px px-2 mb-4 text-xs leading-5 text-green-500 bg-green-100 font-medium rounded-full shadow-sm">@yield('code', __('Oh no'))</span>
                 <h2 class="mb-4 text-4xl md:text-5xl leading-tight font-bold tracking-tighter">{{__('Page not found')}}</h2>

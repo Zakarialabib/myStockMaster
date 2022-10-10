@@ -11,7 +11,7 @@
             <x-dropdown align="right" width="48">
 
                 <x-slot name="trigger">
-                    <x-button primary  class="flex items-center">
+                    <x-button primary class="flex items-center">
                         <i class="fas fa-ellipsis-v"></i>
                     </x-button>
                 </x-slot>
@@ -137,23 +137,19 @@
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="date" :value="__('Date')" />
                 <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date" />
-                <x-input-error :message="$errors->first('date')" />
+                <x-input-error :messages="$errors->get('date')" for="date" class="mt-2" />
             </div>
 
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="customer_id" :value="__('Customer')" />
-                <select id="customer_id" class="block mt-1 w-full" wire:model.defer="customer_id">
-                    <option value="">Select Customer</option>
-                    @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :message="$errors->first('customer_id')" />
+                <x-select-list
+                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+
+                <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
         </x-slot>
     </x-modal>
-
-    // updateModal 
 
     <x-modal wire:model="update">
         <x-slot name="title">
@@ -164,23 +160,18 @@
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="date" :value="__('Date')" />
                 <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date" />
-                <x-input-error :message="$errors->first('date')" />
+                <x-input-error :messages="$errors->get('date')" for="date" class="mt-2" />
             </div>
 
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="customer_id" :value="__('Customer')" />
-                <select id="customer_id" class="block mt-1 w-full" wire:model.defer="customer_id">
-                    <option value="">Select Customer</option>
-                    @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :message="$errors->first('customer_id')" />
+                <x-select-list
+                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+                <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
         </x-slot>
     </x-modal>
-
-    // showModal
 
     <x-modal wire:model="show">
         <x-slot name="title">
@@ -190,26 +181,22 @@
         <x-slot name="content">
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="date" :value="__('Date')" />
-                <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date" disabled />
-                <x-input-error :message="$errors->first('date')" />
+                <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date"
+                    disabled />
+                <x-input-error :messages="$errors->get('date')" for="date" class="mt-2" />
             </div>
 
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="customer_id" :value="__('Customer')" />
-                <select id="customer_id" class="block mt-1 w-full" wire:model.defer="customer_id" disabled>
-                    <option value="">Select Customer</option>
-                    @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :message="$errors->first('customer_id')" />
+                <x-select-list
+                class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+                <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
         </x-slot>
-    </x-modal>  
-
+    </x-modal>
 
 </div>
-
 
 @push('page_scripts')
     <script>

@@ -207,15 +207,15 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('sales.pos.pdf');
 
     //Sales
-    Route::resource('sales', 'SaleController');
-
+    Route::resource('sales', SaleController::class);
+    
     //Payments
-    Route::get('/sale-payments/{sale_id}', 'SalePaymentsController@index')->name('sale-payments.index');
+    Route::get('/sale-payments/{sale_id}', [SalePaymentsController::class, 'index'])->name('sale-payments.index');
     Route::get('/sale-payments/{sale_id}/create', 'SalePaymentsController@create')->name('sale-payments.create');
-    Route::post('/sale-payments/store', 'SalePaymentsController@store')->name('sale-payments.store');
-    Route::get('/sale-payments/{sale_id}/edit/{salePayment}', 'SalePaymentsController@edit')->name('sale-payments.edit');
-    Route::patch('/sale-payments/update/{salePayment}', 'SalePaymentsController@update')->name('sale-payments.update');
-    Route::delete('/sale-payments/destroy/{salePayment}', 'SalePaymentsController@destroy')->name('sale-payments.destroy');
+    Route::post('/sale-payments/store', [SalePaymentsController::class, 'store'])->name('sale-payments.store');
+    Route::get('/sale-payments/{sale_id}/edit/{salePayment}', [SalePaymentsController::class, 'edit'])->name('sale-payments.edit');
+    Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
+    Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
 
      //Generate PDF
      Route::get('/sale-returns/pdf/{id}', function ($id) {

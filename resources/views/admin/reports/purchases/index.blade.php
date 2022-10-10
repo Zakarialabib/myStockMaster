@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto">
+    <div class="px-4 mx-auto">
         <livewire:reports.purchases-report :suppliers="\App\Models\Supplier::all()"/>
     </div>
 @endsection

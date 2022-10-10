@@ -4,10 +4,11 @@ namespace App\Http\Livewire\Sales;
 
 use Livewire\Component;
 use App\Http\Livewire\WithSorting;
+use App\Models\Sale;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Sale;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
@@ -34,6 +35,8 @@ class Index extends Component
 
     public array $paginationOptions;
     
+    public array $listsForFields = [];
+
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -86,6 +89,7 @@ class Index extends Component
         $this->perPage           = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable         = (new Sale())->orderable;
+        $this->initListsForFields();
     }
 
     public function render()
@@ -178,7 +182,10 @@ class Index extends Component
         $this->alert('success', 'Sale deleted successfully.');
     }
 
-
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['custmers'] = Customer::pluck('name', 'id')->toArray();
+    }
 
   
 }

@@ -33,6 +33,11 @@
         @can('access_warehouse')
             <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
         @endcan
+
+        {{-- Todo : Added create button to the right with icon --}}
+        <a class="justify-end text-black font-bold" href="{{route('products.create')}}">
+                <i class="fas fa-plus"></i>
+        </a>
     </x-sidebar.dropdown>
 
     @can('access_adjustments')

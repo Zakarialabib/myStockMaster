@@ -8,7 +8,7 @@ use Livewire\Component;
 class Checkout extends Component
 {
 
-    public $listeners = ['productSelected', 'discountModalRefresh'];
+    public $listeners = ['productSelected', 'discountModalRefresh', 'checkoutModal'];
 
     public $cart_instance;
     public $customers;
@@ -22,6 +22,7 @@ class Checkout extends Component
     public $data;
     public $customer_id;
     public $total_amount;
+    public $checkoutModal;
 
     public function mount($cartInstance, $customers) {
         $this->cart_instance = $cartInstance;
@@ -51,7 +52,7 @@ class Checkout extends Component
 
     public function proceed() {
         if ($this->customer_id != null) {
-            $this->dispatchBrowserEvent('showCheckoutModal');
+            $this->checkoutModal = true;
         } else {
             session()->flash('message', 'Please Select Customer!');
         }
@@ -180,12 +181,12 @@ class Checkout extends Component
         $product_tax = 0;
         $sub_total = 0;
 
-        if ($product['product_tax_type'] == 1) {
+        if ($product['tax_type'] == 1) {
             $price = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
             $unit_price = $product['price'];
             $product_tax = $product['price'] * ($product['order_tax'] / 100);
             $sub_total = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
-        } elseif ($product['product_tax_type'] == 2) {
+        } elseif ($product['tax_type'] == 2) {
             $price = $product['price'];
             $unit_price = $product['price'] - ($product['price'] * ($product['order_tax'] / 100));
             $product_tax = $product['price'] * ($product['order_tax'] / 100);

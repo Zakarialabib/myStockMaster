@@ -24,8 +24,6 @@ class Index extends Component
     public array $orderable;
 
     public string $search = '';
-    
-    public $showDeleteModal = false;
 
     public array $selected = [];
 
@@ -70,6 +68,17 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public array $rules = [
+        'user.name' => 'required|string|max:255',
+        'user.email' => 'required|email|unique:users,email',
+        'user.password' => 'required|string|min:8',
+        'user.phone' => 'required|numeric',
+        'user.city' => 'nullable',
+        'user.country' => 'nullable',
+        'user.address' => 'nullable',
+        'user.tax_number' => 'nullable',
+    ];
+
     public function mount()
     {
         $this->sortBy            = 'id';
@@ -99,8 +108,6 @@ class Index extends Component
         abort_if(Gate::denies('user_delete'), 403);
 
         User::whereIn('id', $this->selected)->delete();
-
-        $this->showDeleteModal = false;
 
         $this->resetSelected();
     }

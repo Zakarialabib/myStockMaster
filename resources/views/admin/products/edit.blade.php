@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto mb-4">
+    <div class="px-4 mx-auto mb-4">
         <form id="product-form" action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('patch')

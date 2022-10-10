@@ -21,7 +21,7 @@
     <div class="flex items-center gap-3">
 
         <div class="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
-            <x-button primary href="{{'app.pos.index'}}">
+            <x-button primary :href="route('app.pos.index')">
                 <i class="bi bi-cart-plus"></i> {{ __('POS') }}
             </x-button>
             {{-- @livewire('admin.cache') --}}

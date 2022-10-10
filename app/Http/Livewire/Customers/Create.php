@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Customers;
 
 use Livewire\Component;
 use App\Models\Customer;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -52,7 +53,16 @@ class Create extends Component
 
         $this->customer->save();
 
-        $this->alert('success', __('Customer created successfully.'));
+        if($this->customer) {
+            $wallet = Wallet::create([
+                'customer_id' => $this->customer->id,
+                'balance' => 0,
+            ]);
+            $this->alert('success', 'Customer created successfully');
+        }
+        else {
+            $this->alert('error', 'Customer not created');
+        }
 
         $this->emit('refreshIndex');
 

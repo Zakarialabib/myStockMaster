@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
 
-            <div class="container px-4 mx-auto mb-4">
+            <div class="px-4 mx-auto mb-4">
                 <div class="row mb-3">
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(

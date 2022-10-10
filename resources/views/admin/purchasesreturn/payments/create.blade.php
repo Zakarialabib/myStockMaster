@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto">
+    <div class="px-4 mx-auto">
         <form id="payment-form" action="{{ route('purchase-return-payments.store') }}" method="POST">
             @csrf
             <div class="row">

@@ -1,147 +1,142 @@
 <div>
-    <div class="card border-0 shadow-sm">
-        <div class="p-4">
+    <div class="w-full py-2 px-6 shadow-md sm:rounded-lg">
+        <div>
+            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
+            <div class="mb-4">
+                <a href="{{ route('customers.create') }}"
+                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                    {{ __('Add Customer') }}
+                </a>
+                <select wire:model="customer_id" id="customer_id"
+                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                    <option value="" selected>{{ __('Select Customer') }}</option>
+                    @foreach ($customers as $customer)
+                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div>
-                @if (session()->has('message'))
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <div class="alert-body">
-                            <span>{{ session('message') }}</span>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                    </div>
-                @endif
+                <x-table>
+                    <x-slot name="thead">
+                        <x-table.th>{{ __('Product') }}</x-table.th>
+                        <x-table.th>{{ __('Price') }}</x-table.th>
+                        <x-table.th>{{ __('Quantity') }}</x-table.th>
+                        <x-table.th>{{ __('Action') }}</x-table.th>
 
-                <div class="mb-4">
-                    <label for="customer_id">Customer <span class="text-red-500">*</span></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <a href="{{ route('customers.create') }}" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                <i class="bi bi-person-plus"></i>
-                            </a>
-                        </div>
-                        <select wire:model="customer_id" id="customer_id" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
-                            <option value="" selected>Select Customer</option>
-                            @foreach($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr class="text-center">
-                            <th class="align-middle">Product</th>
-                            <th class="align-middle">{{__('Price')}}</th>
-                            <th class="align-middle">{{__('Quantity')}}</th>
-                            <th class="align-middle">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if($cart_items->isNotEmpty())
-                            @foreach($cart_items as $cart_item)
-                                <tr>
-                                    <td class="align-middle">
+                    </x-slot>
+                    <x-table.tbody>
+                        @if ($cart_items->isNotEmpty())
+                            @foreach ($cart_items as $cart_item)
+                                <x-table.tr>
+                                    <x-table.td>
                                         {{ $cart_item->name }} <br>
                                         <span class="badge badge-success">
-                                        {{ $cart_item->options->code }}
-                                    </span>
-                                        @include('livewire.includes.product-cart-modal')
-                                    </td>
+                                            {{ $cart_item->options->code }}
+                                        </span>
+                                        {{-- @include('livewire.includes.product-cart-modal') --}}
+                                    </x-table.td>
 
-                                    <td class="align-middle">
+                                    <x-table.td>
                                         {{ format_currency($cart_item->price) }}
-                                    </td>
+                                    </x-table.td>
 
-                                    <td class="align-middle">
+                                    <x-table.td>
                                         @include('livewire.includes.product-cart-quantity')
-                                    </td>
+                                    </x-table.td>
 
-                                    <td class="align-middle text-center">
+                                    <x-table.td>
                                         <a href="#" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
                                             <i class="bi bi-x-circle font-2xl text-danger"></i>
                                         </a>
-                                    </td>
-                                </tr>
+                                    </x-table.td>
+                                </x-table.tr>
                             @endforeach
                         @else
-                            <tr>
-                                <td colspan="8" class="text-center">
-                        <span class="text-red-500">
-                            Please search & select products!
-                        </span>
-                                </td>
-                            </tr>
+                            <x-table.tr>
+                                <x-table.td colspan="8" class="text-center">
+                                    <span class="text-red-500">
+                                        {{ __('Please search & select products!') }}
+                                    </span>
+                                </x-table.td>
+                            </x-table.tr>
                         @endif
-                        </tbody>
+                    </x-table.tbody>
+                </x-table>
+            </div>
+        </div>
+
+        <div class="flex flex-row">
+            <div class="w-full px-4">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>{{ __('Order Tax') }} ({{ $global_tax }}%)</th>
+                            <td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ __('Discount') }} ({{ $global_discount }}%)</th>
+                            <td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ __('Shipping') }}</th>
+                            <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
+                            <td>(+) {{ format_currency($shipping) }}</td>
+                        </tr>
+                        <tr class="text-primary">
+                            <th>{{ __('Grand Total') }}</th>
+                            @php
+                                $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
+                            @endphp
+                            <th>
+                                (=) {{ format_currency($total_with_shipping) }}
+                            </th>
+                        </tr>
                     </table>
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="w-full px-4">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <tr>
-                                <th>Order Tax ({{ $global_tax }}%)</th>
-                                <td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Discount ({{ $global_discount }}%)</th>
-                                <td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Shipping</th>
-                                <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
-                                <td>(+) {{ format_currency($shipping) }}</td>
-                            </tr>
-                            <tr class="text-primary">
-                                <th>Grand Total</th>
-                                @php
-                                    $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping
-                                @endphp
-                                <th>
-                                    (=) {{ format_currency($total_with_shipping) }}
-                                </th>
-                            </tr>
-                        </table>
-                    </div>
+        <div class="flex flex-wrap -mx-1">
+            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
+                    <input wire:model.lazy="global_tax" type="number"
+                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        min="0" max="100" value="{{ $global_tax }}" required>
                 </div>
             </div>
-
-            <div class="flex flex-wrap -mx-1">
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="tax_percentage">Order Tax (%)</label>
-                        <input wire:model.lazy="global_tax" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" min="0" max="100" value="{{ $global_tax }}" required>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="discount_percentage">Discount (%)</label>
-                        <input wire:model.lazy="global_discount" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" min="0" max="100" value="{{ $global_discount }}" required>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="shipping_amount">Shipping</label>
-                        <input wire:model.lazy="shipping" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" min="0" value="0" required step="0.01">
-                    </div>
+            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label for="discount_percentage">{{ __('Discount') }} (%)</label>
+                    <input wire:model.lazy="global_discount" type="number"
+                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        min="0" max="100" value="{{ $global_discount }}" required>
                 </div>
             </div>
-
-            <div class="mb-4 d-flex justify-content-center flex-wrap md:mb-0">
-                <button wire:click="resetCart" type="button" class="btn btn-pill btn-danger mr-3"><i class="bi bi-x"></i> Reset</button>
-                <button wire:loading.attr="disabled" wire:click="proceed" type="button" class="btn btn-pill btn-primary" {{  $total_amount == 0 ? 'disabled' : '' }}><i class="bi bi-check"></i> Proceed</button>
+            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label for="shipping_amount">{{ __('Shipping') }}</label>
+                    <input wire:model.lazy="shipping" type="number"
+                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        min="0" value="0" required step="0.01">
+                </div>
             </div>
+        </div>
+
+        <div class="mb-4 d-flex justify-content-center flex-wrap md:mb-0">
+            <x-button danger wire:click="resetCart" wire:loading.attr="disabled" class="ml-2">
+                <i class="bi bi-x"></i> {{ __('Reset') }}
+            </x-button>
+            <button wire:click="proceed" {{ $total_amount == 0 ? 'disabled' : '' }} wire:loading.attr="disabled"
+                class="ml-2">
+                <i class="bi bi-check"></i> {{ __('Proceed') }}
+                <button>
         </div>
     </div>
 
-    {{--Checkout Modal--}}
+    {{-- Checkout Modal --}}
     @include('livewire.pos.includes.checkout-modal')
 
 </div>
-

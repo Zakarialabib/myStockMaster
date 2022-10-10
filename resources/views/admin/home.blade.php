@@ -24,7 +24,7 @@
     </section>
 @endsection
 @section('content')
-    <div class="container px-4 mx-auto">
+    <div class="px-4 mx-auto">
         @can('show_total_stats')
             <div class="flex flex-wrap -m-4">
                 <div class="w-full lg:w-1/4 p-4">

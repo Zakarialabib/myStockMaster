@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ public_path('b3/bootstrap.min.css') }}">
 </head>
 <body>
-<div class="container px-4 mx-auto">
+<div class="px-4 mx-auto">
     <div class="row">
         <div class="col-xs-12">
             <div style="text-align: center;margin-bottom: 25px;">

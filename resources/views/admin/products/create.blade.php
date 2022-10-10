@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto">
+    <div class="px-4 mx-auto">
         <form id="product-form" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">

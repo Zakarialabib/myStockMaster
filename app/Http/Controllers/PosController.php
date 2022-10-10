@@ -23,7 +23,7 @@ class PosController extends Controller
         $customers = Customer::all();
         $product_categories = Category::all();
 
-        return view('admin.sales.pos.index', compact('product_categories', 'customers'));
+        return view('admin.sale.pos.index', compact('product_categories', 'customers'));
     }
 
 

@@ -99,4 +99,9 @@ class Sale extends Model
     public function getDiscountAmountAttribute($value) {
         return $value / 100;
     }
+
+    public function customer() {
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
+    }
+
 }

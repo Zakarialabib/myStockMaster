@@ -17,7 +17,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto mb-4">
+    <div class="px-4 mx-auto mb-4">
         <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('patch')

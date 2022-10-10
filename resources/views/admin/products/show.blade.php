@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto mb-4">
+    <div class="px-4 mx-auto mb-4">
         <div class="row mb-3">
             <div class="w-full px-4">
                 {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(

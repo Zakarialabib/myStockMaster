@@ -1,4 +1,4 @@
-@props(['for', 'value', 'required' => false])
+@props(['for', 'value', 'required' => false, 'tooltip' => null])
 
 @php
     $requiredClasses = 'text-red-500';
@@ -7,7 +7,12 @@
 
 <label for="{{ $for }}" {{ $attributes->merge(['class' => 'block font-medium text-sm text-gray-700']) }}>
     {{ $value ?? $slot }}
+
     @if ($required)
         <span class="{{ $requiredClasses }}">{{ $requiredLabel }}</span>
+    @endif
+
+    @if($tooltip)
+    <i class="fas fa-info-circle text-red-400 ml-1" data-toggle="tooltip" data-placement="top" title="{{ $tooltip }}"></i>
     @endif
 </label>

@@ -1,42 +1,54 @@
 <div>
-    <div class="card border-0 shadow-sm mt-3">
-        <div class="p-4">
-            <livewire:pos.filter :categories="$categories"/>
-            <div class="row position-relative">
-                <div wire:loading.flex class="col-12 position-absolute justify-content-center align-items-center" style="top:0;right:0;left:0;bottom:0;background-color: rgba(255,255,255,0.5);z-index: 99;">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-                @forelse($products as $product)
-                    <div wire:click.prevent="selectProduct({{ $product }})" class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-md-6" style="cursor: pointer;">
-                        <div class="card border-0 shadow h-100">
-                            <div class="position-relative">
-                                <img height="200" src="{{ $product->getFirstMediaUrl('images') }}" class="card-img-top" alt="Product Image">
-                                <div class="badge badge-info mb-3 position-absolute" style="left:10px;top: 10px;">Stock: {{ $product->quantity }}</div>
+    <div class="w-full py-2 px-6 shadow-md sm:rounded-lg">
+        <livewire:pos.filter :categories="$categories" />
+        <div class="flex flex-row relative h-screen">
+            <div wire:loading.flex class="w-full px-2 absolute justify-center items-center"
+                style="top:0;right:0;left:0;bottom:0;background-color: rgba(255,255,255,0.5);z-index: 99;">
+                <x-loading />
+            </div>
+            <div class="grid grid-cols-4 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+                <div class="">
+                    @forelse($products as $product)
+                        <div wire:click.prevent="selectProduct({{ $product }})" class="h-64 rounded-md shadow-xl">
+                            <div class="relative">
+                                <img src="{{ $product->getFirstMediaUrl('images') }}"
+                                    class="h-32 w-full object-cover rounded-md" alt="{{ $product->name }}">
+                                <div class="inline-block p-1 text-center font-semibold text-sm align-baseline leading-none rounded text-white bg-blue-400 mb-3 absolute"
+                                    style="left:10px;top: 10px;">{{ __('Stock') }}: {{ $product->quantity }}</div>
                             </div>
-                            <div class="p-4">
+                            <div class="px-2">
                                 <div class="mb-2">
-                                    <h6 style="font-size: 13px;" class="card-title mb-0">{{ $product->name }}</h6>
-                                    <span class="badge badge-success">
-                                    {{ $product->code }}
-                                </span>
+                                    <h6 class="text-md text-center font-semibold mb-3 md:mb-0">{{ $product->name }}</h6>
+                                    <span
+                                        class="inline-block p-1 text-center font-semibold text-sm align-baseline leading-none rounded text-white bg-green-400">
+                                        {{ $product->code }}
+                                    </span>
                                 </div>
-                                <p class="card-text font-weight-bold">{{ format_currency($product->price) }}</p>
+                                <p class="mb-0 text-center font-bold">{{ format_currency($product->price) }}</p>
                             </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <div class="alert alert-warning mb-0">
-                            Products Not Found...
+                    @empty
+                        <div class="w-full px-2">
+                            <div
+                                class="relative px-3 py-3 mb-4 border rounded text-yellow-800 border-yellow-800 bg-yellow-400 md:mb-0">
+                                <span class="inline-block align-middle mr-8">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11a1 1 0 11-2 0 1 1 0 012 0zm-1-3a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                                <span class="inline-block align-middle mr-8">
+                                    {{ __('No product found') }}
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
-            <div @class(['mt-3' => $products->hasPages()])>
-                {{ $products->links() }}
-            </div>
+        </div>
+        <div @class(['mt-3' => $products->hasPages()])>
+            {{ $products->links() }}
         </div>
     </div>
 </div>

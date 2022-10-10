@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-    <div class="container px-4 mx-auto">
+    <div class="px-4 mx-auto">
         <div class="row">
             <div class="col-12">
                 <x-card>
