@@ -29,7 +29,7 @@
             <!-- Sidebar -->
             <x-sidebar.sidebar />
             <!-- Page Wrapper -->
-            <div class="flex flex-col min-h-screen"
+            <div class="flex flex-col min-h-screen pl-7"
                 :class="{
                     'lg:ml-64': isSidebarOpen,
                     // 'md:ml-16': !isSidebarOpen,

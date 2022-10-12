@@ -2,12 +2,12 @@
 
 @php
     
-$classes = 'transition-colors hover:text-zinc-900 dark:hover:text-zinc-100';
+$classes = 'transition-colors hover:text-gray-900 dark:hover:text-gray-100';
 $active 
-    ? $classes .= ' text-zinc-900 dark:text-zinc-200' 
-    : $classes .= ' text-zinc-500 dark:text-zinc-400';
+    ? $classes .= ' text-gray-900 dark:text-gray-200' 
+    : $classes .= ' text-gray-500 dark:text-gray-400';
 @endphp
 
 <li>
-    <a class="flex items-center pl-3 py-3 pr-4 text-gray-500 hover:bg-indigo-50 rounded" {{ $attributes->merge(['class' => $classes]) }}>{{ $title }}</a>
+    <a class="flex items-center pl-3 py-3 pr-4 text-indigo-500 hover:text-white hover:bg-indigo-500 rounded" {{ $attributes->merge(['class' => $classes]) }}>{{ $title }}</a>
 </li>

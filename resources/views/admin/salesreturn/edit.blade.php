@@ -29,7 +29,7 @@
                             <div class="flex flex-wrap -mx-1">
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="reference">Reference <span class="text-red-500">*</span></label>
+                                        <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required value="{{ $sale_return->reference }}" readonly>
                                     </div>
                                 </div>
@@ -60,11 +60,11 @@
                             <div class="flex flex-wrap -mx-1">
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="status">Status <span class="text-red-500">*</span></label>
+                                        <label for="status">{{__('Status')}} <span class="text-red-500">*</span></label>
                                         <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="status" id="status" required>
-                                            <option {{ $sale_return->status == 'Pending' ? 'selected' : '' }} value="Pending">Pending</option>
+                                            <option {{ $sale_return->status == 'Pending' ? 'selected' : '' }} value="Pending">{{__('Pending')}}</option>
                                             <option {{ $sale_return->status == 'Shipped' ? 'selected' : '' }} value="Shipped">Shipped</option>
-                                            <option {{ $sale_return->status == 'Completed' ? 'selected' : '' }} value="Completed">Completed</option>
+                                            <option {{ $sale_return->status == 'Completed' ? 'selected' : '' }} value="Completed">{{__('Completed')}}</option>
                                         </select>
                                     </div>
                                 </div>

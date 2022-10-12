@@ -7,14 +7,12 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            {{-- @can('permission_delete') --}}
             <button
                 class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
                 type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled"
                 {{ $this->selectedCount ? '' : 'disabled' }}>
                 {{ __('Delete') }}
             </button>
-            {{-- @endcan --}}
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="my-2 my-md-0">
@@ -24,13 +22,15 @@
             </div>
         </div>
     </div>
-    <div wire:loading.delay>
-        Loading...
+    <div wire:loading.delay class="flex justify-center">
+        <x-loading />
     </div>
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th>#</x-table.th>
+            <x-table.th>
+                <x-input type="checkbox" wire:model="selectPage" />
+            </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
                 @include('components.table.sort', ['field' => 'name'])
@@ -79,6 +79,7 @@
                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                                 <i class="fas fa-trash"></i>
                             </button>
+
                         </div>
                     </x-table.td>
                 </x-table.tr>
@@ -86,7 +87,7 @@
                 <x-table.tr>
                     <x-table.td colspan="6">
                         <div class="flex justify-center">
-                            {{ __('No results found for the query') }} "{{ $search }}".
+                            {{ __('No results found') }}
                         </div>
                     </x-table.td>
                 </x-table.tr>

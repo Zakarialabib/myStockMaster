@@ -4,7 +4,7 @@
     <div class="table-responsive relative">
         <div wire:loading.flex class="absolute top-0 left-0 w-full h-full bg-white bg-opacity-75 z-50">
             <div class="m-auto">
-                <x-spinner />
+                <x-loading />
             </div>
         </div>
         <x-table>
@@ -25,10 +25,10 @@
                                 <span class="badge badge-success">
                                     {{ $cart_item->options->code }}
                                 </span>
-                                @include('livewire.includes.product-cart-modal')
+                                {{-- @include('livewire.includes.product-cart-modal') --}}
                             </x-table.td>
 
-                            <x-table.td>{{ format_currency($cart_item->options->unit_price) }}</td>
+                            <x-table.td>{{ format_currency($cart_item->options->unit_price) }}</x-table.td>
 
                                 <x-table.td>
                                     <span
@@ -52,7 +52,7 @@
                     @endforeach
                 @else
                     <x-table.tr>
-                        <x-table.td td colspan="8" class="text-center">
+                        <x-table.td colspan="8" class="text-center">
                             <span class="text-red-500">
                                 {{ __('Please search & select products!') }}
                             </span>
@@ -65,7 +65,7 @@
     <div class="flex flx-wrap md:justify-end">
         <div class="w-1/3 px-4">
             <div class="w-full mb-5 p-0 overflow-x-auto rounded h-full">
-                <table class="table items-center w-full mb-0 align-top border-grey-100 text-[#67748e] pt-5">">
+                <table class="table items-center w-full mb-0 align-top border-grey-100 text-[#67748e] pt-5">
                     <tr>
                         <th>{{ __('Order Tax') }} ({{ $global_tax }}%)</th>
                         <td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</td>

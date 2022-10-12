@@ -3,7 +3,7 @@
 <html lang="en">
    <head>
       <meta charset="utf-8">
-      <title>{{__('Client')}}  : {{$client['client_name']}}</title>
+      <title>{{__('Customer')}}  : {{$client['client_name']}}</title>
       <link rel="stylesheet" href="{{asset('/css/pdf_style.css')}}" media="all" />
    </head>
 
@@ -14,7 +14,7 @@
          </div>
         
          <div id="Title-heading">
-               {{__('Client')}}  : {{$client['client_name']}}
+               {{__('Customer')}}  : {{$client['client_name']}}
          </div>
          </div>
       </header>
@@ -30,13 +30,13 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$client['client_name']}}</div>
-                           <div><strong>ICE:</strong> {{$client['client_ice']}}</div>
-                           <div><strong>Téle:</strong> {{$client['phone']}}</div>
-                           <div><strong>Ventes totales:</strong> {{$client['total_sales']}}</div>
-                           <div><strong>Monatnt total:</strong> {{$symbol}} {{$client['total_amount']}}</div>
-                           <div><strong>Total payé:</strong> {{$symbol}} {{$client['total_paid']}}</div>
-                           <div><strong>Dû:</strong> {{$symbol}} {{$client['due']}}</div>
+                           <div><strong>{{__('Name')}}:</strong> {{$client['client_name']}}</div>
+                           <div><strong>{{__('Tax_number')}}:</strong> {{$client['client_ice']}}</div>
+                           <div><strong>{{__('Phone')}}:</strong> {{$client['phone']}}</div>
+                           <div><strong>{{__('Total Sales')}}:</strong> {{$client['total_sales']}}</div>
+                           <div><strong>{{__('Total Amount')}}:</strong> {{$symbol}} {{$client['total_amount']}}</div>
+                           <div><strong>{{__('Total Paid')}}:</strong> {{$symbol}} {{$client['total_paid']}}</div>
+                           <div><strong>{{__('Due')}}:</strong> {{$symbol}} {{$client['due']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -46,17 +46,17 @@
                <table class="table-sm">
                   <thead>
                      <tr>
-                        <th class="desc">Infos société</th>
+                        <th class="desc">{{__('Company')}}</th>
                      </tr>
                   </thead>
                   <tbody>
                      <tr>
                         <td>
                            <div id="comp">{{$setting['CompanyName']}}</div>
-                           <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
+                           <div><strong>{{__('Tax Number')}}:</strong>  {{$setting['CompanyTaxNumber']}}</div>
+                           <div><strong>{{__('Address')}}:</strong>  {{$setting['CompanyAdress']}}</div>
+                           <div><strong>{{__('Phone')}}:</strong>  {{$setting['CompanyPhone']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -70,7 +70,7 @@
             <table  class="table-sm">
                <thead>
                   <tr>
-                     <th>DATE</th>
+                     <th>{{__('Date')}}</th>
                      <th>REF</th>
                      <th>PAYE</th>
                      <th>DÛ</th>

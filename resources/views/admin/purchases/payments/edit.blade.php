@@ -29,7 +29,7 @@
                             <div class="flex flex-wrap -mx-1">
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                                     <div class="mb-4">
-                                        <label for="reference">Reference <span class="text-red-500">*</span></label>
+                                        <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required readonly value="{{ $purchasePayment->reference }}">
                                     </div>
                                 </div>

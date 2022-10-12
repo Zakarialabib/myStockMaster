@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="is_active">Status <span class="text-red-500">*</span></label>
+                                <label for="is_active">{{__('Status')}} <span class="text-red-500">*</span></label>
                                 <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="is_active" id="is_active" required>
                                     <option value="1" {{ $user->is_active == 1 ? 'selected' : ''}}>Active</option>
                                     <option value="2" {{ $user->is_active == 2 ? 'selected' : ''}}>Deactive</option>

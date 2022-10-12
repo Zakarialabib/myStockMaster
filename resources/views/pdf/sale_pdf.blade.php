@@ -111,7 +111,7 @@
                   <td>{{$sale['shipping']}} </td>
                </tr>
                <tr>
-                  <td>Total</td>
+                  <td{{__('Total')}}</td>
                   <td>{{$symbol}} {{$sale['GrandTotal']}} </td>
                </tr>
 

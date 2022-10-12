@@ -8,7 +8,11 @@ use App\Support\HasAdvancedFilter;
 class Purchase extends Model
 {
     use HasAdvancedFilter;
-    
+
+    const STATUS_PENDING = 0;
+    const STATUS_ORDERED = 1;
+    const STATUS_COMPLETED = 2;
+
     public $orderable = [
         'id',
         'date',
@@ -53,6 +57,7 @@ class Purchase extends Model
 
     protected $guarded = [];
 
+
     public function purchaseDetails() {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
@@ -96,5 +101,9 @@ class Purchase extends Model
 
     public function getDiscountAmountAttribute($value) {
         return $value / 100;
+    }
+
+    public function supplier() {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 }

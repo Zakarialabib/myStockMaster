@@ -29,13 +29,13 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$provider['provider_name']}}</div>
-                           <div><strong>ICE:</strong> {{$provider['provider_ice']}}</div>
-                           <div><strong>Téle:</strong> {{$provider['phone']}}</div>
-                           <div><strong>Total des achats:</strong> {{$provider['total_purchase']}}</div>
-                           <div><strong>Montant total:</strong> {{$symbol}} {{$provider['total_amount']}}</div>
-                           <div><strong>Total payé:</strong> {{$symbol}} {{$provider['total_paid']}}</div>
-                           <div><strong>Dû:</strong> {{$symbol}} {{$provider['due']}}</div>
+                           <div><strong>{{__('Name')}}:</strong> {{$provider['provider_name']}}</div>
+                           <div><strong>{{__('Tax_number')}}:</strong> {{$provider['provider_ice']}}</div>
+                           <div><strong>{{__('Phone')}}:</strong> {{$provider['phone']}}</div>
+                           <div><strong>{{__('Purchase Total')}}:</strong> {{$provider['total_purchase']}}</div>
+                           <div><strong>{{__('Total Amount')}}:</strong> {{$symbol}} {{$provider['total_amount']}}</div>
+                           <div><strong>{{__('Total Paid')}}:</strong> {{$symbol}} {{$provider['total_paid']}}</div>
+                           <div><strong>{{__('Due')}}:</strong> {{$symbol}} {{$provider['due']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -69,7 +69,7 @@
             <table  class="table-sm">
                <thead>
                   <tr>
-                     <th>DATE</th>
+                     <th>{{__('Date')}}</th>
                      <th>REF</th>
                      <th>PAYE</th>
                      <th>DÛ</th>

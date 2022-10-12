@@ -50,7 +50,7 @@
         <div class="mt-3">
             <button wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button"
                 class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                <i class="bi bi-upc-scan"></i> Generate Barcodes
+                <i class="bi bi-upc-scan"></i> {{__('Generate Barcodes')}}
             </button>
         </div>
     </div>
@@ -73,9 +73,9 @@
     </div>
     <div class="card">
         <div class="p-4">
-            <div class="row justify-content-center">
+            <div class="flex flex-wrap justify-center">
                 @foreach ($barcodes as $barcode)
-                    <div class="col-lg-3 col-md-4 col-sm-6"
+                    <div class="lg:w-1/3 md:w-1/4 sm:w-1/2"
                         style="border: 1px solid #ffffff;border-style: dashed;background-color: #48FCFE;">
                         <p class="mt-3 mb-1" style="font-size: 15px;color: #000;">
                             {{ $product->name }}
@@ -83,8 +83,8 @@
                         <div>
                             {!! $barcode !!}
                         </div>
-                        <p style="font-size: 15px;color: #000;">
-                            Price:: {{ format_currency($product->price) }}
+                        <p class="text-black font-bold text-lg">
+                            {{__('Price')}} : {{ format_currency($product->price) }}
                         </p>
                     </div>
                 @endforeach

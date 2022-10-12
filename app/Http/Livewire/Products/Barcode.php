@@ -44,7 +44,7 @@ class Barcode extends Component
     }
 
     public function getPdf() {
-        $pdf = \PDF::loadView('product::barcode.print', [
+        $pdf = \PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'price' => $this->product->price,
             'name' => $this->product->name,

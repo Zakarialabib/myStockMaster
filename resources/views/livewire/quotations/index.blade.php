@@ -8,31 +8,13 @@
                 @endforeach
             </select>
 
-            <x-dropdown align="right" width="48">
+            <button
+                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
+                {{ $this->selectedCount ? '' : 'disabled' }}>
+                {{ __('Delete Selected') }}
+            </button>
 
-                <x-slot name="trigger">
-                    <x-button primary class="flex items-center">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </x-button>
-                </x-slot>
-
-                <x-slot name="content">
-
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
-                        {{ $this->selectedCount ? '' : 'disabled' }}>
-                        {{ __('Delete Selected') }}
-                    </button>
-
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('import')" wire:loading.attr="disabled">
-                        {{ __('Import') }}
-                    </button>
-                </x-slot>
-
-            </x-dropdown>
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
@@ -52,6 +34,9 @@
             <x-table.th class="pr-0 w-8">
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('id')" :direction="$sorts['id'] ?? null">
+                {{ __('Id') }}
+            </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Date') }}
             </x-table.th>
@@ -68,43 +53,45 @@
         </x-slot>
 
         <x-table.tbody>
-            @forelse ($sales as $sale)
+            @forelse ($quotations as $quotation)
                 <x-table.tr wire:loading.class.delay="opacity-50">
                     <x-table.td class="pr-0">
-                        <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
+                        <input type="checkbox" value="{{ $quotation->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->date }}
+                        {{ $quotation->reference }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->customer->name }}
+                        {{ $quotation->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->total_amount }}
+                        {{ $quotation->customer->name }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->status }}
+                        {{ $quotation->total_amount }}
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                        <x-button info 
-                            {{-- href="{{ route('sales.show', $sale) }}" --}}
-                            type="button" wire:click="confirm('show', {{ $sale->id }})"
+                        {{ $quotation->status }}
+                    </x-table.td>
+                    <x-table.td class="whitespace-no-wrap row-action--icon">
+                        <a href="{{ route('quotations.show', $quotation) }}"
+                            class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                            type="button" wire:click="confirm('show', {{ $quotation->id }})"
                             wire:loading.attr="disabled">
                             <i class="fas fa-eye"></i>
-                        </x-button>
-                        <x-button href="{{ route('sales.edit', $sale) }}"
-                            primary
-                            type="button" wire:click="confirm('edit', {{ $sale->id }})"
+                        </a>
+                        <a href="{{ route('quotations.edit', $quotation) }}"
+                            class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                            type="button" wire:click="confirm('edit', {{ $quotation->id }})"
                             wire:loading.attr="disabled">
                             <i class="fas fa-edit"></i>
-                        </x-button>
-                        <x-button href="{{ route('sales.destroy', $sale) }}"
-                            danger
-                            type="button" wire:click="confirm('delete', {{ $sale->id }})"
+                        </a>
+                        <a href="{{ route('quotations.destroy', $quotation) }}"
+                            class="text-red-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-red-500 dark:border-gray-300 hover:text-red-700  active:bg-red-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                            type="button" wire:click="confirm('delete', {{ $quotation->id }})"
                             wire:loading.attr="disabled">
                             <i class="fas fa-trash"></i>
-                        </x-button>
+                        </a>
                     </x-table.td>
                 </x-table.tr>
             @empty
@@ -120,12 +107,12 @@
     </x-table>
 
     <div class="px-6 py-3">
-        {{ $sales->links() }}
+        {{ $quotations->links() }}
     </div>
 
     <x-modal wire:model="create">
         <x-slot name="title">
-            {{ __('Create Sale') }}
+            {{ __('Create Quotation') }}
         </x-slot>
 
         <x-slot name="content">
@@ -148,7 +135,7 @@
 
     <x-modal wire:model="update">
         <x-slot name="title">
-            {{ __('Update Sale') }}
+            {{ __('Update Quotation') }}
         </x-slot>
 
         <x-slot name="content">
@@ -170,22 +157,21 @@
 
     <x-modal wire:model="show">
         <x-slot name="title">
-            {{ __('Show Sale') }}
+            {{ __('Show Quotation') }}
         </x-slot>
 
         <x-slot name="content">
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="date" :value="__('Date')" />
-                <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date"
-                    disabled />
+                <x-input id="date" class="block mt-1 w-full" type="date" wire:model.defer="date" disabled />
                 <x-input-error :messages="$errors->get('date')" for="date" class="mt-2" />
             </div>
 
             <div class"w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
                 <x-label for="customer_id" :value="__('Customer')" />
                 <x-select-list
-                class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
                 <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
         </x-slot>
@@ -196,7 +182,7 @@
 @push('page_scripts')
     <script>
         document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', saleId => {
+            window.livewire.on('deleteModal', quotationId => {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -207,7 +193,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.livewire.emit('delete', saleId)
+                        window.livewire.emit('delete', quotationId)
                     }
                 })
             })

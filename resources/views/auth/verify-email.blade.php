@@ -30,9 +30,9 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
 
-                <x-button primary class="ml-3">
+                <x-primary-button primary class="ml-3">
                     {{ __('Log Out') }}
-                </x-button>
+                </x-primary-button>
             </form>
         </div>
     </x-auth-card>

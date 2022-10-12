@@ -112,7 +112,7 @@
                   <td>{{$return_purchase['shipping']}} </td>
                </tr>
                <tr>
-                  <td>Total</td>
+                  <td{{__('Total')}}</td>
                   <td>{{$symbol}} {{$return_purchase['GrandTotal']}} </td>
                </tr>
 

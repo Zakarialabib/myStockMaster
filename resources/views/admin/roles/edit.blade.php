@@ -66,7 +66,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="show_total_stats" name="permissions[]"
                                                                value="show_total_stats" {{ $role->hasPermissionTo('show_total_stats') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="show_total_stats">Total Stats</label>
+                                                        <label class="custom-control-label" for="show_total_stats">{{__('Total stats')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">

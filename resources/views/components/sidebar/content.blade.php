@@ -19,6 +19,12 @@
                 <i class="fas fa-boxes w-5 h-5"></i>
             </span>
         </x-slot>
+        <x-slot name="add">
+        {{-- Todo : Added create button to the right with icon --}}
+        <a class="justify-end text-black font-bold" href="{{route('products.create')}}">
+            <i class="fas fa-plus"></i>
+        </a>
+        </x-slot>
         @can('access_product_categories')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />
@@ -34,10 +40,7 @@
             <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
         @endcan
 
-        {{-- Todo : Added create button to the right with icon --}}
-        <a class="justify-end text-black font-bold" href="{{route('products.create')}}">
-                <i class="fas fa-plus"></i>
-        </a>
+       
     </x-sidebar.dropdown>
 
     @can('access_adjustments')
@@ -151,7 +154,7 @@
                 </span>
             </x-slot>
 
-            <x-sidebar.sublink title="{{ __('Purchase Report') }}" href="{{ route('purchases-report.index') }}"
+            <x-sidebar.sublink title="{{ __('Purchases Report') }}" href="{{ route('purchases-report.index') }}"
                 :active="request()->routeIs('purchases-report.index')" />
             <x-sidebar.sublink title="{{ __('Sale Report') }}" href="{{ route('sales-report.index') }}"
                 :active="request()->routeIs('sales-report.index')" />

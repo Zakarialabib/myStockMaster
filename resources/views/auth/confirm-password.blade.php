@@ -26,9 +26,9 @@
             </div>
 
             <div class="flex justify-end mt-4">
-                <x-button primary class="ml-3">
+                <x-primary-button primary class="ml-3">
                     {{ __('Confirm') }}
-                </x-button>
+                </x-primary-button>
             </div>
         </form>
     </x-auth-card>
