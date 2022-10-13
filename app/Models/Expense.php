@@ -31,10 +31,25 @@ class Expense extends Model
         'updated_at',
     ];
     
-    protected $guarded = [];
+    public $fillable = [
+        'category_id',
+        'user_id',
+        'warehouse_id',
+        'date',
+        'reference',
+        'details',
+        'amount',
+    ];
 
-    public function category() {
-        return $this->hasMany(ExpenseCategory::class, 'category_id', 'id');
+    protected $dates = [
+        'date',
+        'created_at',
+        'updated_at'
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
     public static function boot() {

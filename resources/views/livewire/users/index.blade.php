@@ -15,7 +15,8 @@
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <input type="text" wire:model.debounce.300ms="search" class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+            <input type="text" wire:model.debounce.300ms="search"
+                class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                 placeholder="{{ __('Search') }}" />
         </div>
     </div>
@@ -79,10 +80,10 @@
                     <x-table.td>
                         <livewire:toggle-button :model="$user" field="status" key="{{ $user->id }}" />
                     </x-table.td>
-                   
+
                     <x-table.td>
-                        @foreach ($user->roles as $key => $entry)
-                            <span class="badge badge-relationship">{{ $entry->title }}</span>
+                        @foreach ($user->roles as $role)
+                            <x-badge primary>{{ $role->name }}</x-badge>
                         @endforeach
                     </x-table.td>
                     <x-table.td>
@@ -164,8 +165,8 @@
 
                 <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                     <x-label for="tax_number" :value="__('Tax Number')" />
-                    <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                        wire:model.defer="user.tax_number" disabled />
+                    <x-input id="tax_number" class="block mt-1 w-full" type="text" wire:model.defer="user.tax_number"
+                        disabled />
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
@@ -187,8 +188,8 @@
                 <div class="flex flex-wrap">
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                         <x-label for="name" :value="__('Name')" required />
-                        <x-input id="name" class="block mt-1 w-full" type="text"
-                            wire:model.defer="user.name" required />
+                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model.defer="user.name"
+                            required />
                         <x-input-error :messages="$errors->get('user.name')" class="mt-2" />
                     </div>
 
@@ -200,32 +201,66 @@
                     </div>
 
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="email" :value="__('Email')" />
-                        <x-input id="email" class="block mt-1 w-full" type="email"
-                            wire:model.defer="user.email" />
-                        <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
+                        <label for="role">{{__('Role')}} <span class="text-red-500">*</span></label>
+                        <select wire:model.defer="user.role"
+                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            name="role" id="role" required>
+                            <option value="" selected disabled>{{ __('Select Role') }}</option>
+                            @foreach (\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)
+                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="address" :value="__('Address')" />
-                        <x-input id="address" class="block mt-1 w-full" type="text"
-                            wire:model.defer="user.address" />
-                        <x-input-error :messages="$errors->get('user.address')" class="mt-2" />
+                        <x-label for="password" :value="__('Password')" />
+                        <x-input id="password" class="block mt-1 w-full" type="password"
+                            wire:model.defer="user.password" />
+                        <x-input-error :messages="$errors->get('user.password')" class="mt-2" />
                     </div>
 
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="city" :value="__('City')" />
-                        <x-input id="city" class="block mt-1 w-full" type="text"
-                            wire:model.defer="user.city" />
-                        <x-input-error :messages="$errors->get('user.city')" class="mt-2" />
+                        <x-label for="password_confirmation" :value="__('Confirm Password')" />
+                        <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
+                            wire:model.defer="user.password_confirmation" />
+                        <x-input-error :messages="$errors->get('user.password_confirmation')" class="mt-2" />
                     </div>
 
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="tax_number" :value="__('Tax Number')" />
-                        <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                            wire:model.defer="user.tax_number" />
-                        <x-input-error :messages="$errors->get('user.tax_number')" for="" class="mt-2" />
-                    </div>
+                    <x-accordion>
+                        <x-slot name="title">
+                            {{ __('Details') }}
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="email" :value="__('Email')" />
+                                <x-input id="email" class="block mt-1 w-full" type="email"
+                                    wire:model.defer="user.email" />
+                                <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="address" :value="__('Address')" />
+                                <x-input id="address" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.address" />
+                                <x-input-error :messages="$errors->get('user.address')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="city" :value="__('City')" />
+                                <x-input id="city" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.city" />
+                                <x-input-error :messages="$errors->get('user.city')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="tax_number" :value="__('Tax Number')" />
+                                <x-input id="tax_number" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.tax_number" />
+                                <x-input-error :messages="$errors->get('user.tax_number')" for="" class="mt-2" />
+                            </div>
+                        </x-slot>
+                    </x-accordion>
 
                     <div class="flex items-center justify-end mt-4">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
@@ -245,24 +280,23 @@
 </div>
 
 @push('page_scripts')
-
-<script>
-    document.addEventListener('livewire:load', function() {
-        window.livewire.on('deleteModal', UserId => {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.livewire.emit('delete', UserId)
-                }
+    <script>
+        document.addEventListener('livewire:load', function() {
+            window.livewire.on('deleteModal', UserId => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('delete', UserId)
+                    }
+                })
             })
         })
-    })
-</script>
+    </script>
 @endpush

@@ -63,7 +63,12 @@
                         {{ $product->code }}
                     </x-table.td>
                     <x-table.td>
-                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-10 h-10 rounded-full">
+                        @if ($product->image)
+                        <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
+                            class="w-10 h-10 rounded-full">
+                        @else
+                        {{__('No image')}}
+                        @endif
                     </x-table.td>
                     <x-table.td>
                         {{ $product->name }}
@@ -72,10 +77,10 @@
                         {{ $product->quantity }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->cost }}
+                        {{ $product->price }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->price }}
+                        {{ $product->cost }}
                     </x-table.td>
                     <x-table.td>
                         {{ $product->category->name }}
@@ -219,15 +224,14 @@
                     <div class="flex flex-wrap -mx-1">
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="name" :value="__('Product Name')" required autofocus />
-                            <input type="text" wire:model="product.name" name="name"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="name" required>
+                            <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="product.name"
+                                required autofocus />
                             <x-input-error :messages="$errors->get('product.name')" for="product.name" class="mt-2" />
                         </div>
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="code" :value="__('Product Code')" required />
-                            <input type="text" required wire:model="product.code" name="code"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                            <x-input id="code" class="block mt-1 w-full" type="text" name="code" wire:model="product.code" disabled
+                                required />
                             <x-input-error :messages="$errors->get('product.code')" for="product.code" class="mt-2" />
                         </div>
                     </div>
@@ -237,22 +241,21 @@
                             <x-label for="category_id" :value="__('Category')" required />
                             <x-select-list
                                 class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                id="vendor_id" name="vendor_id" wire:model="product.category_id" :options="$this->listsForFields['categories']" />
+                                id="category_id" name="category_id" wire:model="product.category_id"
+                                :options="$this->listsForFields['categories']" />
                         </div>
 
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="cost" :value="__('Cost')" required />
-                            <input type="number" wire:model="product.cost" name="cost"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                min="0" name="cost" required>
+                            <x-input id="cost" class="block mt-1 w-full" type="number" name="cost" wire:model="product.cost"
+                                required />
                             <x-input-error :messages="$errors->get('product.cost')" for="product.cost" class="mt-2" />
 
                         </div>
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="price" :value="__('Price')" required />
-                            <input type="number" wire:model="product.price" name="price"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                min="0" name="price" required>
+                            <x-input id="price" class="block mt-1 w-full" type="number" name="price" wire:model="product.price"
+                                required />
                             <x-input-error :messages="$errors->get('product.price')" for="product.price" class="mt-2" />
 
                         </div>
@@ -266,24 +269,29 @@
                         </div>
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="stock_alert" :value="__('Stock Alert')" required />
-                            <input type="number" wire:model="product.stock_alert" name="stock_alert"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                required min="0">
+                            <x-input id="stock_alert" class="block mt-1 w-full" type="number" name="stock_alert"
+                                wire:model="product.stock_alert" required />
                             <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
                         </div>
                     </div>
 
                     <x-accordion title="{{ 'More Details' }}">
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="w-1/2 px-4">
-                                <x-label for="order_tax" :value="__('Order Tax')" />
-                                <input type="number" wire:model="product.order_tax" name="order_tax" min="0"
-                                    max="100"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                        <div class="flex flex-wrap -mx-1 space-y-2">
+                            <div class="lg:w-1/3 sm:w-1/2 px-2">
+                                <x-label for="brand_id" :value="__('Brand')" />
+                                <x-select-list
+                                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                                    id="brand_id" name="brand_id" wire:model="product.brand_id"
+                                    :options="$this->listsForFields['brands']" />
+                            </div>
+                            <div class="lg:w-1/3 sm:w-1/2 px-2">
+                                <x-label for="order_tax" :value="__('Tax')" />
+                                <x-input id="order_tax" class="block mt-1 w-full" type="number" name="order_tax"
+                                    wire:model="product.order_tax" />
                                 <x-input-error :messages="$errors->get('product.order_tax')" for="product.order_tax" class="mt-2" />
 
                             </div>
-                            <div class="w-1/2 px-4">
+                            <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="tax_type" :value="__('Tax type')" />
                                 <select wire:model="product.tax_type" name="tax_type"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
@@ -291,14 +299,11 @@
                                     <option value="exclusive">{{ __('Exclusive') }}</option>
                                 </select>
                             </div>
-                            <div class="w-1/2 px-4">
+                            <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="unit" :value="__('Unit')" />
-                                <input type="text" wire:model="product.unit" name="unit"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    required>
-
+                                <x-input id="unit" class="block mt-1 w-full" type="text" name="unit" wire:model="product.unit" required />
                             </div>
-                            <div class="w-1/2 px-4">
+                            <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="barcode_symbology" :value="__('Barcode Symbology')" />
                                 <select wire:model="product.barcode_symbology" name="barcode_symbology"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
@@ -312,7 +317,7 @@
                                 </select>
                             </div>
                             <div class="w-full mb-4">
-                                <x-label for="note" :value="__('Note')" />
+                                <x-label for="note" :value="__('Description')" />
                                 <textarea rows="4" wire:model="product.note" name="note"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                                             </textarea>
@@ -321,22 +326,13 @@
                     </x-accordion>
 
 
-                    <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                        <div class="mb-4">
-                            <label for="image">{{ __('Product Images') }} <i
-                                    class="bi bi-question-circle-fill text-info" data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Max Files: 3, Max File Size: 1MB, Image Size: 400x400"></i></label>
-                            <div class="dropzone d-flex flex-wrap align-items-center justify-content-center"
-                                id="document-dropzone">
-                                <div class="dz-message" data-dz-message>
-                                    <i class="bi bi-cloud-arrow-up"></i>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="w-full px-4 my-4">
+                        <x-label for="image" :value="__('Product Image')" />
+                        <x-fileupload wire:model="image" :file="$image" accept="image/jpg,image/jpeg,image/png" />
+                        <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
 
-                    <div class="flex justify-end space-x-2">
+                    <div class="flex justify-start space-x-2">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>

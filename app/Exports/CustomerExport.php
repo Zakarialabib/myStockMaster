@@ -42,7 +42,7 @@ class CustomerExport implements FromQuery, WithMapping, WithHeadings
         $customer->name,
         $customer->email,
         $customer->phone,
-        $customer->address,
+        $customer->city,
         $customer->created_at,
         ];
 

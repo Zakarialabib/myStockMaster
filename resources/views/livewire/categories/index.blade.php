@@ -16,7 +16,7 @@
             <div class="flex items-center mr-3 pl-4">
                 <input wire:model="search" type="text"
                     class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="Search..." />
+                    placeholder="{{__('Search...')}}" />
             </div>
         </div>
     </div>
@@ -112,15 +112,15 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
-                <div class="space-y-4">
-                    <div class="mt-4">
+                <div class="space-y-4 px-4">
+                    <div class="mt-4 w-full">
                         <x-label for="code" :value="__('Code')" />
-                        <x-input id="code" class="block mt-1 w-full" type="text" name="code"
+                        <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
                             wire:model.defer="category.code" />
                         <x-input-error :messages="$errors->get('category.code')" for="category.code" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 p w-full">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                             wire:model.defer="category.name" />
@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="w-full flex justify-end">
-                    <x-button primary type="button" wire:click="$set('showModal', false)">
+                    <x-button primary type="button" wire:loading.attr="disabled"  wire:click="$set('showModal', false)">
                         {{ __('Close') }}
                     </x-button>
                 </div>
@@ -169,6 +169,38 @@
         </x-slot>
     </x-modal>
     <!-- End Show Modal -->
+
+    {{-- Import modal --}}
+
+    <x-modal wire:model="import">
+        <x-slot name="title">
+            {{ __('Import Categories') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="importExcel">
+                <div class="space-y-4">
+                    <div class="mt-4">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                    </div>
+
+                    <div class="w-full flex justify-end">
+                        <x-button primary wire:click="importExcel" type="button" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                        <x-button primary type="button" wire:loading.attr="disabled" wire:click="$set('import', false)">
+                            {{ __('Cancel') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    {{-- End Import modal --}}
 
     <livewire:categories.create />
 </div>

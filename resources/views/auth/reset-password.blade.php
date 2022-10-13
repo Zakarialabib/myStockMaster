@@ -42,7 +42,7 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <x-primary-button primary class="ml-3">
+                <x-primary-button type="submit" primary class="ml-3">
                     {{ __('Reset Password') }}
                 </x-primary-button>
             </div>

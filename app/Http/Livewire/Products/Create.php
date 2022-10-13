@@ -1,20 +1,24 @@
 <?php
-
 namespace App\Http\Livewire\Products;
 
+use App\Models\Brand;
 use App\Models\Category;
 use Livewire\Component;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, WithFileUploads;
 
     public $listeners = ['createProduct'];
     
     public $createProduct;
+
+    public $image;
 
     public array $listsForFields = [];
 
@@ -26,11 +30,12 @@ class Create extends Component
         'product.quantity' => ['required', 'integer', 'min:1'],
         'product.cost' => ['required', 'numeric', 'max:2147483647'],
         'product.price' => ['required', 'numeric', 'max:2147483647'],
-        'product.stock_alert' => ['required', 'integer', 'min:0'],
+        'product.stock_alert' => ['nullable', 'integer', 'min:0'],
         'product.order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
         'product.tax_type' => ['nullable', 'integer'],
         'product.note' => ['nullable', 'string', 'max:1000'],
-        'product.category_id' => ['required', 'integer']
+        'product.category_id' => ['required', 'integer'],
+        'product.brand_id' => ['nullable', 'integer']
     ];
 
     public function mount(Product $product)
@@ -59,6 +64,12 @@ class Create extends Component
     {
         $this->validate();
 
+        if($this->image){
+            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
+            $this->image->storeAs('products',$imageName);
+            $this->product->image = $imageName;
+        }
+
         $this->product->save();
         
         $this->alert('success', 'Product created successfully');
@@ -72,6 +83,7 @@ class Create extends Component
     protected function initListsForFields(): void
     {
         $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
+        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
     }
 
 }

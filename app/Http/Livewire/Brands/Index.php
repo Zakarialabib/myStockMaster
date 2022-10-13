@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\WithPagination;
 use App\Models\Brand;
 use App\Support\HasAdvancedFilter;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+    use WithPagination, WithSorting,
+         LivewireAlert, HasAdvancedFilter, WithFileUploads;
 
     public $brand;
 
@@ -22,6 +25,8 @@ class Index extends Component
 
     public $show;
     
+    public $image;
+
     public $showModal;
 
     public $refreshIndex;
@@ -121,6 +126,12 @@ class Index extends Component
         abort_if(Gate::denies('brand_edit'), 403);
 
         $this->validate();
+
+        if ($this->brand->image != null) {    
+            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
+            $this->image->storeAs('brands',$imageName);
+            $this->brand->image = $imageName;
+        }
 
         $this->brand->save();
 

@@ -57,7 +57,7 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="card h-100 border-0 shadow">
                                         <div class="card-header">
-                                            Dashboard
+                                            {{__('Dashboard')}}
                                         </div>
                                         <div class="p-4">
                                             <div class="row">
@@ -74,7 +74,7 @@
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="show_notifications" name="permissions[]"
                                                                value="show_notifications" {{ $role->hasPermissionTo('show_notifications') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="show_notifications">Notifications</label>
+                                                        <label class="custom-control-label" for="show_notifications">{{__('Notifications')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">

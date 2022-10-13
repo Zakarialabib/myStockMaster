@@ -19,7 +19,7 @@
                             wire:model="expenseCategory.description" />
                         <x-input-error :messages="$errors->first('expenseCategory.description')" />
                     </div>
-                    <div class="w-full flex justify-end space-x-2">
+                    <div class="w-full flex justify-end my-4 space-x-2">
                         <x-button primary wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>

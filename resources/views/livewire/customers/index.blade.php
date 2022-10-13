@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2 space-x-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -8,52 +8,17 @@
                 @endforeach
             </select>
 
-            <x-dropdown align="right" width="48">
-
-                <x-slot name="trigger">
-                    <x-button primary  class="flex items-center">
-                        {{ __('Actions') }}
-                    </x-button>
-                </x-slot>
-
-                <x-slot name="content">
-
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
-                        {{ $this->selectedCount ? '' : 'disabled' }}>
-                        {{ __('Delete Selected') }}
-                    </button>
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('downloadSelected')" wire:loading.attr="disabled"
-                        {{ $this->selectedCount ? '' : 'disabled' }}>
-                        {{ __('Export Selected Excel') }}
-                    </button>
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('downloadAll')" wire:loading.attr="disabled">
-                        {{ __('Export All Excel') }}
-                    </button>
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('import')" wire:loading.attr="disabled">
-                        {{ __('Import') }}
-                    </button>
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('exportSelected')" wire:loading.attr="disabled">
-                        {{ __('Export selected pdf') }}
-                    </button>
-                    <button
-                        class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                        type="button" wire:click="confirm('exportAll')" wire:loading.attr="disabled">
-                        {{ __('Export All Pdf') }}
-                    </button>
-
-                </x-slot>
-
-            </x-dropdown>
+            @if ($selected)
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
+                    {{ __('EXCEL') }}
+                </x-button>
+                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
+                    {{ __('PDF') }}
+                </x-button>
+            @endif
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
@@ -64,14 +29,16 @@
             </div>
         </div>
     </div>
-    <div wire:loading.delay class="flex justify-center">
-        <x-loading />
+    <div wire:loading.delay>
+        <div class="d-flex justify-content-center">
+            <x-loading />
+        </div>
     </div>
 
     <x-table>
         <x-slot name="thead">
             <x-table.th class="pr-0 w-8">
-                <input type="checkbox" wire:model="selectPage" />
+                <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
@@ -97,10 +64,10 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info  wire:click="showModal({{ $customer->id }})" wire:loading.attr="disabled">
+                            <x-button info wire:click="showModal({{ $customer->id }})" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary  wire:click="editModal({{ $customer->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $customer->id }})" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $customer->id }})"
@@ -131,6 +98,10 @@
                         {{ $this->selectedCount }}
                     </span>
                     {{ __('Entries selected') }}
+                </p>
+                <p wire:click="resetSelected" wire:loading.attr="disabled"
+                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
+                    {{ __('Clear Selected') }}
                 </p>
             @endif
             {{ $customers->links() }}
@@ -241,7 +212,7 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <x-button primary  wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
                         <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
@@ -252,6 +223,39 @@
             </form>
         </x-slot>
     </x-modal>
+
+    {{-- Import modal --}}
+
+    <x-modal wire:model="import">
+        <x-slot name="title">
+            {{ __('Import Excel') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="importExcel">
+                <div class="space-y-4">
+                    <div class="mt-4">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                    </div>
+
+                    <div class="w-full flex justify-end">
+                        <x-button primary wire:click="importExcel" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                        <x-button primary type="button" wire:click="$set('import', false)"
+                            wire:loading.attr="disabled">
+                            {{ __('Cancel') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    {{-- End Import modal --}}
 
     <livewire:customers.create />
 

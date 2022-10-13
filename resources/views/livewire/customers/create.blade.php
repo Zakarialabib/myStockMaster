@@ -51,7 +51,7 @@
                         <x-input-error :messages="$errors->get('customer.tax_number')" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex items-center justify-end mt-4">
+                    <div class="w-full flex items-center justify-start space-x-2 mt-4">
                         <x-button primary  wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>

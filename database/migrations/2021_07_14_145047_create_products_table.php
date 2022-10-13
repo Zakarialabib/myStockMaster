@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('warehouse_id')->nullabel();
             $table->string('name');
             $table->string('code')->unique()->nullable();
             $table->string('barcode_symbology')->nullable();
@@ -25,8 +26,11 @@ class CreateProductsTable extends Migration
             $table->string('unit')->nullable();
             $table->integer('stock_alert');
             $table->integer('order_tax')->nullable();
-            $table->tinyInteger('tax_type')->nullable();
             $table->text('note')->nullable();
+            $table->boolean('status')->nullable()->default(1);
+            $table->tinyInteger('tax_type')->nullable();
+            $table->text('image')->nullable();
+            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete();
             $table->timestamps();
         });

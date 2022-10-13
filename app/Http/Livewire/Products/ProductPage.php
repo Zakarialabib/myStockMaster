@@ -12,6 +12,8 @@ use App\Models\Category;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Exports\ProductExport;
 use App\Imports\ProductImport;
+use App\Models\Brand;
+use Illuminate\Support\Str;
 
 class ProductPage extends Component
 {
@@ -30,6 +32,8 @@ class ProductPage extends Component
     public $refreshIndex;
 
     public array $orderable;
+
+    public $image;
 
     public string $search = '';
 
@@ -78,7 +82,7 @@ class ProductPage extends Component
 
     public array $rules = [
         'product.name' => ['required', 'string', 'max:255'],
-        'product.code' => ['required', 'string', 'max:255', 'unique:products,code'],
+        'product.code' => ['required', 'string', 'max:255'],
         'product.barcode_symbology' => ['required', 'string', 'max:255'],
         'product.unit' => ['required', 'string', 'max:255'],
         'product.quantity' => ['required', 'integer', 'min:1'],
@@ -88,7 +92,8 @@ class ProductPage extends Component
         'product.order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
         'product.tax_type' => ['nullable', 'integer'],
         'product.note' => ['nullable', 'string', 'max:1000'],
-        'product.category_id' => ['required', 'integer']
+        'product.category_id' => ['required', 'integer'],
+        'product.brand_id' => ['nullable', 'integer']
     ];
 
     public function mount()
@@ -160,6 +165,12 @@ class ProductPage extends Component
 
         $this->validate();
 
+        if ($this->product->image != null) {    
+            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
+            $this->image->storeAs('products',$imageName);
+            $this->product->image = $imageName;
+        }
+
         $this->product->save();
 
         $this->editModal = false;
@@ -202,5 +213,6 @@ class ProductPage extends Component
     protected function initListsForFields(): void
     {
         $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
+        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
     }
 }

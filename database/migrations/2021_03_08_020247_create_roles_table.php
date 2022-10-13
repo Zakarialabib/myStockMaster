@@ -15,8 +15,7 @@ class CreateRolesTable extends Migration {
 	{
 		Schema::create('roles', function(Blueprint $table)
 		{
-			$table->engine = 'InnoDB';
-			$table->integer('id', true);
+			$table->id();
 			$table->string('name', 192);
 			$table->string('label', 192)->nullable();
 			$table->string('guard_name', 192)->nullable();

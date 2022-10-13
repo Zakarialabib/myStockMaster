@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Roles & Permissions')@
+@section('title', __('Roles & Permissions'))
 
 @section('breadcrumb')
 <section class="py-2 px-6">

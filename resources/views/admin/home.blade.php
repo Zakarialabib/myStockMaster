@@ -26,9 +26,9 @@
 @section('content')
     <div class="px-4 mx-auto">
         @can('show_total_stats')
-            <div class="flex flex-wrap -m-4">
-                <div class="w-full lg:w-1/4 p-4">
-                    <div class="p-6 rounded bg-white">
+            <div class="flex flex-wrap py-4">
+                <div class="w-full lg:w-1/4">
+                    <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-bar-chart font-2xl"></i>
@@ -41,8 +41,8 @@
                     </div>
                 </div>
 
-                <div class="w-full lg:w-1/4 p-4">
-                    <div class="p-6 rounded bg-white">
+                <div class="w-full lg:w-1/4">
+                    <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-left font-2xl"></i>
@@ -55,8 +55,8 @@
                     </div>
                 </div>
 
-                <div class="w-full lg:w-1/4 p-4">
-                    <div class="p-6 rounded bg-white">
+                <div class="w-full lg:w-1/4">
+                    <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-right font-2xl"></i>
@@ -70,8 +70,8 @@
                 </div>
 
 
-                <div class="w-full lg:w-1/4 p-4">
-                    <div class="p-6 rounded bg-white">
+                <div class="w-full lg:w-1/4">
+                    <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-trophy font-2xl"></i>

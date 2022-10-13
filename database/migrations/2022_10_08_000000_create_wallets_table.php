@@ -18,9 +18,12 @@ class CreateWalletsTable extends Migration
             $table->string('recieved_amount', 192)->nullable();
             $table->string('sent_amount', 192)->nullable();
             $table->string('balance', 192)->nullable();
-            $table->bigInteger('user_id')->unsigned()->nullable()->index('wallets_user_id_foreign');
-			$table->bigInteger('customer_id')->unsigned()->nullable()->index('wallets_customer_id_foreign');
-			$table->bigInteger('supplier_id')->unsigned()->nullable()->index('wallets_supplier_id_foreign');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
+            $table->foreign('customer_id')->references('id')->on('customers')->restrictOnDelete();
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->restrictOnDelete();
             $table->timestamps();
         });
     }

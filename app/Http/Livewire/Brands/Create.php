@@ -6,12 +6,16 @@ use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 
 class Create extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert , WithFileUploads;
 
     public $createBrand;
+    
+    public $image;
 
     public $listeners = ['createBrand'];
 
@@ -44,6 +48,12 @@ class Create extends Component
     public function create()
     {
         $this->validate();
+
+        if($this->image){
+            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
+            $this->image->storeAs('brands',$imageName);
+            $this->brand->image = $imageName;
+        }
 
         $this->brand->save();
 

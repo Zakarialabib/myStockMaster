@@ -44,109 +44,101 @@
 @endsection
 
 @section('content')
-    <div class="px-4 mx-auto mb-4">
-        <div class="flex flex-wrap">
-            <div class="w-full">
-                <livewire:search-product />
-            </div>
+    <x-card>
+        <div class="w-full flex flex-wrap">
+            <livewire:search-product />
         </div>
 
-        <div class="flex flex-wrap mt-4">
-            <div class="w-full px-4">
-                <div class="card">
-                    <div class="p-4">
-                        @include('utils.alerts')
-                        <form id="purchase-form" action="{{ route('purchases.store') }}" method="POST">
-                            @csrf
+        <div class="w-full flex flex-wrap mt-4">
+            <div>
+                @include('utils.alerts')
+                <form id="purchase-form" action="{{ route('purchases.store') }}" method="POST">
+                    @csrf
 
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for="reference" :value="__('Reference')" required />
-                                    <input type="text"
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                        name="reference" required readonly value="PR">
-                                </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for='supplier_id' :value="__('Supplier')" required />
-                                    <select
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                        name="supplier_id" id="supplier_id" required>
-                                        @foreach (\App\Models\Supplier::all() as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                        @endforeach
-                                    </select>
+                    <div class="flex flex-wrap -mx-1">
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for="reference" :value="__('Reference')" required />
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="reference" required readonly value="PR">
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for='supplier_id' :value="__('Supplier')" required />
+                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="supplier_id" id="supplier_id" required>
+                                <option value="">{{ __('Select Supplie') }}r</option>
+                                @foreach (\App\Models\Supplier::all() as $supplier)
+                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
 
-                                </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for="date" :value="__('Date')" required />
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for="date" :value="__('Date')" required />
 
-                                    <input type="date"
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                        name="date" required value="{{ now()->format('Y-m-d') }}">
+                            <input type="date"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="date" required value="{{ now()->format('Y-m-d') }}">
 
-                                </div>
-                            </div>
-
-                            <livewire:product-cart :cartInstance="'purchase'" />
-
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for="status" :value="__('Status')" required />
-                                    <select
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                        name="status" id="status" required>
-                                        <option value="Pending">{{ __('Pending') }}</option>
-                                        <option value="Ordered">{{ __('Ordered') }}</option>
-                                        <option value="Completed">{{ __('Completed') }}</option>
-                                    </select>
-                                </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for="payment_method" :value="__('Payment Method')" required />
-
-                                    <select
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                        name="payment_method" id="payment_method" required>
-                                        <option value="Cash">{{ __('Cash') }}</option>
-                                        <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
-                                        <option value="Cheque">{{ __('Cheque') }}</option>
-                                        <option value="Other">{{ __('Other') }}</option>
-                                    </select>
-                                </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <x-label for="paid_amount" :value="__('Amount Paid')" required />
-                                    <div class="input-group">
-                                        <input id="paid_amount" type="text"
-                                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                            name="paid_amount" required>
-                                        <div class="input-group-append">
-                                            <button id="getTotalAmount"
-                                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
-                                                type="button">
-                                                <i class="bi bi-check-square"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="note">{{ __('Note (If Needed)') }}</label>
-                                <textarea name="note" id="note" rows="5"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
-                            </div>
-
-                            <div class="mt-3">
-                                <button type="submit"
-                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                    {{ __('Create Purchase') }} <i class="bi bi-check"></i>
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+
+                    <livewire:product-cart :cartInstance="'purchase'" />
+
+                    <div class="flex flex-wrap -mx-1">
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for="status" :value="__('Status')" required />
+                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="status" id="status" required>
+                                <option value="Pending">{{ __('Pending') }}</option>
+                                <option value="Ordered">{{ __('Ordered') }}</option>
+                                <option value="Completed">{{ __('Completed') }}</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for="payment_method" :value="__('Payment Method')" required />
+
+                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="payment_method" id="payment_method" required>
+                                <option value="Cash">{{ __('Cash') }}</option>
+                                <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
+                                <option value="Cheque">{{ __('Cheque') }}</option>
+                                <option value="Other">{{ __('Other') }}</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <x-label for="paid_amount" :value="__('Amount Paid')" required />
+                            <div class="input-group">
+                                <input id="paid_amount" type="text"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="paid_amount" required>
+                                <div class="input-group-append">
+                                    <button id="getTotalAmount"
+                                        class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
+                                        type="button">
+                                        <i class="bi bi-check-square"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="note">{{ __('Note (If Needed)') }}</label>
+                        <textarea name="note" id="note" rows="5"
+                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="submit"
+                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                            {{ __('Create Purchase') }} <i class="bi bi-check"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+    </x-card>
 @endsection
 
 @push('page_scripts')

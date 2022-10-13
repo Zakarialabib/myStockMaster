@@ -50,9 +50,9 @@
                         <x-table.td>
                             {{ $role->name }}
                         </x-table.td>
-                        <x-table.td class="flex flex-wrap">
-                            @foreach ($role->permissions as $key => $entry)
-                                <span class="badge badge-relationship">{{ $entry->title }}</span>
+                        <x-table.td class="flex flex-wrap space-x-2 space-y-2">
+                            @foreach($role->permissions as $permission)
+                                <x-badge primary>{{ $permission->name }}</x-badge>
                             @endforeach
                         </x-table.td>
                         <x-table.td>
@@ -96,7 +96,7 @@
     
     <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('edit') }}
+            {{ __('Edit Role') }}
         </x-slot>
 
         <x-slot name="content">

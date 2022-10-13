@@ -59,7 +59,12 @@
                         {{ $brand->description }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $brand->image }}
+                        @if ($brand->image)
+                        <img src="{{ asset('images/brands/' . $brand->image) }}" alt="{{ $brand->name }}"
+                            class="w-10 h-10 rounded-full">
+                        @else
+                        {{__('No image')}}
+                        @endif
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">

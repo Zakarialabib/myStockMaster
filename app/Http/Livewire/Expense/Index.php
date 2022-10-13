@@ -22,14 +22,18 @@ class Index extends Component
 
     public int $selectPage;
     
-    public $listeners = ['confirmDelete', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
+    public $listeners = ['show', 'confirmDelete','exportAll','downloadAll', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
     
     public $showModal;
 
-    public $refreshIndex;
-
     public $editModal;
 
+    public $show;
+
+    public $refreshIndex;
+
+    public $export;
+    
     public array $orderable;
 
     public string $search = '';
@@ -40,7 +44,6 @@ class Index extends Component
 
     public array $listsForFields = [];
 
-    public $export;
 
     public array $paginationOptions;
 
@@ -138,6 +141,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_show'), 403);
 
         $this->expense = $expense;
+
+        $this->showModal = true;
     }
 
     public function editModal(Expense $expense)
@@ -196,7 +201,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        return (new ExpenseExport([$expense]))->download('expenses.pdf');
+        return (new ExpenseExport([$expense]))->download('expenses.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     protected function initListsForFields(): void

@@ -26,6 +26,7 @@ use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\WarehouseController;
 
 /*
@@ -137,7 +138,7 @@ Route::group(['middleware' => 'auth'], function () {
         $purchaseReturn = \App\Models\PurchaseReturn::findOrFail($id);
         $supplier = \App\Models\Supplier::findOrFail($purchaseReturn->supplier_id);
 
-        $pdf = \PDF::loadView('purchasesreturn.print', [
+        $pdf = \PDF::loadView('admin.purchasesreturn.print', [
             'purchase_return' => $purchaseReturn,
             'supplier' => $supplier,
         ])->setPaper('a4');
@@ -184,7 +185,7 @@ Route::group(['middleware' => 'auth'], function () {
         $sale = \App\Models\Sale::findOrFail($id);
         $customer = \App\Models\Customer::findOrFail($sale->customer_id);
 
-        $pdf = \PDF::loadView('sale.print', [
+        $pdf = \PDF::loadView('admin.sale.print', [
             'sale' => $sale,
             'customer' => $customer,
         ])->setPaper('a4');
@@ -195,7 +196,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/sales/pos/pdf/{id}', function ($id) {
         $sale = \App\Models\Sale::findOrFail($id);
 
-        $pdf = \PDF::loadView('sale.print-pos', [
+        $pdf = \PDF::loadView('admin.sale.print-pos', [
             'sale' => $sale,
         ])->setPaper('a7')
             ->setOption('margin-top', 8)
@@ -211,7 +212,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     //Payments
     Route::get('/sale-payments/{sale_id}', [SalePaymentsController::class, 'index'])->name('sale-payments.index');
-    Route::get('/sale-payments/{sale_id}/create', 'SalePaymentsController@create')->name('sale-payments.create');
+    Route::get('/sale-payments/{sale_id}/create', [SalePaymentsController::class, 'create'])->name('sale-payments.create');
     Route::post('/sale-payments/store', [SalePaymentsController::class, 'store'])->name('sale-payments.store');
     Route::get('/sale-payments/{sale_id}/edit/{salePayment}', [SalePaymentsController::class, 'edit'])->name('sale-payments.edit');
     Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
@@ -222,7 +223,7 @@ Route::group(['middleware' => 'auth'], function () {
         $saleReturn = \App\Models\SaleReturn::findOrFail($id);
         $customer = \App\Models\Customer::findOrFail($saleReturn->customer_id);
 
-        $pdf = \PDF::loadView('salesreturn.print', [
+        $pdf = \PDF::loadView('admin.salesreturn.print', [
             'sale_return' => $saleReturn,
             'customer' => $customer,
         ])->setPaper('a4');

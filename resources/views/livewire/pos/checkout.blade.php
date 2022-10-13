@@ -1,13 +1,9 @@
 <div>
-    <div class="w-full py-2 px-6 shadow-md sm:rounded-lg">
+    <div class="w-full py-2 px-6">
         <div>
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
             <div class="mb-4">
-                <a href="{{ route('customers.create') }}"
-                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                    {{ __('Add Customer') }}
-                </a>
                 <select wire:model="customer_id" id="customer_id"
                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                     <option value="" selected>{{ __('Select Customer') }}</option>
@@ -24,7 +20,6 @@
                         <x-table.th>{{ __('Price') }}</x-table.th>
                         <x-table.th>{{ __('Quantity') }}</x-table.th>
                         <x-table.th>{{ __('Action') }}</x-table.th>
-
                     </x-slot>
                     <x-table.tbody>
                         @if ($cart_items->isNotEmpty())
@@ -129,10 +124,10 @@
             <x-button danger wire:click="resetCart" wire:loading.attr="disabled" class="ml-2">
                 <i class="bi bi-x"></i> {{ __('Reset') }}
             </x-button>
-            <button wire:click="proceed" {{ $total_amount == 0 ? 'disabled' : '' }} wire:loading.attr="disabled"
-                class="ml-2">
+            <button class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 bg-indigo-500 hover:bg-indigo-700" type="submit" wire:click="proceed" wire:loading.attr="disabled" class="ml-2"
+            {{ $total_amount == 0 ? 'disabled' : '' }}>
                 <i class="bi bi-check"></i> {{ __('Proceed') }}
-                <button>
+            <button>
         </div>
     </div>
 

@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration
             $table->string('country')->nullable();
             $table->text('address')->nullable();
             $table->string('tax_number', 192)->nullable();
-            $table->bigInteger('wallet_id')->unsigned()->nullable()->index('customers_wallet_id_foreign');
+            $table->unsignedBigInteger('wallet_id')->nullable();
             $table->timestamps();
         });
     }

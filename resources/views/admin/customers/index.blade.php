@@ -38,8 +38,17 @@
                 </div>
             </div>
             <div class="float-right">
+                <x-button warning type="button" onclick="Livewire.emit('import')" wire:loading.attr="disabled">
+                {{ __('Import') }}
+                </x-button>
+                <x-button danger type="button" onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
+                    {{ __('Pdf') }}
+                </x-button>
+                <x-button info type="button" onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
+                    {{ __('Excel') }}
+                </x-button>
                 <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createCustomer', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary type="button" onclick="Livewire.emit('createCustomer', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>

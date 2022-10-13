@@ -1,12 +1,12 @@
 <div>
-    <div class="w-full py-2 px-6 shadow-md sm:rounded-lg">
+    <div class="w-full px-2">
         <livewire:pos.filter :categories="$categories" />
         <div class="flex flex-row relative h-screen">
             <div wire:loading.flex class="w-full px-2 absolute justify-center items-center"
                 style="top:0;right:0;left:0;bottom:0;background-color: rgba(255,255,255,0.5);z-index: 99;">
                 <x-loading />
             </div>
-            <div class="grid grid-cols-4 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+            <div class="grid grid-cols-4 gap-4 px-2 mt-5 overflow-y-auto">
                 <div class="">
                     @forelse($products as $product)
                         <div wire:click.prevent="selectProduct({{ $product }})" class="h-64 rounded-md shadow-xl">

@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap space-x-2 my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -8,35 +8,17 @@
                 @endforeach
             </select>
 
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="confirm('deleteSelected')" wire:loading.attr="disabled"
-                {{ $this->selectedCount ? '' : 'disabled' }}>
-                {{ __('Delete Selected') }}
-            </button>
-
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="confirm('downloadSelected')" wire:loading.attr="disabled"
-                {{ $this->selectedCount ? '' : 'disabled' }}>
-                {{ __('Export Selected Excel') }}
-            </button>
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="confirm('downloadAll')" wire:loading.attr="disabled">
-                {{ __('Export All Excel') }}
-            </button>
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="confirm('exportSelected')" wire:loading.attr="disabled"
-                {{ $this->selectedCount ? '' : 'disabled' }}>
-                {{ __('Export Selected PDF') }}
-            </button>
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="confirm('exportAll')" wire:loading.attr="disabled">
-                {{ __('Export All PDF') }}
-            </button>
+            @if ($selected)
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
+                    {{ __('EXCEL') }}
+                </x-button>
+                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
+                    {{ __('PDF') }}
+                </x-button>
+            @endif
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
@@ -58,12 +40,12 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th class="pr-0 w-8">
-                <x-input type="checkbox" class="rounded-tl-md rounded-bl-md" wire:model="selectPage" />
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('id')" :direction="$sorts['id'] ?? null">
-                {{ __('Id') }}
+            <x-table.th sortable multi-column wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+                {{ __('Reference') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('expense_category_id')" :direction="$sorts['expense_category_id'] ?? null">
+            <x-table.th sortable multi-column wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null">
                 {{ __('Expense Category') }}
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
@@ -72,8 +54,9 @@
             <x-table.th sortable multi-column wire:click="sortBy('amount')" :direction="$sorts['amount'] ?? null">
                 {{ __('Amount') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('description')" :direction="$sorts['description'] ?? null">
-                {{ __('Description') }}
+
+            <x-table.th>
+                {{ __('Actions') }}
             </x-table.th>
             <x-table.th />
         </x-slot>
@@ -82,13 +65,13 @@
             @forelse ($expenses as $expense)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $expense->id }}">
                     <x-table.td class="pr-0">
-                        <x-table.checkbox wire:model="selected" value="{{ $expense->id }}" />
+                        <input wire:model="selected" type="checkbox" value="{{ $expense->id }}" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->id }}
+                        {{ $expense->reference }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->expenseCategory->name ?? '' }}
+                        {{ $expense->category->name ?? '' }}
                     </x-table.td>
                     <x-table.td>
                         {{ $expense->date }}
@@ -97,11 +80,8 @@
                         {{ $expense->amount }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->description }}
-                    </x-table.td>
-                    <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button alert wire:click="showModal({{ $expense->id }})" wire:loading.attr="disabled">
+                            <x-button info wire:click="showModal({{ $expense->id }})" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
                             <x-button primary wire:click="editModal({{ $expense->id }})" wire:loading.attr="disabled">
@@ -149,84 +129,101 @@
         </div>
     </div>
 
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Expense Details') }}
-        </x-slot>
+    <div>
+        <livewire:expense.create />
+    </div>
 
-        <x-slot name="content">
-            <div class="flex flex-col">
-                <div class="flex flex-row">
-                    <div class="flex flex-col w-1/2">
-                        <x-label for="expense_category_id" :value="__('Expense Category')" />
-                        <x-input wire:model="expense.expense_category_id" id="expense_category_id"
-                            class="block mt-1 w-full" type="text" disabled />
-                    </div>
-                    <div class="flex flex-col w-1/2">
-                        <x-label for="date" :value="__('Entry Date')" />
-                        <x-input wire:model="expense.date" id="date" class="block mt-1 w-full" type="text"
-                            disabled />
-                    </div>
-                </div>
-                <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-        </x-slot>
+    <div>
+        <x-modal wire:model="editModal">
+            <x-slot name="title">
+                {{ __('Edit Expense') }}
+            </x-slot>
 
-    </x-modal>
+            <x-slot name="content">
+                <form wire:submit.prevent="update">
+                    <div class="flex flex-wrap -mx-1">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <x-label for="expense.reference" :value="__('Reference')" />
+                            <x-input wire:model="expense.reference" id="expense.reference" class="block mt-1 w-full"
+                                type="text" />
+                        </div>
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <x-label for="expense.date" :value="__('Date')" />
+                            <x-input-date wire:model="expense.date" id="expense.date" name="expense.date" class="block mt-1 w-full" />
+                        </div>
 
-
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit Expense') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <form wire:submit.prevent="update">
-                <div class="flex flex-wrap -mx-1">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.reference" :value="__('Reference')" />
-                        <x-input wire:model="expense.reference" id="expense.reference" class="block mt-1 w-full"
-                            type="text" />
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <x-label for="expense.category_id" :value="__('Expense Category')" />
+                            <x-select-list
+                                class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                                required id="category_id" name="category_id" wire:model="expense.category_id"
+                                :options="$this->listsForFields['expensecategories']" />
+                        </div>
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <x-label for="expense.amount" :value="__('Amount')" required />
+                            <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
+                                type="number" />
+                        </div>
+                        <div class="w-fullmb-4">
+                            <x-label for="expense.details" :value="__('Description')" />
+                            <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="6"
+                                wire:model="expense.details" id="expense.details"></textarea>
+                        </div>
                     </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.date" :value="__('Date')" />
-                        <x-input wire:model="expense.date" id="expense.date" class="block mt-1 w-full"
-                            type="date" />
-                    </div>
-
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.expense_category_id" :value="__('Expense Category')" />
-                        <x-select-list
-                            class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                            required id="expense_category_id" name="expense_category_id"
-                            wire:model="expense.expense_category_id" :options="$this->listsForFields['expensecategories']" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        <x-label for="expense.amount" :value="__('Amount')" required />
-                        <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
-                            type="number" />
-                    </div>
-                    <div class="w-fullmb-4">
-                        <x-label for="expense.details" :value="__('Description')" />
-                        <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="6"
-                            wire:model="expense.details" id="expense.details"></textarea>
-                    </div>
-
-                    <div class="flex items-center justify-end mt-4">
+                    <div class="flex items-center justify-start space-x-2 mt-4">
                         <x-button secondary wire:click="$toggle('editModal')" wire:loading.attr="disabled">
                             {{ __('Cancel') }}
                         </x-button>
                         <x-button primary class="ml-4" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
+
+                    </div>
+                </form>
+            </x-slot>
+        </x-modal>
+    </div>
+
+    <x-modal wire:model="showModal">
+        <x-slot name="title">
+            {{ __('Expense Details') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="w-full">
+                <div class="flex flex-wrap">
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="category_id" :value="__('Expense Category')" />
+                        <x-input wire:model="expense.category_id" id="category_id" class="block mt-1 w-full"
+                            type="text" disabled />
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="date" :value="__('Entry Date')" />
+                        <x-input wire:model="expense.date" id="date" class="block mt-1 w-full" type="text"
+                            disabled />
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="reference" :value="__('Reference')" />
+                        <x-input wire:model="expense.reference" id="reference" class="block mt-1 w-full"
+                            type="text" disabled />
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="amount" :value="__('Amount')" />
+                        <x-input wire:model="expense.amount" id="amount" class="block mt-1 w-full" type="text"
+                            disabled />
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="details" :value="__('Description')" />
+                        <x-input wire:model="expense.details" id="details" class="block mt-1 w-full"
+                            type="text" disabled />
                     </div>
                 </div>
-            </form>
+                <x-button class="my-4 px-4" primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
+                    {{ __('Close') }}
+                </x-button>
         </x-slot>
     </x-modal>
 
-    <livewire:expense.create />
 
 </div>
 

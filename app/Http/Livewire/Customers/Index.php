@@ -12,24 +12,31 @@ use App\Support\HasAdvancedFilter;
 use App\Imports\CustomerImport;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+    use WithPagination, WithSorting, LivewireAlert,
+        HasAdvancedFilter, WithFileUploads;
 
     public $customer;
+
+    public $file;
 
     public int $perPage;
 
     public int $selectPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
+    public $listeners = ['resetSelected','confirmDelete','exportAll','downloadAll','delete', 'export', 'import', 'importExcel','refreshIndex','showModal','editModal'];
 
     public $showModal;
 
     public $refreshIndex;
 
     public $editModal; 
+
+    public $import;
 
     public array $orderable;
 
@@ -121,7 +128,7 @@ class Index extends Component
 
         $customer->delete();
 
-        $this->alert('warning', 'Customer deleted successfully');
+        $this->alert('warning', __('Customer deleted successfully'));
     }
     
     public function createModal()
@@ -145,7 +152,7 @@ class Index extends Component
 
         $this->createModal = false;
 
-        $this->alert('success', 'Customer created successfully.');
+        $this->alert('success', __('Customer created successfully'));
     }
 
     public function showModal(Customer $customer)
@@ -179,7 +186,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Customer updated successfully.');
+        $this->alert('success', __('Customer updated successfully.'));
     }
     
     public function downloadSelected()
@@ -188,16 +195,14 @@ class Index extends Component
 
         $customers = Customer::whereIn('id', $this->selected)->get();
 
-        return (new CustomerExport($customers))->download('customers.xlsx');
+        return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function downloadAll()
+    public function downloadAll(Customer $customers)
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $customers = Customer::all();
-
-        return (new CustomerExport($customers))->download('customers.xlsx');
+        return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function exportSelected()
@@ -206,32 +211,36 @@ class Index extends Component
 
         $customers = Customer::whereIn('id', $this->selected)->get();
 
-        return (new CustomerExport($customers))->download('customers.pdf');
+        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
-    public function exportAll()
+    public function exportAll(Customer $customers)
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $customers = Customer::all();
-
-        return (new CustomerExport($customers))->download('customers.pdf');
+        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     public function import()
     {
         abort_if(Gate::denies('customer_access'), 403);
 
+       $this->import = true;
+    }
+
+    public function importExcel()
+    {
+        abort_if(Gate::denies('customer_access'), 403);
+        
         $this->validate([
-            'import_file' => [
-                'required',
-                'file',
-            ],
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Customer::import(new CustomerImport, request()->file('import_file'));
+        Excel::import(new CustomerImport, $this->file('file'));
 
-        $this->reset('import_file');
+        $this->import = false;
+
+        $this->alert('success', __('Customer imported successfully.'));
     }
 
 }
