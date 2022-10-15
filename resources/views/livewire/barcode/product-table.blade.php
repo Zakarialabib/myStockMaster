@@ -9,8 +9,8 @@
             </div>
         </div>
     @endif
-    <div class="card">
-        <div class="p-4">
+    <x-card>
+        <div>
             <x-table>
                 <x-slot name="thead">
                     <x-table.th>
@@ -50,10 +50,10 @@
         <div class="mt-3">
             <button wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button"
                 class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                <i class="bi bi-upc-scan"></i> {{__('Generate Barcodes')}}
+                <i class="bi bi-upc-scan"></i> {{ __('Generate Barcodes') }}
             </button>
         </div>
-    </div>
+    </x-card>
 </div>
 
 <div wire:loading wire:target="generateBarcodes" class="w-100">
@@ -84,7 +84,7 @@
                             {!! $barcode !!}
                         </div>
                         <p class="text-black font-bold text-lg">
-                            {{__('Price')}} : {{ format_currency($product->price) }}
+                            {{ __('Price') }} : {{ format_currency($product->price) }}
                         </p>
                     </div>
                 @endforeach

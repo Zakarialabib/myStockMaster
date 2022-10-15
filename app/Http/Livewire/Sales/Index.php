@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Imports\SaleImport;
 
 class Index extends Component
 {
@@ -17,7 +18,12 @@ class Index extends Component
 
     public $sale;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    public $listeners = [
+    'confirmDelete', 'delete', 'showModal', 'editModal', 'createModal',
+    'importModal', 'import' , 'refreshIndex'
+    ];
+
+    public $refreshIndex;
 
     public $showModal;
 
@@ -67,6 +73,11 @@ class Index extends Component
     public function resetSelected()
     {
         $this->selected = [];
+    }
+
+    public function refreshIndex()
+    {
+        $this->resetPage();
     }
 
     public array $rules = [
@@ -180,6 +191,36 @@ class Index extends Component
         $product->delete();
 
         $this->alert('success', 'Sale deleted successfully.');
+    }
+
+    public function importModal()
+    {
+        abort_if(Gate::denies('create_sales'), 403);
+
+        $this->resetSelected();
+
+        $this->resetValidation();
+
+        $this->importModal = true;
+    }
+
+    public function import()
+    {
+        abort_if(Gate::denies('create_sales'), 403);
+
+        $this->validate([
+            'import_file' => [
+                'required',
+                'file',
+            ],
+        ]);
+
+        Sale::import(new SaleImport, $this->file('import_file'));
+
+        $this->alert('success', 'Sales imported successfully');
+
+        $this->importModal = false;
+
     }
 
     protected function initListsForFields(): void

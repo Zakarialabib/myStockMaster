@@ -8,7 +8,7 @@
                 @endforeach
             </select>
 
-            @if ($selected)
+            @if ($selectedCount)
                 <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
                     <i class="fas fa-trash"></i>
                 </x-button>

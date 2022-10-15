@@ -7,15 +7,11 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-
-            <button
-                class="text-blue-500 dark:text-gray-300 bg-transparent dark:bg-dark-eval-2 border border-blue-500 dark:border-gray-300 hover:text-blue-700  active:bg-blue-600 font-bold uppercase text-xs p-3 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled"
-                {{ $this->selectedCount ? '' : 'disabled' }}>
-                {{ __('Delete Selected') }}
-            </button>
-
-
+            @if ($selected)
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="my-2 my-md-0">

@@ -23,6 +23,8 @@
     },
     "dependencies": {
         "@alpinejs/collapse": "^3.10.3",
+        "@alpinejs/focus": "^3.10.4",
+        "@alpinejs/intersect": "^3.10.4",
         "@fortawesome/fontawesome-free": "^5.15.3",
         "alpinejs": "^3.5.0",
         "apexcharts": "^3.29.0",

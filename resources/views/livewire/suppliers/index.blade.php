@@ -7,14 +7,11 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-
-            <x-button danger wire:click="deleteSelected" class="ml-3">
+            @if ($selected)
+            <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
                 <i class="fas fa-trash"></i>
             </x-button>
-
-            <x-button alert class="ml-3" wire:click="confirm('import')" wire:loading.attr="disabled">
-                {{ __('Import') }}
-            </x-button>
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="flex items-center mr-3 pl-4">
@@ -22,11 +19,6 @@
                     class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                     placeholder="{{ __('Search') }}" />
             </div>
-        </div>
-    </div>
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
         </div>
     </div>
 
@@ -218,6 +210,40 @@
     </x-modal>
 
     <livewire:suppliers.create />
+
+     {{-- Import modal --}}
+
+     <x-modal wire:model="importModal">
+        <x-slot name="title">
+            {{ __('Import Excel') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="import">
+                <div class="space-y-4">
+                    <div class="mt-4">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import_file" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                    </div>
+
+                    <div class="w-full flex justify-end">
+                        <x-button primary wire:click="import" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                        <x-button primary type="button" wire:click="$set('importModal', false)"
+                            wire:loading.attr="disabled">
+                            {{ __('Cancel') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    {{-- End Import modal --}}
+
 
 </div>
 

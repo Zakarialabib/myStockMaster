@@ -21,13 +21,21 @@ class ProductPage extends Component
 
     public $product;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
+    public $listeners = [
+    
+    'confirmDelete', 'delete', 'showModal', 'editModal',         
+    'refreshIndex','import','exportExcel','exportPdf',
+    'importModal'
+
+    ];
 
     public int $perPage;
     
     public $showModal;
     
     public $editModal;
+
+    public $importModal;
     
     public $refreshIndex;
 
@@ -178,6 +186,17 @@ class ProductPage extends Component
         $this->alert('success', 'Product updated successfully.');
     }
 
+    
+    public function importModal()
+    {
+        abort_if(Gate::denies('import_products'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->importModal = true;  
+    }
 
     public function import()
     {
@@ -190,11 +209,12 @@ class ProductPage extends Component
             ],
         ]);
 
-        Product::import(new ProductImport, request()->file('import_file'));
+        Product::import(new ProductImport, $this->file('import_file'));
 
         $this->alert('success', 'Products imported successfully');
-    }
 
+        $this->importModal = false;
+    }
 
     public function exportExcel()
     {

@@ -21,11 +21,13 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import','importModal','refreshIndex','showModal','editModal'];
 
     public $showModal;
 
     public $editModal;
+    
+    public $importModal;
 
     public array $orderable;
 
@@ -150,13 +152,16 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function import()
+    public function importModal()
     {
         abort_if(Gate::denies('supplier_import'), 403);
 
-        $this->validate([
-            'import_file' => 'required',
-        ]);
+        $this->importModal = true;
+    }
+
+    public function import()
+    {
+        abort_if(Gate::denies('supplier_import'), 403);
 
         $this->validate([
             'import_file' => [
@@ -165,9 +170,11 @@ class Index extends Component
             ],
         ]);
 
-        Supplier::import(new SupplierImport, request()->file('import_file'));
+        Supplier::import(new SupplierImport, $this->file('import_file'));
 
         $this->alert('success', 'Supplier Imported Successfully');
+
+        $this->importModal = false;
     }
 
     public function export()

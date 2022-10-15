@@ -16,11 +16,6 @@
             </div>
         </div>
     </div>
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
-        </div>
-    </div>
 
     <x-table>
         <x-slot name="thead">
@@ -133,74 +128,96 @@
         </x-slot>
 
         <x-slot name="content">
-            <x-table>
-                <x-slot name="thead">
-                    <x-table.th>#</x-table.th>
-                    <x-table.th>
-                        {{ __('Code') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Image') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Name') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Quantity') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Price') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Cost') }}
-                    </x-table.th>
-                    <x-table.th>
-                        {{ __('Category') }}
-                    </x-table.th>
-                </x-slot>
-                <x-table.tbody>
-                    <x-table.tr>
-                        <x-table.td>
-                            <input type="text" wire:model="product.product_id"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.code"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <img src="" alt="Product Image" class="img-fluid img-thumbnail mb-2">
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.name"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.quantity"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.price"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.cost"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                        <x-table.td>
-                            <input type="text" wire:model="product.category_id"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                readonly>
-                        </x-table.td>
-                    </x-table.tr>
-                </x-table.tbody>
-            </x-table>
+            <div class="px-4 mx-auto mb-4">
+                <div class="row mb-3">
+                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(
+                            $product->code,
+                            $product->barcode_symbology,
+                            2,
+                            110,
+                        ) !!}
+                    </div>
+                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        @forelse($product->getMedia('images') as $media)
+                            <img src="{{ $media->getUrl() }}" alt="Product Image" class="img-fluid img-thumbnail mb-2">
+                        @empty
+                            <img src="{{ $product->getFirstMediaUrl('images') }}" alt="Product Image"
+                                class="img-fluid img-thumbnail mb-2">
+                        @endforelse
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="w-full px-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped mb-0">
+                                <tr>
+                                    <th>{{__('Product Code')}}</th>
+                                    <td>{{ $product->code }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Barcode Symbology')}}</th>
+                                    <td>{{ $product->barcode_symbology }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Name')}}</th>
+                                    <td>{{ $product->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Category')}}</th>
+                                    <td>{{ $product->category->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Cost')}}</th>
+                                    <td>{{ format_currency($product->cost) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Price')}}</th>
+                                    <td>{{ format_currency($product->price) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Quantity')}}</th>
+                                    <td>{{ $product->quantity . ' ' . $product->unit }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Stock Worth')}}</th>
+                                    <td>
+                                        {{__('COST')}}::
+                                        {{ format_currency($product->cost * $product->quantity) }}
+                                        /
+                                        {{__('PRICE')}}::
+                                        {{ format_currency($product->price * $product->quantity) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Alert Quantity')}}</th>
+                                    <td>{{ $product->stock_alert }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Tax (%)')}}</th>
+                                    <td>{{ $product->order_tax ?? 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Tax Type')}}</th>
+                                    <td>
+                                        @if ($product->tax_type == 1)
+                                            {{__('Exclusive')}}
+                                        @elseif($product->tax_type == 2)
+                                            {{__('Inclusive')}}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{{__('Description')}}</th>
+                                    <td>{{ $product->note ?? 'N/A' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <x-button primary wire:click="$toggle('showModal')">
                 {{ __('Close') }}
@@ -348,11 +365,40 @@
 
     <livewire:products.create />
 
-</div>
+    {{-- Import modal --}}
 
-@push('third_party_scripts')
-    <script src="{{ asset('js/dropzone.js') }}"></script>
-@endpush
+    <x-modal wire:model="importModal">
+        <x-slot name="title">
+            {{ __('Import Excel') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="import">
+                <div class="space-y-4">
+                    <div class="mt-4">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                    </div>
+
+                    <div class="w-full flex justify-end">
+                        <x-button primary wire:click="import" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                        <x-button primary type="button" wire:click="$set('importModal', false)"
+                            wire:loading.attr="disabled">
+                            {{ __('Cancel') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    {{-- End Import modal --}}
+
+</div>
 
 @push('page_scripts')
     <script>

@@ -7,23 +7,18 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            @if($this->selectedCount)
             <x-button danger wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
-
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="flex items-center mr-3 pl-4">
                 <input wire:model="search" type="text"
-                    class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="Search..." />
+                    class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
+                    placeholder="{{__('Search...')}}" />
             </div>
-        </div>
-    </div>
-
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
         </div>
     </div>
 
@@ -130,13 +125,11 @@
 
                     </div>
 
-                    <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                    <div class="w-full px-3">
                         <x-label for="image" :value="__('Image')" />
-                        <x-input id="image" class="block mt-1 w-full" type="text" name="image"
-                            wire:model.defer="brand.image" />
-                        <x-input-error :messages="$errors->get('brand.image')" for="brand.image" class="mt-2" />
+                        <x-fileupload wire:model="image" :file="$image" accept="image/jpg,image/jpeg,image/png" />
+                        <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
-
 
                     <div class="w-full flex justify-end">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">

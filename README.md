@@ -58,6 +58,10 @@ Refactoring the code to use the new Laravel 9 features, livewire capacities, & t
 - 1.0.27 - Optimization of Category Create with Livewire modal
 - 1.0.28 - Optimization of Customer Create with Livewire modal
 - 1.0.29 - Optimization of Supplier Create with Livewire modal
+- 1.0.30 - Optimization of Pos
+- 1.0.31 - Optimization of Sales
+- 1.0.32 - Optimization of Purchases
+- 1.0.33 - Optimization of Product Image Upload
 
 
 ## Requirements

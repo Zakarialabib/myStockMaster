@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html x-data="mainState" :class="{ dark: isDarkMode }" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -9,22 +9,21 @@
 
     <title>@yield('title') || {{ config('app.name') }}</title>
     <!-- Styles -->
-    <style>
-        [x-cloak] {
-            display: none;
-        }
-    </style>
-
+   
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
-
     @include('includes.main-css')
+    
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('includes.main-js')
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body class="font-sans antialiased">
-    <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
+<body class="font-sans antialiased bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300 selection:bg-brand-200 dark:selection:text-slate-800 text-sm sm:text-base">
+    <x-loading-mask />
+    <div @resize.window="handleWindowResize">
         <div class="min-h-screen text-zinc-500 bg-slate-200 dark:bg-dark-bg dark:text-zinc-200">
             <!-- Sidebar -->
             <x-sidebar.sidebar />
@@ -46,7 +45,6 @@
             </div>
         </div>
     </div>
-    @include('includes.main-js')
 </body>
 
 </html>

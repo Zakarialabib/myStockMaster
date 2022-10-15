@@ -126,8 +126,9 @@ class Index extends Component
         abort_if(Gate::denies('brand_edit'), 403);
 
         $this->validate();
+        // upload image if it does or doesn't exist
 
-        if ($this->brand->image != null) {    
+        if($this->image){
             $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
             $this->image->storeAs('brands',$imageName);
             $this->brand->image = $imageName;

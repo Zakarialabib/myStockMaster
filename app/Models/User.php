@@ -10,10 +10,12 @@ use App\Support\HasAdvancedFilter;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia
 {
-    use HasAdvancedFilter, HasApiTokens, Notifiable, InteractsWithMedia;
+    use HasAdvancedFilter, HasApiTokens, 
+    Notifiable, InteractsWithMedia, HasRoles;
 
     public $orderable = [
         'id','name','email', 'password' , 'avatar',
@@ -82,26 +84,19 @@ class User extends Authenticatable implements HasMedia
         }
         return false;
     }
-
-    # assignRole method
-    public function assignRole($role)
-    {
-        return $this->roles()->attach($role);
-    }
-    
-    # User Has many roles   
+        
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role');
     }
     
-    # Use roles to check if user has permission
+    
     public function hasPermission($permission)
     {
         return $this->role->permissions->contains('name', $permission);
     }
 
-    # User has one wallet
+    
     public function wallet()
     {
         return $this->hasOne('App\Models\Wallet');

@@ -3,53 +3,26 @@
 namespace App\Imports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Auth;
 
-class SupplierImport implements FromQuery, WithMapping, WithHeadings
+class SupplierImport implements ToModel
 {
-    use Exportable;
-
-    protected $selected;
-
-    public function __construct($selected)
-    { 
-        $this->selected = $selected;
-    }
-    /**
-    * @var Supplier $supplier
+     /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
     */
- 
-    public function headings(): array
+    public function model(array $row)
     {
-        return [
-            '#',
-            'Name',
-            'Email',
-            'Phone',
-            'Address',
-            'Created At'
-        ];
-    }
+        $supplier = new Supplier([
+           'name' => $row[0],
+           'email' => $row[1],
+           'phone' => $row[2],
+           'address' => $row[3],
+        ]);
 
-    public function map($supplier) : array
-    {
-
-        return[
-        $supplier->id,
-        $supplier->name,
-        $supplier->email,
-        $supplier->phone,
-        $supplier->address,
-        $supplier->created_at,
-        ];
-
-    }
-
-    public function query()
-    {
-        return Supplier::query()->whereIn('id', $this->selected);
+        Auth::user()->suppliers()->save($supplier);
     }
 }

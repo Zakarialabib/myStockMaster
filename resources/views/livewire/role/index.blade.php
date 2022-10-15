@@ -57,6 +57,9 @@
                         </x-table.td>
                         <x-table.td>
                             <div class="inline-flex">
+                                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
                                 <x-button primary wire:click="editModal({{ $role->id }})" wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                 </x-button>

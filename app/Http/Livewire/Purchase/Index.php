@@ -156,8 +156,6 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->reset();
-
         $this->purchase = $purchase;
 
         $this->showModal = true;

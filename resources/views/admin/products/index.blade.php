@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Products')
+@section('title', __('Products'))
 
 @section('breadcrumb')
     <section class="py-2 px-6">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">
-                    Products
+                    {{ __('Products') }}
                 </h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
@@ -40,8 +40,17 @@
                 </div>
             </div>
             <div class="float-right">
+                <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                    {{ __('Import') }}
+                </x-button>
+                <x-button danger type="button" onclick="Livewire.emit('exportPdf')" wire:loading.attr="disabled">
+                    {{ __('Pdf') }}
+                </x-button>
+                <x-button info type="button" onclick="Livewire.emit('exportExcel')" wire:loading.attr="disabled">
+                    {{ __('Excel') }}
+                </x-button>
                 <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createProduct', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary onclick="Livewire.emit('createProduct', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>

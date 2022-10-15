@@ -38,6 +38,10 @@
                 </div>
             </div>
             <div class="float-right">
+                <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                    {{ __('Import') }}
+                </x-button>
+                
                 <!-- Button trigger livewire modal -->
                 <x-button primary  onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
             </div>

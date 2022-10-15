@@ -1,5 +1,5 @@
 <div>
-    <div class="row">
+    <div class="flex flex-row">
         <form wire:submit.prevent="generateReport">
             <div class="flex flex-wrap -mx-1">
                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
@@ -37,11 +37,11 @@
         </form>
     </div>
 
-    <div class="row">
+    <div class="flex flex-row">
         {{-- Sales --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-receipt font-2xl"></i>
                     </div>
@@ -51,12 +51,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Sale Returns --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-arrow-return-left font-2xl"></i>
                     </div>
@@ -66,12 +66,12 @@
                             {{ __('Sale Returns') }}</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Profit --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-trophy font-2xl"></i>
                     </div>
@@ -80,12 +80,12 @@
                         <div class="text-uppercase font-weight-bold small">{{ __('Profit') }}</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Purchases --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-bag font-2xl"></i>
                     </div>
@@ -96,12 +96,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Purchase Returns --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-arrow-return-right font-2xl"></i>
                     </div>
@@ -112,12 +112,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Expenses --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-wallet2 font-2xl"></i>
                     </div>
@@ -126,12 +126,12 @@
                         <div class="text-uppercase font-weight-bold small">{{ __('Expenses') }}</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Payments Received --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-cash-stack font-2xl"></i>
                     </div>
@@ -140,12 +140,12 @@
                         <div class="text-uppercase font-weight-bold small">{{ __('Payments Received') }}</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Payments Sent --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-cash-stack font-2xl"></i>
                     </div>
@@ -154,12 +154,12 @@
                         <div class="text-uppercase font-weight-bold small">{{ __('Payments Sent') }}</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
         {{-- Payments Net --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-3 d-flex align-items-center">
+            <x-card>
+                <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
                         <i class="bi bi-cash-stack font-2xl"></i>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="text-uppercase font-weight-bold small">Payments Net</div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 </div>

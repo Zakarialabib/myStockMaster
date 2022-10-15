@@ -65,29 +65,29 @@
     <div class="flex flex-wrap md:justify-end">
         <div class="w-1/3 px-4">
             <div class="w-full mb-5 p-0 overflow-x-auto rounded h-full">
-                <table class="table items-center w-full mb-0 align-top border-grey-100 text-[#67748e] pt-5">
-                    <tr>
-                        <th>{{ __('Order Tax') }} ({{ $global_tax }}%)</th>
-                        <td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</td>
-                    </tr>
-                    <tr>
-                        <th>{{ __('Discount') }} ({{ $global_discount }}%)</th>
-                        <td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}</td>
-                    </tr>
-                    <tr>
-                        <th>{{ __('Shipping') }}</th>
+                <x-table-responsive>
+                    <x-table.tr>
+                        <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
+                        <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</x-table.td>
+                    </x-table.tr>
+                    <x-table.tr>
+                        <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
+                        <x-table.td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}</x-table.td>
+                    </x-table.tr>
+                    <x-table.tr>
+                        <x-table.th>{{ __('Shipping') }}</x-table.th>
                         <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
-                        <td>(+) {{ format_currency($shipping) }}</td>
-                    </tr>
-                    <tr>
-                        <th>{{ __('Grand Total') }}</th>
+                        <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
+                    </x-table.tr>
+                    <x-table.tr>
+                        <x-table.th>{{ __('Grand Total') }}</x-table.th>
                         @php
                             $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
                         @endphp
-                        <th>
+                        <x-table.th>
                             (=) {{ format_currency($total_with_shipping) }}
-                        </th>
-                    </tr>
+                        </x-table.th>
+                    </x-table.tr>
                 </table>
             </div>
         </div>
