@@ -8,7 +8,7 @@
                 @endforeach
             </select>
 
-            @if ($selectedCount)
+            @if ($selected)
                 <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
                     <i class="fas fa-trash"></i>
                 </x-button>
@@ -182,34 +182,35 @@
                             wire:model.defer="customer.phone" />
                         <x-input-error :messages="$errors->get('customer.phone')" class="mt-2" />
                     </div>
+                    <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="email" :value="__('Email')" />
+                            <x-input id="email" class="block mt-1 w-full" type="email"
+                                wire:model.defer="customer.email" />
+                            <x-input-error :messages="$errors->get('customer.email')" class="mt-2" />
+                        </div>
 
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="email" :value="__('Email')" />
-                        <x-input id="email" class="block mt-1 w-full" type="email"
-                            wire:model.defer="customer.email" />
-                        <x-input-error :messages="$errors->get('customer.email')" class="mt-2" />
-                    </div>
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="address" :value="__('Address')" />
+                            <x-input id="address" class="block mt-1 w-full" type="text"
+                                wire:model.defer="customer.address" />
+                            <x-input-error :messages="$errors->get('customer.address')" class="mt-2" />
+                        </div>
 
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="address" :value="__('Address')" />
-                        <x-input id="address" class="block mt-1 w-full" type="text"
-                            wire:model.defer="customer.address" />
-                        <x-input-error :messages="$errors->get('customer.address')" class="mt-2" />
-                    </div>
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="city" :value="__('City')" />
+                            <x-input id="city" class="block mt-1 w-full" type="text"
+                                wire:model.defer="customer.city" />
+                            <x-input-error :messages="$errors->get('customer.city')" class="mt-2" />
+                        </div>
 
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="city" :value="__('City')" />
-                        <x-input id="city" class="block mt-1 w-full" type="text"
-                            wire:model.defer="customer.city" />
-                        <x-input-error :messages="$errors->get('customer.city')" class="mt-2" />
-                    </div>
-
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="tax_number" :value="__('Tax Number')" />
-                        <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                            wire:model.defer="customer.tax_number" />
-                        <x-input-error :messages="$errors->get('customer.tax_number')" for="" class="mt-2" />
-                    </div>
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="tax_number" :value="__('Tax Number')" />
+                            <x-input id="tax_number" class="block mt-1 w-full" type="text"
+                                wire:model.defer="customer.tax_number" />
+                            <x-input-error :messages="$errors->get('customer.tax_number')" for="" class="mt-2" />
+                        </div>
+                    </x-accordion>
 
                     <div class="flex items-center justify-end mt-4">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
@@ -240,6 +241,33 @@
                             wire:model.defer="import" />
                         <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
+
+                    <x-table-responsive>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Name') }}</x-table.th>
+                            <x-table.td>{{ __('Required') }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Phone') }}</x-table.th>
+                            <x-table.td>{{ __('Required') }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Email') }}</x-table.th>
+                            <x-table.td>{{ __('Optional') }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Address') }}</x-table.th>
+                            <x-table.td>{{ __('Optional') }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('City') }}</x-table.th>
+                            <x-table.td>{{ __('Optional') }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Tax Number') }}</x-table.th>
+                            <x-table.td>{{ __('Optional') }}</x-table.td>
+                        </x-table.tr>
+                    </x-table-responsive>
 
                     <div class="w-full flex justify-end">
                         <x-button primary wire:click="importExcel" wire:loading.attr="disabled">

@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 class SalePayment extends Model
 {
     use HasAdvancedFilter;
+    
     public $orderable = [
         'id',
         'sale_id',

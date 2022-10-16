@@ -28,7 +28,10 @@
                                 {{-- @include('livewire.includes.product-cart-modal') --}}
                             </x-table.td>
 
-                            <x-table.td>{{ format_currency($cart_item->options->unit_price) }}</x-table.td>
+                            <x-table.td>
+                            <input wire:model="price.{{ $cart_item->id }}" type="number" class="px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $cart_item->price }}" min="1">
+                                {{-- {{ format_currency($cart_item->options->unit_price) }} --}}
+                            </x-table.td>
 
                                 <x-table.td>
                                     <span
@@ -63,8 +66,8 @@
         </x-table>
     </div>
     <div class="flex flex-wrap md:justify-end">
-        <div class="w-1/3 px-4">
-            <div class="w-full mb-5 p-0 overflow-x-auto rounded h-full">
+        <div class="w-full">
+            <div class="w-full py-2">
                 <x-table-responsive>
                     <x-table.tr>
                         <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
@@ -88,7 +91,7 @@
                             (=) {{ format_currency($total_with_shipping) }}
                         </x-table.th>
                     </x-table.tr>
-                </table>
+                </x-table-responsive>
             </div>
         </div>
     </div>

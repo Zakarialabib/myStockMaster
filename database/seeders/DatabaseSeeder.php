@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             // RolesSeeder::class,
             SuperUserSeeder::class,
             // RoleUserSeeder::class,
-            PermissionsSeeder::class,
-            PermissionRoleSeeder::class,
+            // PermissionsSeeder::class,
+            // PermissionRoleSeeder::class,
             CurrencySeeder::class,
             SettingsSeeder::class,
         ]);

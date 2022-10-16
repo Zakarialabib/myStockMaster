@@ -8,7 +8,7 @@
     <!-- Toggle button -->
     <x-button type="button" iconOnly srText="Toggle sidebar" secondary
         x-show="isSidebarOpen || isSidebarHovered" @click="isSidebarOpen = !isSidebarOpen">
-        <i class="fas fa-chevron-right hidden w-6 h-6 lg:block" x-show="!isSidebarOpen" aria-hidden="true"></i>
-        <i class="fas fa-chevron-left hidden w-6 h-6 lg:block" x-show="isSidebarOpen" aria-hidden="true"></i>
+        <i class="fas fa-chevron-right hidden w-5 h-5 lg:block" x-show="!isSidebarOpen" aria-hidden="true"></i>
+        <i class="fas fa-chevron-left hidden w-5 h-5 lg:block" x-show="isSidebarOpen" aria-hidden="true"></i>
     </x-button>
 </div>

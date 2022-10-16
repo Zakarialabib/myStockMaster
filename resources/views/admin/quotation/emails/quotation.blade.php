@@ -43,11 +43,11 @@
                             <thead>
                             <tr>
                                 <th class="align-middle">Product</th>
-                                <th class="align-middle">Net Unit Price</th>
+                                <th class="align-middle">{{__('Net Unit Price')}}</th>
                                 <th class="align-middle">{{__('Quantity')}}</th>
-                                <th class="align-middle">Discount</th>
-                                <th class="align-middle">Tax</th>
-                                <th class="align-middle">Sub Total</th>
+                                <th class="align-middle">{{__('Discount')}}</th>
+                                <th class="align-middle">{{__('Tax')}}</th>
+                                <th class="align-middle">{{__('Sub Total')}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -87,19 +87,19 @@
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <td class="left"><strong>Discount ({{ $quotation->discount_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Discount')}} ({{ $quotation->discount_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($quotation->discount_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Tax ({{ $quotation->tax_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Tax')}} ({{ $quotation->tax_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($quotation->tax_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Shipping)</strong></td>
+                                    <td class="left"><strong>{{__('Shipping')}}</strong></td>
                                     <td class="right">{{ format_currency($quotation->shipping_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Grand Total</strong></td>
+                                    <td class="left"><strong>{{__('Grand Total')}}</strong></td>
                                     <td class="right"><strong>{{ format_currency($quotation->total_amount) }}</strong></td>
                                 </tr>
                                 </tbody>

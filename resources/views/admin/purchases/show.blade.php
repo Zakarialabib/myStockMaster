@@ -29,30 +29,30 @@
                     <div class="p-4">
                         <div class="row mb-4">
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Company Info')}}:</h5>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
-                                <div>Email: {{ settings()->company_email }}</div>
-                                <div>Phone: {{ settings()->company_phone }}</div>
+                                <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                                <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
                                 <h5 class="mb-2 border-bottom pb-2">{{__('Supplier Info')}}:</h5>
                                 <div><strong>{{ $supplier->name }}</strong></div>
                                 <div>{{ $supplier->address }}</div>
-                                <div>Email: {{ $supplier->email }}</div>
-                                <div>Phone: {{ $supplier->phone }}</div>
+                                <div>{{__('Email')}}: {{ $supplier->email }}</div>
+                                <div>{{__('Phone')}}: {{ $supplier->phone }}</div>
                             </div>
 
                             <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Invoice Info:</h5>
-                                <div>Invoice: <strong>INV/{{ $purchase->reference }}</strong></div>
-                                <div>Date: {{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}</div>
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Invoice Info')}}:</h5>
+                                <div>{{__('Invoice')}}: <strong>INV/{{ $purchase->reference }}</strong></div>
+                                <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}</div>
                                 <div>
-                                    Status: <strong>{{ $purchase->status }}</strong>
+                                    {{__('Status')}}: <strong>{{ $purchase->status }}</strong>
                                 </div>
                                 <div>
-                                    Payment Status: <strong>{{ $purchase->payment_status }}</strong>
+                                    {{__('Payment Status')}}: <strong>{{ $purchase->payment_status }}</strong>
                                 </div>
                             </div>
 
@@ -62,12 +62,12 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="align-middle">Product</th>
-                                    <th class="align-middle">Net Unit Price</th>
+                                    <th class="align-middle">{{__('Product')}}</th>
+                                    <th class="align-middle">{{__('Net Unit Price')}}</th>
                                     <th class="align-middle">{{__('Quantity')}}</th>
-                                    <th class="align-middle">Discount</th>
-                                    <th class="align-middle">Tax</th>
-                                    <th class="align-middle">Sub Total</th>
+                                    <th class="align-middle">{{__('Discount')}}</th>
+                                    <th class="align-middle">{{__('Tax')}}</th>
+                                    <th class="align-middle">{{__('Sub Total')}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -107,19 +107,19 @@
                                 <table class="table">
                                     <tbody>
                                     <tr>
-                                        <td class="left"><strong>Discount ({{ $purchase->discount_percentage }}%)</strong></td>
+                                        <td class="left"><strong>{{__('Discount')}} ({{ $purchase->discount_percentage }}%)</strong></td>
                                         <td class="right">{{ format_currency($purchase->discount_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Tax ({{ $purchase->tax_percentage }}%)</strong></td>
+                                        <td class="left"><strong>{{__('Tax')}} ({{ $purchase->tax_percentage }}%)</strong></td>
                                         <td class="right">{{ format_currency($purchase->tax_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Shipping)</strong></td>
+                                        <td class="left"><strong>{{__('Shipping')}})</strong></td>
                                         <td class="right">{{ format_currency($purchase->shipping_amount) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="left"><strong>Grand Total</strong></td>
+                                        <td class="left"><strong>{{__('Grand Total')}}</strong></td>
                                         <td class="right"><strong>{{ format_currency($purchase->total_amount) }}</strong></td>
                                     </tr>
                                     </tbody>

@@ -53,7 +53,36 @@ class Sale extends Model
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'id',
+        'date',
+        'reference',
+        'customer_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_status',
+        'payment_method',
+        'shipping_status',
+        'note',
+        'created_at',
+        'updated_at',
+    ];
+
+    const PaymentPending =  '0' ;
+    const PaymentPaid =  '1' ;
+    const PaymentPartial =  '2' ;
+    const PaymentDue =  '3' ;
+
+    const SalePending =  '0' ;
+    const SaleOrdered =  '1' ;
+    const SaleCompleted =  '2' ;
 
     public function saleDetails() {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');

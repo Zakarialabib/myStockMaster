@@ -1,6 +1,6 @@
 <div class="relative">
     <div class="p-4">
-        <div class="mb-4 mb-0">
+        <div class="mb-2 md:mb-0">
             <input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="text"
                 class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                 placeholder="{{ __('Type product name or code....') }}">
@@ -16,10 +16,10 @@
     </div>
 
     @if (!empty($query))
-        <div wire:click="resetQuery" class="position-fixed w-100 h-100"
+        <div wire:click="resetQuery" class="fixed w-100 h-100"
             style="left: 0; top: 0; right: 0; bottom: 0;z-index: 1;"></div>
         @if ($search_results->isNotEmpty())
-            <div class="card position-absolute mt-1" style="z-index: 2;left: 0;right: 0;border: 0;">
+            <div class="card absolute mt-1" style="z-index: 2;left: 0;right: 0;border: 0;">
                 <div class="card-body shadow">
                     <ul class="list-group list-group-flush">
                         @foreach ($search_results as $result)

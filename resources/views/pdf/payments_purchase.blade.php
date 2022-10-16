@@ -37,7 +37,7 @@
                            <div><strong>Nom:</strong> {{$payment['name']}}</div>
                            <div><strong>Téle:</strong> {{$payment['phone']}}</div>
                            <div><strong>Adresse:</strong> {{$payment['adress']}}</div>
-                           <div><strong>Email:</strong> {{$payment['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong> {{$payment['email']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -56,7 +56,7 @@
                            <div id="comp">{{$setting['CompanyName']}}</div>
                            <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
                            <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

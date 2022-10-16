@@ -31,6 +31,8 @@ class Index extends Component
 
     public $editModal;
 
+    public $showPayments;
+
     public int $perPage;
 
     public array $orderable;
@@ -221,6 +223,13 @@ class Index extends Component
 
         $this->importModal = false;
 
+    }
+
+    public function showPayments()
+    {
+        abort_if(Gate::denies('access_sales'), 403);
+
+        $this->showPayments = true;
     }
 
     protected function initListsForFields(): void

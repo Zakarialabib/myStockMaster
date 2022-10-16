@@ -23,9 +23,6 @@
                 <input wire:model="selected" type="checkbox" />
             </x-table.th>
             <x-table.th>
-                {{ __('Code') }}
-            </x-table.th>
-            <x-table.th>
                 {{ __('Image') }}
             </x-table.th>
             <x-table.th>
@@ -55,9 +52,6 @@
                         <input type="checkbox" value="{{ $product->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->code }}
-                    </x-table.td>
-                    <x-table.td>
                         @if ($product->image)
                         <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
                             class="w-10 h-10 rounded-full">
@@ -66,7 +60,12 @@
                         @endif
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->name }}
+                        <div class=" whitespace-nowrap">
+                            {{ $product->name }} <br>
+                            <x-badge success>
+                                {{ $product->code }}
+                            </x-badge>
+                        </div>
                     </x-table.td>
                     <x-table.td>
                         {{ $product->quantity }}
@@ -121,6 +120,7 @@
         </div>
     </div>
 
+    @if ($product)
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
         <x-slot name="title">
@@ -218,15 +218,15 @@
                     </div>
                 </div>
             </div>
-
-            <x-button primary wire:click="$toggle('showModal')">
-                {{ __('Close') }}
-            </x-button>
-
+            <div class="w-full flex justify-start space-x-2">
+                <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
+                    {{ __('Close') }}
+                </x-button>
+            </div>
         </x-slot>
-
     </x-modal>
     <!-- End Show Modal -->
+    @endif
 
     <!-- Edit Modal -->
     <x-modal wire:model="editModal">

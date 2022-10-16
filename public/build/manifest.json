@@ -5,11 +5,11 @@
     "isEntry": true,
     "css": [
       "assets/app.a6f7ba5c.css",
-      "assets/app.b1083077.css"
+      "assets/app.7a89f515.css"
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app.b1083077.css",
+    "file": "assets/app.7a89f515.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },

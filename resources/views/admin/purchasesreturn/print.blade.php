@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Purchase Return Details</title>
+    <title>{{__('Purchase Return Details')}}</title>
     <link rel="stylesheet" href="{{ public_path('b3/bootstrap.min.css') }}">
 </head>
 <body>
@@ -25,27 +25,27 @@
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Company Info:</h4>
                             <div><strong>{{ settings()->company_name }}</strong></div>
                             <div>{{ settings()->company_address }}</div>
-                            <div>Email: {{ settings()->company_email }}</div>
-                            <div>Phone: {{ settings()->company_phone }}</div>
+                            <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                            <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Supplier Info:</h4>
                             <div><strong>{{ $supplier->name }}</strong></div>
                             <div>{{ $supplier->address }}</div>
-                            <div>Email: {{ $supplier->email }}</div>
-                            <div>Phone: {{ $supplier->phone }}</div>
+                            <div>{{__('Email')}}: {{ $supplier->email }}</div>
+                            <div>{{__('Phone')}}: {{ $supplier->phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Invoice Info:</h4>
-                            <div>Invoice: <strong>INV/{{ $purchase_return->reference }}</strong></div>
-                            <div>Date: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                            <div>{{__('Invoice')}}: <strong>INV/{{ $purchase_return->reference }}</strong></div>
+                            <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
                             <div>
-                                Status: <strong>{{ $purchase_return->status }}</strong>
+                                {{__('Status')}}: <strong>{{ $purchase_return->status }}</strong>
                             </div>
                             <div>
-                                Payment Status: <strong>{{ $purchase_return->payment_status }}</strong>
+                                {{__('Payment Status')}}: <strong>{{ $purchase_return->payment_status }}</strong>
                             </div>
                         </div>
 
@@ -55,12 +55,12 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th class="align-middle">Product</th>
-                                <th class="align-middle">Net Unit Price</th>
+                                <th class="align-middle">{{__('Product')}}</th>
+                                <th class="align-middle">{{__('Net Unit Price')}}</th>
                                 <th class="align-middle">{{__('Quantity')}}</th>
-                                <th class="align-middle">Discount</th>
-                                <th class="align-middle">Tax</th>
-                                <th class="align-middle">Sub Total</th>
+                                <th class="align-middle">{{__('Discount')}}</th>
+                                <th class="align-middle">{{__('Tax')}}</th>
+                                <th class="align-middle">{{__('Sub Total')}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -100,19 +100,19 @@
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <td class="left"><strong>Discount ({{ $purchase_return->discount_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Discount')}} ({{ $purchase_return->discount_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($purchase_return->discount_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Tax ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Tax')}} ({{ $purchase_return->tax_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Shipping)</strong></td>
+                                    <td class="left"><strong>{{__('Shipping')}}</strong></td>
                                     <td class="right">{{ format_currency($purchase_return->shipping_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Grand Total</strong></td>
+                                    <td class="left"><strong>{{__('Grand Total')}}</strong></td>
                                     <td class="right"><strong>{{ format_currency($purchase_return->total_amount) }}</strong></td>
                                 </tr>
                                 </tbody>

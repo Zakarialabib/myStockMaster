@@ -63,32 +63,33 @@
         </div>
 
         <div class="flex flex-row">
-            <div class="w-full px-4">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>{{ __('Order Tax') }} ({{ $global_tax }}%)</th>
-                            <td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</td>
-                        </tr>
-                        <tr>
-                            <th>{{ __('Discount') }} ({{ $global_discount }}%)</th>
-                            <td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}</td>
-                        </tr>
-                        <tr>
-                            <th>{{ __('Shipping') }}</th>
+            <div class="w-full">
+                <div class="w-full mb-5 p-0">
+                    <x-table-responsive>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
+                            <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
+                            <x-table.td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
+                            </x-table.td>
+                        </x-table.tr>
+                        <x-table.tr>
+                            <x-table.th>{{ __('Shipping') }}</x-table.th>
                             <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
-                            <td>(+) {{ format_currency($shipping) }}</td>
-                        </tr>
-                        <tr class="text-primary">
-                            <th>{{ __('Grand Total') }}</th>
+                            <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
+                        </x-table.tr>
+                        <x-table.tr class="text-primary">
+                            <x-table.th>{{ __('Grand Total') }}</x-table.th>
                             @php
                                 $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
                             @endphp
-                            <th>
+                            <x-table.th>
                                 (=) {{ format_currency($total_with_shipping) }}
-                            </th>
-                        </tr>
-                    </table>
+                            </x-table.th>
+                        </x-table.tr>
+                    </x-table-responsive>
                 </div>
             </div>
         </div>
@@ -124,10 +125,12 @@
             <x-button danger wire:click="resetCart" wire:loading.attr="disabled" class="ml-2">
                 <i class="bi bi-x"></i> {{ __('Reset') }}
             </x-button>
-            <button class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 bg-indigo-500 hover:bg-indigo-700" type="submit" wire:click="proceed" wire:loading.attr="disabled" class="ml-2"
-            {{ $total_amount == 0 ? 'disabled' : '' }}>
+            <button
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 bg-indigo-500 hover:bg-indigo-700"
+                type="submit" wire:click="proceed" wire:loading.attr="disabled" class="ml-2"
+                {{ $total_amount == 0 ? 'disabled' : '' }}>
                 <i class="bi bi-check"></i> {{ __('Proceed') }}
-            <button>
+                <button>
         </div>
     </div>
 

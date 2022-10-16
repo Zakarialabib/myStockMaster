@@ -38,7 +38,7 @@
                            <div><strong>ICE:</strong> {{$purchase['tax_number']}}</div>
                            <div><strong>Téle:</strong> {{$purchase['phone']}}</div>
                            <div><strong>Adresse:</strong>   {{$purchase['adress']}}</div>
-                           <div><strong>Email:</strong>  {{$purchase['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$purchase['email']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -58,7 +58,7 @@
                            <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
                            <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
                            <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

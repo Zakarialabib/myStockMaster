@@ -47,11 +47,11 @@
             @include('utils.alerts')
         </div>
         <div class="flex flex-row">
-            <div class="w-full lg:w-3/5 min-h-screen">
+            <div class="w-3/12 sm:w-full h-full">
                 <livewire:search-product/>
                 <livewire:pos.product-list :categories="$product_categories"/>
             </div>
-            <div class="w-full lg:w-2/5">
+            <div class="w-9/12 sm:w-full h-full">
                 <livewire:pos.checkout :cart-instance="'sale'" :customers="$customers"/>
             </div>
         </div>

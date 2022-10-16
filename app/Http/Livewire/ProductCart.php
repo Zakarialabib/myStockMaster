@@ -16,6 +16,7 @@ class ProductCart extends Component
     public $global_tax;
     public $shipping;
     public $quantity;
+    public $price;
     public $check_quantity;
     public $discount_type;
     public $item_discount;
@@ -97,6 +98,7 @@ class ProductCart extends Component
         ]);
 
         $this->check_quantity[$product['id']] = $product['quantity'];
+        $this->price[$product['id']] = $product['price'];
         $this->quantity[$product['id']] = 1;
         $this->discount_type[$product['id']] = 'fixed';
         $this->item_discount[$product['id']] = 0;

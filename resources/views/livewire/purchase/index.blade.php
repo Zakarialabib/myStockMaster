@@ -58,7 +58,13 @@
                         {{ $purchase->supplier->name }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $purchase->status }}
+                        @if ($purchase->status == \App\Models\Purchase::PurchasePending)
+                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                        @elseif ($purchase->status == \App\Models\Purchase::PurchaseOrdered)
+                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                        @elseif($purchase->status == \App\Models\Purchase::PurchaseCompleted)
+                            <x-badge success>{{ __('Completed') }}</x-badge>
+                        @endif
                     </x-table.td>
                     <x-table.td>
                         {{ $purchase->total }}
@@ -81,20 +87,20 @@
                             @endcan
 
                             @can('show_purchases')
-                                <x-button primary wire:click="showModal({{ $purchase->id }})">
+                                <x-button primary wire:click="showModal({{ $purchase->id }})" wire:loading.attr="disabled">
                                     <i class="fas fa-eye"></i>
                                 </x-button>
                             @endcan
 
                             @can('edit_purchases')
-                                <x-button primary href="{{ route('purchases.edit', $purchase->id) }}">
+                                <x-button primary href="{{ route('purchases.edit', $purchase->id) }}" wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                 </x-button>
                             @endcan
 
                             @can('delete_purchases')
                                 <x-button danger class="ml-2" type="button"
-                                    wire:click="confirmPurchaseDeletion({{ $purchase->id }})">
+                                wire:click="confirm('delete', {{ $purchase->id }})" wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                 </x-button>
                             @endcan
@@ -126,11 +132,11 @@
         <x-slot name="title">
             {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase->reference }}</strong>
             <div class="float-right">
-                <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}">
+                <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}" wire:loading.attr="disabled">
                     <i class="fas fa-file-pdf"></i>
                     {{ __('PDF') }}
                 </x-button>
-                <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}">
+                <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}" wire:loading.attr="disabled">
                     <i class="fas fa-print"></i>
                     {{ __('Save') }}
                 </x-button>
@@ -167,7 +173,15 @@
                                     {{ __('Status') }}: <strong>{{ $purchase->status }}</strong>
                                 </div>
                                 <div>
-                                    {{ __('Payment Status') }}: <strong>{{ $purchase->payment_status }}</strong>
+                                    {{ __('Payment Status') }} : 
+                                    @if ($purchase->payment_status == \App\Models\Purchase::PaymentPaid)
+                                        <x-badge success>{{ __('Paid') }}</x-badge>
+                                    @elseif ($purchase->payment_status == \App\Models\Purchase::PaymentPartial)
+                                        <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                    @elseif($purchase->payment_status == \App\Models\Purchase::PaymentDue)
+                                        <x-badge danger>{{ __('Due') }}</x-badge>
+                                    @endif
+
                                 </div>
                             </div>
 
@@ -261,5 +275,26 @@
         </x-slot>
     </x-modal>
     @endif
-
 </div>
+
+@push('page_scripts')
+    <script>
+        document.addEventListener('livewire:load', function() {
+            window.livewire.on('deleteModal', purchaseId => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('delete', purchaseId)
+                    }
+                })
+            })
+        })
+    </script>
+@endpush

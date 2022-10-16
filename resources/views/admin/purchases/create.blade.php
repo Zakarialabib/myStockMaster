@@ -45,11 +45,11 @@
 
 @section('content')
     <x-card>
-        <div class="w-full flex flex-wrap">
+        <div class="w-full">
             <livewire:search-product />
         </div>
 
-        <div class="w-full flex flex-wrap mt-4">
+        <div class="w-full mt-4">
             <div>
                 @include('utils.alerts')
                 <form id="purchase-form" action="{{ route('purchases.store') }}" method="POST">
@@ -87,12 +87,13 @@
 
                     <div class="flex flex-wrap -mx-1">
                         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+
                             <x-label for="status" :value="__('Status')" required />
                             <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                 name="status" id="status" required>
-                                <option value="Pending">{{ __('Pending') }}</option>
-                                <option value="Ordered">{{ __('Ordered') }}</option>
-                                <option value="Completed">{{ __('Completed') }}</option>
+                                <option value="{{ App\Models\Purchase::PurchasePending }}">{{ __('Pending') }}</option>
+                                <option value="{{ App\Models\Purchase::PurchaseOrdered }}">{{ __('Ordered') }}</option>
+                                <option value="{{ App\Models\Purchase::PurchaseCompleted }}">{{ __('Completed') }}</option>
                             </select>
                         </div>
                         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">

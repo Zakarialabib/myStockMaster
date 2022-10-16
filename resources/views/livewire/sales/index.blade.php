@@ -21,10 +21,7 @@
             </div>
         </div>
     </div>
-    <div wire:loading.delay class="flex justify-center">
-        <x-loading />
-    </div>
-
+    
     <x-table>
         <x-slot name="thead">
             <x-table.th class="pr-0 w-8">
@@ -63,18 +60,12 @@
                         {{ $sale->customer->name }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($sale->payment_status == 'Partial')
-                            <x-badge warning>
-                                {{ $sale->payment_status }}
-                            </x-badge>
-                        @elseif ($sale->payment_status == 'Paid')
-                            <x-badge success>
-                                {{ $sale->payment_status }}
-                            </x-badge>
-                        @else
-                            <x-badge danger>
-                                {{ $sale->payment_status }}
-                            </x-badge>
+                        @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                            <x-badge success>{{ __('Paid') }}</x-badge>
+                        @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                        @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                            <x-badge danger>{{ __('Due') }}</x-badge>
                         @endif
                     </x-table.td>
 
@@ -83,18 +74,12 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @if ($sale->status == 'Pending')
-                            <x-badge warning>
-                                {{ $sale->status }}
-                            </x-badge>
-                        @elseif ($sale->status == 'Shipped')
-                            <x-badge success>
-                                {{ $sale->status }}
-                            </x-badge>
-                        @else
-                            <x-badge danger>
-                                {{ $sale->status }}
-                            </x-badge>
+                        @if ($sale->status == \App\Models\Sale::SalePending)
+                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                        @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
+                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                        @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                            <x-badge success>{{ __('Completed') }}</x-badge>
                         @endif
                     </x-table.td>
                     <x-table.td>
@@ -123,17 +108,20 @@
                             </x-button>
 
                             @can('access_sale_payments')
-                                <x-button href="{{ route('sale-payments.index', $sale->id) }}" success
+                            <x-button wire:click="showPayments({{ $sale->id }})" primary wire:loading.attr="disabled">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </x-button>
+                                {{-- <x-button href="{{ route('sale-payments.index', $sale->id) }}" success
                                     wire:loading.attr="disabled">
                                     <i class="fas fa-money-bill-wave"></i>
-                                </x-button>
+                                </x-button> --}}
                             @endcan
                             @can('access_sale_payments')
                                 @if ($sale->due_amount > 0)
-                                    <x-button href="{{ route('sale-payments.create', $sale->id) }}" success
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </x-button>
+                                <x-button wire:click="paymentModal({{ $sale->id }})" primary
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </x-button>
                                 @endif
                             @endcan
                     </x-table.td>
@@ -211,17 +199,17 @@
                     <div class="flex flex-row">
                         <div class="w-full">
                             <div class="p-2 d-flex flex-wrap items-center">
-                                <x-button secondary class="d-print-none" target="_blank"
+                                <x-button secondary class="d-print-none" target="_blank" wire:loading.attr="disabled"
                                     href="{{ route('sales.pdf', $sale->id) }}" class="ml-auto">
                                     <i class="fas fa-print"></i> {{ __('Print') }}
                                 </x-button>
-                                <x-button secondary class="d-print-none" target="_blank"
+                                <x-button secondary class="d-print-none" target="_blank" wire:loading.attr="disabled"
                                     href="{{ route('sales.pdf', $sale->id) }}" class="ml-2">
                                     <i class="fas fa-download"></i> {{ __('Download') }}
                                 </x-button>
                                 {{-- Button close modal --}}
                                 <x-button secondary class="d-print-none" wire:click="$set('showModal', false)"
-                                    class="ml-2">
+                                    class="ml-2" wire:loading.attr="disabled">
                                     <i class="fas fa-times"></i> {{ __('Close') }}
                                 </x-button>
                                 </a>
@@ -250,10 +238,24 @@
                                         <div>{{ __('Date') }}:
                                             {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</div>
                                         <div>
-                                            {{ __('Status') }}: <strong>{{ $sale->status }}</strong>
+                                            {{ __('Status') }} :
+                                            @if ($sale->status == \App\Models\Sale::SalePending)
+                                                <x-badge warning>{{ __('Pending') }}</x-badge>
+                                            @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
+                                                <x-badge info>{{ __('Ordered') }}</x-badge>
+                                            @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                                                <x-badge success>{{ __('Completed') }}</x-badge>
+                                            @endif
                                         </div>
                                         <div>
-                                            {{ __('Payment Status') }}: <strong>{{ $sale->payment_status }}</strong>
+                                            {{ __('Payment Status') }} :
+                                            @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                                                <x-badge success>{{ __('Paid') }}</x-badge>
+                                            @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                                                <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                            @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                                                <x-badge danger>{{ __('Due') }}</x-badge>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -265,8 +267,6 @@
                                             <x-table.th>{{ __('Product') }}</x-table.th>
                                             <x-table.th>{{ __('Quantity') }}</x-table.th>
                                             <x-table.th>{{ __('Unit Price') }}</x-table.th>
-                                            <x-table.th>{{ __('Discount') }}</x-table.th>
-                                            <x-table.th>{{ __('Tax') }}</x-table.th>
                                             <x-table.th>{{ __('Subtotal') }}</x-table.th>
                                         </x-slot>
 
@@ -285,14 +285,6 @@
 
                                                     <x-table.td>
                                                         {{ $item->quantity }}
-                                                    </x-table.td>
-
-                                                    <x-table.td>
-                                                        {{ format_currency($item->product_discount_amount) }}
-                                                    </x-table.td>
-
-                                                    <x-table.td>
-                                                        {{ format_currency($item->product_tax_amount) }}
                                                     </x-table.td>
 
                                                     <x-table.td>
@@ -374,6 +366,14 @@
     </x-modal>
 
     {{-- End Import modal --}}
+
+    {{-- Sales Payment payment component   --}}
+    @if ($showPayments)
+        {{-- <livewire:sales-payment :sale="$sale" /> --}}
+    <livewire:sales.payment.index />
+    @endif
+
+    <livewire:sales.payment.payment-form />
 
 </div>
 

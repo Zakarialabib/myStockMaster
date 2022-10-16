@@ -23,12 +23,12 @@
                             wire:model.defer="brand.description" />
                         <x-input-error :messages="$errors->get('brand.description')" for="brand.description" class="mt-2" />
                     </div>
-                    <div class="w-full px-3">
+                    <div class="w-full py-2 px-3">
                         <x-label for="image" :value="__('Image')" />
                         <x-fileupload wire:model="image" :file="$image" accept="image/jpg,image/jpeg,image/png" />
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
-                    <div class="w-full flex justify-end my-4 space-x-2">
+                    <div class="w-full flex justify-start space-x-2">
                         <x-button primary wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>

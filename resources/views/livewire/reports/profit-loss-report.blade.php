@@ -1,9 +1,8 @@
 <div>
-    <div class="flex flex-row">
+    <div class="">
         <form wire:submit.prevent="generateReport">
             <div class="flex flex-wrap -mx-1">
-                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                    <div class="mb-4">
+                <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="start_date" :value="__('Start Date')" required />
                         <input wire:model.defer="start_date" type="date"
                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
@@ -11,10 +10,9 @@
                         @error('start_date')
                             <span class="text-danger mt-1">{{ $message }}</span>
                         @enderror
-                    </div>
+
                 </div>
-                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                    <div class="mb-4">
+                <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="end_date" :value="__('End Date')" required />
                         <input wire:model.defer="end_date" type="date"
                             class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
@@ -23,9 +21,8 @@
                             <span class="text-danger mt-1">{{ $message }}</span>
                         @enderror
                     </div>
-                </div>
             </div>
-            <div class="mb-4 mb-0">
+            <div class="my-4">
                 <button type="submit"
                     class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
                     <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm"
@@ -37,7 +34,7 @@
         </form>
     </div>
 
-    <div class="flex flex-row">
+    <div class="flex flex-wrap">
         {{-- Sales --}}
         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
             <x-card>
@@ -47,7 +44,7 @@
                     </div>
                     <div>
                         <div class="text-value text-primary">{{ format_currency($sales_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small ">{{ $total_sales }} {{ __('Sales') }}
+                        <div class="uppercase font-bold text-xs ">{{ $total_sales }} {{ __('Sales') }}
                         </div>
                     </div>
                 </div>

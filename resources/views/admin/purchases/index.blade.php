@@ -2,8 +2,6 @@
 
 @section('title', __('Purchases'))
 
-
-
 @section('breadcrumb')
     <section class="py-2 px-6">
         <div class="flex flex-wrap items-center justify-between">
@@ -42,12 +40,10 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.emit('createPurchase', 'show')">{{ __('Create') }}</x-button>
-
-                <a href="{{ route('purchases.create') }}"
-                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                    Add Purchase <i class="bi bi-plus"></i>
-                </a>
+                {{-- <x-button primary onclick="Livewire.emit('createPurchase', 'show')">{{ __('Create') }}</x-button> --}}
+                <x-button primary href="{{ route('purchases.create') }}" wire:loading.attr="disabled" >
+                    {{__('Create')}} 
+                </x-button>
 
             </div>
         </div>

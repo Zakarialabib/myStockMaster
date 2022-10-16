@@ -25,22 +25,22 @@
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Company Info:</h4>
                             <div><strong>{{ settings()->company_name }}</strong></div>
                             <div>{{ settings()->company_address }}</div>
-                            <div>Email: {{ settings()->company_email }}</div>
-                            <div>Phone: {{ settings()->company_phone }}</div>
+                            <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                            <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Customer Info:</h4>
                             <div><strong>{{ $customer->name }}</strong></div>
                             <div>{{ $customer->address }}</div>
-                            <div>Email: {{ $customer->email }}</div>
-                            <div>Phone: {{ $customer->phone }}</div>
+                            <div>{{__('Email')}}: {{ $customer->email }}</div>
+                            <div>{{__('Phone')}}: {{ $customer->phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Invoice Info:</h4>
-                            <div>Invoice: <strong>INV/{{ $sale_return->reference }}</strong></div>
-                            <div>Date: {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
+                            <div>{{__('Invoice')}}: <strong>INV/{{ $sale_return->reference }}</strong></div>
+                            <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
                             <div>
                                 Status: <strong>{{ $sale_return->status }}</strong>
                             </div>
@@ -56,11 +56,11 @@
                             <thead>
                             <tr>
                                 <th class="align-middle">Product</th>
-                                <th class="align-middle">Net Unit Price</th>
+                                <th class="align-middle">{{__('Net Unit Price')}}</th>
                                 <th class="align-middle">{{__('Quantity')}}</th>
-                                <th class="align-middle">Discount</th>
-                                <th class="align-middle">Tax</th>
-                                <th class="align-middle">Sub Total</th>
+                                <th class="align-middle">{{__('Discount')}}</th>
+                                <th class="align-middle">{{__('Tax')}}</th>
+                                <th class="align-middle">{{__('Sub Total')}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -100,19 +100,19 @@
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <td class="left"><strong>Discount ({{ $sale_return->discount_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Discount')}} ({{ $sale_return->discount_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($sale_return->discount_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Tax ({{ $sale_return->tax_percentage }}%)</strong></td>
+                                    <td class="left"><strong>{{__('Tax')}} ({{ $sale_return->tax_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($sale_return->tax_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Shipping)</strong></td>
+                                    <td class="left"><strong>{{__('Shipping')}}</strong></td>
                                     <td class="right">{{ format_currency($sale_return->shipping_amount) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="left"><strong>Grand Total</strong></td>
+                                    <td class="left"><strong>{{__('Grand Total')}}</strong></td>
                                     <td class="right"><strong>{{ format_currency($sale_return->total_amount) }}</strong></td>
                                 </tr>
                                 </tbody>

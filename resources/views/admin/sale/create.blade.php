@@ -45,12 +45,11 @@
 
 @section('content')
     <x-card>
-        <div class="w-full">
-            <livewire:search-product />
-        </div>
-
         <div class="flex flex-row mt-4">
-            <div class="w-full px-4">
+            <div class="w-3/12 sm:w-full px-2">
+                <livewire:search-product />
+            </div>
+            <div class="w-9/12 sm:w-full px-2">
                 @include('utils.alerts')
                 <form id="sale-form" action="{{ route('sales.store') }}" method="POST">
                     @csrf

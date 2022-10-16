@@ -37,11 +37,11 @@ class PurchaseController extends Controller
         DB::transaction(function () use ($request) {
             $due_amount = $request->total_amount - $request->paid_amount;
             if ($due_amount == $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = Purchase::PaymentPending;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = Purchase::PaymentPartial;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = Purchase::PaymentPaid;
             }
 
             $purchase = Purchase::create([
@@ -76,7 +76,7 @@ class PurchaseController extends Controller
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status == 'Completed') {
+                if ($request->status == Purchase::PurchasePending) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity + $cart_item->qty
@@ -148,15 +148,15 @@ class PurchaseController extends Controller
         DB::transaction(function () use ($request, $purchase) {
             $due_amount = $request->total_amount - $request->paid_amount;
             if ($due_amount == $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = Purchase::PaymentPending;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = Purchase::PaymentPartial;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = Purchase::PaymentPaid;
             }
 
             foreach ($purchase->purchaseDetails as $purchase_detail) {
-                if ($purchase->status == 'Completed') {
+                if ($purchase->status == Purchase::PurchaseCompleted) {
                     $product = Product::findOrFail($purchase_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity - $purchase_detail->quantity
@@ -198,7 +198,7 @@ class PurchaseController extends Controller
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status == 'Completed') {
+                if ($request->status == Purchase::PurchaseCompleted) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity + $cart_item->qty

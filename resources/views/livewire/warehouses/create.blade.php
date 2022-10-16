@@ -16,6 +16,7 @@
                         <x-input id="phone" class="block mt-1 w-full" type="text"
                             wire:model="warehouse.mobile" />
                     </div>
+                    <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="email" :value="__('Email')" />
                         <x-input id="email" class="block mt-1 w-full" type="email" wire:model="warehouse.email" />
@@ -29,6 +30,7 @@
                         <x-input id="country" class="block mt-1 w-full" type="text"
                             wire:model="warehouse.country" />
                     </div>
+                    </x-accordion>
                 </div>
                 <div class="w-full flex justify-end">
                     <x-button secondary wire:click="$set('createWarehouse', false)">

@@ -50,7 +50,7 @@
                     {{ __('Excel') }}
                 </x-button>
                 <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.emit('createProduct', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary type="button" onclick="Livewire.emit('createProduct', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>

@@ -39,7 +39,7 @@
                            <div><strong>ICE:</strong> {{$return_purchase['tax_number']}}</div>
                            <div><strong>Téle:</strong> {{$return_purchase['phone']}}</div>
                            <div><strong>Adresse:</strong>   {{$return_purchase['adress']}}</div>
-                           <div><strong>Email:</strong>  {{$return_purchase['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$return_purchase['email']}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -59,7 +59,7 @@
                            <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
                            <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
                            <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>Email:</strong>  {{$setting['email']}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
                         </td>
                      </tr>
                   </tbody>

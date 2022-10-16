@@ -5,9 +5,12 @@ namespace App\Http\Livewire\Barcode;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ProductTable extends Component
 {
+    use LivewireAlert;
+
     public $product;
     public $quantity;
     public $barcodes;
@@ -32,7 +35,7 @@ class ProductTable extends Component
 
     public function generateBarcodes(Product $product, $quantity) {
         if ($quantity > 100) {
-            return session()->flash('message', 'Max quantity is 100 per barcode generation!');
+            $this->alert('error', __('Max quantity is 100 per barcode generation!'));
         }
 
         $this->barcodes = [];
