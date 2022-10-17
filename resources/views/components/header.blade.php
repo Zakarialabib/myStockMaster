@@ -1,4 +1,4 @@
-<div x-data="{ mobileMenuOpen: false, open: false }" x-on:click.outside="open = false" class="relative bg-white dark:bg-slate-900 drop-shadow-lg">
+<div x-data="{ mobileMenuOpen: false, open: false }" x-on:click.outside="open = false" class="relative bg-white dark:gray-900 drop-shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="flex justify-between items-center border-gray-100 md:space-x-10">
             <div class="flex justify-start">
@@ -27,7 +27,7 @@
                         <button type="button"
                             class="text-base font-semibold text-gray-500 hover:text-sky-800 dark:text-slate-400 dark:hover:text-sky-400 flex flex-wrap">
                             @if (count($langs) > 1)
-                                <x-heroicon-o-chevron-down class="h-5 w-5 cursor-pointer pr-2" aria-hidden="true" />
+                            <i class="bi bi-globe2 h-5 w-5 cursor-pointer pr-2" aria-hidden="true"></i>
                             @endif
                             <img src="{{ flagImageUrl(\Illuminate\Support\Facades\App::getLocale()) }}"
                                 class="h-5 cursor-pointer" lazy>
@@ -78,7 +78,7 @@
 
             <div class="-mr-2 -my-2 md:hidden">
                 <button @click="mobileMenuOpen = true" type="button"
-                    class="bg-white dark:bg-slate-900 dark:text-slate-400 rounded-md p-2 inline-flex items-center justify-center text-gray-500 hover:text-gray-500 hover:bg-gray-100"
+                    class="bg-white dark:gray-900 dark:text-slate-400 rounded-md p-2 inline-flex items-center justify-center text-gray-500 hover:text-gray-500 hover:bg-gray-100"
                     aria-expanded="false">
                     <span class="sr-only">{{ __('Open menu') }}</span>
                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -99,7 +99,7 @@
         x-transition:leave-end="opacity-0 scale-95"
         class="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
         <div
-            class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white dark:bg-slate-900 divide-y-2 divide-gray-50">
+            class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white dark:gray-900 divide-y-2 divide-gray-50">
             <div class="pt-5 pb-6 px-5">
                 <div class="flex items-center justify-between">
                     <div>
@@ -121,7 +121,7 @@
                     </div>
                     <div class="-mr-2">
                         <button @click="mobileMenuOpen = false" type="button"
-                            class="bg-white dark:bg-slate-900 rounded-md p-2 inline-flex items-center justify-center text-gray-500 hover:text-gray-500 hover:bg-gray-100 dark:text-slate-400">
+                            class="bg-white dark:gray-900 rounded-md p-2 inline-flex items-center justify-center text-gray-500 hover:text-gray-500 hover:bg-gray-100 dark:text-slate-400">
                             <span class="sr-only">{{ __('Close menu') }}</span>
                             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

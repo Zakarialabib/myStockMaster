@@ -15,7 +15,7 @@ class Create extends Component
 
     public array $rules = [
         'warehouse.name' => ['string', 'required'],
-        'warehouse.mobile' => ['string', 'nullable'],
+        'warehouse.phone' => ['string', 'nullable'],
         'warehouse.country' => ['string', 'nullable'],
         'warehouse.city' => ['string', 'nullable'],
         'warehouse.email' => ['string', 'nullable'],

@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
 @section('title', __('Edit Settings'))
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">
@@ -43,8 +41,8 @@
     </section>
 @endsection
 
-@section('content')
-    <div class="w-full mx-auto">
+<x-app-layout>
+    <x-card>
         <div class="w-full px-2">
             @include('utils.alerts')
             <x-card>
@@ -134,7 +132,8 @@
                                 <select name="default_warehouse_id" id="default_warehouse_id"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
                                     @foreach (\App\Models\Warehouse::all() as $warehouse)
-                                        <option {{ $settings->default_warehouse_id == $warehouse->id ? 'selected' : '' }}
+                                        <option
+                                            {{ $settings->default_warehouse_id == $warehouse->id ? 'selected' : '' }}
                                             value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                     @endforeach
                                 </select>
@@ -185,13 +184,15 @@
                                     name="mail_mailer" value="{{ env('MAIL_MAILER') }}" required>
                             </div>
                             <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_host">{{ __('MAIL HOST') }} <span class="text-red-500">*</span></label>
+                                <label for="mail_host">{{ __('MAIL HOST') }} <span
+                                        class="text-red-500">*</span></label>
                                 <input type="text"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                     name="mail_host" value="{{ env('MAIL_HOST') }}" required>
                             </div>
                             <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_port">{{ __('MAIL PORT') }} <span class="text-red-500">*</span></label>
+                                <label for="mail_port">{{ __('MAIL PORT') }} <span
+                                        class="text-red-500">*</span></label>
                                 <input type="number"
                                     class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                     name="mail_port" value="{{ env('MAIL_PORT') }}" required>
@@ -246,5 +247,5 @@
                 </div>
             </x-card>
         </div>
-    </div>
-@endsection
+    </x-card>
+</x-app-layout>

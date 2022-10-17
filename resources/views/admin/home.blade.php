@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
-@section('title', 'Home')
+@section('title', __('Home'))
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
@@ -23,7 +21,7 @@
         </div>
     </section>
 @endsection
-@section('content')
+<x-app-layout>
     <div class="px-4 mx-auto">
         @can('show_total_stats')
             <div class="flex flex-wrap py-4">
@@ -132,7 +130,7 @@
             </div>
         @endcan
     </div>
-@endsection
+</x-app-layout>
 
 @section('third_party_scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"
@@ -141,5 +139,3 @@
     <script src="{{ asset('js/chart-config.js') }}"></script>
 @endsection
 
-@push('page_scripts')
-@endpush

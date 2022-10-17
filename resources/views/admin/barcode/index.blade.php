@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
 @section('title', 'Print Barcode')
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Generate & Print Barcodes') }}</h2>
@@ -40,18 +38,18 @@
         </div>
     </section>
 @endsection
-@section('content')
-    <div class="px-4 mx-auto">
-        <div class="row">
-            <div class="col-12">
+<x-app-layout>
+    <x-card>
+        <div class="flex flex-row">
+            <div class="w-full px-2">
                 <livewire:search-product />
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="w-full px-4">
+        <div class="flex flex-row mt-4">
+            <div class="w-full px-2">
                 <livewire:products.barcode />
             </div>
         </div>
-    </div>
-@endsection
+    </x-card>
+</x-app-layout>

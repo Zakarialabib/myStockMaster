@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
 @section('title', __('Suppliers'))
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Suppliers') }}</h2>
@@ -41,20 +39,19 @@
                 <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
                     {{ __('Import') }}
                 </x-button>
-                
+
                 <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>
 @endsection
 
-@section('content')
-<x-card>
-    @include('utils.alerts')
-    <div>
-         <livewire:suppliers.index />
-    </div>
-</x-card>
-@endsection
-
+<x-app-layout>
+    <x-card>
+        @include('utils.alerts')
+        <div>
+            <livewire:suppliers.index />
+        </div>
+    </x-card>
+</x-app-layout>

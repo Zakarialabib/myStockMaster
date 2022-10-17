@@ -41,6 +41,10 @@ class Create extends Component
     public function mount(Product $product)
     {
         $this->product = $product;
+        $this->product->stock_alert = 10;
+        $this->product->order_tax = 0;
+        $this->product->unit = 'pcs';
+        $this->product->barcode_symbology = 'C128';
         $this->initListsForFields();
     }
     

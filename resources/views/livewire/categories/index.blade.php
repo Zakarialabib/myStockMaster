@@ -167,13 +167,13 @@
 
     {{-- Import modal --}}
 
-    <x-modal wire:model="import">
+    <x-modal wire:model="importModal">
         <x-slot name="title">
             {{ __('Import Categories') }}
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit.prevent="importExcel">
+            <form wire:submit.prevent="import">
                 <div class="space-y-4">
                     <div class="mt-4">
                         <x-label for="import" :value="__('Import')" />
@@ -183,7 +183,7 @@
                     </div>
 
                     <div class="w-full flex justify-end">
-                        <x-button primary wire:click="importExcel" type="button" wire:loading.attr="disabled">
+                        <x-button primary wire:click="import" type="button" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                         <x-button primary type="button" wire:loading.attr="disabled" wire:click="$set('import', false)">

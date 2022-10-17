@@ -1,5 +1,5 @@
 <div>
-    <div class="w-full py-2 px-6">
+    <div class="w-full py-2 px-4">
         <div>
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 

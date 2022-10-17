@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
-@section('title', 'Adjustments')
+@section('title', __('Adjustments'))
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Adjustments list') }}</h2>
@@ -44,11 +42,11 @@
         </div>
     </section>
 @endsection
-@section('content')
+<x-app-layout>
     <x-card>
         @include('utils.alerts')
         <div>
             <livewire:adjustment.index />
         </div>
     </x-card>
-@endsection
+</x-app-layout>

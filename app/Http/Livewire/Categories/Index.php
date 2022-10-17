@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Category;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CategoriesImport;
 
 class Index extends Component
 {
@@ -18,16 +20,22 @@ class Index extends Component
     public $code;
     public $name;
 
-    public $listeners = ['show', 'confirmDelete', 'delete','refreshIndex','showModal','editModal'];
+    public $listeners = [
+        'show', 'confirmDelete', 'delete',
+        'refreshIndex','showModal','editModal',
+        'importModal'
+    ];
 
     public int $perPage;
 
     public $show;
     
     public $showModal;
-
+    
     public $refreshIndex;
 
+    public $importModal;
+    
     public $editModal; 
 
     public array $orderable;
@@ -163,6 +171,30 @@ class Index extends Component
 
             $this->alert('success', 'Category deleted successfully.');
         }
+    }
+
+    public function importExcel ()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->importModal = true;
+    }
+
+    public function import()
+    {
+        abort_if(Gate::denies('access_product_categories'), 403);
+
+        $this->validate([
+            'file' => 'required|mimes:xlsx,xls,csv,txt'
+        ]);
+
+        $file = $this->file('file');
+
+        Excel::import(new CategoriesImport, $file);
+
+        $this->alert('success', 'Categories imported successfully.');
+
+        $this->importModal = false;
     }
 
 

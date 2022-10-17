@@ -48,8 +48,8 @@
 
                 {{-- empty state --}}
                 <p class="flex items-center text-sm font-light text-zinc-400">
-                    <x-heroicon-o-plus class="w-6 h-6 p-1 mr-3 text-zinc-500 border rounded-full shadow" />
-                    {{__('Click/Tap to select media')}} | {{ $types ?? 'Any File' }}
+                    <i class="bi bi-cloud-upload mr-2"></i>
+                    {{ __('Upload a file or drag and drop') }} | {{ $types ?? 'Any File' }}
                 </p>
 
             @endif

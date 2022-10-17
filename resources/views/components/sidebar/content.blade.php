@@ -225,9 +225,11 @@
         onclick="event.preventDefault();
                         document.getElementById('logoutform').submit();"
         href="#">
-        {{-- <x-slot name="icon">
-            <x-heroicon-o-logout class="flex-shrink-0 w-8 h-8 block my-0 mx-auto" aria-hidden="true" />
-        </x-slot> --}}
+        <x-slot name="icon">
+            <span class="inline-block mr-3">
+                <i class="fas fa-sign-out-alt w-5 h-5" aria-hidden="true"></i>
+            </span>
+        </x-slot>
     </x-sidebar.link>
 
 </x-perfect-scrollbar>

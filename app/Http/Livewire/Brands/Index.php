@@ -11,6 +11,8 @@ use App\Models\Brand;
 use App\Support\HasAdvancedFilter;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\BrandsImport;
 
 class Index extends Component
 {
@@ -19,7 +21,10 @@ class Index extends Component
 
     public $brand;
 
-    public $listeners = ['show', 'confirmDelete', 'delete','refreshIndex','showModal','editModal'];
+    public $listeners = [
+    'show', 'confirmDelete', 'delete','refreshIndex',
+    'showModal','editModal','importModal'
+];
 
     public int $perPage;
 
@@ -30,6 +35,8 @@ class Index extends Component
     public $showModal;
 
     public $refreshIndex;
+
+    public $importModal;
 
     public $editModal; 
 
@@ -171,6 +178,26 @@ class Index extends Component
 
         $this->alert('success', 'Brand deleted successfully.');
 
+    }
+
+    public function importModal()
+    {
+        abort_if(Gate::denies('brand_create'), 403);
+
+        $this->importModal = true;
+    }
+
+    public function import()
+    {
+        abort_if(Gate::denies('brand_create'), 403);
+
+        $this->validate([
+            'file' => 'required|mimes:xlsx',
+        ]);
+
+        Excel::import(new BrandsImport, $this->file);
+
+        $this->alert('success', 'Brand imported successfully.');
     }
 
 

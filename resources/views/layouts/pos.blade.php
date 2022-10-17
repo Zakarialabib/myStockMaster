@@ -25,7 +25,7 @@
 
 <body class="font-sans antialiased">
     <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
-        <div class="min-h-screen text-zinc-500 bg-slate-200 dark:bg-dark-bg dark:text-zinc-200">
+        <div class="min-h-screen text-zinc-500 gray-200 dark:bg-dark-bg dark:text-zinc-200">
             <x-navbar-pos />
             <main class="pt-5 pl-10 pr-5 sm:pl-5 sm:pr-3 flex-1">
                 @yield('content')

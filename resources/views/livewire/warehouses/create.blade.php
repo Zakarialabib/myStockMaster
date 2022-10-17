@@ -14,7 +14,7 @@
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="phone" :value="__('Phone')" />
                         <x-input id="phone" class="block mt-1 w-full" type="text"
-                            wire:model="warehouse.mobile" />
+                            wire:model="warehouse.phone" />
                     </div>
                     <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">

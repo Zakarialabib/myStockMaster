@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
 @section('title', __('Brands'))
 
 @section('breadcrumb')
-    <section class="py-2 px-6">
+    <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Brands') }}</h2>
@@ -57,17 +55,18 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-button primary type="button" onclick="Livewire.emit('createBrand', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary type="button" onclick="Livewire.emit('createBrand', 'show')">{{ __('Create') }}
+                </x-button>
             </div>
         </div>
     </section>
 @endsection
 
-@section('content')
-   <x-card>
+<x-app-layout>
+    <x-card>
         @include('utils.alerts')
         <div>
             <livewire:brands.index />
         </div>
-   </x-card>
-@endsection
+    </x-card>
+</x-app-layout>

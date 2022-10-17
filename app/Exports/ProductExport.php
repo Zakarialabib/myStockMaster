@@ -12,34 +12,49 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
 
+    protected $selected;
+
+    public function __construct($selected)
+    { 
+        $this->selected = $selected;
+    }
+    /**
+    * @var Product $product
+    */
+
     public function query()
     {
-        return Product::query();
+        if($this->selected){
+            return Product::query()->whereIn('id', $this->selected);
+        } else {
+            return Product::query();
+        }
     }
 
     public function map($product): array
     {
         return [
-            $product->id,
+            $product->code,
             $product->name,
-            $product->description,
-            $product->price,
+            $product->category->name,
             $product->quantity,
+            $product->cost,
+            $product->price,
             $product->created_at,
-            $product->updated_at,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'ID',
-            'Name',
-            'Description',
-            'Price',
-            'Quantity',
-            'Created At',
-            'Updated At',
+            __('Code'),
+            __('Name'),
+            __('Category'),
+            __('Quantity'),
+            __('Cost'),
+            __('Price'),
+            __('Created At'),
         ];
     }
+   
 }

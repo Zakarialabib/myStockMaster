@@ -2,13 +2,13 @@
 
 namespace App\Exports;
 
-use App\Models\Expense;
+use App\Models\Category;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ExpenseExport implements FromQuery, WithMapping, WithHeadings
+class CategoriesExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
 
@@ -18,40 +18,34 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
     { 
         $this->selected = $selected;
     }
-    
     /**
-    * @var Expense $expense
+    * @var Category $category
     */
 
     public function query()
     {
         if($this->selected){
-            return Expense::query()->whereIn('id', $this->selected);
+            return Category::query()->whereIn('id', $this->selected);
         } else {
-            return Expense::query();
+            return Category::query();
         }
     }
- 
+
+    public function map($category): array
+    {
+        return [
+            $category->name,
+            $category->code,
+            $category->created_at,
+        ];
+    }
+
     public function headings(): array
     {
         return [
-            '#',
             'Name',
-            'Amount',
-            'Created At'
+            'Code',
+            'Created At',
         ];
     }
-
-    public function map($expense) : array
-    {
-
-        return[
-        $expense->id,
-        $expense->name,
-        $expense->amount,
-        $expense->created_at,
-        ];
-
-    }
-
 }

@@ -1,12 +1,23 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
+    mode: 'jit',
+    darkMode: "class",
     content: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-    ],
+    './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+    './storage/framework/views/*.php',
+    './resources/views/**/*.blade.php',
+    './public/*.html',
+    "./app/**/*.php",
+    "./resources/**/*.html",
+    "./resources/**/*.js",
+    "./resources/**/*.jsx",
+    "./resources/**/*.ts",
+    "./resources/**/*.tsx",
+    "./resources/**/*.php",
+],
 
     theme: {
         darkMode: "class",

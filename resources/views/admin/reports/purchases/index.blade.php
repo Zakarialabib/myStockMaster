@@ -3,7 +3,7 @@
 @section('title', __('Purchases Report'))
 
 @section('breadcrumb')
-<section class="py-2 px-6">
+<section class="py-3 px-4">
     <div class="flex flex-wrap items-center justify-between">
         <div class="mb-5 lg:mb-0">
             <h2 class="mb-1 text-2xl font-bold">

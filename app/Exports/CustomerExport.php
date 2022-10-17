@@ -18,38 +18,41 @@ class CustomerExport implements FromQuery, WithMapping, WithHeadings
     { 
         $this->selected = $selected;
     }
+
     /**
     * @var Customer $customer
     */
- 
+    public function query()
+    {
+        if($this->selected){
+            return Customer::query()->whereIn('id', $this->selected);
+        } else {
+            return Customer::query();
+        }
+    }
+
+    public function map($customer): array
+    {
+        return [
+            $customer->id,
+            $customer->name,
+            $customer->email,
+            $customer->phone,
+            $customer->city,
+            $customer->country,
+        ];
+    }
+
     public function headings(): array
     {
         return [
             '#',
-            'Name',
-            'Email',
-            'Phone',
-            'Address',
-            'Created At'
+            __('Name'),
+            __('Email'),
+            __('Phone'),
+            __('City'),
+            __('Country'),
         ];
     }
 
-    public function map($customer) : array
-    {
-
-        return[
-        $customer->id,
-        $customer->name,
-        $customer->email,
-        $customer->phone,
-        $customer->city,
-        $customer->created_at,
-        ];
-
-    }
-
-    public function query()
-    {
-        return Customer::query()->whereIn('id', $this->selected);
-    }
 }
