@@ -6,6 +6,7 @@ use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductTable extends Component
 {
@@ -47,7 +48,7 @@ class ProductTable extends Component
     }
 
     public function getPdf() {
-        $pdf = \PDF::loadView('admin.barcode.print', [
+        $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'price' => $this->product->price,
             'name' => $this->product->name,

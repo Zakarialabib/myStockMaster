@@ -1,8 +1,8 @@
 @props(['isActive' => false, 'title' => '', 'collapsible' => false])
 
 @php
-$isActiveClasses = $isActive ? 'bg-indigo-500 text-white active:bg-indigo-500 text-white' : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-dark-eval-2';
-$classes = 'flex items-center pl-3 py-3 pr-4 text-indigo-500 hover:text-white hover:bg-indigo-500 rounded ' . $isActiveClasses;
+$isActiveClasses = $isActive ? 'bg-indigo-500 active:bg-indigo-500 active:text-white' : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-dark-eval-2';
+$classes = 'flex items-center hover:text-white hover:bg-indigo-500 pl-3 py-3 pr-4 rounded ' . $isActiveClasses;
 if ($collapsible) {
     $classes .= ' w-full';
 }
@@ -29,6 +29,10 @@ if ($collapsible) {
                 class="absolute left-[9px] bg-zinc-400 mt-[-5px] h-2 w-[2px] top-1/2 transition-all duration-200"></span>
         </span>
     </button>
+    
+    @if ($add ?? false)
+    {{ $add }}
+    @endif
 @else
     <a {{ $attributes->merge(['class' => $classes]) }}>
         @if ($icon ?? false)
@@ -42,5 +46,10 @@ if ($collapsible) {
         <span x-show="isSidebarOpen || isSidebarHovered">
             {{ $title }}
         </span>
+
     </a>
+
+    @if ($add ?? false)
+    {{ $add }}
+    @endif
 @endif

@@ -158,7 +158,7 @@
                 <x-label for="customer_id" :value="__('Customer')" />
                 <x-select-list
                     class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['customers']" />
 
                 <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
@@ -181,7 +181,7 @@
                 <x-label for="customer_id" :value="__('Customer')" />
                 <x-select-list
                     class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['custmers']" />
+                    id="customer_id" name="customer_id" wire:model="product.customer_id" :options="$this->listsForFields['customers']" />
                 <x-input-error :messages="$errors->get('customer_id')" for="customer_id" class="mt-2" />
             </div>
         </x-slot>

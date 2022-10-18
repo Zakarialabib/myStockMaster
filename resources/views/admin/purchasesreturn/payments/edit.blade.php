@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Payment')
+@section('title', __('Edit Payment'))
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
@@ -20,7 +20,7 @@
                 <div class="w-full px-4">
                     @include('utils.alerts')
                     <div class="mb-4">
-                        <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update Payment <i class="bi bi-check"></i></button>
+                        <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">{{__('Update Payment')}} <i class="bi bi-check"></i></button>
                     </div>
                 </div>
                 <div class="w-full px-4">
@@ -28,27 +28,21 @@
                         <div class="p-4">
                             <div class="flex flex-wrap -mx-1">
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                    <div class="mb-4">
                                         <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required readonly value="{{ $purchaseReturnPayment->reference }}">
-                                    </div>
                                 </div>
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                    <div class="mb-4">
-                                        <label for="date">Date <span class="text-red-500">*</span></label>
+                                        <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
                                         <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required value="{{ $purchaseReturnPayment->getAttributes()['date'] }}">
-                                    </div>
                                 </div>
                             
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                    <div class="mb-4">
-                                        <label for="due_amount">Due Amount <span class="text-red-500">*</span></label>
+                                        <label for="due_amount">{{__('Due Amount')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="due_amount" required value="{{ format_currency($purchase_return->due_amount) }}" readonly>
-                                    </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="amount">Amount <span class="text-red-500">*</span></label>
+                                        <label for="amount">{{__('Amount')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">
                                             <input id="amount" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="amount" required value="{{ old('amount') ?? $purchaseReturnPayment->amount }}">
                                             <div class="input-group-append">
@@ -62,10 +56,9 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
-                                            <label for="payment_method">Payment Method <span class="text-red-500">*</span></label>
+                                            <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
                                             <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="payment_method" id="payment_method" required>
                                                 <option {{ $purchaseReturnPayment->payment_method == 'Cash' ? 'selected' : '' }} value="Cash">Cash</option>
-                                                <option {{ $purchaseReturnPayment->payment_method == 'Credit Card' ? 'selected' : '' }} value="Credit Card">Credit Card</option>
                                                 <option {{ $purchaseReturnPayment->payment_method == 'Bank Transfer' ? 'selected' : '' }} value="Bank Transfer">Bank Transfer</option>
                                                 <option {{ $purchaseReturnPayment->payment_method == 'Cheque' ? 'selected' : '' }} value="Cheque">Cheque</option>
                                                 <option {{ $purchaseReturnPayment->payment_method == 'Other' ? 'selected' : '' }} value="Other">Other</option>
@@ -76,7 +69,7 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="note">Note</label>
+                                <label for="note">{{__('Note')}}</label>
                                 <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="4" name="note">{{ old('note') ?? $purchaseReturnPayment->note }}</textarea>
                             </div>
 

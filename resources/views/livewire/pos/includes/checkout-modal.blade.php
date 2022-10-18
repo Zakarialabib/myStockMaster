@@ -4,8 +4,7 @@
     </x-slot>
 
     <x-slot name="content">
-        <form id="checkout-form" action="{{ route('app.pos.store') }}" method="POST">
-            @csrf
+        <form id="checkout-form" wire:submit.prevent="store">
             <div>
                 @if (session()->has('checkout_message'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">

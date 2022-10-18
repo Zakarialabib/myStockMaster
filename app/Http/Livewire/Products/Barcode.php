@@ -5,9 +5,13 @@ namespace App\Http\Livewire\Products;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Barcode extends Component
 {
+    use LivewireAlert;
+
     public $product;
     public $quantity;
     public $barcodes;
@@ -32,7 +36,8 @@ class Barcode extends Component
 
     public function generateBarcodes(Product $product, $quantity) {
         if ($quantity > 100) {
-            return session()->flash('message', 'Max quantity is 100 per barcode generation!');
+            $this->alert('error', 'Maximum quantity is 100');
+            return;
         }
 
         $this->barcodes = [];
@@ -44,7 +49,7 @@ class Barcode extends Component
     }
 
     public function getPdf() {
-        $pdf = \PDF::loadView('admin.barcode.print', [
+        $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'price' => $this->product->price,
             'name' => $this->product->name,

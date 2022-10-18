@@ -35,20 +35,20 @@
                                 </div>
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                                     <div class="mb-4">
-                                        <label for="date">Date <span class="text-red-500">*</span></label>
+                                        <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
                                         <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required value="{{ $purchasePayment->getAttributes()['date'] }}">
                                     </div>
                                 </div>
                             
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="due_amount">Due Amount <span class="text-red-500">*</span></label>
+                                        <label for="due_amount">{{__('Due Amount')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="due_amount" required value="{{ format_currency($purchase->due_amount) }}" readonly>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
-                                        <label for="amount">Amount <span class="text-red-500">*</span></label>
+                                        <label for="amount">{{__('Amount')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">
                                             <input id="amount" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="amount" required value="{{ old('amount') ?? $purchasePayment->amount }}">
                                             <div class="input-group-append">
@@ -62,7 +62,7 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
-                                            <label for="payment_method">Payment Method <span class="text-red-500">*</span></label>
+                                            <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
                                             <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="payment_method" id="payment_method" required>
                                                 <option {{ $purchasePayment->payment_method == 'Cash' ? 'selected' : '' }} value="Cash">Cash</option>
                                                 <option {{ $purchasePayment->payment_method == 'Credit Card' ? 'selected' : '' }} value="Credit Card">Credit Card</option>
@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="note">Note</label>
+                                <label for="note">{{__('Note')}}</label>
                                 <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="4" name="note">{{ old('note') ?? $purchasePayment->note }}</textarea>
                             </div>
 

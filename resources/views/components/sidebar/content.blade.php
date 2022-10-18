@@ -1,6 +1,6 @@
 <x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3">
 
-    <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('admin.dashboard')">
+    <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('home')">
         <x-slot name="icon">
             <span class="inline-block mr-3">
                 <x-icons.dashboard class="w-5 h-5" aria-hidden="true" />
@@ -20,10 +20,10 @@
             </span>
         </x-slot>
         <x-slot name="add">
-        {{-- Todo : Added create button to the right with icon --}}
-        <a class="justify-end text-black font-bold" href="{{route('products.create')}}">
-            <i class="fas fa-plus"></i>
-        </a>
+        <button class="inline-block bg-indigo-500 text-white text-xs rounded-full" 
+                    type="submit" wire:click="$emit('createProduct')">
+                +
+        </button>
         </x-slot>
         @can('access_product_categories')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
@@ -171,11 +171,11 @@
     @endcan
 
     @can('access_user_management')
-        <x-sidebar.dropdown title="{{ __('User Management') }}" :active="Str::startsWith(
+        <x-sidebar.dropdown title="{{ __('People') }}" :active="Str::startsWith(
             request()
                 ->route()
                 ->uri(),
-            'User Management',
+            'people',
         )">
             <x-slot name="icon">
                 <span class="inline-block mr-3">

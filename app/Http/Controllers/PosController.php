@@ -32,11 +32,11 @@ class PosController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = '3';
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = '2';
             } else {
-                $payment_status = 'Paid';
+                $payment_status = '1';
             }
 
             $sale = Sale::create([
@@ -93,6 +93,6 @@ class PosController extends Controller
 
         toast('POS Sale Created!', 'success');
 
-        return redirect()->route('sales.index');
+        return redirect()->back();
     }
 }

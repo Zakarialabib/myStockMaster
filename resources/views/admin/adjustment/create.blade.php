@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create Adjustment')
+@section('title', __('Create Adjustment'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
@@ -75,30 +75,25 @@
                             @csrf
                             <div class="flex flex-wrap -mx-1">
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                    <div class="mb-4">
-                                        <label for="reference">{{ __('Reference') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required readonly
-                                            value="ADJ">
-                                    </div>
+                                    <label for="reference">{{ __('Reference') }} <span class="text-danger">*</span></label>
+                                    <input type="text"
+                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        name="reference" required readonly value="ADJ">
                                 </div>
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                    <div class="from-group">
-                                        <div class="mb-4">
-                                            <label for="date">{{ __('Date') }} <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required
-                                                value="{{ now()->format('Y-m-d') }}">
-                                        </div>
-                                    </div>
+                                    <label for="date">{{ __('Date') }} <span class="text-danger">*</span></label>
+                                    <input type="date"
+                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        name="date" required value="{{ now()->format('Y-m-d') }}">
                                 </div>
                             </div>
-                            
+
                             <livewire:adjustment.product-table />
 
                             <div class="mb-4">
                                 <label for="note">{{ __('Note (If Needed)') }}</label>
-                                <textarea name="note" id="note" rows="5" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
+                                <textarea name="note" id="note" rows="5"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
                             </div>
                             <div class="mt-3">
                                 <button type="submit"

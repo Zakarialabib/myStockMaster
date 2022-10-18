@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Customer;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerImport implements ToModel
 {
@@ -23,6 +23,6 @@ class CustomerImport implements ToModel
            'address' => $row[3],
         ]);
 
-        Auth::user()->customers()->save($customer);
+        
     }
 }

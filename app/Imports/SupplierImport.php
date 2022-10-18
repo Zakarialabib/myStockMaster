@@ -3,9 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Auth;
 
 class SupplierImport implements ToModel
 {
@@ -22,7 +20,5 @@ class SupplierImport implements ToModel
            'phone' => $row[2],
            'address' => $row[3],
         ]);
-
-        Auth::user()->suppliers()->save($supplier);
     }
 }

@@ -18,10 +18,10 @@
     
 </head>
 
-<body class="font-sans antialiased gray-100 text-slate-700 dark:gray-900 dark:text-slate-300 selection:bg-brand-200 dark:selection:text-slate-800 text-sm sm:text-base">
+<body class="antialiased bg-body text-body font-body">
     <x-loading-mask />
     <div @resize.window="handleWindowResize">
-        <div class="min-h-screen text-zinc-500 gray-200 dark:bg-dark-bg dark:text-zinc-200">
+        <div class="min-h-screen">
             <!-- Sidebar -->
             <x-sidebar.sidebar />
             <!-- Page Wrapper -->
@@ -35,7 +35,7 @@
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-5 pl-10 pr-5 sm:pl-5 sm:pr-3 flex-1">
+                <main class="pt-5 flex-1">
                     @yield('breadcrumb')
                     @yield('content')
                     @isset($slot)

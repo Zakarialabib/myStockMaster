@@ -18,10 +18,10 @@
 
     <div class="flex items-center gap-3">
 
-        <div class="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
+        <div class="md:flex hidden flex-wrap items-center">
             @can('show_notifications')
                 <div class="px-3">
-                    <x-dropdown align="right" width="100">
+                    <x-dropdown align="right" class="w-auto">
                         <x-slot name="trigger" class="inline-flex">
                             <x-button type="button" iconOnly secondary srText="Open notifications">
                                 @php
@@ -30,9 +30,9 @@
                                         ->get();
                                 @endphp
                                 <div
-                                    class="text-xs font-semibold inline-flex text-white justify-center">
-                                    <i class="fas fa-bell pl-2" aria-hidden="true"></i>
-                                    <span class="">{{ $low_quantity_products->count() }}</span>
+                                    class="text-xs font-semibold text-white justify-center">
+                                    <i class="fas fa-bell" aria-hidden="true"></i>
+                                    <span class="pl-2">{{ $low_quantity_products->count() }}</span>
                             </div>
                             </x-button>
                         </x-slot>
@@ -82,7 +82,7 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('')" :href="route('logout')">
+                    <x-dropdown-link :href="route('settings.index')">
                         {{ __('Settings') }}
                     </x-dropdown-link>
 

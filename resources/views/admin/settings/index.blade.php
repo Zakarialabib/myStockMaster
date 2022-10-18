@@ -42,210 +42,97 @@
 @endsection
 
 <x-app-layout>
-    <x-card>
-        <div class="w-full px-2">
-            @include('utils.alerts')
-            <x-card>
-                <div class="py-3 px-6 mb-0 bg-gray-200 border-b-1 border-gray-light text-gray-500">
-                    <h5 class="mb-0">{{ __('General Settings') }}</h5>
+    <div class="w-full px-2">
+        @include('utils.alerts')
+        <livewire:settings.index />
+    </div>
+
+    <div class="w-full px-2">
+        @if (session()->has('settings_smtp_message'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <div class="alert-body">
+                    <span>{{ session('settings_smtp_message') }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
-                <div class="p-4">
-                    <form action="{{ route('settings.update') }}" method="POST">
-                        @csrf
-                        @method('patch')
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="company_name" :value="__('Company Name')" required />
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="company_name" value="{{ $settings->company_name }}" required>
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="company_email" :value="__('Company Email')" required />
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="company_email" value="{{ $settings->company_email }}" required>
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="company_phone" :value="__('Company Phone')" required />
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="company_phone" value="{{ $settings->company_phone }}" required>
-                            </div>
-
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                <x-label for="company_address" :value="__('Company Address')" required />
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="company_address" value="{{ $settings->company_address }}">
-                            </div>
-
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                <x-label for="company_tax" :value="__('Company Tax')" />
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="company_tax" value="{{ $settings->company_tax }}">
-                            </div>
-
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="default_currency_id" :value="__('Default currency')" required />
-                                <select name="default_currency_id" id="default_currency_id"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    required>
-                                    @foreach (\App\Models\Currency::all() as $currency)
-                                        <option {{ $settings->default_currency_id == $currency->id ? 'selected' : '' }}
-                                            value="{{ $currency->id }}">{{ $currency->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="default_currency_position" :value="__('Default currency position')" required />
-                                <select name="default_currency_position" id="default_currency_position"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    required>
-                                    <option {{ $settings->default_currency_position == 'prefix' ? 'selected' : '' }}
-                                        value="prefix">{{ __('Prefix') }}</option>
-                                    <option {{ $settings->default_currency_position == 'suffix' ? 'selected' : '' }}
-                                        value="suffix">{{ __('Suffix') }}</option>
-                                </select>
-                            </div>
-
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                                <x-label for="footer_text" :value="__('Footer Text')" required />
-                                <input name="footer_text" disabled value="{{ $settings->footer_text }}" type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" />
-                            </div>
-
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="default_client_id" :value="__('Default customer')" />
-                                <select name="default_client_id" id="default_client_id"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
-                                    @foreach (\App\Models\Customer::all() as $customer)
-                                        <option {{ $settings->default_client_id == $customer->id ? 'selected' : '' }}
-                                            value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="default_warehouse_id" :value="__('Default Warehouse')" />
-                                <select name="default_warehouse_id" id="default_warehouse_id"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
-                                    @foreach (\App\Models\Warehouse::all() as $warehouse)
-                                        <option
-                                            {{ $settings->default_warehouse_id == $warehouse->id ? 'selected' : '' }}
-                                            value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <x-label for="notification_email" :value="__('Notification Email')" required />
-                                <input type="checkbox" name="notification_email" id="notification_email"
-                                    {{ $settings->notification_email ? 'checked' : '' }}>
-                            </div>
+            </div>
+        @endif
+        <x-card>
+            <div class="py-3 px-6 mb-0 bg-gray-200 border-b-1 border-gray-light text-gray-500">
+                <h5 class="mb-0">{{ __('Mail Settings') }}</h5>
+            </div>
+            <div class="p-4">
+                <form action="{{ route('settings.smtp.update') }}" method="POST">
+                    @csrf
+                    @method('patch')
+                    <div class="flex flex-wrap -mx-1">
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_mailer">{{ __('MAIL MAILER') }} <span class="text-red-500">*</span></label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_mailer" value="{{ env('MAIL_MAILER') }}" required>
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_host">{{ __('MAIL HOST') }} <span class="text-red-500">*</span></label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_host" value="{{ env('MAIL_HOST') }}" required>
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_port">{{ __('MAIL PORT') }} <span class="text-red-500">*</span></label>
+                            <input type="number"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_port" value="{{ env('MAIL_PORT') }}" required>
                         </div>
 
-                        <div class="mb-4 md:mb-0">
-                            <x-button type="submit" primary>
-                                {{ __('Save Changes') }}
-                            </x-button>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_mailer">{{ __('MAIL MAILER') }}</label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_mailer" value="{{ env('MAIL_MAILER') }}">
                         </div>
-                    </form>
-                </div>
-            </x-card>
-        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_username">{{ __('MAIL USERNAME') }}</label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_username" value="{{ env('MAIL_USERNAME') }}">
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_password">{{ __('MAIL PASSWORD') }}</label>
+                            <input type="password"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_password" value="{{ env('MAIL_PASSWORD') }}">
+                        </div>
 
-        <div class="w-full px-2">
-            @if (session()->has('settings_smtp_message'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <div class="alert-body">
-                        <span>{{ session('settings_smtp_message') }}</span>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_encryption">{{ __('MAIL ENCRYPTION') }}</label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_encryption" value="{{ env('MAIL_ENCRYPTION') }}">
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_from_address">{{ __('MAIL FROM ADDRESS') }}</label>
+                            <input type="email"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_from_address" value="{{ env('MAIL_FROM_ADDRESS') }}">
+                        </div>
+                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <label for="mail_from_name">{{ __('MAIL FROM NAME') }} <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                name="mail_from_name" value="{{ env('MAIL_FROM_NAME') }}" required>
+                        </div>
                     </div>
-                </div>
-            @endif
-            <x-card>
-                <div class="py-3 px-6 mb-0 bg-gray-200 border-b-1 border-gray-light text-gray-500">
-                    <h5 class="mb-0">{{ __('Mail Settings') }}</h5>
-                </div>
-                <div class="p-4">
-                    <form action="{{ route('settings.smtp.update') }}" method="POST">
-                        @csrf
-                        @method('patch')
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_mailer">{{ __('MAIL MAILER') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_mailer" value="{{ env('MAIL_MAILER') }}" required>
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_host">{{ __('MAIL HOST') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_host" value="{{ env('MAIL_HOST') }}" required>
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_port">{{ __('MAIL PORT') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="number"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_port" value="{{ env('MAIL_PORT') }}" required>
-                            </div>
 
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_mailer">{{ __('MAIL MAILER') }}</label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_mailer" value="{{ env('MAIL_MAILER') }}">
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_username">{{ __('MAIL USERNAME') }}</label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_username" value="{{ env('MAIL_USERNAME') }}">
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_password">{{ __('MAIL PASSWORD') }}</label>
-                                <input type="password"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_password" value="{{ env('MAIL_PASSWORD') }}">
-                            </div>
-
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_encryption">{{ __('MAIL ENCRYPTION') }}</label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_encryption" value="{{ env('MAIL_ENCRYPTION') }}">
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_from_address">{{ __('MAIL FROM ADDRESS') }}</label>
-                                <input type="email"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_from_address" value="{{ env('MAIL_FROM_ADDRESS') }}">
-                            </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                                <label for="mail_from_name">{{ __('MAIL FROM NAME') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                    name="mail_from_name" value="{{ env('MAIL_FROM_NAME') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-4 md:mb-0">
-                            <button type="submit"
-                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"><i
-                                    class="bi bi-check"></i> {{ __('Save Changes') }}</button>
-                        </div>
-                    </form>
-                </div>
-            </x-card>
-        </div>
-    </x-card>
+                    <div class="mb-4 md:mb-0">
+                        <button type="submit"
+                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"><i
+                                class="bi bi-check"></i> {{ __('Save Changes') }}</button>
+                    </div>
+                </form>
+            </div>
+        </x-card>
+    </div>
 </x-app-layout>

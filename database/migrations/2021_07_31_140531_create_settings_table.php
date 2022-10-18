@@ -30,6 +30,17 @@ class CreateSettingsTable extends Migration
             $table->boolean('is_invoice_footer')->default(0);
             $table->string('invoice_footer', 192)->nullable();
             $table->string('company_tax', 192)->nullable();
+            
+            $table->boolean('is_rtl')->default(1);
+            $table->string('invoice_prefix', 192)->default('INV-');
+
+            $table->boolean('show_email')->default(1);
+            $table->boolean('show_address')->default(1);
+
+            $table->boolean('show_order_tax')->default(1);
+            $table->boolean('show_discount')->default(1);
+            $table->boolean('show_shipping')->default(1);
+            
             $table->timestamps();
         });
     }

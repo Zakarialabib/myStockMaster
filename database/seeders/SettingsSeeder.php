@@ -32,6 +32,13 @@ class SettingsSeeder extends Seeder {
                 'is_invoice_footer' => '1',
                 'invoice_footer' => 'Thank you for your business',
                 'company_tax' => '0',
+                'is_rtl' => '1',
+                'invoice_prefix' => 'INV-',
+                'show_email' => '1',
+                'show_address' => '1',
+                'show_order_tax' => '1',
+                'show_discount' => '1',
+                'show_shipping' => '1',
                 'created_at' => now(),
                 ],
         ];

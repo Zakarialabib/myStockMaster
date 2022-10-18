@@ -3,39 +3,28 @@
 namespace App\Imports;
 
 use App\Models\Product;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\ToModel;
 
-class ProductImport implements FromQuery, WithMapping, WithHeadings
+class ProductImport implements ToModel
 {
-    use Exportable;
 
-    public function query()
+     /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
     {
-        return Product::query();
+        return new Product([
+            'name' => $row[0],
+            'description' => $row[1],
+            'price' => $row[2],
+            'quantity' => $row[3],
+            'category_id' => $row[4],
+            'brand_id' => $row[5],
+            'image' => $row[6],
+        ]);
     }
-
-    public function map($product): array
-    {
-        return [
-            $product->name,
-            $product->description,
-            $product->price,
-            $product->quantity,
-            $product->category->name,
-        ];
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Name',
-            'Description',
-            'Price',
-            'Quantity',
-            'Category',
-        ];
-    }
+    
 }

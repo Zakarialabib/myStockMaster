@@ -23,12 +23,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
+<body class="antialiased bg-body text-body font-body">
     <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
-        <div class="min-h-screen text-zinc-500 gray-200 dark:bg-dark-bg dark:text-zinc-200">
+        <div class="min-h-screen text-zinc-500 bg-gray-200 dark:bg-dark-bg dark:text-zinc-200">
             <x-navbar-pos />
-            <main class="pt-5 pl-10 pr-5 sm:pl-5 sm:pr-3 flex-1">
+            <main class="pt-5 flex-1">
                 @yield('content')
+                @isset($slot)
+                {{ $slot }}
+                @endisset
             </main>
 
         </div>

@@ -234,7 +234,7 @@ class Index extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['custmers'] = Customer::pluck('name', 'id')->toArray();
+        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
 
   

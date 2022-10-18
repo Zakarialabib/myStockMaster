@@ -48,7 +48,7 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
-                                            <label for="date">Date <span class="text-red-500">*</span></label>
+                                            <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
                                             <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required value="{{ $sale_return->date }}">
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
-                                            <label for="payment_method">Payment Method <span class="text-red-500">*</span></label>
+                                            <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
                                             <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="payment_method" required value="{{ $sale_return->payment_method }}" readonly>
                                         </div>
                                     </div>

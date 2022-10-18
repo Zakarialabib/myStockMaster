@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Puchase\Payment;
+namespace App\Http\Livewire\Purchase\Payment;
 
 use Livewire\Component;
 

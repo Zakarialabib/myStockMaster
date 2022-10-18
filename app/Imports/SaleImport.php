@@ -3,39 +3,24 @@
 namespace App\Imports;
 
 use App\Models\Sale;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ToModel;
 
-class SaleImport implements FromQuery, WithMapping, WithHeadings
+class SaleImport implements ToModel
 {
-    use Exportable;
-
-    public function query()
+     /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
     {
-        return Sale::query();
-    }
-
-    public function map($sale): array
-    {
-        return [
-            $sale->product->name,
-            $sale->quantity,
-            $sale->price,
-            $sale->total,
-            $sale->created_at,
-        ];
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Product',
-            'Quantity',
-            'Price',
-            'Total',
-            'Date',
-        ];
+        return new Sale([
+            'product_id' => $row[0],
+            'quantity' => $row[1],
+            'price' => $row[2],
+            'total' => $row[3],
+            'customer_id' => $row[4],
+            'user_id' => $row[5],
+        ]);
     }
 }

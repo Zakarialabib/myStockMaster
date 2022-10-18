@@ -7,8 +7,13 @@
             {{ $icon }}
         </x-slot>
         @endif
+        @if ($add ?? false)
+        <x-slot name="add">
+            {{ $add }}
+        </x-slot>
+        @endif
     </x-sidebar.link>
-
+    
     <div class="px-4" x-show="open && (isSidebarOpen || isSidebarHovered)" x-collapse>
         <ul class="text-sm font-medium">
             {{ $slot }}

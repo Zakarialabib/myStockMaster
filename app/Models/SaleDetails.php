@@ -32,7 +32,13 @@ class SaleDetails extends Model
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'sale_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'total_price',
+    ];
 
     protected $with = ['product'];
 

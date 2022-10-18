@@ -52,7 +52,7 @@
                 <livewire:pos.product-list :categories="$product_categories"/>
             </div>
             <div class="w-9/12 sm:w-full h-full">
-                <livewire:pos.checkout :cart-instance="'sale'" :customers="$customers"/>
+                <livewire:pos.index />
             </div>
         </div>
     </div>

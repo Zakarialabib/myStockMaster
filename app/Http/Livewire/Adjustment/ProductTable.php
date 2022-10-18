@@ -5,9 +5,11 @@ namespace App\Http\Livewire\Adjustment;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use App\Models\Product;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ProductTable extends Component
 {
+    use LivewireAlert;
 
     protected $listeners = ['productSelected'];
 
@@ -35,16 +37,19 @@ class ProductTable extends Component
                 if (in_array($product, array_map(function ($adjustment) {
                     return $adjustment['product'];
                 }, $this->products))) {
-                    return session()->flash('message', 'Already exists in the product list!');
+                    $this->alert('error', 'Product already added');
+                    return;
                 }
                 break;
             case false:
                 if (in_array($product, $this->products)) {
-                    return session()->flash('message', 'Already exists in the product list!');
+                    $this->alert('error', 'Already exists in the product list!');
+                    return;
                 }
                 break;
             default:
-                return session()->flash('message', 'Something went wrong!');
+            $this->alert('error', 'Something went wrong!');
+            return;
         }
 
         array_push($this->products, $product);

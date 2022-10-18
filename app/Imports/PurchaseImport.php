@@ -3,41 +3,25 @@
 namespace App\Imports;
 
 use App\Models\Purchase;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ToModel;
 
-class PurchaseImport implements FromQuery, WithMapping, WithHeadings
+class PurchaseImport implements Tomodel
 {
-    use Exportable;
-
-    public function query()
+     /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
     {
-        return Purchase::query();
-    }
-
-    public function map($purchase): array
-    {
-        return [
-            $purchase->product->name,
-            $purchase->quantity,
-            $purchase->price,
-            $purchase->total,
-            $purchase->supplier->name,
-            $purchase->created_at,
-        ];
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Product',
-            'Quantity',
-            'Price',
-            'Total',
-            'Supplier',
-            'Created At',
-        ];
+        return new Purchase([
+            'product_id' => $row[0],
+            'quantity' => $row[1],
+            'price' => $row[2],
+            'total' => $row[3],
+            'date' => $row[4],
+            'supplier_id' => $row[5],
+            'user_id' => $row[6],
+        ]);
     }
 }
