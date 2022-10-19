@@ -32,6 +32,8 @@ class Index extends Component
     public $editModal;
 
     public $showPayments;
+    
+    public $importModal;    
 
     public int $perPage;
 

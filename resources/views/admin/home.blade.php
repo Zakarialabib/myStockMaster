@@ -85,11 +85,11 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="flex flex-wrap mb-4">
+            <div class="flex flex-wrap -m-2 py-4">
                 @can('show_weekly_sales_purchases')
                     <div class="lg:w-3/5 sm:w-full px-2">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header">
+                    <div class="p-6 rounded bg-white shadow-md">
+                            <div class="text-xl mb-2">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
                             </div>
                             <div class="p-4">
@@ -100,8 +100,8 @@
                 @endcan
                 @can('show_month_overview')
                     <div class="lg:w-2/5 sm:w-full px-2">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header">
+                    <div class="p-6 rounded bg-white shadow-md">
+                            <div class="text-xl mb-2">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
                             </div>
                             <div class="card-body d-flex justify-content-center">
@@ -116,10 +116,10 @@
         @endcan
 
         @can('show_monthly_cashflow')
-            <div class="row">
-                <div class="w-full px-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header">
+            <div class="fle flex-wrap">
+                <div class="w-full px-2">
+                    <div class="p-6 rounded bg-white shadow-md">
+                        <div class="text-xl mb-2">
                             {{ __('Monthly Cash Flow (Payment Sent & Received)') }}
                         </div>
                         <div class="p-4">

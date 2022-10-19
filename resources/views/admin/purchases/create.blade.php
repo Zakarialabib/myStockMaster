@@ -45,11 +45,13 @@
 
 @section('content')
     <x-card>
-        <div class="w-full">
+        <div class="flex flex-row">
+
+        <div class="w-3/12 sm:w-full h-full">
             <livewire:search-product />
         </div>
 
-        <div class="w-full mt-4">
+        <div class="w-9/12 sm:w-full h-full">
             <div>
                 @include('utils.alerts')
                 <form id="purchase-form" action="{{ route('purchases.store') }}" method="POST">
@@ -138,6 +140,7 @@
                     </div>
                 </form>
             </div>
+        </div>
         </div>
     </x-card>
 @endsection

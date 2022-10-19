@@ -53,10 +53,10 @@
                     </x-table.td>
                     <x-table.td>
                         @if ($product->image)
-                        <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
-                            class="w-10 h-10 rounded-full">
+                            <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="w-10 h-10 rounded-full">
                         @else
-                        {{__('No image')}}
+                            {{ __('No image') }}
                         @endif
                     </x-table.td>
                     <x-table.td>
@@ -81,18 +81,31 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal({{ $product->id }})" wire:loading.attr="disabled"
-                                class="mr-2">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
-                            <x-button primary wire:click="editModal({{ $product->id }})" class="mr-2"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $product->id }})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
+                            <x-dropdown align="right" class="w-auto">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        {{ __('Actions') }}
+                                    </x-button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="showModal({{ $product->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('View') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="editModal({{ $product->id }})" class="mr-2"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
                         </div>
                     </x-table.td>
                 </x-table.tr>
@@ -121,111 +134,107 @@
     </div>
 
     @if ($product)
-    <!-- Show Modal -->
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Show Product') }}
-        </x-slot>
+        <!-- Show Modal -->
+        <x-modal wire:model="showModal">
+            <x-slot name="title">
+                {{ __('Show Product') }}
+            </x-slot>
 
-        <x-slot name="content">
-            <div class="px-4 mx-auto mb-4">
-                <div class="row mb-3">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG(
-                            $product->code,
-                            $product->barcode_symbology,
-                            2,
-                            110,
-                        ) !!}
+            <x-slot name="content">
+                <div class="px-4 mx-auto mb-4">
+                    <div class="row mb-3">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 110) !!}
+                        </div>
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            @forelse($product->getMedia('images') as $media)
+                                <img src="{{ $media->getUrl() }}" alt="Product Image"
+                                    class="img-fluid img-thumbnail mb-2">
+                            @empty
+                                <img src="{{ $product->getFirstMediaUrl('images') }}" alt="Product Image"
+                                    class="img-fluid img-thumbnail mb-2">
+                            @endforelse
+                        </div>
                     </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                        @forelse($product->getMedia('images') as $media)
-                            <img src="{{ $media->getUrl() }}" alt="Product Image" class="img-fluid img-thumbnail mb-2">
-                        @empty
-                            <img src="{{ $product->getFirstMediaUrl('images') }}" alt="Product Image"
-                                class="img-fluid img-thumbnail mb-2">
-                        @endforelse
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="w-full px-4">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped mb-0">
-                                <tr>
-                                    <th>{{__('Product Code')}}</th>
-                                    <td>{{ $product->code }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Barcode Symbology')}}</th>
-                                    <td>{{ $product->barcode_symbology }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Name')}}</th>
-                                    <td>{{ $product->name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Category')}}</th>
-                                    <td>{{ $product->category->name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Cost')}}</th>
-                                    <td>{{ format_currency($product->cost) }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Price')}}</th>
-                                    <td>{{ format_currency($product->price) }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Quantity')}}</th>
-                                    <td>{{ $product->quantity . ' ' . $product->unit }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Stock Worth')}}</th>
-                                    <td>
-                                        {{__('COST')}}::
-                                        {{ format_currency($product->cost * $product->quantity) }}
-                                        /
-                                        {{__('PRICE')}}::
-                                        {{ format_currency($product->price * $product->quantity) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Alert Quantity')}}</th>
-                                    <td>{{ $product->stock_alert }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Tax (%)')}}</th>
-                                    <td>{{ $product->order_tax ?? 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Tax Type')}}</th>
-                                    <td>
-                                        @if ($product->tax_type == 1)
-                                            {{__('Exclusive')}}
-                                        @elseif($product->tax_type == 2)
-                                            {{__('Inclusive')}}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>{{__('Description')}}</th>
-                                    <td>{{ $product->note ?? 'N/A' }}</td>
-                                </tr>
-                            </table>
+                    <div class="row">
+                        <div class="w-full px-4">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped mb-0">
+                                    <tr>
+                                        <th>{{ __('Product Code') }}</th>
+                                        <td>{{ $product->code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Barcode Symbology') }}</th>
+                                        <td>{{ $product->barcode_symbology }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Name') }}</th>
+                                        <td>{{ $product->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Category') }}</th>
+                                        <td>{{ $product->category->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Cost') }}</th>
+                                        <td>{{ format_currency($product->cost) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Price') }}</th>
+                                        <td>{{ format_currency($product->price) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Quantity') }}</th>
+                                        <td>{{ $product->quantity . ' ' . $product->unit }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Stock Worth') }}</th>
+                                        <td>
+                                            {{ __('COST') }}::
+                                            {{ format_currency($product->cost * $product->quantity) }}
+                                            /
+                                            {{ __('PRICE') }}::
+                                            {{ format_currency($product->price * $product->quantity) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Alert Quantity') }}</th>
+                                        <td>{{ $product->stock_alert }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Tax (%)') }}</th>
+                                        <td>{{ $product->order_tax ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Tax Type') }}</th>
+                                        <td>
+                                            @if ($product->tax_type == 1)
+                                                {{ __('Exclusive') }}
+                                            @elseif($product->tax_type == 2)
+                                                {{ __('Inclusive') }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Description') }}</th>
+                                        <td>{{ $product->note ?? 'N/A' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="w-full flex justify-start space-x-2">
-                <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-            </div>
-        </x-slot>
-    </x-modal>
-    <!-- End Show Modal -->
+                <div class="w-full flex justify-start space-x-2">
+                    <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
+                        {{ __('Close') }}
+                    </x-button>
+                </div>
+            </x-slot>
+        </x-modal>
+        <!-- End Show Modal -->
     @endif
 
     <!-- Edit Modal -->
@@ -241,14 +250,14 @@
                     <div class="flex flex-wrap -mx-1">
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="name" :value="__('Product Name')" required autofocus />
-                            <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="product.name"
-                                required autofocus />
+                            <x-input id="name" class="block mt-1 w-full" type="text" name="name"
+                                wire:model="product.name" required autofocus />
                             <x-input-error :messages="$errors->get('product.name')" for="product.name" class="mt-2" />
                         </div>
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="code" :value="__('Product Code')" required />
-                            <x-input id="code" class="block mt-1 w-full" type="text" name="code" wire:model="product.code" disabled
-                                required />
+                            <x-input id="code" class="block mt-1 w-full" type="text" name="code"
+                                wire:model="product.code" disabled required />
                             <x-input-error :messages="$errors->get('product.code')" for="product.code" class="mt-2" />
                         </div>
                     </div>
@@ -264,15 +273,15 @@
 
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="cost" :value="__('Cost')" required />
-                            <x-input id="cost" class="block mt-1 w-full" type="number" name="cost" wire:model="product.cost"
-                                required />
+                            <x-input id="cost" class="block mt-1 w-full" type="number" name="cost"
+                                wire:model="product.cost" required />
                             <x-input-error :messages="$errors->get('product.cost')" for="product.cost" class="mt-2" />
 
                         </div>
                         <div class="lg:w-1/2 sm:w-1/2 px-2">
                             <x-label for="price" :value="__('Price')" required />
-                            <x-input id="price" class="block mt-1 w-full" type="number" name="price" wire:model="product.price"
-                                required />
+                            <x-input id="price" class="block mt-1 w-full" type="number" name="price"
+                                wire:model="product.price" required />
                             <x-input-error :messages="$errors->get('product.price')" for="product.price" class="mt-2" />
 
                         </div>
@@ -318,7 +327,8 @@
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="unit" :value="__('Unit')" />
-                                <x-input id="unit" class="block mt-1 w-full" type="text" name="unit" wire:model="product.unit" required />
+                                <x-input id="unit" class="block mt-1 w-full" type="text" name="unit"
+                                    wire:model="product.unit" required />
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="barcode_symbology" :value="__('Barcode Symbology')" />

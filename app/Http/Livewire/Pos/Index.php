@@ -45,11 +45,28 @@ class Index extends Component
     
     public array $listsForFields = [];
 
+    public function rules()
+    {
+        return [
+            'customer_id' => 'required|numeric',
+            'tax_percentage' => 'required|integer|min:0|max:100',
+            'discount_percentage' => 'required|integer|min:0|max:100',
+            'shipping_amount' => 'numeric',
+            'total_amount' => 'required|numeric',
+            'paid_amount' => 'numeric',
+            'note' => 'nullable|string|max:1000'
+        ];
+    }
+    // mount cartInstance
 
-    
-    public function mount($cartInstance, $customers) {
+    public function mount($cartInstance) {
         $this->cart_instance = $cartInstance;
-        $this->customers = $customers;
+        
+        // $cart_instance = Cart::instance('sale')->content();
+
+        // $this->cart_instance = $cart_instance;
+        $this->customers = Customer::all();
+
         $this->global_discount = 0;
         $this->global_tax = 0;
         $this->shipping = 0.00;
@@ -58,7 +75,10 @@ class Index extends Component
         $this->discount_type = [];
         $this->item_discount = [];
         $this->payment_method = 'cash';
-        $this->paid_amount = 0;
+        // $this->paid_amount = 0;
+        $this->tax_percentage = 0;
+        $this->discount_percentage = 0;
+        $this->shipping_amount = 0;
         $this->initListsForFields();    
     }
 
@@ -69,24 +89,18 @@ class Index extends Component
 
     public function render() {
 
+
         $cart_items = Cart::instance($this->cart_instance)->content();
-        
+
         return view('livewire.pos.index', [
             'cart_items' => $cart_items
         ]);
     }
 
     public function store() {
-        
-        $this->validate([
-            'customer_id' => 'required|numeric',
-            'tax_percentage' => 'required|integer|min:0|max:100',
-            'discount_percentage' => 'required|integer|min:0|max:100',
-            'shipping_amount' => 'numeric',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'numeric',
-            'note' => 'nullable|string|max:1000'
-        ]);
+
+        try{
+        $this->validate();
 
         $due_amount = $this->total_amount - $this->paid_amount;
 
@@ -97,7 +111,7 @@ class Index extends Component
         } else {
             $payment_status = '1';
         }
-
+        // dd(Cart::instance('sale')->content()); 
         $sale = Sale::create([
             'date' => now()->format('Y-m-d'),
             'reference' => 'PSL',
@@ -116,6 +130,7 @@ class Index extends Component
             'discount_amount' => Cart::instance('sale')->discount() * 100,
         ]);
 
+        // foreach ($this->cart_instance as cart_items) {}
         foreach (Cart::instance('sale')->content() as $cart_item) {
             SaleDetails::create([
                 'sale_id' => $sale->id,
@@ -135,9 +150,8 @@ class Index extends Component
             $product->update([
                 'quantity' => $product->quantity - $cart_item->qty
             ]);
+            
         }
-
-        dd(Cart::instance('sale')->content());
 
         Cart::instance('sale')->destroy();
 
@@ -153,9 +167,12 @@ class Index extends Component
 
         $this->alert('success', 'Sale created successfully!');
 
-        $this->emit('refreshPos');
+        $this->checkoutModal = false;
 
-    }
+        } catch (\Exception $e) {
+            $this->alert('error', $e->getMessage());
+        }
+}
 
     public function refreshPos() {
         $this->reset();
@@ -165,7 +182,7 @@ class Index extends Component
         if ($this->customer_id != null) {
             $this->checkoutModal = true;
         } else {
-            $this->alert('error', 'Please select a customer!');
+            $this->alert('error', __('Please select a customer!'));
         }
     }
 

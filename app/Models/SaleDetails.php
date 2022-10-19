@@ -14,30 +14,44 @@ class SaleDetails extends Model
         'id',
         'sale_id',
         'product_id',
+        'name',
+        'code',
         'quantity',
+        'price',
         'unit_price',
-        'total_price',
-        'created_at',
-        'updated_at',
+        'sub_total',
+        'product_discount_amount',
+        'product_discount_type',
+        'product_tax_amount',
     ];
 
     public $filterable = [
         'id',
         'sale_id',
         'product_id',
+        'name',
+        'code',
         'quantity',
+        'price',
         'unit_price',
-        'total_price',
-        'created_at',
-        'updated_at',
+        'sub_total',
+        'product_discount_amount',
+        'product_discount_type',
+        'product_tax_amount',
     ];
 
     protected $fillable = [
-        'sale_id',
+         'sale_id',
         'product_id',
+        'name',
+        'code',
         'quantity',
+        'price',
         'unit_price',
-        'total_price',
+        'sub_total',
+        'product_discount_amount',
+        'product_discount_type',
+        'product_tax_amount',
     ];
 
     protected $with = ['product'];
