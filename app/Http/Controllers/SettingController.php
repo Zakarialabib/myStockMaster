@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Models\Setting;
-use App\Http\Requests\StoreSettingsRequest;
 use App\Http\Requests\StoreSmtpSettingsRequest;
 
 class SettingController extends Controller
@@ -22,30 +21,6 @@ class SettingController extends Controller
 
         return view('admin.settings.index', compact('settings'));
     }
-
-
-    public function update(StoreSettingsRequest $request) {
-        Setting::firstOrFail()->update([
-            'company_name' => $request->company_name,
-            'company_email' => $request->company_email,
-            'company_phone' => $request->company_phone,
-            'notification_email' => $request->notification_email,
-            'company_address' => $request->company_address,
-            'company_tax' => $request->company_tax,
-            'default_currency_id' => $request->default_currency_id,
-            'default_currency_position' => $request->default_currency_position,
-            'footer_text' => $request->footer_text,
-            'default_client_id' => $request->default_client_id,
-            'default_warehouse_id' => $request->default_warehouse_id,
-        ]);
-
-        cache()->forget('settings');
-
-        toast('Settings Updated!', 'info');
-
-        return redirect()->route('settings.index');
-    }
-
 
     public function updateSmtp(StoreSmtpSettingsRequest $request) {
         $toReplace = array(

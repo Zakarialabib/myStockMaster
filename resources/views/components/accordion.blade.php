@@ -11,7 +11,7 @@
             </svg>
         </div>
     </div>
-    <div x-show="open" class="mt-2">
+    <div x-show="open" class="mt-2 divide-y divide-gray-400">
         {{ $slot }}
     </div>
 </div>

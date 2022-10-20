@@ -1,6 +1,15 @@
-<div class="align-middle min-w-full overflow-x-auto overflow-hidden sm:rounded-md scrollbar__inverted shadow-sm dark:shadow-none">
+@props(['hfull' => false])
 
-    <table class="table items-center w-full mb-0 align-top border-grey-200 text-[#67748e] pt-5">
+@php
+    $tableClasses = ' table-auto w-full sm:table-fixed ';
+    if ($hfull) {
+        $tableClasses .= ' h-full';
+    }
+@endphp
+
+<div class="mb-4 bg-white align-middle shadow rounded overflow-x-auto scrollbar__inverted">
+
+    <table {{ $attributes->merge(['class' => $tableClasses]) }}>
         <x-table.thead>
             {{ $thead }}
         </x-table.thead>

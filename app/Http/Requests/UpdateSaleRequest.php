@@ -16,7 +16,7 @@ class UpdateSaleRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|numeric',
-            'code' => 'required|string|max:255',
+            'code' => 'string|max:255',
             'shipping_amount' => 'required|numeric',
             'total_amount' => 'required|numeric',
             'paid_amount' => 'required|numeric|max:' . $this->sale->total_amount,

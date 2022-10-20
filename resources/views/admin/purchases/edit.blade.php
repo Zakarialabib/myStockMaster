@@ -45,85 +45,90 @@
 
 @section('content')
     <x-card>
-        <div class="w-full">
-            <livewire:search-product />
-        </div>
+        <div class="flex flex-row">
 
-        <div class="w-full mt-4">
-            <div>
-                @include('utils.alerts')
-                <form id="purchase-form" action="{{ route('purchases.update', $purchase) }}" method="POST">
-                    @csrf
-                    @method('patch')
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
-                            <input type="text"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="reference" required value="{{ $purchase->reference }}" readonly>
-                        </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="supplier_id">{{ __('Supplier') }} <span class="text-red-500">*</span></label>
-                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="supplier_id" id="supplier_id" required>
-                                @foreach (\App\Models\Supplier::all() as $supplier)
-                                    <option {{ $purchase->supplier_id == $supplier->id ? 'selected' : '' }}
-                                        value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
-                            <input type="date"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="date" required value="{{ $purchase->date }}">
-                        </div>
-                    </div>
+            <div class="w-3/12 sm:w-full h-full">
+                <livewire:search-product />
+            </div>
 
-                    <livewire:product-cart :cartInstance="'purchase'" :data="$purchase" />
-
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="status">{{ __('Status') }} <span class="text-red-500">*</span></label>
-                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="status" id="status" required>
-                                <option {{ $purchase->status == 'Pending' ? 'selected' : '' }} value="Pending">
-                                    {{ __('Pending') }}</option>
-                                <option {{ $purchase->status == 'Ordered' ? 'selected' : '' }} value="Ordered">
-                                    {{ __('Ordered') }}</option>
-                                <option {{ $purchase->status == 'Completed' ? 'selected' : '' }} value="Completed">
-                                    {{ __('Completed') }}</option>
-                            </select>
+            <div class="w-9/12 sm:w-full h-full">
+                <div>
+                    @include('utils.alerts')
+                    <form id="purchase-form" action="{{ route('purchases.update', $purchase) }}" method="POST">
+                        @csrf
+                        @method('patch')
+                        <div class="flex flex-wrap -mx-1">
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
+                                <input type="text"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="reference" required value="{{ $purchase->reference }}" readonly>
+                            </div>
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="supplier_id">{{ __('Supplier') }} <span class="text-red-500">*</span></label>
+                                <select
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="supplier_id" id="supplier_id" required>
+                                    @foreach (\App\Models\Supplier::all() as $supplier)
+                                        <option {{ $purchase->supplier_id == $supplier->id ? 'selected' : '' }}
+                                            value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
+                                <input type="date"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="date" required value="{{ $purchase->date }}">
+                            </div>
                         </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="payment_method">{{ __('Payment Method') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="payment_method" required value="{{ $purchase->payment_method }}" readonly>
-                        </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-                            <label for="paid_amount">{{ __('Amount Received') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input id="paid_amount" type="text"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                name="paid_amount" required value="{{ $purchase->paid_amount }}" readonly>
-                        </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <label for="note">{{__('Descriprion')}}</label>
-                        <textarea name="note" id="note" rows="5"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">{{ $purchase->note }}</textarea>
-                    </div>
+                        <livewire:product-cart :cartInstance="'purchase'" :data="$purchase" />
 
-                    <div class="mt-3">
-                        <button type="submit"
-                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                            {{ __('Update Purchase') }} <i class="bi bi-check"></i>
-                        </button>
-                    </div>
-                </form>
+                        <div class="flex flex-wrap -mx-1">
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="status">{{ __('Status') }} <span class="text-red-500">*</span></label>
+                                <select
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="status" id="status" required>
+                                    <option {{ $purchase->status == 'Pending' ? 'selected' : '' }} value="Pending">
+                                        {{ __('Pending') }}</option>
+                                    <option {{ $purchase->status == 'Ordered' ? 'selected' : '' }} value="Ordered">
+                                        {{ __('Ordered') }}</option>
+                                    <option {{ $purchase->status == 'Completed' ? 'selected' : '' }} value="Completed">
+                                        {{ __('Completed') }}</option>
+                                </select>
+                            </div>
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="payment_method">{{ __('Payment Method') }} <span
+                                        class="text-red-500">*</span></label>
+                                <input type="text"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="payment_method" required value="{{ $purchase->payment_method }}" readonly>
+                            </div>
+                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <label for="paid_amount">{{ __('Amount Received') }} <span
+                                        class="text-red-500">*</span></label>
+                                <input id="paid_amount" type="text"
+                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    name="paid_amount" required value="{{ $purchase->paid_amount }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="note">{{ __('Descriprion') }}</label>
+                            <textarea name="note" id="note" rows="5"
+                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">{{ $purchase->note }}</textarea>
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="submit"
+                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                                {{ __('Update Purchase') }} <i class="bi bi-check"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </x-card>

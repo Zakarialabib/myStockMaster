@@ -29,8 +29,8 @@
                             </x-table.td>
 
                             <x-table.td>
-                            <input wire:model="price.{{ $cart_item->id }}" type="number" class="px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $cart_item->price }}" min="1">
-                                {{-- {{ format_currency($cart_item->options->unit_price) }} --}}
+                            {{-- <input wire:model="price.{{ $cart_item->id }}" type="number" class="px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $cart_item->price }}" min="1"> --}}
+                                {{ format_currency($cart_item->options->unit_price) }}
                             </x-table.td>
 
                                 <x-table.td>

@@ -17,14 +17,12 @@ class Index extends Component
     public $sale;
 
     public $listeners = [
-        'delete', 'showPayments', 'paymentModal','refreshIndex'
+        'delete', 'showPayments', 'refreshIndex'
     ];
 
     public $refreshIndex;
 
     public $showPayments;
-
-    public $paymentModal;
 
     public int $perPage;
 
@@ -37,6 +35,8 @@ class Index extends Component
     public array $paginationOptions;
     
     public array $listsForFields = [];
+
+    public $sale_id;
 
     protected $queryString = [
         'search' => [
@@ -75,8 +75,11 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function mount()
-    {
+    public function mount($sale){
+        $this->sale = $sale;
+
+        $this->sale_id = $sale->id;
+
         $this->perPage = 10;
         $this->sortBy            = 'id';
         $this->sortDirection     = 'desc';
@@ -85,19 +88,29 @@ class Index extends Component
         $this->paymentModal = false;
     }
 
-
-    public function render(SalePayment $sale_id)
+    public function render()
     {
-    //    abort_if(Gate::denies('access_sale_payments'), 403);
+        //    abort_if(Gate::denies('access_sale_payments'), 403);
 
-       $query = SalePayment::where('sale_id', $sale_id)->advancedFilter([
+       $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $salespayment = $query->paginate($this->perPage);
+        $salepayments = $query->paginate($this->perPage);
 
-        return view('livewire.sales.payment.index', compact('salespayment'));
+        return view('livewire.sales.payment.index', compact('salepayments'));
     }
+
+    public function showPayments($sale_id)
+    {
+        abort_if(Gate::denies('access_sales'), 403);
+        
+        $this->sale_id = $sale_id;
+
+        $this->showPayments = true;
+    }
+
+
 }

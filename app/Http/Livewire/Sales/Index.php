@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Sales;
 use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
@@ -19,19 +20,13 @@ class Index extends Component
     public $sale;
 
     public $listeners = [
-    'confirmDelete', 'delete', 'showModal', 'editModal', 'createModal',
+    'confirmDelete', 'delete', 'showModal',
     'importModal', 'import' , 'refreshIndex'
     ];
 
     public $refreshIndex;
 
     public $showModal;
-
-    public $createModal;
-
-    public $editModal;
-
-    public $showPayments;
     
     public $importModal;    
 
@@ -44,6 +39,8 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
+
+    // public $salepayments;
     
     public array $listsForFields = [];
 
@@ -131,53 +128,6 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('create_sales'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('create_sales'), 403);
-
-        $this->validate();
-
-        Sale::create($this->sale);
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Sale created successfully.');
-    }
-
-    public function editModal(Sale $sale)
-    {
-        abort_if(Gate::denies('edit_sales'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->sale = $sale;
-
-        $this->editModal = true;
-    }
-
-    public function update()
-    {
-        $this->validate();
-
-        $this->sale->save();
-
-        $this->editModal   = false;
-
-        $this->alert('success', 'Sale updated successfully.');
-    }
 
     public function deleteSelected()
     {
@@ -225,13 +175,6 @@ class Index extends Component
 
         $this->importModal = false;
 
-    }
-
-    public function showPayments()
-    {
-        abort_if(Gate::denies('access_sales'), 403);
-
-        $this->showPayments = true;
     }
 
     protected function initListsForFields(): void

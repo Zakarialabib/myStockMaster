@@ -136,7 +136,7 @@
         </div>
     </x-card>
 @endsection
-
+{{-- 
 @push('page_scripts')
     <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
     <script>
@@ -158,4 +158,4 @@
             });
         });
     </script>
-@endpush
+@endpush --}}

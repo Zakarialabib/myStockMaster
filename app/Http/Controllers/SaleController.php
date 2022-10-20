@@ -38,11 +38,11 @@ class SaleController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = Sale::PaymentPending;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = Sale::PaymentPartial;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = Sale::PaymentPaid;
             }
 
             $sale = Sale::create([
@@ -151,15 +151,15 @@ class SaleController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = Sale::PaymentPending;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = Sale::PaymentPartial;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = Sale::PaymentPaid;
             }
 
             foreach ($sale->saleDetails as $sale_detail) {
-                if ($sale->status == 'Shipped' || $sale->status == 'Completed') {
+                if ($sale->status == Sale::SaleShipped || $sale->status == Sale::SaleCompleted) {
                     $product = Product::findOrFail($sale_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity + $sale_detail->quantity
@@ -200,8 +200,8 @@ class SaleController extends Controller
                     'product_discount_type' => $cart_item->options->product_discount_type,
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
-
-                if ($request->status == 'Shipped' || $request->status == 'Completed') {
+                
+                if ($request->status == Sale::SaleShipped || $request->status == Sale::SaleCompleted) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity - $cart_item->qty

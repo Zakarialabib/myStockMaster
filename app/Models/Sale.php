@@ -83,6 +83,7 @@ class Sale extends Model
     const SalePending =  '0' ;
     const SaleOrdered =  '1' ;
     const SaleCompleted =  '2' ;
+    const SaleShipped =  '3' ;
 
     public function saleDetails() {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');

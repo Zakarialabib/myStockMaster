@@ -14,7 +14,7 @@ class SalePayment extends Model
         'id',
         'sale_id',
         'payment_method',
-        'payment_reference',
+        'reference',
         'amount',
         'created_at',
         'updated_at',
@@ -24,13 +24,20 @@ class SalePayment extends Model
         'id',
         'sale_id',
         'payment_method',
-        'payment_reference',
+        'reference',
         'amount',
         'created_at',
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'date',
+        'reference',
+        'amount',
+        'note',
+        'sale_id',
+        'payment_method',
+    ];
 
     public function sale() {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
