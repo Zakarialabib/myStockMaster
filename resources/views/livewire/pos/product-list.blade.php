@@ -1,12 +1,12 @@
 <div>
-    <div class="w-full px-2">
+    <div class="w-full px-2 ">
         <livewire:pos.filter :categories="$categories" />
         <div class="flex flex-row relative h-screen">
             <div wire:loading.flex class="w-full px-2 absolute justify-center items-center"
                 style="top:0;right:0;left:0;bottom:0;background-color: rgba(255,255,255,0.5);z-index: 99;">
                 <x-loading />
             </div>
-            <div class="w-full flex flex-wrap px-2 mt-5 overflow-y-auto">
+            <div class="w-full flex flex-wrap px-2 mt-5 overflow-y-auto bg-white">
                 @forelse($products as $product)
                     <div class="w-full lg:w-1/4 md:w-1/2 mx-2">
                         <div wire:click.prevent="selectProduct({{ $product }})"

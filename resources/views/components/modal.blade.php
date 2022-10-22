@@ -20,7 +20,7 @@
 }" x-init="$watch('show', value => value && setTimeout(autofocus, 50))" x-on:close.stop="show = false"
     x-on:keydown.escape.window="show = false" x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
     x-on:keydown.shift.tab.prevent="prevFocusable().focus()" x-show="show"
-    class="fixed inset-x-0 px-6 pt-28 mt-28 z-50 sm:px-0 sm:flex sm:items-center sm:justify-center" style="display: none;">
+    class="fixed inset-x-0 px-6 pt-28 mt-28 z-50 sm:fixed top-0 left-0 w-full h-full py-16 md:py-28 bg-opacity-50 overflow-y-auto" style="display: none;">
     <div class="fixed inset-0 transform" x-on:click="show = false">
         <div x-show="show" class="absolute inset-0 bg-zinc-500 opacity-75"></div>
     </div>
@@ -44,3 +44,5 @@
         </div>
     </x-modal.card>
 </div>
+
+{{-- Example implementation --}}

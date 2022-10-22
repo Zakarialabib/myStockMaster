@@ -40,6 +40,7 @@ class Checkout extends Component
         $this->discount_type = [];
         $this->item_discount = [];
         $this->total_amount = 0;
+        
     }
 
     public function hydrate() {

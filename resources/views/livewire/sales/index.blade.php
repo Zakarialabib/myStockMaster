@@ -22,7 +22,7 @@
         </div>
     </div>
     <div>
-        <x-table hfull>
+        <x-table>
             <x-slot name="thead">
                 <x-table.th class="pr-0 w-8">
                     <input type="checkbox" wire:model="selectPage" />

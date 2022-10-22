@@ -33,7 +33,13 @@
                 {{ $slot }}
                 @endisset
             </main>
+            
+            <livewire:sales.recent />
 
+            <livewire:products.create />
+            
+            <livewire:customers.create />
+            
         </div>
     </div>
     @include('includes.main-js')

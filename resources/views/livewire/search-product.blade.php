@@ -1,5 +1,5 @@
 <div class="relative">
-    <div class="p-4">
+    <div class="p-2">
         <div class="mb-2 md:mb-0">
             <input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="text"
                 class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"

@@ -4,12 +4,16 @@
         {{ __('Dashobard') }}
         </x-button>
 
-        <x-button primary type="submit" wire:click="$emit('createProduct')">
+        <x-button primary type="button" onclick="Livewire.emit('createProduct', 'show')">
             {{ __('Create Product') }}
         </x-button>
 
-        <x-button primary type="submit" wire:click="$emit('createCustomer')">
+        <x-button primary type="button" onclick="Livewire.emit('createCustomer', 'show')">
             {{ __('Create Customer') }}
+        </x-button>
+        
+        <x-button primary type="button" onclick="Livewire.emit('recentSales', 'show')">
+            {{ __('Recent Sales') }}
         </x-button>
 
 

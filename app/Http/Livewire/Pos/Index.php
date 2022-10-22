@@ -33,6 +33,7 @@ class Index extends Component
     public $total_amount;
     public $checkoutModal;
     public $product;
+    public $price;
     public $paid_amount;
     public $tax_percentage;
     public $discount_percentage;
@@ -60,11 +61,9 @@ class Index extends Component
     // mount cartInstance
 
     public function mount($cartInstance) {
+        
         $this->cart_instance = $cartInstance;
         
-        // $cart_instance = Cart::instance('sale')->content();
-
-        // $this->cart_instance = $cart_instance;
         $this->customers = Customer::all();
 
         $this->global_discount = 0;
@@ -75,10 +74,12 @@ class Index extends Component
         $this->discount_type = [];
         $this->item_discount = [];
         $this->payment_method = 'cash';
-        // $this->paid_amount = 0;
+        
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
+        $this->paid_amount = $this->total_amount;
+
         $this->initListsForFields();    
     }
 
@@ -257,6 +258,27 @@ class Index extends Component
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
 
         Cart::instance($this->cart_instance)->update($row_id, [
+            'options' => [
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $cart_item->options->product_discount,
+                'product_discount_type' => $cart_item->options->product_discount_type,
+            ]
+        ]);
+    }
+    public function updatePrice($row_id, $product_id) {
+
+        Cart::instance($this->cart_instance)->update($row_id, $this->price[$product_id]);
+
+        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
+
+
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'price' => $this->price[$product_id],
             'options' => [
                 'sub_total'             => $cart_item->price * $cart_item->qty,
                 'code'                  => $cart_item->options->code,
