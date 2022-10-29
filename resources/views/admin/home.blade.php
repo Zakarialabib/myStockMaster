@@ -25,7 +25,7 @@
     <div class="px-4 mx-auto">
         @can('show_total_stats')
             <div class="flex flex-wrap -m-4 py-4">
-                <div class="w-full md:w-1/2 lg:w-1/4 p-4">
+                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
                     <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/2 lg:w-1/4 p-4">
+                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
                     <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="w-full md:w-1/2 lg:w-1/4 p-4">
+                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
                     <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
@@ -68,7 +68,7 @@
                 </div>
 
 
-                <div class="w-full md:w-1/2 lg:w-1/4 p-4">
+                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
                     <div class="p-6 rounded bg-white shadow-md">
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
@@ -133,9 +133,12 @@
 </x-app-layout>
 
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"
-        integrity="sha512-asxKqQghC1oBShyhiBwA+YgotaSYKxGP1rcSYTDrB0U6DxwlJjU59B67U8+5/++uFjcuVM8Hh5cokLjZlhm3Vg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{ asset('js/chart-config.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"
+integrity="sha512-asxKqQghC1oBShyhiBwA+YgotaSYKxGP1rcSYTDrB0U6DxwlJjU59B67U8+5/++uFjcuVM8Hh5cokLjZlhm3Vg=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{-- define chart  --}}
+<script>
+    
+</script>
 @endsection
 
