@@ -7,15 +7,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Support\HasAdvancedFilter;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable 
 {
     use HasAdvancedFilter, HasApiTokens, 
-    Notifiable, InteractsWithMedia, HasRoles;
+    Notifiable, HasRoles;
 
     public $orderable = [
         'id','name','email', 'password' , 'avatar',
@@ -59,13 +57,11 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['media'];
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('avatars')
-            ->useFallbackUrl('https://www.gravatar.com/avatar/' . md5($this->attributes['email']));
-    }
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array<string, string>
+     */
 
     public function scopeIsActive(Builder $builder) {
         return $builder->where('is_active', 1);

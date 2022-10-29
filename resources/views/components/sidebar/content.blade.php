@@ -19,12 +19,7 @@
                 <i class="fas fa-boxes w-5 h-5"></i>
             </span>
         </x-slot>
-        <x-slot name="add">
-        <button class="inline-block bg-indigo-500 text-white text-xs rounded-full" 
-                    type="submit" wire:click="$emit('createProduct')">
-                +
-        </button>
-        </x-slot>
+      
         @can('access_product_categories')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />

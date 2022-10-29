@@ -67,7 +67,7 @@ x-cloak>
 
                 @if ($mode === 'attachment')
                     <div class="text-center flex-1 p-4">
-                        <div class="mb-2">Uploading...</div>
+                        <div class="mb-2">{{__('Uploading...')}}</div>
                         <div>
                             <div class="h-3 relative max-w-lg mx-auto rounded-full overflow-hidden">
                                 <div class="w-full h-full bg-gray-200 absolute"></div>
@@ -92,7 +92,7 @@ x-cloak>
                                 </svg>
                             </div>
                         @else
-                            <span>Type invalid.</span>
+                            <span>{{__('Type invalid')}}.</span>
                         @endif
                     </div>   
                 </div>
@@ -206,7 +206,7 @@ x-cloak>
                                 wire:loading.attr="disabled" 
                                 type="button" 
                                 x-on:click.prevent="$wire.removeUpload('{{ $attributes->wire('model')->value }}', '{{ $file->getFilename() }}')" class="text-xs text-red-500 appearance-none hover:underline">
-                                Remove
+                                {{__('Remove')}}
                             </button>
                         </div>
                     </div>

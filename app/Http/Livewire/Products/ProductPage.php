@@ -135,7 +135,11 @@ class ProductPage extends Component
     {
         abort_if(Gate::denies('access_products'), 403);
 
-        $query = Product::advancedFilter([
+        $query = Product::with(['category'=>function($query){
+            $query->select('id','name');
+        },'brand'=>function($query){
+            $query->select('id','name');
+        }])->select('products.*')->advancedFilter([
                             's'               => $this->search ?: null,
                             'order_column'    => $this->sortBy,
                             'order_direction' => $this->sortDirection,

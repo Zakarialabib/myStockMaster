@@ -30,9 +30,6 @@ if ($collapsible) {
         </span>
     </button>
     
-    @if ($add ?? false)
-    {{ $add }}
-    @endif
 @else
     <a {{ $attributes->merge(['class' => $classes]) }}>
         @if ($icon ?? false)
@@ -49,7 +46,4 @@ if ($collapsible) {
 
     </a>
 
-    @if ($add ?? false)
-    {{ $add }}
-    @endif
 @endif

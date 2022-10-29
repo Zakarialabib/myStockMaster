@@ -8,6 +8,17 @@ MYSTOCK also has a simple POS system that allows you to sell your products, easy
 
 Refactoring the code to use the new Laravel 9 features, livewire capacities, & tailwind responsiveness.
 
+## Demo
+
+You can check the demo here: 
+[https://test.hotechserver.com](https://test.hotechserver.com)
+
+
+Login with the following credentials
+    -   Email: `admin@ggmail.com'
+    -   Password: `password'
+
+
 ## Features
 
 -   Dashboard
@@ -62,6 +73,7 @@ Refactoring the code to use the new Laravel 9 features, livewire capacities, & t
 - 1.0.31 - Optimization of Sales
 - 1.0.32 - Optimization of Purchases
 - 1.0.33 - Optimization of Product Image Upload
+- 1.0.34 - 
 
 
 ## Requirements

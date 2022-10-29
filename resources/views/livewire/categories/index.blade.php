@@ -60,13 +60,11 @@
                         {{ $category->name }}
                     </x-table.td>
                     <x-table.td>
-                        @php($productsCount = $category->products->count())
-                        {{ $productsCount }}
+                        {{ $category->products->count() }}
                     </x-table.td>
                     <x-table.td>
                         {{-- calculate quantity of all products in this category --}}
-                        @php($stockCount = $category->products->sum('quantity'))
-                        {{ $stockCount }}
+                        {{ $category->products->sum('quantity') }}
                     </x-table.td>
                     <x-table.td>
                         {{-- calculate quantity and cost = stock value --}}

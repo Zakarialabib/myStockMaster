@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-// use Laravel\Sanctum\Sanctum;
+use Illuminate\Database\Eloquent\Model;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceSchema('https');
         }
+
+        Model::shouldBeStrict(! $this->app->isProduction());
 
         //
     }

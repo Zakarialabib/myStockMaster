@@ -72,12 +72,13 @@
         <ul class="flex-col md:flex-row list-none items-center md:flex">
             <x-dropdown align="right" width="60">
                 <x-slot name="trigger">
-                    {{ Auth::user()->name }}
+                    
 
                     <button
                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
-                        <img class="h-8 w-8 rounded-full" src="{{ auth()->user()->profile_photo_url }}"
-                            alt="{{ auth()->user()->name }}" />
+                        {{ Auth::user()->name }}
+                        {{-- <img class="h-8 w-8 rounded-full" src="{{ auth()->user()->profile_photo_url }}"
+                            alt="{{ auth()->user()->name }}" /> --}}
                     </button>
                 </x-slot>
 

@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\NotifyQuantityAlert;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Support\HasAdvancedFilter;
 use App\Support\Helper;
 
-class Product extends Model implements HasMedia
+class Product extends Model
 {
     use HasAdvancedFilter;
-    use InteractsWithMedia;
     
     public $orderable = [
         'id',
@@ -55,7 +51,6 @@ class Product extends Model implements HasMedia
     
     protected $guarded = [];
 
-    protected $with = ['media'];
 
     public function __construct(array $attributes = array())
     {
@@ -69,15 +64,8 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    public function registerMediaCollections(): void {
-        $this->addMediaCollection('images')
-            ->useFallbackUrl('/images/fallback_product_image.png');
-    }
-
-    public function registerMediaConversions(Media $media = null): void {
-        $this->addMediaConversion('thumb')
-            ->width(50)
-            ->height(50);
+    public function brand() {
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
     public function setProductCostAttribute($value) {
