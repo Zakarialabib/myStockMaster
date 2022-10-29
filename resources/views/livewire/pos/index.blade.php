@@ -253,7 +253,7 @@
 </div>
 
 
-@push('page_scripts')
+@push('scripts')
     <script>
         $(document).ready(function() {
             window.addEventListener('showCheckoutModal', event => {

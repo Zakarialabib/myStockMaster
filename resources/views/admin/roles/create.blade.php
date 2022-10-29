@@ -830,7 +830,7 @@
     </div>
 @endsection
 
-@push('page_scripts')
+@push('scripts')
     <script>
         $(document).ready(function() {
             $('#select-all').click(function() {

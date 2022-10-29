@@ -87,6 +87,6 @@
     </div>
 @endsection
 
-@push('page_scripts')
+@push('scripts')
 
 @endpush

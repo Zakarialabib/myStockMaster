@@ -106,7 +106,7 @@
     </div>
 </div>
 
-@push('page_scripts')
+@push('scripts')
     <script>
         window.addEventListener('confirm', event => {
             Swal.fire({

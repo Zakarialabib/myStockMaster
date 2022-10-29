@@ -8,6 +8,4 @@
 
 <x-livewire-alert::scripts />
 
-@yield('third_party_scripts')
-
-@stack('page_scripts')
+@stack('scripts')

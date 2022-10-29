@@ -1,7 +1,6 @@
 .row {
-  @layer w-full mb-12 px-4;
+  @layer w-full px-4 mb-12 flex flex-wrap items-center justify-center;
 }
-
 .card {
   @layer relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg border-0;
 }

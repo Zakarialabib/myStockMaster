@@ -47,7 +47,7 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'auth'], function () {
    
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
 
     Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
     

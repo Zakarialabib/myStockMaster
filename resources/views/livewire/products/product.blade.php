@@ -147,13 +147,8 @@
                             {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 110) !!}
                         </div>
                         <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
-                            @forelse($product->getMedia('images') as $media)
-                                <img src="{{ $media->getUrl() }}" alt="Product Image"
-                                    class="img-fluid img-thumbnail mb-2">
-                            @empty
-                                <img src="{{ $product->getFirstMediaUrl('images') }}" alt="Product Image"
-                                    class="img-fluid img-thumbnail mb-2">
-                            @endforelse
+                            <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="w-32 h-32 rounded-full">
                         </div>
                     </div>
                     <div class="row">
@@ -410,7 +405,7 @@
 
 </div>
 
-@push('page_scripts')
+@push('scripts')
     <script>
         document.addEventListener('livewire:load', function() {
             window.livewire.on('deleteModal', productId => {
