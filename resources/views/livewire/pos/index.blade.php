@@ -4,10 +4,15 @@
             <div>
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-                <div class="mb-4">
-                    <x-select-list
-                        class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                        id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->listsForFields['customers']" />
+                <div class="w-full relative inline-flex">
+                    <x-button wire:click="refreshCustomers" type="button" secondary class="px-2 mr-2 py-0">
+                        <i class="bi bi-arrow-repeat text-lg"></i>
+                    </x-button>
+
+                    <x-select-list 
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                        required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->listsForFields['customers']" />
+                        
                 </div>
 
                 <div>
@@ -98,7 +103,7 @@
                     <div class="mb-4">
                         <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
                         <input wire:model.lazy="tax_percentage" type="number"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             min="0" max="100" value="{{ $global_tax }}" required>
                     </div>
                 </div>
@@ -106,7 +111,7 @@
                     <div class="mb-4">
                         <label for="discount_percentage">{{ __('Discount') }} (%)</label>
                         <input wire:model.lazy="discount_percentage" type="number"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             min="0" max="100" value="{{ $global_discount }}" required>
                     </div>
                 </div>
@@ -114,7 +119,7 @@
                     <div class="mb-4">
                         <label for="shipping_amount">{{ __('Shipping') }}</label>
                         <input wire:model.lazy="shipping" type="number"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             min="0" value="0" required step="0.01">
                     </div>
                 </div>
@@ -155,19 +160,19 @@
                                     <div class="w-full px-2">
                                         <x-label for="total_amount" :value="__('Total Amount')" required />
                                         <input id="total_amount" type="text" wire:model="total_amount"
-                                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                             name="total_amount" value="{{ $total_amount }}" readonly required>
                                     </div>
                                     <div class="w-full px-2">
                                         <x-label for="paid_amount" :value="__('Paid Amount')" required />
                                         <input id="paid_amount" type="text" wire:model="paid_amount"
-                                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                             name="paid_amount" value="{{ $total_amount }}" required>
                                     </div>
                                     <div class="w-full px-2">
                                         <x-label for="payment_method" :value="__('Payment Method')" required />
                                         <select wire:model="payment_method" id="payment_method" required
-                                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                             <option value="Cash">{{ __('Cash') }}</option>
                                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                                             <option value="Cheque">{{ __('Cheque') }}</option>
@@ -177,7 +182,7 @@
                                     <div class="mb-4 w-full">
                                         <x-label for="note" :value="__('Note')" />
                                         <textarea name="note" id="note" rows="5" wire:model="note"
-                                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
+                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                                     </div>
                                 </div>
                             </div>

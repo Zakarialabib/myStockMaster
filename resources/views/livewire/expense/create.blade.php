@@ -25,7 +25,7 @@
                     <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="expense.category_id" :value="__('Expense Category')" />
                         <x-select-list
-                            class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required id="category_id" name="category_id" wire:model="expense.category_id" :options="$this->listsForFields['expensecategories']" />
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-4">
@@ -37,12 +37,12 @@
                     <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="expense.warehouse_id" :value="__('Warehouse')" />
                         <x-select-list
-                            class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required id="warehouse_id" name="warehouse_id" wire:model="expense.warehouse_id" :options="$this->listsForFields['warehouses']" />
                     </div>
                     <div class="w-full px-4">
                         <x-label for="expense.details" :value="__('Description')" />
-                        <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="2"
+                        <textarea class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="2"
                             wire:model="expense.details" id="expense.details"></textarea>
                     </div>
                 </div>

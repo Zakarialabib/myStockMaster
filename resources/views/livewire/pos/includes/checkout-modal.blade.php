@@ -27,21 +27,21 @@
                                 <label for="total_amount">{{ __('Total Amount') }} <span
                                         class="text-red-500">*</span></label>
                                 <input id="total_amount" type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="total_amount" value="{{ $total_amount }}" readonly required>
                             </div>
                             <div class="w-full px-2">
                                 <label for="paid_amount">{{ __('Received Amount') }} <span
                                         class="text-red-500">*</span></label>
                                 <input id="paid_amount" type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="paid_amount" value="{{ $total_amount }}" required>
                             </div>
                             <div class="w-full px-2">
                                 <label for="payment_method">{{ __('Payment Method') }} <span
                                         class="text-red-500">*</span></label>
                                 <select
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="payment_method" id="payment_method" required>
                                     <option value="Cash">{{ __('Cash') }}</option>
                                     <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
@@ -52,7 +52,7 @@
                             <div class="mb-4 w-full">
                                 <label for="note">{{ __('Note (If Needed)') }}</label>
                                 <textarea name="note" id="note" rows="5"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"></textarea>
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                             </div>
                         </div>
                     </div>

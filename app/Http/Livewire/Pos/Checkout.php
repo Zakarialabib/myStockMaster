@@ -13,7 +13,10 @@ use Livewire\Component;
 class Checkout extends Component
 {
 
-    public $listeners = ['productSelected', 'discountModalRefresh', 'checkoutModal'];
+    public $listeners = [
+    'productSelected', 'discountModalRefresh', 'checkoutModal',
+    'refreshCustomers'
+    ];  
 
     public $cart_instance;
     public $customers;
@@ -29,6 +32,10 @@ class Checkout extends Component
     public $total_amount;
     public $checkoutModal;
 
+    public $refreshCustomers;
+
+    public $initListsForFields = [];
+
     public function mount($cartInstance, $customers) {
         $this->cart_instance = $cartInstance;
         $this->customers = $customers;
@@ -40,6 +47,7 @@ class Checkout extends Component
         $this->discount_type = [];
         $this->item_discount = [];
         $this->total_amount = 0;
+        $this->initListsForFields();
         
     }
 
@@ -220,5 +228,14 @@ class Checkout extends Component
         ]]);
     }
 
+     protected function initListsForFields(): void
+    {
+        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
+    }
+    
+    public function refreshCustomers()
+    {
+        $this->initListsForFields();
+    }
 
 }

@@ -5,7 +5,7 @@
                 <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="start_date" :value="__('Start Date')" required />
                         <input wire:model.defer="start_date" type="date"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="start_date">
                         @error('start_date')
                             <span class="text-danger mt-1">{{ $message }}</span>
@@ -15,7 +15,7 @@
                 <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="end_date" :value="__('End Date')" required />
                         <input wire:model.defer="end_date" type="date"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="end_date">
                         @error('end_date')
                             <span class="text-danger mt-1">{{ $message }}</span>

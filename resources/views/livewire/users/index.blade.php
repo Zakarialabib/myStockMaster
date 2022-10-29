@@ -16,7 +16,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <input type="text" wire:model.debounce.300ms="search"
-                class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                 placeholder="{{ __('Search') }}" />
         </div>
     </div>
@@ -203,7 +203,7 @@
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                         <label for="role">{{__('Role')}} <span class="text-red-500">*</span></label>
                         <select wire:model.defer="user.role"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="role" id="role" required>
                             <option value="" selected disabled>{{ __('Select Role') }}</option>
                             @foreach (\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)

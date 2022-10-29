@@ -3,7 +3,7 @@
         <div class="md:w-1/3 px-2">
             <x-label for="category" :value="__('Product Category')" />
             <select wire:model="category"
-                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                 <option value="">{{ __('All Products') }}</option>
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -13,13 +13,13 @@
         <div class="md:w-1/3 px-2">
             <x-label for="warehouse" :value="__('Warehouse')" />
             <x-select-list
-                class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                 required id="warehouses" name="warehouses" wire:model="warehouse_id" :options="$this->listsForFields['warehouses']" />
         </div>
         <div class="md:w-1/3 px-2">
             <x-label for="showCount" :value="__('Product per page')" />
             <select wire:model="showCount"
-                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                 <option value="9">9</option>
                 <option value="15">15</option>
                 <option value="21">21</option>

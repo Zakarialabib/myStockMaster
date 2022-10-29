@@ -16,7 +16,7 @@
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="my-2 my-md-0">
                 <input type="text" wire:model.debounce.300ms="search"
-                    class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
             </div>
         </div>
@@ -125,15 +125,11 @@
                                         </x-dropdown-link>
 
                                         @can('access_sale_payments')
-                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})" primary
-                                                wire:loading.attr="disabled">
+                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})"
+                                                primary wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Payments') }}
                                             </x-dropdown-link>
-                                            {{-- <x-dropdown-link href="{{ route('sale-payments.index', $sale->id) }}" success
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                </x-dropdown-link> --}}
                                         @endcan
                                         @can('access_sale_payments')
                                             @if ($sale->due_amount > 0)
@@ -360,12 +356,83 @@
     <div>
         {{-- if showPayments livewire proprety empty don't show --}}
         @if (empty($showPayments))
-
-        <livewire:sales.payment.index :sale="$sale" />
-
+            <livewire:sales.payment.index :sale="$sale" />
         @endif
     </div>
     {{-- End Sales Payment payment component   --}}
+
+    @if(!empty($paymentModal))
+        <div>
+            <x-modal wire:model="paymentModal">
+            <x-slot name="title">
+                <h2 class="text-lg font-medium text-gray-900">
+                    {{ __('Sale Payment') }} 
+                </h2>
+
+                </x-slot>
+                <x-slot name="content">
+                    <form wire:submit.prevent="paymentSave">
+
+                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
+                        <div class="flex flex-wrap -mx-1">
+                            
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <x-label for="reference" :value="__('Reference')" required />
+                                <x-input type="text" wire:model="reference" id="reference"
+                                    class="block w-full mt-1" required />
+                                <x-input-error :messages="$errors->first('reference')" />
+                            </div>
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <x-label for="date" :value="__('Date')" required />
+                                <x-input type="date" wire:model="date" id="date" class="block w-full mt-1"
+                                    required />
+                                <x-input-error :messages="$errors->first('date')" />
+                            </div>
+
+
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <x-label for="amount" :value="__('Amount')" required />
+                                <x-input type="text" wire:model.defer="amount" id="amount" class="block w-full mt-1"
+                                    required />
+                                <x-input-error :messages="$errors->first('amount')" />
+                            </div>
+
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <x-label for="payment_method" :value="__('Payment Method')" required />
+                                <select wire:model="payment_method"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                    name="payment_method" id="payment_method" required>
+                                    <option value="Cash">{{ __('Cash') }}</option>
+                                    <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
+                                    <option value="Cheque">{{ __('Cheque') }}</option>
+                                    <option value="Other">{{ __('Other') }}</option>
+                                </select>
+                                <x-input-error :messages="$errors->first('payment_method')" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4  px-4">
+                            <x-label for="note" :value="__('Note')" />
+                            <textarea wire:model="note" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                rows="2" name="note">{{ old('note') }}</textarea>
+                        </div>
+
+                        <div class="w-full flex justfiy-start">
+                            
+                            <x-button wire:click="paymentSave" primary type="button" wire:loading.attr="disabled">
+                                {{ __('Save') }}
+                            </x-button>
+                            <x-button wire:click="$set('paymentModal', false)" type="button" secondary>
+                                {{ __('Cancel') }}
+                            </x-button>
+
+                        </div>
+                    </form>
+                </x-slot>
+            </x-modal>
+        </div>
+    @endif
 
 
 </div>

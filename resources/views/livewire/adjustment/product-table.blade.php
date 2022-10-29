@@ -41,23 +41,23 @@
                         </td>
                         <input type="hidden" name="product_ids[]" value="{{ $product['product']['id'] ?? $product['id'] }}">
                         <td class="align-middle">
-                            <input type="number" name="quantities[]" min="1" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $product['quantity'] ?? 1 }}">
+                            <input type="number" name="quantities[]" min="1" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" value="{{ $product['quantity'] ?? 1 }}">
                         </td>
                         <td class="align-middle">
                             @if(isset($product['type']))
                                 @if($product['type'] == 'add')
-                                    <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                                    <select name="types[]" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                         <option value="add" selected>(+) Addition</option>
                                         <option value="sub">(-) Subtraction</option>
                                     </select>
                                 @elseif($product['type'] == 'sub')
-                                    <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                                    <select name="types[]" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                         <option value="sub" selected>(-) Subtraction</option>
                                         <option value="add">(+) Addition</option>
                                     </select>
                                 @endif
                             @else
-                                <select name="types[]" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                                <select name="types[]" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                     <option value="add">(+) Addition</option>
                                     <option value="sub">(-) Subtraction</option>
                                 </select>

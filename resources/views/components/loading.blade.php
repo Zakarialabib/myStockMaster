@@ -1,1 +1,1 @@
-<i class="fas fa-spinner fa-spin fa-fw"></i>
+<i class="fas fa-spinner fa-spin fa-fw h-24 w-24"></i>

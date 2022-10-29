@@ -13,7 +13,7 @@
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "jantinnerezo/livewire-alert": "^2.2",
         "laravel-notification-channels/telegram": "^2.1",
-        "laravel/framework": "^9.19",
+        "laravel/framework": "^9.35",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",

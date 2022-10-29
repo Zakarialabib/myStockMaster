@@ -14,6 +14,7 @@ use App\Exports\ProductExport;
 use App\Imports\ProductImport;
 use App\Models\Brand;
 use Illuminate\Support\Str;
+use App\Models\Warehouse;
 
 class ProductPage extends Component
 {
@@ -234,5 +235,6 @@ class ProductPage extends Component
     {
         $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
         $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
+        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
     }
 }

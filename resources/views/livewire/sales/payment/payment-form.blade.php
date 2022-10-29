@@ -7,7 +7,7 @@
         </x-slot>
         <x-slot name="content">
             <form wire:submit.prevent="save">
-
+                {{-- @dd($sale->id) --}}
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                 <div class="flex flex-wrap -mx-1">
@@ -36,7 +36,7 @@
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <x-label for="payment_method" :value="__('Payment Method')" required />
                         <select wire:model="payment_method"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="payment_method" id="payment_method" required>
                             <option value="Cash">{{ __('Cash') }}</option>
                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
@@ -50,7 +50,7 @@
                 <div class="mb-4">
                     <x-label for="note" :value="__('Note')" />
                     <textarea wire:model="note"
-                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="4"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="4"
                         name="note">{{ old('note') }}</textarea>
                 </div>
 

@@ -104,7 +104,7 @@
                 <div class="mb-4">
                     <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
                     <input wire:model.lazy="global_tax" type="number"
-                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="tax_percentage" min="0" max="100" value="{{ $global_tax }}" required>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 <div class="mb-4">
                     <label for="discount_percentage">{{ __('Discount (%)') }}</label>
                     <input wire:model.lazy="global_discount" type="number"
-                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="discount_percentage" min="0" max="100" value="{{ $global_discount }}" required>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                 <div class="mb-4">
                     <label for="shipping_amount">{{ __('Shipping') }}</label>
                     <input wire:model.lazy="shipping" type="number"
-                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="shipping_amount" min="0" value="0" required step="0.01">
                 </div>
             </div>

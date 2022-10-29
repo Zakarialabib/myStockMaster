@@ -16,8 +16,6 @@ class PaymentForm extends Component
        'paymentModal','refreshIndex','save'
     ];
 
-    public SalePayment $salePayment;
-
     public $paymentModal;
 
     public $refreshIndex;
@@ -48,26 +46,29 @@ class PaymentForm extends Component
         'payment_method' => 'required|string|max:255'
     ];
 
+    // todo : show amount due in amount field
+        // make new refrence number
+        // make today date
 
-    public function mount($salepayment)
+    public function mount(Sale $sale)
     {
-        $this->salepayment = $salepayment ?? new SalePayment();
-
-        $this->date = Carbon::now()->format('Y-m-d');
-
-        $this->amount = $this->salepayment->sale->due_amount;
         
+        $this->sale = $sale;
+        $this->date = Carbon::now()->format('Y-m-d');
+        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->amount = $sale->due_amount;
     }
 
     // show sale Payments modal
 
-    public function paymentModal($salepayment)
+    public function paymentModal($sale)
     {
         abort_if(Gate::denies('access_sales'), 403);
         
-        $this->salepayment = $salepayment;
+        $this->sale_id = $sale;
 
         $this->paymentModal = true;
+    
     }
 
     public function save()
@@ -77,7 +78,7 @@ class PaymentForm extends Component
             
             $this->validate();
             
-            $this->sale_id = $this->salepayment->sale->id;
+            $this->sale = $this->salepayment->sale->id;
 
             SalePayment::create([
                 'date' => $this->date,

@@ -109,7 +109,7 @@ class Index extends Component
 
         $categories = $query->paginate($this->perPage);
 
-        return view('livewire.categories.index', compact('categories'));
+        return view('livewire.categories.index', compact('categories'))->extends('layouts.app');
     }
 
     public function editModal(Category $category)

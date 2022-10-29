@@ -13,12 +13,19 @@ class Create extends Component
     
     public $listeners = ['createCategory'];
     
+    public $code , $name;
+
     public $createCategory;
     
-    public array $rules = [
-        'category.code' => '',
-        'category.name' => 'required',
+    protected $rules = [
+        'code' => 'nullable|string|max:255',
+        'name' => 'required|string|max:255',
     ];
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function mount(Category $category)
     {
@@ -43,13 +50,13 @@ class Create extends Component
 
     public function create()
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->category->save();
+        Category::create($validatedData);
 
-        $this->emit('refreshIndex');
-        
         $this->alert('success', 'Category created successfully.');
+        
+        $this->emit('refreshIndex');
         
         $this->createCategory = false;
     }

@@ -12,6 +12,8 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Imports\SaleImport;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Index extends Component
 {
@@ -21,7 +23,8 @@ class Index extends Component
 
     public $listeners = [
     'confirmDelete', 'delete', 'showModal',
-    'importModal', 'import' , 'refreshIndex'
+    'importModal', 'import' , 'refreshIndex',
+    'paymentModal', 'paymentSave', 
     ];
 
     public $refreshIndex;
@@ -29,6 +32,8 @@ class Index extends Component
     public $showModal;
     
     public $importModal;    
+
+    public $paymentModal;
 
     public int $perPage;
 
@@ -91,7 +96,7 @@ class Index extends Component
         'paid_amount' => 'required|numeric',
         'status' => 'required|string|max:255',
         'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000'
+        'note' => 'string|max:1000'
     ];
 
     public function mount()
@@ -143,7 +148,9 @@ class Index extends Component
         abort_if(Gate::denies('delete_sales'), 403);
 
         $product->delete();
-
+        
+        $this->emit('refreshIndex');
+        
         $this->alert('success', 'Sale deleted successfully.');
     }
 
@@ -173,14 +180,85 @@ class Index extends Component
 
         $this->alert('success', 'Sales imported successfully');
 
-        $this->importModal = false;
+        $this->emit('refreshIndex');
 
+        $this->importModal = false;
+        
+
+    }
+
+    //  Payment modal
+
+    public function paymentModal(Sale $sale)
+    {
+        abort_if(Gate::denies('access_sales'), 403);
+
+        $this->sale = $sale;
+        $this->date = Carbon::now()->format('Y-m-d');
+        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->amount = $sale->due_amount;
+        $this->payment_method = 'Cash';
+        // $this->note = '';
+        $this->sale_id = $sale->id;
+        $this->paymentModal = true;
+    }
+
+    public function paymentSave(){
+        DB::transaction(function () {
+            
+            $this->validate(
+                [
+                    'date' => 'required|date',
+                    'reference' => 'required|string|max:255',
+                    'amount' => 'required|numeric',
+                    'payment_method' => 'required|string|max:255',
+                ]
+            );
+            
+            $sale = Sale::find($this->sale_id);
+
+            SalePayment::create([
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'sale_id' => $this->sale_id,
+                'payment_method' => $this->payment_method,
+            ]);
+
+            $sale = Sale::findOrFail($this->sale_id);
+        
+            $due_amount = $sale->due_amount - $this->amount;
+
+            if ($due_amount == $sale->total_amount) {
+                $payment_status = Sale::PaymentDue;
+            } elseif ($due_amount > 0) {
+                $payment_status = Sale::PaymentPartial;
+            } else {
+                $payment_status = Sale::PaymentPaid;
+            }
+
+            $sale->update([
+                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
+                'payment_status' => $payment_status
+            ]);
+        
+            $this->emit('refreshIndex');
+        
+            $this->paymentModal = false;
+
+        }); 
     }
 
     protected function initListsForFields(): void
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
+    
+    public function refreshCustomers()
+    {
+        $this->initListsForFields();
+    }
 
-  
 }

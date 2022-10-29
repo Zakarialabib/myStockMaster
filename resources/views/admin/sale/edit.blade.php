@@ -60,7 +60,7 @@
                             <div class="mb-4">
                                 <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
                                 <input type="text" id="reference"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="reference" value="{{ $sale->reference }}" readonly>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                                     <label for="customer_id">{{ __('Customer') }} <span
                                             class="text-red-500">*</span></label>
                                     <select
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="customer_id" id="customer_id" required>
                                         @foreach (\App\Models\Customer::all() as $customer)
                                             <option {{ $sale->customer_id == $customer->id ? 'selected' : '' }}
@@ -85,7 +85,7 @@
                                 <div class="mb-4">
                                     <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
                                     <input type="date"
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="date" required value="{{ $sale->date }}">
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                             <div class="mb-4">
                                 <label for="status">{{ __('Status') }} <span class="text-red-500">*</span></label>
                                 <select
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="status" id="status" required>
                                     <option {{ $sale->status == 'Pending' ? 'selected' : '' }} value="Pending">
                                         {{ __('Pending') }}</option>
@@ -116,7 +116,7 @@
                                     <label for="payment_method">{{ __('Payment Method') }} <span
                                             class="text-red-500">*</span></label>
                                     <input type="text"
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="payment_method" required value="{{ $sale->payment_method }}" readonly>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
                                 <label for="paid_amount">{{ __('Amount Received') }} <span
                                         class="text-red-500">*</span></label>
                                 <input id="paid_amount" type="text"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="paid_amount" required value="{{ $sale->paid_amount }}" readonly>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                     <div class="mb-4">
                         <label for="note">{{ __('Note (If Needed)') }}</label>
                         <textarea name="note" id="note" rows="5"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">{{ $sale->note }}</textarea>
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $sale->note }}</textarea>
                     </div>
 
                     <div class="mt-3">

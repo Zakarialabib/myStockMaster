@@ -10,34 +10,34 @@
                         <x-label for="company_name" :value="__('Company Name')" required />
                         <input type="text" wire:model.defer="settings.company_name" id="company_name"
                             name="company_name"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required>
                     </div>
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <x-label for="company_email" :value="__('Company Email')" required />
                         <input type="text" wire:model.defer="settings.company_email" id="company_email"
                             name="company_email" required
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     </div>
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <x-label for="company_phone" :value="__('Company Phone')" required />
                         <input type="text" wire:model.defer="settings.company_phone" id="company_phone"
                             name="company_phone" required
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         <x-label for="company_address" :value="__('Company Address')" required />
                         <input type="text" wire:model.defer="settings.company_address" id="company_address"
                             name="company_address"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                         <x-label for="company_tax" :value="__('Company Tax')" />
                         <input type="text" wire:model.defer="settings.company_tax" id="company_tax"
                             name="company_tax"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     </div>
 
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
@@ -50,7 +50,7 @@
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <x-label for="default_currency_position" :value="__('Default currency position')" required />
                         <select name="default_currency_position" id="default_currency_position"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required>
                             <option {{ $settings->default_currency_position == 'prefix' ? 'selected' : '' }}
                                 value="prefix">{{ __('Prefix') }}</option>
@@ -63,7 +63,7 @@
                         <x-label for="footer_text" :value="__('Footer Text')" required />
                         <input wire:model.defer="settings.footer_text" disabled type="text" id="footer_text"
                             name="footer_text"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" />
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
@@ -82,14 +82,14 @@
                         <x-label for="invoice_footer" :value="__('Invoice Footer')" />
                         <input wire:model.defer="settings.invoice_footer" type="text" id="invoice_footer"
                             name="invoice_footer"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" />
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                         <x-label for="invoice_prefix" :value="__('Invoice Prefix')" />
                         <input wire:model.defer="settings.invoice_prefix" type="text" id="invoice_prefix"
                             name="invoice_prefix"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" />
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
                     </div>
                     <div class="w-full flex justify-center md:w-1/3 px-4 mb-4 md:mb-0">
                         <div class="px-2">

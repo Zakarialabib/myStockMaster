@@ -66,7 +66,7 @@
                             <div class="mb-4">
                                 <label for="name">{{ __('Name') }} <span class="text-red-500">*</span></label>
                                 <input
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     type="text" name="name" required value="{{ auth()->user()->name }}">
                                 @error('name')
                                     <p class="text-danger">{{ $message }}</p>
@@ -75,7 +75,7 @@
                             <div class="mb-4">
                                 <label for="email">{{ __('Email') }} <span class="text-red-500">*</span></label>
                                 <input
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     type="email" name="email" required value="{{ auth()->user()->email }}">
                                 @error('email')
                                     <p class="text-danger">{{ $message }}</p>
@@ -100,7 +100,7 @@
                                 <label for="current_password">{{ __('Current Password') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="password"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="current_password" required>
                                 @error('current_password')
                                     <p class="text-danger">{{ $message }}</p>
@@ -110,7 +110,7 @@
                                 <label for="password">{{ __('New Password') }} <span
                                         class="text-danger">*</span></label>
                                 <input
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     type="password" name="password" required>
                                 @error('password')
                                     <p class="text-danger">{{ $message }}</p>
@@ -120,7 +120,7 @@
                                 <label for="password_confirmation">{{ __('Confirm Password') }} <span
                                         class="text-danger">*</span></label>
                                 <input
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     type="password" name="password_confirmation" required>
                                 @error('password_confirmation')
                                     <p class="text-danger">{{ $message }}</p>

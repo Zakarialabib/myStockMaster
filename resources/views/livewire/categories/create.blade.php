@@ -11,14 +11,14 @@
 
             <form wire:submit.prevent="create">
                 <div>
-                    <x-input id="code" type="text" name="code"
-                        wire:model.defer="category.code" hidden />
+                    <x-input id="code" type="hidden" name="code"
+                        wire:model="code" />
 
                     <div class="my-4">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.defer="category.name" />
-                        <x-input-error :messages="$errors->get('category.name')" for="category.name" class="mt-2" />
+                            wire:model="name" />
+                        <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
 
                     <div class="w-full flex justify-start space-x-2">

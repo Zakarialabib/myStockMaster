@@ -24,7 +24,7 @@
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                         <label for="role">{{__('Role')}} <span class="text-red-500">*</span></label>
                         <select wire:model.defer="user.role"
-                            class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="role" id="role" required>
                             <option value="" selected disabled>{{ __('Select Role') }}</option>
                             @foreach (\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)

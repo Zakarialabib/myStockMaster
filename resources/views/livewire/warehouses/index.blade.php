@@ -36,7 +36,10 @@
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
-                {{ __('Phone') }}
+                {{ __('Products Quantity') }}
+            </x-table.th>
+            <x-table.th>
+                {{ __('Stock Value') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
@@ -51,10 +54,14 @@
                         <input type="checkbox" value="{{ $warehouse->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        {{ $warehouse->name }}
+                        {{ $warehouse->name }} -{{ $warehouse->phone }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $warehouse->phone }}
+                        {{-- calculate quantity of all products in this category --}}
+                        {{ $warehouse->products->sum('pivot.quantity') }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $warehouse->products->sum('pivot.quantity') * $warehouse->products->sum('pivot.cost') }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">

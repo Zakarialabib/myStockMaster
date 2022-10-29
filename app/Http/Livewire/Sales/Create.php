@@ -1,28 +1,23 @@
 <?php
 
-namespace App\Http\Livewire\Pos;
+namespace App\Http\Livewire\Sales;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
-use App\Models\Customer;
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\Category;
+use App\Models\Customer;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Index extends Component
+class Create extends Component
 {
-    
     use LivewireAlert;
 
-    public $listeners = [
-        'refreshPos', 'productSelected', 
-        'discountModalRefresh', 'checkoutModal',
-        'refreshCustomers'
-        ];  
+    public $listeners = ['productSelected', 'discountModalRefresh','proceed'];
 
     public $cart_instance;
     public $customers;
@@ -33,31 +28,21 @@ class Index extends Component
     public $check_quantity;
     public $discount_type;
     public $item_discount;
+    public $tax_percentage;
+    public $discount_percentage;
     public $data;
     public $customer_id;
     public $total_amount;
-    public $checkoutModal;
-    public $product;
-    public $price;
     public $paid_amount;
-    public $tax_percentage;
-    public $discount_percentage;
-    public $discount_amount;
-    public $tax_amount;
-    public $grand_total;
-    public $shipping_amount;
-    public $payment_method;
     public $note;
-    public $refreshCustomers;
-    
-    public array $listsForFields = [];
+    public $payment_method = 'cash';
 
     public function rules()
     {
         return [
             'customer_id' => 'required|numeric',
-            'tax_percentage' => 'required|integer|min:0|max:100',
-            'discount_percentage' => 'required|integer|min:0|max:100',
+            'tax_percentage' => 'integer|min:0|max:100',
+            'discount_percentage' => 'integer|min:0|max:100',
             'shipping_amount' => 'numeric',
             'total_amount' => 'required|numeric',
             'paid_amount' => 'numeric',
@@ -65,37 +50,27 @@ class Index extends Component
         ];
     }
 
+    public array $listsForFields = [];
+    
     protected function initListsForFields(): void
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
-    }
-    
-    public function refreshCustomers()
-    {
-        $this->initListsForFields();
+        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
     }
 
     public function mount($cartInstance) {
-        
         $this->cart_instance = $cartInstance;
-        
-        $this->customers = Customer::all();
-
-        $this->global_discount = 0;
-        $this->global_tax = 0;
-        $this->shipping = 0.00;
+        $this->discount_percentage = 0;
+        $this->tax_percentage = 0;
+        $this->shipping_amount = 0;
         $this->check_quantity = [];
         $this->quantity = [];
         $this->discount_type = [];
         $this->item_discount = [];
-        $this->payment_method = 'cash';
-        
-        $this->tax_percentage = 0;
-        $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
+        $this->total_amount = 0;
+        // paid_amount
         $this->paid_amount = $this->total_amount;
-
-        $this->initListsForFields();    
+        $this->initListsForFields();
     }
 
     public function hydrate() {
@@ -104,18 +79,25 @@ class Index extends Component
     }
 
     public function render() {
-
-
         $cart_items = Cart::instance($this->cart_instance)->content();
-
-        return view('livewire.pos.index', [
+        
+        return view('livewire.sales.create', [
             'cart_items' => $cart_items
         ]);
     }
 
-    public function store() {
+    public function proceed() {
+        if ($this->customer_id != null) {
 
-        try{
+            $this->save();
+
+        } else {
+            $this->alert('error', 'Please select a customer!');
+        }
+    }
+
+    public function save() {
+
         $this->validate();
 
         $due_amount = $this->total_amount - $this->paid_amount;
@@ -183,23 +165,6 @@ class Index extends Component
 
         $this->alert('success', 'Sale created successfully!');
 
-        $this->checkoutModal = false;
-
-        } catch (\Exception $e) {
-            $this->alert('error', $e->getMessage());
-        }
-}
-
-    public function refreshPos() {
-        $this->reset();
-    }
-
-    public function proceed() {
-        if ($this->customer_id != null) {
-            $this->checkoutModal = true;
-        } else {
-            $this->alert('error', __('Please select a customer!'));
-        }
     }
 
     public function calculateTotal() {
@@ -218,7 +183,7 @@ class Index extends Component
         });
 
         if ($exists->isNotEmpty()) {
-            $this->alert('error', 'Product already added to cart!');
+            $this->alert('error', __('Product already added to cart!'));
 
             return;
         }
@@ -262,8 +227,7 @@ class Index extends Component
 
     public function updateQuantity($row_id, $product_id) {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
-           
-            $this->alert('error', 'Quantity not available in stock!');
+            $this->alert('error', __('Quantity is greater than stock!'));
 
             return;
         }
@@ -273,27 +237,6 @@ class Index extends Component
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
 
         Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $cart_item->options->product_discount,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-            ]
-        ]);
-    }
-    public function updatePrice($row_id, $product_id) {
-
-        Cart::instance($this->cart_instance)->update($row_id, $this->price[$product_id]);
-
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'price' => $this->price[$product_id],
             'options' => [
                 'sub_total'             => $cart_item->price * $cart_item->qty,
                 'code'                  => $cart_item->options->code,
@@ -337,7 +280,7 @@ class Index extends Component
 
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
-        $this->alert('success', 'Product discount set successfully!');
+        $this->alert('success', __('Product discount updated!'));
     }
 
     public function calculate($product) {
@@ -374,10 +317,10 @@ class Index extends Component
             'unit'                 => $cart_item->options->unit,
             'product_tax'           => $cart_item->options->product_tax,
             'unit_price'            => $cart_item->options->unit_price,
-            'product_discount'      => $this->discount_amount,
+            'product_discount'      => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }
 
-  
+
 }

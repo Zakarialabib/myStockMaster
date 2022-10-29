@@ -29,7 +29,7 @@
                                 <x-table.td>{{ $product->code }}</x-table.td>
                                 <x-table.td style="width: 200px;">
                                     <input wire:model="quantity"
-                                        class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         type="number" min="1" max="100" value="{{ $quantity }}">
                                 </x-table.td>
                             @else

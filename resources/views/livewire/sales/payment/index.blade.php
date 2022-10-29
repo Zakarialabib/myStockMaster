@@ -62,9 +62,4 @@
         </x-slot>
     </x-modal>
 
-    {{-- Sales Payment payment modal   --}}
-
-    <div>
-        <livewire:sales.payment.payment-form :salepayment="$salepayment" />
-    </div>
 </div>

@@ -32,7 +32,7 @@
                     @endif
                     <div class="mb-4">
                         <label>{{__('Discount')}} Type <span class="text-red-500">*</span></label>
-                        <select wire:model="discount_type.{{ $cart_item->id }}" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" required>
+                        <select wire:model="discount_type.{{ $cart_item->id }}" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
                             <option value="fixed">Fixed</option>
                             <option value="percentage">Percentage</option>
                         </select>
@@ -40,10 +40,10 @@
                     <div class="mb-4">
                         @if($discount_type[$cart_item->id] == 'percentage')
                             <label>Discount(%) <span class="text-red-500">*</span></label>
-                            <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $item_discount[$cart_item->id] }}" min="0" max="100">
+                            <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" value="{{ $item_discount[$cart_item->id] }}" min="0" max="100">
                         @elseif($discount_type[$cart_item->id] == 'fixed')
                             <label>{{__('Discount')}} <span class="text-red-500">*</span></label>
-                            <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $item_discount[$cart_item->id] }}">
+                            <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" value="{{ $item_discount[$cart_item->id] }}">
                         @endif
                     </div>
                 </div>

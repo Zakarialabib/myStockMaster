@@ -2,7 +2,7 @@
     <div class="p-2">
         <div class="mb-2 md:mb-0">
             <input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="text"
-                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                 placeholder="{{ __('Type product name or code....') }}">
         </div>
     </div>

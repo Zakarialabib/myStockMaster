@@ -37,6 +37,12 @@
                 {{ __('Products count') }}
             </x-table.th>
             <x-table.th>
+                {{ __('Stock count') }}
+            </x-table.th>
+            <x-table.th>
+                {{ __('Stock Value') }}
+            </x-table.th>
+            <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
             </tr>
@@ -54,7 +60,20 @@
                         {{ $category->name }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $category->products_count }}
+                        @php($productsCount = $category->products->count())
+                        {{ $productsCount }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{-- calculate quantity of all products in this category --}}
+                        @php($stockCount = $category->products->sum('quantity'))
+                        {{ $stockCount }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{-- calculate quantity and cost = stock value --}}
+                        @php($stockValue = $category->products->sum(function($product) {
+                            return $product->quantity * $product->cost;
+                        }))
+                        {{ $stockValue }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -146,12 +165,12 @@
             <div>
                 <div class="mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         type="text" name="code" wire:model.defer="category.code" disabled />
                 </div>
                 <div class="mb-4">
                     <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         type="text" name="name" wire:model.defer="category.name" disabled />
                 </div>
 

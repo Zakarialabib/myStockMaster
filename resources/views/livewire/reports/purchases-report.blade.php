@@ -7,7 +7,7 @@
                         <div class="mb-4">
                             <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
                             <input wire:model.defer="start_date" type="date"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="start_date">
                             @error('start_date')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -18,7 +18,7 @@
                         <div class="mb-4">
                             <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
                             <input wire:model.defer="end_date" type="date"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="end_date">
                             @error('end_date')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -29,7 +29,7 @@
                         <div class="mb-4">
                             <label>{{ __('Supplier') }}</label>
                             <select wire:model.defer="supplier_id"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="supplier_id">
                                 <option value="">{{ __('Select Supplier') }}</option>
                                 @foreach ($suppliers as $supplier)
@@ -44,7 +44,7 @@
                         <div class="mb-4">
                             <label>{{ __('Status') }}</label>
                             <select wire:model.defer="purchase_status"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="purchase_status">
                                 <option value="">{{ __('Select Status') }}</option>
                                 <option value="Pending">{{ __('Pending') }}</option>
@@ -57,7 +57,7 @@
                         <div class="mb-4">
                             <label>{{ __('Payment Status') }}</label>
                             <select wire:model.defer="payment_status"
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="payment_status">
                                 <option value="">{{ __('Select Payment Status') }}</option>
                                 <option value="Paid">{{ __('Paid') }}</option>

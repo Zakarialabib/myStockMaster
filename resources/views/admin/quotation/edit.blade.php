@@ -30,14 +30,14 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
-                                        <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required value="{{ $quotation->reference }}" readonly>
+                                        <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="reference" required value="{{ $quotation->reference }}" readonly>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="customer_id">Customer <span class="text-red-500">*</span></label>
-                                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="customer_id" id="customer_id" required>
+                                            <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="customer_id" id="customer_id" required>
                                                 @foreach(\App\Models\Customer::all() as $customer)
                                                     <option {{ $quotation->customer_id == $customer->id ? 'selected' : '' }} value="{{ $customer->id }}">{{ $customer->name }}</option>
                                                 @endforeach
@@ -49,7 +49,7 @@
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
-                                            <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required value="{{ $quotation->getAttributes()['date'] }}">
+                                            <input type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="date" required value="{{ $quotation->getAttributes()['date'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="status">{{__('Status')}} <span class="text-red-500">*</span></label>
-                                        <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="status" id="status" required>
+                                        <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="status" id="status" required>
                                             <option {{ $quotation->status == 'Pending' ? 'selected' : '' }} value="Pending">{{__('Pending')}}</option>
                                             <option {{ $quotation->status == 'Sent' ? 'selected' : '' }} value="Sent">Sent</option>
                                         </select>
@@ -71,7 +71,7 @@
 
                             <div class="mb-4">
                                 <label for="note">Note (If Needed)</label>
-                                <textarea name="note" id="note" rows="5" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">{{ $quotation->note }}</textarea>
+                                <textarea name="note" id="note" rows="5" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $quotation->note }}</textarea>
                             </div>
 
                             <div class="mt-3">

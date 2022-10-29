@@ -15,15 +15,22 @@ class Create extends Component
     public $listeners = ['createCustomer'];
     
     public $createCustomer; 
+    
+    public $name, $email ,$phone, $city, $country ,$address, $tax_number;
 
-    public array $rules = [
-        'customer.name' => 'required|string|max:255',
-        'customer.email' => 'nullable|max:255',
-        'customer.phone' => 'required|numeric',
-        'customer.city' => 'nullable',
-        'customer.country' => 'nullable',
-        'customer.address' => 'nullable',
-        'customer.tax_number' => 'nullable',
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'nullable|max:255',
+        'phone' => 'required|numeric',
+        'city' => 'nullable',
+        'country' => 'nullable',
+        'address' => 'nullable',
+        'tax_number' => 'nullable',
     ];
 
     public function mount(Customer $customer)
@@ -49,9 +56,9 @@ class Create extends Component
 
     public function create()
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->customer->save();
+        Customer::create($validatedData);
 
         if($this->customer) {
             $wallet = Wallet::create([

@@ -33,7 +33,7 @@
                         <div class="p-4">
                             <div class="mb-4">
                                 <label for="name">{{__('Role Name')}} <span class="text-red-500">*</span></label>
-                                <input class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" type="text" name="name" required>
+                                <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" type="text" name="name" required>
                             </div>
 
                             <hr>

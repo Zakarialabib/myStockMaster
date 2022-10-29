@@ -29,27 +29,27 @@
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                                     <div class="mb-4">
                                         <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
-                                        <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="reference" required readonly value="INV/{{ $purchase_return->reference }}">
+                                        <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="reference" required readonly value="INV/{{ $purchase_return->reference }}">
                                     </div>
                                 </div>
                                 <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
                                     <div class="mb-4">
                                         <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
-                                        <input type="date" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="date" required value="{{ now()->format('Y-m-d') }}">
+                                        <input type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="date" required value="{{ now()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                             
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="due_amount">{{__('Due Amount')}} <span class="text-red-500">*</span></label>
-                                        <input type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="due_amount" required value="{{ format_currency($purchase_return->due_amount) }}" readonly>
+                                        <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="due_amount" required value="{{ format_currency($purchase_return->due_amount) }}" readonly>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="amount">{{__('Amount')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">
-                                            <input id="amount" type="text" class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="amount" required value="{{ old('amount') }}">
+                                            <input id="amount" type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="amount" required value="{{ old('amount') }}">
                                             <div class="input-group-append">
                                                 <button id="getTotalAmount" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded" type="button">
                                                     <i class="bi bi-check-square"></i>
@@ -62,7 +62,7 @@
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
-                                            <select class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" name="payment_method" id="payment_method" required>
+                                            <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method" id="payment_method" required>
                                                 <option value="Cash">Cash</option>
                                                 <option value="Credit Card">Credit Card</option>
                                                 <option value="Bank Transfer">Bank Transfer</option>
@@ -76,7 +76,7 @@
 
                             <div class="mb-4">
                                 <label for="note">{{__('Note')}}</label>
-                                <textarea class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" rows="4" name="note">{{ old('note') }}</textarea>
+                                <textarea class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="4" name="note">{{ old('note') }}</textarea>
                             </div>
 
                             <input type="hidden" value="{{ $purchase_return->id }}" name="purchase_return_id">
