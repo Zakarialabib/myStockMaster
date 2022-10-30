@@ -4,8 +4,8 @@
             <div class="card border-0 shadow-sm">
                 <div class="p-4">
                     <form wire:submit.prevent="generateReport">
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
                                     <input wire:model.defer="start_date" type="date"
@@ -16,7 +16,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
                                     <input wire:model.defer="end_date" type="date"
@@ -27,7 +27,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Supplier') }}</label>
                                     <select wire:model.defer="supplier_id"
@@ -41,8 +41,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{ __('Status') }}</label>
                                     <select wire:model.defer="purchase_return_status"
@@ -55,7 +55,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{ __('Payment Status') }}</label>
                                     <select wire:model.defer="payment_status"

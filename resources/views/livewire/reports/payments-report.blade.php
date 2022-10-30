@@ -4,8 +4,8 @@
             <div class="card border-0 shadow-sm">
                 <div class="p-4">
                     <form wire:submit.prevent="generateReport">
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Start Date')}} <span class="text-red-500">*</span></label>
                                     <input wire:model.defer="start_date" type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="start_date">
@@ -14,7 +14,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('End Date')}} <span class="text-red-500">*</span></label>
                                     <input wire:model.defer="end_date" type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="end_date">
@@ -24,8 +24,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-wrap -mx-1">
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payments')}}</label>
                                     <select wire:model="payments" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payments">
@@ -40,7 +40,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payment Method')}}</label>
                                     <select wire:model.defer="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method">

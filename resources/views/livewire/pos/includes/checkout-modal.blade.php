@@ -22,7 +22,7 @@
                         <input type="hidden" value="{{ $global_tax }}" name="tax_percentage">
                         <input type="hidden" value="{{ $global_discount }}" name="discount_percentage">
                         <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
-                        <div class="flex flex-wrap -mx-1">
+                        <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="w-full px-2">
                                 <label for="total_amount">{{ __('Total Amount') }} <span
                                         class="text-red-500">*</span></label>

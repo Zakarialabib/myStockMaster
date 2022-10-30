@@ -60,18 +60,22 @@
                         {{ $category->name }}
                     </x-table.td>
                     <x-table.td>
+                        <x-badge type="info">
                         {{ $category->products->count() }}
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        {{-- calculate quantity of all products in this category --}}
+                        <x-badge type="info">
                         {{ $category->products->sum('quantity') }}
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        {{-- calculate quantity and cost = stock value --}}
                         @php($stockValue = $category->products->sum(function($product) {
                             return $product->quantity * $product->cost;
                         }))
-                        {{ $stockValue }}
+                        <x-badge type="info">
+                        {{ number_format($stockValue, 2) }}
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -124,7 +128,8 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
-                <div class="space-y-4 px-4">
+                <div class="mb-6">>
+
                     <div class="mt-4 w-full">
                         <x-label for="code" :value="__('Code')" />
                         <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
@@ -139,12 +144,9 @@
                         <x-input-error :messages="$errors->get('category.name')" for="category.name" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-end">
+                    <div class="w-full flex justify-start">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
-                        </x-button>
-                        <x-button primary type="button" wire:click="$set('editModal', false)">
-                            {{ __('Cancel') }}
                         </x-button>
                     </div>
                 </div>
@@ -160,7 +162,8 @@
         </x-slot>
 
         <x-slot name="content">
-            <div>
+            <div class="flex flex-wrap -mx-2 mb-3">
+
                 <div class="mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
                     <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -172,7 +175,7 @@
                         type="text" name="name" wire:model.defer="category.name" disabled />
                 </div>
 
-                <div class="w-full flex justify-end">
+                <div class="w-full flex justify-start ">
                     <x-button primary type="button" wire:loading.attr="disabled"  wire:click="$set('showModal', false)">
                         {{ __('Close') }}
                     </x-button>
@@ -191,7 +194,7 @@
 
         <x-slot name="content">
             <form wire:submit.prevent="import">
-                <div class="space-y-4">
+                <div class="mb-4">
                     <div class="mt-4">
                         <x-label for="import" :value="__('Import')" />
                         <x-input id="import" class="block mt-1 w-full" type="file" name="import"
@@ -199,12 +202,9 @@
                         <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-end">
+                    <div class="w-full flex justify-start">
                         <x-button primary wire:click="import" type="button" wire:loading.attr="disabled">
                             {{ __('Import') }}
-                        </x-button>
-                        <x-button primary type="button" wire:loading.attr="disabled" wire:click="$set('import', false)">
-                            {{ __('Cancel') }}
                         </x-button>
                     </div>
                 </div>

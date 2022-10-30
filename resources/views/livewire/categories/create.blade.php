@@ -21,18 +21,10 @@
                         <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-start space-x-2">
+                    <div class="w-full flex justify-start">
                         <x-button primary wire:click="create" wire:loading.attr="disabled" type="button">
                             {{ __('Create') }}
                         </x-button>
-
-                        <x-button secondary type="button" wire:loading.attr="disabled" wire:click="$set('createCategory', false)">
-                            {{ __('Cancel') }}
-                        </x-button>
-
-                        <span class="sr-only" wire:loading wire:target="create">
-                            {{ __('Creating...') }}
-                        </span>
                     </div>
                 </div>
             </form>

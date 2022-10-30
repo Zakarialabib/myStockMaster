@@ -1,5 +1,5 @@
 <div>
-    <div class="flex flex-wrap -mx-1">
+    <div class="flex flex-wrap -mx-2 mb-3">
         <div class="md:w-1/3 px-2">
             <x-label for="category" :value="__('Product Category')" />
             <select wire:model="category"

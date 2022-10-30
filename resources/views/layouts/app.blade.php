@@ -28,19 +28,23 @@
             <div class="flex flex-col min-h-screen pl-2"
                 :class="{
                     'lg:ml-64': isSidebarOpen,
-                    // 'md:ml-16': !isSidebarOpen,
+                    'md:ml-16': !isSidebarOpen,
                 }"
                 style="transition-property: margin; transition-duration: 150ms;">
 
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-2 flex-1">
+                <main class="pt-5 px-4 sm:px-6 flex-1">
+                    
                     @yield('breadcrumb')
+                    
                     @yield('content')
+
                     @isset($slot)
                     {{ $slot }}
                     @endisset
+
                 </main>
             </div>
         </div>

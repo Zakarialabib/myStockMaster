@@ -108,7 +108,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
-                <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="flex flex-wrap -mx-2 mb-3">
 
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="name" :value="__('Name')" />
@@ -131,13 +131,11 @@
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-end">
+                    <div class="w-full flex justify-start px-3">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
-                        <x-button primary type="button" wire:click="$set('editModal', false)">
-                            {{ __('Cancel') }}
-                        </x-button>
+                        
                     </div>
                 </div>
             </form>

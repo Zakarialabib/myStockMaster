@@ -1,7 +1,7 @@
 <div>
     <div class="">
         <form wire:submit.prevent="generateReport">
-            <div class="flex flex-wrap -mx-1">
+            <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="lg:w-1/2 sm:w-full px-4">
                         <x-label for="start_date" :value="__('Start Date')" required />
                         <input wire:model.defer="start_date" type="date"
@@ -36,7 +36,7 @@
 
     <div class="flex flex-wrap">
         {{-- Sales --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -51,7 +51,7 @@
             </x-card>
         </div>
         {{-- Sale Returns --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -66,7 +66,7 @@
             </x-card>
         </div>
         {{-- Profit --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -80,7 +80,7 @@
             </x-card>
         </div>
         {{-- Purchases --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -96,7 +96,7 @@
             </x-card>
         </div>
         {{-- Purchase Returns --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -112,7 +112,7 @@
             </x-card>
         </div>
         {{-- Expenses --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -126,7 +126,7 @@
             </x-card>
         </div>
         {{-- Payments Received --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -140,7 +140,7 @@
             </x-card>
         </div>
         {{-- Payments Sent --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">
@@ -154,7 +154,7 @@
             </x-card>
         </div>
         {{-- Payments Net --}}
-        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
             <x-card>
                 <div class="card-body p-3 d-flex items-center">
                     <div class="bg-primary p-3 mfe-3 rounded">

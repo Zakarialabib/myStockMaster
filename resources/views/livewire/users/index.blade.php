@@ -132,7 +132,7 @@
         </x-slot>
 
         <x-slot name="content">
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                     <x-label for="name" :value="__('Name')" />
                     <x-input id="name" class="block mt-1 w-full" disabled type="text"
@@ -168,12 +168,6 @@
                     <x-input id="tax_number" class="block mt-1 w-full" type="text" wire:model.defer="user.tax_number"
                         disabled />
                 </div>
-
-                <div class="flex items-center justify-end mt-4">
-                    <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                        {{ __('Cancel') }}
-                    </x-button>
-                </div>
             </div>
         </x-slot>
     </x-modal>
@@ -185,7 +179,7 @@
 
         <x-slot name="content">
             <form wire:submit.prevent="update">
-                <div class="flex flex-wrap">
+                <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                         <x-label for="name" :value="__('Name')" required />
                         <x-input id="name" class="block mt-1 w-full" type="text" wire:model.defer="user.name"
@@ -262,12 +256,9 @@
                         </x-slot>
                     </x-accordion>
 
-                    <div class="flex items-center justify-end mt-4">
+                    <div class="w-full flex justify-start px-3">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
-                        </x-button>
-                        <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
-                            {{ __('Cancel') }}
                         </x-button>
                     </div>
                 </div>

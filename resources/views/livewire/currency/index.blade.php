@@ -133,7 +133,7 @@
                         wire:model.defer="currency.rate" />
                 </div>
             </div>
-            <div class="flex items-center justify-end mt-4">
+            <div class="w-full flex justify-start px-3">
                 <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
                     {{ __('Close') }}
                 </x-button>
@@ -173,7 +173,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end mt-4">
+                <div class="w-full flex justify-start px-3">
                     <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
                         {{ __('Close') }}
                     </x-button>

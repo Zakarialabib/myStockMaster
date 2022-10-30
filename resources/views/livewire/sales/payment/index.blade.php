@@ -9,9 +9,6 @@
                 <x-button wire:click="$emit('paymentModal', {{ $sale->id}})" primary type="button">
                     {{ __('Add Payment') }}
                 </x-button>
-                <x-button wire:click="$set('showPayments', false)" type="button" secondary>
-                    {{ __('Cancel') }}
-                </x-button>
             </div>
         </x-slot>
         <x-slot name="content">

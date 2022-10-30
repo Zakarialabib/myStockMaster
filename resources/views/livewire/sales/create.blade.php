@@ -91,21 +91,21 @@
             </div>
         </div>
         <div class="flex flex-row">
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="total_amount">{{ __('Total Amount') }} <span class="text-red-500">*</span></label>
                 <input id="total_amount" type="text" wire:model="total_amount"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     name="total_amount" value="{{ $total_amount }}" readonly required>
             </div>
 
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="paid_amount">{{ __('Received Amount') }} <span class="text-red-500">*</span></label>
                 <input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     name="paid_amount" required>
             </div>
 
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="payment_method">{{ __('Payment Method') }} <span class="text-red-500">*</span></label>
                 <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     name="payment_method" id="payment_method" wire:model="payment_method" required>
@@ -118,8 +118,8 @@
         </div>
 
         <x-accordion title="{{ __('Details') }}">
-            <div class="flex flex-wrap -mx-1">
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="flex flex-wrap -mx-2 mb-3">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
                         <input wire:model.lazy="tax_percentage" type="number"
@@ -127,7 +127,7 @@
                             min="0" max="100" required>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="discount_percentage">{{ __('Discount') }} (%)</label>
                         <input wire:model.lazy="discount_percentage" type="number"
@@ -135,7 +135,7 @@
                             min="0" max="100" required>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="shipping_amount">{{ __('Shipping') }}</label>
                         <input wire:model.lazy="shipping_amount" type="number"

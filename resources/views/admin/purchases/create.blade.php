@@ -57,14 +57,14 @@
                 <form id="purchase-form" action="{{ route('purchases.store') }}" method="POST">
                     @csrf
 
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <x-label for="reference" :value="__('Reference')" required />
                             <input type="text"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="reference" required readonly value="PR">
                         </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <x-label for='supplier_id' :value="__('Supplier')" required />
                             <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="supplier_id" id="supplier_id" required>
@@ -75,7 +75,7 @@
                             </select>
 
                         </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <x-label for="date" :value="__('Date')" required />
 
                             <input type="date"
@@ -87,8 +87,8 @@
 
                     <livewire:product-cart :cartInstance="'purchase'" />
 
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
 
                             <x-label for="status" :value="__('Status')" required />
                             <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -98,7 +98,7 @@
                                 <option value="{{ App\Models\Purchase::PurchaseCompleted }}">{{ __('Completed') }}</option>
                             </select>
                         </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <x-label for="payment_method" :value="__('Payment Method')" required />
 
                             <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -109,7 +109,7 @@
                                 <option value="Other">{{ __('Other') }}</option>
                             </select>
                         </div>
-                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <x-label for="paid_amount" :value="__('Amount Paid')" required />
                             <div class="input-group">
                                 <input id="paid_amount" type="text"

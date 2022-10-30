@@ -66,7 +66,7 @@
                         </template>
                     </div>
 
-                    <div class="flex flex-wrap -mx-1">
+                    <div class="flex flex-wrap -mx-2 mb-3">
                         <template x-for="blankday in blankdays">
                             <div style="width: 14.28%" class="p-1 text-sm text-center border border-transparent"></div>
                         </template>

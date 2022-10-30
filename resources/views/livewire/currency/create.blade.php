@@ -10,7 +10,7 @@
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
             <form wire:submit.prevent="create">
-                <div class="flex flex-wrap my-4">
+                <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                         <x-label for="currency.name" :value="__('Name')" required />
                         <x-input id="name" class="block mt-1 w-full" required type="text"
@@ -32,12 +32,9 @@
                             wire:model.defer="currency.exchange_rate" />
                     </div>
                 </div>
-                <div class="w-full flex justify-end  space-x-2">
+                <div class="w-full flex justify-start px-3">
                     <x-button secondary wire:click="$set('createCurrency', false)" wire:loading.attr="disabled">
                         {{ __('Close') }}
-                    </x-button>
-                    <x-button primary wire:click="create" wire:loading.attr="disabled">
-                        {{ __('Create') }}
                     </x-button>
                 </div>
             </form>

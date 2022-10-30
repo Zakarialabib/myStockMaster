@@ -98,8 +98,8 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap -mx-1">
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="flex flex-wrap -mx-2 mb-3">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
                         <input wire:model.lazy="tax_percentage" type="number"
@@ -107,7 +107,7 @@
                             min="0" max="100" value="{{ $global_tax }}" required>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="discount_percentage">{{ __('Discount') }} (%)</label>
                         <input wire:model.lazy="discount_percentage" type="number"
@@ -115,7 +115,7 @@
                             min="0" max="100" value="{{ $global_discount }}" required>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="shipping_amount">{{ __('Shipping') }}</label>
                         <input wire:model.lazy="shipping" type="number"
@@ -156,7 +156,7 @@
                                     wire:mdeol="discount_percentage">
                                 <input type="hidden" value="{{ $shipping }}" name="shipping_amount"
                                     wire:mdeol="shipping_amount">
-                                <div class="flex flex-wrap -mx-1">
+                                <div class="flex flex-wrap -mx-2 mb-3">
                                     <div class="w-full px-2">
                                         <x-label for="total_amount" :value="__('Total Amount')" required />
                                         <input id="total_amount" type="text" wire:model="total_amount"

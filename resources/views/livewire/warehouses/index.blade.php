@@ -97,7 +97,7 @@
         </x-slot>
         <x-slot name="content">
             <form wire:submit.prevent="update">
-                <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" wire:model="warehouse.name"
@@ -124,10 +124,7 @@
                     </div>
                     </x-accordion>
                 </div>
-                <div class="w-full flex justify-end">
-                    <x-button secondary wire:click="$set('editModal', false)">
-                        {{ __('Cancel') }}
-                    </x-button>
+                <div class="w-full flex justify-start px-3">
                     <x-button primary class="ml-3" wire:click="update">
                         {{ __('Save') }}
                     </x-button>

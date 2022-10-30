@@ -96,8 +96,8 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap -mx-1">
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+        <div class="flex flex-wrap -mx-2 mb-3">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
                     <input wire:model.lazy="global_tax" type="number"
@@ -105,7 +105,7 @@
                         min="0" max="100" value="{{ $global_tax }}" required>
                 </div>
             </div>
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="discount_percentage">{{ __('Discount') }} (%)</label>
                     <input wire:model.lazy="global_discount" type="number"
@@ -113,7 +113,7 @@
                         min="0" max="100" value="{{ $global_discount }}" required>
                 </div>
             </div>
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="shipping_amount">{{ __('Shipping') }}</label>
                     <input wire:model.lazy="shipping" type="number"

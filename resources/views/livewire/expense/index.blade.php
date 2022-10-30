@@ -141,43 +141,34 @@
 
             <x-slot name="content">
                 <form wire:submit.prevent="update">
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                             <x-label for="expense.reference" :value="__('Reference')" />
                             <x-input wire:model="expense.reference" id="expense.reference" class="block mt-1 w-full"
                                 type="text" />
                         </div>
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                             <x-label for="expense.date" :value="__('Date')" />
                             <x-input-date wire:model="expense.date" id="expense.date" name="expense.date" class="block mt-1 w-full" />
                         </div>
 
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                             <x-label for="expense.category_id" :value="__('Expense Category')" />
                             <x-select-list
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 required id="category_id" name="category_id" wire:model="expense.category_id"
                                 :options="$this->listsForFields['expensecategories']" />
                         </div>
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                             <x-label for="expense.amount" :value="__('Amount')" required />
                             <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
                                 type="number" />
                         </div>
-                        <div class="w-fullmb-4">
+                        <div class="w-full px-4 mb-4">
                             <x-label for="expense.details" :value="__('Description')" />
                             <textarea class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="6"
                                 wire:model="expense.details" id="expense.details"></textarea>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-start space-x-2 mt-4">
-                        <x-button secondary wire:click="$toggle('editModal')" wire:loading.attr="disabled">
-                            {{ __('Cancel') }}
-                        </x-button>
-                        <x-button primary class="ml-4" wire:click="update" wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-
                     </div>
                 </form>
             </x-slot>

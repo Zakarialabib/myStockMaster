@@ -90,7 +90,7 @@
                     </div>
                 </x-card>
             </div>
-            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                 <x-card>
                     <div class="p-4">
                         <form action="{{ route('profile.update.password') }}" method="POST">

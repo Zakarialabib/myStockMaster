@@ -26,8 +26,8 @@
                         <form id="sale-form" action="{{ route('sales.store') }}" method="POST">
                             @csrf
 
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="reference">{{ __('Reference') }} <span
                                                 class="text-red-500">*</span></label>
@@ -36,7 +36,7 @@
                                             name="reference" required readonly value="SL">
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
 
                                     <label for="customer_id">{{ __('Customer') }} <span
                                             class="text-red-500">*</span></label>
@@ -49,7 +49,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
                                     <input type="date"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -59,8 +59,8 @@
 
                             <livewire:product-cart :cartInstance="'sale'" :data="$sale" />
 
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="status">{{ __('Status') }} <span
                                                 class="text-red-500">*</span></label>
@@ -73,7 +73,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="payment_method">{{__('Payment Method')}} <span
@@ -89,7 +89,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="paid_amount">{{__('Amount Received')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">

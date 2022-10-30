@@ -9,40 +9,40 @@
             <form wire:submit.prevent="create">
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
                 <div>
-                    <div class="flex flex-wrap -mx-1 space-y-2">
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="code" :value="__('Code')" required />
                             <x-input id="code" class="block mt-1 w-full" type="text" name="code"
                                 wire:model="code" placeholder="{{ __('Enter Product Code') }}" required
                                 autofocus />
                             <x-input-error :messages="$errors->get('code')" for="code" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="name" :value="__('Product Name')" required />
                             <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                                 wire:model="name" placeholder="{{ __('Enter Product Name') }}" required />
                             <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="quantity" :value="__('Quantity')" required />
                             <x-input id="quantity" class="block mt-1 w-full" type="number" name="quantity"
                                 wire:model="quantity" placeholder="{{ __('Enter Product Quantity') }}"
                                 required />
                             <x-input-error :messages="$errors->get('quantity')" for="quantity" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="price" :value="__('Price')" required />
                             <x-input id="price" class="block mt-1 w-full" type="number" name="price"
                                 wire:model="price" placeholder="{{ __('Enter Product Price') }}" required />
                             <x-input-error :messages="$errors->get('price')" for="price" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="cost" :value="__('Cost')" required />
                             <x-input type="number" wire:model="cost" id="cost" name="cost"
                                 class="block mt-1 w-full" placeholder="{{ __('Enter Product Cost') }}" required />
                             <x-input-error :messages="$errors->get('cost')" for="cost" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="category" :value="__('Category')" required />
                             <x-select-list
                                 class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
@@ -50,7 +50,7 @@
                                 :options="$this->listsForFields['categories']" />
                             <x-input-error :messages="$errors->get('category_id')" for="category_id" class="mt-2" />
                         </div>
-                        <div class="lg:w-1/2 sm:w-1/2 px-2">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
                             <x-label for="stock_alert" :value="__('Stock Alert')" />
                             <x-input id="stock_alert" class="block mt-1 w-full" type="number" name="stock_alert"
                                 wire:model="stock_alert" />
@@ -59,7 +59,7 @@
                     </div>
 
                     <x-accordion title="{{ __('Details') }}">
-                        <div class="flex flex-wrap -mx-1">
+                        <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="warehouse" :value="__('Warehouse')" />
                                 <x-select-list

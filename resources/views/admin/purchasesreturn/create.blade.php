@@ -25,14 +25,14 @@
                         @include('utils.alerts')
                         <form id="purchase-return-form" action="{{ route('purchase-returns.store') }}" method="POST">
                             @csrf
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="reference" required readonly value="PRRN">
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="supplier_id">Supplier <span class="text-red-500">*</span></label>
@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
@@ -56,8 +56,8 @@
 
                             <livewire:product-cart :cartInstance="'purchase_return'"/>
 
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="status">{{__('Status')}} <span class="text-red-500">*</span></label>
                                         <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="status" id="status" required>
@@ -67,7 +67,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="paid_amount">Amount Received <span class="text-red-500">*</span></label>
                                         <div class="input-group">

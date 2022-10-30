@@ -74,15 +74,15 @@
                         <form action="{{ route('adjustments.update', $adjustment) }}" method="POST">
                             @csrf
                             @method('patch')
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                     <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
                                     <input type="text"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="reference" required value="{{ $adjustment->getAttributes()['reference'] }}"
                                         readonly>
                                 </div>
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
 
                                     <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
                                     <input type="date"

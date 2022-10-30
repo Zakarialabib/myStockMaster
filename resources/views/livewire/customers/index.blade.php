@@ -145,17 +145,10 @@
                         wire:model.defer="customer.city" />
 
                 </div>
-
                 <div>
                     <x-label for="tax_number" :value="__('Tax Number')" />
                     <x-input id="tax_number" class="block mt-1 w-full" type="text"
                         wire:model.defer="customer.tax_number" disabled />
-                </div>
-
-                <div class="flex items-center justify-end mt-4">
-                    <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                        {{ __('Cancel') }}
-                    </x-button>
                 </div>
             </div>
         </x-slot>
@@ -212,12 +205,9 @@
                         </div>
                     </x-accordion>
 
-                    <div class="flex items-center justify-end mt-4">
+                    <div class="w-full flex justify-start px-3">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
-                        </x-button>
-                        <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
-                            {{ __('Cancel') }}
                         </x-button>
                     </div>
                 </div>
@@ -269,13 +259,9 @@
                         </x-table.tr>
                     </x-table-responsive>
 
-                    <div class="w-full flex justify-end">
+                    <div class="w-full flex justify-start">
                         <x-button primary wire:click="importExcel" wire:loading.attr="disabled">
                             {{ __('Import') }}
-                        </x-button>
-                        <x-button primary type="button" wire:click="$set('import', false)"
-                            wire:loading.attr="disabled">
-                            {{ __('Cancel') }}
                         </x-button>
                     </div>
                 </div>

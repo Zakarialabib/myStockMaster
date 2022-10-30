@@ -25,27 +25,27 @@
                 <div class="w-full px-4">
                     <div class="card">
                         <div class="p-4">
-                            <div class="flex flex-wrap -mx-1">
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                     <div class="mb-4">
                                         <label for="reference">{{__('Reference')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="reference" required readonly value="INV/{{ $purchase->reference }}">
                                     </div>
                                 </div>
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-4">
+                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                     <div class="mb-4">
                                         <label for="date">{{__('Date')}} <span class="text-red-500">*</span></label>
                                         <input type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="date" required value="{{ now()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                             
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="due_amount">{{__('Due Amount')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="due_amount" required value="{{ format_currency($purchase->due_amount) }}" readonly>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="mb-4">
                                         <label for="amount">{{__('Amount')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>

@@ -100,7 +100,7 @@
     
     <x-accordion title="{{ __('Details') }}">
         <div class="flex flex-wrap my-2">
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
                     <input wire:model.lazy="global_tax" type="number"
@@ -108,7 +108,7 @@
                         name="tax_percentage" min="0" max="100" value="{{ $global_tax }}" required>
                 </div>
             </div>
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="discount_percentage">{{ __('Discount (%)') }}</label>
                     <input wire:model.lazy="global_discount" type="number"
@@ -116,7 +116,7 @@
                         name="discount_percentage" min="0" max="100" value="{{ $global_discount }}" required>
                 </div>
             </div>
-            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="shipping_amount">{{ __('Shipping') }}</label>
                     <input wire:model.lazy="shipping" type="number"

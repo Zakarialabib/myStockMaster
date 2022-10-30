@@ -12,8 +12,9 @@
                         <div wire:click.prevent="selectProduct({{ $product }})"
                             class="h-64 rounded-md shadow-xl">
                             <div class="relative">
-                                <img src="{{ $product->getFirstMediaUrl('images') }}"
-                                    class="h-32 w-full object-cover rounded-md" alt="{{ $product->name }}">
+                                <img class="h-32 w-full object-cover rounded-md" 
+                                    src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}">
+                                    
                                 <div class="inline-block p-1 text-center font-semibold text-sm align-baseline leading-none rounded text-white bg-blue-400 mb-3 absolute"
                                     style="left:10px;top: 10px;">{{ __('Stock') }}: {{ $product->quantity }}</div>
                                 <span
