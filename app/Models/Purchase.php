@@ -89,13 +89,12 @@ class Purchase extends Model
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
-    public static function boot() {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = Purchase::max('id') + 1;
-            $model->reference = make_reference_id('PR', $number);
-        });
+    public function __construct(array $attributes = array())
+    {
+        $this->setRawAttributes(array(
+            'reference' => 'PR-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
+        ), true);
+        parent::__construct($attributes);
     }
 
     public function scopeCompleted($query) {

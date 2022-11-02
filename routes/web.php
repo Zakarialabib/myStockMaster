@@ -46,6 +46,9 @@ Route::get('/', function () {
 })->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
+
    
     Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
 

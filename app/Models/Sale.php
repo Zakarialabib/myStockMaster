@@ -93,13 +93,12 @@ class Sale extends Model
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
-    public static function boot() {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = Sale::max('id') + 1;
-            $model->reference = make_reference_id('SL', $number);
-        });
+    public function __construct(array $attributes = array())
+    {
+        $this->setRawAttributes(array(
+            'reference' => 'SL-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
+        ), true);
+        parent::__construct($attributes);
     }
 
     public function scopeCompleted($query) {

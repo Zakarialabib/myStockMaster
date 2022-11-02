@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Setting;
+use App\Models\Language;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +33,24 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
-
+        // //  Todo : Share Settings and languages with all views
+        // $settings = cache()->rememberForever('settings', function () {
+        //     return Setting::firstOrFail();
+        // });
+        // View::share('settings', $settings);
+        
+        if (Session::has('language')) {
+        $languages = cache()->rememberForever('languages', function () {
+            return Language::pluck('name', 'code')->toArray();
+        });
+        View::share('languages', $languages);
+        } else {
+        $languages = cache()->rememberForever('languages', function () {
+            return Language::where('is_default', 1)->first();
+        });
+        View::share('languages', $languages);
+        }
+        
         Model::shouldBeStrict(! $this->app->isProduction());
 
         //

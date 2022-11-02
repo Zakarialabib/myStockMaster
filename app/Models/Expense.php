@@ -52,13 +52,12 @@ class Expense extends Model
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
-    public static function boot() {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = Expense::max('id') + 1;
-            $model->reference = make_reference_id('EXP', $number);
-        });
+    public function __construct(array $attributes = array())
+    {
+        $this->setRawAttributes(array(
+            'reference' => 'EXP-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
+        ), true);
+        parent::__construct($attributes);
     }
 
     public function getDateAttribute($value) {

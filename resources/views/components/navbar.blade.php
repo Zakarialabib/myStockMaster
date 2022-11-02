@@ -17,6 +17,8 @@
     </div>
 
     <div class="flex items-center gap-3">
+        {{-- Language dropdown --}}
+      <x-language-dropdown />
 
         <div class="md:flex hidden flex-wrap items-center">
             @can('show_notifications')
@@ -65,6 +67,12 @@
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-5 h-5" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-5 h-5" />
+        </x-button>
+
+
+        <x-button type="button" class="hidden md:inline-flex"  iconOnly primary srText="Toggle RTL mode" @click="toggleRtl">
+            <a x-show="!isRtl" aria-hidden="true"  class="font-bold text-md" > LTR </a>
+            <a x-show="isRtl" aria-hidden="true" class="font-bold text-md" > RTL </a>
         </x-button>
 
         {{-- @livewire('admin.cache') --}}

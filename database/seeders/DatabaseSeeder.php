@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
+
             // UsersSeeder::class,
-            // RolesSeeder::class,
             SuperUserSeeder::class,
-            // RoleUserSeeder::class,
+            RoleUserSeeder::class,
             // PermissionsSeeder::class,
             // PermissionRoleSeeder::class,
             CategoriesSeeder::class,
@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ProductsSeeder::class,
             CurrencySeeder::class,
             SettingsSeeder::class,
+            LanguagesSeeder::class,
         ]);
     }
 }

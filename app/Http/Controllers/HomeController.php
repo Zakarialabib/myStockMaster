@@ -15,6 +15,7 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
+use illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -213,5 +214,13 @@ class HomeController extends Controller
 
         return response()->json(['data' => $data, 'days' => $days]);
 
+    }
+
+    public function changeLanguage($locale)
+    {
+        Session::put('code', $locale);
+        $language = Session::get('code');
+
+        return redirect()->back();
     }
 }
