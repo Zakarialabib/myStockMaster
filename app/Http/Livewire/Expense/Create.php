@@ -13,11 +13,23 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createExpense'];
+    public $listeners = ['createExpense', 'refreshIndex',];
     
     public $createExpense; 
     
+    public $refreshIndex;
+
     public array $listsForFields = [];
+    
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
 
     public array $rules = [
         'expense.reference' => 'required|string|max:255',
@@ -48,6 +60,8 @@ class Create extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
+
+        
         
         $this->createExpense = true;
     }

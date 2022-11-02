@@ -934,6 +934,11 @@
   "resolved" "https://registry.npmjs.org/tabbable/-/tabbable-5.3.3.tgz"
   "version" "5.3.3"
 
+"tailwindcss-rtl@^0.9.0":
+  "integrity" "sha512-y7yC8QXjluDBEFMSX33tV6xMYrf0B3sa+tOB5JSQb6/G6laBU313a+Z+qxu55M1Qyn8tDMttjomsA8IsJD+k+w=="
+  "resolved" "https://registry.npmjs.org/tailwindcss-rtl/-/tailwindcss-rtl-0.9.0.tgz"
+  "version" "0.9.0"
+
 "tailwindcss-tables@^0.4.0":
   "integrity" "sha512-GB25r/03oJln729LcstrPyI53Y5k3X5WWxzAkj+9Zqrw3jB6CXwZm54zIwnQU93dkmXOGGrneldHsIt9Z2YTYQ=="
   "resolved" "https://registry.npmjs.org/tailwindcss-tables/-/tailwindcss-tables-0.4.0.tgz"

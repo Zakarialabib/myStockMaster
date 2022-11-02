@@ -5,14 +5,9 @@
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                 <div class="w-full relative inline-flex">
-                    <x-button wire:click="refreshCustomers" type="button" secondary class="px-2 mr-2 py-0">
-                        <i class="bi bi-arrow-repeat text-lg"></i>
-                    </x-button>
-
                     <x-select-list 
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->listsForFields['customers']" />
-                        
                 </div>
 
                 <div>
@@ -130,7 +125,7 @@
                     <i class="bi bi-x"></i> {{ __('Reset') }}
                 </x-button>
                 <button
-                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 bg-indigo-500 hover:bg-indigo-700"
+                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
                     type="submit" wire:click="proceed" wire:loading.attr="disabled" class="ml-2"
                     {{ $total_amount == 0 ? 'disabled' : '' }}>
                     <i class="bi bi-check"></i> {{ __('Proceed') }}

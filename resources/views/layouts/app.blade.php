@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ dark: isDarkMode }" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html x-data="mainState" :class="{ dark: isDarkMode, rtl : isRtl }" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
     
 </head>
 
-<body class="antialiased bg-body text-body font-body">
+<body class="antialiased bg-body text-body font-body" dir="ltr">
     <x-loading-mask />
     <div @resize.window="handleWindowResize">
         <div class="min-h-screen">
@@ -35,7 +35,7 @@
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-5 px-4 sm:px-6 flex-1">
+                <main class="pt-5 px-2 sm:px-5 flex-1">
                     
                     @yield('breadcrumb')
                     
@@ -44,6 +44,8 @@
                     @isset($slot)
                     {{ $slot }}
                     @endisset
+                    
+                    <x-footer />
 
                 </main>
             </div>

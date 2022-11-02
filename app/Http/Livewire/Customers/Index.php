@@ -150,9 +150,11 @@ class Index extends Component
 
         $this->customer->save();
 
-        $this->createModal = false;
-
         $this->alert('success', __('Customer created successfully'));
+        
+        $this->emit('refreshIndex');
+        
+        $this->createModal = false;
     }
 
     public function showModal(Customer $customer)

@@ -49,6 +49,8 @@ Alpine.data("mainState", () => {
         });
     };
 
+    
+
     Alpine.data("loadingMask", () => ({
         pageLoaded: false,
         init() {
@@ -70,6 +72,22 @@ Alpine.data("mainState", () => {
     const setTheme = (value) => {
         window.localStorage.setItem("dark", value);
     };
+
+    const RTL = () => {
+        if (window.localStorage.getItem("rtl")) {
+            return JSON.parse(window.localStorage.getItem("rtl"));
+        }
+        return false;
+    };
+
+    const enableTheme = (isRtl) => {
+        if (isRtl) {
+            document.body.dir = "rtl";
+        } else {
+            document.body.dir = "ltr";
+        }
+    };
+
     return {
         init,
         isDarkMode: getTheme(),
@@ -77,6 +95,11 @@ Alpine.data("mainState", () => {
             this.isDarkMode = !this.isDarkMode;
             setTheme(this.isDarkMode);
         },
+        isRtl : RTL(),
+        toggleRtl() {
+           this.isRtl = !this.isRtl;
+           enableTheme(this.isRtl);
+       },
         isSidebarOpen: window.innerWidth > 1024,
         isSidebarHovered: false,
         handleSidebarHover(value) {

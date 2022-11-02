@@ -15,11 +15,18 @@ class Create extends Component
 {
     use LivewireAlert, WithFileUploads;
 
-    public $listeners = ['createProduct'];
+    public $listeners = ['createProduct', 'refreshIndex',];
     
     public $createProduct;
 
+    public $refreshIndex;
+
     public $image;
+
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
 
     public array $listsForFields = [];
 
@@ -90,7 +97,6 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        
 
         if($this->image){
             $imageName = Str::slug($this->product->name).'.'.$this->image->extension();

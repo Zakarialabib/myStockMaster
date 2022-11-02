@@ -113,7 +113,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $query = Sale::advancedFilter([
+        $query = Sale::with(['customer', 'salepayments'])
+                      ->advancedFilter([
                             's'               => $this->search ?: null,
                             'order_column'    => $this->sortBy,
                             'order_direction' => $this->sortDirection,

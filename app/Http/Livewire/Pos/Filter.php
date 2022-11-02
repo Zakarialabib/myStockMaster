@@ -10,8 +10,9 @@ class Filter extends Component
     public $categories;
     public $category;
     public $showCount;
+    public $warehouse_id;
     public $warehouses;
-
+    
     public array $listsForFields = [];
 
     public function mount($categories) {

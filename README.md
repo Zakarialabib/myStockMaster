@@ -37,6 +37,15 @@ Login with the following credentials
 -   Warehouse Management
 -   Settings Management
 
+Milstones : 
+Adjustments needs improvement (modals)
+Purchase needs improvement livewire
+Quatation needs improvement livewire
+POS needs improvement livewire
+Send telegram to admin when trasnactions are made
+Send email to admin when trasnactions are made
+
+
 ## Changelog
 
 - 1.0.0 - Initial Release

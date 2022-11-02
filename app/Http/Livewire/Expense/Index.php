@@ -22,13 +22,11 @@ class Index extends Component
 
     public int $selectPage;
     
-    public $listeners = ['show', 'confirmDelete','exportAll','downloadAll', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
+    public $listeners = ['confirmDelete','exportAll','downloadAll', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
     
     public $showModal;
 
     public $editModal;
-
-    public $show;
 
     public $refreshIndex;
 
@@ -109,11 +107,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_access'), 403);
 
-        $query = Expense::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = Expense::with(['category','user','warehouse'])
+                         ->advancedFilter([
+                            's'               => $this->search ?: null,
+                            'order_column'    => $this->sortBy,
+                            'order_direction' => $this->sortDirection,
+                        ]);
 
         $expenses = $query->paginate($this->perPage);
 
@@ -165,6 +164,8 @@ class Index extends Component
         $this->expense->save();
 
         $this->alert('success', 'Expense updated successfully.');
+        
+        $this->emit('refreshIndex');
 
         $this->editModal = false;
     }

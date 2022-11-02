@@ -12,15 +12,22 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createCustomer'];
+    public $listeners = ['createCustomer', 'refreshIndex'];
     
     public $createCustomer; 
+
+    public $refreshIndex; 
     
     public $name, $email ,$phone, $city, $country ,$address, $tax_number;
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+    }
+    
+    public function refreshIndex()
+    {
+        $this->resetPage();
     }
 
     protected $rules = [

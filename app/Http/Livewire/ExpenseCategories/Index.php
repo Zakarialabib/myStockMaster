@@ -18,9 +18,9 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['show','confirmDelete', 'delete', 'refreshIndex', 'showModal', 'editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $show;
+    public int $selectPage;
 
     public $showModal;
 
@@ -80,6 +80,7 @@ class Index extends Component
 
     public function mount()
     {
+        $this->selectPage = false;
         $this->sortField = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
@@ -130,9 +131,12 @@ class Index extends Component
 
         $this->expenseCategory->save();
 
+        $this->alert('success', 'Expense Category Updated Successfully.');
+        
+        $this->emit('refreshIndex');
+        
         $this->editModal = false;
 
-        $this->alert('success', 'Expense Category Updated Successfully.');
     }
 
     public function deleteSelected()

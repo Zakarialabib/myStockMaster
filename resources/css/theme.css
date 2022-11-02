@@ -1,216 +1,154 @@
 .row {
-  @layer w-full px-4 mb-12 flex flex-wrap items-center justify-center;
+  @apply w-full px-4 mb-12 flex flex-wrap items-center justify-center;
 }
 .card {
-  @layer relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg border-0;
+  @apply relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg border-0;
 }
 
 .card .card-header {
-  @layer rounded-t bg-white mb-0 px-6 py-6;
+  @apply rounded-t bg-white mb-0 px-6 py-6;
 }
 
 .card .card-header-container {
-  @layer text-center flex justify-between;
+  @apply text-center flex justify-between;
 }
 
 .card .card-title {
-  @layer text-blueGray-700 text-xl font-bold;
+  @apply text-gray-700 text-xl font-bold;
 }
 
 .card .card-body {
-  @layer flex-auto px-4 lg:px-10 py-10 pt-0;
+  @apply flex-auto px-4 lg:px-10 py-10 pt-0;
 }
 
 .card .card-controls {
-  @layer flex-auto px-4 lg:px-10 py-3; 
+  @apply flex-auto px-4 lg:px-10 py-3; 
 }
 
 .card .card-table {
-  @layer py-3 pt-0;
+  @apply py-3 pt-0;
 }
 
 .btn {
-  @layer font-bold border-transparent uppercase justify-center text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 mr-1 ease-linear transition-all duration-150 cursor-pointer;
+  @apply font-bold border-transparent uppercase justify-center text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 mr-1 ease-linear transition-all duration-150 cursor-pointer;
 }
 
 .btn-sm {
-  @layer py-1 px-2;
+  @apply py-1 px-2;
 }
 
 .btn.btn-primary {
-  @layer bg-pink-500 text-white active:bg-pink-600 focus:ring-pink-500;
+  @apply bg-blue-500 text-white active:bg-blue-600 focus:ring-blue-500;
 }
 
 .btn.btn-indigo {
-  @layer bg-indigo-500 text-white active:bg-indigo-600 focus:ring-indigo-500;
+  @apply bg-indigo-500 text-white active:bg-indigo-600 focus:ring-indigo-500;
 }
 
 .btn.btn-secondary {
-  @layer text-blueGray-500 bg-white hover:bg-blueGray-50 active:bg-blueGray-100 focus:ring-indigo-500;
+  @apply text-gray-500 bg-white hover:bg-gray-50 active:bg-gray-100 focus:ring-indigo-500;
 }
 
 .btn.btn-success {
-  @layer bg-green-500 text-white active:bg-green-600 focus:ring-green-500;
+  @apply bg-green-500 text-white active:bg-green-600 focus:ring-green-500;
 }
 
 .btn.btn-warning {
-  @layer bg-yellow-500 text-white active:bg-yellow-600 focus:ring-yellow-500;
+  @apply bg-orange-500 text-white active:bg-orange-600 focus:ring-orange-500;
 }
 
 .btn.btn-danger {
-  @layer bg-red-500 text-white active:bg-red-600 focus:ring-red-500;
+  @apply bg-red-500 text-white active:bg-red-600 focus:ring-red-500;
 }
 
 .btn.btn-info {
-  @layer bg-blue-500 text-white active:bg-blue-600 focus:ring-blue-500;
+  @apply bg-blue-500 text-white active:bg-blue-600 focus:ring-blue-500;
 }
-
-.btn.btn-rose {
-  @layer bg-rose-500 text-white active:bg-rose-600 focus:ring-rose-500;
-}
-
 
 .sidebar-nav-active {
-  @layer text-xs uppercase py-3 font-bold block text-pink-500;
+  @apply text-xs uppercase py-3 font-bold block text-blue-500;
 }
 
 .sidebar-nav-active > i {
-  @layer mr-2 text-sm opacity-75;
+  @apply mr-2 text-sm opacity-75;
 }
 
 .sidebar-nav-active:hover {
-  @layer text-pink-600;
+  @apply text-blue-600;
 }
 
 .sidebar-nav {
-  @layer text-xs uppercase py-3 font-bold block text-blueGray-800;
+  @apply text-xs uppercase py-3 font-bold block text-gray-800;
 }
 
 .sidebar-nav > i {
-  @layer mr-2 text-sm text-blueGray-400;
+  @apply mr-2 text-sm text-gray-400;
 }
 
 .sidebar-nav:hover {
-  @layer text-blueGray-600;
+  @apply text-gray-600;
 } 
 
-.form-group {
-  @layer mt-4;
-}
-
-.form-group:first-of-type {
-  @layer mt-0;
-}
-
-.validation-message {
-  display: none;
-  @layer text-red-500;
-}
-
-.form-group.invalid input,
-.form-group.invalid select,
-.form-group.invalid textarea {
-  @layer border-red-500 !important;
-}
-
-.form-group.invalid .validation-message {
-  display: block !important;
-}
-
-.form-label {
-  @layer block uppercase text-blueGray-600 text-xs font-bold mb-2;
-}
-
-.form-control {
-  @layer w-full;
-}
-
-input[type=text].form-control,
-input[type=email].form-control,
-input[type=number].form-control,
-input[type=password].form-control,
-textarea.form-control {
-  @layer border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring;
-}
-
-.flatpickr input[type=text].form-control {
-  @layer border-0 px-3 py-3 pl-10 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring;
-}
-
-.flatpickr input[type=text].form-control:required {
-  @layer border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring;
-}
-
 .table { 
-  @layer items-center table-auto bg-transparent border-collapse;
+  @apply items-center table-auto bg-transparent border-collapse;
 }
 
 .table th {
-  @layer align-middle border border-solid text-xs uppercase whitespace-nowrap font-semibold text-left text-blueGray-500;
+  @apply align-middle border border-solid text-xs uppercase whitespace-nowrap font-semibold text-left text-gray-500;
 }
 
 .table td {
-  @layer border-blueGray-200;
+  @apply border-gray-200;
 }
 
 .table.table-index th {
-  @layer px-6 py-3 border-l-0 border-r-0 border-blueGray-100;
+  @apply px-6 py-3 border-l-0 border-r-0 border-gray-100;
 }
 
 .table.table-index td {
-  @layer px-4 py-2 border-t border-dashed;
+  @apply px-4 py-2 border-t border-dashed;
 }
 
 .table.table-view th,
 .table.table-view td {
-  @layer px-6 py-3 border border-solid;
+  @apply px-6 py-3 border border-solid;
 }
 
 .table.table-index > tbody > tr:hover {
-  @layer bg-blueGray-50;
+  @apply bg-gray-50;
 }
 
 .form-group .required::after {
   content: " *";
-  @layer text-rose-500;
-}
-
-.dropzone .dz-preview .dz-image img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+  @apply text-red-500;
 }
 
 .help-block {
-  @layer text-blueGray-600 pt-2 text-sm;
-}
-
-.badge {
-  @layer text-xs font-semibold inline-block py-1 px-2 rounded last:mr-0 mr-1;
+  @apply text-gray-600 pt-2 text-sm;
 }
 
 .badge-relationship {
-  @layer text-indigo-600 bg-indigo-200;
+  @apply text-indigo-600 bg-indigo-200;
 }
 
 .link-light-blue {
-  @layer text-lightBlue-500 flex items-center hover:underline last:mb-0 mb-1;
+  @apply text-blue-200 flex items-center hover:underline last:mb-0 mb-1;
 }
 
 .link-light-blue i {
-  @layer mr-1;
+  @apply mr-1;
 }
 
 .link-photo {
-  @layer inline-block last:mr-0 mr-1;
+  @apply inline-block last:mr-0 mr-1;
 }
 
 .radio-label {
-  @layer flex items-center last:mb-0 mb-1 cursor-pointer;
+  @apply flex items-center last:mb-0 mb-1 cursor-pointer;
 }
 
 .radio-label input[type=radio] {
-  @layer mr-2;
+  @apply mr-2;
 }
 
 .was-validated :invalid ~ .invalid-feedback,
@@ -307,11 +245,6 @@ textarea.form-control.is-invalid {
 .hero img {
   height: 65vh;
 }
-
-.heading-container {
-  height: 65vh;
-  top: 50px;
-}  
 
 .dark .ps__rail-y,
 .dark .ps__rail-x {

@@ -10,23 +10,22 @@
                 @forelse($products as $product)
                     <div class="w-full lg:w-1/4 md:w-1/2 mx-2">
                         <div wire:click.prevent="selectProduct({{ $product }})"
-                            class="h-64 rounded-md shadow-xl">
+                            class="rounded-md shadow-xl border border-gray-200">
                             <div class="relative">
-                                <img class="h-32 w-full object-cover rounded-md" 
-                                    src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}">
-                                    
                                 <div class="inline-block p-1 text-center font-semibold text-sm align-baseline leading-none rounded text-white bg-blue-400 mb-3 absolute"
-                                    style="left:10px;top: 10px;">{{ __('Stock') }}: {{ $product->quantity }}</div>
+                                    style="right:10px;top: 10px;">{{ __('Stock') }}: {{ $product->quantity }}
+                                </div>
+                                <div class="inline-block p-1 text-center">
+                                    <div class="mb-2">
+                                        <h6 class="text-md text-center font-semibold mb-3 md:mb-0">{{ $product->name }}
+                                        </h6>
+                                    </div>
+                                    <p class="mb-0 text-center font-bold">{{ format_currency($product->price) }}</p>
+                                </div>
                                 <span
                                     class="block p-1 text-center font-semibold text-xs align-baseline leading-none text-white bg-green-400">
                                     {{ $product->code }}
                                 </span>
-                            </div>
-                            <div class="p-2">
-                                <div class="mb-2">
-                                    <h6 class="text-md text-center font-semibold mb-3 md:mb-0">{{ $product->name }}</h6>
-                                </div>
-                                <p class="mb-0 text-center font-bold">{{ format_currency($product->price) }}</p>
                             </div>
                         </div>
                     </div>
