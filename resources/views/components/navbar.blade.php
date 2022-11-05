@@ -18,6 +18,7 @@
 
     <div class="flex items-center gap-3">
         {{-- Language dropdown --}}
+      @livewire('cache')
       <x-language-dropdown />
 
         <div class="md:flex hidden flex-wrap items-center">
