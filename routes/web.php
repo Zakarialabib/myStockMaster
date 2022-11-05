@@ -1,6 +1,6 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\CurrencyController;
@@ -28,7 +28,6 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\WarehouseController;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +40,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-})->middleware('guest');
+Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::group(['middleware' => 'auth'], function () {
 

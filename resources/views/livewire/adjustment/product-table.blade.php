@@ -74,7 +74,7 @@
                 <tr>
                     <td colspan="7" class="text-center">
                         <span class="text-red-500">
-                            Please search & select products!
+                            {{__('Please search & select products!')}}
                         </span>
                     </td>
                 </tr>

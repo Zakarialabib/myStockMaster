@@ -1,20 +1,11 @@
 <div>
-    @if (session()->has('message'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <div class="alert-body">
-                <span>{{ session('message') }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-        </div>
-    @endif
+   <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
     <div class="card">
         <div class="p-4">
-            <div class="table-responsive-md">
+            <div>
                 <x-table>
                     <x-slot name="thead">
-
                         <x-table.th>{{ __('Product Name') }}</x-table.th>
                         <x-table.th>{{ __('Code') }}</x-table.th>
                         <x-table.th>
@@ -41,11 +32,10 @@
                     </x-table.tbody>
                 </x-table>
             </div>
-            <div class="mt-3">
-                <button wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button"
-                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                    <i class="bi bi-upc-scan"></i> {{ __('Generate Barcodes') }}
-                </button>
+            <div class="flex justify-center mt-3">
+                <x-button primary wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button">
+                     {{ __('Generate Barcodes') }}
+                </x-button>
             </div>
         </div>
     </div>
@@ -57,12 +47,11 @@
     </div>
 
     @if (!empty($barcodes))
-        <div class="text-right mb-3">
-            <button wire:click="getPdf" wire:loading.attr="disabled" type="button"
-                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                <span wire:loading wire:target="getPdf" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                <i wire:loading.remove wire:target="getPdf" class="bi bi-file-earmark-pdf"></i> Download PDF
+        <div class="text-center mb-3">
+            {{-- open print page with getPDF --}}
+            <button class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest disabled:opacity-25 transition ease-in-out duration-150 bg-indigo-500 hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300"
+             wire:click="getPdf" target="_blank" wire:loading.attr="disabled" type="button">
+                {{__('Download PDF')}}
             </button>
         </div>
         <div class="card">

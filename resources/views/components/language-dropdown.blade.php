@@ -7,11 +7,11 @@
             </button>
         </x-slot>
         <x-slot name="content">
-            @foreach ($languages as $locale)
-            <x-dropdown-link href="{{ route('admin.changelanguage', $locale->code) }}">
+            {{-- @foreach ($languages as $locale)
+                <x-dropdown-link href="{{ route('admin.changelanguage', $locale->code) }}">
                     {{ $locale->name }}
                 </x-dropdown-link>
-            @endforeach
+            @endforeach --}}
         </x-slot>
     </x-dropdown>
 </div>

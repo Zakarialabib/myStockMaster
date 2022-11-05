@@ -16,7 +16,7 @@ class Barcode extends Component
     public $quantity;
     public $barcodes;
 
-    protected $listeners = ['productSelected'];
+    protected $listeners = ['productSelected', 'getPdf'];
 
     public function mount() {
         $this->product = '';
@@ -36,7 +36,7 @@ class Barcode extends Component
 
     public function generateBarcodes(Product $product, $quantity) {
         if ($quantity > 100) {
-            $this->alert('error', 'Maximum quantity is 100');
+            $this->alert('error', _('Maximum quantity is 100'));
             return;
         }
 
@@ -49,12 +49,18 @@ class Barcode extends Component
     }
 
     public function getPdf() {
+
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'price' => $this->product->price,
             'name' => $this->product->name,
-        ]);
-        return $pdf->stream('barcodes-'. $this->product->code .'.pdf');
+        ])->output();
+
+        return response()->streamDownload(
+            fn () => print($pdf),
+            'barcodes-'. $this->product->code .'.pdf'
+       );
+        // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }
 
     public function updatedQuantity() {

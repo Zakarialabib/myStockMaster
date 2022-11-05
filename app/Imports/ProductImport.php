@@ -24,6 +24,8 @@ class ProductImport implements ToModel
             'category_id' => $row[4],
             'brand_id' => $row[5],
             'image' => $row[6],
+            // created_at with carbon date 2021-01-01 00:00:00
+            'created_at' => Carbon::parse($row[7]),
         ]);
     }
     

@@ -1,4 +1,4 @@
-@section('title', 'Print Barcode')
+@section('title', __('Print Barcode'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">

@@ -199,8 +199,6 @@ class Index extends Component
         $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
-        // $this->note = '';
-        $this->purchase_id = $purchase->id;
         $this->paymentModal = true;
     }
 

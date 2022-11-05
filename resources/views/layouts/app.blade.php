@@ -35,7 +35,7 @@
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-5 px-2 sm:px-5 flex-1">
+                <main class="pt-5 px-2 flex-1">
                     
                     @yield('breadcrumb')
                     
@@ -44,10 +44,12 @@
                     @isset($slot)
                     {{ $slot }}
                     @endisset
-                    
-                    <x-footer />
-
+                        
                 </main>
+                
+                <!-- Footer -->
+                <x-footer />
+
             </div>
         </div>
     </div>

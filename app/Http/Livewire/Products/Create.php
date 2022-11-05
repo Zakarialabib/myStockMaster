@@ -15,18 +15,11 @@ class Create extends Component
 {
     use LivewireAlert, WithFileUploads;
 
-    public $listeners = ['createProduct', 'refreshIndex',];
+    public $listeners = ['createProduct'];
     
     public $createProduct;
 
-    public $refreshIndex;
-
     public $image;
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $listsForFields = [];
 

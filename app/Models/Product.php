@@ -47,10 +47,20 @@ class Product extends Model
         'updated_at',
     ];
 
-    // Add those columns to table : tinyint-> "website_featured","catalogue_featured"
-    
-    protected $guarded = [];
-
+    public $fillable = [
+        'category_id',
+        'name',
+        'code',
+        'barcode_symbology',
+        'quantity',
+        'cost',
+        'price',
+        'unit',
+        'stock_alert',
+        'order_tax',
+        'tax_type',
+        'note',
+    ];
 
     public function __construct(array $attributes = array())
     {

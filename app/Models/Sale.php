@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Carbon\Carbon; 
+use Str;
 
 class Sale extends Model
 {

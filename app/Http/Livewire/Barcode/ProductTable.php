@@ -6,7 +6,6 @@ use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductTable extends Component
 {
@@ -16,7 +15,7 @@ class ProductTable extends Component
     public $quantity;
     public $barcodes;
 
-    protected $listeners = ['productSelected'];
+    protected $listeners = ['productSelected','getPdf'];
 
     public function mount() {
         $this->product = '';

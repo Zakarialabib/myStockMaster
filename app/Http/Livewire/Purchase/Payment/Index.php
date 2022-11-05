@@ -78,7 +78,7 @@ class Index extends Component
     public function mount($purchase){
         $this->purchase = $purchase;
 
-        $this->purchase_id = $purchase->id;
+        $this->purchase_id = $this->purchase->id;
 
         $this->perPage = 10;
         $this->sortBy            = 'id';
@@ -92,8 +92,7 @@ class Index extends Component
     {
         //    abort_if(Gate::denies('access_purchase_payments'), 403);
 
-       $query = PurchasePayment::where('purchase_id', $this->purchase_id)->
-       with('purchase')->advancedFilter([
+       $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

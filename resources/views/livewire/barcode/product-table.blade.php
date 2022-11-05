@@ -1,14 +1,5 @@
 <div>
-    @if (session()->has('message'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <div class="alert-body">
-                <span>{{ session('message') }}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-        </div>
-    @endif
+    <x-auth-validation-errors class="mb-4" :errors="$errors" />
     <x-card>
         <div>
             <x-table>
@@ -38,7 +29,7 @@
                         @empty
                             <x-table.td colspan="3">
                                 <div class="flex justify-center">
-                                    {{ __('Please search & select a product') }}
+                                    {{ __('Please search & select a product!') }}
                                 </div>
                             </x-table.td>
                         @endif
@@ -64,12 +55,9 @@
 
 @if (!empty($barcodes))
     <div class="text-right mb-3">
-        <button wire:click="getPdf" wire:loading.attr="disabled" type="button"
-            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-            <span wire:loading wire:target="getPdf" class="spinner-border spinner-border-sm" role="status"
-                aria-hidden="true"></span>
-            <i wire:loading.remove wire:target="getPdf" class="bi bi-file-earmark-pdf"></i> Download PDF
-        </button>
+        <x-button primary wire:click="getPdf" wire:loading.attr="disabled" type="button">
+            {{__('Download PDF')}}
+        </x-button>
     </div>
     <div class="card">
         <div class="p-4">

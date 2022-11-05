@@ -2,7 +2,6 @@ import './bootstrap';
 import '../css/app.css'; 
 import "../css/theme.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-import "./chart-config";
 
 import swal from 'sweetalert2';
 

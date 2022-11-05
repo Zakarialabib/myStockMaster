@@ -33,11 +33,6 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
-        // //  Todo : Share Settings and languages with all views
-        // $settings = cache()->rememberForever('settings', function () {
-        //     return Setting::firstOrFail();
-        // });
-        // View::share('settings', $settings);
         
         if (Session::has('language')) {
         $languages = cache()->rememberForever('languages', function () {
@@ -48,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $languages = cache()->rememberForever('languages', function () {
             return Language::where('is_default', 1)->first();
         });
+        
         View::share('languages', $languages);
         }
         
