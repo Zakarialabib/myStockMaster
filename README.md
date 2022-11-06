@@ -4,11 +4,32 @@ Mystock is a simple inventory management system built with Laravel 9, Livewire, 
 
 This project allows you to manage your inventory, sales, and purchases, easy & simple reporting, that helps you to generate reports for your business.
 
-
-
 ## Roadmap
 
-Refactoring the code to use the new Laravel 9 features, livewire capacities, & tailwind responsiveness.
+- [x] Dashboard
+- [x] Products
+- [x] Categorires
+- [x] Brands
+- [] Print Barcode -- problem with barcode generator
+- [x] Purchases
+- [x] Sales
+- [x] Customers
+- [x] Suppliers
+- [x] Reports
+- [x] Settings
+- [x] Users
+- [x] Roles
+- [x] Permissions
+- [x] Stock adjustment
+- [x] Currencies
+- [x] Warehouses
+- [] Notifications
+- [] SMS Notifications
+- [] Email Templates
+- [] Backup - GDrive & Local
+- [] Import/Export - working on it
+- [] Multi language - working on it
+- [] Multi store - working on it
 
 ## Demo
 
@@ -16,9 +37,9 @@ You can check the demo here:
 [https://test.hotechserver.com](https://test.hotechserver.com)
 
 
-Login with the following credentials
-    -   Email: `admin@ggmail.com'
-    -   Password: `password'
+## Login with the following credentials
+    -   Email: `admin@ggmail.com`
+    -   Password: `password`
 
 
 ## Features
@@ -39,14 +60,14 @@ Login with the following credentials
 -   Warehouse Management
 -   Settings Management
 
-Milstones : 
-Adjustments needs improvement (modals)
-Purchase needs improvement livewire
-Quatation needs improvement livewire
-POS needs improvement livewire
-Send telegram to admin when trasnactions are made
-Send email to admin when trasnactions are made
+## Milstones : 
 
+- Send telegram to admin when trasnactions are made
+- Send products through telegram bot to customers
+- Send email to admin when trasnactions are made
+- Sync with woocommerce to get products and orders
+- Sync with youCan to get products and orders
+- Sync with Shopify to get products and orders
 
 ## Changelog
 
@@ -84,6 +105,7 @@ Send email to admin when trasnactions are made
 - 1.0.31 - Optimization of Sales
 - 1.0.32 - Optimization of Purchases
 - 1.0.33 - Optimization of Product Image Upload
+....
 
 
 ## Requirements
@@ -93,10 +115,6 @@ Send email to admin when trasnactions are made
 -   Node.js
 -   NPM
 -   MySQL
-
-- Laravel 9
-- Tailwind CSS
-- Laravel Livewire
 
 ## Installation
 
@@ -108,8 +126,8 @@ Send email to admin when trasnactions are made
 6.  Run `php artisan migrate --seed`
 7.  Run `php artisan serve`
 8.  Login with the following credentials
-    -   Email: `admin@ggmail.com'
-    -   Password: `password'
+    -   Email: `admin@ggmail.com`
+    -   Password: `password`
 9.  Enjoy!
 
 ## License
@@ -145,4 +163,3 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ## Donate
 
 If you like this project, leave a star and share it with your friends. You can also support me by donating.
-
