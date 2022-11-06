@@ -1,8 +1,10 @@
 # Mystock - Laravel Liveiwre Inventory Pos
 
-Mystock is a simple inventory management system built with Laravel 9 and Tailwind CSS. It is a simple inventory management system that allows you to manage your inventory, sales, and purchases. 
+Mystock is a simple inventory management system built with Laravel 9, Livewire, AlpineJs and Tailwind CSS. 
 
-MYSTOCK also has a simple POS system that allows you to sell your products, easy & simple reporting system that allows you to generate reports for your sales and purchases.
+This project allows you to manage your inventory, sales, and purchases, easy & simple reporting, that helps you to generate reports for your business.
+
+
 
 ## Roadmap
 
@@ -82,7 +84,6 @@ Send email to admin when trasnactions are made
 - 1.0.31 - Optimization of Sales
 - 1.0.32 - Optimization of Purchases
 - 1.0.33 - Optimization of Product Image Upload
-- 1.0.34 - 
 
 
 ## Requirements
@@ -120,10 +121,20 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 -   [Laravel](https://laravel.com/)
 -   [Tailwind CSS](https://tailwindcss.com/)
 -   [Livewire](https://laravel-livewire.com/)
+-   [AlpineJs]()
 
 ## Screenshots
 
-Soon
+- Login
+![Login](screens/login.png)
+- Dashboard
+![Dashboard](screens/dashboard.png)
+- Products
+![Products](screens/products.png)
+- Product Create
+![Product Create](screens/product-modal.png)
+- Purchase Create
+![Purchase Create](screens/purchase-create.png)
 
 ## Contact
 
