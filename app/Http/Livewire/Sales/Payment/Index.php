@@ -77,8 +77,10 @@ class Index extends Component
 
     public function mount($sale){
         $this->sale = $sale;
-
-        $this->sale_id = $sale->id;
+        
+        if($sale){
+            $this->sale_id = $sale->id;
+        }
 
         $this->perPage = 10;
         $this->sortBy            = 'id';

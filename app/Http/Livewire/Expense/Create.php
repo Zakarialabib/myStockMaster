@@ -13,24 +13,17 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createExpense', 'refreshIndex',];
+    public $listeners = ['createExpense'];
     
     public $createExpense; 
     
-    public $refreshIndex;
-
     public array $listsForFields = [];
     
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
+    
     public array $rules = [
         'expense.reference' => 'required|string|max:255',
         'expense.category_id' => 'required|integer|exists:expense_categories,id',

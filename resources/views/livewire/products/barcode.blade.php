@@ -56,7 +56,7 @@
         </div>
         <div class="card">
             <div class="p-4">
-                <div class="row justify-content-center">
+                <div class="flex flex-wrap justify-center">
                     @foreach ($barcodes as $barcode)
                         <div class="lg:w-1/3 md:w-1/4 sm:w-1/2"
                             style="border: 1px solid #ffffff;border-style: dashed;">

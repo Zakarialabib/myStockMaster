@@ -29,8 +29,10 @@ class Index extends Component
     public $showModal;
 
     public $createModal;
-
+    
     public $editModal;
+    
+    public $purchase_id;
 
     public array $orderable;
 
@@ -67,6 +69,11 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function refreshIndex()
+    {
+        $this->resetPage();
+    }
+
     public array $rules = [
         'supplier_id' => 'required|numeric',
         'reference' => 'required|string|max:255',
@@ -82,6 +89,7 @@ class Index extends Component
 
     public function mount()
     {
+        
         $this->selectPage = false;
         $this->sortField = 'id';
         $this->sortDirection = 'desc';
@@ -199,6 +207,7 @@ class Index extends Component
         $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
+        $this->purchase_id = $purchase->id;
         $this->paymentModal = true;
     }
 

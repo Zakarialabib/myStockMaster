@@ -25,23 +25,15 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <x-input type="checkbox" wire:model="selectPage" />
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
-                {{ __('Name') }}
-                @include('components.table.sort', ['field' => 'name'])
+            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                {{ __('date') }}
+                @include('components.table.sort', ['field' => 'date'])
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('description')" :direction="$sorts['description'] ?? null">
-                {{ __('Description') }}
-                @include('components.table.sort', ['field' => 'description'])
-            </x-table.th>
-            <x-table.th sortable wire:click="sortBy('created_at')" :direction="$sorts['created_at'] ?? null">
-                {{ __('Created At') }}
-                @include('components.table.sort', ['field' => 'created_at'])
-            </x-table.th>
-            <x-table.th sortable wire:click="sortBy('updated_at')" :direction="$sorts['updated_at'] ?? null">
-                {{ __('Updated At') }}
-                @include('components.table.sort', ['field' => 'updated_at'])
+            <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+                {{ __('reference') }}
+                @include('components.table.sort', ['field' => 'reference'])
             </x-table.th>
             <x-table.th>{{ __('Actions') }}</x-table.th>
         </x-slot>
@@ -51,10 +43,8 @@
                     <x-table.td>
                         <input wire:model="selected" value="{{ $adjustment->id }}" />
                     </x-table.td>
-                    <x-table.td>{{ $adjustment->name }}</x-table.td>
-                    <x-table.td>{{ $adjustment->description }}</x-table.td>
-                    <x-table.td>{{ $adjustment->created_at->format('d/m/Y') }}</x-table.td>
-                    <x-table.td>{{ $adjustment->updated_at->format('d/m/Y') }}</x-table.td>
+                    <x-table.td>{{ $adjustment->date }}</x-table.td>
+                    <x-table.td>{{ $adjustment->reference }}</x-table.td>
                     <x-table.td>
                         <div class="flex justify-center">
 

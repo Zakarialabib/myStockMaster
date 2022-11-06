@@ -146,7 +146,9 @@
     @if ($purchase)
         <x-modal wire:model="showModal">
             <x-slot name="title">
+                <div class="w-full flex">
                 {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase->reference }}</strong>
+                
                 <div class="float-right">
                     <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
                         wire:loading.attr="disabled">
@@ -159,6 +161,7 @@
                         {{ __('Save') }}
                     </x-button>
                 </div>
+            </div>
             </x-slot>
 
             <x-slot name="content">
@@ -212,13 +215,11 @@
                                         @elseif($purchase->payment_status == \App\Models\Purchase::PaymentDue)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
-
                                     </div>
                                 </div>
-
                             </div>
 
-                            <div>
+                            <div class="w-full">
                                 <x-table>
                                     <x-slot name="thead">
                                         <x-table.th>{{ __('Product') }}</x-table.th>
@@ -252,8 +253,8 @@
                                     </x-table.tbody>
                                 </x-table>
                             </div>
-                            <div class="row">
-                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                            <div class="flex flex-row">
+                                <div class="w-full px-4 mb-4">
                                     <x-table-responsive>
                                         <x-table.tr>
                                             <x-table.heading class="left">
@@ -300,7 +301,7 @@
     {{-- Purchase Payment payment component   --}}
     <div>
         {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($showPayments))
+        @if (empty($purchase))
         <livewire:purchase.payment.index :purchase="$purchase" />
         @endif
     </div>

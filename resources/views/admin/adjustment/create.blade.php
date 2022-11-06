@@ -59,14 +59,11 @@
 @endsection
 
 @section('content')
-    <div class="px-4 mx-auto mb-4">
-        <div class="row">
-            <div class="col-12">
+    <x-card>
+        <div class="">
+            <div class="w-full">
                 <livewire:search-product />
             </div>
-        </div>
-
-        <div class="row mt-4">
             <div class="w-full px-4">
                 <x-card>
                     <div class="p-4">
@@ -74,13 +71,13 @@
                         <form action="{{ route('adjustments.store') }}" method="POST">
                             @csrf
                             <div class="flex flex-wrap -mx-2 mb-3">
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                                <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
                                     <label for="reference">{{ __('Reference') }} <span class="text-danger">*</span></label>
                                     <input type="text"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="reference" required readonly value="ADJ">
                                 </div>
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                                <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
                                     <label for="date">{{ __('Date') }} <span class="text-danger">*</span></label>
                                     <input type="date"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -106,5 +103,5 @@
                 </x-card>
             </div>
         </div>
-    </div>
+    </x-card>
 @endsection

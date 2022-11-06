@@ -11,11 +11,9 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createSupplier', 'refreshIndex'];
+    public $listeners = ['createSupplier'];
     
     public $createSupplier; 
-    
-    public $refreshIndex; 
 
     public array $rules = [
         'supplier.name' => ['required', 'string', 'max:255'],

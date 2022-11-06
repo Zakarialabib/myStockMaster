@@ -28,28 +28,33 @@ class Barcode extends Component
         return view('livewire.products.barcode');
     }
 
+    // selecte multiple products without barcode
     public function productSelected(Product $product) {
         $this->product = $product;
         $this->quantity = 1;
         $this->barcodes = [];
+        // $this->emit('productSelected', $this->product, $this->quantity, $this->barcodes);
     }
 
-    public function generateBarcodes(Product $product, $quantity) {
+    // generate barcodes for selected products
+    public function generateBarcodes(Product $product, $quantity){
         if ($quantity > 100) {
-            $this->alert('error', _('Maximum quantity is 100'));
-            return;
+            $this->alert('error', __('Max quantity is 100 per barcode generation!'));
         }
 
         $this->barcodes = [];
 
-        for ($i = 1; $i <= $quantity; $i++) {
+        for ($i=0; $i < $this->quantity; $i++) { 
             $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology,2 , 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
+
     }
 
     public function getPdf() {
 
+        // dd($this->barcodes);
+        
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'price' => $this->product->price,
@@ -58,7 +63,7 @@ class Barcode extends Component
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-'. $this->product->code .'.pdf'
+            'barcodes-'. $this->product->name .'.pdf'
        );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }

@@ -6,9 +6,11 @@
                 {{ __('Sale Payment') }}
             </h2>
             <div class="flex justify-end">
+                @if($sale)
                 <x-button wire:click="$emit('paymentModal', {{ $sale->id}})" primary type="button">
                     {{ __('Add Payment') }}
                 </x-button>
+                @endif
             </div>
         </x-slot>
         <x-slot name="content">

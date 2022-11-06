@@ -15,11 +15,10 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    
     use LivewireAlert;
 
     public $listeners = [
-        'refreshPos', 'productSelected', 
+        'refreshPos', 'productSelected', 'refreshIndex',
         'discountModalRefresh', 'checkoutModal',
         'refreshCustomers'
         ];  
@@ -49,7 +48,7 @@ class Index extends Component
     public $payment_method;
     public $note;
     public $refreshCustomers;
-    
+    public $refreshIndex;
     public array $listsForFields = [];
 
     public function rules()
@@ -75,12 +74,14 @@ class Index extends Component
         $this->initListsForFields();
     }
 
+    public function refreshIndex()
+    {
+        $this->reset();
+    }
+
     public function mount($cartInstance) {
         
         $this->cart_instance = $cartInstance;
-        
-        $this->customers = Customer::all();
-
         $this->global_discount = 0;
         $this->global_tax = 0;
         $this->shipping = 0.00;
@@ -93,12 +94,15 @@ class Index extends Component
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
-        $this->paid_amount = $this->total_amount;
+        $this->paid_amount = 0;
 
         $this->initListsForFields();    
     }
 
     public function hydrate() {
+        if ($this->payment_method == 'cash') {
+            $this->paid_amount = $this->total_amount;
+        }
         $this->total_amount = $this->calculateTotal();
         $this->updatedCustomerId();
     }

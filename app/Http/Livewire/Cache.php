@@ -4,9 +4,12 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Artisan;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Cache extends Component
 {
+    use LivewireAlert;
+
     protected $listeners = ['onClearCache'];
 
     public function render()
@@ -18,9 +21,6 @@ class Cache extends Component
     {
         Artisan::call('optimize:clear');
         Artisan::call('view:clear');
-
-        Artisan::call('migrate:fresh --seed');
-        
         Artisan::call('optimize');
 
         $this->alert('success', __('All caches have been cleared!') );

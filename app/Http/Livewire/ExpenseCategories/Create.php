@@ -11,17 +11,10 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createExpenseCategory', 'refreshIndex',];
+    public $listeners = ['createExpenseCategory'];
     
     public $createExpenseCategory; 
     
-    public $refreshIndex;
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
         'expenseCategory.name' => 'required',
         'expenseCategory.description' => '',

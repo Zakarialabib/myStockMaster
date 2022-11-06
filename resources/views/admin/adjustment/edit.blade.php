@@ -1,12 +1,10 @@
-@extends('layouts.app')
-
 @section('title', __('Edit Adjustment'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
         <div class="flex flex-wrap items-center">
             <div class="mb-5 lg:mb-0">
-                <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
+                <h2 class="mb-1 text-2xl font-bold">{{ __('Edit Adjustment') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
                         <span class="inline-block mr-2">
@@ -50,7 +48,7 @@
                                     d="M4.99992 10.8333H1.66659C1.44557 10.8333 1.23361 10.9211 1.07733 11.0774C0.921049 11.2337 0.833252 11.4457 0.833252 11.6667V18.3333C0.833252 18.5544 0.921049 18.7663 1.07733 18.9226C1.23361 19.0789 1.44557 19.1667 1.66659 19.1667H4.99992C5.22093 19.1667 5.43289 19.0789 5.58917 18.9226C5.74545 18.7663 5.83325 18.5544 5.83325 18.3333V11.6667C5.83325 11.4457 5.74545 11.2337 5.58917 11.0774C5.43289 10.9211 5.22093 10.8333 4.99992 10.8333ZM4.16658 17.5H2.49992V12.5H4.16658V17.5ZM18.3333 7.50001H14.9999C14.7789 7.50001 14.5669 7.5878 14.4107 7.74408C14.2544 7.90036 14.1666 8.11233 14.1666 8.33334V18.3333C14.1666 18.5544 14.2544 18.7663 14.4107 18.9226C14.5669 19.0789 14.7789 19.1667 14.9999 19.1667H18.3333C18.5543 19.1667 18.7662 19.0789 18.9225 18.9226C19.0788 18.7663 19.1666 18.5544 19.1666 18.3333V8.33334C19.1666 8.11233 19.0788 7.90036 18.9225 7.74408C18.7662 7.5878 18.5543 7.50001 18.3333 7.50001ZM17.4999 17.5H15.8333V9.16667H17.4999V17.5ZM11.6666 0.83334H8.33325C8.11224 0.83334 7.90028 0.921137 7.744 1.07742C7.58772 1.2337 7.49992 1.44566 7.49992 1.66667V18.3333C7.49992 18.5544 7.58772 18.7663 7.744 18.9226C7.90028 19.0789 8.11224 19.1667 8.33325 19.1667H11.6666C11.8876 19.1667 12.0996 19.0789 12.2558 18.9226C12.4121 18.7663 12.4999 18.5544 12.4999 18.3333V1.66667C12.4999 1.44566 12.4121 1.2337 12.2558 1.07742C12.0996 0.921137 11.8876 0.83334 11.6666 0.83334ZM10.8333 17.5H9.16658V2.50001H10.8333V17.5Z"
                                     fill="currentColor"></path>
                             </svg></span>
-                        <span>{{ __('Edit') }}</span>
+                        <span>{{ __('Edit Adjustment') }}</span>
                     </a>
                 </div>
             </div>
@@ -58,57 +56,53 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <div class="px-4 mx-auto mb-4">
-        <div class="row">
-            <div class="col-12">
+        <div class="flex pb-4">
+            <div class="w-full">
                 <livewire:search-product />
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="w-full px-4">
-                <x-card>
-                    <div class="p-4">
-                        @include('utils.alerts')
-                        <form action="{{ route('adjustments.update', $adjustment) }}" method="POST">
-                            @csrf
-                            @method('patch')
-                            <div class="flex flex-wrap -mx-2 mb-3">
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                                    <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
-                                    <input type="text"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="reference" required value="{{ $adjustment->getAttributes()['reference'] }}"
-                                        readonly>
-                                </div>
-                                <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+        <div class="flex">
+            <div class="w-full">
+                @include('utils.alerts')
+                <form action="{{ route('adjustments.update', $adjustment) }}" method="POST">
+                    @csrf
+                    @method('patch')
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="lg:w-1/2 sm:w-full px-3">
+                            <x-label for="reference" :value="__('Reference')" required />
+                            <input type="text"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                name="reference" required value="{{ $adjustment->getAttributes()['reference'] }}"
+                                readonly>
+                        </div>
+                        <div class="lg:w-1/2 sm:w-full px-3">
+                            <x-label for="date" :value="__('Date')" required />
+                            <input type="date"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                name="date" required value="{{ $adjustment->getAttributes()['date'] }}">
 
-                                    <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
-                                    <input type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="date" required value="{{ $adjustment->getAttributes()['date'] }}">
+                        </div>
+                    </div>
+                    <livewire:adjustment.product-table :adjustedProducts="$adjustment->adjustedProducts->toArray()" />
 
-                                </div>
-                            </div>
-                            <livewire:adjustment.product-table :adjustedProducts="$adjustment->adjustedProducts->toArray()" />
-                            <div class="mb-4">
-                                <label for="note">{{ __('Note (If Needed)') }}</label>
-                                <textarea name="note" id="note" rows="5"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                    <div class="mb-4">
+                        <label for="note">{{ __('Note (If Needed)') }}</label>
+                        <textarea name="note" id="note" rows="5"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                     {{ $adjustment->note }}
                                 </textarea>
-                            </div>
-                            <div class="mt-3">
-                                <button type="submit"
-                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                    {{ __('Update Adjustment') }} <i class="bi bi-check"></i>
-                                </button>
-                            </div>
-                        </form>
                     </div>
+                    <div class="mt-3">
+                        <button type="submit"
+                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                            {{ __('Update Adjustment') }} <i class="bi bi-check"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    </div>
-@endsection
+</x-app-layout>
