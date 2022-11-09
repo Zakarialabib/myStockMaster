@@ -21,4 +21,32 @@ return [
             100,
         ],
     ],
+    'invoiceLayout' => [
+        'name' => 'Default',
+        'header_text' => 'MyStock',
+        'highlight_color' => '#000000',
+        'footer_text' => '',
+        'is_default' => 1,
+        'invoice_heading_not_paid' => '',
+        'invoice_heading_paid' => '',
+        'show_city' => 1,
+        'show_country' => 1,
+        'show_payments' => 1,
+        'show_customer' => 1,
+        'show_shipping' => 1,
+        'show_order_tax' => 1,
+        'show_discount' => 1,
+    ],
+    
+    'ref_no_prefixes' => [
+        'purchase' => 'PO',
+        'sell' => 'SL',
+        'stock_adjustment' => 'SA',
+        'sell_return' => 'SR',
+        'sell_payment' => 'SP',
+        'expense' => 'EP',
+        'purchase_return' => 'PR',
+        'purchase_payment' => 'PP',
+        'quotation' => 'BL'
+    ] 
 ];

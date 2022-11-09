@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Payment_Purchase extends Mailable
+class PaymentSale extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,8 +33,8 @@ class Payment_Purchase extends Mailable
     public function build()
     {
         return $this->subject('PAYMENT RECEIPT')
-            ->markdown('emails.paymentPurchase')
-            ->attachData($this->pdf, 'Payment_Purchase_' . $this->facture['Ref'] . '.pdf', [
+            ->markdown('emails.paymentSale')
+            ->attachData($this->pdf, 'PaymentSale_' . $this->facture['Ref'] . '.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->facture);

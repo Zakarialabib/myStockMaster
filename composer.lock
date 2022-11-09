@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61d3c893c3a9dfd9e3c82aae2a10a5cc",
+    "content-hash": "d86b5f2396cc85461e01289540220d8d",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -3095,6 +3095,63 @@
                 }
             ],
             "time": "2022-10-28T22:51:32+00:00"
+        },
+        {
+            "name": "nxp/math-executor",
+            "version": "v2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/neonxp/MathExecutor.git",
+                "reference": "a041bb58ad02db7905a5a23de372eb811ee66dd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/a041bb58ad02db7905a5a23de372eb811ee66dd1",
+                "reference": "a041bb58ad02db7905a5a23de372eb811ee66dd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "phpunit/phpunit": ">=9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NXP\\": "src/NXP"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander 'NeonXP' Kiryukhin",
+                    "email": "a.kiryukhin@mail.ru"
+                },
+                {
+                    "name": "Bruce Wells",
+                    "email": "brucekwells@gmail.com"
+                }
+            ],
+            "description": "Simple math expressions calculator",
+            "homepage": "http://github.com/NeonXP/MathExecutor",
+            "keywords": [
+                "calculator",
+                "expression",
+                "formula",
+                "math",
+                "mathmatics",
+                "parser"
+            ],
+            "support": {
+                "issues": "https://github.com/neonxp/MathExecutor/issues",
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.1"
+            },
+            "time": "2022-08-04T12:18:48+00:00"
         },
         {
             "name": "phenx/php-font-lib",

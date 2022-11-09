@@ -28,6 +28,7 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -249,10 +250,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/sale-return-payments/destroy/{saleReturnPayment}', 'SaleReturnPaymentsController@destroy')
         ->name('sale-return-payments.destroy');
 
-     //User Profile
-     Route::get('/user/profile', 'ProfileController@edit')->name('profile.edit');
-     Route::patch('/user/profile', 'ProfileController@update')->name('profile.update');
-     Route::patch('/user/password', 'ProfileController@updatePassword')->name('profile.update.password');
+     //User Profile 
+     Route::get('/user/profile', [ProfileController::class ,'index'] )->name('profile.index');
+    //  Route::patch('/user/profile', [ ProfileController::class , 'update'])->name('profile.update');
+    //  Route::patch('/user/password', [ ProfileController::class , 'updatePassword'])->name('profile.update.password');
  
      //Users
      Route::resource('users', UsersController::class);

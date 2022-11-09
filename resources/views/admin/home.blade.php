@@ -28,6 +28,7 @@
 @endsection
 <x-app-layout>
     <div class="px-4 mx-auto">
+        <livewire:calculator />
         @can('show_total_stats')
             <div class="flex flex-wrap -m-4 py-4">
                 <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">

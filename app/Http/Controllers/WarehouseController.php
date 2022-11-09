@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\Request;
 
 class WarehouseController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
         abort_if(Gate::denies('access_warehouses'), 403);
 

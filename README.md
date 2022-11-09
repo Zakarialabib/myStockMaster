@@ -20,16 +20,20 @@ This project allows you to manage your inventory, sales, and purchases, easy & s
 - [x] Users
 - [x] Roles
 - [x] Permissions
+- [x] Pos
 - [x] Stock adjustment
 - [x] Currencies
 - [x] Warehouses
-- [] Notifications
-- [] SMS Notifications
-- [] Email Templates
-- [] Backup - GDrive & Local
-- [] Import/Export - working on it
-- [] Multi language - working on it
-- [] Multi store - working on it
+- [x] Calculator dashboard
+- [ ] User Profile - working on it
+- [ ] Printers
+- [ ] Notifications
+- [ ] SMS Notifications
+- [ ] Email Templates
+- [ ] Backup - GDrive & Local
+- [ ] Import/Export - working on it
+- [ ] Multi language - working on it
+- [ ] Multi store - working on it
 
 ## Demo
 
@@ -65,9 +69,11 @@ You can check the demo here:
 - Send telegram to admin when trasnactions are made
 - Send products through telegram bot to customers
 - Send email to admin when trasnactions are made
-- Sync with woocommerce to get products and orders
-- Sync with youCan to get products and orders
-- Sync with Shopify to get products and orders
+- Expose Api to connect with other systems
+- Make connections with woocommerce to get products and orders
+- Make connections with youCan to get products and orders
+- Make connections with Shopify to get products and orders
+- Connect with delivery system to get orders and send them to delivery system
 
 ## Changelog
 

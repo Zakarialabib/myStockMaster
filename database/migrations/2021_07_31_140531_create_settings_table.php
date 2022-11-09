@@ -41,6 +41,9 @@ class CreateSettingsTable extends Migration
             $table->boolean('show_discount')->default(1);
             $table->boolean('show_shipping')->default(1);
             
+            $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
+            $table->integer('printer_id')->nullable();
+            
             $table->timestamps();
         });
     }
