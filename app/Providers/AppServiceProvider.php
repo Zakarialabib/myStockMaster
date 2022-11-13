@@ -34,22 +34,25 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.force_https_scheme') || app()->environment('production')) {
             URL::forceScheme('https');
         }
-        
-        if (Session::has('language')) {
-        $languages = cache()->rememberForever('languages', function () {
-            return Language::pluck('name', 'code')->toArray();
-        });
-        View::share('languages', $languages);
-        } else {
-        $languages = cache()->rememberForever('languages', function () {
-            return Language::where('is_default', 1)->first();
-        });
-        
-        View::share('languages', $languages);
-        }
-        
-        Model::shouldBeStrict(! $this->app->isProduction());
 
-        //
+        View::share('languages', $this->getLanguages());
+
+        Model::shouldBeStrict(! $this->app->isProduction());
+    }
+
+    /**
+     * @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null
+     */
+    private function getLanguages()
+    {
+        if (! Schema::hasTable('languages')) {
+            return null;
+        }
+
+        return cache()->rememberForever('languages', function () {
+            return Session::has('language')
+                ? Language::pluck('name', 'code')->toArray()
+                : Language::where('is_default', 1)->first();
+        });
     }
 }
