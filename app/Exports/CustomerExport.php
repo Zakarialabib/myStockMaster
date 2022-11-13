@@ -15,31 +15,31 @@ class CustomerExport implements FromQuery, WithMapping, WithHeadings
     protected $selected;
 
     public function __construct($selected)
-    { 
+    {
         $this->selected = $selected;
     }
 
-    /**
-    * @var Customer $customer
-    */
     public function query()
     {
-        if($this->selected){
+        if ($this->selected) {
             return Customer::query()->whereIn('id', $this->selected);
-        } else {
-            return Customer::query();
         }
+
+        return Customer::query();
     }
 
-    public function map($customer): array
+    /**
+     * @var Customer $row
+     */
+    public function map($row): array
     {
         return [
-            $customer->id,
-            $customer->name,
-            $customer->email,
-            $customer->phone,
-            $customer->city,
-            $customer->country,
+            $row->id,
+            $row->name,
+            $row->email,
+            $row->phone,
+            $row->city,
+            $row->country,
         ];
     }
 
@@ -54,5 +54,4 @@ class CustomerExport implements FromQuery, WithMapping, WithHeadings
             __('Country'),
         ];
     }
-
 }

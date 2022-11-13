@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Users;
 
 use Livewire\Component;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Profile extends Component
@@ -20,9 +21,8 @@ class Profile extends Component
         return view('livewire.users.profile');
     }
 
-    public function update() 
+    public function update()
     {
-        
         $this->validate();
 
         auth()->user()->update([
@@ -36,13 +36,14 @@ class Profile extends Component
                 'image' => $this->image->hashName()
             ]);
         }
+
         $this->alert('success', 'Profile updated successfully!');
-        
     }
 
-    public function updatePassword() {
+    public function updatePassword()
+    {
         $this->validate([
-            'current_password'  => ['required', 'max:255', new MatchCurrentPassword()],
+            'current_password' => ['required', 'max:255', new MatchCurrentPassword()],
             'password' => 'required|min:8|max:255|confirmed'
         ]);
 
@@ -51,6 +52,5 @@ class Profile extends Component
         ]);
 
         $this->alert('success', 'Password updated successfully!');
-
     }
 }

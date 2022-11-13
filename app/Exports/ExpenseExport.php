@@ -15,23 +15,19 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
     protected $selected;
 
     public function __construct($selected)
-    { 
+    {
         $this->selected = $selected;
     }
-    
-    /**
-    * @var Expense $expense
-    */
 
     public function query()
     {
-        if($this->selected){
+        if ($this->selected) {
             return Expense::query()->whereIn('id', $this->selected);
-        } else {
-            return Expense::query();
         }
+
+        return Expense::query();
     }
- 
+
     public function headings(): array
     {
         return [
@@ -42,16 +38,16 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
         ];
     }
 
-    public function map($expense) : array
+    /**
+     * @var Expense $row
+     */
+    public function map($row): array
     {
-
         return[
-        $expense->id,
-        $expense->name,
-        $expense->amount,
-        $expense->created_at,
+            $row->id,
+            $row->name,
+            $row->amount,
+            $row->created_at,
         ];
-
     }
-
 }

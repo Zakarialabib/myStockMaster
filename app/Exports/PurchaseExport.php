@@ -17,15 +17,20 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
         return Purchase::query();
     }
 
-    public function map($purchase): array
+    /**
+     * @param Purchase $row
+     *
+     * @return array
+     */
+    public function map($row): array
     {
         return [
-            $purchase->product->name,
-            $purchase->quantity,
-            $purchase->price,
-            $purchase->total,
-            $purchase->supplier->name,
-            $purchase->created_at,
+            $row->product->name,
+            $row->quantity,
+            $row->price,
+            $row->total,
+            $row->supplier->name,
+            $row->created_at,
         ];
     }
 

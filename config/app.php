@@ -186,7 +186,7 @@ return [
         /*
          * Package Service Providers...
          */
-        
+
         Spatie\Permission\PermissionServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
