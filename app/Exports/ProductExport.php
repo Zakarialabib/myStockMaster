@@ -15,32 +15,32 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
     protected $selected;
 
     public function __construct($selected)
-    { 
+    {
         $this->selected = $selected;
     }
-    /**
-    * @var Product $product
-    */
 
     public function query()
     {
-        if($this->selected){
+        if ($this->selected) {
             return Product::query()->whereIn('id', $this->selected);
-        } else {
-            return Product::query();
         }
+
+        return Product::query();
     }
 
-    public function map($product): array
+    /**
+     * @var Product $row
+     */
+    public function map($row): array
     {
         return [
-            $product->code,
-            $product->name,
-            $product->category->name,
-            $product->quantity,
-            $product->cost,
-            $product->price,
-            $product->created_at,
+            $row->code,
+            $row->name,
+            $row->category->name,
+            $row->quantity,
+            $row->cost,
+            $row->price,
+            $row->created_at,
         ];
     }
 
@@ -56,5 +56,4 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
             __('Created At'),
         ];
     }
-   
 }

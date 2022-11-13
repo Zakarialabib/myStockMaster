@@ -4,14 +4,16 @@ namespace App\Support;
 
 use Carbon\Carbon;
 
-class Helper {
+class Helper
+{
 
     public static function genCode()
     {
         return Carbon::now()->format('ymd') . mt_rand(10000000, 99999999);
     }
-    
-    public static function slug($string, $separator = '-') {
+
+    public static function slug($string, $separator = '-')
+    {
         $_transliteration = [
             '/ä|æ|ǽ/' => 'ae',
             '/ö|œ/' => 'oe',
@@ -75,5 +77,4 @@ class Helper {
         unset($_transliteration);
         return mb_strtolower(preg_replace(array_keys($map), array_values($map), $string));
     }
-
 }

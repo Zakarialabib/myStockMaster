@@ -18,26 +18,27 @@ use App\Models\Warehouse;
 
 class ProductPage extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithSorting;
+    use LivewireAlert;
+    use WithPagination;
+    use WithFileUploads;
 
     public $product;
 
     public $listeners = [
-    
-    'confirmDelete', 'delete', 'showModal', 'editModal',         
-    'refreshIndex','import','exportExcel','exportPdf',
-    'importModal'
-
+        'confirmDelete', 'delete', 'showModal', 'editModal',
+        'refreshIndex','import','exportExcel','exportPdf',
+        'importModal'
     ];
 
     public int $perPage;
-    
+
     public $showModal;
-    
+
     public $editModal;
 
     public $importModal;
-    
+
     public $refreshIndex;
 
     public array $orderable;
@@ -51,7 +52,7 @@ class ProductPage extends Component
     public array $paginationOptions;
 
     public array $listsForFields = [];
-    
+
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -135,15 +136,17 @@ class ProductPage extends Component
     {
         abort_if(Gate::denies('access_products'), 403);
 
-        $query = Product::with(['category'=>function($query){
-            $query->select('id','name');
-        },'brand'=>function($query){
-            $query->select('id','name');
-        }])->select('products.*')->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+        $query = Product::query()
+            ->with([
+                'category' => fn ($query) => $query->select('id', 'name'),
+                'brand' => fn ($query) => $query->select('id', 'name')
+            ])
+            ->select('products.*')
+            ->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $products = $query->paginate($this->perPage);
 
@@ -156,7 +159,7 @@ class ProductPage extends Component
 
         $this->product = $product;
 
-        $this->showModal = true;  
+        $this->showModal = true;
     }
 
     public function editModal(Product $product)
@@ -169,7 +172,7 @@ class ProductPage extends Component
 
         $this->product = $product;
 
-        $this->editModal = true;  
+        $this->editModal = true;
     }
 
     public function update()
@@ -178,9 +181,9 @@ class ProductPage extends Component
 
         $this->validate();
 
-        if ($this->product->image != null) {    
-            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
-            $this->image->storeAs('products',$imageName);
+        if (null !== $this->product->image) {
+            $imageName = Str::slug($this->product->name) . '.' . $this->image->extension();
+            $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
 
@@ -191,7 +194,6 @@ class ProductPage extends Component
         $this->alert('success', 'Product updated successfully.');
     }
 
-    
     public function importModal()
     {
         abort_if(Gate::denies('import_products'), 403);
@@ -200,7 +202,7 @@ class ProductPage extends Component
 
         $this->resetValidation();
 
-        $this->importModal = true;  
+        $this->importModal = true;
     }
 
     public function import()
@@ -214,7 +216,7 @@ class ProductPage extends Component
             ],
         ]);
 
-        Product::import(new ProductImport, $this->file('import_file'));
+        Product::import(new ProductImport(), $this->file('import_file'));
 
         $this->alert('success', 'Products imported successfully');
 
@@ -225,14 +227,14 @@ class ProductPage extends Component
     {
         abort_if(Gate::denies('export_products'), 403);
 
-        return (new ProductExport)->download('products.xlsx');
+        return (new ProductExport())->download('products.xlsx');
     }
 
     public function exportPdf()
     {
         abort_if(Gate::denies('export_products'), 403);
 
-        return (new ProductExport)->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return (new ProductExport())->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     protected function initListsForFields(): void

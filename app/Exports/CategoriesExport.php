@@ -15,28 +15,25 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings
     protected $selected;
 
     public function __construct($selected)
-    { 
+    {
         $this->selected = $selected;
     }
-    /**
-    * @var Category $category
-    */
 
     public function query()
     {
-        if($this->selected){
+        if ($this->selected) {
             return Category::query()->whereIn('id', $this->selected);
-        } else {
-            return Category::query();
         }
+
+        return Category::query();
     }
 
-    public function map($category): array
+    public function map($row): array
     {
         return [
-            $category->name,
-            $category->code,
-            $category->created_at,
+            $row->name,
+            $row->code,
+            $row->created_at,
         ];
     }
 

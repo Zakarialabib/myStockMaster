@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Setting;
 use App\Models\Language;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
@@ -20,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
         // Sanctum::ignoreMigrations();
     }
 

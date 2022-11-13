@@ -15,21 +15,16 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     protected $selected;
 
     public function __construct($selected)
-    { 
+    {
         $this->selected = $selected;
     }
-    /**
-    * @var Supplier $supplier
-    */
 
     public function query()
     {
-        if($this->selected){
+        if ($this->selected) {
             return Supplier::query()->whereIn('id', $this->selected);
-        } else {
-            return Supplier::query();
         }
-        
+        return Supplier::query();
     }
 
     public function headings(): array
@@ -45,23 +40,21 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
             __('Tax number'),
         ];
     }
-  
 
-    public function map($supplier) : array
+    /**
+     * @var Supplier $row
+     */
+    public function map($row): array
     {
-
         return[
-        $supplier->id,
-        $supplier->name,
-        $supplier->email,
-        $supplier->phone,
-        $supplier->city,
-        $supplier->country,
-        $supplier->address,
-        $supplier->tax_number,
+        $row->id,
+        $row->name,
+        $row->email,
+        $row->phone,
+        $row->city,
+        $row->country,
+        $row->address,
+        $row->tax_number,
         ];
-
     }
-
-  
 }
