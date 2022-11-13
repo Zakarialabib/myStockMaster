@@ -16,6 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'force_https_scheme' => env('FORCE_HTTPS_SCHEME', false),
 
     /*
     |--------------------------------------------------------------------------
