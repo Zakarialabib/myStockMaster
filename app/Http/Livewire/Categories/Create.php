@@ -12,24 +12,20 @@ class Create extends Component
     use LivewireAlert;
     
     public $listeners = ['createCategory'];
-    
-    public $code , $name;
 
     public $createCategory;
+
+    public $category;
+
+    public $name;
     
     protected $rules = [
-        'code' => 'nullable|string|max:255',
         'name' => 'required|string|max:255',
     ];
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
-    }
-
-    public function mount(Category $category)
-    {
-        $this->category = $category;
     }
 
     public function render()
@@ -41,9 +37,7 @@ class Create extends Component
 
     public function createCategory()
     {
-        $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->reset();
 
         $this->createCategory = true;
     }
@@ -54,9 +48,9 @@ class Create extends Component
 
         Category::create($validatedData);
 
-        $this->alert('success', 'Category created successfully.');
-        
         $this->emit('refreshIndex');
+        
+        $this->alert('success', __('Category created successfully.'));
         
         $this->createCategory = false;
     }

@@ -56,10 +56,10 @@ class Create extends Component
                 'user_id' => $this->user->id,
                 'balance' => 0,
             ]);
-            $this->alert('success', 'User created successfully!');
+            $this->alert('success', __('User created successfully!'));
         } else {
 
-            $this->alert('warning', 'User was not created !');
+            $this->alert('warning', __('User was not created !'));
         }
 
         $this->emit('userCreated');

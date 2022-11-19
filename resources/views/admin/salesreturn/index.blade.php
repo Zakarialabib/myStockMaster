@@ -49,7 +49,7 @@
 @section('content')
     <div class="px-4 mx-auto">
         <div class="row">
-            <div class="col-12">
+            <div class="w-full px-4">
                 <div class="card">
                     <div class="p-4">
                         <a href="{{ route('sale-returns.create') }}" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">

@@ -119,7 +119,7 @@ class Index extends Component
 
         $this->reset('createModal');
 
-        $this->alert('success', 'Adjustment created successfully.');
+        $this->alert('success', __('Adjustment created successfully.'));
     }
 
     public function editModal(Adjustment $adjustment)
@@ -145,14 +145,14 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Adjustment updated successfully.');
+        $this->alert('success', __('Adjustment updated successfully.'));
     }
 
     public function showModal(Adjustment $adjustment)
     {
         abort_if(Gate::denies('adjustment_show'), 403);
 
-        $this->adjustment = $adjustment;
+        $this->adjustment = Adjustment::find($adjustment->id);
 
         $this->showModal = true;
     }
@@ -165,7 +165,7 @@ class Index extends Component
 
         $this->resetSelected();
 
-        $this->alert('success', 'Adjustment deleted successfully.');
+        $this->alert('success', __('Adjustment deleted successfully.'));
     }
 
     public function delete(Adjustment $adjustment)
@@ -174,7 +174,7 @@ class Index extends Component
 
         $adjustment->delete();
 
-        $this->alert('success', 'Adjustment deleted successfully.');
+        $this->alert('success', __('Adjustment deleted successfully.'));
     }
 
 }

@@ -124,7 +124,7 @@ class Index extends Component
 
     public function showModal(User $user)
     {
-        $this->user = $user;
+        $this->user = User::find($user->id);
 
         $this->showModal = true;
     }
@@ -137,7 +137,7 @@ class Index extends Component
 
         $this->resetValidation();
         
-        $this->user = $user;
+        $this->user = User::find($user->id);
 
         $this->editModal = true;
     }

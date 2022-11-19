@@ -142,68 +142,68 @@
 
             <x-slot name="content">
                 <div class="px-4 mx-auto mb-4">
-                    <div class="row mb-3">
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                    <div class="flex flex-row mb-3">
+                        <div class="lg:w-1/2 sm:w-full px-3">
                             {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 110) !!}
                         </div>
-                        <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                        <div class="lg:w-1/2 sm:w-full px-3">
                             <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
                                 class="w-32 h-32 rounded-full">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="flex flex-row">
                         <div class="w-full px-4">
-                            <div class="table-responsive">
+                            <x-table-responsive>
                                 <table class="table table-bordered table-striped mb-0">
-                                    <tr>
-                                        <th>{{ __('Product Code') }}</th>
-                                        <td>{{ $product->code }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Barcode Symbology') }}</th>
-                                        <td>{{ $product->barcode_symbology }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Name') }}</th>
-                                        <td>{{ $product->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Category') }}</th>
-                                        <td>{{ $product->category->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Cost') }}</th>
-                                        <td>{{ format_currency($product->cost) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Price') }}</th>
-                                        <td>{{ format_currency($product->price) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Quantity') }}</th>
-                                        <td>{{ $product->quantity . ' ' . $product->unit }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Stock Worth') }}</th>
-                                        <td>
+                                    <x-table.tr>
+                                        <x-table.th>{{ __('Product Code') }}</x-table.th>
+                                        <x-table.td>{{ $product->code }}</x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>{{ __('Barcode Symbology') }}</x-table.th>
+                                        <x-table.td>{{ $product->barcode_symbology }}</x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>{{ __('Name') }}</x-table.th>
+                                        <x-table.td>{{ $product->name }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Category') }}</x-table.th>
+                                        <x-table.td>{{ $product->category->name }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Cost') }}</x-table.th>
+                                        <x-table.td>{{ format_currency($product->cost) }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Price') }}</x-table.th>
+                                        <x-table.td>{{ format_currency($product->price) }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Quantity') }}</x-table.th>
+                                        <x-table.td>{{ $product->quantity . ' ' . $product->unit }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Stock Worth') }}</x-table.th>
+                                        <x-table.td>
                                             {{ __('COST') }}::
                                             {{ format_currency($product->cost * $product->quantity) }}
                                             /
                                             {{ __('PRICE') }}::
                                             {{ format_currency($product->price * $product->quantity) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Alert Quantity') }}</th>
-                                        <td>{{ $product->stock_alert }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Tax (%)') }}</th>
-                                        <td>{{ $product->order_tax ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Tax Type') }}</th>
-                                        <td>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Alert Quantity') }}</x-table.th>
+                                        <x-table.td>{{ $product->stock_alert }}</x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Tax (%)') }}</x-table.th>
+                                        <x-table.td>{{ $product->order_tax ?? 'N/A' }}</x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>{{ __('Tax Type') }}</x-table.th>
+                                        <x-table.td>
                                             @if ($product->tax_type == 1)
                                                 {{ __('Exclusive') }}
                                             @elseif($product->tax_type == 2)
@@ -211,21 +211,16 @@
                                             @else
                                                 N/A
                                             @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ __('Description') }}</th>
-                                        <td>{{ $product->note ?? 'N/A' }}</td>
-                                    </tr>
-                                </table>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                     <x-table.tr>
+                                        <x-table.th>{{ __('Description') }}</x-table.th>
+                                        <x-table.td>{{ $product->note ?? 'N/A' }}</x-table.td>
+                                    </x-table.tr>
+                                </x-table-responsive>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="w-full flex justify-start space-x-2">
-                    <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
-                        {{ __('Close') }}
-                    </x-button>
                 </div>
             </x-slot>
         </x-modal>
@@ -362,11 +357,8 @@
                     </div>
 
                     <div class="flex justify-start space-x-2">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
-                        </x-button>
-                        <x-button primary wire:click="$toggle('editModal')" wire:loading.attr="disabled">
-                            {{ __('Close') }}
                         </x-button>
                     </div>
                 </div>
@@ -395,7 +387,7 @@
                     </div>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="import" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="import" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>

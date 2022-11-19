@@ -37,7 +37,7 @@ class Profile extends Component
             ]);
         }
 
-        $this->alert('success', 'Profile updated successfully!');
+        $this->alert('success', __('Profile updated successfully!'));
     }
 
     public function updatePassword()
@@ -51,6 +51,6 @@ class Profile extends Component
             'password' => Hash::make($this->password)
         ]);
 
-        $this->alert('success', 'Password updated successfully!');
+        $this->alert('success', __('Password updated successfully!'));
     }
 }

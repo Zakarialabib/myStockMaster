@@ -56,7 +56,8 @@
                     </x-accordion>
 
                     <div class="w-full flex items-center justify-start space-x-2 mt-4">
-                        <x-button primary wire:click="create" wire:loading.attr="disabled">
+                        <x-button primary type="button" wire:click="create" 
+                                wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
                     </div>

@@ -64,14 +64,16 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal({{ $customer->id }})" wire:loading.attr="disabled">
+                            <x-button info wire:click="showModal({{ $customer->id }})" 
+                               type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $customer->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $customer->id }})" 
+                               type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $customer->id }})"
-                                wire:loading.attr="disabled">
+                               type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -206,7 +208,7 @@
                     </x-accordion>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
                     </div>
@@ -260,7 +262,7 @@
                     </x-table-responsive>
 
                     <div class="w-full flex justify-start">
-                        <x-button primary wire:click="importExcel" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="importExcel" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>

@@ -137,9 +137,9 @@ class Index extends Component
 
         $this->printer->save();
 
-        $this->showModal = false;
+        $this->editModal = false;
 
-        $this->alert('success', 'Printer updated successfully!');
+        $this->alert('success', __('Printer updated successfully!'));
     }
 
     public function delete(Printer $printer)
@@ -148,7 +148,7 @@ class Index extends Component
 
         $printer->delete();
 
-        $this->alert('success', 'Printer deleted successfully!');
+        $this->alert('success', __('Printer deleted successfully!'));
     }
     
 }

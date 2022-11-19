@@ -22,16 +22,14 @@ class Index extends Component
     public int $perPage;
 
     public $listeners = [
-     'confirmDelete', 'delete', 'showModal', 'editModal',
-     'createModal','paymentModal' , 'paymentSave', 'refreshIndex'
+     'confirmDelete', 'delete', 'showModal',
+     'paymentModal' , 'refreshIndex'
     ];
 
     public $showModal;
+    
+    public $paymentModal;
 
-    public $createModal;
-    
-    public $editModal;
-    
     public $purchase_id;
 
     public array $orderable;
@@ -112,56 +110,6 @@ class Index extends Component
         return view('livewire.purchase.index', compact('purchases'));
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('purchase_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->reset();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('purchase_create'), 403);
-
-        $this->validate();
-
-        Purchase::create($this->purchase);
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Purchase created successfully.');
-    }
-
-    public function editModal(Purchase $purchase)
-    {
-        abort_if(Gate::denies('purchase_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->purchase = $purchase;
-
-        $this->editModal = true;
-    }
-
-    public function update()
-    {
-        $this->validate();
-
-        $this->purchase->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', 'Purchase updated successfully.');
-    }
-
     public function showModal(Purchase $purchase)
     {
         abort_if(Gate::denies('purchase_show'), 403);
@@ -170,7 +118,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->purchase = $purchase;
+        $this->purchase = Purchase::find($purchase->id);
 
         $this->showModal = true;
     }
@@ -190,7 +138,6 @@ class Index extends Component
 
         $purchase->delete();
     }
-
 
     //  Payment modal
 
@@ -254,7 +201,7 @@ class Index extends Component
         
             $this->emit('refreshIndex');
 
-            $this->alert('success', 'Payment created successfully.');
+            $this->alert('success', __('Payment created successfully.'));
 
             $this->paymentModal = false;
 

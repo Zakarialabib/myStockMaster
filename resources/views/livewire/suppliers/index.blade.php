@@ -58,14 +58,15 @@
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
                             <x-button secondary wire:click="showModal({{ $supplier->id }})"
-                                wire:loading.attr="disabled">
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $supplier->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $supplier->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $supplier->id }})"
-                                wire:loading.attr="disabled">
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -189,7 +190,7 @@
                     </x-accordion>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
                     </div>
@@ -218,7 +219,7 @@
                     </div>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="import" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="import" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>

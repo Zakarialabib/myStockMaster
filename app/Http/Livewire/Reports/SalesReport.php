@@ -8,11 +8,8 @@ use App\Models\Sale;
 
 class SalesReport extends Component
 {
-
     use WithPagination;
-
-    protected $paginationTheme = 'bootstrap';
-
+    
     public $customers;
     public $start_date;
     public $end_date;

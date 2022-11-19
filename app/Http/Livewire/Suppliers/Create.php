@@ -53,7 +53,7 @@ class Create extends Component
 
         $this->supplier->save();
 
-        $this->alert('success', 'Supplier created successfully.');
+        $this->alert('success', __('Supplier created successfully.'));
 
         $this->emit('refreshIndex');
 

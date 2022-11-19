@@ -14,6 +14,8 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createExpense'];
+
+    public $reference, $category_id, $date, $amount, $details, $user_id, $warehouse_id;
     
     public $createExpense; 
     
@@ -24,20 +26,20 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
     
-    public array $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|max:255',
-        'expense.user_id' => 'nullable',
-        'expense.warehouse_id' => 'nullable',
+    protected $rules = [
+        'reference' => 'required|string|max:255',
+        'category_id' => 'required|integer|exists:expense_categories,id',
+        'date' => 'required',
+        'amount' => 'required|numeric',
+        'details' => 'nullable|string|max:255',
+        'user_id' => 'nullable',
+        'warehouse_id' => 'nullable',
     ];
 
-    public function mount(Expense $expense)
-    {
-        $this->expense = $expense;
-        
+    public function mount()
+    {   
+        $this->date = date('Y-m-d');
+
         $this->initListsForFields();
     }
 
@@ -50,24 +52,20 @@ class Create extends Component
 
     public function createExpense()
     {
-        $this->resetErrorBag();
+        $this->reset();
 
-        $this->resetValidation();
-
-        
-        
         $this->createExpense = true;
     }
 
     public function create()
     {
-        $this->validate();
+        $validatedData = $this->validate();
         
         $user_id = auth()->user()->id;
         
         $this->expense->user_id = $user_id;
 
-        $this->expense->save();
+        Expense::create($validatedData);
 
         $this->alert('success', __('Expense created successfully.'));
 

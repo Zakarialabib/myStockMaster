@@ -78,7 +78,7 @@ class Index extends Component
 
         cache()->forget('settings');
 
-        $this->alert('success', 'Settings Updated!');
+        $this->alert('success', __('Settings Updated successfully !'));
     }
 
     protected function initListsForFields(): void

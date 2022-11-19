@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if($this->selected)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
+            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
             @endif
@@ -64,11 +64,11 @@
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
                             <x-button primary wire:click="$emit('editModal', {{ $brand->id }})"
-                                wire:loading.attr="disabled">
+                              type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $brand->id }})"
-                                wire:loading.attr="disabled">
+                              type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -131,11 +131,11 @@
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                    <div class="w-full py-2 flex justify-start px-3">
+                        <x-button type="button" primary 
+                                  wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
-                        
                     </div>
                 </div>
             </form>

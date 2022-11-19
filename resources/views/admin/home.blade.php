@@ -1,9 +1,33 @@
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/chart-config.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/chart-config.js') }}"></script>
+    <script>
+        document.querySelectorAll('.js-date').forEach(el => {
+            el.addEventListener('click', event => {
+                clearActive();
+                hideAll();
+                el.classList.add('active');
+                document.querySelector(`#${el.dataset.date}`).style.display = 'flex';
+            });
+        });
+
+        const clearActive = () => {
+            document.querySelectorAll('.js-date').forEach(el => {
+                el.classList.remove('active');
+            });
+        };
+
+        const hideAll = () => {
+            document.querySelectorAll('.js-date-row').forEach(el => {
+                el.style.display = 'none';
+            });
+        };
+    </script>
 @endpush
 
-@section('title', __('Home'))
+@section('title', __('Dashboard'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
@@ -27,8 +51,117 @@
     </section>
 @endsection
 <x-app-layout>
-    <div class="px-4 mx-auto">
+    <div class="px-2 mx-auto">
         <livewire:calculator />
+        <div class="md:inline-flex float-right pt-2 pb-5 sm:flex sm:flex-wrap">
+            <button type="button" data-date="today"
+                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300 active">
+                {{ __('Today') }}
+            </button>
+
+            <button type="button" data-date="month"
+                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+                {{ __('Last month') }}
+            </button>
+
+            <button type="button" data-date="semi"
+                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+                {{ __('Last 6 month') }}
+            </button>
+
+            <button type="button" data-date="year"
+                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+                {{ __('Last year') }}
+            </button>
+        </div>
+        @foreach ($data as $key => $d)
+            @if ($loop->first)
+                <div class="w-full flex flex-wrap align-center mb-4 js-date-row" id="{{ $key }}">
+                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
+                        <div
+                            class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                            <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    {{ __('Sales') }}
+                                </p>
+                                <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    {{ format_currency($d['salesTotal']) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                            <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    {{ __('Stock Value') }}
+                                </p>
+                                <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    {{ format_currency($d['stockValue']) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="w-full flex flex-wrap align-center mb-4 js-date-row" style="display: none"
+                    id="{{ $key }}">
+                    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
+                        <div
+                            class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                            <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    {{ __('Sales') }}
+                                </p>
+                                <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    {{ format_currency($d['salesTotal']) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                            <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    {{ __('Stock Value') }}
+                                </p>
+                                <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    {{ format_currency($d['stockValue']) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endforeach
         @can('show_total_stats')
             <div class="flex flex-wrap -m-4 py-4">
                 <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
@@ -82,7 +215,7 @@
                             </span>
                             <h3 class="text-sm text-gray-600">
                                 {{ __('Profit') }}
-                            </h3>    
+                            </h3>
                         </div>
                         <h2 class="mb-2 text-3xl font-bold">{{ format_currency($profit) }}</h2>
                     </div>
@@ -94,7 +227,7 @@
             <div class="flex flex-wrap -m-2 py-4">
                 @can('show_weekly_sales_purchases')
                     <div class="lg:w-3/5 sm:w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                        <div class="p-6 rounded bg-white shadow-md">
                             <div class="text-xl mb-2">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
                             </div>
@@ -106,7 +239,7 @@
                 @endcan
                 @can('show_month_overview')
                     <div class="lg:w-2/5 sm:w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                        <div class="p-6 rounded bg-white shadow-md">
                             <div class="text-xl mb-2">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
                             </div>

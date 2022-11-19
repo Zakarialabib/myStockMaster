@@ -21,9 +21,11 @@ class HomeController extends Controller
 {
 
     public function index() {
+
         $sales = Sale::completed()->sum('total_amount');
         $sale_returns = SaleReturn::completed()->sum('total_amount');
         $purchase_returns = PurchaseReturn::completed()->sum('total_amount');
+
         $product_costs = 0;
 
         foreach (Sale::completed()->with('saleDetails')->get() as $sale) {
@@ -35,11 +37,35 @@ class HomeController extends Controller
         $revenue = ($sales - $sale_returns) / 100;
         $profit = $revenue - $product_costs;
 
+        $data = array(
+            'today' => array(
+                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now())->sum(DB::raw('quantity * cost')),
+               
+            ),
+            'month' => array(
+                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now()->subMonth())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
+               
+            ),
+            'semi' => array(
+                'salesTotal' => Sale::whereDate( 'created_at', '>=' , Carbon::now()->subMonths(6))->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
+                
+            ),
+            'year' => array(
+                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now()->subYear())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
+            ),
+        );
+
+
         return view('admin.home', [
             'revenue'          => $revenue,
             'sale_returns'     => $sale_returns / 100,
             'purchase_returns' => $purchase_returns / 100,
-            'profit'           => $profit
+            'profit'           => $profit,
+            'data'             => $data,
         ]);
     }
 

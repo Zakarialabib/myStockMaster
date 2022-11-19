@@ -11,7 +11,7 @@ class PurchasesReport extends Component
 
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
+    
 
     public $suppliers;
     public $start_date;

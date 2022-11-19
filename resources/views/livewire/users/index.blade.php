@@ -89,14 +89,15 @@
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
                             <x-button secondary wire:click="showModal({{ $user->id }})"
-                                wire:loading.attr="disabled">
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $user->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $user->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $user->id }})"
-                                wire:loading.attr="disabled">
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -257,7 +258,7 @@
                     </x-accordion>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
                     </div>

@@ -101,7 +101,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_show'), 403);
 
-        $this->warehouse = $warehouse;
+        $this->warehouse = Warehouse::find($warehouse->id);
 
         $this->showModal = true;
     }
@@ -114,7 +114,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->warehouse = $warehouse;
+        $this->warehouse = Warehouse::find($warehouse->id);
 
         $this->editModal = true;
     }
@@ -129,7 +129,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Warehouse updated successfully');
+        $this->alert('success', __('Warehouse updated successfully'));
     }
 
 
@@ -139,7 +139,7 @@ class Index extends Component
 
         $warehouse->delete();
 
-        $this->alert('success', 'Warehouse successfully deleted.');
+        $this->alert('warning', __('Warehouse successfully deleted.'));
     }
 
     public function deleteSelected()
@@ -148,7 +148,7 @@ class Index extends Component
 
         Warehouse::whereIn('id', $this->selected)->delete();
 
-        $this->alert('success', 'Warehouses successfully deleted.');
+        $this->alert('warning', __('Warehouses successfully deleted.'));
     }
 
 }

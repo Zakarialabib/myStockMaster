@@ -14,20 +14,24 @@ class Create extends Component
     use LivewireAlert , WithFileUploads;
 
     public $createBrand;
+
+    public $brand;
     
+    public $name, $description;
+
     public $image;
 
     public $listeners = ['createBrand'];
 
-    public function mount(Brand $brand)
-    {
-        $this->brand = $brand;
-    }
-
-    public array $rules = [
-        'brand.name' => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string|max:255',
     ];
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function render()
     {
@@ -38,16 +42,14 @@ class Create extends Component
 
     public function createBrand()
     {
-        $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->reset();
 
         $this->createBrand = true;
     }
 
     public function create()
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
         if($this->image){
             $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
@@ -55,11 +57,11 @@ class Create extends Component
             $this->brand->image = $imageName;
         }
 
-        $this->brand->save();
+        Brand::create($validatedData);
 
         $this->emit('refreshIndex');
         
-        $this->alert('success', 'Brand created successfully.');
+        $this->alert('success', __('Brand created successfully.'));
         
         $this->createBrand = false;
     }

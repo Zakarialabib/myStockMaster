@@ -107,7 +107,7 @@ class Recent extends Component
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = $sale;
+        $this->sale = Sale::find($sale->id);
 
         $this->showModal = true;
     }

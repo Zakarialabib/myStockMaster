@@ -33,7 +33,8 @@
                 </x-table>
             </div>
             <div class="flex justify-center mt-3">
-                <x-button primary wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button">
+                <x-button primary wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" 
+                          type="button" wire:loading.attr="disabled">
                      {{ __('Generate Barcodes') }}
                 </x-button>
             </div>

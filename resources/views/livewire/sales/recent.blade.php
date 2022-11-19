@@ -156,13 +156,6 @@
                                                 class="ml-2">
                                                 <i class="fas fa-download"></i> {{ __('Download') }}
                                             </x-button>
-                                            {{-- Button close modal --}}
-                                            <x-button secondary class="d-print-none"
-                                                wire:click="$set('showModal', false)" class="ml-2"
-                                                wire:loading.attr="disabled">
-                                                <i class="fas fa-times"></i> {{ __('Close') }}
-                                            </x-button>
-                                            </a>
                                         </div>
                                         <div class="p-4">
                                             <div class="flex flex-row mb-4">

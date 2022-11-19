@@ -65,8 +65,8 @@
             </p>
         </div>
         <p>
-            Date: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}<br>
-            Reference: {{ $sale->reference }}<br>
+            {{__('Date')}}: {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}<br>
+            {{__('Reference')}}: {{ $sale->reference }}<br>
             {{__('Name')}}: {{ $sale->customer->name }}
         </p>
         <table class="table-data">
@@ -95,7 +95,7 @@
             @endif
             @if($sale->shipping_amount)
                 <tr>
-                    <th colspan="2" style="text-align:left">Shipping</th>
+                    <th colspan="2" style="text-align:left">{{__('Shipping')}}</th>
                     <th style="text-align:right">{{ format_currency($sale->shipping_amount) }}</th>
                 </tr>
             @endif
@@ -109,10 +109,10 @@
             <tbody>
                 <tr style="background-color:#ddd;">
                     <td class="centered" style="padding: 5px;">
-                        Paid By: {{ $sale->payment_method }}
+                        {{__('Paid By')}}: {{ $sale->payment_method }}
                     </td>
                     <td class="centered" style="padding: 5px;">
-                        Amount: {{ format_currency($sale->paid_amount) }}
+                        {{__('Amount')}}: {{ format_currency($sale->paid_amount) }}
                     </td>
                 </tr>
                 <tr style="border-bottom: 0;">
