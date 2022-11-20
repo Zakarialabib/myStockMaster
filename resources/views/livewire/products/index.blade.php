@@ -19,7 +19,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input wire:model="selected" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    @if ($product)
+    @if (null !== $showModal)
         <!-- Show Modal -->
         <x-modal wire:model="showModal">
             <x-slot name="title">
@@ -233,6 +233,7 @@
     @endif
 
     <!-- Edit Modal -->
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Product') }}
@@ -373,6 +374,7 @@
             </form>
         </x-slot>
     </x-modal>
+    @endif
     <!-- End Edit Modal -->
 
     <livewire:products.create />

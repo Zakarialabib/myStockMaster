@@ -12,8 +12,8 @@ use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\PurchasePaymentsController;
-use App\Http\Controllers\PurchaseReturnController;
+use App\Http\Controllers\PurchasesPaymentsController;
+use App\Http\Controllers\PurchasesReturnController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SaleController;
@@ -148,11 +148,11 @@ Route::group(['middleware' => 'auth'], function () {
     })->name('purchase-returns.pdf');
 
     //Purchase Returns
-    Route::resource('purchase-returns', PurchaseReturnController::class);
+    Route::resource('purchase-returns', PurchasesReturnController::class);
 
     //Purchase Returns Payments
-    Route::get('/purchase-return-payments/{purchase_return_id}', 'PurchaseReturnPaymentsController@index')
-        ->name('purchase-return-payments.index');
+    Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
+    
     Route::get('/purchase-return-payments/{purchase_return_id}/create', 'PurchaseReturnPaymentsController@create')
         ->name('purchase-return-payments.create');
     Route::post('/purchase-return-payments/store', 'PurchaseReturnPaymentsController@store')

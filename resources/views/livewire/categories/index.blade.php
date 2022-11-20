@@ -24,7 +24,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -128,22 +128,19 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
-                <div class="mb-6">>
-
+                <div class="mb-6">
                     <div class="mt-4 w-full">
                         <x-label for="code" :value="__('Code')" />
                         <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
                             wire:model.defer="category.code" />
                         <x-input-error :messages="$errors->get('category.code')" for="category.code" class="mt-2" />
                     </div>
-
-                    <div class="mt-4 p w-full">
+                    <div class="my-4 p w-full">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                             wire:model.defer="category.name" />
                         <x-input-error :messages="$errors->get('category.name')" for="category.name" class="mt-2" />
                     </div>
-
                     <div class="w-full flex justify-start">
                         <x-button primary wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
@@ -163,22 +160,15 @@
 
         <x-slot name="content">
             <div class="flex flex-wrap -mx-2 mb-3">
-
-                <div class="mb-4">
+                <div class="w-full mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
                     <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="code" wire:model.defer="category.code" disabled />
+                        type="text" name="code" wire:model="category.code" disabled />
                 </div>
-                <div class="mb-4">
+                <div class="w-full mb-4">
                     <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
                     <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="name" wire:model.defer="category.name" disabled />
-                </div>
-
-                <div class="w-full flex justify-start ">
-                    <x-button primary type="button" wire:loading.attr="disabled"  wire:click="$set('showModal', false)">
-                        {{ __('Close') }}
-                    </x-button>
+                        type="text" name="name" wire:model="category.name" disabled />
                 </div>
             </div>
         </x-slot>
@@ -195,7 +185,7 @@
         <x-slot name="content">
             <form wire:submit.prevent="import">
                 <div class="mb-4">
-                    <div class="mt-4">
+                    <div class="my-4">
                         <x-label for="import" :value="__('Import')" />
                         <x-input id="import" class="block mt-1 w-full" type="file" name="import"
                             wire:model.defer="import" />

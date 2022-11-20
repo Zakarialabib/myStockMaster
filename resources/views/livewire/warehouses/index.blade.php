@@ -29,7 +29,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input type="checkbox" class="rounded-tl-md rounded-bl-md" wire:model="selectPage" />
             </x-table.th>
             <x-table.th>
@@ -90,7 +90,8 @@
     <div class="mt-4">
         {{ $warehouses->links() }}
     </div>
-
+    
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Warehouse') }}

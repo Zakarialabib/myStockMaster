@@ -28,7 +28,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('created_at')" :direction="$sorts['created_at'] ?? null">
@@ -125,7 +125,7 @@
             {{ $users->links() }}
         </div>
     </div>
-
+    @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show User') }}
@@ -171,7 +171,9 @@
             </div>
         </x-slot>
     </x-modal>
-
+    @endif
+    
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit User') }}
@@ -265,7 +267,7 @@
             </form>
         </x-slot>
     </x-modal>
-
+    @endif
     <livewire:users.create />
 
 </div>

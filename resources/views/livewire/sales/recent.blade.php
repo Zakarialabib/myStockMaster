@@ -24,7 +24,7 @@
             <div>
                 <x-table>
                     <x-slot name="thead">
-                        <x-table.th class="pr-0 w-8">
+                        <x-table.th >
                             <input type="checkbox" wire:model="selectPage" />
                         </x-table.th>
                         <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">

@@ -42,31 +42,31 @@
                 </x-table.th>
             </x-slot>
             <x-table.tbody>
-                @forelse ($purchases as $purchase)
+                @forelse ($purchasereturns as $purchasereturn)
                     <x-table.tr>
                         <x-table.td class="pr-0">
-                            <input type="checkbox" value="{{ $purchase->id }}" wire:model="selected" />
+                            <input type="checkbox" value="{{ $purchasereturn->id }}" wire:model="selected" />
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->reference }}
+                            {{ $purchasereturn->reference }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->date }}
+                            {{ $purchasereturn->date }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->supplier->name }}
+                            {{ $purchasereturn->supplier->name }}
                         </x-table.td>
                         <x-table.td>
-                            @if ($purchase->status == \App\Models\Purchase::PurchasePending)
+                            @if ($purchasereturn->status == \App\Models\PurchaseReturn::PurchaseReturnPending)
                                 <x-badge warning>{{ __('Pending') }}</x-badge>
-                            @elseif ($purchase->status == \App\Models\Purchase::PurchaseOrdered)
-                                <x-badge info>{{ __('Ordered') }}</x-badge>
-                            @elseif($purchase->status == \App\Models\Purchase::PurchaseCompleted)
+                            @elseif ($purchasereturn->status == \App\Models\PurchaseReturn::PurchaseReturnCanceled)
+                                <x-badge info>{{ __('Canceled') }}</x-badge>
+                            @elseif($purchasereturn->status == \App\Models\PurchaseReturn::PurchaseReturnCompleted)
                                 <x-badge success>{{ __('Completed') }}</x-badge>
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->total_amount }}
+                            {{ format_currency($salereturn->total_amount) }}
                         </x-table.td>
                         <x-table.td>
                             <div class="flex justify-start space-x-2">
@@ -79,7 +79,7 @@
 
                                     <x-slot name="content">
                                         @can('access_purchase_payments')
-                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $purchase->id }})"
+                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $purchasereturn->id }})"
                                                 primary wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Payments') }}
@@ -87,8 +87,8 @@
                                         @endcan
 
                                         @can('access_purchase_payments')
-                                            @if ($purchase->due_amount > 0)
-                                                <x-dropdown-link wire:click="paymentModal({{ $purchase->id }})" primary
+                                            @if ($purchasereturn->due_amount > 0)
+                                                <x-dropdown-link wire:click="paymentModal({{ $purchasereturn->id }})" primary
                                                     wire:loading.attr="disabled">
                                                     <i class="fas fa-money-bill-wave"></i>
                                                     {{ __('Add Payment') }}
@@ -97,7 +97,7 @@
                                         @endcan
 
                                         @can('show_purchases')
-                                            <x-dropdown-link wire:click="showModal({{ $purchase->id }})"
+                                            <x-dropdown-link wire:click="showModal({{ $purchasereturn->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-eye"></i>
                                                 {{ __('View') }}
@@ -105,7 +105,7 @@
                                         @endcan
 
                                         @can('edit_purchases')
-                                            <x-dropdown-link href="{{ route('purchases.edit', $purchase->id) }}"
+                                            <x-dropdown-link href="{{ route('purchases.edit', $purchasereturn->id) }}"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-edit"></i>
                                                 {{ __('Edit') }}
@@ -113,7 +113,7 @@
                                         @endcan
 
                                         @can('delete_purchases')
-                                            <x-dropdown-link wire:click="confirm('delete', {{ $purchase->id }})"
+                                            <x-dropdown-link wire:click="confirm('delete', {{ $purchasereturn->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-trash"></i>
                                                 {{ __('Delete') }}
@@ -138,24 +138,24 @@
         </x-table>
     </div>
     <div class="mt-4">
-        {{ $purchases->links() }}
+        {{ $purchasereturns->links() }}
     </div>
 
 
-    {{-- Show Purchase --}}
+    {{-- Show PurchaseReturn --}}
     @if (null !== $showModal)
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 <div class="w-full flex">
-                {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase->reference }}</strong>
+                {{ __('Show PurchaseReturn') }} - {{ __('Reference') }}: <strong>{{ $purchasereturn->reference }}</strong>
                 
                 <div class="float-right">
-                    <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
+                    <x-button secondary href="{{ route('purchases.pdf', $purchasereturn->id) }}"
                         wire:loading.attr="disabled">
                         <i class="fas fa-file-pdf"></i>
                         {{ __('PDF') }}
                     </x-button>
-                    <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
+                    <x-button secondary href="{{ route('purchases.pdf', $purchasereturn->id) }}"
                         wire:loading.attr="disabled">
                         <i class="fas fa-print"></i>
                         {{ __('Save') }}
@@ -165,130 +165,121 @@
             </x-slot>
 
             <x-slot name="content">
-                <div class="px-2 mx-auto py-4">
+                <div class="px-4 mx-auto">
                     <div class="flex flex-row">
-                        <div class="w-full">
-                            <div class="flex flex-row mb-4">
-                                <div class="md:w-1/3 mb-3 md:mb-0">
-                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                    <div><strong>{{ settings()->company_name }}</strong></div>
-                                    <div>{{ settings()->company_address }}</div>
-                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
-                                    <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
-                                </div>
-
-                                <div class="md:w-1/3 mb-3 md:mb-0">
-                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Supplier Info') }}:</h5>
-                                    <div><strong>{{ $purchase->supplier->name }}</strong></div>
-                                    <div>{{ $purchase->supplier->address }}</div>
-                                    <div>{{ __('Email') }}: {{ $purchase->supplier->email }}</div>
-                                    <div>{{ __('Phone') }}: {{ $purchase->supplier->phone }}</div>
-                                </div>
-
-                                <div class="md:w-1/3 mb-3 md:mb-0">
-                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
-                                    <div>{{ __('Invoice') }}: <strong>INV/{{ $purchase->reference }}</strong></div>
-                                    <div>{{ __('Date') }}:
-                                        {{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}</div>
+                        <div class="w-full px-4">
+                            <div class="card">
+                                <div class="card-header d-flex flex-wrap align-items-center">
                                     <div>
-                                        {{ __('Status') }}:
-                                        @if ($purchase->status == \App\Models\Purchase::PurchasePending)
-                                            <x-badge warning class="text-xs">
-                                                {{ __('Pending') }}
-                                            </x-badge>
-                                        @elseif ($purchase->status == \App\Models\Purchase::PurchaseOrdered)
-                                            <x-badge success class="text-xs">
-                                                {{ __('Ordered') }}
-                                            </x-badge>
-                                        @elseif ($purchase->status == \App\Models\Purchase::PurchaseCompleted)
-                                            <x-badge success class="text-xs">
-                                                {{ __('Completed') }}
-                                            </x-badge>
-                                        @endif
+                                        {{__('Reference')}}: <strong>{{ $purchase_return->reference }}</strong>
                                     </div>
-                                    <div>
-                                        {{ __('Payment Status') }} :
-                                        @if ($purchase->payment_status == \App\Models\Purchase::PaymentPaid)
-                                            <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($purchase->payment_status == \App\Models\Purchase::PaymentPartial)
-                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($purchase->payment_status == \App\Models\Purchase::PaymentDue)
-                                            <x-badge danger>{{ __('Due') }}</x-badge>
-                                        @endif
-                                    </div>
+                                    <a target="_blank" class="btn-secondary mfs-auto mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
+                                        <i class="bi bi-printer"></i> {{__('Print')}}
+                                    </a>
+                                    <a target="_blank" class="btn-info mfe-1 d-print-none" href="{{ route('purchase-returns.pdf', $purchase_return->id) }}">
+                                        <i class="bi bi-save"></i> {{__('Save')}}
+                                    </a>
                                 </div>
-                            </div>
-
-                            <div class="w-full">
-                                <x-table>
-                                    <x-slot name="thead">
-                                        <x-table.th>{{ __('Product') }}</x-table.th>
-                                        <x-table.th>{{ __('Unit Cost') }}</x-table.th>
-                                        <x-table.th>{{ __('Quantity') }}</x-table.th>
-                                        <x-table.th>{{ __('Subtotal') }}</x-table.th>
-                                    </x-slot>
-                                    <x-table.tbody>
-                                        @foreach ($purchase->purchaseDetails as $item)
-                                            <x-table.tr>
-                                                <x-table.td class="align-middle">
-                                                    {{ $item->name }} <br>
-                                                    <x-badge primary>
-                                                        {{ $item->code }}
-                                                    </x-badge>
-                                                </x-table.td>
-
-                                                <x-table.td class="align-middle">
-                                                    {{ format_currency($item->unit_price) }}
-                                                </x-table.td>
-
-                                                <x-table.td class="align-middle">
-                                                    {{ $item->quantity }}
-                                                </x-table.td>
-
-                                                <x-table.td class="align-middle">
-                                                    {{ format_currency($item->sub_total) }}
-                                                </x-table.td>
-                                            </x-table.tr>
-                                        @endforeach
-                                    </x-table.tbody>
-                                </x-table>
-                            </div>
-                            <div class="flex flex-row">
-                                <div class="w-full px-4 mb-4">
-                                    <x-table-responsive>
-                                        <x-table.tr>
-                                            <x-table.heading class="left">
-                                                <strong>{{ __('Discount') }}
-                                                    ({{ $purchase->discount_percentage }}%)</strong>
-                                            </x-table.heading>
-                                            <x-table.td class="right">
-                                                {{ format_currency($purchase->discount_amount) }}</x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.heading class="left">
-                                                <strong>{{ __('Tax') }}
-                                                    ({{ $purchase->tax_percentage }}%)</strong>
-                                            </x-table.heading>
-                                            <x-table.td class="right">
-                                                {{ format_currency($purchase->tax_amount) }}
-                                            </x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.heading class="left">
-                                                <strong>{{ __('Shipping') }}</strong>
-                                            </x-table.heading>
-                                            <x-table.td class="right">
-                                                {{ format_currency($purchase->shipping_amount) }}</x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.heading class="left">
-                                                <strong>{{ __('Grand Total') }}</strong>
-                                            </x-table.heading>
-                                            <x-table.td class="right">
-                                                <strong>{{ format_currency($purchase->total_amount) }}</strong>
-                                            </x-table.td>
-                                        </x-table.tr>
-                                    </x-table-responsive>
+                                <div class="p-4">
+                                    <div class="flex flex-row mb-4">
+                                        <div class="w-1/4 mb-3">
+                                            <h5 class="mb-2 border-bottom pb-2">{{__('Company Info')}}:</h5>
+                                            <div><strong>{{ settings()->company_name }}</strong></div>
+                                            <div>{{ settings()->company_address }}</div>
+                                            <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                                            <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
+                                        </div>
+            
+                                        <div class="w-1/4 mb-3">
+                                            <h5 class="mb-2 border-bottom pb-2">{{__('Supplier Info')}}:</h5>
+                                            <div><strong>{{ $supplier->name }}</strong></div>
+                                            <div>{{ $supplier->address }}</div>
+                                            <div>{{__('Email')}}: {{ $supplier->email }}</div>
+                                            <div>{{__('Phone')}}: {{ $supplier->phone }}</div>
+                                        </div>
+            
+                                        <div class="w-1/4 mb-3">
+                                            <h5 class="mb-2 border-bottom pb-2">{{__('Invoice Info')}}:</h5>
+                                            <div>{{__('Invoice')}}: <strong>INV/{{ $purchase_return->reference }}</strong></div>
+                                            <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                                            <div>
+                                                {{__('Status')}}: <strong>{{ $purchase_return->status }}</strong>
+                                            </div>
+                                            <div>
+                                                {{__('Payment Status')}}: <strong>{{ $purchase_return->payment_status }}</strong>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+            
+                                    <div class="table-responsive-sm">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th class="align-middle">{{__('Product')}}</th>
+                                                <th class="align-middle">{{__('Net Unit Price')}}</th>
+                                                <th class="align-middle">{{__('Quantity')}}</th>
+                                                <th class="align-middle">{{__('Discount')}}</th>
+                                                <th class="align-middle">{{__('Tax')}}</th>
+                                                <th class="align-middle">{{__('Sub Total')}}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($purchase_return->purchaseReturnDetails as $item)
+                                                <tr>
+                                                    <td class="align-middle">
+                                                        {{ $item->name }} <br>
+                                                        <span class="badge badge-success">
+                                                            {{ $item->code }}
+                                                        </span>
+                                                    </td>
+            
+                                                    <td class="align-middle">{{ format_currency($item->unit_price) }}</td>
+            
+                                                    <td class="align-middle">
+                                                        {{ $item->quantity }}
+                                                    </td>
+            
+                                                    <td class="align-middle">
+                                                        {{ format_currency($item->product_discount_amount) }}
+                                                    </td>
+            
+                                                    <td class="align-middle">
+                                                        {{ format_currency($item->product_tax_amount) }}
+                                                    </td>
+            
+                                                    <td class="align-middle">
+                                                        {{ format_currency($item->sub_total) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="left"><strong>{{__('Discount')}} ({{ $purchase_return->discount_percentage }}%)</strong></td>
+                                                    <td class="right">{{ format_currency($purchase_return->discount_amount) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="left"><strong>{{__('Tax')}} ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                                    <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="left"><strong>{{__('Shipping')}}</strong></td>
+                                                    <td class="right">{{ format_currency($purchase_return->shipping_amount) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="left"><strong>{{__('Grand Total')}}</strong></td>
+                                                    <td class="right"><strong>{{ format_currency($purchase_return->total_amount) }}</strong></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -298,21 +289,21 @@
         </x-modal>
     @endif
 
-    {{-- Purchase Payment payment component   --}}
+    {{-- PurchaseReturn Payment payment component   --}}
     <div>
         {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($purchase))
-        <livewire:purchase.payment.index :purchase="$purchase" />
+        @if (empty($purchasereturn))
+        <livewire:purchase.payment.index :purchase="$purchasereturn" />
         @endif
     </div>
-    {{-- End Purchase Payment payment component   --}}
+    {{-- End PurchaseReturn Payment payment component   --}}
 
     @if (!empty($paymentModal))
         <div>
             <x-modal wire:model="paymentModal">
                 <x-slot name="title">
                     <h2 class="text-lg font-medium text-gray-900">
-                        {{ __('Purchase Payment') }}
+                        {{ __('PurchaseReturn Payment') }}
                     </h2>
 
                 </x-slot>

@@ -58,7 +58,7 @@
     <x-card>
         @include('utils.alerts')
         <div>
-            <livewire:products.product-page />
+            <livewire:products.index />
         </div>
     </x-card>
 </x-app-layout>

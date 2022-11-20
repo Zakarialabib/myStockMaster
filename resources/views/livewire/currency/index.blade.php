@@ -24,7 +24,7 @@
    
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <x-input type="checkbox" class="rounded-tl rounded-bl" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -104,7 +104,8 @@
             {{ $currencies->links() }}
         </div>
     </div>
-
+    
+    @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Currency') }}
@@ -140,7 +141,9 @@
             </div>
         </x-slot>
     </x-modal>
-
+    @endif
+    
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Currency') }}
@@ -184,6 +187,7 @@
             </form>
         </x-slot>
     </x-modal>
+    @endif
 
     <livewire:currency.create />
 </div>

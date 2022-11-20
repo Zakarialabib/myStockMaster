@@ -51,41 +51,41 @@
             </x-slot>
 
             <x-table.tbody>
-                @forelse ($sales as $sale)
+                @forelse ($salereturns as $salereturn)
                     <x-table.tr wire:loading.class.delay="opacity-50">
-                        <x-table.td class="pr-0">
-                            <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
+                        <x-table.td>
+                            <input type="checkbox" value="{{ $salereturn->id }}" wire:model="selected" />
                         </x-table.td>
                         <x-table.td>
-                            {{ $sale->date }}
+                            {{ $salereturn->date }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $sale->customer->name }}
+                            {{ $salereturn->customer->name }}
                         </x-table.td>
                         <x-table.td>
-                            @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                            @if ($salereturn->payment_status == \App\Models\SaleReturn::PaymentPaid)
                                 <x-badge success>{{ __('Paid') }}</x-badge>
-                            @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                            @elseif ($salereturn->payment_status == \App\Models\SaleReturn::PaymentPartial)
                                 <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                            @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                            @elseif($salereturn->payment_status == \App\Models\SaleReturn::PaymentDue)
                                 <x-badge danger>{{ __('Due') }}</x-badge>
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            {{ $sale->due_amount }}
+                            {{ format_currency($salereturn->due_amount) }}
                         </x-table.td>
 
                         <x-table.td>
-                            {{ $sale->total_amount }}
+                            {{ format_currency($salereturn->total_amount) }}
                         </x-table.td>
 
                         <x-table.td>
-                            @if ($sale->status == \App\Models\Sale::SalePending)
+                            @if ($salereturn->status == \App\Models\SaleReturn::SaleReturnPending)
                                 <x-badge warning>{{ __('Pending') }}</x-badge>
-                            @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
-                                <x-badge info>{{ __('Ordered') }}</x-badge>
-                            @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                            @elseif ($salereturn->status == \App\Models\SaleReturn::SaleReturnCompleted)
                                 <x-badge success>{{ __('Completed') }}</x-badge>
+                            @elseif($salereturn->status == \App\Models\SaleReturn::SaleReturnCanceld)
+                                <x-badge danger>{{ __('Canceled') }}</x-badge>
                             @endif
                         </x-table.td>
                         <x-table.td>
@@ -98,42 +98,40 @@
                                     </x-slot>
 
                                     <x-slot name="content">
-                                        <x-dropdown-link wire:click="showModal({{ $sale->id }})"
+                                        @can('show_salereturn')
+                                        <x-dropdown-link wire:click="showModal({{ $salereturn->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-eye"></i>
                                             {{ __('View') }}
                                         </x-dropdown-link>
-                                        @can('edit_sales')
-                                            <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
+                                      @endcan
+                                        @can('edit_salereturn')
+                                            <x-dropdown-link href="{{ route('sale-returns.edit', $salereturn) }}"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-edit"></i>
                                                 {{ __('Edit') }}
                                             </x-dropdown-link>
                                         @endcan
-                                        @can('delete_sales')
-                                            <x-dropdown-link wire:click="$emit('deleteModal', {{ $sale->id }})"
+
+                                        @can('delete_salereturn')
+                                            <x-dropdown-link wire:click="$emit('deleteModal', {{ $salereturn->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-trash"></i>
                                                 {{ __('Delete') }}
                                             </x-dropdown-link>
                                         @endcan
 
-                                        <x-dropdown-link target="_blank" href="{{ route('sales.pos.pdf', $sale->id) }}"
-                                            wire:loading.attr="disabled">
-                                            <i class="fas fa-print"></i>
-                                            {{ __('Print') }}
-                                        </x-dropdown-link>
-
-                                        @can('access_sale_payments')
-                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})"
+                                        @can('show_salereturn_payments')
+                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $salereturn->id }})"
                                                 primary wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Payments') }}
                                             </x-dropdown-link>
                                         @endcan
-                                        @can('access_sale_payments')
-                                            @if ($sale->due_amount > 0)
-                                                <x-dropdown-link wire:click="paymentModal({{ $sale->id }})" primary
+
+                                        @can('create_salereturn_payments')
+                                            @if ($salereturn->due_amount > 0)
+                                                <x-dropdown-link wire:click="paymentModal({{ $salereturn->id }})" primary
                                                     wire:loading.attr="disabled">
                                                     <i class="fas fa-money-bill-wave"></i>
                                                     {{ __('Add Payment') }}
@@ -159,153 +157,139 @@
     </div>
 
     <div class="px-6 py-3">
-        {{ $sales->links() }}
+        {{ $salereturns->links() }}
     </div>
 
-    {{-- Show Sale --}}
+    {{-- Show SaleReturn --}}
     @if (null !== $showModal)
         <div>
             <x-modal wire:model="showModal">
                 <x-slot name="title">
-                    {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale->reference }}</strong>
+                    {{ __('Show SaleReturn') }} - {{ __('Reference') }}: <strong>{{ $salereturn->reference }}</strong>
                 </x-slot>
 
                 <x-slot name="content">
                     <div class="px-4 mx-auto">
                         <div class="flex flex-row">
-                            <div class="w-full">
-                                <div class="p-2 d-flex flex-wrap items-center">
-                                    <x-button secondary class="d-print-none" target="_blank"
-                                        wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
-                                        class="ml-auto">
-                                        <i class="fas fa-print"></i> {{ __('Print') }}
-                                    </x-button>
-                                    <x-button secondary class="d-print-none" target="_blank"
-                                        wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
-                                        class="ml-2">
-                                        <i class="fas fa-download"></i> {{ __('Download') }}
-                                    </x-button>
-                                    {{-- Button close modal --}}
-                                    <x-button secondary class="d-print-none" wire:click="$set('showModal', false)"
-                                        class="ml-2" wire:loading.attr="disabled">
-                                        <i class="fas fa-times"></i> {{ __('Close') }}
-                                    </x-button>
-                                    </a>
-                                </div>
-                                <div class="p-4">
-                                    <div class="flex flex-row mb-4">
-                                        <div class="md:w-1/3 mb-3 md:mb-0">
-                                            <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                            <div><strong>{{ settings()->company_name }}</strong></div>
-                                            <div>{{ settings()->company_address }}</div>
-                                            <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
-                                            <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
+                            <div class="w-full px-4">
+                                <div class="card">
+                                    <div class="card-header d-flex flex-wrap align-items-center">
+                                        <div>
+                                            {{__('Reference')}}: <strong>{{ $this->salereturn->reference }}</strong>
                                         </div>
-
-                                        <div class="md:w-1/3 mb-3 md:mb-0">
-                                            <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
-                                            <div><strong>{{ $sale->customer->name }}</strong></div>
-                                            <div>{{ $sale->customer->address }}</div>
-                                            <div>{{ __('Email') }}: {{ $sale->customer->email }}</div>
-                                            <div>{{ __('Phone') }}: {{ $sale->customer->phone }}</div>
-                                        </div>
-
-                                        <div class="md:w-1/3 mb-3 md:mb-0">
-                                            <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
-                                            <div>{{ __('Invoice') }}: <strong>INV/{{ $sale->reference }}</strong>
-                                            </div>
-                                            <div>{{ __('Date') }}:
-                                                {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</div>
-                                            <div>
-                                                {{ __('Status') }} :
-                                                @if ($sale->status == \App\Models\Sale::SalePending)
-                                                    <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
-                                                    <x-badge info>{{ __('Ordered') }}</x-badge>
-                                                @elseif($sale->status == \App\Models\Sale::SaleCompleted)
-                                                    <x-badge success>{{ __('Completed') }}</x-badge>
-                                                @endif
-                                            </div>
-                                            <div>
-                                                {{ __('Payment Status') }} :
-                                                @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
-                                                    <x-badge success>{{ __('Paid') }}</x-badge>
-                                                @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
-                                                    <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                                @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
-                                                    <x-badge danger>{{ __('Due') }}</x-badge>
-                                                @endif
-                                            </div>
-                                        </div>
-
+                                        <a target="_blank" class="btn-secondary mfs-auto mfe-1 d-print-none" href="{{ route('sale-returns.pdf', $this->salereturn->id) }}">
+                                            <i class="bi bi-printer"></i> {{__('Print')}}
+                                        </a>
+                                        <a target="_blank" class="btn-info mfe-1 d-print-none" href="{{ route('sale-returns.pdf', $this->salereturn->id) }}">
+                                            <i class="bi bi-save"></i> {{__('Save')}}
+                                        </a>
                                     </div>
-
-                                    <div class="">
-                                        <x-table>
-                                            <x-slot name="thead">
-                                                <x-table.th>{{ __('Product') }}</x-table.th>
-                                                <x-table.th>{{ __('Quantity') }}</x-table.th>
-                                                <x-table.th>{{ __('Unit Price') }}</x-table.th>
-                                                <x-table.th>{{ __('Subtotal') }}</x-table.th>
-                                            </x-slot>
-
-                                            <x-table.tbody>
-                                                @foreach ($sale->saleDetails as $item)
-                                                    <x-table.tr>
-                                                        <x-table.td>
-                                                            {{ $item->name }} <br>
-                                                            <x-badge success>
-                                                                {{ $item->code }}
-                                                            </x-badge>
-                                                        </x-table.td>
-                                                        <x-table.td>
-                                                            {{ format_currency($item->unit_price) }}
-                                                        </x-table.td>
-
-                                                        <x-table.td>
-                                                            {{ $item->quantity }}
-                                                        </x-table.td>
-
-                                                        <x-table.td>
-                                                            {{ format_currency($item->sub_total) }}
-                                                        </x-table.td>
-                                                    </x-table.tr>
-                                                @endforeach
-                                            </x-table.tbody>
-                                        </x-table>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                            <table class="table">
+                                    <div class="p-4">
+                                        <div class="flex flex-row mb-4">
+                                            <div class="w-1/4 mb-3">
+                                                <h5 class="mb-2 border-bottom pb-2">{{__('Company Info')}}:</h5>
+                                                <div><strong>{{ settings()->company_name }}</strong></div>
+                                                <div>{{ settings()->company_address }}</div>
+                                                <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                                                <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
+                                            </div>
+                
+                                            <div class="w-1/4 mb-3">
+                                                <h5 class="mb-2 border-bottom pb-2">{{__('Customer Info')}}:</h5>
+                                                <div><strong>{{ $this->salereturn->customer->name }}</strong></div>
+                                                <div>{{ $this->salereturn->customer->address }}</div>
+                                                <div>{{__('Phone')}}: {{ $this->salereturn->customer->phone }}</div>
+                                            </div>
+                
+                                            <div class="w-1/4 mb-3">
+                                                <h5 class="mb-2 border-bottom pb-2">{{__('Invoice Info')}}:</h5>
+                                                <div>{{__('Invoice')}}: <strong>INV/{{ $this->salereturn->reference }}</strong></div>
+                                                <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($this->salereturn->date)->format('d M, Y') }}</div>
+                                                <div>
+                                                    {{__('Status')}}: <strong>
+                                                        @if ($this->salereturn == \App\Models\SaleReturn::SaleReturnPending)
+                                                        <x-badge warning>{{ __('Pending') }}</x-badge>
+                                                    @elseif ($this->salereturn == \App\Models\SaleReturn::SaleReturnCompleted)
+                                                        <x-badge success>{{ __('Completed') }}</x-badge>
+                                                    @elseif($this->salereturn == \App\Models\SaleReturn::SaleReturnCanceld)
+                                                        <x-badge danger>{{ __('Canceled') }}</x-badge>
+                                                    @endif    
+                                                    </strong>
+                                                </div>
+                                                <div>
+                                                    {{__('Payment Status')}}: <strong>{{ $this->salereturn->payment_status }}</strong>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th class="align-middle">{{__('Product')}}</th>
+                                                    <th class="align-middle">{{__('Net Unit Price')}}</th>
+                                                    <th class="align-middle">{{__('Quantity')}}</th>
+                                                    <th class="align-middle">{{__('Discount')}}</th>
+                                                    <th class="align-middle">{{__('Tax')}}</th>
+                                                    <th class="align-middle">{{__('Sub Total')}}</th>
+                                                </tr>
+                                                </thead>
                                                 <tbody>
+                                                @foreach($this->salereturn->saleReturnDetails as $item)
                                                     <tr>
-                                                        <td class="left"><strong>{{ __('Discount') }}
-                                                                ({{ $sale->discount_percentage }}%)</strong></td>
-                                                        <td class="right">
-                                                            {{ format_currency($sale->discount_amount) }}
+                                                        <td class="align-middle">
+                                                            {{ $item->name }} <br>
+                                                            <span class="badge badge-success">
+                                                                {{ $item->code }}
+                                                            </span>
+                                                        </td>
+                
+                                                        <td class="align-middle">{{ format_currency($item->unit_price) }}</td>
+                
+                                                        <td class="align-middle">
+                                                            {{ $item->quantity }}
+                                                        </td>
+                
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->product_discount_amount) }}
+                                                        </td>
+                
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->product_tax_amount) }}
+                                                        </td>
+                
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->sub_total) }}
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Tax') }}
-                                                                ({{ $sale->tax_percentage }}%)</strong></td>
-                                                        <td class="right">{{ format_currency($sale->tax_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Shipping') }}</strong></td>
-                                                        <td class="right">
-                                                            {{ format_currency($sale->shipping_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Grand Total') }}</strong>
-                                                        </td>
-                                                        <td class="right">
-                                                            <strong>{{ format_currency($sale->total_amount) }}</strong>
-                                                        </td>
-                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                                                <table class="table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="left"><strong>{{__('Discount')}} ({{ $this->salereturn->discount_percentage }}%)</strong></td>
+                                                        <td class="right">{{ format_currency($this->salereturn->discount_amount) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="left"><strong>{{__('Tax')}} ({{ $this->salereturn->tax_percentage }}%)</strong></td>
+                                                        <td class="right">{{ format_currency($this->salereturn->tax_amount) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="left"><strong>{{__('Shipping')}}</strong></td>
+                                                        <td class="right">{{ format_currency($this->salereturn->shipping_amount) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="left"><strong>{{__('Grand Total')}}</strong></td>
+                                                        <td class="right"><strong>{{ format_currency($this->salereturn->total_amount) }}</strong></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -316,7 +300,7 @@
             </x-modal>
         </div>
     @endif
-    {{-- End Show Sale --}}
+    {{-- End Show SaleReturn --}}
 
     {{-- Import modal --}}
     <div>
@@ -353,7 +337,7 @@
     <div>
         {{-- if showPayments livewire proprety empty don't show --}}
         @if (empty($showPayments))
-            <livewire:sales.payment.index :sale="$sale" />
+            <livewire:sales.payment.index :sale="$salereturn" />
         @endif
     </div>
     {{-- End Sales Payment payment component   --}}
@@ -363,7 +347,7 @@
             <x-modal wire:model="paymentModal">
             <x-slot name="title">
                 <h2 class="text-lg font-medium text-gray-900">
-                    {{ __('Sale Payment') }} 
+                    {{ __('SaleReturn Payment') }} 
                 </h2>
 
                 </x-slot>

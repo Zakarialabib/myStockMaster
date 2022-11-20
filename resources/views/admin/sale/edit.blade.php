@@ -149,24 +149,3 @@
         </div>
     </x-card>
 @endsection
-{{-- 
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#paid_amount').maskMoney('mask');
-
-            $('#sale-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush --}}
