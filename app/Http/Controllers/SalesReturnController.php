@@ -72,15 +72,15 @@ class SalesReturnController extends Controller
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
                     'sub_total' => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
+                    'discount_amount' => $cart_item->options->discount * 100,
+                    'discount_type' => $cart_item->options->discount_type,
+                    'tax_amount' => $cart_item->options->tax * 100,
                 ]);
 
-                if ($request->status == 'Completed') {
+                if ($request->status == '2') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty
                     ]);
                 }
             }
@@ -130,12 +130,12 @@ class SalesReturnController extends Controller
                 'price'   => $sale_return_detail->price,
                 'weight'  => 1,
                 'options' => [
-                    'product_discount' => $sale_return_detail->product_discount_amount,
-                    'product_discount_type' => $sale_return_detail->product_discount_type,
+                    'discount' => $sale_return_detail->discount_amount,
+                    'discount_type' => $sale_return_detail->discount_type,
                     'sub_total'   => $sale_return_detail->sub_total,
                     'code'        => $sale_return_detail->code,
-                    'stock'       => Product::findOrFail($sale_return_detail->product_id)->product_quantity,
-                    'product_tax' => $sale_return_detail->product_tax_amount,
+                    'stock'       => Product::findOrFail($sale_return_detail->product_id)->quantity,
+                    'tax' => $sale_return_detail->tax_amount,
                     'unit_price'  => $sale_return_detail->unit_price
                 ]
             ]);
@@ -161,7 +161,7 @@ class SalesReturnController extends Controller
                 if ($sale_return->status == 'Completed') {
                     $product = Product::findOrFail($sale_return_detail->product_id);
                     $product->update([
-                        'product_quantity' => $product->product_quantity - $sale_return_detail->quantity
+                        'quantity' => $product->quantity - $sale_return_detail->quantity
                     ]);
                 }
                 $sale_return_detail->delete();
@@ -195,15 +195,15 @@ class SalesReturnController extends Controller
                     'price' => $cart_item->price * 100,
                     'unit_price' => $cart_item->options->unit_price * 100,
                     'sub_total' => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
+                    'discount_amount' => $cart_item->options->discount * 100,
+                    'discount_type' => $cart_item->options->discount_type,
+                    'tax_amount' => $cart_item->options->tax * 100,
                 ]);
 
                 if ($request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'product_quantity' => $product->product_quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty
                     ]);
                 }
             }

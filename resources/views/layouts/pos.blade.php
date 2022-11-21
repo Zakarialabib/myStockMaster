@@ -23,7 +23,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="antialiased bg-body text-body font-body" dir="rtl">
+<body class="antialiased bg-body text-body font-body" dir="ltr">
     <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen">
             <x-navbar-pos />

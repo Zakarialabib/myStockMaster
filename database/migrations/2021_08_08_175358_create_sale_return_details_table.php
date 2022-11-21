@@ -23,12 +23,12 @@ class CreateSaleReturnDetailsTable extends Migration
             $table->integer('price');
             $table->integer('unit_price');
             $table->integer('sub_total');
-            $table->integer('product_discount_amount');
-            $table->string('product_discount_type')->default('fixed');
-            $table->integer('product_tax_amount');
+            $table->integer('discount_amount');
+            $table->string('discount_type')->default('fixed');
+            $table->integer('tax_amount');
             $table->foreign('sale_return_id')->references('id')
                 ->on('sale_returns')->cascadeOnDelete();
-            $table->foreign('product_id')->references('id')
+            $table->foreign('id')->references('id')
                 ->on('products')->nullOnDelete();
             $table->timestamps();
         });

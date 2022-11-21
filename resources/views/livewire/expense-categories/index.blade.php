@@ -30,7 +30,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -98,7 +98,8 @@
             {{ $expenseCategories->links() }}
         </div>
     </div>
-
+    
+    @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Expense Category') }}
@@ -119,7 +120,9 @@
             </div>
         </x-slot>
     </x-modal>
+    @endif
 
+    @if (null !== $editModal)
     <x-modal wire:click="editModal">
         <x-slot name="title">
             {{ __('Edit Expense Category') }}
@@ -147,6 +150,7 @@
             </div>
         </x-slot>
     </x-modal>
+    @endif
 
     <livewire:expense-categories.create />
     

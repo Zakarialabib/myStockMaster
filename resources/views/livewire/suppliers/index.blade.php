@@ -24,7 +24,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -88,10 +88,11 @@
     <div class="px-6 py-3">
         {{ $suppliers->links() }}
     </div>
-
+    
+    @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show User') }}
+            {{ __('Show Supplier') }}
         </x-slot>
 
         <x-slot name="content">
@@ -135,7 +136,9 @@
             </div>
         </x-slot>
     </x-modal>
-
+    @endif
+    
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Supplier') }}

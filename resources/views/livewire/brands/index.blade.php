@@ -24,7 +24,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th >
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -144,6 +144,35 @@
     <!-- End Edit Modal -->
 
     <livewire:brands.create />
+
+    {{-- Import modal --}}
+
+    <x-modal wire:model="importModal">
+        <x-slot name="title">
+            {{ __('Import Brands') }}
+        </x-slot>
+
+        <x-slot name="content">
+            <form wire:submit.prevent="import">
+                <div class="mb-4">
+                    <div class="my-4">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                    </div>
+
+                    <div class="w-full flex justify-start">
+                        <x-button primary wire:click="import" type="button" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+    {{-- End Import modal --}}
 
 </div>
 

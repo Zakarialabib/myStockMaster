@@ -54,7 +54,10 @@
                 </div>
             </div>
             <div class="float-right">
-                <!-- Button trigger livewire modal -->
+                <x-button warning type="button" onclick="Livewire.emit('importModal', 'show')">
+                    {{ __('Import') }}
+                </x-button>
+
                 <x-button primary type="button" onclick="Livewire.emit('createBrand', 'show')">
                 {{ __('Create') }}
                 </x-button>
