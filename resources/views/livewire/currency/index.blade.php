@@ -64,16 +64,18 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button alert wire:click="showModal({{ $currency->id }})" wire:loading.attr="disabled">
+                            <x-button alert wire:click="showModal({{ $currency->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button primary wire:click="editModal({{ $currency->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $currency->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
                             <x-button danger wire:click="confirm('delete', {{ $currency->id }})"
-                                wire:loading.attr="disabled">
+                                type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -134,11 +136,6 @@
                         wire:model.defer="currency.rate" />
                 </div>
             </div>
-            <div class="w-full flex justify-start px-3">
-                <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-            </div>
         </x-slot>
     </x-modal>
     @endif
@@ -177,10 +174,7 @@
                 </div>
 
                 <div class="w-full flex justify-start px-3">
-                    <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
-                        {{ __('Close') }}
-                    </x-button>
-                    <x-button primary wire:click="update" wire:loading.attr="disabled">
+                    <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                         {{ __('Update') }}
                     </x-button>
                 </div>

@@ -107,7 +107,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_category_show'), 403);
 
-        $this->expenseCategory = $expenseCategory;
+        $this->expenseCategory = ExpenseCategory::find($expenseCategory->id);
 
         $this->showModal = true;
     }
@@ -120,7 +120,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->expenseCategory = $expenseCategory;
+        $this->expenseCategory = ExpenseCategory::find($expenseCategory->id);
 
         $this->editModal = true;
     }
@@ -131,7 +131,7 @@ class Index extends Component
 
         $this->expenseCategory->save();
 
-        $this->alert('success', 'Expense Category Updated Successfully.');
+        $this->alert('success', __('Expense Category Updated Successfully.'));
         
         $this->emit('refreshIndex');
         
@@ -154,6 +154,6 @@ class Index extends Component
 
         $expenseCategory->delete();
 
-        $this->alert('success', 'Expense Category Deleted Successfully.');
+        $this->alert('success', __('Expense Category Deleted Successfully.'));
     }
 }

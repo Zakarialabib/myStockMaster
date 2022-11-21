@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($this->selected)
-                <x-button danger wire:click="deleteSelected" class="ml-3">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -48,23 +48,20 @@
                     <x-table.td>
                         <div class="flex justify-center">
 
-                            <a href="{{ route('adjustments.show', $adjustment->id) }}"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                wire:loading.attr="disabled">
+                            <x-button href="{{ route('adjustments.show', $adjustment->id) }}"
+                                success type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
-                            </a>
+                            </x-button>
 
-                            <a href="{{ route('adjustments.edit', $adjustment->id) }}"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                wire:loading.attr="disabled">
+                            <x-button info href="{{ route('adjustments.edit', $adjustment->id) }}"
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
-                            </a>
+                            </x-button>
 
-                            <button type="button" wire:click="confirm('delete', {{ $adjustment->id }})"
-                                wire:loading.attr="disabled"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <x-button danger type="button" wire:click="confirm('delete', {{ $adjustment->id }})"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
-                            </button>
+                            </x-button>
 
                         </div>
                     </x-table.td>

@@ -129,7 +129,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = $sale;
+        $this->sale = Sale::find($sale->id);
 
         $this->showModal = true;
     }
@@ -152,7 +152,7 @@ class Index extends Component
         
         $this->emit('refreshIndex');
         
-        $this->alert('success', 'Sale deleted successfully.');
+        $this->alert('success', __('Sale deleted successfully.'));
     }
 
     public function importModal()
@@ -179,7 +179,7 @@ class Index extends Component
 
         Sale::import(new SaleImport, $this->file('import_file'));
 
-        $this->alert('success', 'Sales imported successfully');
+        $this->alert('success', __('Sales imported successfully'));
 
         $this->emit('refreshIndex');
 

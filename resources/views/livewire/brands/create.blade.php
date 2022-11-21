@@ -14,14 +14,14 @@
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.defer="brand.name" />
-                        <x-input-error :messages="$errors->get('brand.name')" for="brand.name" class="mt-2" />
+                            wire:model="name" />
+                        <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="description" :value="__('Description')" />
                         <x-input id="description" class="block mt-1 w-full" type="text" name="description"
-                            wire:model.defer="brand.description" />
-                        <x-input-error :messages="$errors->get('brand.description')" for="brand.description" class="mt-2" />
+                            wire:model="description" />
+                        <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
                     </div>
                     <div class="w-full py-2 px-3">
                         <x-label for="image" :value="__('Image')" />
@@ -29,7 +29,8 @@
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="create" wire:loading.attr="disabled">
+                        <x-button primary type="submit" 
+                                 wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
                     </div>

@@ -62,7 +62,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="align-middle">Product</th>
+                                    <th class="align-middle">{{__('Product')}}</th>
                                     <th class="align-middle">{{__('Net Unit Price')}}</th>
                                     <th class="align-middle">{{__('Quantity')}}</th>
                                     <th class="align-middle">{{__('Discount')}}</th>

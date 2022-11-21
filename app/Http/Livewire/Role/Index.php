@@ -126,7 +126,7 @@ class Index extends Component
 
         $this->createModal = false;
 
-        $this->alert('success', 'Role created successfully.');
+        $this->alert('success', __('Role created successfully.'));
     }
     
     public function editModal(Role $role)
@@ -137,7 +137,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->role = $role;
+        $this->role = Role::find($role->id);
 
         $this->editModal = true;
     }
@@ -152,7 +152,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Role updated successfully.');
+        $this->alert('success', __('Role updated successfully.'));
     }
 
     public function deleteSelected()

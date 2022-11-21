@@ -123,7 +123,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->brand = $brand;
+        $this->brand = Brand::find($brand->id);
 
         $this->editModal = true;
     }
@@ -145,7 +145,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Brand updated successfully.');
+        $this->alert('success', __('Brand updated successfully.'));
     }
     
     public function showModal(Brand $brand)
@@ -156,7 +156,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->brand = $brand;
+        $this->brand = Brand::find($brand->id);
 
         $this->showModal = true;
     }
@@ -176,7 +176,7 @@ class Index extends Component
        
         $brand->delete();
 
-        $this->alert('success', 'Brand deleted successfully.');
+        $this->alert('success', __('Brand deleted successfully.'));
 
     }
 
@@ -197,7 +197,7 @@ class Index extends Component
 
         Excel::import(new BrandsImport, $this->file);
 
-        $this->alert('success', 'Brand imported successfully.');
+        $this->alert('success', __('Brand imported successfully.'));
     }
 
 

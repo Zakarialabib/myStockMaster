@@ -202,10 +202,7 @@
                 </div>
 
                 <div class="w-full flex justify-start px-3">
-                    <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
-                        {{ __('Close') }}
-                    </x-button>
-                    <x-button primary wire:click="update" wire:loading.attr="disabled">
+                    <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                         {{ __('Update') }}
                     </x-button>
                 </div>

@@ -120,7 +120,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->category = $category;
+        $this->category = Category::find($category->id);
 
         $this->editModal = true;
     }
@@ -135,7 +135,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Category updated successfully.');
+        $this->alert('success', __('Category updated successfully.'));
     }
     
     public function showModal(Category $category)
@@ -146,7 +146,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->category = $category;
+        $this->category = Category::find($category->id);
 
         $this->showModal = true;
     }
@@ -164,12 +164,11 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
-        if ($category->products()->isNotEmpty()) {
-            return back()->withErrors('Can\'t delete beacuse there are products associated with this category.');
+        if ($category->products->count() > 0) {
+            $this->alert('error', __('Category has products.'));
         } else {
             $category->delete();
-
-            $this->alert('success', 'Category deleted successfully.');
+            $this->alert('success', __('Category deleted successfully.'));
         }
     }
 
@@ -192,7 +191,7 @@ class Index extends Component
 
         Excel::import(new CategoriesImport, $file);
 
-        $this->alert('success', 'Categories imported successfully.');
+        $this->alert('success', __('Categories imported successfully.'));
 
         $this->importModal = false;
     }

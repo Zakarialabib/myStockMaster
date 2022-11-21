@@ -55,7 +55,8 @@
 
 @if (!empty($barcodes))
     <div class="text-right mb-3">
-        <x-button primary wire:click="getPdf" wire:loading.attr="disabled" type="button">
+        <x-button primary wire:click="getPdf" 
+                  wire:loading.attr="disabled" type="button">
             {{__('Download PDF')}}
         </x-button>
     </div>

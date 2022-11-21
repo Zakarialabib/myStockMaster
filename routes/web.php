@@ -29,6 +29,7 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
      //Product Category
     Route::resource('product-categories', CategoriesController::class)->except('show', 'create');
 
-    //Generate PDF
+    //Generate PDF move to ExportController
     Route::get('/quotations/pdf/{id}', function ($id) {
         $quotation = \App\Models\Quotation::findOrFail($id);
         $customer = \App\Models\Customer::findOrFail($quotation->customer_id);
@@ -110,7 +111,7 @@ Route::group(['middleware' => 'auth'], function () {
     //quotations
     Route::resource('quotations', QuotationController::class);
 
-     //Generate PDF
+     //Generate PDF move to ExportController
     Route::get('/purchases/pdf/{id}', function ($id) {
         $purchase = \App\Models\Purchase::findOrFail($id);
         $supplier = \App\Models\Supplier::findOrFail($purchase->supplier_id);
@@ -135,17 +136,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
 
     //Generate PDF
-    Route::get('/purchase-returns/pdf/{id}', function ($id) {
-        $purchaseReturn = \App\Models\PurchaseReturn::findOrFail($id);
-        $supplier = \App\Models\Supplier::findOrFail($purchaseReturn->supplier_id);
-
-        $pdf = PDF::loadView('admin.purchasesreturn.print', [
-            'purchase_return' => $purchaseReturn,
-            'supplier' => $supplier,
-        ])->setPaper('a4');
-
-        return $pdf->stream('purchase-return-' . $purchaseReturn->reference . '.pdf');
-    })->name('purchase-returns.pdf');
+    Route::get('/purchase-returns/pdf/{id}', [ExportController::class, 'purchaseReturns'])->name('purchase-returns.pdf');
 
     //Purchase Returns
     Route::resource('purchase-returns', PurchasesReturnController::class);
@@ -182,31 +173,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/app/pos', [PosController::class, 'store'])->name('app.pos.store');
 
     //Generate PDF
-    Route::get('/sales/pdf/{id}', function ($id) {
-        $sale = \App\Models\Sale::findOrFail($id);
-        $customer = \App\Models\Customer::findOrFail($sale->customer_id);
-
-        $pdf = PDF::loadView('admin.sale.print', [
-            'sale' => $sale,
-            'customer' => $customer,
-        ])->setPaper('a4');
-
-        return $pdf->stream('sale-' . $sale->reference . '.pdf');
-    })->name('sales.pdf');
-
-    Route::get('/sales/pos/pdf/{id}', function ($id) {
-        $sale = \App\Models\Sale::findOrFail($id);
-
-        $pdf = PDF::loadView('admin.sale.print-pos', [
-            'sale' => $sale,
-        ])->setPaper('a7')
-            ->setOption('margin-top', 8)
-            ->setOption('margin-bottom', 8)
-            ->setOption('margin-left', 5)
-            ->setOption('margin-right', 5);
-
-        return $pdf->stream('sale-' . $sale->reference . '.pdf');
-    })->name('sales.pos.pdf');
+    Route::get('/sales/pdf/{id}', [ExportController::class , 'sale'])->name('sales.pdf');
+    Route::get('/sales/pos/pdf/{id}', [ExportController::class , 'salePos'])->name('sales.pos.pdf');
 
     //Sales
     Route::resource('sales', SaleController::class);
@@ -219,7 +187,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
     Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
 
-     //Generate PDF
+     //Generate PDF move to ExportController
     Route::get('/sale-returns/pdf/{id}', function ($id) {
         $saleReturn = \App\Models\SaleReturn::findOrFail($id);
         $customer = \App\Models\Customer::findOrFail($saleReturn->customer_id);

@@ -84,7 +84,7 @@
                     </x-accordion>
 
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
+                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>
                     </div>

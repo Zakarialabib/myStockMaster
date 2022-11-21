@@ -161,7 +161,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_show'), 403);
 
-        $this->customer = $customer;
+        $this->customer = Customer::find($customer->id);
 
         $this->showModal = true;
     }
@@ -174,7 +174,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->customer = $customer;
+        $this->customer = Customer::find($customer->id);
 
         $this->editModal = true;
 

@@ -60,11 +60,11 @@
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <x-button primary wire:click="editModal({{ $role->id }})"
-                                    wire:loading.attr="disabled">
+                                  type="button"  wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                 </x-button>
                                 <x-button danger type="button" wire:click="confirm('delete', {{ $role->id }})"
-                                    wire:loading.attr="disabled">
+                                   type="button" wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                 </x-button>
 

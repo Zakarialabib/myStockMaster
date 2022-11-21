@@ -4,8 +4,8 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Return')}} _{{$return_sale['Ref']}}</title>
-      <link rel="stylesheet" href="{{asset('/css/pdf_style.css')}}" media="all" />
+      <title>{{__('Return')}} _{{$return_$sale['reference']}}</title>
+      <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
    <body>
@@ -15,12 +15,12 @@
          </div>
          <div id="company">
             <div><strong> Date: </strong>{{$return_sale['date']}}</div>
-            <div><strong> Numéro: </strong> {{$return_sale['Ref']}}</div>
+            <div><strong> Numéro: </strong> {{$return_$sale['reference']}}</div>
             <div><strong> Réf vente: </strong> {{$return_sale['sale_ref']}}</div>
 
          </div>
          <div id="Title-heading">
-            Retour  : {{$return_sale['Ref']}}
+            Retour  : {{$return_$sale['reference']}}
          </div>
          </div>
       </header>

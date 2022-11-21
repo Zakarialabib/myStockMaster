@@ -60,13 +60,12 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product)
+    public function mount()
     {
-        $this->product = $product;
-        $this->product->stock_alert = 10;
-        $this->product->order_tax = 0;
-        $this->product->unit = 'pcs';
-        $this->product->barcode_symbology = 'C128';
+        $this->stock_alert = 10;
+        $this->order_tax = 0;
+        $this->unit = 'pcs';
+        $this->barcode_symbology = 'C128';
         $this->initListsForFields();
     }
     
@@ -99,7 +98,7 @@ class Create extends Component
 
         Product::create($validatedData);
         
-        $this->alert('success', 'Product created successfully');
+        $this->alert('success', __('Product created successfully'));
 
         $this->emit('refreshIndex');
 

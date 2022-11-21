@@ -84,8 +84,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
+    <div class="flex flex-row">
+        <div class="w-full px-4">
             <div class="card border-0 shadow-sm">
                 <div class="p-4">
                     <x-table>

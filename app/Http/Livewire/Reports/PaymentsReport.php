@@ -16,8 +16,6 @@ class PaymentsReport extends Component
 
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
-
     public $start_date;
     public $end_date;
     public $payments;

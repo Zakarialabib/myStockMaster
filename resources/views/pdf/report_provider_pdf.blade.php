@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <title>Supplier  : {{$provider['provider_name']}}</title>
-      <link rel="stylesheet" href="{{asset('/css/pdf_style.css')}}" media="all" />
+      <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
    <body>

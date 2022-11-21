@@ -118,11 +118,6 @@
                         wire:model="expenseCategory.description" disabled />
                 </div>
             </div>
-            <div class="flex justify-center">
-                <x-button primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-            </div>
         </x-slot>
     </x-modal>
     @endif
@@ -149,10 +144,7 @@
                 </div>
             </div>
             <div class="flex justify-center">
-                <x-button primary wire:click="$toggle('editModal')" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-                <x-button primary wire:click="update" wire:loading.attr="disabled">
+                <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
                     {{ __('Update') }}
                 </x-button>
             </div>

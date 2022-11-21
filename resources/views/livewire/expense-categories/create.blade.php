@@ -20,7 +20,7 @@
                         <x-input-error :messages="$errors->first('expenseCategory.description')" />
                     </div>
                     <div class="w-full flex justify-start px-3">
-                        <x-button primary wire:click="create" wire:loading.attr="disabled">
+                        <x-button primary type="button" wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
                     </div>

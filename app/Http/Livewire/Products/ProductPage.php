@@ -157,7 +157,7 @@ class ProductPage extends Component
     {
         abort_if(Gate::denies('show_products'), 403);
 
-        $this->product = $product;
+        $this->product = Product::find($product->id);
 
         $this->showModal = true;
     }
@@ -170,7 +170,7 @@ class ProductPage extends Component
 
         $this->resetValidation();
 
-        $this->product = $product;
+        $this->product = Product::find($product->id);
 
         $this->editModal = true;
     }
@@ -191,7 +191,7 @@ class ProductPage extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Product updated successfully.');
+        $this->alert('success', __('Product updated successfully.'));
     }
 
     public function importModal()
@@ -218,7 +218,7 @@ class ProductPage extends Component
 
         Product::import(new ProductImport(), $this->file('import_file'));
 
-        $this->alert('success', 'Products imported successfully');
+        $this->alert('success', __('Products imported successfully'));
 
         $this->importModal = false;
     }

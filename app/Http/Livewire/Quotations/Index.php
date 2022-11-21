@@ -17,14 +17,12 @@ class Index extends Component
 
     public $quotation;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    public $listeners = [
+        'confirmDelete', 'delete', 'showModal'
+    ];
 
     public $showModal;
-
-    public $createModal;
-
-    public $editModal;
-
+    
     public int $perPage;
 
     public array $orderable;
@@ -111,59 +109,11 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_quotations'), 403);
 
-        $this->quotation = $quotation;
+        $this->quotation = Quotation::find($quotation->id);
 
         $this->showModal = true;
     }
-
-    public function createModal()
-    {
-        abort_if(Gate::denies('create_quotations'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('create_quotations'), 403);
-
-        $this->validate();
-
-        Quotation::create($this->quotation);
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Quotation created successfully.');
-    }
-
-    public function editModal(Quotation $quotation)
-    {
-        abort_if(Gate::denies('edit_quotations'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->quotation = $quotation;
-
-        $this->editModal = true;
-    }
-
-    public function update()
-    {
-        $this->validate();
-
-        $this->quotation->save();
-
-        $this->editModal   = false;
-
-        $this->alert('success', 'Quotation updated successfully.');
-    }
-
+    
     public function deleteSelected()
     {
         abort_if(Gate::denies('delete_quotations'), 403);
@@ -179,7 +129,7 @@ class Index extends Component
 
         $product->delete();
 
-        $this->alert('success', 'Quotation deleted successfully.');
+        $this->alert('success', __('Quotation deleted successfully.'));
     }
 
     protected function initListsForFields(): void

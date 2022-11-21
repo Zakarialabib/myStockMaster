@@ -125,7 +125,7 @@ class Index extends Component
 
         $this->createModal = false;
 
-        $this->alert('success', 'Permission created successfully.');
+        $this->alert('success', __('Permission created successfully.'));
     }
 
     public function editModal(Permission $permission)
@@ -136,7 +136,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->permission = $permission;
+        $this->permission = Permission::find($permission->id);
 
         $this->editModal = true;
     }
@@ -149,7 +149,7 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Permission updated successfully.');
+        $this->alert('success', __('Permission updated successfully.'));
     }
 
     public function deleteSelected()
@@ -167,6 +167,6 @@ class Index extends Component
 
         $permission->delete();
 
-        $this->alert('success', 'Permission deleted successfully.');
+        $this->alert('success', __('Permission deleted successfully.'));
     }
 }

@@ -163,7 +163,7 @@ class Create extends Component
             ]);
         }
 
-        $this->alert('success', 'Sale created successfully!');
+        $this->alert('success', __('Sale created successfully!'));
 
     }
 

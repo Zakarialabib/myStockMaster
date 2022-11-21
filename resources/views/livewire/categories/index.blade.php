@@ -7,17 +7,17 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selected)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
+            @if ($this->selected)
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
             <div class="flex items-center mr-3 pl-4">
                 <input wire:model="search" type="text"
                     class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="{{__('Search...')}}" />
+                    placeholder="{{ __('Search...') }}" />
             </div>
         </div>
     </div>
@@ -61,34 +61,36 @@
                     </x-table.td>
                     <x-table.td>
                         <x-badge type="info">
-                        {{ $category->products->count() }}
+                            {{ $category->products->count() }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <x-badge type="info">
-                        {{ $category->products->sum('quantity') }}
+                        <x-badge info>
+                            {{ $category->products->sum('quantity') }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        @php($stockValue = $category->products->sum(function($product) {
-                            return $product->quantity * $product->cost;
-                        }))
-                        <x-badge type="info">
-                        {{ number_format($stockValue, 2) }}
+                        @php
+                            $stockValue = $category->products->sum(function ($product) {
+                                return $product->quantity * $product->cost;
+                            });
+                        @endphp
+                        <x-badge info>
+                            {{ format_currency($stockValue) }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
                             <x-button info wire:click="$emit('showModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
+                               type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
                             <x-button primary wire:click="$emit('editModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
+                              type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
+                              type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -193,7 +195,7 @@
                     </div>
 
                     <div class="w-full flex justify-start">
-                        <x-button primary wire:click="import" type="button" wire:loading.attr="disabled">
+                        <x-button primary wire:click="import" type="submit" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>
@@ -205,6 +207,8 @@
     {{-- End Import modal --}}
 
     <livewire:categories.create />
+
+
 </div>
 
 @push('scripts')

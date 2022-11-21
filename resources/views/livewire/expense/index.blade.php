@@ -81,14 +81,16 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal({{ $expense->id }})" wire:loading.attr="disabled">
+                            <x-button info wire:click="showModal({{ $expense->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $expense->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $expense->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger wire:click="$emit('deleteModal', {{ $expense->id }})"
-                                wire:loading.attr="disabled">
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -149,7 +151,8 @@
                         </div>
                         <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                             <x-label for="expense.date" :value="__('Date')" />
-                            <x-input-date wire:model="expense.date" id="expense.date" name="expense.date" class="block mt-1 w-full" />
+                            <x-input-date wire:model="expense.date" id="expense.date" name="expense.date"
+                                class="block mt-1 w-full" />
                         </div>
 
                         <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
@@ -166,8 +169,9 @@
                         </div>
                         <div class="w-full px-4 mb-4">
                             <x-label for="expense.details" :value="__('Description')" />
-                            <textarea class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="6"
-                                wire:model="expense.details" id="expense.details"></textarea>
+                            <textarea
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                rows="6" wire:model="expense.details" id="expense.details"></textarea>
                         </div>
                     </div>
                 </form>
@@ -209,12 +213,9 @@
                             type="text" disabled />
                     </div>
                 </div>
-                <x-button class="my-4 px-4" primary wire:click="$toggle('showModal')" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
+            </div>
         </x-slot>
     </x-modal>
-
 
 </div>
 

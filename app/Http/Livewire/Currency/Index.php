@@ -17,9 +17,10 @@ class Index extends Component
 
     public int $perPage;
 
-    
-
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
+    public $listeners = [
+        'confirmDelete', 'delete', 'showModal', 
+        'editModal', 'refreshIndex'
+    ];
 
     public $showModal;
 
@@ -109,7 +110,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('currency_show'), 403);
 
-        $this->currency = $currency;
+        $this->currency = Currency::find($currency->id);
 
         $this->showModal = true;
     }
@@ -122,7 +123,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->currency = $currency;
+        $this->currency = Currency::find($currency->id);
 
         $this->editModal = true;
 
@@ -136,9 +137,9 @@ class Index extends Component
 
         $this->currency->save();
 
-        $this->showModal = false;
+        $this->editModal = false;
 
-        $this->alert('success', 'Currency updated successfully!');
+        $this->alert('success', __('Currency updated successfully!'));
     }
 
     public function delete(Currency $currency)
@@ -147,7 +148,7 @@ class Index extends Component
 
         $currency->delete();
 
-        $this->alert('success', 'Currency deleted successfully!');
+        $this->alert('success', __('Currency deleted successfully!'));
     }
     
 }

@@ -131,10 +131,6 @@
                         <x-button primary type="button" wire:click="create" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
-                        <x-button secondary type="button" wire:click="$toggle('createProduct')"
-                            wire:loading.attr="disabled">
-                            {{ __('Close') }}
-                        </x-button>
                     </div>
                 </div>
             </form>

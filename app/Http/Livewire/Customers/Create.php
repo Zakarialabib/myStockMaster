@@ -33,11 +33,6 @@ class Create extends Component
         'tax_number' => 'nullable',
     ];
 
-    public function mount(Customer $customer)
-    {
-        $this->customer = $customer;
-    }
-
     public function render()
     {
         abort_if(Gate::denies('customer_create'), 403);
@@ -47,9 +42,7 @@ class Create extends Component
 
     public function createCustomer()
     {
-        $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->reset();
         
         $this->createCustomer = true;
     }
@@ -65,10 +58,10 @@ class Create extends Component
                 'customer_id' => $this->customer->id,
                 'balance' => 0,
             ]);
-            $this->alert('success', 'Customer created successfully');
+            $this->alert('success', __('Customer created successfully'));
         }
         else {
-            $this->alert('error', 'Customer not created');
+            $this->alert('error', __('Customer not created'));
         }
 
         $this->emit('refreshIndex');

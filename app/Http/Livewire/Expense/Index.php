@@ -139,7 +139,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_show'), 403);
 
-        $this->expense = $expense;
+        $this->expense = Expense::find($expense->id);
 
         $this->showModal = true;
     }
@@ -152,7 +152,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->expense = $expense;
+        $this->expense = Expense::find($expense->id);
 
         $this->editModal = true;
     }
@@ -163,7 +163,7 @@ class Index extends Component
 
         $this->expense->save();
 
-        $this->alert('success', 'Expense updated successfully.');
+        $this->alert('success', __('Expense updated successfully.'));
         
         $this->emit('refreshIndex');
 

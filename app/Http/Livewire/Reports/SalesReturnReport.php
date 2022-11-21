@@ -11,7 +11,7 @@ class SalesReturnReport extends Component
 
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
+    
 
     public $customers;
     public $start_date;

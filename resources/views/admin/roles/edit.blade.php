@@ -77,7 +77,7 @@
                                                         <label class="custom-control-label" for="show_notifications">{{__('Notifications')}}</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="w-full px-4">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="show_month_overview" name="permissions[]"
@@ -85,7 +85,7 @@
                                                         <label class="custom-control-label" for="show_month_overview">Month Overview</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="w-full px-4">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="show_weekly_sales_purchases" name="permissions[]"
@@ -93,7 +93,7 @@
                                                         <label class="custom-control-label" for="show_weekly_sales_purchases">Weekly Sales & Purchases</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="w-full px-4">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="show_monthly_cashflow" name="permissions[]"
@@ -191,7 +191,7 @@
                                                         <label class="custom-control-label" for="access_product_categories">{{__('Category')}}</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="w-full px-4">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="print_barcodes" name="permissions[]"
@@ -313,7 +313,7 @@
                                                         <label class="custom-control-label" for="send_quotation_mails">Send Email</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="w-full px-4">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
                                                                id="create_quotation_sales" name="permissions[]"

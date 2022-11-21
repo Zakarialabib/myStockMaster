@@ -174,7 +174,7 @@ class ProductCart extends Component
 
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
-        $this->alert('success', 'Discount applied successfully!');
+        $this->alert('success', __('Discount applied successfully!'));
     }
 
     public function calculate($product) {

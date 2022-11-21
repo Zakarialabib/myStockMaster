@@ -185,7 +185,7 @@ class Index extends Component
             ]);
         }
 
-        $this->alert('success', 'Sale created successfully!');
+        $this->alert('success', __('Sale created successfully!'));
 
         $this->checkoutModal = false;
 
@@ -341,7 +341,7 @@ class Index extends Component
 
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
-        $this->alert('success', 'Product discount set successfully!');
+        $this->alert('success', __('Product discount set successfully!'));
     }
 
     public function calculate($product) {

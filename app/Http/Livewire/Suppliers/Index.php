@@ -105,7 +105,8 @@ class Index extends Component
 
     public function showModal(Supplier $supplier)
     {
-        $this->supplier = $supplier;
+        $this->supplier = Supplier::find($supplier->id);
+        
         $this->showModal = true;
     }
 
@@ -117,7 +118,7 @@ class Index extends Component
 
         $this->resetValidation();
         
-        $this->supplier = $supplier;
+        $this->supplier = Supplier::find($supplier->id);
 
         $this->editModal = true;
     }
@@ -128,7 +129,7 @@ class Index extends Component
 
         $this->supplier->save();
 
-        $this->alert('success', 'Supplier Updated Successfully');
+        $this->alert('success', __('Supplier Updated Successfully'));
 
         $this->editModal = false;
 
@@ -140,7 +141,7 @@ class Index extends Component
 
         $supplier->delete();
 
-        $this->alert('warning', 'Supplier Deleted Successfully');
+        $this->alert('warning', __('Supplier Deleted Successfully'));
     }
 
     public function deleteSelected()
@@ -172,7 +173,7 @@ class Index extends Component
 
         Supplier::import(new SupplierImport, $this->file('import_file'));
 
-        $this->alert('success', 'Supplier Imported Successfully');
+        $this->alert('success', __('Supplier Imported Successfully'));
 
         $this->importModal = false;
     }

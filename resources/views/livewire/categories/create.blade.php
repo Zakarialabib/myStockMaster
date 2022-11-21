@@ -16,13 +16,14 @@
 
                     <div class="my-4">
                         <x-label for="name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model="name" />
+                        <x-input id="name" class="block mt-1 w-full" type="text" name="name" autofocus
+                            wire:model="name"  />
                         <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
 
                     <div class="w-full flex justify-start">
-                        <x-button primary wire:click="create" wire:loading.attr="disabled" type="button">
+                        <x-button primary wire:click="create" 
+                            wire:loading.attr="disabled" type="submit">
                             {{ __('Create') }}
                         </x-button>
                     </div>
