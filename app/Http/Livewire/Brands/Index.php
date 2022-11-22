@@ -2,22 +2,23 @@
 
 namespace App\Http\Livewire\Brands;
 
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads, WithPagination};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\Brand;
 use App\Support\HasAdvancedFilter;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\BrandsImport;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting,
-         LivewireAlert, HasAdvancedFilter, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use HasAdvancedFilter;
+    use WithFileUploads;
 
     public $brand;
 
@@ -29,7 +30,7 @@ class Index extends Component
     public int $perPage;
 
     public $show;
-    
+
     public $image;
 
     public $showModal;
@@ -38,7 +39,7 @@ class Index extends Component
 
     public $importModal;
 
-    public $editModal; 
+    public $editModal;
 
     public array $orderable;
 
@@ -47,7 +48,7 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -135,9 +136,9 @@ class Index extends Component
         $this->validate();
         // upload image if it does or doesn't exist
 
-        if($this->image){
+        if ($this->image) {
             $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
-            $this->image->storeAs('brands',$imageName);
+            $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }
 
@@ -147,7 +148,7 @@ class Index extends Component
 
         $this->alert('success', __('Brand updated successfully.'));
     }
-    
+
     public function showModal(Brand $brand)
     {
         abort_if(Gate::denies('brand_show'), 403);
@@ -169,15 +170,14 @@ class Index extends Component
 
         $this->resetSelected();
     }
-    
+
     public function delete(Brand $brand)
     {
         abort_if(Gate::denies('brand_delete'), 403);
-       
+
         $brand->delete();
 
         $this->alert('success', __('Brand deleted successfully.'));
-
     }
 
     public function importModal()
@@ -195,11 +195,8 @@ class Index extends Component
             'file' => 'required|mimes:xlsx',
         ]);
 
-        Excel::import(new BrandsImport, $this->file);
+        Excel::import(new BrandsImport(), $this->file);
 
         $this->alert('success', __('Brand imported successfully.'));
     }
-
-
 }
-

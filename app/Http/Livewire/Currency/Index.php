@@ -11,14 +11,16 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
     public $currency;
 
     public int $perPage;
 
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal', 
+        'confirmDelete', 'delete', 'showModal',
         'editModal', 'refreshIndex'
     ];
 
@@ -94,7 +96,7 @@ class Index extends Component
     public function render()
     {
         abort_if(Gate::denies('currency_access'), 403);
-        
+
         $query = Currency::advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
@@ -126,7 +128,6 @@ class Index extends Component
         $this->currency = Currency::find($currency->id);
 
         $this->editModal = true;
-
     }
 
     public function update(Currency $currency)
@@ -150,5 +151,4 @@ class Index extends Component
 
         $this->alert('success', __('Currency deleted successfully!'));
     }
-    
 }

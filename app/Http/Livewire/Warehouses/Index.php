@@ -2,17 +2,18 @@
 
 namespace App\Http\Livewire\Warehouses;
 
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads, WithPagination};
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
 use App\Models\Warehouse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $warehouse;
 
@@ -78,7 +79,7 @@ class Index extends Component
         $this->sortBy            = 'id';
         $this->sortDirection     = 'desc';
         $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        
+        $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Warehouse())->orderable;
     }
 
@@ -105,7 +106,7 @@ class Index extends Component
 
         $this->showModal = true;
     }
-    
+
     public function editModal(Warehouse $warehouse)
     {
         abort_if(Gate::denies('warehouse_edit'), 403);
@@ -150,5 +151,4 @@ class Index extends Component
 
         $this->alert('warning', __('Warehouses successfully deleted.'));
     }
-
 }

@@ -23,7 +23,6 @@ class Cache extends Component
         Artisan::call('view:clear');
         Artisan::call('optimize');
 
-        $this->alert('success', __('All caches have been cleared!') );
-
+        $this->alert('success', __('All caches have been cleared!'));
     }
 }

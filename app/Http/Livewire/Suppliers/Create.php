@@ -12,8 +12,8 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createSupplier'];
-    
-    public $createSupplier; 
+
+    public $createSupplier;
 
     public array $rules = [
         'supplier.name' => ['required', 'string', 'max:255'],
@@ -33,17 +33,16 @@ class Create extends Component
     public function render()
     {
         abort_if(Gate::denies('supplier_create'), 403);
-        
+
         return view('livewire.suppliers.create');
     }
 
     public function createSupplier()
     {
-
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
+
         $this->createSupplier = true;
     }
 
@@ -58,6 +57,5 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createSupplier = false;
-        
     }
 }

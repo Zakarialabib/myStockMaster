@@ -11,14 +11,12 @@ use App\Models\SalePayment;
 
 class SalePaymentsController extends Controller
 {
-
-    public function index($sale_id) {
+    public function index($sale_id)
+    {
         abort_if(Gate::denies('access_sale_payments'), 403);
 
         $sale = Sale::findOrFail($sale_id);
 
         return view('admin.sale.payments.index', compact('sale'));
     }
-
-
 }

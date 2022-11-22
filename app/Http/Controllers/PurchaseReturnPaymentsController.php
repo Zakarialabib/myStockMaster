@@ -11,8 +11,8 @@ use App\Models\PurchaseReturnPayment;
 
 class PurchaseReturnPaymentsController extends Controller
 {
-
-    public function index($purchase_return_id) {
+    public function index($purchase_return_id)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $purchase_return = PurchaseReturn::findOrFail($purchase_return_id);
@@ -21,7 +21,8 @@ class PurchaseReturnPaymentsController extends Controller
     }
 
 
-    public function create($purchase_return_id) {
+    public function create($purchase_return_id)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $purchase_return = PurchaseReturn::findOrFail($purchase_return_id);
@@ -30,7 +31,8 @@ class PurchaseReturnPaymentsController extends Controller
     }
 
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $request->validate([
@@ -77,7 +79,8 @@ class PurchaseReturnPaymentsController extends Controller
     }
 
 
-    public function edit($purchase_return_id, PurchaseReturnPayment $purchaseReturnPayment) {
+    public function edit($purchase_return_id, PurchaseReturnPayment $purchaseReturnPayment)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $purchase_return = PurchaseReturn::findOrFail($purchase_return_id);
@@ -86,7 +89,8 @@ class PurchaseReturnPaymentsController extends Controller
     }
 
 
-    public function update(Request $request, PurchaseReturnPayment $purchaseReturnPayment) {
+    public function update(Request $request, PurchaseReturnPayment $purchaseReturnPayment)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $request->validate([
@@ -133,7 +137,8 @@ class PurchaseReturnPaymentsController extends Controller
     }
 
 
-    public function destroy(PurchaseReturnPayment $purchaseReturnPayment) {
+    public function destroy(PurchaseReturnPayment $purchaseReturnPayment)
+    {
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $purchaseReturnPayment->delete();

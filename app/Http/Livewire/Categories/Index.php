@@ -2,19 +2,20 @@
 
 namespace App\Http\Livewire\Categories;
 
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Http\Livewire\WithSorting;
+use Livewire\{Component, WithFileUploads, WithPagination};
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use App\Models\Category;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Livewire\WithSorting;
+use App\Models\Category;
 use App\Imports\CategoriesImport;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $category;
     public $code;
@@ -29,14 +30,14 @@ class Index extends Component
     public int $perPage;
 
     public $show;
-    
+
     public $showModal;
-    
+
     public $refreshIndex;
 
     public $importModal;
-    
-    public $editModal; 
+
+    public $editModal;
 
     public array $orderable;
 
@@ -45,7 +46,7 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -137,7 +138,7 @@ class Index extends Component
 
         $this->alert('success', __('Category updated successfully.'));
     }
-    
+
     public function showModal(Category $category)
     {
         abort_if(Gate::denies('access_product_categories'), 403);
@@ -159,7 +160,7 @@ class Index extends Component
 
         $this->resetSelected();
     }
-    
+
     public function delete(Category $category)
     {
         abort_if(Gate::denies('access_product_categories'), 403);
@@ -172,7 +173,7 @@ class Index extends Component
         }
     }
 
-    public function importExcel ()
+    public function importModal()
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -189,13 +190,10 @@ class Index extends Component
 
         $file = $this->file('file');
 
-        Excel::import(new CategoriesImport, $file);
+        Excel::import(new CategoriesImport(), $file);
 
         $this->alert('success', __('Categories imported successfully.'));
 
         $this->importModal = false;
     }
-
-
 }
-

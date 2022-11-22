@@ -13,7 +13,6 @@ use App\Models\SaleReturnPayment;
 
 class PaymentsReport extends Component
 {
-
     use WithPagination;
 
     public $start_date;
@@ -28,14 +27,16 @@ class PaymentsReport extends Component
     ];
     protected $query;
 
-    public function mount() {
+    public function mount()
+    {
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->payments = '';
         $this->query = null;
     }
 
-    public function render() {
+    public function render()
+    {
         $this->getQuery();
 
         return view('livewire.reports.payments-report', [
@@ -53,16 +54,19 @@ class PaymentsReport extends Component
         ]);
     }
 
-    public function generateReport() {
+    public function generateReport()
+    {
         $this->validate();
         $this->render();
     }
 
-    public function updatedPayments($value) {
+    public function updatedPayments($value)
+    {
         $this->resetPage();
     }
 
-    public function getQuery() {
+    public function getQuery()
+    {
         if ($this->payments == 'sale') {
             $this->query = SalePayment::query()->with('sale');
         } elseif ($this->payments == 'sale_return') {

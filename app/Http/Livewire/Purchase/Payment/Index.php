@@ -12,8 +12,10 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
-    
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+
     public $purchase;
 
     public $listeners = [
@@ -33,7 +35,7 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     public array $listsForFields = [];
 
     public $purchase_id;
@@ -75,10 +77,11 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function mount($purchase){
+    public function mount($purchase)
+    {
         $this->purchase = $purchase;
 
-        if($purchase){
+        if ($purchase) {
             $this->purchase_id = $purchase->id;
         }
 
@@ -94,11 +97,11 @@ class Index extends Component
     {
         //    abort_if(Gate::denies('access_purchase_payments'), 403);
 
-       $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
+             's'               => $this->search ?: null,
+             'order_column'    => $this->sortBy,
+             'order_direction' => $this->sortDirection,
+         ]);
 
         $purchasepayments = $query->paginate($this->perPage);
 
@@ -108,11 +111,9 @@ class Index extends Component
     public function showPayments($purchase_id)
     {
         abort_if(Gate::denies('access_purchases'), 403);
-        
+
         $this->purchase_id = $purchase_id;
 
         $this->showPayments = true;
     }
-
-
 }

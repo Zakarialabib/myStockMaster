@@ -2,12 +2,7 @@
 
 namespace App\Http\Livewire\Sales;
 
-use App\Models\Product;
-use App\Models\Sale;
-use App\Models\Category;
-use App\Models\Customer;
-use App\Models\SaleDetails;
-use App\Models\SalePayment;
+use App\Models\{Product,Sale,Category,Customer,SaleDetails,SalePayment};
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;

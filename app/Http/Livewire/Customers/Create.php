@@ -13,10 +13,24 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createCustomer'];
-    
-    public $createCustomer; 
-    
-    public $name, $email ,$phone, $city, $country ,$address, $tax_number;
+
+    public $createCustomer;
+
+    public $customer;
+
+    public $name;
+
+    public $email ;
+
+    public $phone;
+
+    public $city;
+
+    public $country ;
+
+    public $address;
+
+    public $tax_number;
 
     public function updated($propertyName)
     {
@@ -36,14 +50,14 @@ class Create extends Component
     public function render()
     {
         abort_if(Gate::denies('customer_create'), 403);
-        
+
         return view('livewire.customers.create');
     }
 
     public function createCustomer()
     {
         $this->reset();
-        
+
         $this->createCustomer = true;
     }
 
@@ -52,21 +66,16 @@ class Create extends Component
         $validatedData = $this->validate();
 
         Customer::create($validatedData);
-
-        if($this->customer) {
+        if ($this->customer) {
             $wallet = Wallet::create([
                 'customer_id' => $this->customer->id,
                 'balance' => 0,
             ]);
-            $this->alert('success', __('Customer created successfully'));
         }
-        else {
-            $this->alert('error', __('Customer not created'));
-        }
+        $this->alert('success', __('Customer created successfully'));
 
         $this->emit('refreshIndex');
 
         $this->createCustomer = false;
-        
     }
 }

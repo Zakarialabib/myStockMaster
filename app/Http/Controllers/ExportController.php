@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -11,10 +11,8 @@ use PDF;
 
 class ExportController extends Controller
 {
-
     public function salePos($id)
     {
-
         $sale = Sale::findOrFail($id);
 
         $pdf = PDF::loadView('admin.sale.print-pos', [
@@ -26,12 +24,10 @@ class ExportController extends Controller
             ->setOption('margin-right', 5);
 
         return $pdf->stream('sale-' . $sale->reference . '.pdf');
-
     }
 
     public function sale($id)
     {
-
         $sale = Sale::findOrFail($id);
         $customer = Customer::findOrFail($sale->customer_id);
 
@@ -41,13 +37,11 @@ class ExportController extends Controller
         ])->setPaper('a4');
 
         return $pdf->stream('sale-' . $sale->reference . '.pdf');
-
     }
 
 
     public function purchaseReturns($id)
     {
-
         $purchaseReturn = PurchaseReturn::findOrFail($id);
         $supplier = Supplier::findOrFail($purchaseReturn->supplier_id);
 
@@ -57,6 +51,5 @@ class ExportController extends Controller
         ])->setPaper('a4');
 
         return $pdf->stream('purchase-return-' . $purchaseReturn->reference . '.pdf');
-        
     }
 }

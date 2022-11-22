@@ -12,9 +12,9 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createExpenseCategory'];
-    
-    public $createExpenseCategory; 
-    
+
+    public $createExpenseCategory;
+
     public array $rules = [
         'expenseCategory.name' => 'required',
         'expenseCategory.description' => '',
@@ -37,7 +37,7 @@ class Create extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
+
         $this->createExpenseCategory = true;
     }
 
@@ -52,6 +52,5 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createExpenseCategory = false;
-        
     }
 }

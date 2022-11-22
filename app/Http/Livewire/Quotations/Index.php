@@ -2,13 +2,11 @@
 
 namespace App\Http\Livewire\Quotations;
 
-use Livewire\Component;
+use Livewire\{Component,WithFileUploads,WithPagination};
 use App\Http\Livewire\WithSorting;
 use App\Models\Quotation;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component

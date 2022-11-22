@@ -8,10 +8,7 @@ use App\Models\Purchase;
 
 class PurchasesReport extends Component
 {
-
     use WithPagination;
-
-    
 
     public $suppliers;
     public $start_date;
@@ -25,7 +22,8 @@ class PurchasesReport extends Component
         'end_date'   => 'required|date|after:start_date',
     ];
 
-    public function mount($suppliers) {
+    public function mount($suppliers)
+    {
         $this->suppliers = $suppliers;
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
@@ -34,7 +32,8 @@ class PurchasesReport extends Component
         $this->payment_status = '';
     }
 
-    public function render() {
+    public function render()
+    {
         $purchases = Purchase::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, function ($query) {
@@ -53,7 +52,8 @@ class PurchasesReport extends Component
         ]);
     }
 
-    public function generateReport() {
+    public function generateReport()
+    {
         $this->validate();
         $this->render();
     }

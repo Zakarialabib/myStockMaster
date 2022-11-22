@@ -16,22 +16,24 @@ use App\Http\Requests\UpdateQuotationRequest;
 
 class QuotationController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         abort_if(Gate::denies('access_quotations'), 403);
 
         return view('admin.quotation.index');
     }
 
 
-    public function create() {
+    public function create()
+    {
         abort_if(Gate::denies('create_quotations'), 403);
 
         return view('admin.quotation.create');
     }
 
-
-    public function store(StoreQuotationRequest $request) {
+    // use livewire --------->
+    public function store(StoreQuotationRequest $request)
+    {
         DB::transaction(function () use ($request) {
             $quotation = Quotation::create([
                 'date' => $request->date,
@@ -71,7 +73,8 @@ class QuotationController extends Controller
     }
 
 
-    public function show(Quotation $quotation) {
+    public function show(Quotation $quotation)
+    {
         abort_if(Gate::denies('show_quotations'), 403);
 
         $customer = Customer::findOrFail($quotation->customer_id);
@@ -80,7 +83,8 @@ class QuotationController extends Controller
     }
 
 
-    public function edit(Quotation $quotation) {
+    public function edit(Quotation $quotation)
+    {
         abort_if(Gate::denies('edit_quotations'), 403);
 
         $quotation_details = $quotation->quotationDetails;
@@ -112,7 +116,8 @@ class QuotationController extends Controller
     }
 
 
-    public function update(UpdateQuotationRequest $request, Quotation $quotation) {
+    public function update(UpdateQuotationRequest $request, Quotation $quotation)
+    {
         DB::transaction(function () use ($request, $quotation) {
             foreach ($quotation->quotationDetails as $quotation_detail) {
                 $quotation_detail->delete();
@@ -157,7 +162,8 @@ class QuotationController extends Controller
     }
 
 
-    public function destroy(Quotation $quotation) {
+    public function destroy(Quotation $quotation)
+    {
         abort_if(Gate::denies('delete_quotations'), 403);
 
         $quotation->delete();

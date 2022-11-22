@@ -16,15 +16,16 @@ use App\Http\Requests\UpdateSaleRequest;
 
 class SaleController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         abort_if(Gate::denies('access_sales'), 403);
 
         return view('admin.sale.index');
     }
 
 
-    public function create() {
+    public function create()
+    {
         abort_if(Gate::denies('create_sales'), 403);
 
         Cart::instance('sale')->destroy();
@@ -32,8 +33,9 @@ class SaleController extends Controller
         return view('admin.sale.create');
     }
 
-
-    public function store(StoreSaleRequest $request) {
+    // use livewire --------->
+    public function store(StoreSaleRequest $request)
+    {
         DB::transaction(function () use ($request) {
             $due_amount = $request->total_amount - $request->paid_amount;
 
@@ -104,7 +106,8 @@ class SaleController extends Controller
     }
 
 
-    public function show(Sale $sale) {
+    public function show(Sale $sale)
+    {
         abort_if(Gate::denies('show_sales'), 403);
 
         $customer = Customer::findOrFail($sale->customer_id);
@@ -113,7 +116,8 @@ class SaleController extends Controller
     }
 
 
-    public function edit(Sale $sale) {
+    public function edit(Sale $sale)
+    {
         abort_if(Gate::denies('edit_sales'), 403);
 
         $sale_details = $sale->saleDetails;
@@ -145,9 +149,9 @@ class SaleController extends Controller
     }
 
 
-    public function update(UpdateSaleRequest $request, Sale $sale) {
+    public function update(UpdateSaleRequest $request, Sale $sale)
+    {
         DB::transaction(function () use ($request, $sale) {
-
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
@@ -200,7 +204,7 @@ class SaleController extends Controller
                     'product_discount_type' => $cart_item->options->product_discount_type,
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
-                
+
                 if ($request->status == Sale::SaleShipped || $request->status == Sale::SaleCompleted) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
@@ -218,7 +222,8 @@ class SaleController extends Controller
     }
 
 
-    public function destroy(Sale $sale) {
+    public function destroy(Sale $sale)
+    {
         abort_if(Gate::denies('delete_sales'), 403);
 
         $sale->delete();

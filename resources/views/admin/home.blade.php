@@ -52,27 +52,28 @@
 @endsection
 <x-app-layout>
     <div class="px-2 mx-auto">
-        <livewire:calculator />
+        {{-- <livewire:calculator /> --}}
+        <div class="bg-white">
         <div class="md:inline-flex float-right pt-2 pb-5 sm:flex sm:flex-wrap">
-            <button type="button" data-date="today"
-                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300 active">
+            <x-button type="button" primary data-date="today"
+                class="js-date mr-2 active">
                 {{ __('Today') }}
-            </button>
+            </x-button>
 
-            <button type="button" data-date="month"
-                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+            <x-button type="button" primary data-date="month"
+                class="js-date mr-2">
                 {{ __('Last month') }}
-            </button>
+            </x-button>
 
-            <button type="button" data-date="semi"
-                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+            <x-button type="button" primary data-date="semi"
+                class="js-date mr-2">
                 {{ __('Last 6 month') }}
-            </button>
+            </x-button>
 
-            <button type="button" data-date="year"
-                class="js-date btn rounded-md md:text-sm sm:text-xs mt-2 font-medium border-0 focus:outline-none focus:ring transition bg-purple-600 text-white hover:text-purple-800 hover:bg-purple-100 active:bg-purple-200 focus:ring-purple-300">
+            <x-button type="button" primary data-date="year"
+                class="js-date">
                 {{ __('Last year') }}
-            </button>
+            </x-button>
         </div>
         @foreach ($data as $key => $d)
             @if ($loop->first)
@@ -162,6 +163,7 @@
                 </div>
             @endif
         @endforeach
+        </div>
         @can('show_total_stats')
             <div class="flex flex-wrap -m-4 py-4">
                 <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">

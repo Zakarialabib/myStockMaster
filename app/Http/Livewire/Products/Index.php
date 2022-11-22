@@ -2,21 +2,16 @@
 
 namespace App\Http\Livewire\Products;
 
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads, WithPagination};
+use App\Models\{Product, Category, Warehouse, Brand};
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use App\Models\Product;
-use App\Models\Category;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Exports\ProductExport;
 use App\Imports\ProductImport;
-use App\Models\Brand;
 use Illuminate\Support\Str;
-use App\Models\Warehouse;
 
-class ProductPage extends Component
+class Index extends Component
 {
     use WithSorting;
     use LivewireAlert;
@@ -150,7 +145,7 @@ class ProductPage extends Component
 
         $products = $query->paginate($this->perPage);
 
-        return view('livewire.products.product', compact('products'));
+        return view('livewire.products.index', compact('products'));
     }
 
     public function showModal(Product $product)

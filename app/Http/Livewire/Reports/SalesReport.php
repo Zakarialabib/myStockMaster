@@ -9,7 +9,7 @@ use App\Models\Sale;
 class SalesReport extends Component
 {
     use WithPagination;
-    
+
     public $customers;
     public $start_date;
     public $end_date;
@@ -22,7 +22,8 @@ class SalesReport extends Component
         'end_date'   => 'required|date|after:start_date',
     ];
 
-    public function mount($customers) {
+    public function mount($customers)
+    {
         $this->customers = $customers;
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
@@ -31,7 +32,8 @@ class SalesReport extends Component
         $this->payment_status = '';
     }
 
-    public function render() {
+    public function render()
+    {
         $sales = Sale::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, function ($query) {
@@ -50,7 +52,8 @@ class SalesReport extends Component
         ]);
     }
 
-    public function generateReport() {
+    public function generateReport()
+    {
         $this->validate();
         $this->render();
     }

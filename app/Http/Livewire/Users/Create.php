@@ -51,14 +51,13 @@ class Create extends Component
 
         $this->user->save();
 
-        if($this->user) {
+        if ($this->user) {
             $wallet = Wallet::create([
                 'user_id' => $this->user->id,
                 'balance' => 0,
             ]);
             $this->alert('success', __('User created successfully!'));
         } else {
-
             $this->alert('warning', __('User was not created !'));
         }
 

@@ -2,18 +2,14 @@
 
 namespace App\Http\Livewire\Sales;
 
-use Livewire\Component;
-use App\Http\Livewire\WithSorting;
-use App\Models\Sale;
-use App\Models\SalePayment;
-use App\Models\Customer;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
+use Livewire\{Component, WithFileUploads, WithPagination};
+use App\Models\{Sale, SalePayment, Customer};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
+use App\Http\Livewire\WithSorting;
 use App\Imports\SaleImport;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class Index extends Component
 {

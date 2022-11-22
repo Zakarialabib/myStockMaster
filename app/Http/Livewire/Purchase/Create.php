@@ -3,10 +3,7 @@
 namespace App\Http\Livewire\Purchase;
 
 use Livewire\Component;
-use App\Models\Supplier;
-use App\Models\Product;
-use App\Models\Purchase;
-use App\Models\PurchaseDetail;
+use App\Models\{Supplier, Product, Purchase, PurchaseDetail};
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

@@ -2,11 +2,9 @@
 
 namespace App\Http\Livewire\PurchaseReturn;
  
-use Livewire\Component;
+use Livewire\{Component,WithFileUploads,WithPagination};
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
 use App\Models\PurchaseReturn;
 use App\Models\PurchasePayment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

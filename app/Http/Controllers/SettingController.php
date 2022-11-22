@@ -13,8 +13,8 @@ use App\Http\Requests\StoreSmtpSettingsRequest;
 
 class SettingController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         abort_if(Gate::denies('access_settings'), 403);
 
         $settings = Setting::firstOrFail();
@@ -22,7 +22,8 @@ class SettingController extends Controller
         return view('admin.settings.index', compact('settings'));
     }
 
-    public function updateSmtp(StoreSmtpSettingsRequest $request) {
+    public function updateSmtp(StoreSmtpSettingsRequest $request)
+    {
         $toReplace = array(
             'MAIL_MAILER='.env('MAIL_HOST'),
             'MAIL_HOST="'.env('MAIL_HOST').'"',

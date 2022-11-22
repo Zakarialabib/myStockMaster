@@ -19,9 +19,8 @@ use illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-
-    public function index() {
-
+    public function index()
+    {
         $sales = Sale::completed()->sum('total_amount');
         $sale_returns = SaleReturn::completed()->sum('total_amount');
         $purchase_returns = PurchaseReturn::completed()->sum('total_amount');
@@ -39,23 +38,23 @@ class HomeController extends Controller
 
         $data = array(
             'today' => array(
-                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now())->sum('total_amount') / 100,
-                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now())->sum(DB::raw('quantity * cost')),
-               
+                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now())->sum(DB::raw('quantity * cost')),
+
             ),
             'month' => array(
-                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now()->subMonth())->sum('total_amount') / 100,
-                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
-               
+                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
+
             ),
             'semi' => array(
-                'salesTotal' => Sale::whereDate( 'created_at', '>=' , Carbon::now()->subMonths(6))->sum('total_amount') / 100,
-                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
-                
+                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
+
             ),
             'year' => array(
-                'salesTotal' => Sale::whereDate('created_at', '>=' , Carbon::now()->subYear())->sum('total_amount') / 100,
-                'stockValue' => Product::whereDate('created_at', '>=' , Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
+                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subYear())->sum('total_amount') / 100,
+                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
             ),
         );
 
@@ -70,7 +69,8 @@ class HomeController extends Controller
     }
 
 
-    public function currentMonthChart() {
+    public function currentMonthChart()
+    {
         abort_if(!request()->ajax(), 404);
 
         $currentMonthSales = Sale::where('status', 'Completed')->whereMonth('date', date('m'))
@@ -91,7 +91,8 @@ class HomeController extends Controller
     }
 
 
-    public function salesPurchasesChart() {
+    public function salesPurchasesChart()
+    {
         abort_if(!request()->ajax(), 404);
 
         $sales = $this->salesChartData();
@@ -101,7 +102,8 @@ class HomeController extends Controller
     }
 
 
-    public function paymentChart() {
+    public function paymentChart()
+    {
         abort_if(!request()->ajax(), 404);
 
         $dates = collect();
@@ -178,7 +180,8 @@ class HomeController extends Controller
         ]);
     }
 
-    public function salesChartData() {
+    public function salesChartData()
+    {
         $dates = collect();
         foreach (range(-6, 0) as $i) {
             $date = Carbon::now()->addDays($i)->format('d-m-y');
@@ -210,7 +213,8 @@ class HomeController extends Controller
     }
 
 
-    public function purchasesChartData() {
+    public function purchasesChartData()
+    {
         $dates = collect();
         foreach (range(-6, 0) as $i) {
             $date = Carbon::now()->addDays($i)->format('d-m-y');
@@ -239,7 +243,6 @@ class HomeController extends Controller
         }
 
         return response()->json(['data' => $data, 'days' => $days]);
-
     }
 
     public function changeLanguage($locale)

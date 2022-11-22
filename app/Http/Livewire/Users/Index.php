@@ -11,7 +11,9 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
     public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
 
@@ -118,8 +120,7 @@ class Index extends Component
 
         $user->delete();
 
-        $this->alert('warning', __('User deleted successfully!') );
-
+        $this->alert('warning', __('User deleted successfully!'));
     }
 
     public function showModal(User $user)
@@ -136,7 +137,7 @@ class Index extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
+
         $this->user = User::find($user->id);
 
         $this->editModal = true;
@@ -151,6 +152,5 @@ class Index extends Component
         $this->alert('success', __('User Updated Successfully'));
 
         $this->editModal = false;
-
     }
 }

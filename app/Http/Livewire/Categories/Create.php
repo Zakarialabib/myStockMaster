@@ -2,15 +2,15 @@
 
 namespace App\Http\Livewire\Categories;
 
+use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Create extends Component
 {
     use LivewireAlert;
-    
+
     public $listeners = ['createCategory'];
 
     public $createCategory;
@@ -18,7 +18,7 @@ class Create extends Component
     public $category;
 
     public $name;
-    
+
     protected $rules = [
         'name' => 'required|string|max:255',
     ];
@@ -49,9 +49,9 @@ class Create extends Component
         Category::create($validatedData);
 
         $this->emit('refreshIndex');
-        
+
         $this->alert('success', __('Category created successfully.'));
-        
+
         $this->createCategory = false;
     }
 }

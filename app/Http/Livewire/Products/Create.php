@@ -1,15 +1,11 @@
 <?php
 namespace App\Http\Livewire\Products;
 
-use App\Models\Brand;
-use App\Models\Category;
-use Livewire\Component;
-use App\Models\Product;
+use App\Models\{Product, Category, Warehouse, Brand};
+use Livewire\{Component, WithFileUploads};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Livewire\WithFileUploads;
-use App\Models\Warehouse;
 
 class Create extends Component
 {

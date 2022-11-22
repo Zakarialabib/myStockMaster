@@ -11,8 +11,8 @@ use AppHttp\Requests\StoreQuotationSaleRequest;
 
 class QuotationSalesController extends Controller
 {
-
-    public function __invoke(Quotation $quotation) {
+    public function __invoke(Quotation $quotation)
+    {
         abort_if(Gate::denies('create_quotation_sales'), 403);
 
         $quotation_details = $quotation->quotationDetails;

@@ -2,17 +2,18 @@
 
 namespace App\Http\Livewire\Adjustment;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
+use Livewire\{Component, WithFileUploads, WithPagination};
 use App\Models\Adjustment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $adjustment;
 
@@ -176,5 +177,4 @@ class Index extends Component
 
         $this->alert('success', __('Adjustment deleted successfully.'));
     }
-
 }

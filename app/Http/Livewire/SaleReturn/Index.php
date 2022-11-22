@@ -2,36 +2,35 @@
 
 namespace App\Http\Livewire\SaleReturn;
 
-use Livewire\Component;
-use App\Http\Livewire\WithSorting;
-use App\Models\SaleReturn;
-use App\Models\SalePayment;
-use App\Models\Customer;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
+use Livewire\{Component,WithFileUploads,WithPagination};
+use App\Models\{SaleReturn,SalePayment,Customer};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Livewire\WithSorting;
+use Illuminate\Support\Facades\DB;
 use App\Imports\SaleImport;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $salereturn;
 
     public $listeners = [
     'confirmDelete', 'delete', 'showModal',
     'importModal', 'import' , 'refreshIndex',
-    'paymentModal', 'paymentSave', 
+    'paymentModal', 'paymentSave',
     ];
 
     public $refreshIndex;
 
     public $showModal;
-    
-    public $importModal;    
+
+    public $importModal;
 
     public $paymentModal;
 
@@ -45,8 +44,6 @@ class Index extends Component
 
     public array $paginationOptions;
 
-    // public $salepayments;
-    
     public array $listsForFields = [];
 
     protected $queryString = [
@@ -149,9 +146,9 @@ class Index extends Component
         abort_if(Gate::denies('delete_sales'), 403);
 
         $product->delete();
-        
+
         $this->emit('refreshIndex');
-        
+
         $this->alert('success', 'SaleReturn deleted successfully.');
     }
 
@@ -177,15 +174,13 @@ class Index extends Component
             ],
         ]);
 
-        SaleReturn::import(new SaleImport, $this->file('import_file'));
+        SaleReturn::import(new SaleImport(), $this->file('import_file'));
 
         $this->alert('success', 'Sales imported successfully');
 
         $this->emit('refreshIndex');
 
         $this->importModal = false;
-        
-
     }
 
     //  Payment modal
@@ -204,9 +199,9 @@ class Index extends Component
         $this->paymentModal = true;
     }
 
-    public function paymentSave(){
+    public function paymentSave()
+    {
         DB::transaction(function () {
-            
             $this->validate(
                 [
                     'date' => 'required|date',
@@ -215,7 +210,7 @@ class Index extends Component
                     'payment_method' => 'required|string|max:255',
                 ]
             );
-            
+
             $salereturn = SaleReturn::find($this->salereturn_id);
 
             SalePayment::create([
@@ -228,7 +223,7 @@ class Index extends Component
             ]);
 
             $salereturn = SaleReturn::findOrFail($this->salereturn_id);
-        
+
             $due_amount = $salereturn->due_amount - $this->amount;
 
             if ($due_amount == $salereturn->total_amount) {
@@ -244,22 +239,20 @@ class Index extends Component
                 'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status
             ]);
-        
-            $this->emit('refreshIndex');
-        
-            $this->paymentModal = false;
 
-        }); 
+            $this->emit('refreshIndex');
+
+            $this->paymentModal = false;
+        });
     }
 
     protected function initListsForFields(): void
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
-    
+
     public function refreshCustomers()
     {
         $this->initListsForFields();
     }
-
 }

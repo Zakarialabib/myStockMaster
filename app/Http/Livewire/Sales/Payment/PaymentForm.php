@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentForm extends Component
 {
-
     public $listeners = [
        'paymentModal','refreshIndex','save'
     ];
@@ -47,12 +46,11 @@ class PaymentForm extends Component
     ];
 
     // todo : show amount due in amount field
-        // make new refrence number
-        // make today date
+    // make new refrence number
+    // make today date
 
     public function mount(Sale $sale)
     {
-        
         $this->sale = $sale;
         $this->date = Carbon::now()->format('Y-m-d');
         $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
@@ -64,20 +62,17 @@ class PaymentForm extends Component
     public function paymentModal($sale)
     {
         abort_if(Gate::denies('access_sales'), 403);
-        
+
         $this->sale_id = $sale;
 
         $this->paymentModal = true;
-    
     }
 
     public function save()
     {
-
         DB::transaction(function () {
-            
             $this->validate();
-            
+
             $this->sale = $this->salepayment->sale->id;
 
             SalePayment::create([
@@ -90,7 +85,7 @@ class PaymentForm extends Component
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
-        
+
             $due_amount = $sale->due_amount - $this->amount;
 
             if ($due_amount == $sale->total_amount) {
@@ -106,19 +101,15 @@ class PaymentForm extends Component
                 'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status
             ]);
-        
-            $this->emit('refreshIndex');
-        
-            $this->paymentModal = false;
 
-        }); 
-        
+            $this->emit('refreshIndex');
+
+            $this->paymentModal = false;
+        });
     }
 
     public function render()
     {
         return view('livewire.sales.payment.payment-form');
     }
-
-    
 }

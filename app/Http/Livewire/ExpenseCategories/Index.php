@@ -12,7 +12,10 @@ use App\Support\HasAdvancedFilter;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use HasAdvancedFilter;
 
     public $expenseCategory;
 
@@ -132,11 +135,10 @@ class Index extends Component
         $this->expenseCategory->save();
 
         $this->alert('success', __('Expense Category Updated Successfully.'));
-        
-        $this->emit('refreshIndex');
-        
-        $this->editModal = false;
 
+        $this->emit('refreshIndex');
+
+        $this->editModal = false;
     }
 
     public function deleteSelected()

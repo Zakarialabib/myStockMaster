@@ -42,6 +42,8 @@ use App\Http\Controllers\ExportController;
 |
 */
 
+require __DIR__ . '/auth.php';
+
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::group(['middleware' => 'auth'], function () {
@@ -70,10 +72,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Customers
     Route::resource('customers', CustomersController::class);
-
+    Route::get('customer/details/{customer}',[CustomersController::class, 'details'])->name('customer.details');
+    
     //Suppliers
     Route::resource('suppliers', SuppliersController::class);
-
+    Route::get('supplier/details/{supplier}',[SuppliersController::class, 'details'])->name('supplier.details');
+    
     //Warehouses
     Route::resource('warehouses', WarehouseController::class);
 
@@ -219,8 +223,6 @@ Route::group(['middleware' => 'auth'], function () {
 
      //User Profile
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');
-    //  Route::patch('/user/profile', [ ProfileController::class , 'update'])->name('profile.update');
-    //  Route::patch('/user/password', [ ProfileController::class , 'updatePassword'])->name('profile.update.password');
 
      //Users
     Route::resource('users', UsersController::class);
@@ -239,4 +241,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/settings', [SettingController::class ,'update'])->name('settings.update');
 });
 
-require __DIR__ . '/auth.php';
+

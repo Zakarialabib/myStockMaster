@@ -2,15 +2,10 @@
 
 namespace App\Http\Livewire\Settings;
 
-use App\Models\Currency;
-use App\Models\Customer;
-use Livewire\Component;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use App\Models\Setting;
-use App\Models\Warehouse;
+use Illuminate\Support\Facades\{Artisan, Gate, Log};
+use App\Models\{Currency,Customer,Setting,Warehouse};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Index extends Component
 {

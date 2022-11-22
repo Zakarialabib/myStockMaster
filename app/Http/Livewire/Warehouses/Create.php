@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Gate;
 
 class Create extends Component
 {
-
     public $listeners = ['createWarehouse'];
-    
-    public $createWarehouse; 
+
+    public $createWarehouse;
 
     public array $rules = [
         'warehouse.name' => ['string', 'required'],
@@ -47,12 +46,11 @@ class Create extends Component
         abort_if(Gate::denies('warehouse_create'), 403);
 
         $this->validate();
-        
+
         $this->warehouse->save();
 
         $this->createWarehouse = false;
 
         $this->emit('refreshIndex');
-
     }
 }

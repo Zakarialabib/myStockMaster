@@ -15,5 +15,4 @@ class BrandsController extends Controller
 
         return view('admin.brands.index');
     }
-
 }

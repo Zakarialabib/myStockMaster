@@ -52,5 +52,8 @@ class Supplier extends Model
         return $this->hasOne(Wallet::class);
     }
 
-    
+    public function purchases()
+    {
+        return $this->HasOne(Purchase::class);
+    }
 }

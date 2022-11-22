@@ -4,20 +4,22 @@ namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads};
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 
 class Create extends Component
 {
-    use LivewireAlert , WithFileUploads;
+    use LivewireAlert ;
+    use WithFileUploads;
 
     public $createBrand;
 
     public $brand;
-    
-    public $name, $description;
+
+    public $name;
+
+    public $description;
 
     public $image;
 
@@ -51,18 +53,18 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        if($this->image){
+        if ($this->image) {
             $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
-            $this->image->storeAs('brands',$imageName);
+            $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }
 
         Brand::create($validatedData);
 
         $this->emit('refreshIndex');
-        
+
         $this->alert('success', __('Brand created successfully.'));
-        
+
         $this->createBrand = false;
     }
 }

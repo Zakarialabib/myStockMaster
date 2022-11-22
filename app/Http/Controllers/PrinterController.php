@@ -14,7 +14,6 @@ class PrinterController extends Controller
      */
     public function index()
     {
-
         return view('admin.printer.index');
     }
 
@@ -26,13 +25,13 @@ class PrinterController extends Controller
     public function create()
     {
         if (!auth()->user()->can('access_printers')) {
-             abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $capability_profiles = Printer::capability_profiles();
         $connection_types = Printer::connection_types();
 
-        return view('printer.create')
+        return view('admin.printer.create')
             ->with(compact('capability_profiles', 'connection_types'));
     }
 
@@ -45,7 +44,7 @@ class PrinterController extends Controller
     public function store(Request $request)
     {
         if (!auth()->user()->can('access_printers')) {
-             abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         try {
@@ -63,7 +62,7 @@ class PrinterController extends Controller
                 $input['port'] = '';
             }
 
-            $printer = new Printer;
+            $printer = new Printer();
             $printer->fill($input)->save();
 
             $output = ['success' => 1,
@@ -71,7 +70,7 @@ class PrinterController extends Controller
                         ];
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+
             $output = ['success' => false,
                             'msg' => __("messages.something_went_wrong")
                         ];
@@ -100,7 +99,7 @@ class PrinterController extends Controller
     public function edit($id)
     {
         if (!auth()->user()->can('access_printers')) {
-             abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
@@ -109,7 +108,7 @@ class PrinterController extends Controller
         $capability_profiles = Printer::capability_profiles();
         $connection_types = Printer::connection_types();
 
-        return view('printer.edit')
+        return view('admin.printer.edit')
             ->with(compact('printer', 'capability_profiles', 'connection_types'));
     }
 
@@ -123,7 +122,7 @@ class PrinterController extends Controller
     public function update(Request $request, $id)
     {
         if (!auth()->user()->can('access_printers')) {
-             abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         try {
@@ -146,7 +145,7 @@ class PrinterController extends Controller
                         ];
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-        
+
             $output = ['success' => false,
                         'msg' => __("messages.something_went_wrong")
                     ];
@@ -164,9 +163,9 @@ class PrinterController extends Controller
     public function destroy($id)
     {
         if (!auth()->user()->can('access_printers')) {
-             abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
-        
+
         if (request()->ajax()) {
             try {
                 $business_id = request()->user()->business_id;
@@ -179,7 +178,7 @@ class PrinterController extends Controller
                             ];
             } catch (\Exception $e) {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
+
                 $output = ['success' => false,
                             'msg' => __("messages.something_went_wrong")
                         ];

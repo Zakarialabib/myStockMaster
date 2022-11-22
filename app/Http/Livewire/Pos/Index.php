@@ -2,14 +2,9 @@
 
 namespace App\Http\Livewire\Pos;
 
+use App\Models\{Customer,Category,Product,Sale,SaleDetails,SalePayment};
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
-use App\Models\Customer;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Sale;
-use App\Models\SaleDetails;
-use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 

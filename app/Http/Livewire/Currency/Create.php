@@ -54,6 +54,5 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createCurrency = false;
-
     }
 }

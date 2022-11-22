@@ -2,23 +2,22 @@
 
 namespace App\Http\Livewire\Customers;
 
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads, WithPagination};
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
-use App\Models\Customer;
 use App\Exports\CustomerExport;
-use App\Support\HasAdvancedFilter;
 use App\Imports\CustomerImport;
+use App\Models\Customer;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert,
-        HasAdvancedFilter, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $customer;
 
@@ -34,7 +33,7 @@ class Index extends Component
 
     public $refreshIndex;
 
-    public $editModal; 
+    public $editModal;
 
     public $import;
 
@@ -130,7 +129,7 @@ class Index extends Component
 
         $this->alert('warning', __('Customer deleted successfully'));
     }
-    
+
     public function createModal()
     {
         abort_if(Gate::denies('access_product_categories'), 403);
@@ -151,9 +150,9 @@ class Index extends Component
         $this->customer->save();
 
         $this->alert('success', __('Customer created successfully'));
-        
+
         $this->emit('refreshIndex');
-        
+
         $this->createModal = false;
     }
 
@@ -177,7 +176,6 @@ class Index extends Component
         $this->customer = Customer::find($customer->id);
 
         $this->editModal = true;
-
     }
 
     public function update()
@@ -190,7 +188,7 @@ class Index extends Component
 
         $this->alert('success', __('Customer updated successfully.'));
     }
-    
+
     public function downloadSelected()
     {
         abort_if(Gate::denies('customer_access'), 403);
@@ -227,22 +225,21 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-       $this->import = true;
+        $this->import = true;
     }
 
     public function importExcel()
     {
         abort_if(Gate::denies('customer_access'), 403);
-        
+
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Excel::import(new CustomerImport, $this->file('file'));
+        Excel::import(new CustomerImport(), $this->file('file'));
 
         $this->import = false;
 
         $this->alert('success', __('Customer imported successfully.'));
     }
-
 }

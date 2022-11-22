@@ -3,14 +3,14 @@
 namespace App\Http\Livewire\Role;
 
 use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithSorting;
 use App\Support\HasAdvancedFilter;
+use App\Http\Livewire\WithSorting;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Permission;
 
 class Index extends Component
 {

@@ -16,15 +16,16 @@ use App\Http\Requests\UpdatePurchaseReturnRequest;
 
 class PurchasesReturnController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         abort_if(Gate::denies('access_purchase_returns'), 403);
 
         return view('admin.purchasereturn.index');
     }
 
 
-    public function create() {
+    public function create()
+    {
         abort_if(Gate::denies('create_purchase_returns'), 403);
 
         Cart::instance('purchase_return')->destroy();
@@ -33,7 +34,8 @@ class PurchasesReturnController extends Controller
     }
 
 
-    public function store(StorePurchaseReturnRequest $request) {
+    public function store(StorePurchaseReturnRequest $request)
+    {
         DB::transaction(function () use ($request) {
             $due_amount = $request->total_amount - $request->paid_amount;
 
@@ -104,7 +106,8 @@ class PurchasesReturnController extends Controller
     }
 
 
-    public function show(PurchaseReturn $purchase_return) {
+    public function show(PurchaseReturn $purchase_return)
+    {
         abort_if(Gate::denies('show_purchase_returns'), 403);
 
         $supplier = Supplier::findOrFail($purchase_return->supplier_id);
@@ -113,7 +116,8 @@ class PurchasesReturnController extends Controller
     }
 
 
-    public function edit(PurchaseReturn $purchase_return) {
+    public function edit(PurchaseReturn $purchase_return)
+    {
         abort_if(Gate::denies('edit_purchase_returns'), 403);
 
         $purchase_return_details = $purchase_return->purchaseReturnDetails;
@@ -145,7 +149,8 @@ class PurchasesReturnController extends Controller
     }
 
 
-    public function update(UpdatePurchaseReturnRequest $request, PurchaseReturn $purchase_return) {
+    public function update(UpdatePurchaseReturnRequest $request, PurchaseReturn $purchase_return)
+    {
         DB::transaction(function () use ($request, $purchase_return) {
             $due_amount = $request->total_amount - $request->paid_amount;
 
@@ -217,7 +222,8 @@ class PurchasesReturnController extends Controller
     }
 
 
-    public function destroy(PurchaseReturn $purchase_return) {
+    public function destroy(PurchaseReturn $purchase_return)
+    {
         abort_if(Gate::denies('delete_purchase_returns'), 403);
 
         $purchase_return->delete();

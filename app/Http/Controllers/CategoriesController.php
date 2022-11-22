@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\Gate;
 
 class CategoriesController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         abort_if(Gate::denies('access_product_categories'), 403);
 
         return view('admin.categories.index');
     }
-    
 }

@@ -12,14 +12,17 @@ use App\Support\HasAdvancedFilter;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert , HasAdvancedFilter;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert ;
+    use HasAdvancedFilter;
 
     public $permission;
 
     public $listeners = ['show','confirmDelete', 'delete', 'createModal', 'editModal'];
 
     public $show;
-    
+
     public $createModal;
 
     public $editModal;
@@ -109,7 +112,7 @@ class Index extends Component
     public function createModal()
     {
         abort_if(Gate::denies('permission_create'), 403);
-        
+
         $this->resetErrorBag();
 
         $this->resetValidation();

@@ -2,15 +2,12 @@
 
 namespace App\Http\Livewire\Suppliers;
 
-use Livewire\Component;
+use Livewire\{Component, WithFileUploads, WithPagination};
+use App\Models\{Supplier,Wallet};
 use App\Http\Livewire\WithSorting;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use App\Models\Supplier;
 use App\Exports\SupplierExport;
 use App\Imports\SupplierImport;
-use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component

@@ -13,22 +13,25 @@ use App\Notifications\NotifyQuantityAlert;
 
 class AdjustmentController extends Controller
 {
-
-    public function index() {
+    
+    public function index()
+    {
         abort_if(Gate::denies('access_adjustments'), 403);
 
         return view('admin.adjustment.index');
     }
 
 
-    public function create() {
+    public function create()
+    {
         abort_if(Gate::denies('create_adjustments'), 403);
 
         return view('admin.adjustment.create');
     }
 
-
-    public function store(Request $request) {
+    // use livewire ---------> 
+    public function store(Request $request)
+    {
         abort_if(Gate::denies('create_adjustments'), 403);
 
         $request->validate([
@@ -74,21 +77,24 @@ class AdjustmentController extends Controller
     }
 
 
-    public function show(Adjustment $adjustment) {
+    public function show(Adjustment $adjustment)
+    {
         abort_if(Gate::denies('show_adjustments'), 403);
 
         return view('admin.adjustment.show', compact('adjustment'));
     }
 
 
-    public function edit(Adjustment $adjustment) {
+    public function edit(Adjustment $adjustment)
+    {
         abort_if(Gate::denies('edit_adjustments'), 403);
 
         return view('admin.adjustment.edit', compact('adjustment'));
     }
 
 
-    public function update(Request $request, Adjustment $adjustment) {
+    public function update(Request $request, Adjustment $adjustment)
+    {
         abort_if(Gate::denies('edit_adjustments'), 403);
 
         $request->validate([
@@ -151,7 +157,8 @@ class AdjustmentController extends Controller
     }
 
 
-    public function destroy(Adjustment $adjustment) {
+    public function destroy(Adjustment $adjustment)
+    {
         abort_if(Gate::denies('delete_adjustments'), 403);
 
         $adjustment->delete();

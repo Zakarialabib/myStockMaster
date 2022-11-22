@@ -37,7 +37,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -64,18 +64,36 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal({{ $customer->id }})" 
-                               type="button" wire:loading.attr="disabled">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
-                            <x-button primary wire:click="editModal({{ $customer->id }})" 
-                               type="button" wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $customer->id }})"
-                               type="button" wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
+                            <x-dropdown align="right" class="w-auto">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        {{ __('Actions') }}
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="showModal({{ $customer->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('View') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link href="{{ route('customer.details', $customer->id) }}">
+                                        <i class="fas fa-book"></i>
+                                        {{ __('Details') }}
+                                    </x-dropdown-link>
+
+                                    <x-dropdown-link wire:click="editModal({{ $customer->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="$emit('deleteModal', {{ $customer->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+
                         </div>
                     </x-table.td>
                 </x-table.tr>
@@ -110,113 +128,113 @@
         </div>
     </div>
     @if (null !== $showModal)
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Show User') }}
-        </x-slot>
+        <x-modal wire:model="showModal">
+            <x-slot name="title">
+                {{ __('Show User') }}
+            </x-slot>
 
-        <x-slot name="content">
-            <div class="flex flex-wrap">
-                <div>
-                    <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" class="block mt-1 w-full" disabled type="text"
-                        wire:model.defer="customer.name" />
-                </div>
+            <x-slot name="content">
+                <div class="flex flex-wrap">
+                    <div>
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" class="block mt-1 w-full" disabled type="text"
+                            wire:model.defer="customer.name" />
+                    </div>
 
-                <div>
-                    <x-label for="phone" :value="__('Phone')" />
-                    <x-input id="phone" class="block mt-1 w-full" disabled type="text"
-                        wire:model.defer="customer.phone" />
-                </div>
+                    <div>
+                        <x-label for="phone" :value="__('Phone')" />
+                        <x-input id="phone" class="block mt-1 w-full" disabled type="text"
+                            wire:model.defer="customer.phone" />
+                    </div>
 
-                <div>
-                    <x-label for="email" :value="__('Email')" />
-                    <x-input id="email" class="block mt-1 w-full" disabled type="email"
-                        wire:model.defer="customer.email" />
-                </div>
+                    <div>
+                        <x-label for="email" :value="__('Email')" />
+                        <x-input id="email" class="block mt-1 w-full" disabled type="email"
+                            wire:model.defer="customer.email" />
+                    </div>
 
-                <div>
-                    <x-label for="address" :value="__('Address')" />
-                    <x-input id="address" class="block mt-1 w-full" disabled type="text"
-                        wire:model.defer="customer.address" />
-                </div>
+                    <div>
+                        <x-label for="address" :value="__('Address')" />
+                        <x-input id="address" class="block mt-1 w-full" disabled type="text"
+                            wire:model.defer="customer.address" />
+                    </div>
 
-                <div>
-                    <x-label for="city" :value="__('City')" />
-                    <x-input id="city" class="block mt-1 w-full" type="text" disabled
-                        wire:model.defer="customer.city" />
+                    <div>
+                        <x-label for="city" :value="__('City')" />
+                        <x-input id="city" class="block mt-1 w-full" type="text" disabled
+                            wire:model.defer="customer.city" />
 
+                    </div>
+                    <div>
+                        <x-label for="tax_number" :value="__('Tax Number')" />
+                        <x-input id="tax_number" class="block mt-1 w-full" type="text"
+                            wire:model.defer="customer.tax_number" disabled />
+                    </div>
                 </div>
-                <div>
-                    <x-label for="tax_number" :value="__('Tax Number')" />
-                    <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                        wire:model.defer="customer.tax_number" disabled />
-                </div>
-            </div>
-        </x-slot>
-    </x-modal>
+            </x-slot>
+        </x-modal>
     @endif
     @if (null !== $editModal)
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit User') }}
-        </x-slot>
+        <x-modal wire:model="editModal">
+            <x-slot name="title">
+                {{ __('Edit User') }}
+            </x-slot>
 
-        <x-slot name="content">
-            <form wire:submit.prevent="update">
-                <div class="flex flex-wrap">
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="name" :value="__('Name')" required />
-                        <x-input id="name" class="block mt-1 w-full" type="text"
-                            wire:model.defer="customer.name" required />
-                        <x-input-error :messages="$errors->get('customer.name')" class="mt-2" />
+            <x-slot name="content">
+                <form wire:submit.prevent="update">
+                    <div class="flex flex-wrap">
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="name" :value="__('Name')" required />
+                            <x-input id="name" class="block mt-1 w-full" type="text"
+                                wire:model.defer="customer.name" required />
+                            <x-input-error :messages="$errors->get('customer.name')" class="mt-2" />
+                        </div>
+
+                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                            <x-label for="phone" :value="__('Phone')" required />
+                            <x-input id="phone" class="block mt-1 w-full" required type="text"
+                                wire:model.defer="customer.phone" />
+                            <x-input-error :messages="$errors->get('customer.phone')" class="mt-2" />
+                        </div>
+                        <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="email" :value="__('Email')" />
+                                <x-input id="email" class="block mt-1 w-full" type="email"
+                                    wire:model.defer="customer.email" />
+                                <x-input-error :messages="$errors->get('customer.email')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="address" :value="__('Address')" />
+                                <x-input id="address" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="customer.address" />
+                                <x-input-error :messages="$errors->get('customer.address')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="city" :value="__('City')" />
+                                <x-input id="city" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="customer.city" />
+                                <x-input-error :messages="$errors->get('customer.city')" class="mt-2" />
+                            </div>
+
+                            <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                                <x-label for="tax_number" :value="__('Tax Number')" />
+                                <x-input id="tax_number" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="customer.tax_number" />
+                                <x-input-error :messages="$errors->get('customer.tax_number')" for="" class="mt-2" />
+                            </div>
+                        </x-accordion>
+
+                        <div class="w-full flex justify-start px-3">
+                            <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
+                                {{ __('Update') }}
+                            </x-button>
+                        </div>
                     </div>
-
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                        <x-label for="phone" :value="__('Phone')" required />
-                        <x-input id="phone" class="block mt-1 w-full" required type="text"
-                            wire:model.defer="customer.phone" />
-                        <x-input-error :messages="$errors->get('customer.phone')" class="mt-2" />
-                    </div>
-                    <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                            <x-label for="email" :value="__('Email')" />
-                            <x-input id="email" class="block mt-1 w-full" type="email"
-                                wire:model.defer="customer.email" />
-                            <x-input-error :messages="$errors->get('customer.email')" class="mt-2" />
-                        </div>
-
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                            <x-label for="address" :value="__('Address')" />
-                            <x-input id="address" class="block mt-1 w-full" type="text"
-                                wire:model.defer="customer.address" />
-                            <x-input-error :messages="$errors->get('customer.address')" class="mt-2" />
-                        </div>
-
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                            <x-label for="city" :value="__('City')" />
-                            <x-input id="city" class="block mt-1 w-full" type="text"
-                                wire:model.defer="customer.city" />
-                            <x-input-error :messages="$errors->get('customer.city')" class="mt-2" />
-                        </div>
-
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
-                            <x-label for="tax_number" :value="__('Tax Number')" />
-                            <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                                wire:model.defer="customer.tax_number" />
-                            <x-input-error :messages="$errors->get('customer.tax_number')" for="" class="mt-2" />
-                        </div>
-                    </x-accordion>
-
-                    <div class="w-full flex justify-start px-3">
-                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
+                </form>
+            </x-slot>
+        </x-modal>
     @endif
     {{-- Import modal --}}
 

@@ -8,8 +8,12 @@ use Livewire\Component;
 class ToggleButton extends Component
 {
     public Model $model;
-    
-    public $field, $status, $uniqueId;
+
+    public $field;
+
+    public $status;
+
+    public $uniqueId;
 
     protected $listeners = ['updating'];
 
@@ -23,14 +27,11 @@ class ToggleButton extends Component
     {
         $this->model->setAttribute($this->field, $value)->save();
 
-        $this->alert('success', __('Status Changed successfully!') );
-
+        $this->alert('success', __('Status Changed successfully!'));
     }
 
     public function render()
     {
         return view('livewire.toggle-button');
     }
-
 }
-    

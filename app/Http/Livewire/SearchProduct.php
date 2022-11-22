@@ -8,39 +8,44 @@ use App\Models\Product;
 
 class SearchProduct extends Component
 {
-
     public $query;
     public $search_results;
     public $how_many;
 
-    public function mount() {
+    public function mount()
+    {
         $this->query = '';
         $this->how_many = 5;
         $this->search_results = Collection::empty();
     }
 
-    public function render() {
+    public function render()
+    {
         return view('livewire.search-product');
     }
 
-    public function updatedQuery() {
+    public function updatedQuery()
+    {
         $this->search_results = Product::where('name', 'like', '%' . $this->query . '%')
             ->orWhere('code', 'like', '%' . $this->query . '%')
             ->take($this->how_many)->get();
     }
 
-    public function loadMore() {
+    public function loadMore()
+    {
         $this->how_many += 5;
         $this->updatedQuery();
     }
 
-    public function resetQuery() {
+    public function resetQuery()
+    {
         $this->query = '';
         $this->how_many = 5;
         $this->search_results = Collection::empty();
     }
 
-    public function selectProduct($product) {
+    public function selectProduct($product)
+    {
         $this->emit('productSelected', $product);
     }
 }

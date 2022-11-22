@@ -3,9 +3,7 @@
 namespace App\Http\Livewire\Expense;
 
 use Livewire\Component;
-use App\Models\Expense;
-use App\Models\ExpenseCategory;
-use App\Models\Warehouse;
+use App\Models\{Expense, ExpenseCategory, Warehouse};
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -15,17 +13,23 @@ class Create extends Component
 
     public $listeners = ['createExpense'];
 
-    public $reference, $category_id, $date, $amount, $details, $user_id, $warehouse_id;
-    
-    public $createExpense; 
-    
+    public $reference;
+    public $category_id;
+    public $date;
+    public $amount;
+    public $details;
+    public $user_id;
+    public $warehouse_id;
+
+    public $createExpense;
+
     public array $listsForFields = [];
-    
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
-    
+
     protected $rules = [
         'reference' => 'required|string|max:255',
         'category_id' => 'required|integer|exists:expense_categories,id',
@@ -37,7 +41,7 @@ class Create extends Component
     ];
 
     public function mount()
-    {   
+    {
         $this->date = date('Y-m-d');
 
         $this->initListsForFields();
@@ -60,9 +64,9 @@ class Create extends Component
     public function create()
     {
         $validatedData = $this->validate();
-        
+
         $user_id = auth()->user()->id;
-        
+
         $this->expense->user_id = $user_id;
 
         Expense::create($validatedData);
@@ -72,7 +76,6 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createExpense = false;
-        
     }
 
     protected function initListsForFields(): void

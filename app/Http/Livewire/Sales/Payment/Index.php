@@ -12,8 +12,10 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
-    
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+
     public $sale;
 
     public $listeners = [
@@ -33,7 +35,7 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     public array $listsForFields = [];
 
     public $sale_id;
@@ -75,10 +77,11 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function mount($sale){
+    public function mount($sale)
+    {
         $this->sale = $sale;
-        
-        if($sale){
+
+        if ($sale) {
             $this->sale_id = $sale->id;
         }
 
@@ -94,11 +97,11 @@ class Index extends Component
     {
         //    abort_if(Gate::denies('access_sale_payments'), 403);
 
-       $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
+             's'               => $this->search ?: null,
+             'order_column'    => $this->sortBy,
+             'order_direction' => $this->sortDirection,
+         ]);
 
         $salepayments = $query->paginate($this->perPage);
 
@@ -108,11 +111,9 @@ class Index extends Component
     public function showPayments($sale_id)
     {
         abort_if(Gate::denies('access_sales'), 403);
-        
+
         $this->sale_id = $sale_id;
 
         $this->showPayments = true;
     }
-
-
 }
