@@ -14,17 +14,17 @@
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="flex items-center mr-3 pl-4">
-                <input wire:model="search" type="text"
-                    class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="{{ __('Search...') }}" />
+            <div class="my-2 my-md-0">
+                <input type="text" wire:model.debounce.300ms="search"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    placeholder="{{ __('Search') }}" />
             </div>
         </div>
     </div>
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -57,7 +57,9 @@
                         {{ $category->code }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $category->name }}
+                        <button type="button" wire:click="showModal({{ $category->id }})">
+                            {{ $category->name }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         <x-badge type="info">
@@ -80,20 +82,32 @@
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="$emit('showModal', {{ $category->id }})"
-                               type="button" wire:loading.attr="disabled">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
-                            <x-button primary wire:click="$emit('editModal', {{ $category->id }})"
-                              type="button"  wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $category->id }})"
-                              type="button"  wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
-                        </div>
+                        <x-dropdown
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <x-slot name="trigger">
+                                <button type="button"
+                                    class="px-4 text-base font-semibold text-gray-500 hover:text-sky-800 dark:text-slate-400 dark:hover:text-sky-400">
+                                    <i class="fas fa-angle-double-down"></i>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                <x-dropdown-link wire:click="showModal({{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-eye"></i>
+                                    {{ __('Show') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="editModal({{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                    {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
                     </x-table.td>
                 </x-table.tr>
             @empty
@@ -164,12 +178,14 @@
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    <input
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         type="text" name="code" wire:model="category.code" disabled />
                 </div>
                 <div class="w-full mb-4">
                     <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    <input
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         type="text" name="name" wire:model="category.name" disabled />
                 </div>
             </div>

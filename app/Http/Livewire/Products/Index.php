@@ -2,14 +2,20 @@
 
 namespace App\Http\Livewire\Products;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
-use App\Models\{Product, Category, Warehouse, Brand};
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Exports\ProductExport;
+use App\Http\Livewire\WithSorting;
 use App\Imports\ProductImport;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Warehouse;
+use App\Notifications\ProductTelegram;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -22,8 +28,8 @@ class Index extends Component
 
     public $listeners = [
         'confirmDelete', 'delete', 'showModal', 'editModal',
-        'refreshIndex','import','exportExcel','exportPdf',
-        'importModal'
+        'refreshIndex', 'exportExcel', 'exportPdf',
+        'importModal', 'sendTelegram',
     ];
 
     public int $perPage;
@@ -35,6 +41,8 @@ class Index extends Component
     public $importModal;
 
     public $refreshIndex;
+
+    public $sendTelegram;
 
     public array $orderable;
 
@@ -98,16 +106,16 @@ class Index extends Component
         'product.tax_type' => ['nullable', 'integer'],
         'product.note' => ['nullable', 'string', 'max:1000'],
         'product.category_id' => ['required', 'integer'],
-        'product.brand_id' => ['nullable', 'integer']
+        'product.brand_id' => ['nullable', 'integer'],
     ];
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Product())->orderable;
+        $this->orderable = (new Product)->orderable;
         $this->initListsForFields();
     }
 
@@ -134,7 +142,7 @@ class Index extends Component
         $query = Product::query()
             ->with([
                 'category' => fn ($query) => $query->select('id', 'name'),
-                'brand' => fn ($query) => $query->select('id', 'name')
+                'brand' => fn ($query) => $query->select('id', 'name'),
             ])
             ->select('products.*')
             ->advancedFilter([
@@ -150,16 +158,24 @@ class Index extends Component
 
     public function showModal(Product $product)
     {
-        abort_if(Gate::denies('show_products'), 403);
+        // abort_if(Gate::denies('show_products'), 403);
 
         $this->product = Product::find($product->id);
 
         $this->showModal = true;
     }
 
+    public function sendTelegram(Product $product)
+    {
+        $this->product = Product::find($product->id);
+
+        $this->product->notify(new ProductTelegram);
+
+    }
+
     public function editModal(Product $product)
     {
-        abort_if(Gate::denies('edit_products'), 403);
+        // abort_if(Gate::denies('edit_products'), 403);
 
         $this->resetErrorBag();
 
@@ -172,12 +188,12 @@ class Index extends Component
 
     public function update()
     {
-        abort_if(Gate::denies('edit_products'), 403);
+        // abort_if(Gate::denies('edit_products'), 403);
 
         $this->validate();
 
         if (null !== $this->product->image) {
-            $imageName = Str::slug($this->product->name) . '.' . $this->image->extension();
+            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
             $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
@@ -211,7 +227,7 @@ class Index extends Component
             ],
         ]);
 
-        Product::import(new ProductImport(), $this->file('import_file'));
+        Product::import(new ProductImport, $this->file('import_file'));
 
         $this->alert('success', __('Products imported successfully'));
 
@@ -222,14 +238,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('export_products'), 403);
 
-        return (new ProductExport())->download('products.xlsx');
+        return (new ProductExport)->download('products.xlsx');
     }
 
     public function exportPdf()
     {
         abort_if(Gate::denies('export_products'), 403);
 
-        return (new ProductExport())->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return (new ProductExport)->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     protected function initListsForFields(): void

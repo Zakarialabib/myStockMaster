@@ -4,13 +4,14 @@ namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
-use Livewire\{Component, WithFileUploads};
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use LivewireAlert ;
+    use LivewireAlert;
     use WithFileUploads;
 
     public $createBrand;

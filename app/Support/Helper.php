@@ -6,10 +6,9 @@ use Carbon\Carbon;
 
 class Helper
 {
-
     public static function genCode()
     {
-        return Carbon::now()->format('ymd') . mt_rand(10000000, 99999999);
+        return Carbon::now()->format('ymd').mt_rand(10000000, 99999999);
     }
 
     public static function slug($string, $separator = '-')
@@ -64,17 +63,18 @@ class Helper
             '/Ĳ/' => 'IJ',
             '/ĳ/' => 'ij',
             '/Œ/' => 'OE',
-            '/ƒ/' => 'f'
+            '/ƒ/' => 'f',
         ];
 
         $quotedReplacement = preg_quote($separator, '/');
-        $merge = array(
+        $merge = [
             '/[^\s\p{Zs}\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]/mu' => ' ',
             '/[\s\p{Zs}]+/mu' => $separator,
             sprintf('/^[%s]+|[%s]+$/', $quotedReplacement, $quotedReplacement) => '',
-        );
+        ];
         $map = $_transliteration + $merge;
         unset($_transliteration);
+
         return mb_strtolower(preg_replace(array_keys($map), array_values($map), $string));
     }
 }

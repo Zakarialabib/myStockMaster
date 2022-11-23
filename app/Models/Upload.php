@@ -11,6 +11,4 @@ class Upload extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $guarded = [];
-
-
 }

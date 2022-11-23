@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 
 class RoleUser extends Model
 {
     use HasAdvancedFilter;
-    
+
     protected $table = 'role_user';
-    
+
     public $orderable = [
         'id',
         'user_id',
@@ -32,7 +32,6 @@ class RoleUser extends Model
         'role_id',
     ];
 
-
     protected $casts = [
         'user_id' => 'integer',
         'role_id' => 'integer',
@@ -47,5 +46,4 @@ class RoleUser extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

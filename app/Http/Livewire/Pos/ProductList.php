@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Pos;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Product;
 use App\Models\Warehouse;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class ProductList extends Component
 {
@@ -16,12 +16,15 @@ class ProductList extends Component
     protected $listeners = [
         'selectedCategory' => 'categoryChanged',
         'selectedWarehouse' => 'warehouseChanged',
-        'showCount'        => 'showCountChanged'
+        'showCount' => 'showCountChanged',
     ];
 
     public $categories;
+
     public $category_id;
+
     public $warehouse_id;
+
     public $limit = 9;
 
     public function mount($categories)
@@ -39,7 +42,7 @@ class ProductList extends Component
                 return $query->where('category_id', $this->category_id);
             })->when($this->warehouse_id, function ($query) {
                 return $query->where('warehouse_id', $this->warehouse_id);
-            })->paginate($this->limit)
+            })->paginate($this->limit),
         ]);
     }
 

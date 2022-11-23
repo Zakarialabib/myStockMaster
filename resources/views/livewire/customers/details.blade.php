@@ -159,12 +159,11 @@
                                             <x-dropdown align="right" class="w-auto">
                                                 <x-slot name="trigger" class="inline-flex">
                                                     <x-button primary type="button" class="text-white flex items-center">
-                                                        {{ __('Actions') }}
+                                                        <i class="fas fa-angle-double-down"></i>
                                                     </x-button>
                                                 </x-slot>
             
                                                 <x-slot name="content">
-
                                                     <x-dropdown-link wire:click="showModal({{ $sale->id }})"
                                                         wire:loading.attr="disabled">
                                                         <i class="fas fa-eye"></i>

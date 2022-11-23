@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
-use Carbon\Carbon; 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Str;
 
 class Sale extends Model
@@ -77,62 +77,77 @@ class Sale extends Model
         'updated_at',
     ];
 
-    const PaymentPending =  '0' ;
-    const PaymentPaid =  '1' ;
-    const PaymentPartial =  '2' ;
-    const PaymentDue =  '3' ;
+    const PaymentPending = '0';
 
-    const SalePending =  '0' ;
-    const SaleOrdered =  '1' ;
-    const SaleCompleted =  '2' ;
-    const SaleShipped =  '3' ;
+    const PaymentPaid = '1';
 
-    public function saleDetails() {
+    const PaymentPartial = '2';
+
+    const PaymentDue = '3';
+
+    const SalePending = '0';
+
+    const SaleOrdered = '1';
+
+    const SaleCompleted = '2';
+
+    const SaleShipped = '3';
+
+    public function saleDetails()
+    {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
     }
 
-    public function salePayments() {
+    public function salePayments()
+    {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
-        $this->setRawAttributes(array(
-            'reference' => 'SL-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
-        ), true);
+        $this->setRawAttributes([
+            'reference' => 'SL-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+        ], true);
         parent::__construct($attributes);
     }
 
-    public function scopeCompleted($query) {
+    public function scopeCompleted($query)
+    {
         return $query->where('status', 'Completed');
     }
 
-    public function getShippingAmountAttribute($value) {
+    public function getShippingAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getPaidAmountAttribute($value) {
+    public function getPaidAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getTotalAmountAttribute($value) {
+    public function getTotalAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getDueAmountAttribute($value) {
+    public function getDueAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getTaxAmountAttribute($value) {
+    public function getTaxAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getDiscountAmountAttribute($value) {
+    public function getDiscountAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
-
 }

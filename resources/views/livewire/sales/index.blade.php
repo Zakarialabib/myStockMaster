@@ -29,142 +29,141 @@
             </div>
         </div>
     </div>
-    <div>
-        <x-table>
-            <x-slot name="thead">
-                <x-table.th >
-                    <input type="checkbox" wire:model="selectPage" />
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
-                    {{ __('Date') }}
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
-                    {{ __('Customer') }}
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
-                    {{ __('Payment status') }}
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
-                    {{ __('Due Amount') }}
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
-                    {{ __('Total') }}
-                </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
-                    {{ __('Status') }}
-                </x-table.th>
-                <x-table.th>
-                    {{ __('Actions') }}
-                </x-table.th>
-            </x-slot>
 
-            <x-table.tbody>
-                @forelse ($sales as $sale)
-                    <x-table.tr wire:loading.class.delay="opacity-50">
-                        <x-table.td class="pr-0">
-                            <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
-                        </x-table.td>
-                        <x-table.td>
-                            {{ $sale->date }}
-                        </x-table.td>
-                        <x-table.td>
-                            {{ $sale->customer->name }}
-                        </x-table.td>
-                        <x-table.td>
-                            @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
-                                <x-badge success>{{ __('Paid') }}</x-badge>
-                            @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
-                                <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                            @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
-                                <x-badge danger>{{ __('Due') }}</x-badge>
-                            @endif
-                        </x-table.td>
-                        <x-table.td>
-                            {{ $sale->due_amount }}
-                        </x-table.td>
+    <x-table>
+        <x-slot name="thead">
+            <x-table.th>
+                <input type="checkbox" wire:model="selectPage" />
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                {{ __('Date') }}
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+                {{ __('Customer') }}
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+                {{ __('Payment status') }}
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+                {{ __('Due Amount') }}
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+                {{ __('Total') }}
+            </x-table.th>
+            <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+                {{ __('Status') }}
+            </x-table.th>
+            <x-table.th>
+                {{ __('Actions') }}
+            </x-table.th>
+        </x-slot>
 
-                        <x-table.td>
-                            {{ $sale->total_amount }}
-                        </x-table.td>
+        <x-table.tbody>
+            @forelse ($sales as $sale)
+                <x-table.tr wire:loading.class.delay="opacity-50">
+                    <x-table.td class="pr-0">
+                        <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $sale->date }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $sale->customer->name }}
+                    </x-table.td>
+                    <x-table.td>
+                        @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                            <x-badge success>{{ __('Paid') }}</x-badge>
+                        @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                        @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                            <x-badge danger>{{ __('Due') }}</x-badge>
+                        @endif
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $sale->due_amount }}
+                    </x-table.td>
 
-                        <x-table.td>
-                            @if ($sale->status == \App\Models\Sale::SalePending)
-                                <x-badge warning>{{ __('Pending') }}</x-badge>
-                            @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
-                                <x-badge info>{{ __('Ordered') }}</x-badge>
-                            @elseif($sale->status == \App\Models\Sale::SaleCompleted)
-                                <x-badge success>{{ __('Completed') }}</x-badge>
-                            @endif
-                        </x-table.td>
-                        <x-table.td>
-                            <div class="flex justify-start space-x-2">
-                                <x-dropdown align="right" class="w-auto">
-                                    <x-slot name="trigger" class="inline-flex">
-                                        <x-button primary type="button" class="text-white flex items-center">
-                                            {{ __('Actions') }}
-                                        </x-button>
-                                    </x-slot>
+                    <x-table.td>
+                        {{ $sale->total_amount }}
+                    </x-table.td>
 
-                                    <x-slot name="content">
-                                        <x-dropdown-link wire:click="showModal({{ $sale->id }})"
+                    <x-table.td>
+                        @if ($sale->status == \App\Models\Sale::SalePending)
+                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                        @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
+                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                        @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                            <x-badge success>{{ __('Completed') }}</x-badge>
+                        @endif
+                    </x-table.td>
+                    <x-table.td>
+                        <div class="flex justify-start space-x-2">
+                            <x-dropdown align="right" class="w-auto">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-angle-double-down"></i>
+                                    </x-button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="showModal({{ $sale->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('View') }}
+                                    </x-dropdown-link>
+                                    @can('edit_sales')
+                                        <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
                                             wire:loading.attr="disabled">
-                                            <i class="fas fa-eye"></i>
-                                            {{ __('View') }}
+                                            <i class="fas fa-edit"></i>
+                                            {{ __('Edit') }}
                                         </x-dropdown-link>
-                                        @can('edit_sales')
-                                            <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
-                                                wire:loading.attr="disabled">
-                                                <i class="fas fa-edit"></i>
-                                                {{ __('Edit') }}
-                                            </x-dropdown-link>
-                                        @endcan
-                                        @can('delete_sales')
-                                            <x-dropdown-link wire:click="$emit('deleteModal', {{ $sale->id }})"
-                                                wire:loading.attr="disabled">
-                                                <i class="fas fa-trash"></i>
-                                                {{ __('Delete') }}
-                                            </x-dropdown-link>
-                                        @endcan
-
-                                        <x-dropdown-link target="_blank" href="{{ route('sales.pos.pdf', $sale->id) }}"
+                                    @endcan
+                                    @can('delete_sales')
+                                        <x-dropdown-link wire:click="$emit('deleteModal', {{ $sale->id }})"
                                             wire:loading.attr="disabled">
-                                            <i class="fas fa-print"></i>
-                                            {{ __('Print') }}
+                                            <i class="fas fa-trash"></i>
+                                            {{ __('Delete') }}
                                         </x-dropdown-link>
+                                    @endcan
 
-                                        @can('access_sale_payments')
-                                            <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})"
-                                                primary wire:loading.attr="disabled">
+                                    <x-dropdown-link target="_blank" href="{{ route('sales.pos.pdf', $sale->id) }}"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-print"></i>
+                                        {{ __('Print') }}
+                                    </x-dropdown-link>
+
+                                    @can('access_sale_payments')
+                                        <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})" primary
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            {{ __('Payments') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                    @can('access_sale_payments')
+                                        @if ($sale->due_amount > 0)
+                                            <x-dropdown-link wire:click="paymentModal({{ $sale->id }})" primary
+                                                wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
-                                                {{ __('Payments') }}
+                                                {{ __('Add Payment') }}
                                             </x-dropdown-link>
-                                        @endcan
-                                        @can('access_sale_payments')
-                                            @if ($sale->due_amount > 0)
-                                                <x-dropdown-link wire:click="paymentModal({{ $sale->id }})" primary
-                                                    wire:loading.attr="disabled">
-                                                    <i class="fas fa-money-bill-wave"></i>
-                                                    {{ __('Add Payment') }}
-                                                </x-dropdown-link>
-                                            @endif
-                                        @endcan
-                                    </x-slot>
-                                </x-dropdown>
-                            </div>
-                        </x-table.td>
-                    </x-table.tr>
-                @empty
-                    <x-table.tr>
-                        <x-table.td>
-                            <div class="flex justify-center items-center">
-                                <span class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
-                            </div>
-                        </x-table.td>
-                    </x-table.tr>
-                @endforelse
-            </x-table.tbody>
-        </x-table>
-    </div>
+                                        @endif
+                                    @endcan
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
+                    </x-table.td>
+                </x-table.tr>
+            @empty
+                <x-table.tr>
+                    <x-table.td>
+                        <div class="flex justify-center items-center">
+                            <span class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
+                        </div>
+                    </x-table.td>
+                </x-table.tr>
+            @endforelse
+        </x-table.tbody>
+    </x-table>
 
     <div class="px-6 py-3">
         {{ $sales->links() }}
@@ -352,21 +351,18 @@
     {{-- End Import modal --}}
 
     {{-- Sales Payment payment component   --}}
-    <div>
-        {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($showPayments))
-            <livewire:sales.payment.index :sale="$sale" />
-        @endif
-    </div>
+    @if (empty($showPayments))
+        <livewire:sales.payment.index :sale="$sale" />
+    @endif
     {{-- End Sales Payment payment component   --}}
 
-    @if(!empty($paymentModal))
+    @if (!empty($paymentModal))
         <div>
             <x-modal wire:model="paymentModal">
-            <x-slot name="title">
-                <h2 class="text-lg font-medium text-gray-900">
-                    {{ __('Sale Payment') }} 
-                </h2>
+                <x-slot name="title">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        {{ __('Sale Payment') }}
+                    </h2>
 
                 </x-slot>
                 <x-slot name="content">
@@ -375,7 +371,7 @@
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                         <div class="flex flex-wrap -mx-2 mb-3">
-                            
+
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="reference" :value="__('Reference')" required />
                                 <x-input type="text" wire:model="reference" id="reference"
@@ -392,8 +388,8 @@
 
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="amount" :value="__('Amount')" required />
-                                <x-input type="text" wire:model.defer="amount" id="amount" class="block w-full mt-1"
-                                    required />
+                                <x-input type="text" wire:model.defer="amount" id="amount"
+                                    class="block w-full mt-1" required />
                                 <x-input-error :messages="$errors->first('amount')" />
                             </div>
 
@@ -413,7 +409,8 @@
 
                         <div class="mb-4  px-3">
                             <x-label for="note" :value="__('Note')" />
-                            <textarea wire:model="note" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                            <textarea wire:model="note"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 rows="2" name="note">{{ old('note') }}</textarea>
                         </div>
 

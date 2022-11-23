@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
     use HasAdvancedFilter;
-    
+
     public $orderable = [
         'id',
         'name',
@@ -44,5 +44,4 @@ class Warehouse extends Model
     {
         return $this->belongsToMany(Product::class);
     }
-
 }

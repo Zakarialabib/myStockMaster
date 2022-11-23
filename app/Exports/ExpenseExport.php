@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Expense;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class ExpenseExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -34,12 +34,12 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
             '#',
             'Name',
             'Amount',
-            'Created At'
+            'Created At',
         ];
     }
 
     /**
-     * @var Expense $row
+     * @var Expense
      */
     public function map($row): array
     {

@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Customers;
 
-use Livewire\Component;
 use App\Models\Customer;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -20,13 +20,13 @@ class Create extends Component
 
     public $name;
 
-    public $email ;
+    public $email;
 
     public $phone;
 
     public $city;
 
-    public $country ;
+    public $country;
 
     public $address;
 

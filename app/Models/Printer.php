@@ -2,44 +2,42 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Notifications\NotifyQuantityAlert;
 use App\Support\HasAdvancedFilter;
-use App\Support\Helper;
+use Illuminate\Database\Eloquent\Model;
 
 class Printer extends Model
 {
     use HasAdvancedFilter;
-    
+
     public $orderable = [
         'id',
-        'name', 
+        'name',
         'connection_type',
-        'capability_profile', 
-        'char_per_line', 
-        'ip_address', 
-        'port', 
+        'capability_profile',
+        'char_per_line',
+        'ip_address',
+        'port',
         'path',
     ];
 
     public $filterable = [
         'id',
-        'name', 
+        'name',
         'connection_type',
-        'capability_profile', 
-        'char_per_line', 
-        'ip_address', 
-        'port', 
+        'capability_profile',
+        'char_per_line',
+        'ip_address',
+        'port',
         'path',
     ];
-    
+
     public $fillable = [
-        'name', 
+        'name',
         'connection_type',
-        'capability_profile', 
-        'char_per_line', 
-        'ip_address', 
-        'port', 
+        'capability_profile',
+        'char_per_line',
+        'ip_address',
+        'port',
         'path',
     ];
 
@@ -50,7 +48,7 @@ class Printer extends Model
             'simple' => 'Simple',
             'SP2000' => 'Star Branded',
             'TEP-200M' => 'Espon Tep',
-            'P822D' => 'P822D'
+            'P822D' => 'P822D',
         ];
 
         return $profiles;
@@ -68,7 +66,7 @@ class Printer extends Model
         $types = [
             'network' => 'Network',
             'windows' => 'Windows',
-            'linux' => 'Linux'
+            'linux' => 'Linux',
         ];
 
         return $types;
@@ -80,10 +78,4 @@ class Printer extends Model
 
         return isset($types[$type]) ? $types[$type] : '';
     }
-
-    // Permissions
-    // printer_access
-    // printer_show
-    // printer_edit
-    // printer_delete
 }

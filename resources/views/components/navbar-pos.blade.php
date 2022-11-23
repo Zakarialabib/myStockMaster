@@ -1,7 +1,7 @@
 <section class="py-5 px-6 bg-white shadow">
     <nav class="space-x-3">
       <x-button primary :href="route('home')" :active="request()->routeIs('home')">
-        {{ __('Dashobard') }}
+        {{ __('Dashboard') }}
         </x-button>
 
         <x-button primary type="button" onclick="Livewire.emit('createProduct', 'show')">

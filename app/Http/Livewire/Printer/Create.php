@@ -3,9 +3,9 @@
 namespace App\Http\Livewire\Printer;
 
 use App\Models\Printer;
-use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {

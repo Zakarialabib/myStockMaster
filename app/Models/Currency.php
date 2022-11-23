@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 
 class Currency extends Model
 {
     use HasAdvancedFilter;
-    
+
     public $table = 'currencies';
 
     public $orderable = [
@@ -39,5 +39,4 @@ class Currency extends Model
         'decimal_separator',
         'exchange_rate',
     ];
-
 }

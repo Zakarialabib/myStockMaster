@@ -8,10 +8,18 @@
                 @endforeach
             </select>
             @if ($selected)
-            <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
-                <i class="fas fa-trash"></i>
-            </x-button>
-        @endif
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+            @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
             <div class="w-full">
@@ -30,7 +38,7 @@
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th>
@@ -46,7 +54,7 @@
 
         <x-table.tbody>
             @forelse($expenseCategories as $expenseCategory)
-            <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $expenseCategory->id }}">
+                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $expenseCategory->id }}">
                     <x-table.td>
                         <input type="checkbox" value="{{ $expenseCategory->id }}" wire:model="selected">
                     </x-table.td>
@@ -98,62 +106,62 @@
             {{ $expenseCategories->links() }}
         </div>
     </div>
-    
-    @if (null !== $showModal)
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Show Expense Category') }}
-        </x-slot>
 
-        <x-slot name="content">
-            <div class="flex flex-wrap justify-center">
-                <div class="w-full">
-                    <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.name" disabled />
+    @if (null !== $showModal)
+        <x-modal wire:model="showModal">
+            <x-slot name="title">
+                {{ __('Show Expense Category') }}
+            </x-slot>
+
+            <x-slot name="content">
+                <div class="flex flex-wrap justify-center">
+                    <div class="w-full">
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" type="text" class="block mt-1 w-full"
+                            wire:model="expenseCategory.name" disabled />
+                    </div>
+                    <div class="w-full">
+                        <x-label for="description" :value="__('Description')" />
+                        <x-input id="description" type="text" class="block mt-1 w-full"
+                            wire:model="expenseCategory.description" disabled />
+                    </div>
                 </div>
-                <div class="w-full">
-                    <x-label for="description" :value="__('Description')" />
-                    <x-input id="description" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.description" disabled />
-                </div>
-            </div>
-        </x-slot>
-    </x-modal>
+            </x-slot>
+        </x-modal>
     @endif
 
     @if (null !== $editModal)
-    <x-modal wire:click="editModal">
-        <x-slot name="title">
-            {{ __('Edit Expense Category') }}
-        </x-slot>
+        <x-modal wire:click="editModal">
+            <x-slot name="title">
+                {{ __('Edit Expense Category') }}
+            </x-slot>
 
-        <x-slot name="content">
-            <div class="flex flex-wrap justify-center">
-                <div class="w-full">
-                    <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.name" />
-                    <x-input-error :messages="$errors->first('expenseCategory.name')" />
+            <x-slot name="content">
+                <div class="flex flex-wrap justify-center">
+                    <div class="w-full">
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" type="text" class="block mt-1 w-full"
+                            wire:model="expenseCategory.name" />
+                        <x-input-error :messages="$errors->first('expenseCategory.name')" />
+                    </div>
+                    <div class="w-full">
+                        <x-label for="description" :value="__('Description')" />
+                        <x-input id="description" type="text" class="block mt-1 w-full"
+                            wire:model="expenseCategory.description" />
+                        <x-input-error :messages="$errors->first('expenseCategory.description')" />
+                    </div>
                 </div>
-                <div class="w-full">
-                    <x-label for="description" :value="__('Description')" />
-                    <x-input id="description" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.description" />
-                    <x-input-error :messages="$errors->first('expenseCategory.description')" />
+                <div class="flex justify-center">
+                    <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
+                        {{ __('Update') }}
+                    </x-button>
                 </div>
-            </div>
-            <div class="flex justify-center">
-                <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
-                    {{ __('Update') }}
-                </x-button>
-            </div>
-        </x-slot>
-    </x-modal>
+            </x-slot>
+        </x-modal>
     @endif
 
     <livewire:expense-categories.create />
-    
+
 </div>
 
 @push('scripts')

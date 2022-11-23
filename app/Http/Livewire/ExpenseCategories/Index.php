@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\ExpenseCategories;
 
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\ExpenseCategory;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -88,7 +88,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new ExpenseCategory())->orderable;
+        $this->orderable = (new ExpenseCategory)->orderable;
     }
 
     public function render()
@@ -96,8 +96,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_category_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

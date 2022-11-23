@@ -8,21 +8,27 @@
                 {{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-
+            @if ($selected)
             <x-button danger wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
+            @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
+            <div class="my-2 my-md-0">
             <input type="text" wire:model.debounce.300ms="search"
                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                 placeholder="{{ __('Search') }}" />
-        </div>
-    </div>
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
+            </div>
         </div>
     </div>
 
@@ -33,22 +39,18 @@
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('created_at')" :direction="$sorts['created_at'] ?? null">
                 {{ __('Date') }}
-                @include('components.table.sort', ['field' => 'created_at'])
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
-                @include('components.table.sort', ['field' => 'name'])
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('email')" :direction="$sorts['email'] ?? null">
                 {{ __('Email') }}
-                @include('components.table.sort', ['field' => 'email'])
             </x-table.th>
             <x-table.th>
                 {{ __('Phone') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
-                @include('components.table.sort', ['field' => 'status'])
             </x-table.th>
             <x-table.th>
                 {{ __('Roles') }}
@@ -59,7 +61,7 @@
         </x-slot>
         <x-table.tbody>
             @forelse($users as $user)
-                <x-table.tr>
+                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $user->id }}">
                     <x-table.td>
                         <input type="checkbox" value="{{ $user->id }}" wire:model="selected">
                     </x-table.td>
@@ -67,20 +69,24 @@
                         {{ $user->created_at->format('d / m / Y') }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $user->name }}
+                        <button wire:click="showModal({{ $user->id }})"
+                            type="button">
+                            {{ $user->name }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
-                        <a class="link-light-blue" href="mailto:{{ $user->email }}">
+                        <a class="text-blue-500" href="mailto:{{ $user->email }}">
                             {{ $user->email }}
                         </a>
                     </x-table.td>
                     <x-table.td>
+                        <a class="text-blue-500" href="tel:{{ $user->phone }}">
                         {{ $user->phone }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         <livewire:toggle-button :model="$user" field="status" key="{{ $user->id }}" />
                     </x-table.td>
-
                     <x-table.td>
                         @foreach ($user->roles as $role)
                             <x-badge primary>{{ $role->name }}</x-badge>
@@ -126,6 +132,7 @@
             {{ $users->links() }}
         </div>
     </div>
+
     @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
@@ -269,6 +276,7 @@
         </x-slot>
     </x-modal>
     @endif
+    
     <livewire:users.create />
 
 </div>

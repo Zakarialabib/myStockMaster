@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
+use App\Models\PurchasePayment;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Purchase;
-use App\Models\PurchasePayment;
 
 class PurchasePaymentsController extends Controller
 {
@@ -20,7 +20,6 @@ class PurchasePaymentsController extends Controller
         return view('admin.purchases.payments.index', compact('purchase'));
     }
 
-
     public function create($purchase_id)
     {
         abort_if(Gate::denies('access_purchase_payments'), 403);
@@ -29,7 +28,6 @@ class PurchasePaymentsController extends Controller
 
         return view('admin.purchases.payments.create', compact('purchase'));
     }
-
 
     public function store(Request $request)
     {
@@ -41,7 +39,7 @@ class PurchasePaymentsController extends Controller
             'amount' => 'required|numeric',
             'note' => 'nullable|string|max:1000',
             'purchase_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -51,7 +49,7 @@ class PurchasePaymentsController extends Controller
                 'amount' => $request->amount,
                 'note' => $request->note,
                 'purchase_id' => $request->purchase_id,
-                'payment_method' => $request->payment_method
+                'payment_method' => $request->payment_method,
             ]);
 
             $purchase = Purchase::findOrFail($request->purchase_id);
@@ -69,7 +67,7 @@ class PurchasePaymentsController extends Controller
             $purchase->update([
                 'paid_amount' => ($purchase->paid_amount + $request->amount) * 100,
                 'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'payment_status' => $payment_status,
             ]);
         });
 
@@ -77,7 +75,6 @@ class PurchasePaymentsController extends Controller
 
         return redirect()->route('purchases.index');
     }
-
 
     public function edit($purchase_id, PurchasePayment $purchasePayment)
     {
@@ -87,7 +84,6 @@ class PurchasePaymentsController extends Controller
 
         return view('admin.purchases.payments.edit', compact('purchasePayment', 'purchase'));
     }
-
 
     public function update(Request $request, PurchasePayment $purchasePayment)
     {
@@ -99,7 +95,7 @@ class PurchasePaymentsController extends Controller
             'amount' => 'required|numeric',
             'note' => 'nullable|string|max:1000',
             'purchase_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request, $purchasePayment) {
@@ -118,7 +114,7 @@ class PurchasePaymentsController extends Controller
             $purchase->update([
                 'paid_amount' => (($purchase->paid_amount - $purchasePayment->amount) + $request->amount) * 100,
                 'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'payment_status' => $payment_status,
             ]);
 
             $purchasePayment->update([
@@ -127,7 +123,7 @@ class PurchasePaymentsController extends Controller
                 'amount' => $request->amount,
                 'note' => $request->note,
                 'purchase_id' => $request->purchase_id,
-                'payment_method' => $request->payment_method
+                'payment_method' => $request->payment_method,
             ]);
         });
 
@@ -135,7 +131,6 @@ class PurchasePaymentsController extends Controller
 
         return redirect()->route('purchases.index');
     }
-
 
     public function destroy(PurchasePayment $purchasePayment)
     {

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use NumberToWords\Legacy\Numbers\Words\Locale\Cs;
 
 class DatabaseSeeder extends Seeder
 {

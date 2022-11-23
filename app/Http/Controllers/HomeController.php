@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -15,6 +12,8 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -36,42 +35,40 @@ class HomeController extends Controller
         $revenue = ($sales - $sale_returns) / 100;
         $profit = $revenue - $product_costs;
 
-        $data = array(
-            'today' => array(
+        $data = [
+            'today' => [
                 'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now())->sum('total_amount') / 100,
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now())->sum(DB::raw('quantity * cost')),
 
-            ),
-            'month' => array(
+            ],
+            'month' => [
                 'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum('total_amount') / 100,
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
 
-            ),
-            'semi' => array(
+            ],
+            'semi' => [
                 'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum('total_amount') / 100,
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
 
-            ),
-            'year' => array(
+            ],
+            'year' => [
                 'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subYear())->sum('total_amount') / 100,
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
-            ),
-        );
-
+            ],
+        ];
 
         return view('admin.home', [
-            'revenue'          => $revenue,
-            'sale_returns'     => $sale_returns / 100,
+            'revenue' => $revenue,
+            'sale_returns' => $sale_returns / 100,
             'purchase_returns' => $purchase_returns / 100,
-            'profit'           => $profit,
-            'data'             => $data,
+            'profit' => $profit,
+            'data' => $data,
         ]);
     }
 
-
     public function currentMonthChart()
     {
-        abort_if(!request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $currentMonthSales = Sale::where('status', 'Completed')->whereMonth('date', date('m'))
                 ->whereYear('date', date('Y'))
@@ -84,16 +81,15 @@ class HomeController extends Controller
                 ->sum('amount') / 100;
 
         return response()->json([
-            'sales'     => $currentMonthSales,
+            'sales' => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
-            'expenses'  => $currentMonthExpenses
+            'expenses' => $currentMonthExpenses,
         ]);
     }
 
-
     public function salesPurchasesChart()
     {
-        abort_if(!request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $sales = $this->salesChartData();
         $purchases = $this->purchasesChartData();
@@ -101,10 +97,9 @@ class HomeController extends Controller
         return response()->json(['sales' => $sales, 'purchases' => $purchases]);
     }
 
-
     public function paymentChart()
     {
-        abort_if(!request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $dates = collect();
         foreach (range(-11, 0) as $i) {
@@ -117,7 +112,7 @@ class HomeController extends Controller
         $sale_payments = SalePayment::where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
-                DB::raw("SUM(amount) as amount")
+                DB::raw('SUM(amount) as amount'),
             ])
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
@@ -125,7 +120,7 @@ class HomeController extends Controller
         $sale_return_payments = SaleReturnPayment::where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
-                DB::raw("SUM(amount) as amount")
+                DB::raw('SUM(amount) as amount'),
             ])
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
@@ -133,7 +128,7 @@ class HomeController extends Controller
         $purchase_payments = PurchasePayment::where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
-                DB::raw("SUM(amount) as amount")
+                DB::raw('SUM(amount) as amount'),
             ])
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
@@ -141,7 +136,7 @@ class HomeController extends Controller
         $purchase_return_payments = PurchaseReturnPayment::where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
-                DB::raw("SUM(amount) as amount")
+                DB::raw('SUM(amount) as amount'),
             ])
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
@@ -149,7 +144,7 @@ class HomeController extends Controller
         $expenses = Expense::where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
-                DB::raw("SUM(amount) as amount")
+                DB::raw('SUM(amount) as amount'),
             ])
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
@@ -211,7 +206,6 @@ class HomeController extends Controller
 
         return response()->json(['data' => $data, 'days' => $days]);
     }
-
 
     public function purchasesChartData()
     {

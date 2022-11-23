@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\ExpenseCategories;
 
-use Livewire\Component;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {

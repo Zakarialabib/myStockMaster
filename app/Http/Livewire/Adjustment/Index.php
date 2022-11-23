@@ -3,10 +3,12 @@
 namespace App\Http\Livewire\Adjustment;
 
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\{Component, WithFileUploads, WithPagination};
 use App\Models\Adjustment;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -75,11 +77,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Adjustment())->orderable;
+        $this->orderable = (new Adjustment)->orderable;
     }
 
     public function render()
@@ -87,8 +89,8 @@ class Index extends Component
         abort_if(Gate::denies('adjustment_access'), 403);
 
         $query = Adjustment::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -99,20 +101,20 @@ class Index extends Component
 
     public function createModal()
     {
-        abort_if(Gate::denies('adjustment_create'), 403);
+        // abort_if(Gate::denies('adjustment_create'), 403);
 
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->adjustment = new Adjustment();
+        $this->adjustment = new Adjustment;
 
         $this->createModal = true;
     }
 
     public function create()
     {
-        abort_if(Gate::denies('adjustment_create'), 403);
+        // abort_if(Gate::denies('adjustment_create'), 403);
 
         $this->validate();
 
@@ -125,7 +127,7 @@ class Index extends Component
 
     public function editModal(Adjustment $adjustment)
     {
-        abort_if(Gate::denies('adjustment_edit'), 403);
+        // abort_if(Gate::denies('adjustment_edit'), 403);
 
         $this->resetErrorBag();
 
@@ -138,7 +140,7 @@ class Index extends Component
 
     public function update()
     {
-        abort_if(Gate::denies('adjustment_edit'), 403);
+        // abort_if(Gate::denies('adjustment_edit'), 403);
 
         $this->validate();
 
@@ -151,7 +153,7 @@ class Index extends Component
 
     public function showModal(Adjustment $adjustment)
     {
-        abort_if(Gate::denies('adjustment_show'), 403);
+        // abort_if(Gate::denies('adjustment_show'), 403);
 
         $this->adjustment = Adjustment::find($adjustment->id);
 
@@ -160,7 +162,7 @@ class Index extends Component
 
     public function deleteSelected()
     {
-        abort_if(Gate::denies('adjustment_delete'), 403);
+        // abort_if(Gate::denies('adjustment_delete'), 403);
 
         Adjustment::whereIn('id', $this->selected)->delete();
 

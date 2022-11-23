@@ -8,8 +8,8 @@
                 @endforeach
             </select>
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <div class="">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
+            <div class="my-2 my-md-0">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                     placeholder="{{ __('Search') }}" />
@@ -25,13 +25,13 @@
             <x-table.th>
                 {{ __('Image') }}
             </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Quantity') }}
             </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('price')" :direction="$sorts['price'] ?? null">
                 {{ __('Price') }}
             </x-table.th>
             <x-table.th>
@@ -43,7 +43,6 @@
             <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
-
         </x-slot>
         <x-table.tbody>
             @forelse($products as $product)
@@ -84,7 +83,7 @@
                             <x-dropdown align="right" class="w-auto">
                                 <x-slot name="trigger" class="inline-flex">
                                     <x-button primary type="button" class="text-white flex items-center">
-                                        {{ __('Actions') }}
+                                        <i class="fas fa-angle-double-down"></i>
                                     </x-button>
                                 </x-slot>
 
@@ -133,28 +132,38 @@
         </div>
     </div>
 
-    @if (null !== $showModal)
+    @if ($showModal)
         <!-- Show Modal -->
         <x-modal wire:model="showModal">
             <x-slot name="title">
-                {{ __('Show Product') }}
+                {{ __('Show Product') }} - {{ $product->code }}
             </x-slot>
 
             <x-slot name="content">
                 <div class="px-4 mx-auto mb-4">
+                    {{-- Send telegram --}}
+                    <div class="flex justify-center w-full px-3">
+                        <x-button success type="button" wire:click="sendTelegram({{ $product->id }})"
+                            wire:loading.attr="disabled">
+                            <i class="fas fa-edit"></i>
+                            {{ __('Send to telegram') }}
+                        </x-button>
+                    </div>
                     <div class="flex flex-row mb-3">
                         <div class="lg:w-1/2 sm:w-full px-3">
                             {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 110) !!}
                         </div>
+                        @if ($product->image)
                         <div class="lg:w-1/2 sm:w-full px-3">
                             <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
                                 class="w-32 h-32 rounded-full">
                         </div>
+                        @endif
                     </div>
+
                     <div class="flex flex-row">
                         <div class="w-full px-4">
                             <x-table-responsive>
-                                <table class="table table-bordered table-striped mb-0">
                                     <x-table.tr>
                                         <x-table.th>{{ __('Product Code') }}</x-table.th>
                                         <x-table.td>{{ $product->code }}</x-table.td>

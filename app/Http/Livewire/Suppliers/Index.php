@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire\Suppliers;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
-use App\Models\{Supplier,Wallet};
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
 use App\Exports\SupplierExport;
+use App\Http\Livewire\WithSorting;
 use App\Imports\SupplierImport;
+use App\Models\Supplier;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -18,12 +20,12 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','importModal','refreshIndex','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'importModal', 'refreshIndex', 'showModal', 'editModal'];
 
     public $showModal;
 
     public $editModal;
-    
+
     public $importModal;
 
     public array $orderable;
@@ -78,20 +80,20 @@ class Index extends Component
     public function mount()
     {
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        
-        $this->orderable = (new Supplier())->orderable;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
+        $this->orderable = (new Supplier)->orderable;
     }
 
     public function render()
-    {   
+    {
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -103,7 +105,7 @@ class Index extends Component
     public function showModal(Supplier $supplier)
     {
         $this->supplier = Supplier::find($supplier->id);
-        
+
         $this->showModal = true;
     }
 
@@ -114,7 +116,7 @@ class Index extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
+
         $this->supplier = Supplier::find($supplier->id);
 
         $this->editModal = true;
@@ -181,6 +183,4 @@ class Index extends Component
 
         return (new SupplierExport)->download('supplier.xlsx');
     }
-
-    
 }

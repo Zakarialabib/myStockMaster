@@ -2,18 +2,20 @@
 
 namespace App\Http\Livewire\Products;
 
+use App\Models\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
-use App\Models\Product;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class Barcode extends Component
 {
     use LivewireAlert;
 
     public $product;
+
     public $quantity;
+
     public $barcodes;
 
     protected $listeners = ['productSelected', 'getPdf'];
@@ -48,7 +50,7 @@ class Barcode extends Component
 
         $this->barcodes = [];
 
-        for ($i=0; $i < $this->quantity; $i++) {
+        for ($i = 0; $i < $this->quantity; $i++) {
             $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
@@ -66,7 +68,7 @@ class Barcode extends Component
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-'. $this->product->name .'.pdf'
+            'barcodes-'.$this->product->name.'.pdf'
         );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }

@@ -32,5 +32,4 @@ class ProductWarehouse extends Model
     {
         return $this->belongsTo('App\Models\ProductVariant');
     }
-
 }

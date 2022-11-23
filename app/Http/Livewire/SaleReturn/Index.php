@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire\SaleReturn;
 
-use Livewire\{Component,WithFileUploads,WithPagination};
-use App\Models\{SaleReturn,SalePayment,Customer};
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Support\Facades\Gate;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\DB;
 use App\Imports\SaleImport;
+use App\Models\Customer;
+use App\Models\SalePayment;
+use App\Models\SaleReturn;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -21,9 +25,9 @@ class Index extends Component
     public $salereturn;
 
     public $listeners = [
-    'confirmDelete', 'delete', 'showModal',
-    'importModal', 'import' , 'refreshIndex',
-    'paymentModal', 'paymentSave',
+        'confirmDelete', 'delete', 'showModal',
+        'importModal', 'import', 'refreshIndex',
+        'paymentModal', 'paymentSave',
     ];
 
     public $refreshIndex;
@@ -93,16 +97,16 @@ class Index extends Component
         'paid_amount' => 'required|numeric',
         'status' => 'required|string|max:255',
         'payment_method' => 'required|string|max:255',
-        'note' => 'string|max:1000'
+        'note' => 'string|max:1000',
     ];
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new SaleReturn())->orderable;
+        $this->orderable = (new SaleReturn)->orderable;
         $this->initListsForFields();
     }
 
@@ -110,12 +114,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $query = SaleReturn::with(['customer', 'saleReturnPayments','saleReturnDetails'])
+        $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
                       ->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+                          's' => $this->search ?: null,
+                          'order_column' => $this->sortBy,
+                          'order_direction' => $this->sortDirection,
+                      ]);
 
         $salereturns = $query->paginate($this->perPage);
 
@@ -130,7 +134,6 @@ class Index extends Component
 
         $this->showModal = true;
     }
-
 
     public function deleteSelected()
     {
@@ -174,7 +177,7 @@ class Index extends Component
             ],
         ]);
 
-        SaleReturn::import(new SaleImport(), $this->file('import_file'));
+        SaleReturn::import(new SaleImport, $this->file('import_file'));
 
         $this->alert('success', 'Sales imported successfully');
 
@@ -237,7 +240,7 @@ class Index extends Component
             $salereturn->update([
                 'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
                 'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'payment_status' => $payment_status,
             ]);
 
             $this->emit('refreshIndex');

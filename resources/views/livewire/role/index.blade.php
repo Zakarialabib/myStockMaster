@@ -67,12 +67,12 @@
                                 <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <x-button primary wire:click="editModal({{ $role->id }})"
-                                  type="button"  wire:loading.attr="disabled">
+                                <x-button primary wire:click="editModal({{ $role->id }})" type="button"
+                                    wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                 </x-button>
                                 <x-button danger type="button" wire:click="confirm('delete', {{ $role->id }})"
-                                   type="button" wire:loading.attr="disabled">
+                                    type="button" wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                 </x-button>
 
@@ -95,7 +95,6 @@
             {{ $roles->links() }}
         </div>
     </div>
-
 
     <x-modal wire:model="editModal">
         <x-slot name="title">
@@ -125,13 +124,12 @@
                     </div>
                 </div>
             </form>
-
         </x-slot>
     </x-modal>
 
     <x-modal wire:model="createModal">
         <x-slot name="title">
-            {{ __('create') }}
+            {{ __('Create') }}
         </x-slot>
 
         <x-slot name="content">
@@ -160,8 +158,6 @@
         </x-slot>
     </x-modal>
 </div>
-
-
 
 @push('scripts')
     <script>

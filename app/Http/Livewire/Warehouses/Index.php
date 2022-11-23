@@ -2,11 +2,13 @@
 
 namespace App\Http\Livewire\Warehouses;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
 use App\Models\Warehouse;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -19,7 +21,7 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['refreshIndex','confirmDelete', 'delete', 'showModal', 'editModal'];
+    public $listeners = ['refreshIndex', 'confirmDelete', 'delete', 'showModal', 'editModal'];
 
     public $showModal;
 
@@ -76,11 +78,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Warehouse())->orderable;
+        $this->orderable = (new Warehouse)->orderable;
     }
 
     public function render()
@@ -88,8 +90,8 @@ class Index extends Component
         abort_if(Gate::denies('warehouse_access'), 403);
 
         $query = Warehouse::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -132,7 +134,6 @@ class Index extends Component
 
         $this->alert('success', __('Warehouse updated successfully'));
     }
-
 
     public function delete(Warehouse $warehouse)
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Reports;
 
-use Livewire\Component;
 use App\Models\Expense;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
@@ -12,28 +11,43 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
+use Livewire\Component;
 
 class ProfitLossReport extends Component
 {
     public $start_date;
+
     public $end_date;
+
     public $total_sales;
+
     public $sales_amount;
+
     public $total_purchases;
+
     public $purchases_amount;
+
     public $total_sale_returns;
+
     public $sale_returns_amount;
+
     public $total_purchase_returns;
+
     public $purchase_returns_amount;
+
     public $expenses_amount;
+
     public $profit_amount;
+
     public $payments_received_amount;
+
     public $payments_sent_amount;
+
     public $payments_net_amount;
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date'   => 'required|date|after:start_date'
+        'end_date' => 'required|date|after:start_date',
     ];
 
     public function mount()

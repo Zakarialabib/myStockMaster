@@ -10,7 +10,6 @@ This project allows you to manage your inventory, sales, and purchases, easy & s
 - [x] Products
 - [x] Categorires
 - [x] Brands
-- [] Print Barcode -- problem with barcode generator
 - [x] Purchases
 - [x] Sales
 - [x] Customers
@@ -25,15 +24,18 @@ This project allows you to manage your inventory, sales, and purchases, easy & s
 - [x] Currencies
 - [x] Warehouses
 - [x] Calculator dashboard
-- [ ] User Profile - working on it
+- [x] Backup - Local
+- [x] Backup GDrive & others
+- [] Print Barcode -- problem with barcode generator
 - [ ] Printers
+- [ ] User Profile 
 - [ ] Notifications
 - [ ] SMS Notifications
 - [ ] Email Templates
-- [ ] Backup - GDrive & Local
-- [ ] Import/Export - working on it
-- [ ] Multi language - working on it
-- [ ] Multi store - working on it
+- [ ] Import/Export 
+- [ ] Multi language 
+- [ ] Cash register (pos , sales, expenses)
+
 
 ## Demo
 

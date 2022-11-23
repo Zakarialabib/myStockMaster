@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\Expense;
 
-use Livewire\Component;
-use App\Models\{Expense, ExpenseCategory, Warehouse};
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {
@@ -14,11 +16,17 @@ class Create extends Component
     public $listeners = ['createExpense'];
 
     public $reference;
+
     public $category_id;
+
     public $date;
+
     public $amount;
+
     public $details;
+
     public $user_id;
+
     public $warehouse_id;
 
     public $createExpense;

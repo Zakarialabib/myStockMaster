@@ -17,6 +17,8 @@ class PrinterController extends Controller
         return view('admin.printer.index');
     }
 
+    //  use livewire ==>
+
     /**
      * Show the form for creating a new resource.
      *
@@ -24,9 +26,7 @@ class PrinterController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('access_printers')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // access_printers
 
         $capability_profiles = Printer::capability_profiles();
         $connection_types = Printer::connection_types();
@@ -43,9 +43,7 @@ class PrinterController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('access_printers')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // access_printers
 
         try {
             $business_id = $request->session()->get('user.business_id');
@@ -53,7 +51,6 @@ class PrinterController extends Controller
 
             $input['business_id'] = $business_id;
             $input['created_by'] = $request->session()->get('user.id');
-            ;
 
             if ($input['connection_type'] == 'network') {
                 $input['path'] = '';
@@ -62,21 +59,16 @@ class PrinterController extends Controller
                 $input['port'] = '';
             }
 
-            $printer = new Printer();
+            $printer = new Printer;
             $printer->fill($input)->save();
-
-            $output = ['success' => 1,
-                            'msg' => __('printer.added_success')
-                        ];
+            // this->alert
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            // this->alert
         }
 
-        return redirect('printers')->with('status', $output);
+        return redirect('printers');
     }
 
     /**
@@ -98,9 +90,7 @@ class PrinterController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('access_printers')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // access_printers
 
         $business_id = request()->session()->get('user.business_id');
         $printer = Printer::where('business_id', $business_id)->find($id);
@@ -121,9 +111,7 @@ class PrinterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('access_printers')) {
-            abort(403, 'Unauthorized action.');
-        }
+        // access_printers
 
         try {
             $input = $request->only(['name', 'connection_type', 'capability_profile', 'ip_address', 'port', 'path', 'char_per_line']);
@@ -140,15 +128,12 @@ class PrinterController extends Controller
 
             $printer->fill($input)->save();
 
-            $output = ['success' => true,
-                        'msg' => __("printer.updated_success")
-                        ];
-        } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            // this->alert
 
-            $output = ['success' => false,
-                        'msg' => __("messages.something_went_wrong")
-                    ];
+        } catch (\Exception $e) {
+            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+
+            // this->alert
         }
 
         return redirect('printers')->with('status', $output);
@@ -162,7 +147,7 @@ class PrinterController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('access_printers')) {
+        if (! auth()->user()->can('access_printers')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -173,18 +158,14 @@ class PrinterController extends Controller
                 $printer = Printer::where('business_id', $business_id)->findOrFail($id);
                 $printer->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("printer.deleted_success")
-                            ];
+                // this->alert
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+             // this->alert
             }
 
-            return $output;
+            // return $output;
         }
     }
 }

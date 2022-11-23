@@ -116,16 +116,15 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="note">{{ __('Descriprion') }}</label>
+                            <label for="note">{{ __('Note') }}</label>
                             <textarea name="note" id="note" rows="5"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $purchase->note }}</textarea>
                         </div>
 
                         <div class="mt-3">
-                            <button type="submit"
-                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                {{ __('Update Purchase') }} <i class="bi bi-check"></i>
-                            </button>
+                            <x-button type="submit" primary>
+                                {{ __('Update Purchase') }} 
+                            </x-button>
                         </div>
                     </form>
                 </div>

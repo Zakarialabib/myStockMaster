@@ -93,10 +93,9 @@
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                             </div>
                             <div class="mt-3">
-                                <button type="submit"
-                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                    {{ __('Create Adjustment') }} <i class="bi bi-check"></i>
-                                </button>
+                                <x-button type="submit" primary>
+                                    {{ __('Create Adjustment') }}
+                                </x-button>
                             </div>
                         </form>
                     </div>

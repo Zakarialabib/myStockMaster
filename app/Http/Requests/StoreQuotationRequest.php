@@ -22,7 +22,7 @@ class StoreQuotationRequest extends FormRequest
             'shipping_amount' => 'required|numeric',
             'total_amount' => 'required|numeric',
             'status' => 'required|string|max:255',
-            'note' => 'nullable|string|max:1000'
+            'note' => 'nullable|string|max:1000',
         ];
     }
 

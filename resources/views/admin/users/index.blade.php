@@ -39,18 +39,18 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createYser', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary onclick="Livewire.emit('createYser', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>
 @endsection
 
 
-@section('content')
-<x-card>
-    @include('utils.alerts')
-    <div>
-         <livewire:users.index />
-    </div>
-</x-card>
-@endsection
+<x-app-layout>
+    <x-card>
+        @include('utils.alerts')
+        <div>
+            <livewire:users.index />
+        </div>
+    </x-card>
+</x-app-layout>

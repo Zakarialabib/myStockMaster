@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Emails\QuotationMail;
+use App\Models\Quotation;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Emails\QuotationMail;
-use App\Models\Quotation;
 
 class SendQuotationEmailController extends Controller
 {
@@ -17,10 +16,10 @@ class SendQuotationEmailController extends Controller
             Mail::to($quotation->customer->email)->send(new QuotationMail($quotation));
 
             $quotation->update([
-                'status' => 'Sent'
+                'status' => 'Sent',
             ]);
 
-            toast('Sent On "' . $quotation->customer->email . '"!', 'success');
+            toast('Sent On "'.$quotation->customer->email.'"!', 'success');
         } catch (\Exception $exception) {
             Log::error($exception);
             toast('Something Went Wrong!', 'error');

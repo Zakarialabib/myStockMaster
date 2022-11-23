@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Purchase;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class PurchaseExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -18,8 +18,7 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param Purchase $row
-     *
+     * @param  Purchase  $row
      * @return array
      */
     public function map($row): array

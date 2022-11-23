@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Str;
 
 class Expense extends Model
@@ -21,6 +21,7 @@ class Expense extends Model
         'created_at',
         'updated_at',
     ];
+
     public $filterable = [
         'id',
         'category_id',
@@ -31,7 +32,7 @@ class Expense extends Model
         'created_at',
         'updated_at',
     ];
-    
+
     public $fillable = [
         'category_id',
         'user_id',
@@ -45,7 +46,7 @@ class Expense extends Model
     protected $dates = [
         'date',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function category()
@@ -53,23 +54,26 @@ class Expense extends Model
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
-        $this->setRawAttributes(array(
-            'reference' => 'EXP-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
-        ), true);
+        $this->setRawAttributes([
+            'reference' => 'EXP-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+        ], true);
         parent::__construct($attributes);
     }
 
-    public function getDateAttribute($value) {
+    public function getDateAttribute($value)
+    {
         return Carbon::parse($value)->format('d M, Y');
     }
 
-    public function setAmountAttribute($value) {
+    public function setAmountAttribute($value)
+    {
         $this->attributes['amount'] = ($value * 100);
     }
 
-    public function getAmountAttribute($value) {
-        return ($value / 100);
+    public function getAmountAttribute($value)
+    {
+        return $value / 100;
     }
 }

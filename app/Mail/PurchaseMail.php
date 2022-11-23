@@ -11,6 +11,7 @@ class PurchaseMail extends Mailable
     use Queueable, SerializesModels;
 
     public $purchase;
+
     public $pdf;
 
     /**
@@ -29,13 +30,12 @@ class PurchaseMail extends Mailable
      *
      * @return $this
      */
-
     public function build()
     {
         return
         $this->subject('Purchase Details')
             ->markdown('emails.purchase')
-            ->attachData($this->pdf, 'Purchase_' . $this->purchase['Ref'] . '.pdf', [
+            ->attachData($this->pdf, 'Purchase_'.$this->purchase['Ref'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->purchase);

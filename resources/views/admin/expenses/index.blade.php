@@ -38,13 +38,28 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button danger type="button" onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
-                    {{ __('Pdf') }}
-                </x-button>
-                <x-button info type="button" onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
-                    {{ __('Excel') }}
-                </x-button>
-                <!-- Button trigger livewire modal -->
+                <x-dropdown align="right" class="w-auto mr-2">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button secondary type="button" class="text-white flex items-center">
+                            <i class="fas fa-angle-double-down"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        {{-- use livewire - coming soon --}}
+                        {{-- <x-dropdown-link onclick="Livewire.emit('import')" 
+                            wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-dropdown-link> --}}
+                        <x-dropdown-link onclick="Livewire.emit('exportAll')" 
+                            wire:loading.attr="disabled">
+                            {{ __('PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
+                            wire:loading.attr="disabled">
+                            {{ __('Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
                 <x-button primary onclick="Livewire.emit('createExpense', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>

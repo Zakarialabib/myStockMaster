@@ -14,7 +14,7 @@
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="flex items-center mr-3 pl-4">
+            <div class="my-2 my-md-0">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -27,13 +27,13 @@
             <x-table.th>
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('phone')" :direction="$sorts['phone'] ?? null">
+            <x-table.th sortable wire:click="sortBy('phone')" :direction="$sorts['phone'] ?? null">
                 {{ __('Phone') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('address')" :direction="$sorts['address'] ?? null">
+            <x-table.th sortable wire:click="sortBy('address')" :direction="$sorts['address'] ?? null">
                 {{ __('Address') }}
             </x-table.th>
             <x-table.th>
@@ -47,7 +47,9 @@
                         <input type="checkbox" wire:model="selected" value="{{ $supplier->id }}" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $supplier->name }}
+                         <button type="button" wire:click="showModal({{ $supplier->id }})">
+                            {{ $supplier->name }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $supplier->phone }}
@@ -60,7 +62,7 @@
                             <x-dropdown align="right" class="w-auto">
                                 <x-slot name="trigger" class="inline-flex">
                                     <x-button primary type="button" class="text-white flex items-center">
-                                        {{ __('Actions') }}
+                                        <i class="fas fa-angle-double-down"></i>
                                     </x-button>
                                 </x-slot>
                                 <x-slot name="content">

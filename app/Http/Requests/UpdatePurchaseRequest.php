@@ -21,10 +21,10 @@ class UpdatePurchaseRequest extends FormRequest
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount' => 'required|numeric',
             'total_amount' => 'required|numeric',
-            'paid_amount' => 'required|numeric|max:' . $this->purchase->total_amount,
+            'paid_amount' => 'required|numeric|max:'.$this->purchase->total_amount,
             'status' => 'required|string|max:255',
             'payment_method' => 'required|string|max:255',
-            'note' => 'nullable|string|max:1000'
+            'note' => 'nullable|string|max:1000',
         ];
     }
 

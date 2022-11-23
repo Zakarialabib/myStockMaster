@@ -1,18 +1,23 @@
 <?php
+
 namespace App\Http\Livewire\Products;
 
-use App\Models\{Product, Category, Warehouse, Brand};
-use Livewire\{Component, WithFileUploads};
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
     use LivewireAlert, WithFileUploads;
 
     public $listeners = ['createProduct'];
-    
+
     public $createProduct;
 
     public $image;
@@ -20,18 +25,31 @@ class Create extends Component
     public array $listsForFields = [];
 
     public $name;
+
     public $code;
+
     public $barcode_symbology;
+
     public $unit;
+
     public $quantity;
+
     public $cost;
+
     public $price;
+
     public $stock_alert;
+
     public $order_tax;
+
     public $tax_type;
+
     public $note;
+
     public $category_id;
+
     public $brand_id;
+
     public $warehouse_id;
 
     protected $rules = [
@@ -48,7 +66,7 @@ class Create extends Component
         'note' => ['nullable', 'string', 'max:1000'],
         'category_id' => ['required', 'integer'],
         'brand_id' => ['nullable', 'integer'],
-        'warehouse_id' => ['nullable', 'integer']
+        'warehouse_id' => ['nullable', 'integer'],
     ];
 
     public function updated($propertyName)
@@ -64,7 +82,7 @@ class Create extends Component
         $this->barcode_symbology = 'C128';
         $this->initListsForFields();
     }
-    
+
     public function render()
     {
         abort_if(Gate::denies('create_products'), 403);
@@ -78,22 +96,21 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createProduct = true;  
+        $this->createProduct = true;
     }
 
     public function create()
     {
         $validatedData = $this->validate();
 
-
-        if($this->image){
+        if($this->image) {
             $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
-            $this->image->storeAs('products',$imageName);
+            $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
 
         Product::create($validatedData);
-        
+
         $this->alert('success', __('Product created successfully'));
 
         $this->emit('refreshIndex');
@@ -108,5 +125,4 @@ class Create extends Component
         $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
         $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
     }
-
 }

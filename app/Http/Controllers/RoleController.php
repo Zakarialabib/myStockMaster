@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {

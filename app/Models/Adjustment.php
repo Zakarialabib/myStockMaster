@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use App\Support\HasAdvancedFilter;
 
 class Adjustment extends Model
 {
@@ -27,18 +27,21 @@ class Adjustment extends Model
         'created_at',
         'updated_at',
     ];
-    
+
     protected $guarded = [];
 
-    public function getDateAttribute($value) {
+    public function getDateAttribute($value)
+    {
         return Carbon::parse($value)->format('d M, Y');
     }
 
-    public function adjustedProducts() {
+    public function adjustedProducts()
+    {
         return $this->hasMany(AdjustedProduct::class, 'adjustment_id', 'id');
     }
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
         static::creating(function ($model) {
@@ -46,5 +49,4 @@ class Adjustment extends Model
             $model->reference = make_reference_id('ADJ', $number);
         });
     }
-
 }

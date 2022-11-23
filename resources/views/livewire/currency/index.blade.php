@@ -7,10 +7,18 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selectedCount)
+            @if ($selected)
             <x-button danger wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
+            @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
@@ -47,8 +55,7 @@
             @forelse ($currencies as $currency)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $currency->id }}">
                     <x-table.td class="pr-0">
-                        <x-input type="checkbox" class="rounded-tl rounded-bl" value="{{ $currency->id }}"
-                            wire:model="selected" />
+                        <input type="checkbox" value="{{ $currency->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $currency->name }}

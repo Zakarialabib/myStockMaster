@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Supplier;
 
 class SuppliersController extends Controller
 {
@@ -14,6 +14,7 @@ class SuppliersController extends Controller
 
         return view('admin.suppliers.index');
     }
+
     public function details(Supplier $supplier)
     {
         abort_if(Gate::denies('access_suppliers'), 403);

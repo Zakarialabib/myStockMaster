@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class SupplierExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -24,6 +24,7 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
         if ($this->selected) {
             return Supplier::query()->whereIn('id', $this->selected);
         }
+
         return Supplier::query();
     }
 
@@ -42,19 +43,19 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @var Supplier $row
+     * @var Supplier
      */
     public function map($row): array
     {
         return[
-        $row->id,
-        $row->name,
-        $row->email,
-        $row->phone,
-        $row->city,
-        $row->country,
-        $row->address,
-        $row->tax_number,
+            $row->id,
+            $row->name,
+            $row->email,
+            $row->phone,
+            $row->city,
+            $row->country,
+            $row->address,
+            $row->tax_number,
         ];
     }
 }

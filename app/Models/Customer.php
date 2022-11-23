@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
@@ -34,12 +34,12 @@ class Customer extends Model
     ];
 
     protected $fillable = [
-        'city', 
+        'city',
         'tax_number',
         'name',
         'email',
         'phone',
-       'country',
+        'country',
         'address',
     ];
 
@@ -57,5 +57,4 @@ class Customer extends Model
     {
         return $this->HasOne(Sale::class);
     }
-
 }

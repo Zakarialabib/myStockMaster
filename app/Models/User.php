@@ -3,11 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -18,15 +18,15 @@ class User extends Authenticatable
     use HasAdvancedFilter;
 
     public $orderable = [
-        'id','name','email', 'password' , 'avatar',
-        'phone' ,'role_id','statut' ,'is_all_warehouses',
-        'created_at','updated_at',
+        'id', 'name', 'email', 'password', 'avatar',
+        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'created_at', 'updated_at',
     ];
 
     public $filterable = [
-        'id','name','email', 'password' , 'avatar',
-        'phone' ,'role_id','statut' ,'is_all_warehouses',
-        'created_at','updated_at','wallet_id'
+        'id', 'name', 'email', 'password', 'avatar',
+        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'created_at', 'updated_at', 'wallet_id',
     ];
 
     /**
@@ -35,9 +35,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id','name','email', 'password' , 'avatar',
-        'phone' ,'role_id','statut' ,'is_all_warehouses',
-        'created_at','updated_at','wallet_id'
+        'id', 'name', 'email', 'password', 'avatar',
+        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'created_at', 'updated_at', 'wallet_id',
     ];
 
     /**
@@ -69,7 +69,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Warehouse');
     }
 
-    # User hasRole method
+    // User hasRole method
     public function hasRole($roles)
     {
         if ($this->roles()->where('name', $roles)->first()) {

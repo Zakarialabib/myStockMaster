@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Product;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class ProductExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -29,7 +29,7 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @var Product $row
+     * @var Product
      */
     public function map($row): array
     {

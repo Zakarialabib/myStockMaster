@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use App\Models\Supplier;
+use App\Http\Requests\StorePurchaseReturnRequest;
+use App\Http\Requests\UpdatePurchaseReturnRequest;
 use App\Models\Product;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturnPayment;
-use App\Http\Requests\StorePurchaseReturnRequest;
-use App\Http\Requests\UpdatePurchaseReturnRequest;
+use App\Models\Supplier;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class PurchasesReturnController extends Controller
 {
@@ -23,7 +23,6 @@ class PurchasesReturnController extends Controller
         return view('admin.purchasereturn.index');
     }
 
-
     public function create()
     {
         abort_if(Gate::denies('create_purchase_returns'), 403);
@@ -32,7 +31,6 @@ class PurchasesReturnController extends Controller
 
         return view('admin.purchasereturn.create');
     }
-
 
     public function store(StorePurchaseReturnRequest $request)
     {
@@ -82,7 +80,7 @@ class PurchasesReturnController extends Controller
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity - $cart_item->qty
+                        'quantity' => $product->quantity - $cart_item->qty,
                     ]);
                 }
             }
@@ -91,11 +89,11 @@ class PurchasesReturnController extends Controller
 
             if ($purchase_return->paid_amount > 0) {
                 PurchaseReturnPayment::create([
-                    'date'               => $request->date,
-                    'reference'          => 'INV/' . $purchase_return->reference,
-                    'amount'             => $purchase_return->paid_amount,
+                    'date' => $request->date,
+                    'reference' => 'INV/'.$purchase_return->reference,
+                    'amount' => $purchase_return->paid_amount,
                     'purchase_return_id' => $purchase_return->id,
-                    'payment_method'     => $request->payment_method
+                    'payment_method' => $request->payment_method,
                 ]);
             }
         });
@@ -105,7 +103,6 @@ class PurchasesReturnController extends Controller
         return redirect()->route('purchase-returns.index');
     }
 
-
     public function show(PurchaseReturn $purchase_return)
     {
         abort_if(Gate::denies('show_purchase_returns'), 403);
@@ -114,7 +111,6 @@ class PurchasesReturnController extends Controller
 
         return view('admin.purchasereturn.show', compact('purchase_return', 'supplier'));
     }
-
 
     public function edit(PurchaseReturn $purchase_return)
     {
@@ -128,26 +124,25 @@ class PurchasesReturnController extends Controller
 
         foreach ($purchase_return_details as $purchase_return_detail) {
             $cart->add([
-                'id'      => $purchase_return_detail->product_id,
-                'name'    => $purchase_return_detail->name,
-                'qty'     => $purchase_return_detail->quantity,
-                'price'   => $purchase_return_detail->price,
-                'weight'  => 1,
+                'id' => $purchase_return_detail->product_id,
+                'name' => $purchase_return_detail->name,
+                'qty' => $purchase_return_detail->quantity,
+                'price' => $purchase_return_detail->price,
+                'weight' => 1,
                 'options' => [
                     'product_discount' => $purchase_return_detail->product_discount_amount,
                     'product_discount_type' => $purchase_return_detail->product_discount_type,
-                    'sub_total'   => $purchase_return_detail->sub_total,
-                    'code'        => $purchase_return_detail->code,
-                    'stock'       => Product::findOrFail($purchase_return_detail->product_id)->quantity,
+                    'sub_total' => $purchase_return_detail->sub_total,
+                    'code' => $purchase_return_detail->code,
+                    'stock' => Product::findOrFail($purchase_return_detail->product_id)->quantity,
                     'product_tax' => $purchase_return_detail->product_tax_amount,
-                    'unit_price'  => $purchase_return_detail->unit_price
-                ]
+                    'unit_price' => $purchase_return_detail->unit_price,
+                ],
             ]);
         }
 
         return view('admin.purchasereturn.edit', compact('purchase_return'));
     }
-
 
     public function update(UpdatePurchaseReturnRequest $request, PurchaseReturn $purchase_return)
     {
@@ -166,7 +161,7 @@ class PurchasesReturnController extends Controller
                 if ($purchase_return->status == 'Shipped' || $purchase_return->status == 'Completed') {
                     $product = Product::findOrFail($purchase_return_detail->product_id);
                     $product->update([
-                        'quantity' => $product->quantity + $purchase_return_detail->quantity
+                        'quantity' => $product->quantity + $purchase_return_detail->quantity,
                     ]);
                 }
                 $purchase_return_detail->delete();
@@ -208,7 +203,7 @@ class PurchasesReturnController extends Controller
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity - $cart_item->qty
+                        'quantity' => $product->quantity - $cart_item->qty,
                     ]);
                 }
             }
@@ -220,7 +215,6 @@ class PurchasesReturnController extends Controller
 
         return redirect()->route('purchase-returns.index');
     }
-
 
     public function destroy(PurchaseReturn $purchase_return)
     {

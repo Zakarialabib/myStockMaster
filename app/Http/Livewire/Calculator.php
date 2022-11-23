@@ -7,9 +7,13 @@ use Livewire\Component;
 class Calculator extends Component
 {
     public $number1 = '';
+
     public $number2 = '';
+
     public string $action = '+';
+
     public float $result = 0;
+
     public bool $disabled = true;
 
     public function render()
@@ -19,17 +23,17 @@ class Calculator extends Component
 
     public function calculate()
     {
-        $num1 = (float)$this->number1;
-        $num2 = (float)$this->number2;
+        $num1 = (float) $this->number1;
+        $num2 = (float) $this->number2;
         if ($this->action === '-') {
             $this->result = $num1 - $num2;
-        } else if ($this->action === '+') {
+        } elseif ($this->action === '+') {
             $this->result = $num1 + $num2;
-        } else if ($this->action === '*') {
+        } elseif ($this->action === '*') {
             $this->result = $num1 * $num2;
-        } else if ($this->action === '/') {
+        } elseif ($this->action === '/') {
             $this->result = $num1 / $num2;
-        } else if ($this->action === '%') {
+        } elseif ($this->action === '%') {
             $this->result = $num1 / 100 * $num2;
         }
     }

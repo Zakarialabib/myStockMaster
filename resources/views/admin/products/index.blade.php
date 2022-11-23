@@ -38,16 +38,27 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
-                    {{ __('Import') }}
-                </x-button>
-                <x-button danger type="button" onclick="Livewire.emit('exportPdf')" wire:loading.attr="disabled">
-                    {{ __('Pdf') }}
-                </x-button>
-                <x-button info type="button" onclick="Livewire.emit('exportExcel')" wire:loading.attr="disabled">
-                    {{ __('Excel') }}
-                </x-button>
-                <!-- Button trigger livewire modal -->
+                <x-dropdown align="right" class="w-auto mr-2">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button secondary type="button" class="text-white flex items-center">
+                            <i class="fas fa-angle-double-down"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link onclick="Livewire.emit('importModal')" 
+                            wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link onclick="Livewire.emit('exportPdf')" 
+                            wire:loading.attr="disabled">
+                            {{ __('PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link onclick="Livewire.emit('exportExcel')" 
+                            wire:loading.attr="disabled">
+                            {{ __('Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
                 <x-button primary type="button" onclick="Livewire.emit('createProduct', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>

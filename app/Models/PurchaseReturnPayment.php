@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class PurchaseReturnPayment extends Model
@@ -36,23 +36,28 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
-    public function purchaseReturn() {
+    public function purchaseReturn()
+    {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
 
-    public function setAmountAttribute($value) {
+    public function setAmountAttribute($value)
+    {
         $this->attributes['amount'] = $value * 100;
     }
 
-    public function getAmountAttribute($value) {
+    public function getAmountAttribute($value)
+    {
         return $value / 100;
     }
 
-    public function getDateAttribute($value) {
+    public function getDateAttribute($value)
+    {
         return Carbon::parse($value)->format('d M, Y');
     }
 
-    public function scopeByPurchaseReturn($query) {
+    public function scopeByPurchaseReturn($query)
+    {
         return $query->where('purchase_return_id', request()->route('purchase_return_id'));
     }
 }

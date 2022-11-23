@@ -47,7 +47,7 @@
                 {{ __('Phone') }}
             </x-table.th>
             <x-table.th>
-                {{ __('Actions') }}
+                <i class="fas fa-angle-double-down"></i>
             </x-table.th>
         </x-slot>
         <x-table.tbody>
@@ -67,7 +67,7 @@
                             <x-dropdown align="right" class="w-auto">
                                 <x-slot name="trigger" class="inline-flex">
                                     <x-button primary type="button" class="text-white flex items-center">
-                                        {{ __('Actions') }}
+                                        <i class="fas fa-angle-double-down"></i>
                                     </x-button>
                                 </x-slot>
                                 <x-slot name="content">

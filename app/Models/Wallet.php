@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
 
 class Wallet extends Model
 {
@@ -73,5 +72,4 @@ class Wallet extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

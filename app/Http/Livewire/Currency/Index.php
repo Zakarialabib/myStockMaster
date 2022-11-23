@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Currency;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\Currency;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -21,7 +21,7 @@ class Index extends Component
 
     public $listeners = [
         'confirmDelete', 'delete', 'showModal',
-        'editModal', 'refreshIndex'
+        'editModal', 'refreshIndex',
     ];
 
     public $showModal;
@@ -86,11 +86,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Currency())->orderable;
+        $this->orderable = (new Currency)->orderable;
     }
 
     public function render()
@@ -98,8 +98,8 @@ class Index extends Component
         abort_if(Gate::denies('currency_access'), 403);
 
         $query = Currency::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a4c046e6bae003db95809118ccb9922",
+    "content-hash": "c9e299667b9ea603eb1300076e24d68d",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1371,29 +1371,36 @@
         },
         {
             "name": "laravel-notification-channels/telegram",
-            "version": "2.1.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-notification-channels/telegram.git",
-                "reference": "76299fa06f48cb175e17ea951ccf3b185329a1ac"
+                "reference": "8609d67d2f0b6ae5adfba85021722443dd332fb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-notification-channels/telegram/zipball/76299fa06f48cb175e17ea951ccf3b185329a1ac",
-                "reference": "76299fa06f48cb175e17ea951ccf3b185329a1ac",
+                "url": "https://api.github.com/repos/laravel-notification-channels/telegram/zipball/8609d67d2f0b6ae5adfba85021722443dd332fb8",
+                "reference": "8609d67d2f0b6ae5adfba85021722443dd332fb8",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.0",
-                "illuminate/contracts": "8.45 - 9",
-                "illuminate/notifications": "8.45 - 9",
-                "illuminate/support": "8.45 - 9",
-                "php": "^7.4 || ^8.0"
+                "illuminate/contracts": "^9.0",
+                "illuminate/notifications": "^9.0",
+                "illuminate/support": "^9.0",
+                "php": "^8.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
-                "phpunit/phpunit": "^9.0"
+                "nunomaduro/larastan": "^2.0",
+                "orchestra/testbench": "^7.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "extra": {
@@ -1431,9 +1438,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel-notification-channels/telegram/issues",
-                "source": "https://github.com/laravel-notification-channels/telegram/tree/2.1.0"
+                "source": "https://github.com/laravel-notification-channels/telegram/tree/3.0.0"
             },
-            "time": "2022-07-01T02:14:31+00:00"
+            "time": "2022-10-15T01:56:19+00:00"
         },
         {
             "name": "laravel/framework",

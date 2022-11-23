@@ -2,24 +2,24 @@
 
 namespace App\Http\Livewire\Permission;
 
-use Livewire\Component;
-use App\Models\Permission;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Http\Livewire\WithSorting;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Permission;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
     use WithPagination;
     use WithSorting;
-    use LivewireAlert ;
+    use LivewireAlert;
     use HasAdvancedFilter;
 
     public $permission;
 
-    public $listeners = ['show','confirmDelete', 'delete', 'createModal', 'editModal'];
+    public $listeners = ['show', 'confirmDelete', 'delete', 'createModal', 'editModal'];
 
     public $show;
 
@@ -89,18 +89,18 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Permission())->orderable;
+        $this->orderable = (new Permission)->orderable;
     }
 
     public function render()
     {
         $query = Permission::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

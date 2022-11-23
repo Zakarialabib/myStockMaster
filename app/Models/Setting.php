@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Currency;
 
 class Setting extends Model
 {
@@ -11,7 +10,8 @@ class Setting extends Model
 
     protected $with = ['currency'];
 
-    public function currency() {
+    public function currency()
+    {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');
     }
 }

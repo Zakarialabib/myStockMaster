@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use App\Models\Supplier;
+use App\Http\Requests\StorePurchaseRequest;
+use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
-use App\Http\Requests\StorePurchaseRequest;
-use App\Http\Requests\UpdatePurchaseRequest;
+use App\Models\Supplier;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class PurchaseController extends Controller
 {
@@ -23,7 +23,6 @@ class PurchaseController extends Controller
         return view('admin.purchases.index');
     }
 
-
     public function create()
     {
         abort_if(Gate::denies('create_purchases'), 403);
@@ -33,7 +32,7 @@ class PurchaseController extends Controller
         return view('admin.purchases.create');
     }
 
-    // use livewire instead ---------> 
+    // use livewire instead --------->
     public function store(StorePurchaseRequest $request)
     {
         DB::transaction(function () use ($request) {
@@ -81,7 +80,7 @@ class PurchaseController extends Controller
                 if ($request->status == Purchase::PurchasePending) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty,
                     ]);
                 }
             }
@@ -94,7 +93,7 @@ class PurchaseController extends Controller
                     'reference' => 'INV/'.$purchase->reference,
                     'amount' => $purchase->paid_amount,
                     'purchase_id' => $purchase->id,
-                    'payment_method' => $request->payment_method
+                    'payment_method' => $request->payment_method,
                 ]);
             }
         });
@@ -104,7 +103,6 @@ class PurchaseController extends Controller
         return redirect()->route('purchases.index');
     }
 
-
     public function show(Purchase $purchase)
     {
         abort_if(Gate::denies('show_purchases'), 403);
@@ -113,7 +111,6 @@ class PurchaseController extends Controller
 
         return view('admin.purchases.show', compact('purchase', 'supplier'));
     }
-
 
     public function edit(Purchase $purchase)
     {
@@ -127,26 +124,25 @@ class PurchaseController extends Controller
 
         foreach ($purchase_details as $purchase_detail) {
             $cart->add([
-                'id'      => $purchase_detail->product_id,
-                'name'    => $purchase_detail->name,
-                'qty'     => $purchase_detail->quantity,
-                'price'   => $purchase_detail->price,
-                'weight'  => 1,
+                'id' => $purchase_detail->product_id,
+                'name' => $purchase_detail->name,
+                'qty' => $purchase_detail->quantity,
+                'price' => $purchase_detail->price,
+                'weight' => 1,
                 'options' => [
                     'product_discount' => $purchase_detail->product_discount_amount,
                     'product_discount_type' => $purchase_detail->product_discount_type,
-                    'sub_total'   => $purchase_detail->sub_total,
-                    'code'        => $purchase_detail->code,
-                    'stock'       => Product::findOrFail($purchase_detail->product_id)->quantity,
+                    'sub_total' => $purchase_detail->sub_total,
+                    'code' => $purchase_detail->code,
+                    'stock' => Product::findOrFail($purchase_detail->product_id)->quantity,
                     'product_tax' => $purchase_detail->product_tax_amount,
-                    'unit_price'  => $purchase_detail->unit_price
-                ]
+                    'unit_price' => $purchase_detail->unit_price,
+                ],
             ]);
         }
 
         return view('admin.purchases.edit', compact('purchase'));
     }
-
 
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
@@ -164,7 +160,7 @@ class PurchaseController extends Controller
                 if ($purchase->status == Purchase::PurchaseCompleted) {
                     $product = Product::findOrFail($purchase_detail->product_id);
                     $product->update([
-                        'quantity' => $product->quantity - $purchase_detail->quantity
+                        'quantity' => $product->quantity - $purchase_detail->quantity,
                     ]);
                 }
                 $purchase_detail->delete();
@@ -206,7 +202,7 @@ class PurchaseController extends Controller
                 if ($request->status == Purchase::PurchaseCompleted) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty,
                     ]);
                 }
             }
@@ -218,7 +214,6 @@ class PurchaseController extends Controller
 
         return redirect()->route('purchases.index');
     }
-
 
     public function destroy(Purchase $purchase)
     {

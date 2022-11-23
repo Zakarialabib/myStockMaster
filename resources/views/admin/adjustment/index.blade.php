@@ -39,8 +39,6 @@
                 <x-button href="{{ route('adjustments.create') }}" primary>
                     {{ __('Create') }}
                 </x-button>
-                {{-- <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-button> --}}
             </div>
         </div>
     </section>

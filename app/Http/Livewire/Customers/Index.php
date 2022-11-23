@@ -2,14 +2,15 @@
 
 namespace App\Http\Livewire\Customers;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
 use App\Exports\CustomerExport;
+use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
-use App\Models\Wallet;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
@@ -27,7 +28,7 @@ class Index extends Component
 
     public int $selectPage;
 
-    public $listeners = ['resetSelected','confirmDelete','exportAll','downloadAll','delete', 'export', 'import', 'importExcel','refreshIndex','showModal','editModal'];
+    public $listeners = ['resetSelected', 'confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'import', 'importExcel', 'refreshIndex', 'showModal', 'editModal'];
 
     public $showModal;
 
@@ -90,11 +91,11 @@ class Index extends Component
     public function mount()
     {
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Customer())->orderable;
+        $this->orderable = (new Customer)->orderable;
     }
 
     public function render()
@@ -102,8 +103,8 @@ class Index extends Component
         abort_if(Gate::denies('customer_access'), 403);
 
         $query = Customer::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -138,7 +139,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->customer = new Customer();
+        $this->customer = new Customer;
 
         $this->createModal = true;
     }
@@ -236,7 +237,7 @@ class Index extends Component
             'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Excel::import(new CustomerImport(), $this->file('file'));
+        Excel::import(new CustomerImport, $this->file('file'));
 
         $this->import = false;
 

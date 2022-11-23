@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire\Settings;
 
-use Illuminate\Support\Facades\{Artisan, Gate, Log};
-use App\Models\{Currency,Customer,Setting,Warehouse};
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\Setting;
+use App\Models\Warehouse;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -14,7 +17,7 @@ class Index extends Component
     public $settings;
 
     public $listeners = ['update'];
-    
+
     public array $listsForFields = [];
 
     public $site_logo;
@@ -49,7 +52,8 @@ class Index extends Component
         return view('livewire.settings.index');
     }
 
-    public function mount() {
+    public function mount()
+    {
         abort_if(Gate::denies('access_settings'), 403);
 
         $settings = Setting::firstOrFail();
@@ -59,13 +63,14 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function update() {
+    public function update()
+    {
 
         $this->validate();
 
-        if ($this->site_logo != null) {    
+        if ($this->site_logo != null) {
             $imageName = Str::slug($this->company_name).'.'.$this->image->extension();
-            $this->image->storeAs('settings',$imageName);
+            $this->image->storeAs('settings', $imageName);
             $this->site_logo = $imageName;
         }
 
@@ -82,6 +87,4 @@ class Index extends Component
         $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
-
-    
 }

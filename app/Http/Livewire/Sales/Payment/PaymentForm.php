@@ -2,17 +2,17 @@
 
 namespace App\Http\Livewire\Sales\Payment;
 
-use App\Models\SalePayment;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use Carbon\Carbon;
-use Livewire\Component;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Component;
 
 class PaymentForm extends Component
 {
     public $listeners = [
-       'paymentModal','refreshIndex','save'
+        'paymentModal', 'refreshIndex', 'save',
     ];
 
     public $paymentModal;
@@ -42,7 +42,7 @@ class PaymentForm extends Component
         'amount' => 'required|numeric',
         'note' => 'nullable|string|max:1000',
         // 'sale_id' => 'nullable|integer',
-        'payment_method' => 'required|string|max:255'
+        'payment_method' => 'required|string|max:255',
     ];
 
     // todo : show amount due in amount field
@@ -99,7 +99,7 @@ class PaymentForm extends Component
             $sale->update([
                 'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
                 'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'payment_status' => $payment_status,
             ]);
 
             $this->emit('refreshIndex');

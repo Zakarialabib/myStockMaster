@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\Quotations;
 
-use Livewire\{Component,WithFileUploads,WithPagination};
 use App\Http\Livewire\WithSorting;
-use App\Models\Quotation;
 use App\Models\Customer;
+use App\Models\Quotation;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -16,11 +18,11 @@ class Index extends Component
     public $quotation;
 
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal'
+        'confirmDelete', 'delete', 'showModal',
     ];
 
     public $showModal;
-    
+
     public int $perPage;
 
     public array $orderable;
@@ -30,7 +32,7 @@ class Index extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     public array $listsForFields = [];
 
     protected $queryString = [
@@ -75,16 +77,16 @@ class Index extends Component
         'paid_amount' => 'required|numeric',
         'status' => 'required|string|max:255',
         'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000'
+        'note' => 'nullable|string|max:1000',
     ];
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Quotation())->orderable;
+        $this->orderable = (new Quotation)->orderable;
         $this->initListsForFields();
     }
 
@@ -93,10 +95,10 @@ class Index extends Component
         abort_if(Gate::denies('access_quotations'), 403);
 
         $query = Quotation::advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $quotations = $query->paginate($this->perPage);
 
@@ -111,7 +113,7 @@ class Index extends Component
 
         $this->showModal = true;
     }
-    
+
     public function deleteSelected()
     {
         abort_if(Gate::denies('delete_quotations'), 403);
@@ -134,6 +136,4 @@ class Index extends Component
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
-
-  
 }

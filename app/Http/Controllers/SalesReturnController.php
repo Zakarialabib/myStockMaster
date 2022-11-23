@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreSaleReturnRequest;
+use App\Http\Requests\UpdateSaleReturnRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnDetail;
 use App\Models\SaleReturnPayment;
-use App\Http\Requests\StoreSaleReturnRequest;
-use App\Http\Requests\UpdateSaleReturnRequest;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class SalesReturnController extends Controller
 {
@@ -23,7 +23,6 @@ class SalesReturnController extends Controller
         return view('admin.salesreturn.index');
     }
 
-
     public function create()
     {
         abort_if(Gate::denies('create_sale_returns'), 403);
@@ -33,7 +32,7 @@ class SalesReturnController extends Controller
         return view('admin.salesreturn.create');
     }
 
-    // use livewire ---------> 
+    // use livewire --------->
     public function store(StoreSaleReturnRequest $request)
     {
         DB::transaction(function () use ($request) {
@@ -82,7 +81,7 @@ class SalesReturnController extends Controller
                 if ($request->status == '2') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty,
                     ]);
                 }
             }
@@ -95,7 +94,7 @@ class SalesReturnController extends Controller
                     'reference' => 'INV/'.$sale_return->reference,
                     'amount' => $sale_return->paid_amount,
                     'sale_return_id' => $sale_return->id,
-                    'payment_method' => $request->payment_method
+                    'payment_method' => $request->payment_method,
                 ]);
             }
         });
@@ -105,7 +104,6 @@ class SalesReturnController extends Controller
         return redirect()->route('sale-returns.index');
     }
 
-
     public function show(SaleReturn $sale_return)
     {
         abort_if(Gate::denies('show_sale_returns'), 403);
@@ -114,7 +112,6 @@ class SalesReturnController extends Controller
 
         return view('admin.salesreturn.show', compact('sale_return', 'customer'));
     }
-
 
     public function edit(SaleReturn $sale_return)
     {
@@ -128,26 +125,25 @@ class SalesReturnController extends Controller
 
         foreach ($sale_return_details as $sale_return_detail) {
             $cart->add([
-                'id'      => $sale_return_detail->product_id,
-                'name'    => $sale_return_detail->name,
-                'qty'     => $sale_return_detail->quantity,
-                'price'   => $sale_return_detail->price,
-                'weight'  => 1,
+                'id' => $sale_return_detail->product_id,
+                'name' => $sale_return_detail->name,
+                'qty' => $sale_return_detail->quantity,
+                'price' => $sale_return_detail->price,
+                'weight' => 1,
                 'options' => [
                     'discount' => $sale_return_detail->discount_amount,
                     'discount_type' => $sale_return_detail->discount_type,
-                    'sub_total'   => $sale_return_detail->sub_total,
-                    'code'        => $sale_return_detail->code,
-                    'stock'       => Product::findOrFail($sale_return_detail->product_id)->quantity,
+                    'sub_total' => $sale_return_detail->sub_total,
+                    'code' => $sale_return_detail->code,
+                    'stock' => Product::findOrFail($sale_return_detail->product_id)->quantity,
                     'tax' => $sale_return_detail->tax_amount,
-                    'unit_price'  => $sale_return_detail->unit_price
-                ]
+                    'unit_price' => $sale_return_detail->unit_price,
+                ],
             ]);
         }
 
         return view('admin.salesreturn.edit', compact('sale_return'));
     }
-
 
     public function update(UpdateSaleReturnRequest $request, SaleReturn $sale_return)
     {
@@ -166,7 +162,7 @@ class SalesReturnController extends Controller
                 if ($sale_return->status == 'Completed') {
                     $product = Product::findOrFail($sale_return_detail->product_id);
                     $product->update([
-                        'quantity' => $product->quantity - $sale_return_detail->quantity
+                        'quantity' => $product->quantity - $sale_return_detail->quantity,
                     ]);
                 }
                 $sale_return_detail->delete();
@@ -208,7 +204,7 @@ class SalesReturnController extends Controller
                 if ($request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity + $cart_item->qty
+                        'quantity' => $product->quantity + $cart_item->qty,
                     ]);
                 }
             }
@@ -220,7 +216,6 @@ class SalesReturnController extends Controller
 
         return redirect()->route('sale-returns.index');
     }
-
 
     public function destroy(SaleReturn $sale_return)
     {

@@ -28,12 +28,10 @@
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
-                {{ __('date') }}
-                @include('components.table.sort', ['field' => 'date'])
+                {{ __('Date') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
-                {{ __('reference') }}
-                @include('components.table.sort', ['field' => 'reference'])
+                {{ __('Reference') }}
             </x-table.th>
             <x-table.th>{{ __('Actions') }}</x-table.th>
         </x-slot>
@@ -48,13 +46,13 @@
                     <x-table.td>
                         <div class="flex justify-center">
 
-                            <x-button href="{{ route('adjustments.show', $adjustment->id) }}"
-                                success type="button" wire:loading.attr="disabled">
+                            <x-button primary wire:click="showModal({{ $customer->id }})"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button info href="{{ route('adjustments.edit', $adjustment->id) }}"
-                                type="button" wire:loading.attr="disabled">
+                            <x-button info href="{{ route('adjustments.edit', $adjustment->id) }}" type="button"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
@@ -91,6 +89,65 @@
             {{ $adjustments->links() }}
         </div>
     </div>
+
+
+    <x-modal wire:model="showModal">
+        <x-slot name="title">
+            {{ __('Show Adjustment') }} -
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="p-4">
+                <div>
+                    <x-table>
+                        <x-slot name="thead">
+                            <x-table.tr>
+                                <x-table.th colspan="2">
+                                    {{ __('Date') }}
+                                </x-table.th>
+                                <x-table.th colspan="2">
+                                    {{ __('Reference') }}
+                                </x-table.th>
+                            </x-table.tr>
+                            <x-table.tr>
+                                <x-table.td colspan="2">
+                                    {{ $adjustment->date }}
+                                </x-table.td>
+                                <x-table.td colspan="2">
+                                    {{ $adjustment->reference }}
+                                </x-table.td>
+                            </x-table.tr>
+                        </x-slot>
+                        <x-table.tbody>
+                            <x-table.tr>
+                                <x-table.th>{{ __('Product Name') }}</x-table.th>
+                                <x-table.th>{{ __('Code') }}</x-table.th>
+                                <x-table.th>{{ __('Quantity') }}</x-table.th>
+                                <x-table.th>{{ __('Type') }}</x-table.th>
+                            </x-table.tr>
+
+                            @foreach ($adjustment->adjustedProducts as $adjustedProduct)
+                                <x-table.tr>
+                                    <x-table.td>{{ $adjustedProduct->product->name }}</x-table.td>
+                                    <x-table.td>{{ $adjustedProduct->product->code }}</x-table.td>
+                                    <x-table.td>{{ $adjustedProduct->quantity }}</x-table.td>
+                                    <x-table.td>
+                                        @if ($adjustedProduct->type == 'add')
+                                            {{ __('(+) Addition') }}
+                                        @else
+                                            {{ __('(-) Subtraction') }}
+                                        @endif
+                                    </x-table.td>
+                                </x-table.tr>
+                            @endforeach
+                        </x-table.tbody>
+                    </x-table>
+                </div>
+            </div>
+        </x-slot>
+    </x-modal>
+
+
 </div>
 
 @push('scripts')

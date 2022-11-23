@@ -2,15 +2,17 @@
 
 namespace App\Http\Livewire\Brands;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
+use App\Imports\BrandsImport;
 use App\Models\Brand;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\BrandsImport;
 
 class Index extends Component
 {
@@ -23,9 +25,9 @@ class Index extends Component
     public $brand;
 
     public $listeners = [
-    'show', 'confirmDelete', 'delete','refreshIndex',
-    'showModal','editModal','importModal'
-];
+        'show', 'confirmDelete', 'delete', 'refreshIndex',
+        'showModal', 'editModal', 'importModal',
+    ];
 
     public int $perPage;
 
@@ -93,11 +95,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Brand())->orderable;
+        $this->orderable = (new Brand)->orderable;
     }
 
     public function render()
@@ -105,16 +107,15 @@ class Index extends Component
         abort_if(Gate::denies('brand_access'), 403);
 
         $query = Brand::advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $brands = $query->paginate($this->perPage);
 
         return view('livewire.brands.index', compact('brands'));
     }
-
 
     public function editModal(Brand $brand)
     {
@@ -195,7 +196,7 @@ class Index extends Component
             'file' => 'required|mimes:xlsx',
         ]);
 
-        Excel::import(new BrandsImport(), $this->file);
+        Excel::import(new BrandsImport, $this->file);
 
         $this->alert('success', __('Brand imported successfully.'));
     }

@@ -2,15 +2,13 @@
 
 namespace App\Http\Livewire\Customers;
 
-use Livewire\Component;
+use App\Http\Livewire\WithSorting;
 use App\Models\Customer;
 use App\Models\Sale;
-use App\Models\SalePayment;
 use App\Models\SaleReturn;
-use App\Models\SaleReturnPayment;
-use App\Http\Livewire\WithSorting;
-use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Details extends Component
 {
@@ -69,19 +67,19 @@ class Details extends Component
         $this->customer = Customer::findOrFail($customer->id);
         $this->customer_id = $this->customer->id;
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 20;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 20;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Customer())->orderable;
+        $this->orderable = (new Customer)->orderable;
     }
 
     public function getSalesProperty()
     {
         $query = Sale::where('customer_id', $this->customer_id)
         ->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -93,8 +91,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
         ->with('salepayments')
         ->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -144,6 +142,7 @@ class Details extends Component
 
         $revenue = ($sales - $sale_returns) / 100;
         $profit = $revenue - $product_costs;
+
         return $profit;
     }
 

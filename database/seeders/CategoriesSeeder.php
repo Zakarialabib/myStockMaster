@@ -2,23 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CategoriesSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         Category::create([
-            'name'      => 'Electronics',
-            'code'               => Str::random(5),
+            'name' => 'Electronics',
+            'code' => Str::random(5),
         ]);
     }
 }

@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire\Categories;
 
-use Livewire\{Component, WithFileUploads, WithPagination};
+use App\Http\Livewire\WithSorting;
+use App\Imports\CategoriesImport;
+use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Livewire\WithSorting;
-use App\Models\Category;
-use App\Imports\CategoriesImport;
 
 class Index extends Component
 {
@@ -18,13 +20,15 @@ class Index extends Component
     use WithFileUploads;
 
     public $category;
+
     public $code;
+
     public $name;
 
     public $listeners = [
         'show', 'confirmDelete', 'delete',
-        'refreshIndex','showModal','editModal',
-        'importModal'
+        'refreshIndex', 'showModal', 'editModal',
+        'importModal',
     ];
 
     public int $perPage;
@@ -91,11 +95,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Category())->orderable;
+        $this->orderable = (new Category)->orderable;
     }
 
     public function render()
@@ -103,10 +107,10 @@ class Index extends Component
         abort_if(Gate::denies('access_product_categories'), 403);
 
         $query = Category::with('products')->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $categories = $query->paginate($this->perPage);
 
@@ -185,12 +189,12 @@ class Index extends Component
         abort_if(Gate::denies('access_product_categories'), 403);
 
         $this->validate([
-            'file' => 'required|mimes:xlsx,xls,csv,txt'
+            'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
         $file = $this->file('file');
 
-        Excel::import(new CategoriesImport(), $file);
+        Excel::import(new CategoriesImport, $file);
 
         $this->alert('success', __('Categories imported successfully.'));
 

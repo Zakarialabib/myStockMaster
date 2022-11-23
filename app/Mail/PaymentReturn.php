@@ -11,6 +11,7 @@ class PaymentReturn extends Mailable
     use Queueable, SerializesModels;
 
     public $facture;
+
     public $pdf;
 
     /**
@@ -29,12 +30,11 @@ class PaymentReturn extends Mailable
      *
      * @return $this
      */
-
     public function build()
     {
         return $this->subject('PAYMENT RECEIPT')
             ->markdown('emails.paymentReturn')
-            ->attachData($this->pdf, 'Payment_Return' . $this->facture['Ref'] . '.pdf', [
+            ->attachData($this->pdf, 'Payment_Return'.$this->facture['Ref'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->facture);

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Warehouses;
 
-use Livewire\Component;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Component;
 
 class Create extends Component
 {

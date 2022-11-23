@@ -2,16 +2,13 @@
 
 namespace App\Http\Livewire\Suppliers;
 
-use Livewire\Component;
-use App\Models\Supplier;
 use App\Models\Purchase;
-use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
-use App\Models\PurchaseReturnPayment;
+use App\Models\Supplier;
+use Livewire\Component;
 
 class Details extends Component
 {
-
     public $supplier_id;
 
     public function mount($supplier)
@@ -35,11 +32,10 @@ class Details extends Component
     // total due amount
     public function getTotalDueProperty()
     {
-        return Purchase::where('supplier_id', $this->supplier_id) 
+        return Purchase::where('supplier_id', $this->supplier_id)
         ->sum('due_amount') / 100;
     }
 
-  
     // show totalPayments
     public function getTotalPaymentsProperty()
     {
@@ -65,11 +61,12 @@ class Details extends Component
 
         $debt = ($purchases - $purchase_returns) / 100;
         $debit = $debt - $product_costs;
+
         return $debit;
     }
 
-    // show PurchaseInvoices 
-    // show PurchasePayments 
+    // show PurchaseInvoices
+    // show PurchasePayments
 
     public function render()
     {

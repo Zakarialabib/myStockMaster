@@ -7,23 +7,26 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            @if ($selected)
             <x-button danger wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
-
+            @endif
+            @if ($this->selectedCount)
+            <p class="text-sm leading-5">
+                <span class="font-medium">
+                    {{ $this->selectedCount }}
+                </span>
+                {{ __('Entries selected') }}
+            </p>
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="flex items-center mr-3 pl-4">
-                <input wire:model="search" type="text"
-                    class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="Search..." />
+            <div class="my-2 my-md-0">
+                <input type="text" wire:model.debounce.300ms="search"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    placeholder="{{ __('Search') }}" />
             </div>
-        </div>
-    </div>
-
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
         </div>
     </div>
 

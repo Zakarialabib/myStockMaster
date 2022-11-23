@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Models\Category;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class CategoriesExport implements FromQuery, WithMapping, WithHeadings
 {

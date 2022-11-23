@@ -2,16 +2,13 @@
 
 namespace App\Http\Livewire\Sales;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use App\Models\Sale;
-use App\Models\SalePayment;
-use App\Models\Customer;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Imports\SaleImport;
 
 class Recent extends Component
 {
@@ -20,15 +17,15 @@ class Recent extends Component
     public $sale;
 
     public $listeners = [
-    'recentSales', 'showModal',
-    'importModal', 'refreshIndex'
+        'recentSales', 'showModal',
+        'importModal', 'refreshIndex',
     ];
 
     public $refreshIndex;
 
     public $showModal;
-    
-    public $recentSales;    
+
+    public $recentSales;
 
     public int $perPage;
 
@@ -39,7 +36,7 @@ class Recent extends Component
     public array $selected = [];
 
     public array $paginationOptions;
-    
+
     public array $listsForFields = [];
 
     protected $queryString = [
@@ -81,22 +78,22 @@ class Recent extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 10;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 10;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Sale())->orderable;
+        $this->orderable = (new Sale)->orderable;
     }
 
     public function render()
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $query = Sale::with('customer','saleDetails')->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+        $query = Sale::with('customer', 'saleDetails')->advancedFilter([
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $sales = $query->paginate($this->perPage);
 
@@ -118,5 +115,4 @@ class Recent extends Component
 
         $this->recentSales = true;
     }
-  
 }

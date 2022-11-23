@@ -2,20 +2,22 @@
 
 namespace App\Http\Livewire\Barcode;
 
-use Livewire\Component;
-use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Milon\Barcode\Facades\DNS1DFacade;
 
 class ProductTable extends Component
 {
     use LivewireAlert;
 
     public $product;
+
     public $quantity;
+
     public $barcode;
 
-    protected $listeners = ['productSelected','getPdf'];
+    protected $listeners = ['productSelected', 'getPdf'];
 
     public function mount()
     {
@@ -30,6 +32,7 @@ class ProductTable extends Component
     {
         return view('livewire.barcode.product-table');
     }
+
     // selecte multiple products without barcode
     public function productSelected(Product $product)
     {
@@ -48,7 +51,7 @@ class ProductTable extends Component
 
         $this->barcodes = [];
 
-        for ($i=0; $i < $this->quantity; $i++) {
+        for ($i = 0; $i < $this->quantity; $i++) {
             $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
@@ -61,7 +64,8 @@ class ProductTable extends Component
             'price' => $this->product->price,
             'name' => $this->product->name,
         ]);
-        return $pdf->stream('barcodes-'. $this->product->code .'.pdf');
+
+        return $pdf->stream('barcodes-'.$this->product->code.'.pdf');
     }
 
     public function updatedQuantity()

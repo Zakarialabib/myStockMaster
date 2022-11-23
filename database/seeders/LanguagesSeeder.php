@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Language;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class LanguagesSeeder extends Seeder
 {
@@ -18,25 +16,25 @@ class LanguagesSeeder extends Seeder
     {
         Language::insert([
             [
-            'id'           => 1,
-            'name'        => 'English',
-            'code' => 'en',
-            'status'      => 1,
-            'is_default'      => 0,
+                'id' => 1,
+                'name' => 'English',
+                'code' => 'en',
+                'status' => 1,
+                'is_default' => 0,
             ],
             [
-            'id'           => 2,
-            'name'        => 'Arabic',
-            'code' => 'ar',
-            'status'      => 1,
-            'is_default'      => 0,
+                'id' => 2,
+                'name' => 'Arabic',
+                'code' => 'ar',
+                'status' => 1,
+                'is_default' => 0,
             ],
             [
-            'id'           => 3,
-            'name'        => 'French',
-            'code' => 'fr',
-            'status'      => 1,
-            'is_default'      => 1,
+                'id' => 3,
+                'name' => 'French',
+                'code' => 'fr',
+                'status' => 1,
+                'is_default' => 1,
             ],
         ]);
 

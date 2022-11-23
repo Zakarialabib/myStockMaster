@@ -2,14 +2,15 @@
 
 namespace App\Http\Livewire\Expense;
 
-use Livewire\{Component, WithPagination};
+use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
-use App\Exports\ExpenseExport;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -24,7 +25,7 @@ class Index extends Component
 
     public int $selectPage;
 
-    public $listeners = ['confirmDelete','exportAll','downloadAll', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
+    public $listeners = ['confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'refreshIndex', 'showModal', 'editModal'];
 
     public $showModal;
 
@@ -100,7 +101,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Expense())->orderable;
+        $this->orderable = (new Expense)->orderable;
         $this->initListsForFields();
     }
 
@@ -108,12 +109,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_access'), 403);
 
-        $query = Expense::with(['category','user','warehouse'])
+        $query = Expense::with(['category', 'user', 'warehouse'])
                          ->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+                             's' => $this->search ?: null,
+                             'order_column' => $this->sortBy,
+                             'order_direction' => $this->sortDirection,
+                         ]);
 
         $expenses = $query->paginate($this->perPage);
 
@@ -170,7 +171,6 @@ class Index extends Component
 
         $this->editModal = false;
     }
-
 
     public function downloadSelected()
     {

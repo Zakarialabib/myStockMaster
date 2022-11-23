@@ -36,11 +36,19 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
-                    {{ __('Import') }}
-                </x-button>
-
-                <!-- Button trigger livewire modal -->
+                <x-dropdown align="right" class="w-auto mr-2">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button secondary type="button" class="text-white flex items-center">
+                            <i class="fas fa-angle-double-down"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                
                 <x-button primary onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>

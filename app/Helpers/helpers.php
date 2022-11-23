@@ -23,15 +23,15 @@ if (! function_exists('format_currency')) {
         $thousandSeparator = $settings->currency->thousand_separator;
 
         return 'prefix' === $position
-            ? $symbol . number_format((float) $value, 2, $decimalSeparator, $thousandSeparator)
-            : number_format((float) $value, 2, $decimalSeparator, $thousandSeparator) . $symbol;
+            ? $symbol.number_format((float) $value, 2, $decimalSeparator, $thousandSeparator)
+            : number_format((float) $value, 2, $decimalSeparator, $thousandSeparator).$symbol;
     }
 }
 
 if (! function_exists('make_reference_id')) {
     function make_reference_id($prefix, $number)
     {
-        return $prefix . '-' . str_pad($number, 5, 0, STR_PAD_LEFT);
+        return $prefix.'-'.str_pad($number, 5, 0, STR_PAD_LEFT);
     }
 }
 

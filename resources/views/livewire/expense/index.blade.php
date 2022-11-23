@@ -19,6 +19,14 @@
                     {{ __('PDF') }}
                 </x-button>
             @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
 
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
@@ -42,16 +50,16 @@
             <x-table.th >
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+            <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
                 {{ __('Reference') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null">
+            <x-table.th sortable wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null">
                 {{ __('Expense Category') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Entry Date') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('amount')" :direction="$sorts['amount'] ?? null">
+            <x-table.th sortable wire:click="sortBy('amount')" :direction="$sorts['amount'] ?? null">
                 {{ __('Amount') }}
             </x-table.th>
 
@@ -68,7 +76,9 @@
                         <input wire:model="selected" type="checkbox" value="{{ $expense->id }}" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->reference }}
+                        <button type="button" wire:click="showModal({{ $expense->id }})">
+                            {{ $expense->reference }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $expense->category->name ?? '' }}

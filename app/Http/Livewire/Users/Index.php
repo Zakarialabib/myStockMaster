@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Http\Livewire\WithSorting;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithSorting;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
@@ -15,7 +15,7 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'refreshIndex', 'showModal', 'editModal'];
 
     public $showModal;
 
@@ -83,11 +83,11 @@ class Index extends Component
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new User())->orderable;
+        $this->orderable = (new User)->orderable;
     }
 
     public function render()
@@ -95,8 +95,8 @@ class Index extends Component
         abort_if(Gate::denies('user_access'), 403);
 
         $query = User::with(['roles'])->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

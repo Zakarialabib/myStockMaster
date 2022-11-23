@@ -11,6 +11,7 @@ class SaleMail extends Mailable
     use Queueable, SerializesModels;
 
     public $sale;
+
     public $pdf;
 
     /**
@@ -33,7 +34,7 @@ class SaleMail extends Mailable
     {
         return $this->subject('Sale Details')
             ->markdown('emails.sale')
-            ->attachData($this->pdf, 'Sale_' . $this->sale['Ref'] . '.pdf', [
+            ->attachData($this->pdf, 'Sale_'.$this->sale['Ref'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->sale);

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use App\Models\Sale;
-use App\Models\SalePayment;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class SalePaymentsController extends Controller
 {

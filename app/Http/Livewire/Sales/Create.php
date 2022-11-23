@@ -2,34 +2,54 @@
 
 namespace App\Http\Livewire\Sales;
 
-use App\Models\{Product,Sale,Category,Customer,SaleDetails,SalePayment};
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\SaleDetails;
+use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['productSelected', 'discountModalRefresh','proceed'];
+    public $listeners = ['productSelected', 'discountModalRefresh', 'proceed'];
 
     public $cart_instance;
+
     public $customers;
+
     public $global_discount;
+
     public $global_tax;
+
     public $shipping;
+
     public $quantity;
+
     public $check_quantity;
+
     public $discount_type;
+
     public $item_discount;
+
     public $tax_percentage;
+
     public $discount_percentage;
+
     public $data;
+
     public $customer_id;
+
     public $total_amount;
+
     public $paid_amount;
+
     public $note;
+
     public $payment_method = 'cash';
 
     public function rules()
@@ -41,19 +61,20 @@ class Create extends Component
             'shipping_amount' => 'numeric',
             'total_amount' => 'required|numeric',
             'paid_amount' => 'numeric',
-            'note' => 'nullable|string|max:1000'
+            'note' => 'nullable|string|max:1000',
         ];
     }
 
     public array $listsForFields = [];
-    
+
     protected function initListsForFields(): void
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
         $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
     }
 
-    public function mount($cartInstance) {
+    public function mount($cartInstance)
+    {
         $this->cart_instance = $cartInstance;
         $this->discount_percentage = 0;
         $this->tax_percentage = 0;
@@ -68,20 +89,23 @@ class Create extends Component
         $this->initListsForFields();
     }
 
-    public function hydrate() {
+    public function hydrate()
+    {
         $this->total_amount = $this->calculateTotal();
         $this->updatedCustomerId();
     }
 
-    public function render() {
+    public function render()
+    {
         $cart_items = Cart::instance($this->cart_instance)->content();
-        
+
         return view('livewire.sales.create', [
-            'cart_items' => $cart_items
+            'cart_items' => $cart_items,
         ]);
     }
 
-    public function proceed() {
+    public function proceed()
+    {
         if ($this->customer_id != null) {
 
             $this->save();
@@ -91,7 +115,8 @@ class Create extends Component
         }
     }
 
-    public function save() {
+    public function save()
+    {
 
         $this->validate();
 
@@ -104,7 +129,7 @@ class Create extends Component
         } else {
             $payment_status = '1';
         }
-        // dd(Cart::instance('sale')->content()); 
+        // dd(Cart::instance('sale')->content());
         $sale = Sale::create([
             'date' => now()->format('Y-m-d'),
             'reference' => 'PSL',
@@ -141,9 +166,9 @@ class Create extends Component
 
             $product = Product::findOrFail($cart_item->id);
             $product->update([
-                'quantity' => $product->quantity - $cart_item->qty
+                'quantity' => $product->quantity - $cart_item->qty,
             ]);
-            
+
         }
 
         Cart::instance('sale')->destroy();
@@ -154,7 +179,7 @@ class Create extends Component
                 'reference' => 'INV/'.$sale->reference,
                 'amount' => $sale->paid_amount,
                 'sale_id' => $sale->id,
-                'payment_method' => $this->payment_method
+                'payment_method' => $this->payment_method,
             ]);
         }
 
@@ -162,15 +187,18 @@ class Create extends Component
 
     }
 
-    public function calculateTotal() {
+    public function calculateTotal()
+    {
         return Cart::instance($this->cart_instance)->total() + $this->shipping;
     }
 
-    public function resetCart() {
+    public function resetCart()
+    {
         Cart::instance($this->cart_instance)->destroy();
     }
 
-    public function productSelected($product) {
+    public function productSelected($product)
+    {
         $cart = Cart::instance($this->cart_instance);
 
         $exists = $cart->search(function ($cartItem, $rowId) use ($product) {
@@ -184,21 +212,21 @@ class Create extends Component
         }
 
         $cart->add([
-            'id'      => $product['id'],
-            'name'    => $product['name'],
-            'qty'     => 1,
-            'price'   => $this->calculate($product)['price'],
-            'weight'  => 1,
+            'id' => $product['id'],
+            'name' => $product['name'],
+            'qty' => 1,
+            'price' => $this->calculate($product)['price'],
+            'weight' => 1,
             'options' => [
-                'product_discount'      => 0.00,
+                'product_discount' => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total'             => $this->calculate($product)['sub_total'],
-                'code'                  => $product['code'],
-                'stock'                 => $product['quantity'],
-                'unit'                  => $product['unit'],
-                'product_tax'           => $this->calculate($product)['product_tax'],
-                'unit_price'            => $this->calculate($product)['unit_price']
-            ]
+                'sub_total' => $this->calculate($product)['sub_total'],
+                'code' => $product['code'],
+                'stock' => $product['quantity'],
+                'unit' => $product['unit'],
+                'product_tax' => $this->calculate($product)['product_tax'],
+                'unit_price' => $this->calculate($product)['unit_price'],
+            ],
         ]);
 
         $this->check_quantity[$product['id']] = $product['quantity'];
@@ -208,19 +236,23 @@ class Create extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function removeItem($row_id) {
+    public function removeItem($row_id)
+    {
         Cart::instance($this->cart_instance)->remove($row_id);
     }
 
-    public function updatedGlobalTax() {
-        Cart::instance($this->cart_instance)->setGlobalTax((integer)$this->global_tax);
+    public function updatedGlobalTax()
+    {
+        Cart::instance($this->cart_instance)->setGlobalTax((int) $this->global_tax);
     }
 
-    public function updatedGlobalDiscount() {
-        Cart::instance($this->cart_instance)->setGlobalDiscount((integer)$this->global_discount);
+    public function updatedGlobalDiscount()
+    {
+        Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
     }
 
-    public function updateQuantity($row_id, $product_id) {
+    public function updateQuantity($row_id, $product_id)
+    {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
             $this->alert('error', __('Quantity is greater than stock!'));
 
@@ -233,33 +265,36 @@ class Create extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $cart_item->options->product_discount,
+                'sub_total' => $cart_item->price * $cart_item->qty,
+                'code' => $cart_item->options->code,
+                'stock' => $cart_item->options->stock,
+                'unit' => $cart_item->options->unit,
+                'product_tax' => $cart_item->options->product_tax,
+                'unit_price' => $cart_item->options->unit_price,
+                'product_discount' => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
-            ]
+            ],
         ]);
     }
 
-    public function updatedDiscountType($value, $name) {
+    public function updatedDiscountType($value, $name)
+    {
         $this->item_discount[$name] = 0;
     }
 
-    public function discountModalRefresh($product_id, $row_id) {
+    public function discountModalRefresh($product_id, $row_id)
+    {
         $this->updateQuantity($row_id, $product_id);
     }
 
-    public function setProductDiscount($row_id, $product_id) {
+    public function setProductDiscount($row_id, $product_id)
+    {
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
 
         if ($this->discount_type[$product_id] == 'fixed') {
             Cart::instance($this->cart_instance)
                 ->update($row_id, [
-                    'price' => ($cart_item->price + $cart_item->options->product_discount) - $this->item_discount[$product_id]
+                    'price' => ($cart_item->price + $cart_item->options->product_discount) - $this->item_discount[$product_id],
                 ]);
 
             $discount_amount = $this->item_discount[$product_id];
@@ -270,7 +305,7 @@ class Create extends Component
 
             Cart::instance($this->cart_instance)
                 ->update($row_id, [
-                    'price' => ($cart_item->price + $cart_item->options->product_discount) - $discount_amount
+                    'price' => ($cart_item->price + $cart_item->options->product_discount) - $discount_amount,
                 ]);
 
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
@@ -278,7 +313,8 @@ class Create extends Component
         $this->alert('success', __('Product discount updated!'));
     }
 
-    public function calculate($product) {
+    public function calculate($product)
+    {
         $price = 0;
         $unit_price = 0;
         $product_tax = 0;
@@ -304,18 +340,17 @@ class Create extends Component
         return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
     }
 
-    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount) {
+    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
+    {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total'             => $cart_item->price * $cart_item->qty,
-            'code'                  => $cart_item->options->code,
-            'stock'                 => $cart_item->options->stock,
-            'unit'                 => $cart_item->options->unit,
-            'product_tax'           => $cart_item->options->product_tax,
-            'unit_price'            => $cart_item->options->unit_price,
-            'product_discount'      => $discount_amount,
+            'sub_total' => $cart_item->price * $cart_item->qty,
+            'code' => $cart_item->options->code,
+            'stock' => $cart_item->options->stock,
+            'unit' => $cart_item->options->unit,
+            'product_tax' => $cart_item->options->product_tax,
+            'unit_price' => $cart_item->options->unit_price,
+            'product_discount' => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }
-
-
 }

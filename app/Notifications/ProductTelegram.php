@@ -3,36 +3,30 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramMessage;
-use App\Models\Product;
 
 class ProductTelegram extends Notification
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct($Product)
-    {
+    public $product;
 
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
     }
 
     public function via($notifiable)
     {
-        return ["telegram"];
+        return ['telegram'];
     }
 
     public function toTelegram($notifiable)
     {
-        $content .= '*Nom:* '.$this->Product['name'].PHP_EOL;
-        $content .= '*Prix:* '.$this->Product['price'];
-
-        return TelegramMessage::create()->content($content);
+        return TelegramMessage::create()
+        ->to('-877826769')
+        ->content("'Test Message'e");
     }
 
     /**

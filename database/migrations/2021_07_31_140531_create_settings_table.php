@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSettingsTable extends Migration
 {
@@ -30,7 +30,7 @@ class CreateSettingsTable extends Migration
             $table->boolean('is_invoice_footer')->default(0);
             $table->string('invoice_footer', 192)->nullable();
             $table->string('company_tax', 192)->nullable();
-            
+
             $table->boolean('is_rtl')->default(1);
             $table->string('invoice_prefix', 192)->default('INV-');
 
@@ -40,10 +40,10 @@ class CreateSettingsTable extends Migration
             $table->boolean('show_order_tax')->default(1);
             $table->boolean('show_discount')->default(1);
             $table->boolean('show_shipping')->default(1);
-            
+
             $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
             $table->integer('printer_id')->nullable();
-            
+
             $table->timestamps();
         });
     }

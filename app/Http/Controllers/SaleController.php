@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreSaleRequest;
+use App\Http\Requests\UpdateSaleRequest;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use App\Http\Requests\StoreSaleRequest;
-use App\Http\Requests\UpdateSaleRequest;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class SaleController extends Controller
 {
@@ -22,7 +22,6 @@ class SaleController extends Controller
 
         return view('admin.sale.index');
     }
-
 
     public function create()
     {
@@ -82,7 +81,7 @@ class SaleController extends Controller
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity - $cart_item->qty
+                        'quantity' => $product->quantity - $cart_item->qty,
                     ]);
                 }
             }
@@ -95,7 +94,7 @@ class SaleController extends Controller
                     'reference' => 'INV/'.$sale->reference,
                     'amount' => $sale->paid_amount,
                     'sale_id' => $sale->id,
-                    'payment_method' => $request->payment_method
+                    'payment_method' => $request->payment_method,
                 ]);
             }
         });
@@ -105,7 +104,6 @@ class SaleController extends Controller
         return redirect()->route('sales.index');
     }
 
-
     public function show(Sale $sale)
     {
         abort_if(Gate::denies('show_sales'), 403);
@@ -114,7 +112,6 @@ class SaleController extends Controller
 
         return view('admin.sale.show', compact('sale', 'customer'));
     }
-
 
     public function edit(Sale $sale)
     {
@@ -128,26 +125,25 @@ class SaleController extends Controller
 
         foreach ($sale_details as $sale_detail) {
             $cart->add([
-                'id'      => $sale_detail->product_id,
-                'name'    => $sale_detail->name,
-                'qty'     => $sale_detail->quantity,
-                'price'   => $sale_detail->price,
-                'weight'  => 1,
+                'id' => $sale_detail->product_id,
+                'name' => $sale_detail->name,
+                'qty' => $sale_detail->quantity,
+                'price' => $sale_detail->price,
+                'weight' => 1,
                 'options' => [
                     'product_discount' => $sale_detail->product_discount_amount,
                     'product_discount_type' => $sale_detail->product_discount_type,
-                    'sub_total'   => $sale_detail->sub_total,
-                    'code'        => $sale_detail->code,
-                    'stock'       => Product::findOrFail($sale_detail->product_id)->quantity,
+                    'sub_total' => $sale_detail->sub_total,
+                    'code' => $sale_detail->code,
+                    'stock' => Product::findOrFail($sale_detail->product_id)->quantity,
                     'product_tax' => $sale_detail->product_tax_amount,
-                    'unit_price'  => $sale_detail->unit_price
-                ]
+                    'unit_price' => $sale_detail->unit_price,
+                ],
             ]);
         }
 
         return view('admin.sale.edit', compact('sale'));
     }
-
 
     public function update(UpdateSaleRequest $request, Sale $sale)
     {
@@ -166,7 +162,7 @@ class SaleController extends Controller
                 if ($sale->status == Sale::SaleShipped || $sale->status == Sale::SaleCompleted) {
                     $product = Product::findOrFail($sale_detail->product_id);
                     $product->update([
-                        'quantity' => $product->quantity + $sale_detail->quantity
+                        'quantity' => $product->quantity + $sale_detail->quantity,
                     ]);
                 }
                 $sale_detail->delete();
@@ -208,7 +204,7 @@ class SaleController extends Controller
                 if ($request->status == Sale::SaleShipped || $request->status == Sale::SaleCompleted) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
-                        'quantity' => $product->quantity - $cart_item->qty
+                        'quantity' => $product->quantity - $cart_item->qty,
                     ]);
                 }
             }
@@ -220,7 +216,6 @@ class SaleController extends Controller
 
         return redirect()->route('sales.index');
     }
-
 
     public function destroy(Sale $sale)
     {

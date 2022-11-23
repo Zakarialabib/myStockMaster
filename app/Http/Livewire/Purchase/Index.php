@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Livewire\Purchase;
- 
-use Livewire\{Component, WithFileUploads, WithPagination};
+
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -20,12 +22,12 @@ class Index extends Component
     public int $perPage;
 
     public $listeners = [
-     'confirmDelete', 'delete', 'showModal',
-     'paymentModal' , 'refreshIndex'
+        'confirmDelete', 'delete', 'showModal',
+        'paymentModal', 'refreshIndex',
     ];
 
     public $showModal;
-    
+
     public $paymentModal;
 
     public $purchase_id;
@@ -80,28 +82,28 @@ class Index extends Component
         'paid_amount' => 'required|numeric',
         'status' => 'required|string|max:255',
         'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000'
+        'note' => 'nullable|string|max:1000',
     ];
 
     public function mount()
     {
-        
+
         $this->selectPage = false;
         $this->sortField = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Purchase())->orderable;
+        $this->orderable = (new Purchase)->orderable;
     }
 
     public function render()
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
                            ->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+                               's' => $this->search ?: null,
+                               'order_column' => $this->sortBy,
+                               'order_direction' => $this->sortDirection,
+                           ]);
 
         $purchases = $query->paginate($this->perPage);
 
@@ -156,9 +158,10 @@ class Index extends Component
         $this->paymentModal = true;
     }
 
-    public function paymentSave(){
+    public function paymentSave()
+    {
         DB::transaction(function () {
-            
+
             $this->validate(
                 [
                     'date' => 'required|date',
@@ -167,7 +170,7 @@ class Index extends Component
                     'payment_method' => 'required|string|max:255',
                 ]
             );
-            
+
             $purchase = Purchase::find($this->purchase_id);
 
             PurchasePayment::create([
@@ -180,7 +183,7 @@ class Index extends Component
             ]);
 
             $purchase = Purchase::findOrFail($this->purchase_id);
-        
+
             $due_amount = $purchase->due_amount - $this->amount;
 
             if ($due_amount == $purchase->total_amount) {
@@ -194,16 +197,15 @@ class Index extends Component
             $purchase->update([
                 'paid_amount' => ($purchase->paid_amount + $this->amount) * 100,
                 'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'payment_status' => $payment_status,
             ]);
-        
+
             $this->emit('refreshIndex');
 
             $this->alert('success', __('Payment created successfully.'));
 
             $this->paymentModal = false;
 
-        }); 
+        });
     }
-
 }
