@@ -34,11 +34,14 @@ class Index extends Component
 
     public int $perPage;
 
-    public $showModal;
-
-    public $editModal;
-
-    public $importModal;
+   /** @var boolean */
+   public $showModal = false;
+    
+   /** @var boolean */
+   public $importModal = false;
+   
+   /** @var boolean */
+   public $editModal = false;
 
     public $refreshIndex;
 
@@ -121,7 +124,7 @@ class Index extends Component
 
     public function deleteSelected()
     {
-        abort_if(Gate::denies('delete_products'), 403);
+        abort_if(Gate::denies('product_delete'), 403);
 
         Product::whereIn('id', $this->selected)->delete();
 
@@ -130,14 +133,14 @@ class Index extends Component
 
     public function delete(Product $product)
     {
-        abort_if(Gate::denies('delete_products'), 403);
+        abort_if(Gate::denies('product_delete'), 403);
 
         $product->delete();
     }
 
     public function render()
     {
-        abort_if(Gate::denies('access_products'), 403);
+        abort_if(Gate::denies('product_access'), 403);
 
         $query = Product::query()
             ->with([
@@ -158,7 +161,7 @@ class Index extends Component
 
     public function showModal(Product $product)
     {
-        // abort_if(Gate::denies('show_products'), 403);
+        abort_if(Gate::denies('product_access'), 403);
 
         $this->product = Product::find($product->id);
 
@@ -175,7 +178,7 @@ class Index extends Component
 
     public function editModal(Product $product)
     {
-        // abort_if(Gate::denies('edit_products'), 403);
+        abort_if(Gate::denies('product_update'), 403);
 
         $this->resetErrorBag();
 
@@ -188,12 +191,11 @@ class Index extends Component
 
     public function update()
     {
-        // abort_if(Gate::denies('edit_products'), 403);
 
         $this->validate();
 
-        if (null !== $this->product->image) {
-            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
+        if ($this->image) {
+            $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
             $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
@@ -207,7 +209,8 @@ class Index extends Component
 
     public function importModal()
     {
-        abort_if(Gate::denies('import_products'), 403);
+        
+        abort_if(Gate::denies('product_access'), 403);
 
         $this->resetErrorBag();
 
@@ -218,8 +221,7 @@ class Index extends Component
 
     public function import()
     {
-        abort_if(Gate::denies('import_products'), 403);
-
+        
         $this->validate([
             'import_file' => [
                 'required',
@@ -236,14 +238,13 @@ class Index extends Component
 
     public function exportExcel()
     {
-        abort_if(Gate::denies('export_products'), 403);
+        abort_if(Gate::denies('product_access'), 403);
 
         return (new ProductExport)->download('products.xlsx');
     }
 
     public function exportPdf()
     {
-        abort_if(Gate::denies('export_products'), 403);
 
         return (new ProductExport)->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }

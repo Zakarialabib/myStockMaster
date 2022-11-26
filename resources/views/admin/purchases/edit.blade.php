@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 @section('title', __('Edit Purchase'))
 
 @section('breadcrumb')
@@ -43,7 +41,7 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <x-card>
         <div class="flex flex-row">
 
@@ -115,14 +113,14 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="w-full px-3 mb-4">
                             <label for="note">{{ __('Note') }}</label>
                             <textarea name="note" id="note" rows="5"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $purchase->note }}</textarea>
                         </div>
 
-                        <div class="mt-3">
-                            <x-button type="submit" primary>
+                        <div class="w-full px-3">
+                            <x-button type="submit" primary class="w-full text-center"> 
                                 {{ __('Update Purchase') }} 
                             </x-button>
                         </div>
@@ -131,25 +129,4 @@
             </div>
         </div>
     </x-card>
-@endsection
-
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#paid_amount').maskMoney('mask');
-
-            $('#purchase-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush
+</x-app-layout>

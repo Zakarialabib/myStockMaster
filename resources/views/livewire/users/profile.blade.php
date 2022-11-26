@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-row">
         <form wire:submit.prevent="update">
-            @include('utils.alerts')
+    
             <div class="w-full px-2">
                 <x-label for="image" :value="__('Profile Image')" required />
                 <img style="width: 100px;height: 100px;"

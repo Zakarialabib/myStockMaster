@@ -1,10 +1,9 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ __('Purchase Return Details') }}</title>
     <link rel="stylesheet" href="{{ public_path('print/bootstrap.min.css') }}">
@@ -28,7 +27,9 @@
                                     {{__('Company Info')}}:</h4>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
-                                <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                @if (settings()->show_email == true)
+                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                @endif
                                 <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
                             </div>
 
@@ -36,8 +37,12 @@
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
                                     {{__('Supplier Info')}}:</h4>
                                 <div><strong>{{ $supplier->name }}</strong></div>
+                                @if (settings()->address == true)
                                 <div>{{ $supplier->address }}</div>
+                                @endif
+                                @if (settings()->show_email == true)
                                 <div>{{ __('Email') }}: {{ $supplier->email }}</div>
+                                @endif
                                 <div>{{ __('Phone') }}: {{ $supplier->phone }}</div>
                             </div>
 
@@ -106,22 +111,28 @@
                             <div class="col-xs-4 col-xs-offset-8">
                                 <table class="table">
                                     <tbody>
+                                        @if ($purchase_return->discount_percentage)
                                         <tr>
                                             <td class="left"><strong>{{ __('Discount') }}
                                                     ({{ $purchase_return->discount_percentage }}%)</strong></td>
                                             <td class="right">{{ format_currency($purchase_return->discount_amount) }}
                                             </td>
                                         </tr>
+                                        @endif
+                                        @if ($purchase_return->tax_percentage)
                                         <tr>
                                             <td class="left"><strong>{{ __('Tax') }}
-                                                    ({{ $purchase_return->tax_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
-                                        </tr>
+                                                ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                                <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ( settings()->show_shipping == true )
                                         <tr>
                                             <td class="left"><strong>{{ __('Shipping') }}</strong></td>
                                             <td class="right">{{ format_currency($purchase_return->shipping_amount) }}
                                             </td>
                                         </tr>
+                                        @endif
                                         <tr>
                                             <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
                                             <td class="right">

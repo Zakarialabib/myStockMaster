@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_products'), 403);
+        abort_if(Gate::denies('product_access'), 403);
 
         return view('admin.products.index');
     }

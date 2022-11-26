@@ -81,7 +81,7 @@ class QuotationController extends Controller
 
     public function edit(Quotation $quotation)
     {
-        abort_if(Gate::denies('edit_quotations'), 403);
+        abort_if(Gate::denies('quotation_update'), 403);
 
         $quotation_details = $quotation->quotationDetails;
 
@@ -156,14 +156,4 @@ class QuotationController extends Controller
         return redirect()->route('quotations.index');
     }
 
-    public function destroy(Quotation $quotation)
-    {
-        abort_if(Gate::denies('delete_quotations'), 403);
-
-        $quotation->delete();
-
-        toast('Quotation Deleted!', 'warning');
-
-        return redirect()->route('quotations.index');
-    }
 }

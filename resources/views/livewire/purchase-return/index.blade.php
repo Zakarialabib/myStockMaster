@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -8,8 +8,8 @@
                 @endforeach
             </select>
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -189,15 +189,21 @@
                                             <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
                                             <div><strong>{{ settings()->company_name }}</strong></div>
                                             <div>{{ settings()->company_address }}</div>
+                                            @if ( settings()->show_email == true )
                                             <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                            @endif
                                             <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
                                         </div>
 
                                         <div class="w-1/4 mb-3">
                                             <h5 class="mb-2 border-bottom pb-2">{{ __('Supplier Info') }}:</h5>
                                             <div><strong>{{ $supplier->name }}</strong></div>
+                                            @if ( settings()->show_address == true )
                                             <div>{{ $supplier->address }}</div>
+                                            @endif
+                                            @if ( settings()->show_email == true )
                                             <div>{{ __('Email') }}: {{ $supplier->email }}</div>
+                                            @endif
                                             <div>{{ __('Phone') }}: {{ $supplier->phone }}</div>
                                         </div>
 
@@ -268,6 +274,7 @@
                                         <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
                                             <table class="table">
                                                 <tbody>
+                                                    @if( $purchase_return->discount_percentage )
                                                     <tr>
                                                         <td class="left"><strong>{{ __('Discount') }}
                                                                 ({{ $purchase_return->discount_percentage }}%)</strong>
@@ -276,18 +283,27 @@
                                                             {{ format_currency($purchase_return->discount_amount) }}
                                                         </td>
                                                     </tr>
+                                                    @endif
+                                                    @if ( $purchase_return->tax_percentage )
                                                     <tr>
-                                                        <td class="left"><strong>{{ __('Tax') }}
-                                                                ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                                        <td class="left">
+                                                            <strong>{{ __('Tax') }}
+                                                                ({{ $purchase_return->tax_percentage }}%)
+                                                            </strong>
+                                                        </td>
                                                         <td class="right">
-                                                            {{ format_currency($purchase_return->tax_amount) }}</td>
+                                                            {{ format_currency($purchase_return->tax_amount) }}
+                                                        </td>
                                                     </tr>
+                                                    @endif
+                                                    @if ( settings()->show_shipping == true )
                                                     <tr>
                                                         <td class="left"><strong>{{ __('Shipping') }}</strong></td>
                                                         <td class="right">
                                                             {{ format_currency($purchase_return->shipping_amount) }}
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                     <tr>
                                                         <td class="left"><strong>{{ __('Grand Total') }}</strong>
                                                         </td>
@@ -329,7 +345,7 @@
                 <x-slot name="content">
                     <form wire:submit.prevent="paymentSave">
 
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-validation-errors class="mb-4" :errors="$errors" />
 
                         <div class="flex flex-wrap -mx-2 mb-3">
 

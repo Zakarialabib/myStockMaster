@@ -143,9 +143,9 @@
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="access_products" name="permissions[]"
-                                                               value="access_products" {{ old('access_products') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="access_products">{{__('Access')}}</label>
+                                                               id="product_access" name="permissions[]"
+                                                               value="product_access" {{ old('product_access') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="product_access">{{__('Access')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -167,9 +167,9 @@
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="edit_products" name="permissions[]"
-                                                               value="edit_products" {{ old('edit_products') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_products">{{__('Edit')}}</label>
+                                                               id="product_update" name="permissions[]"
+                                                               value="product_update" {{ old('product_update') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="product_update">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
@@ -289,17 +289,17 @@
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="edit_quotations" name="permissions[]"
-                                                               value="edit_quotations" {{ old('edit_quotations') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="edit_quotations">{{__('Edit')}}</label>
+                                                               id="quotation_update" name="permissions[]"
+                                                               value="quotation_update" {{ old('quotation_update') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="quotation_update">{{__('Edit')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="delete_quotations" name="permissions[]"
-                                                               value="delete_quotations" {{ old('delete_quotations') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="delete_quotations">{{__('Delete')}}</label>
+                                                               id="quotation_delete" name="permissions[]"
+                                                               value="quotation_delete" {{ old('quotation_delete') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="quotation_delete">{{__('Delete')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">

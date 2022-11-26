@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -13,8 +13,8 @@
                 </x-button>
             @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -27,22 +27,22 @@
             <x-table.th>
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Date') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+            <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+            <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                 {{ __('Due Amount') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+            <x-table.th sortable wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+            <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
             </x-table.th>
             <x-table.th>
@@ -193,14 +193,21 @@
                                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
                                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                                 <div>{{ settings()->company_address }}</div>
+                                                @if ( settings()->show_email == true )
                                                 <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                                @endif
                                                 <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
                                             </div>
 
                                             <div class="w-1/4 mb-3">
                                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
                                                 <div><strong>{{ $this->salereturn->customer->name }}</strong></div>
+                                                @if ( settings()->show_address == true )
                                                 <div>{{ $this->salereturn->customer->address }}</div>
+                                                @endif
+                                                @if ( settings()->show_email == true )
+                                                <div>{{ $this->salereturn->customer->email }}</div>
+                                                @endif
                                                 <div>{{ __('Phone') }}: {{ $this->salereturn->customer->phone }}
                                                 </div>
                                             </div>
@@ -288,6 +295,7 @@
                                                                 {{ format_currency($this->salereturn->discount_amount) }}
                                                             </td>
                                                         </tr>
+                                                        @if()
                                                         <tr>
                                                             <td class="left"><strong>{{ __('Tax') }}
                                                                     ({{ $this->salereturn->tax_percentage }}%)</strong>
@@ -296,6 +304,7 @@
                                                                 {{ format_currency($this->salereturn->tax_amount) }}
                                                             </td>
                                                         </tr>
+                                                        @if ( settings()->show_shipping == true )
                                                         <tr>
                                                             <td class="left"><strong>{{ __('Shipping') }}</strong>
                                                             </td>
@@ -303,6 +312,7 @@
                                                                 {{ format_currency($this->salereturn->shipping_amount) }}
                                                             </td>
                                                         </tr>
+                                                        @endif
                                                         <tr>
                                                             <td class="left">
                                                                 <strong>{{ __('Grand Total') }}</strong></td>
@@ -343,8 +353,9 @@
                             <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                         </div>
 
-                        <div class="w-full flex justify-start px-3">
-                            <x-button primary wire:click="import" wire:loading.attr="disabled">
+                        <div class="w-full px-3">
+                            <x-button primary type="submit" class="w-full text-center" 
+                                      wire:loading.attr="disabled">
                                 {{ __('Import') }}
                             </x-button>
                         </div>
@@ -377,7 +388,7 @@
                 <x-slot name="content">
                     <form wire:submit.prevent="paymentSave">
 
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-validation-errors class="mb-4" :errors="$errors" />
 
                         <div class="flex flex-wrap -mx-2 mb-3">
 

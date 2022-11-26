@@ -1,6 +1,6 @@
 <x-sidebar.overlay />
 
-<aside class="fixed inset-y-0 z-20 flex flex-col py-4 space-y-6 bg-white shadow-lg dark:bg-dark-eval-1" 
+<aside class="fixed inset-y-0 z-20 flex flex-col py-2 space-y-6 bg-white shadow-lg dark:bg-dark-eval-1" 
         :class="{
             'translate-x-0 w-60': isSidebarOpen || isSidebarHovered,
             'w-16 translate-x-0 hidden lg:block': !isSidebarOpen && !isSidebarHovered,

@@ -9,6 +9,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Str;
 
 class Index extends Component
 {
@@ -30,7 +31,6 @@ class Index extends Component
         'settings.default_currency_id' => 'required|integer|min:0|max:4294967295',
         'settings.default_currency_position' => 'required|string|min:1|max:255',
         'settings.notification_email' => 'required|string|min:1|max:255',
-        'settings.footer_text' => 'required|string|min:1|max:255',
         'settings.company_address' => 'required|string|min:1|max:255',
         'settings.default_client_id' => 'nullable|integer|min:0|max:4294967295',
         'settings.default_warehouse_id' => 'nullable|integer|min:0|max:4294967295',
@@ -38,6 +38,11 @@ class Index extends Component
         'settings.is_invoice_footer' => 'boolean',
         'settings.invoice_footer' => 'nullable|string|min:0|max:255',
         'settings.company_tax' => 'nullable|string|min:0|max:255',
+        'settings.sale_prefix'   => 'nullable',
+        'settings.purchase_prefix'   => 'nullable',
+        'settings.quotation_prefix'   => 'nullable',
+        'settings.salepayment_prefix'    => 'nullable',
+        'settings.purchasepayment_prefix'    => 'nullable',
         'settings.is_rtl' => 'boolean',
         'settings.invoice_prefix' => 'required|string|min:1|max:255',
         'settings.show_email' => 'boolean',

@@ -17,7 +17,7 @@
     <div class="px-4 mx-auto">
         <div class="row">
             <div class="w-full px-4">
-                @include('utils.alerts')
+        
                 <div class="card">
                     <div class="p-4">
                         <div class="table-responsive">

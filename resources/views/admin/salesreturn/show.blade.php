@@ -27,16 +27,18 @@
                         </a>
                     </div>
                     <div class="p-4">
-                        <div class="row mb-4">
-                            <div class="col-sm-4 mb-3 mb-md-0">
+                        <div class="flex flex-row mb-4">
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
                                 <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
-                                <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                                @if (settings()->show_email == true)
+                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                @endif
                                 <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                             </div>
 
-                            <div class="col-sm-4 mb-3 mb-md-0">
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
                                 <h5 class="mb-2 border-bottom pb-2">Customer Info:</h5>
                                 <div><strong>{{ $customer->name }}</strong></div>
                                 <div>{{ $customer->address }}</div>
@@ -44,7 +46,7 @@
                                 <div>{{__('Phone')}}: {{ $customer->phone }}</div>
                             </div>
 
-                            <div class="col-sm-4 mb-3 mb-md-0">
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
                                 <h5 class="mb-2 border-bottom pb-2">Invoice Info:</h5>
                                 <div>{{__('Invoice')}}: <strong>INV/{{ $sale_return->reference }}</strong></div>
                                 <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>

@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 @section('title', __('Create Sale'))
 
 @section('breadcrumb')
@@ -43,7 +41,7 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <x-card>
         <div class="px-4 mx-auto">
             <div class="w-full">
@@ -52,7 +50,7 @@
             <div class="flex flex-row">
                 <div class="w-3/12 sm:w-full h-full">
                     <livewire:search-product/>
-                    {{-- <livewire:pos.product-list :categories="$product_categories"/> --}}
+                    <livewire:pos.product-list :categories="$product_categories"/>
                 </div>
                 <div class="w-9/12 sm:w-full h-full">
                     <livewire:sales.create :cartInstance="'sale'" />
@@ -60,27 +58,4 @@
             </div>
         </div>
     </x-card>
-@endsection
-
-{{-- @push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#getTotalAmount').click(function() {
-                $('#paid_amount').maskMoney('mask', {{ Cart::instance('sale')->total() }});
-            });
-
-            $('#sale-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush --}}
+</x-app-layout>

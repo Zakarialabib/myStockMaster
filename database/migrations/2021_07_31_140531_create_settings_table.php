@@ -32,7 +32,12 @@ class CreateSettingsTable extends Migration
             $table->string('company_tax', 192)->nullable();
 
             $table->boolean('is_rtl')->default(1);
-            $table->string('invoice_prefix', 192)->default('INV-');
+
+            $table->string('sale_prefix', 25)->default('SA-');
+            $table->string('purchase_prefix', 25)->default('PR-');
+            $table->string('quotation_prefix', 25)->default('DE-');
+            $table->string('salepayment_prefix', 25)->default('SP-');
+            $table->string('purchasepayment_prefix', 25)->default('PR-');
 
             $table->boolean('show_email')->default(1);
             $table->boolean('show_address')->default(1);
@@ -40,7 +45,7 @@ class CreateSettingsTable extends Migration
             $table->boolean('show_order_tax')->default(1);
             $table->boolean('show_discount')->default(1);
             $table->boolean('show_shipping')->default(1);
-
+            
             $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
             $table->integer('printer_id')->nullable();
 

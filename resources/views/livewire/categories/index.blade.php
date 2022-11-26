@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 border border-gray-300 rounded-md shadow-sm py-2 px-4 bg-white text-sm leading-5 font-medium text-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
@@ -12,9 +12,17 @@
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
+            @if ($this->selectedCount)
+            <p class="text-sm leading-5">
+                <span class="font-medium">
+                    {{ $this->selectedCount }}
+                </span>
+                {{ __('Entries selected') }}
+            </p>
+        @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -27,10 +35,7 @@
             <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th>
-                {{ __('Code') }}
-            </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
@@ -52,9 +57,6 @@
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $category->id }}">
                     <x-table.td>
                         <input type="checkbox" value="{{ $category->id }}" wire:model="selected">
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $category->code }}
                     </x-table.td>
                     <x-table.td>
                         <button type="button" wire:click="showModal({{ $category->id }})">
@@ -135,6 +137,7 @@
     </div>
 
     <!-- Edit Modal -->
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Category') }}
@@ -142,7 +145,7 @@
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="mb-6">
                     <div class="mt-4 w-full">
@@ -166,9 +169,11 @@
             </form>
         </x-slot>
     </x-modal>
+    @endif
     <!-- End Edit Modal -->
 
     <!-- Show Modal -->
+    @if (null !== $showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Category') }}
@@ -191,6 +196,7 @@
             </div>
         </x-slot>
     </x-modal>
+    @endif
     <!-- End Show Modal -->
 
     {{-- Import modal --}}

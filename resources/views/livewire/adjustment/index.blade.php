@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -13,8 +13,8 @@
                 </x-button>
             @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -44,14 +44,14 @@
                     <x-table.td>{{ $adjustment->date }}</x-table.td>
                     <x-table.td>{{ $adjustment->reference }}</x-table.td>
                     <x-table.td>
-                        <div class="flex justify-center">
+                        <div class="flex justify-start space-x-2">
 
-                            <x-button primary wire:click="showModal({{ $customer->id }})"
+                            <x-button primary type="button" wire:click="showModal({{ $adjustment->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button info href="{{ route('adjustments.edit', $adjustment->id) }}" type="button"
+                            <x-button info href="{{ route('adjustments.edit', $adjustment->id) }}"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
@@ -90,63 +90,59 @@
         </div>
     </div>
 
+    @if (null !== $showModal)
+        <x-modal wire:model="showModal">
+            <x-slot name="title">
+                {{ __('Show Adjustment') }} - {{ $adjustment->date }}
+            </x-slot>
 
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Show Adjustment') }} -
-        </x-slot>
-
-        <x-slot name="content">
-            <div class="p-4">
-                <div>
-                    <x-table>
-                        <x-slot name="thead">
+            <x-slot name="content">
+                <div class="p-4">
+                    <div>
+                        <x-table-responsive>
                             <x-table.tr>
-                                <x-table.th colspan="2">
-                                    {{ __('Date') }}
-                                </x-table.th>
-                                <x-table.th colspan="2">
-                                    {{ __('Reference') }}
-                                </x-table.th>
-                            </x-table.tr>
-                            <x-table.tr>
-                                <x-table.td colspan="2">
+                                <x-table.th>{{ __('Date') }}</x-table.th>
+                                <x-table.td>
                                     {{ $adjustment->date }}
                                 </x-table.td>
-                                <x-table.td colspan="2">
+                            </x-table.tr>
+
+                            <x-table.tr>
+                                <x-table.th>{{ __('Reference') }}</x-table.th>
+                                <x-table.td>
                                     {{ $adjustment->reference }}
                                 </x-table.td>
                             </x-table.tr>
-                        </x-slot>
-                        <x-table.tbody>
-                            <x-table.tr>
-                                <x-table.th>{{ __('Product Name') }}</x-table.th>
-                                <x-table.th>{{ __('Code') }}</x-table.th>
-                                <x-table.th>{{ __('Quantity') }}</x-table.th>
-                                <x-table.th>{{ __('Type') }}</x-table.th>
-                            </x-table.tr>
 
-                            @foreach ($adjustment->adjustedProducts as $adjustedProduct)
+                            <div class="border-t border-gray-300 py-3">
                                 <x-table.tr>
-                                    <x-table.td>{{ $adjustedProduct->product->name }}</x-table.td>
-                                    <x-table.td>{{ $adjustedProduct->product->code }}</x-table.td>
-                                    <x-table.td>{{ $adjustedProduct->quantity }}</x-table.td>
-                                    <x-table.td>
-                                        @if ($adjustedProduct->type == 'add')
-                                            {{ __('(+) Addition') }}
-                                        @else
-                                            {{ __('(-) Subtraction') }}
-                                        @endif
-                                    </x-table.td>
+                                    <x-table.th>{{ __('Product Name') }}</x-table.th>
+                                    <x-table.th>{{ __('Code') }}</x-table.th>
+                                    <x-table.th>{{ __('Quantity') }}</x-table.th>
+                                    <x-table.th>{{ __('Type') }}</x-table.th>
                                 </x-table.tr>
-                            @endforeach
-                        </x-table.tbody>
-                    </x-table>
+                                <x-table.tbody>
+                                    @foreach ($adjustment->adjustedProducts as $adjustedProduct)
+                                        <x-table.tr>
+                                            <x-table.td>{{ $adjustedProduct->product->name }}</x-table.td>
+                                            <x-table.td>{{ $adjustedProduct->product->code }}</x-table.td>
+                                            <x-table.td>{{ $adjustedProduct->quantity }}</x-table.td>
+                                            <x-table.td>
+                                                @if ($adjustedProduct->type == 'add')
+                                                    {{ __('(+) Addition') }}
+                                                @else
+                                                    {{ __('(-) Subtraction') }}
+                                                @endif
+                                            </x-table.td>
+                                        </x-table.tr>
+                                    @endforeach
+                                </x-table.tbody>
+                        </x-table-responsive>
+                    </div>
                 </div>
-            </div>
-        </x-slot>
-    </x-modal>
-
+            </x-slot>
+        </x-modal>
+    @endif
 
 </div>
 

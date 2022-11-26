@@ -23,11 +23,14 @@ class Index extends Component
 
     public $listeners = ['refreshIndex', 'confirmDelete', 'delete', 'showModal', 'editModal'];
 
-    public $showModal;
+   /** @var boolean */
+   public $showModal = false;
 
-    public $createModal;
-
-    public $editModal;
+   /** @var boolean */
+   public $importModal = false;
+   
+   /** @var boolean */
+   public $editModal = false;
 
     public array $orderable;
 
@@ -74,6 +77,8 @@ class Index extends Component
     public array $rules = [
         'warehouse.name' => ['string', 'required'],
         'warehouse.phone' => ['string', 'nullable'],
+        'warehouse.city' => ['string', 'nullable'],
+        'warehouse.email' => ['string', 'nullable'],
     ];
 
     public function mount()

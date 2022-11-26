@@ -37,11 +37,11 @@
                     </a>
                 </div>
             </div>
-            <div class="float-right">
+            <div class="flex space-x-2">
                 <x-dropdown align="right" class="w-auto mr-2">
                     <x-slot name="trigger" class="inline-flex">
                         <x-button secondary type="button" class="text-white flex items-center">
-                            <i class="fas fa-angle-double-down"></i>
+                            <i class="fas fa-angle-double-down w-4 h-4"></i>
                         </x-button>
                     </x-slot>
                     <x-slot name="content">
@@ -67,7 +67,7 @@
 
 <x-app-layout>
     <x-card>
-        @include('utils.alerts')
+
         <div>
             <livewire:products.index />
         </div>

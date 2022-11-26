@@ -1,5 +1,5 @@
 <div >
-    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <x-validation-errors class="mb-4" :errors="$errors" />
 
     <div>
         <div wire:loading.flex class="absolute top-0 left-0 w-full h-full bg-white bg-opacity-75 z-50">

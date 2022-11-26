@@ -1,5 +1,5 @@
 <div>
-    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <x-validation-errors class="mb-4" :errors="$errors" />
     <x-card>
         <div>
             <x-table>

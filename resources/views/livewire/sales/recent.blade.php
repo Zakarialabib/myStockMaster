@@ -5,7 +5,7 @@
         </x-slot>
         <x-slot name="content">
             <div class="flex flex-wrap justify-center">
-                <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+                <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
                     <select wire:model="perPage"
                         class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                         @foreach ($paginationOptions as $value)
@@ -13,8 +13,8 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-                    <div class="my-2 my-md-0">
+                <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+                    <div class="my-2">
                         <input type="text" wire:model.debounce.300ms="search"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             placeholder="{{ __('Search') }}" />
@@ -72,11 +72,11 @@
                                     @endif
                                 </x-table.td>
                                 <x-table.td>
-                                    {{ $sale->due_amount }}
+                                    {{ format_currency($sale->due_amount) }}
                                 </x-table.td>
 
                                 <x-table.td>
-                                    {{ $sale->total_amount }}
+                                    {{ format_currency($sale->total_amount) }}
                                 </x-table.td>
 
                                 <x-table.td>
@@ -178,7 +178,7 @@
                                                 <div class="md:w-1/3 mb-3 md:mb-0">
                                                     <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                                     <div>{{ __('Invoice') }}:
-                                                        <strong>INV/{{ $sale->reference }}</strong>
+                                                        <strong>{{ settings()->sale_prefix }} - {{ $sale->reference }}</strong>
                                                     </div>
                                                     <div>{{ __('Date') }}:
                                                         {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}

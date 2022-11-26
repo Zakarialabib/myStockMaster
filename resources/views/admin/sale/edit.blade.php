@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 @section('title', __('Edit Sale'))
 
 @section('breadcrumb')
@@ -43,7 +41,7 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <x-card>
         <div class="flex flex-row mt-4">
             <div class="w-3/12 sm:w-full px-2">
@@ -148,4 +146,4 @@
             </div>
         </div>
     </x-card>
-@endsection
+</x-app-layout>

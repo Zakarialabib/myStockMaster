@@ -25,29 +25,33 @@ class Index extends Component
     public $brand;
 
     public $listeners = [
-        'show', 'confirmDelete', 'delete', 'refreshIndex',
+        'confirmDelete', 'delete', 'refreshIndex',
         'showModal', 'editModal', 'importModal',
     ];
 
     public int $perPage;
-
-    public $show;
-
+    
     public $image;
-
-    public $showModal;
-
+    
     public $refreshIndex;
 
-    public $importModal;
+    /** @var boolean */
+    public $showModal = false;
 
-    public $editModal;
+    /** @var boolean */
+    public $importModal = false;
+    
+    /** @var boolean */
+    public $editModal = false;
+
+    public int $selectPage;
 
     public array $orderable;
 
     public string $search = '';
 
-    public array $selected = [];
+    /** @var array */
+    public $selected = [];
 
     public array $paginationOptions;
 
@@ -95,6 +99,7 @@ class Index extends Component
 
     public function mount()
     {
+        $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
@@ -138,7 +143,7 @@ class Index extends Component
         // upload image if it does or doesn't exist
 
         if ($this->image) {
-            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
+            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
             $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }

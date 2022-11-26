@@ -7,9 +7,22 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            @if ($selected)
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+            @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                     placeholder="{{ __('Search') }}" />
@@ -70,10 +83,10 @@
                         {{ $product->quantity }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->price }}
+                        {{ format_currency($product->price) }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->cost }}
+                        {{ format_currency($product->cost) }}
                     </x-table.td>
                     <x-table.td>
                         {{ $product->category->name }}
@@ -237,24 +250,23 @@
     @endif
 
     <!-- Edit Modal -->
-    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Edit Product') }}
+            {{ __('Edit Product') }} - {{ $product->name }}
         </x-slot>
 
         <x-slot name="content">
             <form wire:submit.prevent="update">
-                <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                <x-validation-errors class="mb-4" :errors="$errors" />
                 <div>
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="name" :value="__('Product Name')" required autofocus />
                             <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                                 wire:model="product.name" required autofocus />
                             <x-input-error :messages="$errors->get('product.name')" for="product.name" class="mt-2" />
                         </div>
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="code" :value="__('Product Code')" required />
                             <x-input id="code" class="block mt-1 w-full" type="text" name="code"
                                 wire:model="product.code" disabled required />
@@ -263,7 +275,7 @@
                     </div>
 
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="category_id" :value="__('Category')" required />
                             <x-select-list
                                 class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
@@ -271,14 +283,14 @@
                                 :options="$this->listsForFields['categories']" />
                         </div>
 
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="cost" :value="__('Cost')" required />
                             <x-input id="cost" class="block mt-1 w-full" type="number" name="cost"
                                 wire:model="product.cost" required />
                             <x-input-error :messages="$errors->get('product.cost')" for="product.cost" class="mt-2" />
 
                         </div>
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="price" :value="__('Price')" required />
                             <x-input id="price" class="block mt-1 w-full" type="number" name="price"
                                 wire:model="product.price" required />
@@ -286,14 +298,14 @@
 
                         </div>
 
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="quantity" :value="__('Quantity')" required />
-                            <input type="number" wire:model="product.quantity" name="quantity"
+                            <input type="number" wire:model="product.quantity" name="quantity" disabled
                                 class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
                                 required min="1">
                             <x-input-error :messages="$errors->get('product.quantity')" for="product.quantity" class="mt-2" />
                         </div>
-                        <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="stock_alert" :value="__('Stock Alert')" required />
                             <x-input id="stock_alert" class="block mt-1 w-full" type="number" name="stock_alert"
                                 wire:model="product.stock_alert" required />
@@ -353,7 +365,7 @@
                             <div class="w-full mb-4">
                                 <x-label for="note" :value="__('Description')" />
                                 <textarea rows="4" wire:model="product.note" name="note"
-                                    class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded">
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="3">
                                             </textarea>
                             </div>
                         </div>
@@ -366,8 +378,8 @@
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
 
-                    <div class="flex justify-start space-x-2">
-                        <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
+                    <div class="w-full px-4">
+                        <x-button primary type="submit" wire:loading.attr="disabled" class="w-full text-center">
                             {{ __('Update') }}
                         </x-button>
                     </div>
@@ -375,7 +387,7 @@
             </form>
         </x-slot>
     </x-modal>
-    @endif
+
     <!-- End Edit Modal -->
 
     <livewire:products.create />
@@ -397,8 +409,9 @@
                         <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
 
-                    <div class="w-full flex justify-start px-3">
-                        <x-button primary type="submit" wire:click="import" wire:loading.attr="disabled">
+                    <div class="w-full px-3">
+                        <x-button primary type="submit" class="w-full text-center" 
+                                  wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>

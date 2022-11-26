@@ -21,7 +21,8 @@ class Index extends Component
         'confirmDelete', 'delete', 'showModal',
     ];
 
-    public $showModal;
+    /** @var boolean */
+    public $showModal = false;
 
     public int $perPage;
 
@@ -67,19 +68,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000',
-    ];
-
     public function mount()
     {
         $this->sortBy = 'id';
@@ -109,14 +97,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_quotations'), 403);
 
-        $this->quotation = Quotation::find($quotation->id);
+        $this->quotation = Customer::findOrFail($quotation->customer_id);
 
         $this->showModal = true;
     }
 
     public function deleteSelected()
     {
-        abort_if(Gate::denies('delete_quotations'), 403);
+        abort_if(Gate::denies('quotation_delete'), 403);
 
         Quotation::whereIn('id', $this->selected)->delete();
 
@@ -125,7 +113,7 @@ class Index extends Component
 
     public function delete(Quotation $product)
     {
-        abort_if(Gate::denies('delete_quotations'), 403);
+        abort_if(Gate::denies('quotation_delete'), 403);
 
         $product->delete();
 

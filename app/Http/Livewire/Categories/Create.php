@@ -12,16 +12,19 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createCategory'];
-
-    public $createCategory;
-
+    
+    /** @var boolean */
+    public $createCategory = false; 
+    
     public $category;
-
+    
+    /** @var string */
     public $name;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-    ];
+    protected function rules()
+    {
+        return [ 'name' => 'required|string|max:255', ];
+    }
 
     public function updated($propertyName)
     {

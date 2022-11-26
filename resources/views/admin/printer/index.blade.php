@@ -47,7 +47,7 @@
 
 <x-app-layout>
     <x-card>
-        @include('utils.alerts')
+
         <div>
             <livewire:printer.index />
         </div>

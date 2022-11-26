@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
@@ -13,8 +13,8 @@
             </x-button>
             @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -148,14 +148,9 @@
                         wire:model.defer="printer.path" />
                 </div>
             </div>
-            <div class="w-full flex justify-start px-3">
-                <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-            </div>
         </x-slot>
     </x-modal>
-
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit printer') }}
@@ -163,53 +158,54 @@
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="flex flex-wrap -mx-2 mb-3">
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" required type="text"
                             wire:model.defer="printer.name" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.connection_type" :value="__('Connection type')" />
                         <x-input id="connection_type" class="block mt-1 w-full" type="text"
                             wire:model.defer="printer.connection_type" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.capability_profile" :value="__('Capability profile')" />
                         <x-input id="capability_profile" class="block mt-1 w-full" type="text"
                             wire:model.defer="printer.capability_profile" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.char_per_line" :value="__('char per line')" />
                         <x-input id="char_per_line" class="block mt-1 w-full" type="text"
                             wire:model.defer="printer.char_per_line" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.ip_address" :value="__('Ip address')" />
                         <x-input id="ip_address" class="block mt-1 w-full" type="text"
                             wire:model.defer="printer.ip_address" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.port" :value="__('Port')" />
                         <x-input id="port" class="block mt-1 w-full" type="text" wire:model.defer="printer.port" />
                     </div>
-                    <div class="w-full lg:w-1/2 px-3 mb-6 lg:mb-0">
+                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.path" :value="__('Path')" />
                         <x-input id="path" class="block mt-1 w-full" type="text" wire:model.defer="printer.path" />
                     </div>
                 </div>
 
-                <div class="w-full flex justify-start px-3">
-                    <x-button primary type="submit" wire:click="update" wire:loading.attr="disabled">
+                <div class="w-full px-3">
+                    <x-button primary type="submit" class="w-full text-center" 
+                              wire:loading.attr="disabled">
                         {{ __('Update') }}
                     </x-button>
                 </div>
             </form>
         </x-slot>
     </x-modal>
-
+    @endif
     <livewire:printer.create />
 </div>
 

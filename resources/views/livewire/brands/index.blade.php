@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 border border-gray-300 rounded-md shadow-sm py-2 px-4 bg-white text-sm leading-5 font-medium text-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
@@ -21,11 +21,11 @@
                 </p>
             @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="flex items-center mr-3 pl-4">
-                <input wire:model="search" type="text"
-                    class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="{{__('Search...')}}" />
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
+                <input type="text" wire:model.debounce.300ms="search"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    placeholder="{{ __('Search') }}" />
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
             <x-table.th >
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
@@ -99,14 +99,15 @@
     </div>
 
     <!-- Edit Modal -->
+    @if (null !== $editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Edit Category') }}
+            {{ __('Edit Brand') }}
         </x-slot>
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="flex flex-wrap -mx-2 mb-3">
 
@@ -141,6 +142,7 @@
             </form>
         </x-slot>
     </x-modal>
+    @endif
     <!-- End Edit Modal -->
 
     <livewire:brands.create />

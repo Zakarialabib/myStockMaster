@@ -43,7 +43,7 @@
 
 <x-app-layout>
     <div class="w-full px-2">
-        @include('utils.alerts')
+
         <livewire:settings.index />
     </div>
 

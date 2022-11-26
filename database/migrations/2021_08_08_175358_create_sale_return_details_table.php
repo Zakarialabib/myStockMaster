@@ -26,10 +26,8 @@ class CreateSaleReturnDetailsTable extends Migration
             $table->integer('discount_amount');
             $table->string('discount_type')->default('fixed');
             $table->integer('tax_amount');
-            $table->foreign('sale_return_id')->references('id')
-                ->on('sale_returns')->cascadeOnDelete();
-            $table->foreign('id')->references('id')
-                ->on('products')->nullOnDelete();
+            $table->foreign('sale_return_id')->references('id')->on('sale_returns')->cascadeOnDelete();
+            $table->foreign('id')->references('id')->on('products')->cascadeOnDelete();
             $table->timestamps();
         });
     }

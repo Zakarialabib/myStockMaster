@@ -19,7 +19,6 @@ class Locale
      */
     public function handle($request, Closure $next)
     {
-        // Set config translatable.locales
         if (Schema::hasTable('languages')) {
             $languages = Language::query()
                 ->where('status', Language::STATUS_ACTIVE)

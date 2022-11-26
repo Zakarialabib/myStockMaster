@@ -21,35 +21,38 @@ class Index extends Component
 
     public $category;
 
-    public $code;
-
+    /** @var boolean */
     public $name;
 
     public $listeners = [
-        'show', 'confirmDelete', 'delete',
+        'confirmDelete', 'delete', 'importModal',
         'refreshIndex', 'showModal', 'editModal',
-        'importModal',
     ];
 
     public int $perPage;
-
-    public $show;
-
-    public $showModal;
-
+    
     public $refreshIndex;
 
-    public $importModal;
+    /** @var boolean */
+    public $showModal = false;
+    
+    /** @var boolean */
+    public $importModal = false;
+    
+    /** @var boolean */
+    public $editModal = false;
 
-    public $editModal;
+    /** @var array */
+    public $orderable;
 
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
+    /** @var string */
+    public $search = '';
+    
+    /** @var array */
+    public $selected = [];
+    
+    /** @var array */
+    public $paginationOptions;
 
     protected $queryString = [
         'search' => [
@@ -63,10 +66,13 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'category.code' => '',
-        'category.name' => 'required',
-    ];
+    protected function rules()
+    {
+        return
+            [
+            'category.name' => 'required|string|max:255',
+            ];
+    }
 
     public function getSelectedCountProperty()
     {

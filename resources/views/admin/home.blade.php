@@ -8,7 +8,7 @@
             el.addEventListener('click', event => {
                 clearActive();
                 hideAll();
-                el.classList.add('active');
+                el.classList.add('active:bg-indigo-800');
                 document.querySelector(`#${el.dataset.date}`).style.display = 'flex';
             });
         });
@@ -53,21 +53,21 @@
 <x-app-layout>
     <div class="px-2 mx-auto">
         {{-- <livewire:calculator /> --}}
-        <div class="bg-white">
-            <div class="md:inline-flex float-right pt-2 pb-5 sm:flex sm:flex-wrap">
-                <x-button type="button" primary data-date="today" class="js-date mr-2 active">
+        <div class="bg-white ">
+            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right py-2">
+                <x-button type="button" primary data-date="today" class="js-date mr-2 py-2 active:bg-indigo-800">
                     {{ __('Today') }}
                 </x-button>
 
-                <x-button type="button" primary data-date="month" class="js-date mr-2">
+                <x-button type="button" primary data-date="month" class="js-date py-2  mr-2">
                     {{ __('Last month') }}
                 </x-button>
 
-                <x-button type="button" primary data-date="semi" class="js-date mr-2">
+                <x-button type="button" primary data-date="semi" class="js-date py-2  mr-2">
                     {{ __('Last 6 month') }}
                 </x-button>
 
-                <x-button type="button" primary data-date="year" class="js-date">
+                <x-button type="button" primary data-date="year" class="js-date py-2 ">
                     {{ __('Last year') }}
                 </x-button>
             </div>
@@ -76,7 +76,7 @@
                     <div class="w-full flex flex-wrap align-center mb-4 js-date-row" id="{{ $key }}">
                         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
                             <div
-                                class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -85,17 +85,17 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    <p class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-300">
                                         {{ __('Sales') }}
                                     </p>
-                                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
                                         {{ format_currency($d['salesTotal']) }}
                                     </p>
                                 </div>
                             </div>
 
                             <div
-                                class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -104,10 +104,10 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
                                         {{ __('Stock Value') }}
                                     </p>
-                                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
                                         {{ format_currency($d['stockValue']) }}
                                     </p>
                                 </div>
@@ -119,7 +119,7 @@
                         id="{{ $key }}">
                         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
                             <div
-                                class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -128,17 +128,17 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
                                         {{ __('Sales') }}
                                     </p>
-                                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
                                         {{ format_currency($d['salesTotal']) }}
                                     </p>
                                 </div>
                             </div>
 
                             <div
-                                class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -147,10 +147,10 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
                                         {{ __('Stock Value') }}
                                     </p>
-                                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
                                         {{ format_currency($d['stockValue']) }}
                                     </p>
                                 </div>
@@ -161,9 +161,9 @@
             @endforeach
         </div>
         @can('show_total_stats')
-            <div class="flex flex-wrap -m-4 py-4">
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full mb-4 py-4">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-bar-chart font-2xl"></i>
@@ -176,8 +176,8 @@
                     </div>
                 </div>
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-left font-2xl"></i>
@@ -190,8 +190,8 @@
                     </div>
                 </div>
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-arrow-return-right font-2xl"></i>
@@ -205,8 +205,8 @@
                 </div>
 
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
                             <span class="inline-block mr-2">
                                 <i class="bi bi-trophy font-2xl"></i>
@@ -222,10 +222,10 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="flex flex-wrap -m-2 py-4">
+            <div class="flex flex-wrap py-4">
                 @can('show_weekly_sales_purchases')
-                    <div class="lg:w-3/5 sm:w-full px-2">
-                        <div class="p-6 rounded bg-white shadow-md">
+                    <div class="lg:w-3/5 sm:w-full px-2 mb-4">
+                        <div>
                             <div class="text-xl mb-2">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
                             </div>
@@ -236,8 +236,8 @@
                     </div>
                 @endcan
                 @can('show_month_overview')
-                    <div class="lg:w-2/5 sm:w-full px-2">
-                        <div class="p-6 rounded bg-white shadow-md">
+                    <div class="lg:w-2/5 sm:w-full px-2 mb-4">
+                        <div>
                             <div class="text-xl mb-2">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
                             </div>
@@ -253,9 +253,9 @@
         @endcan
 
         @can('show_monthly_cashflow')
-            <div class="fle flex-wrap">
+            <div class="fle flex-wrap mb-4 py-4">
                 <div class="w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                    <div>
                         <div class="text-xl mb-2">
                             {{ __('Monthly Cash Flow (Payment Sent & Received)') }}
                         </div>

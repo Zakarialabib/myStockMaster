@@ -12,8 +12,9 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createSupplier'];
-
-    public $createSupplier;
+    
+    /** @var boolean */
+    public $createSupplier = false;
 
     public array $rules = [
         'supplier.name' => ['required', 'string', 'max:255'],

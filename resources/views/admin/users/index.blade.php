@@ -48,7 +48,7 @@
 
 <x-app-layout>
     <x-card>
-        @include('utils.alerts')
+
         <div>
             <livewire:users.index />
         </div>

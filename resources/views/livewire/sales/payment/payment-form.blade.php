@@ -8,7 +8,7 @@
         <x-slot name="content">
             <form wire:submit.prevent="save">
                 {{-- @dd($sale->id) --}}
-                <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                <x-validation-errors class="mb-4" :errors="$errors" />
 
                 <div class="flex flex-wrap -mx-2 mb-3">
                     {{-- <input type="hidden" wire:model="sale_id" name="sale_id"> --}}

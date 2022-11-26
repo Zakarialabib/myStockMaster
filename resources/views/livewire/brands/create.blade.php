@@ -7,20 +7,20 @@
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
 
             <form wire:submit.prevent="create">
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model="name" />
+                            wire:model.lazy="brand.name" />
                         <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="description" :value="__('Description')" />
                         <x-input id="description" class="block mt-1 w-full" type="text" name="description"
-                            wire:model="description" />
+                            wire:model.lazy="brand.description" />
                         <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
                     </div>
                     <div class="w-full py-2 px-3">
@@ -28,9 +28,8 @@
                         <x-fileupload wire:model="image" :file="$image" accept="image/jpg,image/jpeg,image/png" />
                         <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                     </div>
-                    <div class="w-full flex justify-start px-3">
-                        <x-button primary type="submit" 
-                                 wire:click="create" wire:loading.attr="disabled">
+                    <div class="w-full px-3">
+                        <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
                     </div>

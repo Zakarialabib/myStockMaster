@@ -10,7 +10,8 @@ class Create extends Component
 {
     public $listeners = ['createWarehouse'];
 
-    public $createWarehouse;
+    /** @var boolean */
+    public $createWarehouse = false;
 
     public array $rules = [
         'warehouse.name' => ['string', 'required'],
@@ -49,8 +50,11 @@ class Create extends Component
 
         $this->warehouse->save();
 
+        $this->alert('success', __('Warehouse created successfully.'));
+        
+        $this->emit('refreshIndex');
+
         $this->createWarehouse = false;
 
-        $this->emit('refreshIndex');
     }
 }

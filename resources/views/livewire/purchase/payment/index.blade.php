@@ -27,8 +27,12 @@
                     @forelse ($purchasepayments as $purchasepayment)
                         <x-table.tr>
                             <x-table.td>{{ $purchasepayment->created_at }}</x-table.td>
-                            <x-table.td>{{ $purchasepayment->amount }}</x-table.td>
-                            <x-table.td>{{ $purchasepayment->purchase->due_amount }}</x-table.td>
+                            <x-table.td>
+                                {{ format_currency($purchasepayment->amount) }}
+                            </x-table.td>
+                            <x-table.td>
+                                {{ format_currency($purchasepayment->purchase->due_amount) }}
+                            </x-table.td>
                             <x-table.td>{{ $purchasepayment->payment_method }}</x-table.td>
                             <x-table.td>
                                 @can('access_purchase_payments')

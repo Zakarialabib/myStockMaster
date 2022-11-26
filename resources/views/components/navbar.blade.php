@@ -10,22 +10,19 @@
             <x-icons.menu x-show="!isSidebarOpen" aria-hidden="true" class="w-5 h-5" />
             <x-icons.x x-show="isSidebarOpen" aria-hidden="true" class="w-5 h-5" />
         </x-button>
-        <x-button type="button" class="md:hidden" iconOnly secondary srText="Toggle dark mode" @click="toggleTheme">
-            <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-5 h-5" />
-            <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-5 h-5" />
-        </x-button>
     </div>
 
     <div class="flex items-center gap-3">
+        <div class="md:flex hidden flex-wrap items-center">
+            <x-button type="button" secondary id="fullScreen" >
+                <i class="fa fa-expand w-4 h-4"></i>
+            </x-button >
+        </div>
 
-        {{-- calculator icon button dropdown alpine  --}}
-
-        {{-- Language dropdown --}}
         <x-language-dropdown />
 
-        <div class="md:flex hidden flex-wrap items-center">
-            @can('show_notifications')
-                <div class="px-3">
+        @can('show_notifications')
+                <div>
                     <x-dropdown align="right" class="w-auto">
                         <x-slot name="trigger" class="inline-flex">
                             <x-button type="button" iconOnly secondary srText="Open notifications">
@@ -63,25 +60,21 @@
                 {{ __('POS') }}
             </x-button>
 
-        </div>
-
-        <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
+        {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-5 h-5" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-5 h-5" />
-        </x-button>
+        </x-button> --}}
 
 
-        <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
+        {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
             @click="toggleRtl">
             <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
             <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
-        </x-button>
-
-        {{-- @livewire('admin.cache') --}}
+        </x-button> --}}
 
         <ul class="flex-col md:flex-row list-none items-center md:flex">
-            <x-dropdown align="right" width="60">
+            <x-dropdown align="right" width="56">
                 <x-slot name="trigger">
                     <x-button type="button" primary>
                         {{ Auth::user()->name }}
@@ -139,3 +132,48 @@
         <span class="sr-only">{{ config('settings.site_title') }}</span>
     </a>
 </div> --}}
+
+
+@push('scripts')
+<script>
+    // $(document).ready(function () {
+    
+   
+
+    function toggleFullscreen(elem) {
+        elem = elem || document.documentElement;
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                }
+            } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    if(('#fullScreen').length > 0) {
+       document.getElementById('fullScreen').addEventListener('click', function() {
+           toggleFullscreen();
+        });
+    }
+   
+
+// });
+
+</script>
+    
+@endpush

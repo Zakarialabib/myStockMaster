@@ -30,7 +30,7 @@ class Profile extends Component
             'email' => $this->email,
         ]);
 
-        if ($this->image) {
+        if (isset($this->image)) {
             $this->image->store('users', 'public');
             auth()->user()->update([
                 'image' => $this->image->hashName(),

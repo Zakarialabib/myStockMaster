@@ -32,9 +32,9 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.force_https_scheme') || app()->environment('production')) {
             URL::forceScheme('https');
         }
-
+        
         View::share('languages', $this->getLanguages());
-
+        
         Model::shouldBeStrict(! $this->app->isProduction());
     }
 

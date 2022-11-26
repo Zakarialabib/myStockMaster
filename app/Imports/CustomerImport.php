@@ -16,8 +16,6 @@ class CustomerImport implements ToModel
         return new Customer([
             'name' => $row['name'],
             'phone' => $row['phone'],
-            'address' => $row['address'] ?? null,
-            'tax_number' => $row['tax_number'] ?? null,
         ]);
 
     }

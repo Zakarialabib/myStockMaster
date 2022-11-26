@@ -44,7 +44,7 @@
 @section('content')
     <div class="px-4 mx-auto">
         <div class="w-full">
-            @include('utils.alerts')
+    
         </div>
         <div class="flex flex-row">
             <div class="w-3/12 sm:w-full h-full">

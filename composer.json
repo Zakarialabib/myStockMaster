@@ -26,6 +26,7 @@
         "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.17",
         "laravel/breeze": "^1.14",

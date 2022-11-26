@@ -44,7 +44,21 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'date',
+        'reference',
+        'customer_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'status',
+        'note',
+        'created_at',
+        'updated_at',
+    ];
 
     public function quotationDetails()
     {

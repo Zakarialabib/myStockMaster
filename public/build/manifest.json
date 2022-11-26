@@ -4,16 +4,16 @@
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app.0432eeea.css",
-      "assets/app.ae4de5e7.css"
+      "assets/app.e653851c.css",
+      "assets/app.0457a673.css"
     ]
   },
   "resources/js/app.css": {
-    "file": "assets/app.0432eeea.css",
+    "file": "assets/app.e653851c.css",
     "src": "resources/js/app.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app.ae4de5e7.css",
+    "file": "assets/app.0457a673.css",
     "src": "resources/css/app.css",
     "isEntry": true
   }

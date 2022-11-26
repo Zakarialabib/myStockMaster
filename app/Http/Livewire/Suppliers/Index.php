@@ -22,11 +22,14 @@ class Index extends Component
 
     public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'importModal', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $showModal;
+    /** @var boolean */
+    public $showModal = false;
 
-    public $editModal;
+    /** @var boolean */
+    public $importModal = false;
 
-    public $importModal;
+    /** @var boolean */
+    public $editModal = false;
 
     public array $orderable;
 

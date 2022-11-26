@@ -250,6 +250,22 @@ class PermissionsSeeder extends Seeder
                 'id' => 55,
                 'name' => 'adjustment_access',
             ],
+            [
+                'id' => 56,
+                'name' => 'quotation_create',
+            ],
+            [
+                'id' => 57,
+                'name' => 'quotation_update',
+            ],
+            [
+                'id' => 58,
+                'name' => 'quotation_delete',
+            ],
+            [
+                'id' => 58,
+                'name' => 'quotation_sale',
+            ],
 
         ];
 

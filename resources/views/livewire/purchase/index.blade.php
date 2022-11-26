@@ -1,15 +1,28 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            @if ($selected)
+                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+            @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
                 <input type="text" wire:model.debounce.300ms="search"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     placeholder="{{ __('Search') }}" />
@@ -22,19 +35,19 @@
                 <x-table.th >
                     <input type="checkbox" wire:model="selectPage" />
                 </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+                <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
                     {{ __('Reference') }}
                 </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('supplier_id')" :direction="$sorts['supplier_id'] ?? null">
+                <x-table.th sortable wire:click="sortBy('supplier_id')" :direction="$sorts['supplier_id'] ?? null">
                     {{ __('Supplier') }}
                 </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+                <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                     {{ __('Status') }}
                 </x-table.th>
-                <x-table.th sortable multi-column wire:click="sortBy('email')" :direction="$sorts['email'] ?? null">
+                <x-table.th sortable>
                     {{ __('Total') }}
                 </x-table.th>
                 <x-table.th>
@@ -66,7 +79,7 @@
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->total_amount }}
+                            {{ format_currency($purchase->total_amount) }}
                         </x-table.td>
                         <x-table.td>
                             <div class="flex justify-start space-x-2">
@@ -256,6 +269,7 @@
                             <div class="flex flex-row">
                                 <div class="w-full px-4 mb-4">
                                     <x-table-responsive>
+                                        @if ( $purchase->discount_percentage )
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Discount') }}
@@ -264,6 +278,8 @@
                                             <x-table.td class="right">
                                                 {{ format_currency($purchase->discount_amount) }}</x-table.td>
                                         </x-table.tr>
+                                        @endif
+                                        @if ( $purchase->tax_percentage )
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Tax') }}
@@ -273,6 +289,8 @@
                                                 {{ format_currency($purchase->tax_amount) }}
                                             </x-table.td>
                                         </x-table.tr>
+                                        @endif
+                                        @if ( settings()->show_shipping == true )
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Shipping') }}</strong>
@@ -280,6 +298,7 @@
                                             <x-table.td class="right">
                                                 {{ format_currency($purchase->shipping_amount) }}</x-table.td>
                                         </x-table.tr>
+                                        @endif
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Grand Total') }}</strong>
@@ -319,7 +338,7 @@
                 <x-slot name="content">
                     <form wire:submit.prevent="paymentSave">
 
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <x-validation-errors class="mb-4" :errors="$errors" />
 
                         <div class="flex flex-wrap -mx-2 mb-3">
 

@@ -13,7 +13,8 @@ class Create extends Component
 
     public $listeners = ['createUser'];
 
-    public $createUser;
+    /** @var boolean */
+    public $createUser = false;
 
     public array $rules = [
         'user.name' => 'required|string|max:255',

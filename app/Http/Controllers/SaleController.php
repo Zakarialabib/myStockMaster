@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
+use App\Models\Category;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,9 @@ class SaleController extends Controller
 
         Cart::instance('sale')->destroy();
 
-        return view('admin.sale.create');
+        $product_categories = Category::all();
+
+        return view('admin.sale.create', compact('product_categories'));
     }
 
     // use livewire --------->
@@ -102,15 +105,6 @@ class SaleController extends Controller
         toast('Sale Created!', 'success');
 
         return redirect()->route('sales.index');
-    }
-
-    public function show(Sale $sale)
-    {
-        abort_if(Gate::denies('show_sales'), 403);
-
-        $customer = Customer::findOrFail($sale->customer_id);
-
-        return view('admin.sale.show', compact('sale', 'customer'));
     }
 
     public function edit(Sale $sale)
@@ -217,14 +211,4 @@ class SaleController extends Controller
         return redirect()->route('sales.index');
     }
 
-    public function destroy(Sale $sale)
-    {
-        abort_if(Gate::denies('delete_sales'), 403);
-
-        $sale->delete();
-
-        toast('Sale Deleted!', 'warning');
-
-        return redirect()->route('sales.index');
-    }
 }

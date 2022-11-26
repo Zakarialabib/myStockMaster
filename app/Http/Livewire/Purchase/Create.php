@@ -182,7 +182,7 @@ class Create extends Component
 
         $this->alert('success', __('Purchase created successfully!'));
 
-        // return redirect()->route('purchases.index');
+        return redirect()->route('purchases.index');
     }
 
     public function calculateTotal()

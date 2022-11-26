@@ -49,7 +49,7 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <div class="px-4 mx-auto mb-4">
         <div class="row">
             <div class="col-12">
@@ -175,26 +175,3 @@
         </div>
     </x-card>
 </x-app-layout>
-
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#getTotalAmount').click(function() {
-                $('#paid_amount').maskMoney('mask', {{ Cart::instance('purchase_return')->total() }});
-            });
-
-            $('#purchase-return-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush
