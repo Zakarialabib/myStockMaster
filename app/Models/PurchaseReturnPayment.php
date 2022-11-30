@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 class PurchaseReturnPayment extends Model
@@ -36,7 +37,7 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
-    public function purchaseReturn()
+    public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
@@ -58,6 +59,6 @@ class PurchaseReturnPayment extends Model
 
     public function scopeByPurchaseReturn($query)
     {
-        return $query->where('purchase_return_id', request()->route('purchase_return_id'));
+        return $query->wherePurchaseReturnId(request()->route('purchase_return_id'));
     }
 }

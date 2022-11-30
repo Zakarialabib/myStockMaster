@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExpenseCategory extends Model
 {
-   use HasAdvancedFilter;
+    use HasAdvancedFilter;
 
     public $orderable = [
         'id',
@@ -27,7 +28,7 @@ class ExpenseCategory extends Model
 
     protected $guarded = [];
 
-    public function expenses()
+    public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class, 'category_id', 'id');
     }

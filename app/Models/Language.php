@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Language extends Model
 {
@@ -21,62 +22,62 @@ class Language extends Model
 
     public $timestamps = false;
 
-    public function blogs()
+    public function blogs(): HasMany
     {
         return $this->hasMany('App\Models\Blog', 'language_id');
     }
 
-    public function blog_categories()
+    public function blog_categories(): HasMany
     {
         return $this->hasMany('App\Models\BlogCategory', 'language_id');
     }
 
-    public function categories()
+    public function categories(): HasMany
     {
         return $this->hasMany('App\Models\Category', 'language_id');
     }
 
-    public function subcategories()
+    public function subcategories(): HasMany
     {
         return $this->hasMany('App\Models\Subcategory', 'language_id');
     }
 
-    public function childcategories()
+    public function childcategories(): HasMany
     {
         return $this->hasMany('App\Models\Childcategory', 'language_id');
     }
 
-    public function faqs()
+    public function faqs(): HasMany
     {
         return $this->hasMany('App\Models\Faq', 'language_id');
     }
 
-    public function packages()
+    public function packages(): HasMany
     {
         return $this->hasMany('App\Models\Package', 'language_id');
     }
 
-    public function pages()
+    public function pages(): HasMany
     {
         return $this->hasMany('App\Models\Page', 'language_id');
     }
 
-    public function pickups()
+    public function pickups(): HasMany
     {
         return $this->hasMany('App\Models\Pickup', 'language_id');
     }
 
-    public function shippings()
+    public function shippings(): HasMany
     {
         return $this->hasMany('App\Models\Shipping', 'language_id');
     }
 
-    public function sliders()
+    public function sliders(): HasMany
     {
         return $this->hasMany('App\Models\Slider', 'language_id');
     }
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany('App\Models\Product', 'language_id');
     }

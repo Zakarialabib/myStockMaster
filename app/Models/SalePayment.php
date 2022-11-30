@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 class SalePayment extends Model
@@ -39,7 +40,7 @@ class SalePayment extends Model
         'payment_method',
     ];
 
-    public function sale()
+    public function sale():BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
@@ -61,6 +62,6 @@ class SalePayment extends Model
 
     public function scopeBySale($query)
     {
-        return $query->where('sale_id', request()->route('sale_id'));
+        return $query->whereSaleId(request()->route('sale_id'));
     }
 }

@@ -5,7 +5,8 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Str;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Expense extends Model
 {
@@ -49,7 +50,7 @@ class Expense extends Model
         'updated_at',
     ];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
@@ -57,7 +58,7 @@ class Expense extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'reference' => 'EXP-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+            'reference' => 'EXP-' . Carbon::now()->format('Ymd') . '-' . Str::random(4),
         ], true);
         parent::__construct($attributes);
     }

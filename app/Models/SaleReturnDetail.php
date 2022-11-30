@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SaleReturnDetail extends Model
 {
@@ -35,12 +36,12 @@ class SaleReturnDetail extends Model
 
     protected $with = ['product'];
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function saleReturn()
+    public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturnPayment::class, 'sale_return_id', 'id');
     }

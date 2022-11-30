@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -30,7 +31,7 @@ class Category extends Model
         parent::__construct($attributes);
     }
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');
     }

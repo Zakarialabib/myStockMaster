@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdjustedProduct extends Model
 {
@@ -29,12 +30,12 @@ class AdjustedProduct extends Model
 
     protected $with = ['product'];
 
-    public function adjustment()
+    public function adjustment(): BelongsTo
     {
         return $this->belongsTo(Adjustment::class, 'adjustment_id', 'id');
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }

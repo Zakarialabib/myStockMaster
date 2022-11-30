@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Str;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Purchase extends Model
 {
@@ -88,12 +90,12 @@ class Purchase extends Model
 
     const PurchaseCompleted = '2';
 
-    public function purchaseDetails()
+    public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
-    public function purchasePayments()
+    public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
@@ -101,14 +103,14 @@ class Purchase extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'reference' => 'PR-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+            'reference' => 'PR-' . Carbon::now()->format('Ymd') . '-' . Str::random(4),
         ], true);
         parent::__construct($attributes);
     }
 
     public function scopeCompleted($query)
     {
-        return $query->where('status', 'Completed');
+        return $query->whereStatus('Completed');
     }
 
     public function getShippingAmountAttribute($value)
@@ -141,7 +143,7 @@ class Purchase extends Model
         return $value / 100;
     }
 
-    public function supplier()
+    public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
