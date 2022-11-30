@@ -34,7 +34,7 @@ class Locale
         if ($code) {
             App::setLocale($code);
         } else {
-            App::setLocale($language_default['code']);
+            App::setLocale($language_default['code'] ?? 'en');// befor seed database it's throw exception so i add (?? 'en')
         }
 
         return $next($request);
