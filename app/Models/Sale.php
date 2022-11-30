@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Str;
+use Illuminate\Support\Str;
 
 class Sale extends Model
 {
     use HasAdvancedFilter;
+    use SaleScope;
 
     public $orderable = [
         'id',
@@ -113,7 +115,7 @@ class Sale extends Model
 
     public function scopeCompleted($query)
     {
-        return $query->where('status', 'Completed');
+        return $query->whereStatus('Completed');
     }
 
     public function getShippingAmountAttribute($value)

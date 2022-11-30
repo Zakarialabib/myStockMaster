@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseReturn extends Model
 {
@@ -82,34 +84,24 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-    public function purchaseReturnDetails()
+    public function purchaseReturnDetails(): HasMany
     {
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
     }
 
-    public function purchaseReturnPayments()
+    public function purchaseReturnPayments(): HasMany
     {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
     }
 
-    public function supplier()
+    public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = PurchaseReturn::max('id') + 1;
-            $model->reference = make_reference_id('PRRN', $number);
-        });
-    }
-
     public function scopeCompleted($query)
     {
-        return $query->where('status', '2');
+        return $query->whereStatus('2');
     }
 
     public function getShippingAmountAttribute($value)
@@ -140,5 +132,16 @@ class PurchaseReturn extends Model
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $number = PurchaseReturn::max('id') + 1;
+            $model->reference = make_reference_id('PRRN', $number);
+        });
     }
 }

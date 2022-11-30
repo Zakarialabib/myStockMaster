@@ -28,7 +28,7 @@ class HomeController extends Controller
 
         foreach (Sale::completed()->with('saleDetails')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->cost;
+                $product_costs += $saleDetail->product?->cost;
             }
         }
 
@@ -37,26 +37,26 @@ class HomeController extends Controller
 
         $data = [
             'today' => [
-                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now())->sum('total_amount') / 100,
+                'salesTotal' => Sale::salesTotal(Carbon::now()),
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now())->sum(DB::raw('quantity * cost')),
 
             ],
             'month' => [
-                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum('total_amount') / 100,
+                'salesTotal' => Sale::salesTotal(Carbon::now()->subMonth()),
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
 
             ],
             'semi' => [
-                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum('total_amount') / 100,
+                'salesTotal' => Sale::salesTotal(Carbon::now()->subMonths(6)),
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
 
             ],
             'year' => [
-                'salesTotal' => Sale::whereDate('created_at', '>=', Carbon::now()->subYear())->sum('total_amount') / 100,
+                'salesTotal' => Sale::salesTotal(Carbon::now()->subYear()),
                 'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
             ],
         ];
-
+       // dd($data['month']['salesTotal']);
         return view('admin.home', [
             'revenue' => $revenue,
             'sale_returns' => $sale_returns / 100,
@@ -68,17 +68,17 @@ class HomeController extends Controller
 
     public function currentMonthChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if(!request()->ajax(), 404);
 
         $currentMonthSales = Sale::where('status', 'Completed')->whereMonth('date', date('m'))
-                ->whereYear('date', date('Y'))
-                ->sum('total_amount') / 100;
+            ->whereYear('date', date('Y'))
+            ->sum('total_amount') / 100;
         $currentMonthPurchases = Purchase::where('status', 'Completed')->whereMonth('date', date('m'))
-                ->whereYear('date', date('Y'))
-                ->sum('total_amount') / 100;
+            ->whereYear('date', date('Y'))
+            ->sum('total_amount') / 100;
         $currentMonthExpenses = Expense::whereMonth('date', date('m'))
-                ->whereYear('date', date('Y'))
-                ->sum('amount') / 100;
+            ->whereYear('date', date('Y'))
+            ->sum('amount') / 100;
 
         return response()->json([
             'sales' => $currentMonthSales,
@@ -89,7 +89,7 @@ class HomeController extends Controller
 
     public function salesPurchasesChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if(!request()->ajax(), 404);
 
         $sales = $this->salesChartData();
         $purchases = $this->purchasesChartData();
@@ -99,7 +99,7 @@ class HomeController extends Controller
 
     public function paymentChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if(!request()->ajax(), 404);
 
         $dates = collect();
         foreach (range(-11, 0) as $i) {
