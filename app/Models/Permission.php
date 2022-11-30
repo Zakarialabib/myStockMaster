@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Permission extends Model
 {
@@ -29,7 +30,7 @@ class Permission extends Model
 
     protected $fillable = ['name', 'label', 'description'];
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseReturnDetail extends Model
 {
@@ -10,12 +11,12 @@ class PurchaseReturnDetail extends Model
 
     protected $with = ['product'];
 
-    public function product()
+    public function product():BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function purchaseReturn()
+    public function purchaseReturn():BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }

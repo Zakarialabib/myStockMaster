@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 class Quotation extends Model
@@ -60,24 +62,14 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    public function quotationDetails()
+    public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = Quotation::max('id') + 1;
-            $model->reference = make_reference_id('QT', $number);
-        });
     }
 
     public function getDateAttribute($value)
@@ -113,5 +105,15 @@ class Quotation extends Model
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $number = Quotation::max('id') + 1;
+            $model->reference = make_reference_id('QT', $number);
+        });
     }
 }

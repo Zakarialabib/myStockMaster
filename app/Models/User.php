@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -61,10 +63,10 @@ class User extends Authenticatable
 
     public function scopeIsActive(Builder $builder)
     {
-        return $builder->where('is_active', 1);
+        return $builder->whereIsActive(true);
     }
 
-    public function assignedWarehouses()
+    public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Warehouse');
     }
@@ -72,14 +74,14 @@ class User extends Authenticatable
     // User hasRole method
     public function hasRole($roles)
     {
-        if ($this->roles()->where('name', $roles)->first()) {
+        if ($this->roles()->whereName($roles)->first()) {
             return true;
         }
 
         return false;
     }
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Role');
     }
@@ -89,7 +91,7 @@ class User extends Authenticatable
         return $this->role->permissions->contains('name', $permission);
     }
 
-    public function wallet()
+    public function wallet(): HasOne
     {
         return $this->hasOne('App\Models\Wallet');
     }

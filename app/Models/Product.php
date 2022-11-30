@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
 use App\Support\Helper;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class Product extends Model
 {
     use HasAdvancedFilter;
     use Notifiable;
+    use ProductScope;
 
     public $orderable = [
         'id',
@@ -71,12 +74,12 @@ class Product extends Model
         parent::__construct($attributes);
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }

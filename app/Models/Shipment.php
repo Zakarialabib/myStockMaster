@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Shipment extends Model
 {
@@ -18,12 +19,12 @@ class Shipment extends Model
         'sale_id' => 'integer',
     ];
 
-    public function sale()
+    public function sale(): BelongsTo
     {
         return $this->belongsTo('App\Models\Sale');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\User');
     }

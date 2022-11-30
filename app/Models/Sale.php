@@ -6,6 +6,8 @@ use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Sale extends Model
@@ -95,12 +97,12 @@ class Sale extends Model
 
     const SaleShipped = '3';
 
-    public function saleDetails()
+    public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
     }
 
-    public function salePayments()
+    public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
@@ -108,7 +110,7 @@ class Sale extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'reference' => 'SL-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+            'reference' => 'SL-' . Carbon::now()->format('Ymd') . '-' . Str::random(4),
         ], true);
         parent::__construct($attributes);
     }
@@ -148,7 +150,7 @@ class Sale extends Model
         return $value / 100;
     }
 
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }

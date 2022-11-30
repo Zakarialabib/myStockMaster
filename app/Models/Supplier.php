@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Supplier extends Model
 {
-     use HasAdvancedFilter;
+    use HasAdvancedFilter;
 
     public $orderable = [
         'id',
@@ -47,12 +48,12 @@ class Supplier extends Model
         'updated_at',
     ];
 
-    public function wallet()
+    public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
 
-    public function purchases()
+    public function purchases(): HasOne
     {
         return $this->HasOne(Purchase::class);
     }

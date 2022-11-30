@@ -85,17 +85,17 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    public function saleReturnDetails():HasMany
+    public function saleReturnDetails(): HasMany
     {
         return $this->hasMany(SaleReturnDetail::class, 'sale_return_id', 'id');
     }
 
-    public function saleReturnPayments():HasMany
+    public function saleReturnPayments(): HasMany
     {
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-    public function customer():BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }

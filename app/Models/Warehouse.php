@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Warehouse extends Model
 {
@@ -35,12 +36,12 @@ class Warehouse extends Model
         'name', 'mobile', 'country', 'city', 'email',
     ];
 
-    public function assignedUsers()
+    public function assignedUsers(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\User');
     }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
     }

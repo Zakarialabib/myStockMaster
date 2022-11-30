@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductWarehouse extends Model
 {
@@ -18,17 +19,17 @@ class ProductWarehouse extends Model
         'qte' => 'double',
     ];
 
-    public function warehouse()
+    public function warehouse(): BelongsTo
     {
         return $this->belongsTo('App\Models\Warehouse');
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo('App\Models\Product');
     }
 
-    public function productVariant()
+    public function productVariant(): BelongsTo
     {
         return $this->belongsTo('App\Models\ProductVariant');
     }

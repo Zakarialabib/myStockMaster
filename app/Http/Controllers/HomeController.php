@@ -38,25 +38,25 @@ class HomeController extends Controller
         $data = [
             'today' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()),
-                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now())->sum(DB::raw('quantity * cost')),
+                'stockValue' => Product::stockValue(Carbon::now()),
 
             ],
             'month' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonth()),
-                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonth())->sum(DB::raw('quantity * cost')),
-
+                'stockValue' => Product::stockValue(Carbon::now()->subMonth()),
             ],
             'semi' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonths(6)),
-                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subMonths(6))->sum(DB::raw('quantity * cost')),
+                'stockValue' => Product::stockValue(Carbon::now()->subMonths(6)),
 
             ],
             'year' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subYear()),
-                'stockValue' => Product::whereDate('created_at', '>=', Carbon::now()->subYear())->sum(DB::raw('quantity * cost')),
+                'stockValue' => Product::stockValue(Carbon::now()->subYear()),
+
             ],
         ];
-       // dd($data['month']['salesTotal']);
+
         return view('admin.home', [
             'revenue' => $revenue,
             'sale_returns' => $sale_returns / 100,
@@ -70,10 +70,10 @@ class HomeController extends Controller
     {
         abort_if(!request()->ajax(), 404);
 
-        $currentMonthSales = Sale::where('status', 'Completed')->whereMonth('date', date('m'))
+        $currentMonthSales = Sale::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
             ->sum('total_amount') / 100;
-        $currentMonthPurchases = Purchase::where('status', 'Completed')->whereMonth('date', date('m'))
+        $currentMonthPurchases = Purchase::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
             ->sum('total_amount') / 100;
         $currentMonthExpenses = Expense::whereMonth('date', date('m'))
@@ -185,7 +185,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $sales = Sale::where('status', 'Completed')
+        $sales = Sale::whereStatus('Completed')
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')
@@ -217,7 +217,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $purchases = Purchase::where('status', 'Completed')
+        $purchases = Purchase::whereStatus('Completed')
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')

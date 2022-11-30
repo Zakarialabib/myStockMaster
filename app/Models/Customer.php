@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Customer extends Model
 {
@@ -48,12 +49,12 @@ class Customer extends Model
         'updated_at',
     ];
 
-    public function wallet()
+    public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
 
-    public function sales()
+    public function sales(): HasOne
     {
         return $this->HasOne(Sale::class);
     }

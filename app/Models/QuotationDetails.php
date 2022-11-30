@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationDetails extends Model
 {
@@ -47,12 +48,12 @@ class QuotationDetails extends Model
 
     protected $with = ['product'];
 
-    public function product()
+    public function product():BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function quotation()
+    public function quotation():BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
     }
