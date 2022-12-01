@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Expense;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Warehouse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -31,6 +33,8 @@ class Create extends Component
 
     public $createExpense;
 
+    public $expense;
+
     public array $listsForFields = [];
 
     public function updated($propertyName)
@@ -48,36 +52,39 @@ class Create extends Component
         'warehouse_id' => 'nullable',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->date = date('Y-m-d');
 
+        $this->date = date('Y-m-d');
         $this->initListsForFields();
     }
 
-    public function render()
+
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('expense_create'), 403);
 
         return view('livewire.expense.create');
     }
 
-    public function createExpense()
+    public function createExpense(): void
     {
         $this->reset();
 
         $this->createExpense = true;
+
+        $this->initListsForFields();
     }
 
-    public function create()
+    public function create(): void
     {
         $validatedData = $this->validate();
 
-        $user_id = auth()->user()->id;
+        //$user_id = auth()->id();
 
-        $this->expense->user_id = $user_id;
+        $expense = Expense::create($validatedData);
 
-        Expense::create($validatedData);
+        $expense->user()->associate(auth()->user());
 
         $this->alert('success', __('Expense created successfully.'));
 
@@ -86,7 +93,7 @@ class Create extends Component
         $this->createExpense = false;
     }
 
-    protected function initListsForFields(): void
+    protected function initListsForFields()
     {
         $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
         $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();

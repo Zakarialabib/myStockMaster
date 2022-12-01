@@ -10,12 +10,6 @@ class ProductTelegram extends Notification
 {
     use Queueable;
 
-    public $product;
-
-    public function __construct(Product $product)
-    {
-        $this->product = $product;
-    }
 
     public function via($notifiable)
     {

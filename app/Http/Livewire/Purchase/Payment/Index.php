@@ -6,6 +6,8 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -52,32 +54,32 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
-    public function mount($purchase)
+    public function mount($purchase): void
     {
         $this->purchase = $purchase;
 
@@ -93,7 +95,7 @@ class Index extends Component
         $this->paymentModal = false;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         //    abort_if(Gate::denies('access_purchase_payments'), 403);
 
@@ -108,7 +110,7 @@ class Index extends Component
         return view('livewire.purchase.payment.index', compact('purchasepayments'));
     }
 
-    public function showPayments($purchase_id)
+    public function showPayments($purchase_id): void
     {
         abort_if(Gate::denies('access_purchases'), 403);
 

@@ -11,18 +11,14 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class ProductExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Product::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return Product::query()->whereIn('id', $this->models);
         }
 
         return Product::query();
@@ -36,11 +32,11 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
         return [
             $row->code,
             $row->name,
-            $row->category->name,
+            $row->category?->name,
             $row->quantity,
             $row->cost,
             $row->price,
-            $row->created_at,
+            $row->created_at->format('d-m-Y'),
         ];
     }
 

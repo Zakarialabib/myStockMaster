@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\Models\Category;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Str;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class CategoriesImport implements ToModel, WithHeadingRow
+class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**
      * @param  array  $row

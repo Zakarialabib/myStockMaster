@@ -3,9 +3,12 @@
 namespace App\Imports;
 
 use App\Models\Product;
+use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Str;
 
-class ProductImport implements ToModel
+class ProductImport implements ToModel, SkipsEmptyRows
 {
     /**
      * @param  array  $row

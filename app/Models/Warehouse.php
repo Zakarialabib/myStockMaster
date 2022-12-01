@@ -14,7 +14,7 @@ class Warehouse extends Model
         'id',
         'name',
         'city',
-        'mobile',
+        'phone',
         'email',
         'country',
         'created_at',
@@ -25,7 +25,7 @@ class Warehouse extends Model
         'id',
         'name',
         'city',
-        'mobile',
+        'phone',
         'email',
         'country',
         'created_at',
@@ -33,7 +33,7 @@ class Warehouse extends Model
     ];
 
     protected $fillable = [
-        'name', 'mobile', 'country', 'city', 'email',
+        'name', 'phone', 'country', 'city', 'email',
     ];
 
     public function assignedUsers(): BelongsToMany

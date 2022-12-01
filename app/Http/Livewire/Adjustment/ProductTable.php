@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Adjustment;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -27,12 +29,12 @@ class ProductTable extends Component
         }
     }
 
-    public function render()
+    public function render(): View | Factory
     {
         return view('livewire.adjustment.product-table');
     }
 
-    public function productSelected($product)
+    public function productSelected($product): void
     {
         switch ($this->hasAdjustments) {
             case true:
@@ -60,7 +62,7 @@ class ProductTable extends Component
         array_push($this->products, $product);
     }
 
-    public function removeProduct($key)
+    public function removeProduct($key): void
     {
         unset($this->products[$key]);
     }

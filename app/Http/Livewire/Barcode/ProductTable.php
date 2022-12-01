@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Barcode;
 
 use App\Models\Product;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
@@ -19,7 +22,7 @@ class ProductTable extends Component
 
     protected $listeners = ['productSelected', 'getPdf'];
 
-    public function mount()
+    public function mount(): void
     {
         $this->product = '';
 
@@ -28,13 +31,13 @@ class ProductTable extends Component
         $this->barcodes = [];
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.barcode.product-table');
     }
 
     // selecte multiple products without barcode
-    public function productSelected(Product $product)
+    public function productSelected(Product $product): void
     {
         $this->product = $product;
         $this->quantity = 1;
@@ -43,7 +46,7 @@ class ProductTable extends Component
     }
 
     // generate barcodes for selected products
-    public function generateBarcodes()
+    public function generateBarcodes(): void
     {
         if ($quantity > 100) {
             $this->alert('error', __('Max quantity is 100 per barcode generation!'));
@@ -57,7 +60,7 @@ class ProductTable extends Component
         }
     }
 
-    public function getPdf()
+    public function getPdf(): Response
     {
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
@@ -65,10 +68,10 @@ class ProductTable extends Component
             'name' => $this->product->name,
         ]);
 
-        return $pdf->stream('barcodes-'.$this->product->code.'.pdf');
+        return $pdf->stream('barcodes-' . $this->product->code . '.pdf');
     }
 
-    public function updatedQuantity()
+    public function updatedQuantity(): void
     {
         $this->barcodes = [];
     }

@@ -4,6 +4,8 @@ namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -20,19 +22,19 @@ class Create extends Component
         'expenseCategory.description' => '',
     ];
 
-    public function mount(ExpenseCategory $expenseCategory)
+    public function mount(ExpenseCategory $expenseCategory): void
     {
         $this->expenseCategory = $expenseCategory;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('expense_category_create'), 403);
 
         return view('livewire.expense-categories.create');
     }
 
-    public function createExpenseCategory()
+    public function createExpenseCategory(): void
     {
         $this->resetErrorBag();
 
@@ -41,7 +43,7 @@ class Create extends Component
         $this->createExpenseCategory = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 

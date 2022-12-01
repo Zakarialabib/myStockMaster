@@ -10,6 +10,9 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Arr;
 
 class Index extends Component
 {
@@ -75,7 +78,7 @@ class Index extends Component
 
     public array $listsForFields = [];
 
-    public function rules()
+    public function rules():array
     {
         return [
             'customer_id' => 'required|numeric',
@@ -93,17 +96,17 @@ class Index extends Component
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
 
-    public function refreshCustomers()
+    public function refreshCustomers(): void
     {
         $this->initListsForFields();
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->reset();
     }
 
-    public function mount($cartInstance)
+    public function mount($cartInstance): void
     {
 
         $this->cart_instance = $cartInstance;
@@ -124,16 +127,16 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function hydrate()
+    public function hydrate(): void
     {
         if ($this->payment_method == 'cash') {
             $this->paid_amount = $this->total_amount;
         }
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
+        $this->updatedCustomerId();: void
     }
 
-    public function render()
+    public function render():View|Factory
     {
 
         $cart_items = Cart::instance($this->cart_instance)->content();
@@ -143,7 +146,7 @@ class Index extends Component
         ]);
     }
 
-    public function store()
+    public function store(): void
     {
 
         try {
@@ -221,12 +224,12 @@ class Index extends Component
         }
 }
 
-    public function refreshPos()
+    public function refreshPos(): void
     {
         $this->reset();
     }
 
-    public function proceed()
+    public function proceed(): void
     {
         if ($this->customer_id != null) {
             $this->checkoutModal = true;
@@ -235,17 +238,17 @@ class Index extends Component
         }
     }
 
-    public function calculateTotal()
+    public function calculateTotal():mixed
     {
         return Cart::instance($this->cart_instance)->total() + $this->shipping;
     }
 
-    public function resetCart()
+    public function resetCart(): void
     {
         Cart::instance($this->cart_instance)->destroy();
     }
 
-    public function productSelected($product)
+    public function productSelected($product): void
     {
         $cart = Cart::instance($this->cart_instance);
 
@@ -284,22 +287,22 @@ class Index extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function removeItem($row_id)
+    public function removeItem($row_id): void
     {
         Cart::instance($this->cart_instance)->remove($row_id);
     }
 
-    public function updatedGlobalTax()
+    public function updatedGlobalTax(): void
     {
         Cart::instance($this->cart_instance)->setGlobalTax((int) $this->global_tax);
     }
 
-    public function updatedGlobalDiscount()
+    public function updatedGlobalDiscount(): void
     {
         Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
     }
 
-    public function updateQuantity($row_id, $product_id)
+    public function updateQuantity($row_id, $product_id): void
     {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
 
@@ -326,7 +329,7 @@ class Index extends Component
         ]);
     }
 
-    public function updatePrice($row_id, $product_id)
+    public function updatePrice($row_id, $product_id): void
     {
 
         Cart::instance($this->cart_instance)->update($row_id, $this->price[$product_id]);
@@ -348,17 +351,17 @@ class Index extends Component
         ]);
     }
 
-    public function updatedDiscountType($value, $name)
+    public function updatedDiscountType($value, $name): void
     {
         $this->item_discount[$name] = 0;
     }
 
-    public function discountModalRefresh($product_id, $row_id)
+    public function discountModalRefresh($product_id, $row_id): void
     {
         $this->updateQuantity($row_id, $product_id);
     }
 
-    public function setProductDiscount($row_id, $product_id)
+    public function setProductDiscount($row_id, $product_id): void
     {
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
 
@@ -384,7 +387,7 @@ class Index extends Component
         $this->alert('success', __('Product discount set successfully!'));
     }
 
-    public function calculate($product)
+    public function calculate($product):array
     {
         $price = 0;
         $unit_price = 0;
@@ -411,7 +414,7 @@ class Index extends Component
         return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
     }
 
-    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
+    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount): void
     {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
             'sub_total' => $cart_item->price * $cart_item->qty,

@@ -5,9 +5,13 @@ namespace App\Http\Livewire\Purchase;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
+use App\Models\PurchasePayment;
 use App\Models\Supplier;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Http\RedirectResponse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -60,7 +64,7 @@ class Create extends Component
         $this->resetPage();
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'supplier_id' => 'required|numeric',
@@ -74,19 +78,19 @@ class Create extends Component
             'payment_method' => 'required|string|max:255',
             'note' => 'nullable|string|max:1000',
         ];
-}
+    }
 
     protected function initListsForFields(): void
     {
         $this->listsForFields['suppliers'] = Supplier::pluck('name', 'id')->toArray();
     }
 
-    public function mount($cartInstance)
+    public function mount($cartInstance): void
     {
 
         $this->cart_instance = $cartInstance;
 
-        $this->reference = 'PO-'.date('YmdHis');
+        $this->reference = 'PO-' . date('YmdHis');
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
@@ -95,10 +99,9 @@ class Create extends Component
         $this->date = Carbon::today()->format('Y-m-d');
 
         $this->initListsForFields();
-
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 
@@ -107,13 +110,13 @@ class Create extends Component
         ]);
     }
 
-    public function hydrate()
+    public function hydrate(): void
     {
         $this->total_amount = $this->calculateTotal();
         // $this->updatedCustomerId();
     }
 
-    public function save()
+    public function save(): RedirectResponse
     {
 
         $this->validate();
@@ -173,7 +176,7 @@ class Create extends Component
         if ($purchase->paid_amount > 0) {
             PurchasePayment::create([
                 'date' => $this->date,
-                'reference' => 'INV/'.$purchase->reference,
+                'reference' => 'INV/' . $purchase->reference,
                 'amount' => $purchase->paid_amount,
                 'purchase_id' => $purchase->id,
                 'payment_method' => $this->payment_method,
@@ -185,17 +188,17 @@ class Create extends Component
         return redirect()->route('purchases.index');
     }
 
-    public function calculateTotal()
+    public function calculateTotal(): mixed
     {
         return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
     }
 
-    public function resetCart()
+    public function resetCart(): void
     {
         Cart::instance($this->cart_instance)->destroy();
     }
 
-    public function productSelected($product)
+    public function productSelected($product): void
     {
         $cart = Cart::instance($this->cart_instance);
 
@@ -234,12 +237,12 @@ class Create extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function removeItem($row_id)
+    public function removeItem($row_id): void
     {
         Cart::instance($this->cart_instance)->remove($row_id);
     }
 
-    public function updateQuantity($row_id, $product_id)
+    public function updateQuantity($row_id, $product_id): void
     {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
             $this->alert('error', __('Quantity is greater than stock!'));
@@ -265,7 +268,7 @@ class Create extends Component
         ]);
     }
 
-    public function calculate($product)
+    public function calculate($product): array
     {
         $price = 0;
         $unit_price = 0;

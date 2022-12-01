@@ -23,7 +23,7 @@ class CreateExpensesTable extends Migration
             $table->foreign('category_id')->references('id')->on('expense_categories')->restrictOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->foreign('warehouse_id')->references('id')->on('warehouses')->restrictOnDelete();
-            $table->string('details', 192);
+            $table->string('details', 192)->nullable();
             $table->float('amount', 10, 0);
             $table->softDeletes();
             $table->timestamps();

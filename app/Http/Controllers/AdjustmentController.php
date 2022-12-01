@@ -101,7 +101,7 @@ class AdjustmentController extends Controller
             ]);
 
             foreach ($adjustment->adjustedProducts as $adjustedProduct) {
-                $product = Product::findOrFail($adjustedProduct->product->id);
+                $product = Product::findOrFail($adjustedProduct->product?->id);
 
                 if ($adjustedProduct->type == 'add') {
                     $product->update([

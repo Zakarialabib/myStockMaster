@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Currency;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\Currency;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -52,27 +54,27 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
@@ -84,7 +86,7 @@ class Index extends Component
         'currency.exchange_rate' => 'required|numeric',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -93,7 +95,7 @@ class Index extends Component
         $this->orderable = (new Currency)->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('currency_access'), 403);
 
@@ -108,7 +110,7 @@ class Index extends Component
         return view('livewire.currency.index', compact('currencies'));
     }
 
-    public function showModal(Currency $currency)
+    public function showModal(Currency $currency): void
     {
         abort_if(Gate::denies('currency_show'), 403);
 
@@ -117,7 +119,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function editModal(Currency $currency)
+    public function editModal(Currency $currency): void
     {
         abort_if(Gate::denies('currency_edit'), 403);
 
@@ -130,7 +132,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update(Currency $currency)
+    public function update(Currency $currency): void
     {
         abort_if(Gate::denies('currency_edit'), 403);
 
@@ -143,7 +145,7 @@ class Index extends Component
         $this->alert('success', __('Currency updated successfully!'));
     }
 
-    public function delete(Currency $currency)
+    public function delete(Currency $currency): void
     {
         abort_if(Gate::denies('currency_delete'), 403);
 

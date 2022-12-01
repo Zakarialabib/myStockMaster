@@ -72,7 +72,7 @@ class User extends Authenticatable
     }
 
     // User hasRole method
-    public function hasRole($roles)
+    public function hasRole($roles): bool
     {
         if ($this->roles()->whereName($roles)->first()) {
             return true;

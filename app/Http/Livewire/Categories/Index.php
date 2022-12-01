@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Categories;
 use App\Http\Livewire\WithSorting;
 use App\Imports\CategoriesImport;
 use App\Models\Category;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -30,15 +32,15 @@ class Index extends Component
     ];
 
     public int $perPage;
-    
+
     public $refreshIndex;
 
     /** @var boolean */
     public $showModal = false;
-    
+
     /** @var boolean */
     public $importModal = false;
-    
+
     /** @var boolean */
     public $editModal = false;
 
@@ -47,10 +49,10 @@ class Index extends Component
 
     /** @var string */
     public $search = '';
-    
+
     /** @var array */
     public $selected = [];
-    
+
     /** @var array */
     public $paginationOptions;
 
@@ -66,40 +68,40 @@ class Index extends Component
         ],
     ];
 
-    protected function rules()
+    protected function rules():array
     {
         return
             [
-            'category.name' => 'required|string|max:255',
+                'category.name' => 'required|string|max:255',
             ];
     }
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty():int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch():void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage():void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected():void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex():void
     {
         $this->resetPage();
     }
 
-    public function mount()
+    public function mount():void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -108,7 +110,7 @@ class Index extends Component
         $this->orderable = (new Category)->orderable;
     }
 
-    public function render()
+    public function render():mixed
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -123,7 +125,7 @@ class Index extends Component
         return view('livewire.categories.index', compact('categories'))->extends('layouts.app');
     }
 
-    public function editModal(Category $category)
+    public function editModal(Category $category):void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -136,7 +138,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update():void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -149,7 +151,7 @@ class Index extends Component
         $this->alert('success', __('Category updated successfully.'));
     }
 
-    public function showModal(Category $category)
+    public function showModal(Category $category):void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -162,7 +164,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected():void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -171,7 +173,7 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Category $category)
+    public function delete(Category $category):void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -183,14 +185,14 @@ class Index extends Component
         }
     }
 
-    public function importModal()
+    public function importModal():void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
         $this->importModal = true;
     }
 
-    public function import()
+    public function import():void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 

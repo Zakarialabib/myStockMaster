@@ -6,6 +6,8 @@ use App\Exports\CustomerExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -58,22 +60,22 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
@@ -88,7 +90,7 @@ class Index extends Component
         'customer.tax_number' => 'nullable',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -98,7 +100,7 @@ class Index extends Component
         $this->orderable = (new Customer)->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('customer_access'), 403);
 
