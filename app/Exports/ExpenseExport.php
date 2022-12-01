@@ -11,18 +11,15 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class ExpenseExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Expense::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+
+            return  Expense::query()->whereIn('id', $this->models);
         }
 
         return Expense::query();
@@ -32,7 +29,7 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
     {
         return [
             '#',
-            'Name',
+            'Reference',
             'Amount',
             'Created At',
         ];
@@ -43,11 +40,11 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
      */
     public function map($row): array
     {
-        return[
+        return [
             $row->id,
-            $row->name,
+            $row->reference,
             $row->amount,
-            $row->created_at,
+            $row->created_at->format('d-m-Y'),
         ];
     }
 }

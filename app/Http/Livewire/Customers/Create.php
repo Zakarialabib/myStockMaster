@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\Wallet;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -32,7 +34,9 @@ class Create extends Component
 
     public $tax_number;
 
-    public function updated($propertyName)
+    
+
+    public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
@@ -47,21 +51,21 @@ class Create extends Component
         'tax_number' => 'nullable',
     ];
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('customer_create'), 403);
 
         return view('livewire.customers.create');
     }
 
-    public function createCustomer()
+    public function createCustomer(): void
     {
         $this->reset();
 
         $this->createCustomer = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $validatedData = $this->validate();
 

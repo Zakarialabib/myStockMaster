@@ -6,6 +6,9 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleReturn;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,7 +23,7 @@ class Details extends Component
 
     public int $selectPage;
 
-    public $customer_id;
+    public  $customer_id;
 
     public array $orderable;
 
@@ -42,27 +45,27 @@ class Details extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
-    public function mount($customer)
+    public function mount($customer): void
     {
         $this->customer = Customer::findOrFail($customer->id);
         $this->customer_id = $this->customer->id;
@@ -74,67 +77,66 @@ class Details extends Component
         $this->orderable = (new Customer)->orderable;
     }
 
-    public function getSalesProperty()
+    public function getSalesProperty(): mixed
     {
-        $query = Sale::where('customer_id', $this->customer_id)
-        ->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = $this->customer()
+            ->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         return $query->paginate($this->perPage);
     }
 
-    public function getCustomerPaymentsProperty()
+    public function getCustomerPaymentsProperty(): mixed
     {
-        $query = Sale::where('customer_id', $this->customer_id)
-        ->with('salepayments')
-        ->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = $this->customer()
+            ->with('salepayments')
+            ->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         return $query->paginate($this->perPage);
     }
 
-    public function getTotalSalesProperty()
+    public function getTotalSalesProperty(): int|float
     {
-        return Sale::where('customer_id', $this->customer_id)
-                    ->sum('total_amount') / 100;
+        return $this->customerSum('total_amount');
     }
 
-    public function getTotalSaleReturnsProperty()
+    public function getTotalSaleReturnsProperty(): int|float
     {
-        return SaleReturn::where('customer_id', $this->customer_id)
-                                ->sum('total_amount') / 100;
+
+        return $this->customerSum('total_amount');
     }
 
-    public function getTotalPaymentsProperty()
+    public function getTotalPaymentsProperty(): int|float
     {
-        return Sale::where('customer_id', $this->customer_id)
-        ->sum('paid_amount') / 100;
+
+        return $this->customerSum('paid_amount');
     }
 
     // total due amount
-    public function getTotalDueProperty()
+    public function getTotalDueProperty(): int|float
     {
-        return Sale::where('customer_id', $this->customer_id)
-        ->sum('due_amount') / 100;
+
+        return $this->customerSum('due_amount');
     }
 
     // show profit
-    public function getProfitProperty()
+    public function getProfitProperty(): int|float
     {
-        $sales = Sale::where('customer_id', $this->customer_id)
-                    ->completed()->sum('total_amount');
-        $sale_returns = SaleReturn::where('customer_id', $this->customer_id)
-                    ->completed()->sum('total_amount');
+        $sales = $this->customer()
+            ->completed()->sum('total_amount');
+        $sale_returns = SaleReturn::whereBelongsTo($this->customer)
+            ->completed()->sum('total_amount');
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails')->get() as $sale) {
+        foreach ($this->customer()->with('saleDetails')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }
@@ -146,8 +148,19 @@ class Details extends Component
         return $profit;
     }
 
-    public function render()
+    private function customerSum(string $field): int|float
     {
+        return Sale::whereBelongsTo($this->customer)->sum($field) / 100;
+    }
+
+    private function customer(): Builder
+    {
+        return Sale::whereCustomerId($this->customer_id);
+    }
+
+    public function render(): View|Factory
+    {
+
         return view('livewire.customers.details');
     }
 }

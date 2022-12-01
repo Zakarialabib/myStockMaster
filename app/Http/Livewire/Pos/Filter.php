@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Pos;
 
 use App\Models\Warehouse;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Filter extends Component
 {
@@ -19,28 +21,28 @@ class Filter extends Component
 
     public array $listsForFields = [];
 
-    public function mount($categories)
+    public function mount($categories): void
     {
         $this->categories = $categories;
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.pos.filter');
     }
 
-    public function updatedCategory()
+    public function updatedCategory(): void
     {
         $this->emitUp('selectedCategory', $this->category);
     }
 
-    public function updatedWarehouse()
+    public function updatedWarehouse(): void
     {
         $this->emitUp('selectedWarehouse', $this->warehouse);
     }
 
-    public function updatedShowCount()
+    public function updatedShowCount(): void
     {
         $this->emitUp('showCount', $this->category);
     }

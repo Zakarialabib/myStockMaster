@@ -6,7 +6,10 @@ use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Milon\Barcode\Facades\DNS1DFacade;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Barcode extends Component
 {
@@ -20,20 +23,20 @@ class Barcode extends Component
 
     protected $listeners = ['productSelected', 'getPdf'];
 
-    public function mount()
+    public function mount(): void
     {
         $this->product = '';
         $this->quantity = 0;
         $this->barcodes = [];
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.products.barcode');
     }
 
     // selecte multiple products without barcode
-    public function productSelected(Product $product)
+    public function productSelected(Product $product): void
     {
         $this->product = $product;
         $this->quantity = 1;
@@ -42,7 +45,7 @@ class Barcode extends Component
     }
 
     // generate barcodes for selected products
-    public function generateBarcodes(Product $product, $quantity)
+    public function generateBarcodes(Product $product, $quantity): void
     {
         if ($quantity > 100) {
             $this->alert('error', __('Max quantity is 100 per barcode generation!'));
@@ -56,7 +59,7 @@ class Barcode extends Component
         }
     }
 
-    public function getPdf()
+    public function getPdf(): StreamedResponse
     {
         // dd($this->barcodes);
 
@@ -68,12 +71,12 @@ class Barcode extends Component
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-'.$this->product->name.'.pdf'
+            'barcodes-' . $this->product->name . '.pdf'
         );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }
 
-    public function updatedQuantity()
+    public function updatedQuantity(): void
     {
         $this->barcodes = [];
     }

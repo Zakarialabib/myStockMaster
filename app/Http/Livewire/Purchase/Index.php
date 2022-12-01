@@ -8,6 +8,8 @@ use App\Models\PurchasePayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -52,22 +54,22 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
@@ -85,7 +87,7 @@ class Index extends Component
         'note' => 'nullable|string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
 
         $this->selectPage = false;
@@ -96,21 +98,21 @@ class Index extends Component
         $this->orderable = (new Purchase)->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
-                           ->advancedFilter([
-                               's' => $this->search ?: null,
-                               'order_column' => $this->sortBy,
-                               'order_direction' => $this->sortDirection,
-                           ]);
+            ->advancedFilter([
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $purchases = $query->paginate($this->perPage);
 
         return view('livewire.purchase.index', compact('purchases'));
     }
 
-    public function showModal(Purchase $purchase)
+    public function showModal(Purchase $purchase): void
     {
         abort_if(Gate::denies('purchase_show'), 403);
 
@@ -123,7 +125,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
@@ -132,7 +134,7 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Purchase $purchase)
+    public function delete(Purchase $purchase): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
@@ -141,7 +143,7 @@ class Index extends Component
 
     //  Payment modal
 
-    public function paymentModal(Purchase $purchase)
+    public function paymentModal(Purchase $purchase): void
     {
         abort_if(Gate::denies('purchase_payment'), 403);
 
@@ -151,14 +153,14 @@ class Index extends Component
 
         $this->purchase = $purchase;
         $this->date = Carbon::now()->format('Y-m-d');
-        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->reference = 'ref-' . Carbon::now()->format('YmdHis');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchase->id;
         $this->paymentModal = true;
     }
 
-    public function paymentSave()
+    public function paymentSave(): void
     {
         DB::transaction(function () {
 
@@ -205,7 +207,6 @@ class Index extends Component
             $this->alert('success', __('Payment created successfully.'));
 
             $this->paymentModal = false;
-
         });
     }
 }

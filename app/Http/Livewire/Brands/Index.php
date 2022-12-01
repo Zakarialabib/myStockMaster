@@ -6,6 +6,8 @@ use App\Http\Livewire\WithSorting;
 use App\Imports\BrandsImport;
 use App\Models\Brand;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -72,32 +74,32 @@ class Index extends Component
         'brand.description' => ['nullable', 'string'],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty():int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch():void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage():void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected():void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex():void
     {
         $this->resetPage();
     }
 
-    public function mount()
+    public function mount():void
     {
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -107,7 +109,7 @@ class Index extends Component
         $this->orderable = (new Brand)->orderable;
     }
 
-    public function render()
+    public function render():View|Factory
     {
         abort_if(Gate::denies('brand_access'), 403);
 
@@ -122,7 +124,7 @@ class Index extends Component
         return view('livewire.brands.index', compact('brands'));
     }
 
-    public function editModal(Brand $brand)
+    public function editModal(Brand $brand):void
     {
         abort_if(Gate::denies('brand_edit'), 403);
 
@@ -135,7 +137,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update():void
     {
         abort_if(Gate::denies('brand_edit'), 403);
 
@@ -155,7 +157,7 @@ class Index extends Component
         $this->alert('success', __('Brand updated successfully.'));
     }
 
-    public function showModal(Brand $brand)
+    public function showModal(Brand $brand):void
     {
         abort_if(Gate::denies('brand_show'), 403);
 
@@ -168,7 +170,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected():void
     {
         abort_if(Gate::denies('brand_delete'), 403);
 
@@ -177,7 +179,7 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Brand $brand)
+    public function delete(Brand $brand):void
     {
         abort_if(Gate::denies('brand_delete'), 403);
 
@@ -186,14 +188,14 @@ class Index extends Component
         $this->alert('success', __('Brand deleted successfully.'));
     }
 
-    public function importModal()
+    public function importModal():void
     {
         abort_if(Gate::denies('brand_create'), 403);
 
         $this->importModal = true;
     }
 
-    public function import()
+    public function import():void
     {
         abort_if(Gate::denies('brand_create'), 403);
 

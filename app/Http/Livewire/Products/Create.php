@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -17,7 +19,7 @@ class Create extends Component
     use LivewireAlert, WithFileUploads;
 
     public $listeners = ['createProduct'];
-    
+
     /** @var boolean */
     public $createProduct = null;
 
@@ -43,12 +45,12 @@ class Create extends Component
         'product.brand_id' => ['nullable', 'integer'],
     ];
 
-    public function updated($propertyName)
+    public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product)
+    public function mount(Product $product): void
     {
         $this->product = $product;
         $this->product->stock_alert = 10;
@@ -58,14 +60,14 @@ class Create extends Component
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('create_products'), 403);
 
         return view('livewire.products.create');
     }
 
-    public function createProduct()
+    public function createProduct(): void
     {
         $this->resetErrorBag();
 
@@ -74,12 +76,12 @@ class Create extends Component
         $this->createProduct = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
-        if($this->image) {
-            $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+        if ($this->image) {
+            $imageName = Str::slug($this->product->name) . '-' . date('Y-m-d H:i:s') . '.' . $this->image->extension();
             $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
@@ -91,7 +93,6 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createProduct = false;
-
     }
 
     protected function initListsForFields(): void

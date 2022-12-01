@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Printer;
 
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -25,19 +27,19 @@ class Create extends Component
         'printer.path' => 'required|string|max:255',
     ];
 
-    public function mount(Printer $printer)
+    public function mount(Printer $printer): void
     {
         $this->printer = $printer;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('printer_create'), 403);
 
         return view('livewire.printer.create');
     }
 
-    public function createPrinter()
+    public function createPrinter(): void
     {
         $this->resetErrorBag();
 
@@ -49,7 +51,7 @@ class Create extends Component
         $this->createPrinter = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -60,6 +62,5 @@ class Create extends Component
         $this->emit('refreshIndex');
 
         $this->createPrinter = false;
-
     }
 }

@@ -39,21 +39,18 @@ class HomeController extends Controller
             'today' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()),
                 'stockValue' => Product::stockValue(Carbon::now()),
-
             ],
             'month' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonth()),
-                'stockValue' => Product::stockValue(Carbon::now()->subMonth()),
+                'stockValue' => Product::stockValue(Carbon::now()->subMonth())
             ],
             'semi' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonths(6)),
-                'stockValue' => Product::stockValue(Carbon::now()->subMonths(6)),
-
+                'stockValue' => Product::stockValue(Carbon::now()->subMonths(6))
             ],
             'year' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subYear()),
-                'stockValue' => Product::stockValue(Carbon::now()->subYear()),
-
+                'stockValue' => Product::stockValue(Carbon::now()->subYear())
             ],
         ];
 

@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -12,40 +14,40 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createCategory'];
-    
+
     /** @var boolean */
-    public $createCategory = false; 
-    
+    public $createCategory = false;
+
     public $category;
-    
+
     /** @var string */
     public $name;
 
-    protected function rules()
+    protected function rules(): array
     {
-        return [ 'name' => 'required|string|max:255', ];
+        return ['name' => 'required|string|max:255',];
     }
 
-    public function updated($propertyName)
+    public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
         return view('livewire.categories.create');
     }
 
-    public function createCategory()
+    public function createCategory(): void
     {
         $this->reset();
 
         $this->createCategory = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $validatedData = $this->validate();
 

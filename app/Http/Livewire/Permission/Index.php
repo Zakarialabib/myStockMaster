@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Permission;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -49,22 +51,22 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
@@ -87,7 +89,7 @@ class Index extends Component
         ];
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -96,7 +98,7 @@ class Index extends Component
         $this->orderable = (new Permission)->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         $query = Permission::advancedFilter([
             's' => $this->search ?: null,
@@ -109,7 +111,7 @@ class Index extends Component
         return view('livewire.permission.index', compact('permissions'));
     }
 
-    public function createModal()
+    public function createModal(): void
     {
         abort_if(Gate::denies('permission_create'), 403);
 
@@ -120,7 +122,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -131,7 +133,7 @@ class Index extends Component
         $this->alert('success', __('Permission created successfully.'));
     }
 
-    public function editModal(Permission $permission)
+    public function editModal(Permission $permission): void
     {
         abort_if(Gate::denies('permission_edit'), 403);
 
@@ -144,7 +146,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -155,7 +157,7 @@ class Index extends Component
         $this->alert('success', __('Permission updated successfully.'));
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('permission_delete'), 403);
 
@@ -164,7 +166,7 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Permission $permission)
+    public function delete(Permission $permission): void
     {
         abort_if(Gate::denies('permission_delete'), 403);
 

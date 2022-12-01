@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class ProductList extends Component
 {
@@ -35,7 +37,7 @@ class ProductList extends Component
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.pos.product-list', [
             'products' => Product::when($this->category_id, function ($query) {
@@ -46,25 +48,25 @@ class ProductList extends Component
         ]);
     }
 
-    public function categoryChanged($category_id)
+    public function categoryChanged($category_id): void
     {
         $this->category_id = $category_id;
         $this->resetPage();
     }
 
-    public function warehouseChanged($warehouse_id)
+    public function warehouseChanged($warehouse_id): void
     {
         $this->warehouse_id = $warehouse_id;
         $this->resetPage();
     }
 
-    public function showCountChanged($value)
+    public function showCountChanged($value): void
     {
         $this->limit = $value;
         $this->resetPage();
     }
 
-    public function selectProduct($product)
+    public function selectProduct($product): void
     {
         $this->emit('productSelected', $product);
     }

@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\Models\Brand;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class BrandsImport implements ToModel
+class BrandsImport implements ToModel , SkipsEmptyRows
 {
     /**
      * @param  array  $row

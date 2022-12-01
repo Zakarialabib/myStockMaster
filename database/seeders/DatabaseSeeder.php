@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
+            WarehouseSeeder::class
         ]);
     }
 }

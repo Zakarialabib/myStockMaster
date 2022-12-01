@@ -12,10 +12,13 @@ use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
 {
@@ -71,27 +74,27 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty():int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch():void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage():void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected():void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex():void
     {
         $this->resetPage();
     }
@@ -112,7 +115,7 @@ class Index extends Component
         'product.brand_id' => ['nullable', 'integer'],
     ];
 
-    public function mount()
+    public function mount():void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -122,7 +125,7 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function deleteSelected()
+    public function deleteSelected():void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
@@ -131,14 +134,14 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Product $product)
+    public function delete(Product $product):void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
         $product->delete();
     }
 
-    public function render()
+    public function render():View|Factory
     {
         abort_if(Gate::denies('product_access'), 403);
 
@@ -159,7 +162,7 @@ class Index extends Component
         return view('livewire.products.index', compact('products'));
     }
 
-    public function showModal(Product $product)
+    public function showModal(Product $product):void
     {
         abort_if(Gate::denies('product_access'), 403);
 
@@ -168,7 +171,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function sendTelegram(Product $product)
+    public function sendTelegram(Product $product):void
     {
         $this->product = Product::find($product->id);
 
@@ -176,7 +179,7 @@ class Index extends Component
 
     }
 
-    public function editModal(Product $product)
+    public function editModal(Product $product):void
     {
         abort_if(Gate::denies('product_update'), 403);
 
@@ -189,7 +192,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update():void
     {
 
         $this->validate();
@@ -207,7 +210,7 @@ class Index extends Component
         $this->alert('success', __('Product updated successfully.'));
     }
 
-    public function importModal()
+    public function importModal():void
     {
         
         abort_if(Gate::denies('product_access'), 403);
@@ -219,7 +222,7 @@ class Index extends Component
         $this->importModal = true;
     }
 
-    public function import()
+    public function import():void
     {
         
         $this->validate([
@@ -236,17 +239,22 @@ class Index extends Component
         $this->importModal = false;
     }
 
-    public function exportExcel()
+    public function exportExcel():BinaryFileResponse
     {
         abort_if(Gate::denies('product_access'), 403);
 
-        return (new ProductExport)->download('products.xlsx');
+        return $this->callExport()->download('products.xlsx');
     }
 
     public function exportPdf()
     {
 
-        return (new ProductExport)->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }
+
+    private function callExport(): ProductExport
+    {
+        return (new ProductExport());
     }
 
     protected function initListsForFields(): void
