@@ -69,7 +69,7 @@
                 </x-dropdown>
 
                 <x-button primary type="button" onclick="Livewire.emit('createBrand', 'show')">
-                {{ __('Create') }}
+                {{ __('Create Brand') }}
                 </x-button>
             </div>
         </div>

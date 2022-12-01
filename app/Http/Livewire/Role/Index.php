@@ -19,9 +19,9 @@ class Index extends Component
 
     public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
 
-    public $createModal;
+    public $createModal  = false;
 
-    public $editModal;
+    public $editModal  = false;
 
     public int $perPage;
 

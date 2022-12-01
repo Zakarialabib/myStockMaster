@@ -41,7 +41,7 @@
         <div class="mt-3">
             <button wire:click="generateBarcodes({{ $product }}, {{ $quantity }})" type="button"
                 class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                <i class="bi bi-upc-scan"></i> {{ __('Generate Barcodes') }}
+                 {{ __('Generate Barcodes') }}
             </button>
         </div>
     </x-card>

@@ -23,7 +23,7 @@
 
         @can('show_notifications')
                 <div>
-                    <x-dropdown align="right" class="w-auto">
+                    <x-dropdown align="right" width="56">
                         <x-slot name="trigger" class="inline-flex">
                             <x-button type="button" iconOnly secondary srText="Open notifications">
                                 @php
@@ -136,9 +136,6 @@
 
 @push('scripts')
 <script>
-    // $(document).ready(function () {
-    
-   
 
     function toggleFullscreen(elem) {
         elem = elem || document.documentElement;

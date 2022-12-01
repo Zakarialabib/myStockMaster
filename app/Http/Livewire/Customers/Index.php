@@ -32,11 +32,11 @@ class Index extends Component
 
     public $listeners = ['resetSelected', 'confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'import', 'importExcel', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $showModal;
+    public $showModal  = false;
+
+    public $editModal  = false;
 
     public $refreshIndex;
-
-    public $editModal;
 
     public $import;
 

@@ -17,6 +17,8 @@ class Create extends Component
 
     public $listeners = ['createExpense'];
 
+    public $createExpense  = false;
+    
     public $reference;
 
     public $category_id;
@@ -31,7 +33,6 @@ class Create extends Component
 
     public $warehouse_id;
 
-    public $createExpense;
 
     public $expense;
 

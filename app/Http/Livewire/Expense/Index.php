@@ -30,9 +30,9 @@ class Index extends Component
 
     public $listeners = ['confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $showModal;
+    public $showModal  = false;
 
-    public $editModal;
+    public $editModal  = false;
 
     public $showDeleteModal;
 

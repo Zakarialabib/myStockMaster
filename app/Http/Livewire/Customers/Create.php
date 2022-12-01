@@ -16,7 +16,7 @@ class Create extends Component
 
     public $listeners = ['createCustomer'];
 
-    public $createCustomer;
+    public $createCustomer = false;
 
     public $customer;
 

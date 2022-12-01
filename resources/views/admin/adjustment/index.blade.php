@@ -37,7 +37,7 @@
             </div>
             <div class="float-right">
                 <x-button href="{{ route('adjustments.create') }}" primary>
-                    {{ __('Create') }}
+                    {{ __('Create Adjustment') }}
                 </x-button>
             </div>
         </div>
