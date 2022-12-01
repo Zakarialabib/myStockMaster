@@ -8,6 +8,7 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+/public/hot
 /public/images/products/*
 /public/images/livewire-temp/*
 /public/storage/

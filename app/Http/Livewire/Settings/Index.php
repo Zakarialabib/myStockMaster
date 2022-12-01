@@ -9,7 +9,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Str;
+use Illuminate\Support\Str;
 
 class Index extends Component
 {
@@ -80,8 +80,6 @@ class Index extends Component
         }
 
         $this->settings->save();
-
-        cache()->forget('settings');
 
         $this->alert('success', __('Settings Updated successfully !'));
     }
