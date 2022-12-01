@@ -6,6 +6,8 @@ use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Setting;
 use App\Models\Warehouse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -44,7 +46,7 @@ class Index extends Component
         'settings.salepayment_prefix'    => 'nullable',
         'settings.purchasepayment_prefix'    => 'nullable',
         'settings.is_rtl' => 'boolean',
-        'settings.invoice_prefix' => 'required|string|min:1|max:255',
+        //'settings.invoice_prefix' => 'nullable|string|min:1|max:255',
         'settings.show_email' => 'boolean',
         'settings.show_address' => 'boolean',
         'settings.show_order_tax' => 'boolean',
@@ -52,12 +54,12 @@ class Index extends Component
         'settings.show_shipping' => 'boolean',
     ];
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.settings.index');
     }
 
-    public function mount()
+    public function mount(): void
     {
         abort_if(Gate::denies('access_settings'), 403);
 
@@ -68,13 +70,14 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function update()
+    public function update(): void
     {
 
         $this->validate();
 
+
         if ($this->site_logo != null) {
-            $imageName = Str::slug($this->company_name).'.'.$this->image->extension();
+            $imageName = Str::slug($this->company_name) . '.' . $this->image->extension();
             $this->image->storeAs('settings', $imageName);
             $this->site_logo = $imageName;
         }
