@@ -22,6 +22,8 @@ class Index extends Component
     public $purchase;
 
     public int $perPage;
+    
+    public $selectPage;
 
     public $listeners = [
         'confirmDelete', 'delete', 'showModal',
@@ -69,6 +71,11 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function resetSelected(): void
+    {
+        $this->selected = [];
+    }
+
     public function refreshIndex(): void
     {
         $this->resetPage();
@@ -91,7 +98,7 @@ class Index extends Component
     {
 
         $this->selectPage = false;
-        $this->sortField = 'id';
+        $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');

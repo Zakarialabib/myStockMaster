@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Purchase;
+use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,9 +12,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class PurchaseExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
+
+    protected $models;
 
     public function query()
     {
+        if ($this->models) {
+            return Purchase::query()->whereIn('id', $this->models);
+        }
+
         return Purchase::query();
     }
 

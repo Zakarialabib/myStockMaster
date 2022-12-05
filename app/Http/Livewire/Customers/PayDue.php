@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Customers;
 
-use App\Models\PaymentSale;
+use App\Models\SalePayment;
 use App\Models\Sale;
 use Auth;
 use Carbon\Carbon;
@@ -36,7 +36,7 @@ class PayDue extends Component
                     $payment_status = Sale::PaymentPartial;
                 }
 
-                $payment_sale = new PaymentSale;
+                $payment_sale = new SalePayment;
                 $payment_sale->sale_id = $customer_sale->id;
                 $payment_sale->reference = app('App\Http\Controllers\PaymentSalesController')->getNumberOrder();
                 $payment_sale->date = Carbon::now();

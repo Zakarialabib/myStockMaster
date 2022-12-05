@@ -103,15 +103,6 @@ class PurchaseController extends Controller
         return redirect()->route('purchases.index');
     }
 
-    public function show(Purchase $purchase)
-    {
-        abort_if(Gate::denies('show_purchases'), 403);
-
-        $supplier = Supplier::findOrFail($purchase->supplier_id);
-
-        return view('admin.purchases.show', compact('purchase', 'supplier'));
-    }
-
     public function edit(Purchase $purchase)
     {
         abort_if(Gate::denies('edit_purchases'), 403);

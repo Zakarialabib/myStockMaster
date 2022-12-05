@@ -28,7 +28,7 @@ class Index extends Component
 
     public int $perPage;
 
-    public int $selectPage;
+    public $selectPage;
 
     public $listeners = ['resetSelected', 'confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'import', 'importExcel', 'refreshIndex', 'showModal', 'editModal'];
 
@@ -133,31 +133,6 @@ class Index extends Component
         $this->alert('warning', __('Customer deleted successfully'));
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->customer = new Customer;
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        $this->customer->save();
-
-        $this->alert('success', __('Customer created successfully'));
-
-        $this->emit('refreshIndex');
-
-        $this->createModal = false;
-    }
 
     public function showModal(Customer $customer)
     {

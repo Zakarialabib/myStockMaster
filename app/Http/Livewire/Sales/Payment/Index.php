@@ -67,7 +67,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
@@ -90,7 +90,6 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new SalePayment)->orderable;
-        $this->paymentModal = false;
     }
 
     public function render()

@@ -7,9 +7,12 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Checkout extends Component
 {
+    use LivewireAlert;
+
     public $listeners = [
         'productSelected', 'discountModalRefresh', 'checkoutModal',
         'refreshCustomers',
@@ -257,8 +260,4 @@ class Checkout extends Component
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
 
-    public function refreshCustomers(): void
-    {
-        $this->initListsForFields();
-    }
 }

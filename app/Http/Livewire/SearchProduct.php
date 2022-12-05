@@ -13,6 +13,8 @@ class SearchProduct extends Component
 {
     use WithPagination;
 
+    public $product;
+
     protected $listeners = [
         'selectedCategory' => 'categoryChanged',
         'selectedWarehouse' => 'warehouseChanged',
@@ -20,7 +22,7 @@ class SearchProduct extends Component
     ];
 
     public array $listsForFields = [];
-    
+
     public $categories;
 
     public $category_id;
@@ -63,18 +65,12 @@ class SearchProduct extends Component
                                         ->orWhere('code', 'like', '%'.$this->query.'%')
                                         ->take($this->how_many)
                                         ->get();
-        // issue here 
-        if (isset($this->query)) 
-        {
-            $this->product = Product::where('name', $this->query)
-                                    ->orWhere('code', $this->query)
-                                    ->first();
-            
+        // issue here
+        if ($this->search_results->count() > 0) {
+            $this->product = $this->search_results->first();
             $this->emit('productSelected', $this->product);
-        }   
-                            
+        }
     }
-    
 
     public function loadMore()
     {
@@ -90,7 +86,7 @@ class SearchProduct extends Component
     }
 
     public function selectProduct($product)
-    {   
+    {
         $this->emit('productSelected', $product);
     }
 

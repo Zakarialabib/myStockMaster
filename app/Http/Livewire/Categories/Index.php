@@ -25,6 +25,8 @@ class Index extends Component
 
     /** @var boolean */
     public $name;
+    
+    public $file;
 
     public $listeners = [
         'confirmDelete', 'delete', 'importModal',
@@ -122,7 +124,7 @@ class Index extends Component
 
         $categories = $query->paginate($this->perPage);
 
-        return view('livewire.categories.index', compact('categories'))->extends('layouts.app');
+        return view('livewire.categories.index', compact('categories'));
     }
 
     public function editModal(Category $category):void

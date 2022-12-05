@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Emails\QuotationMail;
+use App\Mail\QuotationMail;
 use App\Models\Quotation;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;

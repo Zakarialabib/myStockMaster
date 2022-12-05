@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Product;
+use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -24,9 +25,6 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
         return Product::query();
     }
 
-    /**
-     * @var Product
-     */
     public function map($row): array
     {
         return [

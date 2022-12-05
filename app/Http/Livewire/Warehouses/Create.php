@@ -5,13 +5,18 @@ namespace App\Http\Livewire\Warehouses;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Create extends Component
 {
+    use LivewireAlert;
+
     public $listeners = ['createWarehouse'];
 
     /** @var boolean */
     public $createWarehouse = false;
+    
+    public $warehouse;
 
     public array $rules = [
         'warehouse.name' => ['string', 'required'],

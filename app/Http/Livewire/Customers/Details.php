@@ -21,7 +21,7 @@ class Details extends Component
 
     public int $perPage;
 
-    public int $selectPage;
+    public $selectPage;
 
     public  $customer_id;
 

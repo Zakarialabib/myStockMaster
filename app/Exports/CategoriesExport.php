@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Category;
+use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,18 +12,15 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class CategoriesExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Category::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+
+            return  Category::query()->whereIn('id', $this->models);
         }
 
         return Category::query();
@@ -40,9 +38,9 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Code',
-            'Created At',
+            __('Name'),
+            __('Code'),
+            __('Created At'),
         ];
     }
 }

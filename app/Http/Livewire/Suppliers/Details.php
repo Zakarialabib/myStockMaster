@@ -11,6 +11,8 @@ class Details extends Component
 {
     public $supplier_id;
 
+    public $supplier;
+
     public function mount($supplier)
     {
         $this->supplier = Supplier::find($supplier->id);

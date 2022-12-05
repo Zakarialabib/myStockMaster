@@ -1,9 +1,15 @@
 <div class="relative">
     <div class="mb-3 px-2">
-        <div class="mb-2 w-full">
-            <input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus
-                class="block w-full shadow-sm focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                placeholder="{{ __('Type product name or code....') }}">
+        <div class="mb-2 w-full relative text-gray-600 focus-within:text-gray-400">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+              <button type="button" class="p-1 focus:outline-none focus:shadow-outline" onkeydown="initQuaggaJS();">
+                <i class="fas fa-camera"></i>
+              </button>
+            </span>
+            <input id="productSearch" wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus
+                class="w-full pl-10 shadow-sm focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                placeholder="{{ __('Type product name or code....') }}" >
+            <div id="scanner-container" class="hidden"></div>
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="md:w-1/3 px-2">
@@ -39,13 +45,13 @@
     </div>
 
     @if (!empty($query))
-        <div wire:click="resetQuery fixed w-full h-full  left-0 right-0 top-0 bottom-0 z-10">
-        </div>
+        <div wire:click="resetQuery" class="fixed w-full h-full  left-0 right-0 top-0 bottom-0 z-10"></div>
         @if ($search_results->isNotEmpty())
             <div class="flex flex-row relative">
                 <div class="w-full grid gap-3 md:grid-cols-2 lg:grid-cols-3 px-2 mt-5 overflow-y-auto bg-white">
                     @foreach ($search_results as $result)
-                        <div wire:click.prevent="selectProduct({{ $result }})" class="w-full py-10 relative pointer">
+                        <div wire:click.prevent="selectProduct({{ $result }})"
+                            class="w-full py-10 relative shadow-md cursor-pointer">
                             <div class="inline-block p-1 text-center font-semibold text-sm align-baseline leading-none rounded text-white bg-blue-400 mb-3 absolute"
                                 style="right:10px;top: 10px;">{{ __('Stock') }}: {{ $result->quantity }}
                             </div>
@@ -139,3 +145,39 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js" integrity="sha512-bCsBoYoW6zE0aja5xcIyoCDPfT27+cGr7AOCqelttLVRGay6EKGQbR6wm6SUcUGOMGXJpj+jrIpMS6i80+kZPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+
+function initQuaggaJS() {
+    Quagga.init({
+      inputStream : {
+        name : "Live",
+        type : "LiveStream",
+        target: document.querySelector('#scanner-container') // Or '#yourElement' (optional)
+      },
+      decoder : {
+        readers : ["code_128_reader"]
+      }
+    }, function(err) {
+      if (err) {
+        console.log(err);
+        return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
+    });
+    document.querySelector("#scanner-container").classList.remove("hidden");
+  }
+
+  Quagga.onDetected(function(result) {
+    document.querySelector("#productSearch").value = result.codeResult.code;
+    document.querySelector("#scanner-container").classList.add("hidden");
+    Quagga.stop();
+  });
+</script>
+
+@endpush

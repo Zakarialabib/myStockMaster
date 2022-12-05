@@ -70,15 +70,6 @@ class QuotationController extends Controller
         return redirect()->route('quotations.index');
     }
 
-    public function show(Quotation $quotation)
-    {
-        abort_if(Gate::denies('show_quotations'), 403);
-
-        $customer = Customer::findOrFail($quotation->customer_id);
-
-        return view('admin.quotation.show', compact('quotation', 'customer'));
-    }
-
     public function edit(Quotation $quotation)
     {
         abort_if(Gate::denies('quotation_update'), 403);

@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Permission;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
-use App\Support\HasAdvancedFilter;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -17,7 +16,6 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
-    use HasAdvancedFilter;
 
     public $permission;
 
