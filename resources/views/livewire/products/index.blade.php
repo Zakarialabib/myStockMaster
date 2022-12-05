@@ -106,7 +106,12 @@
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link wire:click="editModal({{ $product->id }})" class="mr-2"
+                                    <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-paper-plane"></i>
+                                        {{ __('Send to telegram') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="editModal({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
@@ -145,7 +150,7 @@
         </div>
     </div>
 
-    @if ($showModal)
+
         <!-- Show Modal -->
         <x-modal wire:model="showModal">
             <x-slot name="title">
@@ -155,7 +160,7 @@
             <x-slot name="content">
                 <div class="px-4 mx-auto mb-4">
                     {{-- Send telegram --}}
-                    <div class="flex justify-center w-full px-3">
+                    <div class="flex justify-center w-full my-5 px-3">
                         <x-button success type="button" wire:click="sendTelegram({{ $product->id }})"
                             wire:loading.attr="disabled">
                             <i class="fas fa-edit"></i>
@@ -247,7 +252,7 @@
             </x-slot>
         </x-modal>
         <!-- End Show Modal -->
-    @endif
+
 
     <!-- Edit Modal -->
     <x-modal wire:model="editModal">

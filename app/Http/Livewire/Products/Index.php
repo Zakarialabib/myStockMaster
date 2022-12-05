@@ -171,11 +171,18 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function sendTelegram(Product $product):void
+    public function sendTelegram($product):void
     {
-        $this->product = Product::find($product->id);
+        $this->product = Product::find($product);
+   
+        // Specify Telegram channel
+        $telegramChannel = '-877826769';
+   
+        // Pass in product details
+        $productName = $this->product->name;
+        $productPrice = $this->product->price;
 
-        $this->product->notify(new ProductTelegram);
+        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
 
     }
 

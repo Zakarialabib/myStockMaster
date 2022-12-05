@@ -2,14 +2,26 @@
     <div class="mb-3 px-2">
         <div class="mb-2 w-full relative text-gray-600 focus-within:text-gray-400">
             <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-              <button type="button" class="p-1 focus:outline-none focus:shadow-outline" onkeydown="initQuaggaJS();">
+                {{-- emit show modal --}}
+              <a  href="#" class="p-1 focus:outline-none focus:shadow-outline" 
+                    wire:click="show" 
+                    onkeydown="initQuaggaJS();"
+                    onclick="initQuaggaJS();">
                 <i class="fas fa-camera"></i>
-              </button>
+              </a>
             </span>
+            {{-- show modal --}}
+            <x-modal wire:model="show">
+                <x-slot name="title">
+                    {{__('Scan here')}}
+                </x-slot>
+                <x-slot name="content">
+                    <div id="scanner-container"></div>
+                </x-slot>
+            </x-modal>
             <input id="productSearch" wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus
                 class="w-full pl-10 shadow-sm focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                 placeholder="{{ __('Type product name or code....') }}" >
-            <div id="scanner-container" class="hidden"></div>
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="md:w-1/3 px-2">
