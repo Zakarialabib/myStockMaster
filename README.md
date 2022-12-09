@@ -1,8 +1,25 @@
-# Mystock - Laravel Liveiwre Inventory Pos
+Mystock is a Laravel-based inventory management system that offers an easy and straightforward way to keep track of your inventory, sales, purchases, and more. It features a user-friendly dashboard, intuitive reports, and a wide range of features to help you manage and grow your business.
 
-Mystock is a simple inventory management system built with Laravel 9, Livewire, AlpineJs and Tailwind CSS. 
+Features:
 
-This project allows you to manage your inventory, sales, and purchases, easy & simple reporting, that helps you to generate reports for your business.
+    Dashboard with key insights and metrics
+    Products, categories, brands, and suppliers management
+    Sales and purchases tracking
+    Customers and user management with roles and permissions
+    Settings and preferences
+    Inventory adjustment and stock management
+    Multi-currency support
+    Warehouses and storage locations
+    Calculator dashboard
+    Local and cloud-based backup options
+    Import/Export functionality
+    Multi-language support
+    Cash register and POS integration
+    Notifications and alerts
+    Send product promotion to telegram  
+
+Mystock is built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring a fast and responsive user experience. Try it out today and see how it can help you manage your inventory and grow your business.
+
 
 ## Roadmap
 
@@ -47,74 +64,16 @@ You can check the demo here:
     -   Email: `admin@ggmail.com`
     -   Password: `password`
 
-
-## Features
-
--   Dashboard
--   Products Management
--   Category Management
--   Brand Management
--   Unit Management
--   Sales Management
--   Purchase Management
--   Quatation Management
--   POS System
--   Reporting System
--   User Management
--   Role Management
--   Permission Management
--   Warehouse Management
--   Settings Management
-
 ## Milstones : 
 
-- Send telegram to admin when trasnactions are made
-- Send products through telegram bot to customers
-- Send email to admin when trasnactions are made
-- Expose Api to connect with other systems
-- Make connections with woocommerce to get products and orders
-- Make connections with youCan to get products and orders
-- Make connections with Shopify to get products and orders
-- Connect with delivery system to get orders and send them to delivery system
+-Mystock is constantly improving and expanding its functionality. Here are some of the upcoming features and enhancements:
 
-## Changelog
-
-- 1.0.0 - Initial Release
-- 1.0.1 - Added Settings
-- 1.0.2 - Added Dashboard
-- 1.0.3 - Added Reports
-- 1.0.4 - Added User Management
-- 1.0.5 - Added Role Management
-- 1.0.6 - Added Permission Management
-- 1.0.7 - Added Product management
-- 1.0.8 - Added Purchase Management
-- 1.0.9 - Added Sales Management
-- 1.0.10 - Added POS System
-- 1.0.11 - Optimization of Product Category Management (Livewire modals)
-- 1.0.12 - Optimization of Customer management (Livewire modals)
-- 1.0.13 - Optimization of Supplier management (Livewire modals)
-- 1.0.14 - Fixing migrations and seeds
-- 1.0.15 - Warehouse Management
-- 1.0.16 - Added Quatation Management
-- 1.0.17 - Added Brand Management  
-- 1.0.18 - Added Import & Export Products
-- 1.0.19 - Added Import & Export Customers
-- 1.0.20 - Added Import & Export Suppliers
-- 1.0.21 - Added Import & Export Permissions
-- 1.0.22 - Added Import & Export Sales  
-- 1.0.23 - Added Import & Export Purchases
-- 1.0.24 - Optimization of Product Create with Livewire modal
-- 1.0.25 - Optimization of User Managemenet with Livewire modal
-- 1.0.26 - Optimization of Brand Create with Livewire modal
-- 1.0.27 - Optimization of Category Create with Livewire modal
-- 1.0.28 - Optimization of Customer Create with Livewire modal
-- 1.0.29 - Optimization of Supplier Create with Livewire modal
-- 1.0.30 - Optimization of Pos
-- 1.0.31 - Optimization of Sales
-- 1.0.32 - Optimization of Purchases
-- 1.0.33 - Optimization of Product Image Upload
-....
-
+    Email notifications for admin when transactions are made
+    API access for connecting with other systems
+    Integration with popular e-commerce platforms such as WooCommerce, YouCan, and Shopify
+    Connection with delivery systems for order management and fulfillment
+    
+Stay tuned for updates and new features or join us in discussions above!
 
 ## Requirements
 
@@ -149,7 +108,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 -   [Livewire](https://laravel-livewire.com/)
 -   [AlpineJs]()
 
-## Screenshots
+## Screenshots : 
 
 - Login
 ![Login](screens/login.png)
