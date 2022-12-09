@@ -1,22 +1,20 @@
 Mystock is a Laravel-based inventory management system that offers an easy and straightforward way to keep track of your inventory, sales, purchases, and more. It features a user-friendly dashboard, intuitive reports, and a wide range of features to help you manage and grow your business.
 
 Features:
-
-    Dashboard with key insights and metrics
-    Products, categories, brands, and suppliers management
-    Sales and purchases tracking
-    Customers and user management with roles and permissions
-    Settings and preferences
-    Inventory adjustment and stock management
-    Multi-currency support
-    Warehouses and storage locations
-    Calculator dashboard
-    Local and cloud-based backup options
-    Import/Export functionality
-    Multi-language support
-    Cash register and POS integration
-    Notifications and alerts
-    Send product promotion to telegram  
+- Dashboard with key insights and metrics
+- Products, categories, brands, and suppliers management
+- Sales and purchases tracking
+- Customers and user management with roles and permissions
+- Settings and preferences
+- Inventory adjustment and stock management
+- Multi-currency support
+- Warehouses multi-locations
+- Local and cloud-based backup options
+- Import/Export functionality
+- Multi-language support
+- POS integration
+- Notifications and alerts
+- Send product promotion to telegram  
 
 Mystock is built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring a fast and responsive user experience. Try it out today and see how it can help you manage your inventory and grow your business.
 
@@ -68,10 +66,12 @@ You can check the demo here:
 
 -Mystock is constantly improving and expanding its functionality. Here are some of the upcoming features and enhancements:
 
-    Email notifications for admin when transactions are made
-    API access for connecting with other systems
-    Integration with popular e-commerce platforms such as WooCommerce, YouCan, and Shopify
-    Connection with delivery systems for order management and fulfillment
+- Transactional Notifications for admin
+- API access for connecting with other systems
+- Integration with popular e-commerce platforms such as WooCommerce, YouCan, and Shopify
+- Connection with delivery systems for order management and fulfillment
+- Local and cloud-based backup options
+- Cash register
     
 Stay tuned for updates and new features or join us in discussions above!
 
