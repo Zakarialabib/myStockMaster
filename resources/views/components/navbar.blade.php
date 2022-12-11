@@ -40,7 +40,7 @@
 
                         <x-slot name="content">
                             @forelse($low_quantity_products as $product)
-                                <x-dropdown-link href="{{ route('products.show', $product->id) }}">
+                                <x-dropdown-link href="#">
                                     <i class="fas fa-bell w-5 h-5" aria-hidden="true"></i>
                                     <span class="ml-2">{{ __('Product') }}: "{{ $product->code }}"
                                         {{ __('is low in quantity !') }}</span>
