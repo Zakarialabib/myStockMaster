@@ -67,11 +67,11 @@
         </x-button> --}}
 
 
-        {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
+        <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
             @click="toggleRtl">
             <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
             <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
-        </x-button> --}}
+        </x-button>
 
         <ul class="flex-col md:flex-row list-none items-center md:flex">
             <x-dropdown align="right" width="56">

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\SaleReturn;
 
 use App\Http\Livewire\WithSorting;
@@ -88,16 +90,16 @@ class Index extends Component
     }
 
     public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|string|max:255',
+        'payment_method'      => 'required|string|max:255',
+        'note'                => 'string|max:1000',
     ];
 
     public function mount()
@@ -106,7 +108,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new SaleReturn)->orderable;
+        $this->orderable = (new SaleReturn())->orderable;
         $this->initListsForFields();
     }
 
@@ -115,11 +117,11 @@ class Index extends Component
         abort_if(Gate::denies('access_sales'), 403);
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
-                      ->advancedFilter([
-                          's' => $this->search ?: null,
-                          'order_column' => $this->sortBy,
-                          'order_direction' => $this->sortDirection,
-                      ]);
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $salereturns = $query->paginate($this->perPage);
 
@@ -177,7 +179,7 @@ class Index extends Component
             ],
         ]);
 
-        SaleReturn::import(new SaleImport, $this->file('import_file'));
+        SaleReturn::import(new SaleImport(), $this->file('import_file'));
 
         $this->alert('success', 'Sales imported successfully');
 
@@ -207,9 +209,9 @@ class Index extends Component
         DB::transaction(function () {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -217,11 +219,11 @@ class Index extends Component
             $salereturn = SaleReturn::find($this->salereturn_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->salereturn_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->salereturn_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -238,8 +240,8 @@ class Index extends Component
             }
 
             $salereturn->update([
-                'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($salereturn->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

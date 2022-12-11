@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales\Payment;
 
 use App\Http\Livewire\WithSorting;
@@ -89,7 +91,7 @@ class Index extends Component
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new SalePayment)->orderable;
+        $this->orderable = (new SalePayment())->orderable;
     }
 
     public function render()
@@ -97,8 +99,8 @@ class Index extends Component
         //    abort_if(Gate::denies('access_sale_payments'), 403);
 
         $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

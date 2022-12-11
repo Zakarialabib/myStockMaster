@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Printer;
 
 use App\Models\Printer;
@@ -20,13 +22,13 @@ class Create extends Component
     public $printer;
 
     public array $rules = [
-        'printer.name' => 'required|string|max:255',
-        'printer.connection_type' => 'required|string|max:255',
+        'printer.name'               => 'required|string|max:255',
+        'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line' => 'required',
-        'printer.ip_address' => 'required|string|max:255',
-        'printer.port' => 'required|string|max:255',
-        'printer.path' => 'required|string|max:255',
+        'printer.char_per_line'      => 'required',
+        'printer.ip_address'         => 'required|string|max:255',
+        'printer.port'               => 'required|string|max:255',
+        'printer.path'               => 'required|string|max:255',
     ];
 
     public function mount(Printer $printer): void

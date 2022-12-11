@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Imports;
 
 use App\Models\Customer;
@@ -14,9 +16,8 @@ class CustomerImport implements ToModel
     public function model(array $row)
     {
         return new Customer([
-            'name' => $row['name'],
+            'name'  => $row['name'],
             'phone' => $row['phone'],
         ]);
-
     }
 }

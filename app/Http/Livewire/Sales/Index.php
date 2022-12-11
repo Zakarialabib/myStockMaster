@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales;
 
 use App\Http\Livewire\WithSorting;
@@ -17,7 +19,10 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $sale;
 
@@ -87,16 +92,16 @@ class Index extends Component
     }
 
     public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|string|max:255',
+        'payment_method'      => 'required|string|max:255',
+        'note'                => 'string|max:1000',
     ];
 
     public function mount()
@@ -105,7 +110,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Sale)->orderable;
+        $this->orderable = (new Sale())->orderable;
         $this->initListsForFields();
     }
 
@@ -114,22 +119,22 @@ class Index extends Component
         abort_if(Gate::denies('access_sales'), 403);
 
         $query = Sale::with(['customer', 'salepayments'])
-                      ->advancedFilter([
-                          's' => $this->search ?: null,
-                          'order_column' => $this->sortBy,
-                          'order_direction' => $this->sortDirection,
-                      ]);
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $sales = $query->paginate($this->perPage);
 
         return view('livewire.sales.index', compact('sales'));
     }
 
-    public function showModal(Sale $sale)
+    public function showModal($sale)
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = Sale::find($sale->id);
+        $this->sale = Sale::find($sale);
 
         $this->showModal = true;
     }
@@ -176,14 +181,13 @@ class Index extends Component
             ],
         ]);
 
-        Sale::import(new SaleImport, $this->file('import_file'));
+        Sale::import(new SaleImport(), $this->file('import_file'));
 
         $this->alert('success', __('Sales imported successfully'));
 
         $this->emit('refreshIndex');
 
         $this->importModal = false;
-
     }
 
     //  Payment modal
@@ -205,12 +209,11 @@ class Index extends Component
     public function paymentSave()
     {
         DB::transaction(function () {
-
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -218,11 +221,11 @@ class Index extends Component
             $sale = Sale::find($this->sale_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->sale_id,
+                'date'           => $this->date,
+                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -239,15 +242,14 @@ class Index extends Component
             }
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
             $this->emit('refreshIndex');
 
             $this->paymentModal = false;
-
         });
     }
 

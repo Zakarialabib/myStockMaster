@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Currency;
 
 use App\Http\Livewire\WithSorting;
@@ -80,9 +82,9 @@ class Index extends Component
     }
 
     public array $rules = [
-        'currency.name' => 'required|string|max:255',
-        'currency.code' => 'required|string|max:255',
-        'currency.symbol' => 'required|string|max:255',
+        'currency.name'          => 'required|string|max:255',
+        'currency.code'          => 'required|string|max:255',
+        'currency.symbol'        => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
     ];
 
@@ -92,7 +94,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Currency)->orderable;
+        $this->orderable = (new Currency())->orderable;
     }
 
     public function render(): View|Factory
@@ -100,8 +102,8 @@ class Index extends Component
         abort_if(Gate::denies('currency_access'), 403);
 
         $query = Currency::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Quotations;
 
 use App\Http\Livewire\WithSorting;
@@ -13,7 +15,10 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $quotation;
 
@@ -21,7 +26,7 @@ class Index extends Component
         'confirmDelete', 'delete', 'showModal',
     ];
 
-    /** @var boolean */
+    /** @var bool */
     public $showModal = false;
 
     public int $perPage;
@@ -74,7 +79,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Quotation)->orderable;
+        $this->orderable = (new Quotation())->orderable;
         $this->initListsForFields();
     }
 
@@ -83,8 +88,8 @@ class Index extends Component
         abort_if(Gate::denies('access_quotations'), 403);
 
         $query = Quotation::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

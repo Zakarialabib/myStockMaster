@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
@@ -15,7 +17,7 @@ class Create extends Component
 
     public $listeners = ['createCategory'];
 
-    /** @var boolean */
+    /** @var bool */
     public $createCategory = false;
 
     public $category;
@@ -25,7 +27,7 @@ class Create extends Component
 
     protected function rules(): array
     {
-        return ['name' => 'required|string|max:255',];
+        return ['name' => 'required|string|max:255', ];
     }
 
     public function updated($propertyName): void

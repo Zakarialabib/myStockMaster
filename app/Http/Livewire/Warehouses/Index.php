@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Warehouses;
 
 use App\Http\Livewire\WithSorting;
@@ -23,14 +25,14 @@ class Index extends Component
 
     public $listeners = ['refreshIndex', 'confirmDelete', 'delete', 'showModal', 'editModal'];
 
-   /** @var boolean */
-   public $showModal = false;
+    /** @var bool */
+    public $showModal = false;
 
-   /** @var boolean */
-   public $importModal = false;
-   
-   /** @var boolean */
-   public $editModal = false;
+    /** @var bool */
+    public $importModal = false;
+
+    /** @var bool */
+    public $editModal = false;
 
     public array $orderable;
 
@@ -75,9 +77,9 @@ class Index extends Component
     }
 
     public array $rules = [
-        'warehouse.name' => ['string', 'required'],
+        'warehouse.name'  => ['string', 'required'],
         'warehouse.phone' => ['string', 'nullable'],
-        'warehouse.city' => ['string', 'nullable'],
+        'warehouse.city'  => ['string', 'nullable'],
         'warehouse.email' => ['string', 'nullable'],
     ];
 
@@ -87,7 +89,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Warehouse)->orderable;
+        $this->orderable = (new Warehouse())->orderable;
     }
 
     public function render()
@@ -95,8 +97,8 @@ class Index extends Component
         abort_if(Gate::denies('warehouse_access'), 403);
 
         $query = Warehouse::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

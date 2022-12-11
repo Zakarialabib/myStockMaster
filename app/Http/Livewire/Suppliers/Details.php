@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Suppliers;
 
 use App\Models\Purchase;
@@ -22,36 +24,36 @@ class Details extends Component
     public function getTotalPurchasesProperty()
     {
         return Purchase::where('supplier_id', $this->supplier_id)
-        ->sum('total_amount');
+            ->sum('total_amount');
     }
 
     public function getTotalPurchaseReturnsProperty()
     {
         return PurchaseReturn::where('supplier_id', $this->supplier_id)
-        ->sum('total_amount');
+            ->sum('total_amount');
     }
 
     // total due amount
     public function getTotalDueProperty()
     {
         return Purchase::where('supplier_id', $this->supplier_id)
-        ->sum('due_amount') / 100;
+            ->sum('due_amount') / 100;
     }
 
     // show totalPayments
     public function getTotalPaymentsProperty()
     {
         return Purchase::where('supplier_id', $this->supplier_id)
-                        ->sum('paid_amount');
+            ->sum('paid_amount');
     }
 
     // show Debit
     public function getDebitProperty()
     {
         $purchases = Purchase::where('supplier_id', $this->supplier_id)
-                    ->completed()->sum('total_amount');
+            ->completed()->sum('total_amount');
         $purchase_returns = PurchaseReturn::where('supplier_id', $this->supplier_id)
-                    ->completed()->sum('total_amount');
+            ->completed()->sum('total_amount');
 
         $product_costs = 0;
 

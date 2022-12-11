@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Permission;
@@ -22,6 +24,5 @@ class PermissionRoleSeeder extends Seeder
         });
         // TODO: change 1 to Role::ROLE_ADMIN
         Role::findOrFail(1)->permissions()->sync($admin_permissions->pluck('id'));
-
     }
 }

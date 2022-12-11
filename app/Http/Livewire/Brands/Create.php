@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
@@ -13,7 +15,8 @@ use Illuminate\Support\Str;
 
 class Create extends Component
 {
-    use LivewireAlert, WithFileUploads;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $createBrand = false;
 
@@ -24,7 +27,7 @@ class Create extends Component
     public $listeners = ['createBrand'];
 
     public array $rules = [
-        'brand.name' => ['required', 'string', 'max:255'],
+        'brand.name'        => ['required', 'string', 'max:255'],
         'brand.description' => ['nullable', 'string'],
     ];
 
@@ -42,7 +45,7 @@ class Create extends Component
 
     public function createBrand(): void
     {
-        // strange behavior with reset() 
+        // strange behavior with reset()
 
         $this->resetErrorBag();
 
@@ -56,7 +59,7 @@ class Create extends Component
         $this->validate();
 
         if ($this->image) {
-            $imageName = Str::slug($this->brand->name) . '-' . date('Y-m-d H:i:s') . '.' . $this->image->extension();
+            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
             $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Products;
 
 use App\Exports\ProductExport;
@@ -37,14 +39,11 @@ class Index extends Component
 
     public int $perPage;
 
-   /** @var boolean */
-   public $showModal = false;
-    
-   /** @var boolean */
-   public $importModal = false;
-   
-   /** @var boolean */
-   public $editModal = false;
+    public $showModal = false;
+
+    public $importModal = false;
+
+    public $editModal = false;
 
     public $refreshIndex;
 
@@ -74,58 +73,58 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty():int
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch():void
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage():void
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected():void
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex():void
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
     public array $rules = [
-        'product.name' => ['required', 'string', 'max:255'],
-        'product.code' => ['required', 'string', 'max:255'],
+        'product.name'              => ['required', 'string', 'max:255'],
+        'product.code'              => ['required', 'string', 'max:255'],
         'product.barcode_symbology' => ['required', 'string', 'max:255'],
-        'product.unit' => ['required', 'string', 'max:255'],
-        'product.quantity' => ['required', 'integer', 'min:1'],
-        'product.cost' => ['required', 'numeric', 'max:2147483647'],
-        'product.price' => ['required', 'numeric', 'max:2147483647'],
-        'product.stock_alert' => ['required', 'integer', 'min:0'],
-        'product.order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
-        'product.tax_type' => ['nullable', 'integer'],
-        'product.note' => ['nullable', 'string', 'max:1000'],
-        'product.category_id' => ['required', 'integer'],
-        'product.brand_id' => ['nullable', 'integer'],
+        'product.unit'              => ['required', 'string', 'max:255'],
+        'product.quantity'          => ['required', 'integer', 'min:1'],
+        'product.cost'              => ['required', 'numeric', 'max:2147483647'],
+        'product.price'             => ['required', 'numeric', 'max:2147483647'],
+        'product.stock_alert'       => ['required', 'integer', 'min:0'],
+        'product.order_tax'         => ['nullable', 'integer', 'min:0', 'max:100'],
+        'product.tax_type'          => ['nullable', 'integer'],
+        'product.note'              => ['nullable', 'string', 'max:1000'],
+        'product.category_id'       => ['required', 'integer'],
+        'product.brand_id'          => ['nullable', 'integer'],
     ];
 
-    public function mount():void
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Product)->orderable;
+        $this->orderable = (new Product())->orderable;
         $this->initListsForFields();
     }
 
-    public function deleteSelected():void
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
@@ -134,26 +133,26 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Product $product):void
+    public function delete(Product $product): void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
         $product->delete();
     }
 
-    public function render():View|Factory
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('product_access'), 403);
 
         $query = Product::query()
             ->with([
                 'category' => fn ($query) => $query->select('id', 'name'),
-                'brand' => fn ($query) => $query->select('id', 'name'),
+                'brand'    => fn ($query) => $query->select('id', 'name'),
             ])
             ->select('products.*')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -162,7 +161,7 @@ class Index extends Component
         return view('livewire.products.index', compact('products'));
     }
 
-    public function showModal(Product $product):void
+    public function showModal(Product $product): void
     {
         abort_if(Gate::denies('product_access'), 403);
 
@@ -171,22 +170,22 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function sendTelegram($product):void
+    public function sendTelegram($product): void
     {
         $this->product = Product::find($product);
-   
+
         // Specify Telegram channel
         $telegramChannel = '-877826769';
-   
+
         // Pass in product details
         $productName = $this->product->name;
         $productPrice = $this->product->price;
+        $productImage = $this->product->image;
 
-        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
-
+        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice, $productImage));
     }
 
-    public function editModal(Product $product):void
+    public function editModal(Product $product): void
     {
         abort_if(Gate::denies('product_update'), 403);
 
@@ -194,14 +193,13 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->product = Product::find($product->id);
+        $this->product = Product::find($product);
 
         $this->editModal = true;
     }
 
-    public function update():void
+    public function update(): void
     {
-
         $this->validate();
 
         if ($this->image) {
@@ -217,9 +215,8 @@ class Index extends Component
         $this->alert('success', __('Product updated successfully.'));
     }
 
-    public function importModal():void
+    public function importModal(): void
     {
-        
         abort_if(Gate::denies('product_access'), 403);
 
         $this->resetErrorBag();
@@ -229,9 +226,8 @@ class Index extends Component
         $this->importModal = true;
     }
 
-    public function import():void
+    public function import(): void
     {
-        
         $this->validate([
             'import_file' => [
                 'required',
@@ -239,14 +235,14 @@ class Index extends Component
             ],
         ]);
 
-        Product::import(new ProductImport, $this->file('import_file'));
+        Product::import(new ProductImport(), $this->file('import_file'));
 
         $this->alert('success', __('Products imported successfully'));
 
         $this->importModal = false;
     }
 
-    public function exportExcel():BinaryFileResponse
+    public function exportExcel(): BinaryFileResponse
     {
         abort_if(Gate::denies('product_access'), 403);
 
@@ -255,7 +251,6 @@ class Index extends Component
 
     public function exportPdf()
     {
-
         return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 

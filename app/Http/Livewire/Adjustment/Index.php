@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
 use App\Http\Livewire\WithSorting;
@@ -72,8 +74,8 @@ class Index extends Component
     }
 
     public array $rules = [
-        'adjustment.date' => ['date', 'required'],
-        'adjustment.note' => ['string', 'max:255', 'nullable'],
+        'adjustment.date'      => ['date', 'required'],
+        'adjustment.note'      => ['string', 'max:255', 'nullable'],
         'adjustment.reference' => ['string', 'max:255', 'nullable'],
     ];
 
@@ -83,16 +85,16 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Adjustment)->orderable;
+        $this->orderable = (new Adjustment())->orderable;
     }
 
-    public function render(): View | Factory
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 
         $query = Adjustment::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -109,7 +111,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->adjustment = new Adjustment;
+        $this->adjustment = new Adjustment();
 
         $this->createModal = true;
     }

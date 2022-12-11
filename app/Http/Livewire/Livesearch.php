@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 use Livewire\Component;
@@ -8,7 +10,6 @@ use App\Models\Purchase;
 use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 
 class Livesearch extends Component
 {

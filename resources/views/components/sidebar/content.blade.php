@@ -2,7 +2,7 @@
 
     <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('home')">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <x-icons.dashboard class="w-5 h-5" aria-hidden="true" />
             </span>
         </x-slot>
@@ -15,7 +15,7 @@
         'Products',
     )">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <i class="fas fa-boxes w-5 h-5"></i>
             </span>
         </x-slot>
@@ -46,7 +46,7 @@
             'Adjustments',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-adjust w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -64,7 +64,7 @@
         )">
 
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-file-invoice-dollar w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -81,7 +81,7 @@
             'Purchases',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-shopping-cart w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -101,7 +101,7 @@
             'Sales',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-shopping-bag w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -123,7 +123,7 @@
             'Expenses',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-money-bill-alt w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -144,7 +144,7 @@
             'Reports',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-chart-line w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -173,7 +173,7 @@
             'people',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-users w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -203,7 +203,7 @@
             'Settings',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-cog w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -221,7 +221,7 @@
                         document.getElementById('logoutform').submit();"
         href="#">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <i class="fas fa-sign-out-alt w-5 h-5" aria-hidden="true"></i>
             </span>
         </x-slot>

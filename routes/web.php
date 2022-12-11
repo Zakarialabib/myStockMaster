@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BarcodeController;
@@ -47,7 +49,6 @@ require __DIR__ . '/auth.php';
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::group(['middleware' => 'auth'], function () {
-
     // change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
@@ -89,10 +90,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
     //Product
-    Route::get('products', ProductController::class);
+    Route::get('products', ProductController::class)->name('products.index');
 
     //Product Category
-    Route::get('product-categories', CategoriesController::class);
+    Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');

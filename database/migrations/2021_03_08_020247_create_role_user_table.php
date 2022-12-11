@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +21,7 @@ class CreateRoleUserTable extends Migration
             $table->integer('role_id')->index('role_user_role_id');
             $table->timestamps(6);
         });
-}
+    }
 
     /**
      * Reverse the migrations.

@@ -4,6 +4,8 @@ npm-debug.log
 yarn-error.log
 storage/*.key
 .env
+_ide_helper.php
+_ide_helper_models.php
 Homestead.yaml
 Homestead.json
 /.vagrant

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Purchase\Payment;
 
 use App\Http\Livewire\WithSorting;
@@ -91,7 +93,7 @@ class Index extends Component
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new PurchasePayment)->orderable;
+        $this->orderable = (new PurchasePayment())->orderable;
     }
 
     public function render(): View|Factory
@@ -99,8 +101,8 @@ class Index extends Component
         //    abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

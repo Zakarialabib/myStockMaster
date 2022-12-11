@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,14 +17,14 @@ class UpdateSaleRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => 'required|numeric',
-            'code' => 'string|max:255',
+            'customer_id'     => 'required|numeric',
+            'code'            => 'string|max:255',
             'shipping_amount' => 'required|numeric',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'required|numeric|max:'.$this->sale->total_amount,
-            'status' => 'required|string|max:255',
-            'payment_method' => 'required|string|max:255',
-            'note' => 'nullable|string|max:1000',
+            'total_amount'    => 'required|numeric',
+            'paid_amount'     => 'required|numeric|max:'.$this->sale->total_amount,
+            'status'          => 'required|string|max:255',
+            'payment_method'  => 'required|string|max:255',
+            'note'            => 'nullable|string|max:1000',
         ];
     }
 

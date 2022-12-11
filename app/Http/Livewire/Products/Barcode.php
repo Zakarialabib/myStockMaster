@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
@@ -34,10 +36,10 @@ class Barcode extends Component
     }
 
        public function render(): View|Factory
-    {
-        return view('livewire.products.barcode');
-    }
-    
+       {
+           return view('livewire.products.barcode');
+       }
+
     public function productSelected($product): void
     {
         $this->products = Product::find($product);
@@ -73,7 +75,7 @@ class Barcode extends Component
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-' . date('Y-m-d') . '.pdf'
+            'barcodes-'.date('Y-m-d').'.pdf'
         );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }

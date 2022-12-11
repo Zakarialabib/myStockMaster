@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Categories;
 
 use App\Http\Livewire\WithSorting;
 use App\Imports\CategoriesImport;
 use App\Models\Category;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -23,9 +23,9 @@ class Index extends Component
 
     public $category;
 
-    /** @var boolean */
+    /** @var bool */
     public $name;
-    
+
     public $file;
 
     public $listeners = [
@@ -37,13 +37,13 @@ class Index extends Component
 
     public $refreshIndex;
 
-    /** @var boolean */
+    /** @var bool */
     public $showModal = false;
 
-    /** @var boolean */
+    /** @var bool */
     public $importModal = false;
 
-    /** @var boolean */
+    /** @var bool */
     public $editModal = false;
 
     /** @var array */
@@ -70,7 +70,7 @@ class Index extends Component
         ],
     ];
 
-    protected function rules():array
+    protected function rules(): array
     {
         return
             [
@@ -78,47 +78,47 @@ class Index extends Component
             ];
     }
 
-    public function getSelectedCountProperty():int
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch():void
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage():void
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected():void
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex():void
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
-    public function mount():void
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Category)->orderable;
+        $this->orderable = (new Category())->orderable;
     }
 
-    public function render():mixed
+    public function render(): mixed
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
         $query = Category::with('products')->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -127,7 +127,7 @@ class Index extends Component
         return view('livewire.categories.index', compact('categories'));
     }
 
-    public function editModal(Category $category):void
+    public function editModal(Category $category): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -140,7 +140,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update():void
+    public function update(): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -153,7 +153,7 @@ class Index extends Component
         $this->alert('success', __('Category updated successfully.'));
     }
 
-    public function showModal(Category $category):void
+    public function showModal(Category $category): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -166,7 +166,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function deleteSelected():void
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -175,7 +175,7 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Category $category):void
+    public function delete(Category $category): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -187,14 +187,14 @@ class Index extends Component
         }
     }
 
-    public function importModal():void
+    public function importModal(): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
         $this->importModal = true;
     }
 
-    public function import():void
+    public function import(): void
     {
         abort_if(Gate::denies('access_product_categories'), 403);
 
@@ -204,7 +204,7 @@ class Index extends Component
 
         $file = $this->file('file');
 
-        Excel::import(new CategoriesImport, $file);
+        Excel::import(new CategoriesImport(), $file);
 
         $this->alert('success', __('Categories imported successfully.'));
 

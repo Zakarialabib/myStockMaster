@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Reports;
 
 use App\Models\PurchasePayment;
@@ -23,8 +25,8 @@ class PaymentsReport extends Component
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date' => 'required|date|after:start_date',
-        'payments' => 'required|string',
+        'end_date'   => 'required|date|after:start_date',
+        'payments'   => 'required|string',
     ];
 
     protected $query;

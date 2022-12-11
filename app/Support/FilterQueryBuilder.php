@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Support;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +13,11 @@ class FilterQueryBuilder
 
     protected $table;
 
+    /**
+     * @param mixed $query
+     * @param mixed $data
+     * @return mixed
+     */
     public function apply($query, $data)
     {
         $this->model = $query->getModel();
@@ -28,6 +35,11 @@ class FilterQueryBuilder
         return $query;
     }
 
+    /**
+     * @param mixed $filter
+     * @param mixed $query
+     * @return mixed
+     */
     public function contains($filter, $query)
     {
         $filter['query_1'] = addslashes($filter['query_1']);
@@ -35,6 +47,11 @@ class FilterQueryBuilder
         return $query->where($filter['column'], 'like', '%'.$filter['query_1'].'%', $filter['match']);
     }
 
+    /**
+     * param mixed $query
+     * @param mixed $data
+     * @return mixed
+     */
     protected function makeOrder($query, $data)
     {
         if ($this->isNestedColumn($data['order_column'])) {
@@ -46,7 +63,7 @@ class FilterQueryBuilder
             $relatedTable = $relatedModel->getTable();
             $as = "prefix_{$relatedTable}";
 
-            if (! $belongs instanceof BelongsTo) {
+            if ( ! $belongs instanceof BelongsTo) {
                 return;
             }
 
@@ -65,6 +82,11 @@ class FilterQueryBuilder
             ->select("{$this->table}.*");
     }
 
+      /**
+       * @param mixed $filter
+       * @param mixed $query
+       * @return mixed
+       */
     protected function makeFilter($query, $filter)
     {
         if ($this->isNestedColumn($filter['column'])) {

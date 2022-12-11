@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales;
 
 use App\Http\Livewire\WithSorting;
@@ -12,7 +14,10 @@ use Livewire\WithPagination;
 
 class Recent extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $sale;
 
@@ -82,7 +87,7 @@ class Recent extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 10;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Sale)->orderable;
+        $this->orderable = (new Sale())->orderable;
     }
 
     public function render()
@@ -90,8 +95,8 @@ class Recent extends Component
         abort_if(Gate::denies('access_sales'), 403);
 
         $query = Sale::with('customer', 'saleDetails')->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

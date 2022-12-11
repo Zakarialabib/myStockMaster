@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Warehouses;
 
 use App\Models\Warehouse;
@@ -13,17 +15,17 @@ class Create extends Component
 
     public $listeners = ['createWarehouse'];
 
-    /** @var boolean */
+    /** @var bool */
     public $createWarehouse = false;
-    
+
     public $warehouse;
 
     public array $rules = [
-        'warehouse.name' => ['string', 'required'],
-        'warehouse.phone' => ['string', 'nullable'],
+        'warehouse.name'    => ['string', 'required'],
+        'warehouse.phone'   => ['string', 'nullable'],
         'warehouse.country' => ['string', 'nullable'],
-        'warehouse.city' => ['string', 'nullable'],
-        'warehouse.email' => ['string', 'nullable'],
+        'warehouse.city'    => ['string', 'nullable'],
+        'warehouse.email'   => ['string', 'nullable'],
     ];
 
     public function mount(Warehouse $warehouse)
@@ -56,10 +58,9 @@ class Create extends Component
         $this->warehouse->save();
 
         $this->alert('success', __('Warehouse created successfully.'));
-        
+
         $this->emit('refreshIndex');
 
         $this->createWarehouse = false;
-
     }
 }

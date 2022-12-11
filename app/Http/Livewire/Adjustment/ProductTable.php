@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
 use Illuminate\Contracts\View\Factory;
@@ -29,7 +31,7 @@ class ProductTable extends Component
         }
     }
 
-    public function render(): View | Factory
+    public function render(): View|Factory
     {
         return view('livewire.adjustment.product-table');
     }
@@ -45,6 +47,7 @@ class ProductTable extends Component
 
                     return;
                 }
+
                 break;
             case false:
                 if (in_array($product, $this->products)) {
@@ -52,6 +55,7 @@ class ProductTable extends Component
 
                     return;
                 }
+
                 break;
             default:
                 $this->alert('error', 'Something went wrong!');

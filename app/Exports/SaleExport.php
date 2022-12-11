@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Sale;
-use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -14,8 +15,10 @@ class SaleExport implements FromQuery, WithMapping, WithHeadings
     use Exportable;
     use ForModelsTrait;
 
+    /** @var mixed */
     protected $models;
 
+    /** @return Builder|EloquentBuilder|Relation */
     public function query()
     {
         if ($this->models) {

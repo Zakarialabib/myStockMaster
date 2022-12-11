@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
@@ -27,7 +29,7 @@ class Profile extends Component
         $this->validate();
 
         auth()->user()->update([
-            'name' => $this->name,
+            'name'  => $this->name,
             'email' => $this->email,
         ]);
 
@@ -44,8 +46,8 @@ class Profile extends Component
     public function updatePassword()
     {
         $this->validate([
-            'current_password' => ['required', 'max:255', new MatchCurrentPassword],
-            'password' => 'required|min:8|max:255|confirmed',
+            'current_password' => ['required', 'max:255', new MatchCurrentPassword()],
+            'password'         => 'required|min:8|max:255|confirmed',
         ]);
 
         auth()->user()->update([

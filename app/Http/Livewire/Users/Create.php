@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
@@ -13,19 +15,19 @@ class Create extends Component
 
     public $listeners = ['createUser'];
 
-    /** @var boolean */
+    /** @var bool */
     public $createUser = false;
 
     public $user;
 
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
+        'user.name'       => 'required|string|max:255',
+        'user.email'      => 'required|email|unique:users,email',
+        'user.password'   => 'required|string|min:8',
+        'user.phone'      => 'required|numeric',
+        'user.city'       => 'nullable',
+        'user.country'    => 'nullable',
+        'user.address'    => 'nullable',
         'user.tax_number' => 'nullable',
     ];
 

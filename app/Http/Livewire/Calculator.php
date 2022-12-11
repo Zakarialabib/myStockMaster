@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 use Livewire\Component;
@@ -25,6 +27,7 @@ class Calculator extends Component
     {
         $num1 = (float) $this->number1;
         $num2 = (float) $this->number2;
+
         if ($this->action === '-') {
             $this->result = $num1 - $num2;
         } elseif ($this->action === '+') {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Suppliers;
 
 use App\Models\Supplier;
@@ -12,19 +14,19 @@ class Create extends Component
     use LivewireAlert;
 
     public $listeners = ['createSupplier'];
-    
-    /** @var boolean */
+
+    /** @var bool */
     public $createSupplier = false;
 
     public $supplier;
 
     public array $rules = [
-        'supplier.name' => ['required', 'string', 'max:255'],
-        'supplier.email' => ['nullable', 'string', 'max:255'],
-        'supplier.phone' => ['required'],
-        'supplier.address' => ['nullable', 'string', 'max:255'],
-        'supplier.city' => ['nullable', 'string', 'max:255'],
-        'supplier.country' => ['nullable', 'string', 'max:255'],
+        'supplier.name'       => ['required', 'string', 'max:255'],
+        'supplier.email'      => ['nullable', 'string', 'max:255'],
+        'supplier.phone'      => ['required'],
+        'supplier.address'    => ['nullable', 'string', 'max:255'],
+        'supplier.city'       => ['nullable', 'string', 'max:255'],
+        'supplier.country'    => ['nullable', 'string', 'max:255'],
         'supplier.tax_number' => ['nullable', 'string', 'max:255'],
     ];
 

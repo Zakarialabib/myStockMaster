@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Language;
@@ -32,18 +34,16 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.force_https_scheme') || app()->environment('production')) {
             URL::forceScheme('https');
         }
-        
+
         View::share('languages', $this->getLanguages());
-        
-        Model::shouldBeStrict(! $this->app->isProduction());
+
+        Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
-    /**
-     * @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null
-     */
+    /** @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null */
     private function getLanguages()
     {
-        if (! Schema::hasTable('languages')) {
+        if ( ! Schema::hasTable('languages')) {
             return;
         }
 

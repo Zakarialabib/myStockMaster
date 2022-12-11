@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\AdjustedProduct;
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 
 class AdjustmentController extends Controller
 {
+    /** @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory */
     public function index()
     {
         abort_if(Gate::denies('access_adjustments'), 403);
@@ -32,12 +35,12 @@ class AdjustmentController extends Controller
         abort_if(Gate::denies('create_adjustments'), 403);
 
         $request->validate([
-            'reference' => 'required|string|max:255',
-            'date' => 'required|date',
-            'note' => 'nullable|string|max:1000',
+            'reference'   => 'required|string|max:255',
+            'date'        => 'required|date',
+            'note'        => 'nullable|string|max:1000',
             'product_ids' => 'required',
-            'quantities' => 'required',
-            'types' => 'required',
+            'quantities'  => 'required',
+            'types'       => 'required',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -49,9 +52,9 @@ class AdjustmentController extends Controller
             foreach ($request->product_ids as $key => $id) {
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
-                    'product_id' => $id,
-                    'quantity' => $request->quantities[$key],
-                    'type' => $request->types[$key],
+                    'product_id'    => $id,
+                    'quantity'      => $request->quantities[$key],
+                    'type'          => $request->types[$key],
                 ]);
 
                 $product = Product::findOrFail($id);
@@ -85,19 +88,19 @@ class AdjustmentController extends Controller
         abort_if(Gate::denies('edit_adjustments'), 403);
 
         $request->validate([
-            'reference' => 'required|string|max:255',
-            'date' => 'required|date',
-            'note' => 'nullable|string|max:1000',
+            'reference'   => 'required|string|max:255',
+            'date'        => 'required|date',
+            'note'        => 'nullable|string|max:1000',
             'product_ids' => 'required',
-            'quantities' => 'required',
-            'types' => 'required',
+            'quantities'  => 'required',
+            'types'       => 'required',
         ]);
 
         DB::transaction(function () use ($request, $adjustment) {
             $adjustment->update([
                 'reference' => $request->reference,
-                'date' => $request->date,
-                'note' => $request->note,
+                'date'      => $request->date,
+                'note'      => $request->note,
             ]);
 
             foreach ($adjustment->adjustedProducts as $adjustedProduct) {
@@ -119,9 +122,9 @@ class AdjustmentController extends Controller
             foreach ($request->product_ids as $key => $id) {
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
-                    'product_id' => $id,
-                    'quantity' => $request->quantities[$key],
-                    'type' => $request->types[$key],
+                    'product_id'    => $id,
+                    'quantity'      => $request->quantities[$key],
+                    'type'          => $request->types[$key],
                 ]);
 
                 $product = Product::findOrFail($id);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Role;
 
 use App\Http\Livewire\WithSorting;
@@ -12,17 +14,19 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
     public $role;
-    
+
     public $permissions;
 
     public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
 
-    public $createModal  = false;
+    public $createModal = false;
 
-    public $editModal  = false;
+    public $editModal = false;
 
     public int $perPage;
 
@@ -71,11 +75,11 @@ class Index extends Component
     protected function rules(): array
     {
         return [
-            'role.name' => 'required|string|max:255',
-            'role.label' => 'string|nullable|max:255',
-            'role.guard_name' => 'required|string|max:255',
+            'role.name'        => 'required|string|max:255',
+            'role.label'       => 'string|nullable|max:255',
+            'role.guard_name'  => 'required|string|max:255',
             'role.description' => 'string|nullable|max:255',
-            'role.status' => 'string|nullable|max:255',
+            'role.status'      => 'string|nullable|max:255',
         ];
     }
 
@@ -85,7 +89,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Role)->orderable;
+        $this->orderable = (new Role())->orderable;
         $this->permissions = $this->role->permissions->pluck('id')->toArray();
         $this->initListsForFields();
     }
@@ -93,8 +97,8 @@ class Index extends Component
     public function render()
     {
         $query = Role::with(['permissions'])->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

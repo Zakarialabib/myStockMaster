@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -45,7 +47,7 @@ class CreateSettingsTable extends Migration
             $table->boolean('show_order_tax')->default(1);
             $table->boolean('show_discount')->default(1);
             $table->boolean('show_shipping')->default(1);
-            
+
             $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
             $table->integer('printer_id')->nullable();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Printer;
 
 use App\Http\Livewire\WithSorting;
@@ -13,7 +15,9 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
     public $printer;
 
@@ -75,13 +79,13 @@ class Index extends Component
     }
 
     public array $rules = [
-        'printer.name' => 'required|string|max:255',
-        'printer.connection_type' => 'required|string|max:255',
+        'printer.name'               => 'required|string|max:255',
+        'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line' => 'required',
-        'printer.ip_address' => 'required|string|max:255',
-        'printer.port' => 'required|string|max:255',
-        'printer.path' => 'required|string|max:255',
+        'printer.char_per_line'      => 'required',
+        'printer.ip_address'         => 'required|string|max:255',
+        'printer.port'               => 'required|string|max:255',
+        'printer.path'               => 'required|string|max:255',
     ];
 
     public function mount(): void
@@ -90,7 +94,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Printer)->orderable;
+        $this->orderable = (new Printer())->orderable;
     }
 
     public function render(): View|Factory
@@ -98,8 +102,8 @@ class Index extends Component
         abort_if(Gate::denies('printer_access'), 403);
 
         $query = Printer::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

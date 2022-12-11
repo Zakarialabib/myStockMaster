@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Http\Livewire\WithSorting;
@@ -77,7 +79,7 @@ class Index extends Component
     }
 
     public array $rules = [
-        'expenseCategory.name' => 'required',
+        'expenseCategory.name'        => 'required',
         'expenseCategory.description' => '',
     ];
 
@@ -88,7 +90,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new ExpenseCategory)->orderable;
+        $this->orderable = (new ExpenseCategory())->orderable;
     }
 
     public function render(): View|Factory
@@ -96,8 +98,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_category_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

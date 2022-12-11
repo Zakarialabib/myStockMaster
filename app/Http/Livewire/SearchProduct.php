@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 use App\Models\Product;
@@ -16,9 +18,9 @@ class SearchProduct extends Component
     public $product;
 
     protected $listeners = [
-        'selectedCategory' => 'categoryChanged',
+        'selectedCategory'  => 'categoryChanged',
         'selectedWarehouse' => 'warehouseChanged',
-        'showCount' => 'showCountChanged',
+        'showCount'         => 'showCountChanged',
     ];
 
     public array $listsForFields = [];
@@ -49,12 +51,12 @@ class SearchProduct extends Component
     {
         return view('livewire.search-product', [
             'products' => Product::where('name', 'like', '%'.$this->query.'%')
-            ->orWhere('code', 'like', '%'.$this->query.'%')
-            ->when($this->category_id, function ($query) {
-                return $query->where('category_id', $this->category_id);
-            })->when($this->warehouse_id, function ($query) {
-                return $query->where('warehouse_id', $this->warehouse_id);
-            })->paginate($this->how_many),
+                ->orWhere('code', 'like', '%'.$this->query.'%')
+                ->when($this->category_id, function ($query) {
+                    return $query->where('category_id', $this->category_id);
+                })->when($this->warehouse_id, function ($query) {
+                    return $query->where('warehouse_id', $this->warehouse_id);
+                })->paginate($this->how_many),
         ]);
     }
 
@@ -62,9 +64,9 @@ class SearchProduct extends Component
     {
         // if the query is like name or code show search results
         $this->search_results = Product::where('name', 'like', '%'.$this->query.'%')
-                                        ->orWhere('code', 'like', '%'.$this->query.'%')
-                                        ->take($this->how_many)
-                                        ->get();
+            ->orWhere('code', 'like', '%'.$this->query.'%')
+            ->take($this->how_many)
+            ->get();
         // issue here
         if ($this->search_results->count() > 0) {
             $this->product = $this->search_results->first();

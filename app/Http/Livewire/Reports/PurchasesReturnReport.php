@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Reports;
 
 use App\Models\PurchaseReturn;
@@ -24,7 +26,7 @@ class PurchasesReturnReport extends Component
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date' => 'required|date|after:start_date',
+        'end_date'   => 'required|date|after:start_date',
     ];
 
     public function mount($suppliers)
