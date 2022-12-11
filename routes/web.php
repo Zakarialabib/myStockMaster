@@ -67,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('currencies', CurrencyController::class)->name('currencies.index');
 
     //Expense Category
-    Route::get('expense-categories', ExpenseCategoriesController::class);
+    Route::get('expense-categories', ExpenseCategoriesController::class)->name('expense-categories.index');
 
     //Expense
     Route::get('expenses', ExpenseController::class)->name('expenses.index');
