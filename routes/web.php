@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
@@ -85,13 +85,13 @@ Route::group(['middleware' => 'auth'], function () {
     //Brands
     Route::resource('brands', BrandsController::class);
 
-     //Print Barcode
-     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
+    //Print Barcode
+    Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
-     //Product
+    //Product
     Route::resource('products', ProductController::class);
 
-     //Product Category
+    //Product Category
     Route::resource('product-categories', CategoriesController::class)->except('show', 'create');
 
     //Generate Quotation PDF
@@ -106,7 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Quotations
     Route::resource('quotations', QuotationController::class);
 
-     //Generate Purchase PDF
+    //Generate Purchase PDF
     Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('purchases.pdf');
 
     //Purchases
@@ -172,7 +172,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
     Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
 
-     //Generate Sale Returns PDF
+    //Generate Sale Returns PDF
     Route::get('/sale-returns/pdf/{id}', [ExportController::class, 'saleReturns'])->name('sale-returns.pdf');
 
     //Sale Returns
@@ -192,16 +192,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/sale-return-payments/destroy/{saleReturnPayment}', 'SaleReturnPaymentsController@destroy')
         ->name('sale-return-payments.destroy');
 
-     //User Profile
+    //User Profile
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');
 
-     //Users
+    //Users
     Route::resource('users', UsersController::class);
 
-     //Roles
+    //Roles
     Route::resource('roles', RoleController::class)->except(['show']);
 
-     // Permissions
+    // Permissions
     Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
 
     //Mail Settings
