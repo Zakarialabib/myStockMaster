@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class)->except(['show']);
 
     // Permissions
-    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
+    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
