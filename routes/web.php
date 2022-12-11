@@ -64,27 +64,27 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('adjustments', AdjustmentController::class);
 
     //Currencies
-    Route::get('currencies', CurrencyController::class);
+    Route::get('currencies', CurrencyController::class)->name('currencies.index');
 
     //Expense Category
     Route::get('expense-categories', ExpenseCategoriesController::class);
 
     //Expense
-    Route::get('expenses', ExpenseController::class);
+    Route::get('expenses', ExpenseController::class)->naem('expenses.index');
 
     //Customers
-    Route::get('customers', CustomersController::class);
+    Route::get('customers', CustomersController::class)->naem('customers.index');
     Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
 
     //Suppliers
-    Route::get('suppliers', SuppliersController::class);
+    Route::get('suppliers', SuppliersController::class)->naem('suppliers.index');
     Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
 
     //Warehouses
-    Route::get('warehouses', WarehouseController::class);
+    Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
 
     //Brands
-    Route::get('brands', BrandsController::class);
+    Route::get('brands', BrandsController::class)->name('brands.index');
 
     //Print Barcode
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
