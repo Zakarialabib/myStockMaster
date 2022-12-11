@@ -4,7 +4,6 @@ namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\ExpenseCategory;
-use App\Support\HasAdvancedFilter;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -17,7 +16,6 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
-    use HasAdvancedFilter;
 
     public $expenseCategory;
 
@@ -25,7 +23,7 @@ class Index extends Component
 
     public $listeners = ['confirmDelete', 'delete', 'refreshIndex', 'showModal', 'editModal'];
 
-    public int $selectPage;
+    public $selectPage;
 
     public $showModal;
 
@@ -86,7 +84,7 @@ class Index extends Component
     public function mount(): void
     {
         $this->selectPage = false;
-        $this->sortField = 'id';
+        $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');

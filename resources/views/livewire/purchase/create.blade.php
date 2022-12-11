@@ -3,7 +3,6 @@
         <x-validation-errors class="mb-4" :errors="$errors" />
         
         <form wire:submit.prevent="save">
-
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <x-label for="reference" :value="__('Reference')" required />
@@ -68,9 +67,9 @@
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
             </div>
 
-            <div class="mt-3">
-                <x-button type="submit" primary>
-                    {{ __('Create Purchase') }} <i class="bi bi-check"></i>
+            <div class="w-full mt-3">
+                <x-button type="submit" primary class="w-full">
+                    {{ __('Create Purchase') }}
                 </x-button>
             </div>
         </form>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Suppliers;
 
-use App\Models\PaymentPurchase;
+use App\Models\PurchasePayment;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -35,7 +35,7 @@ class PayDue extends Component
                     $payment_status = Purchase::PaymentPartial;
                 }
 
-                $payment_purchase = new PaymentPurchase;
+                $payment_purchase = new PurchasePayment;
                 $payment_purchase->purchase_id = $supplier_purchase->id;
                 $payment_purchase->Ref = app('App\Http\Controllers\PaymentPurchasesController')->getNumberOrder();
                 $payment_purchase->date = Carbon::now();

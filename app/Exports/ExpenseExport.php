@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Expense;
+use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -35,9 +36,6 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
         ];
     }
 
-    /**
-     * @var Expense
-     */
     public function map($row): array
     {
         return [

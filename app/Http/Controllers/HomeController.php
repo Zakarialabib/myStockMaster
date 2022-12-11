@@ -14,7 +14,7 @@ use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {

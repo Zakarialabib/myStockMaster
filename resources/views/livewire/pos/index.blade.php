@@ -1,4 +1,5 @@
 <div>
+    <livewire:livesearch />
     <div>
         <div class="w-full py-2 px-4">
             <div>

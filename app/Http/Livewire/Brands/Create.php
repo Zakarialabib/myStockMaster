@@ -15,7 +15,7 @@ class Create extends Component
 {
     use LivewireAlert, WithFileUploads;
 
-    public $createBrand;
+    public $createBrand = false;
 
     public $brand;
 

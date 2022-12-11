@@ -53,7 +53,7 @@
     <div class="px-4 mx-auto mb-4">
         <div class="row">
             <div class="col-12">
-                <livewire:search-product/>
+                <livewire:search-product />
             </div>
 
             <div class="flex flex-row mt-4">

@@ -59,11 +59,6 @@ class Create extends Component
 
     public array $listsForFields = [];
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public function rules(): array
     {
         return [

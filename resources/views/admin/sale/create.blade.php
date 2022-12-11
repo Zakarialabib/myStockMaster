@@ -43,18 +43,12 @@
 
 <x-app-layout>
     <x-card>
-        <div class="px-4 mx-auto">
-            <div class="w-full">
-                @include('utils.alerts')
+        <div class="flex flex-row">
+            <div class="w-3/12 sm:w-full h-full">
+                <livewire:search-product />
             </div>
-            <div class="flex flex-row">
-                <div class="w-3/12 sm:w-full h-full">
-                    <livewire:search-product/>
-                    <livewire:pos.product-list :categories="$product_categories"/>
-                </div>
-                <div class="w-9/12 sm:w-full h-full">
-                    <livewire:sales.create :cartInstance="'sale'" />
-                </div>
+            <div class="w-9/12 sm:w-full h-full">
+                <livewire:sales.create :cartInstance="'sale'" />
             </div>
         </div>
     </x-card>

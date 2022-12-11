@@ -28,12 +28,4 @@ class RoleController extends Controller
         return view('admin.roles.edit', compact('role'));
     }
 
-    public function show(Role $role)
-    {
-        abort_if(Gate::denies('role_show'), 403);
-
-        $role->load('permissions');
-
-        return view('admin.roles.show', compact('role'));
-    }
 }

@@ -16,6 +16,8 @@ class Create extends Component
     /** @var boolean */
     public $createSupplier = false;
 
+    public $supplier;
+
     public array $rules = [
         'supplier.name' => ['required', 'string', 'max:255'],
         'supplier.email' => ['nullable', 'string', 'max:255'],

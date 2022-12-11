@@ -1,5 +1,5 @@
 <div>
-    <div class="w-full py-2 px-4">
+    <div class="w-full px-4">
         <div>
             <x-validation-errors class="mb-4" :errors="$errors" />
 
@@ -31,7 +31,10 @@
 
                                     <x-table.td>
                                         {{ format_currency($cart_item->price) }}
-                                        @include('livewire.includes.product-cart-price')
+                                        <input style="min-width: 40px;max-width: 90px;" type="number" 
+                                               class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"        
+                                               type="number" value="{{ $cart_item->price }}"
+                                               min="1" wire:model.lazy="price">
                                     </x-table.td>
 
                                     <x-table.td>
@@ -160,12 +163,12 @@
 
     </div>
 
-    <div class="mb-4 flex justify-center px-3 flex-wrap">
-        <x-button danger wire:click="resetCart" wire:loading.attr="disabled" class="ml-2 font-bold">
+    <div class="flex flex-wrap px-3 space-x-2">
+        <x-button danger type="button" wire:click="resetCart" wire:loading.attr="disabled" class="ml-2 font-bold">
             {{ __('Reset') }}
         </x-button>
         <button
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
+        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
             type="submit" wire:click="proceed" wire:loading.attr="disabled"
             {{ $total_amount == 0 ? 'disabled' : '' }}>
             {{ __('Proceed') }}

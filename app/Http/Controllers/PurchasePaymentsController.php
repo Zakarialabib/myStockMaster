@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Gate;
 
 class PurchasePaymentsController extends Controller
 {
-    public function index($purchase_id)
+    public function index()
     {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
-        $purchase = Purchase::findOrFail($purchase_id);
-
-        return view('admin.purchases.payments.index', compact('purchase'));
+        return view('admin.purchases.payments.index');
     }
 
     public function create($purchase_id)

@@ -37,7 +37,9 @@
             </div>
             <div class="float-right">
                 <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createCurrency', 'show')">{{ __('Create') }}</x-button>
+                <x-button primary  onclick="Livewire.emit('createCurrency')">
+                    {{ __('Create Currency') }}
+                </x-button>
             </div>
         </div>
     </section>

@@ -40,7 +40,7 @@
                 <!-- Button trigger livewire modal -->
                 {{-- <x-button primary onclick="Livewire.emit('createPurchase', 'show')">{{ __('Create') }}</x-button> --}}
                 <x-button primary href="{{ route('purchases.create') }}" wire:loading.attr="disabled" >
-                    {{__('Create')}} 
+                    {{__('Create Purchase')}} 
                 </x-button>
 
             </div>

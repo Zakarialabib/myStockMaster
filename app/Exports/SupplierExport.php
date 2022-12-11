@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Supplier;
+use App\Exports\ForModelsTrait;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,18 +12,14 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class SupplierExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Supplier::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return Supplier::query()->whereIn('id', $this->models);
         }
 
         return Supplier::query();
@@ -31,7 +28,6 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
-            '#',
             __('Name'),
             __('Email'),
             __('Phone'),
@@ -42,13 +38,9 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
         ];
     }
 
-    /**
-     * @var Supplier
-     */
     public function map($row): array
     {
         return[
-            $row->id,
             $row->name,
             $row->email,
             $row->phone,

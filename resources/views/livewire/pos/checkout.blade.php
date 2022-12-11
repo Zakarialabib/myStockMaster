@@ -124,12 +124,12 @@
             @endif
         </div>
 
-        <div class="mb-4 flex justify-center px-3 flex-wrap">
+        <div class="flex flex-wrap px-3 space-x-2">
             <x-button warning wire:click="resetCart" wire:loading.attr="disabled" class="ml-2 font-bold">
                 {{ __('Reset') }}
             </x-button>
             <button
-                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
                 type="submit" wire:click="proceed" wire:loading.attr="disabled"
                 {{ $total_amount == 0 ? 'disabled' : '' }}>
                 {{ __('Proceed') }}

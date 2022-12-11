@@ -83,7 +83,7 @@
                         </x-table.td>
                         <x-table.td>
                             <div class="flex justify-start space-x-2">
-                                <x-dropdown align="right" class="w-auto">
+                                <x-dropdown align="right" width="56">
                                     <x-slot name="trigger" class="inline-flex">
                                         <x-button primary type="button" class="text-white flex items-center">
                                             <i class="fas fa-angle-double-down"></i>

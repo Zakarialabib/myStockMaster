@@ -92,7 +92,6 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new PurchasePayment)->orderable;
-        $this->paymentModal = false;
     }
 
     public function render(): View|Factory

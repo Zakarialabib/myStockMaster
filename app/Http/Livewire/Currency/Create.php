@@ -16,7 +16,9 @@ class Create extends Component
     public $listeners = ['createCurrency'];
 
     public $createCurrency;
-
+    
+    public $currency;
+    
     public array $rules = [
         'currency.name' => 'required|string|max:255',
         'currency.code' => 'required|string|max:255',

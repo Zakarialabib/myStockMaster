@@ -17,8 +17,6 @@ class PaymentForm extends Component
 
     public $paymentModal;
 
-    public $refreshIndex;
-
     public $sale_id;
 
     public $reference;
@@ -30,11 +28,6 @@ class PaymentForm extends Component
     public $payment_method;
 
     public $note;
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     protected $rules = [
         'date' => 'required|date',

@@ -9,7 +9,7 @@ use App\Models\Quotation;
 use App\Models\Sale;
 use App\Models\SaleReturn;
 use App\Models\Supplier;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportController extends Controller
 {

@@ -26,7 +26,9 @@
 <body class="antialiased bg-body text-body font-body" dir="ltr">
     <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen">
+            
             <x-navbar-pos />
+
             <main class="pt-2 flex-1">
                 @yield('content')
                 @isset($slot)
@@ -40,6 +42,8 @@
             
             <livewire:customers.create />
             
+            <x-settings-bar />
+
         </div>
     </div>
     @include('includes.main-js')

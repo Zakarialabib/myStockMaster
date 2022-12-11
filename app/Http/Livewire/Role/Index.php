@@ -5,7 +5,6 @@ namespace App\Http\Livewire\Role;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Support\HasAdvancedFilter;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -13,15 +12,17 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, HasAdvancedFilter, LivewireAlert;
+    use WithPagination, WithSorting, LivewireAlert;
 
     public $role;
+    
+    public $permissions;
 
     public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
 
-    public $createModal;
+    public $createModal  = false;
 
-    public $editModal;
+    public $editModal  = false;
 
     public int $perPage;
 
@@ -62,7 +63,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
@@ -85,7 +86,7 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Role)->orderable;
-        // $this->permissions = $this->role->permissions->pluck('id')->toArray();
+        $this->permissions = $this->role->permissions->pluck('id')->toArray();
         $this->initListsForFields();
     }
 

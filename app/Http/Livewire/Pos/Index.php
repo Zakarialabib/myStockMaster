@@ -84,10 +84,11 @@ class Index extends Component
             'customer_id' => 'required|numeric',
             'tax_percentage' => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
-            'shipping_amount' => 'numeric',
+            'shipping_amount' => 'nullable|numeric',
             'total_amount' => 'required|numeric',
-            'paid_amount' => 'numeric',
+            'paid_amount' => 'nullable|numeric',
             'note' => 'nullable|string|max:1000',
+            'price' =>'nullable|numeric',
         ];
     }
 
@@ -133,7 +134,7 @@ class Index extends Component
             $this->paid_amount = $this->total_amount;
         }
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();: void
+        $this->updatedCustomerId();
     }
 
     public function render():View|Factory
@@ -329,26 +330,18 @@ class Index extends Component
         ]);
     }
 
-    public function updatePrice($row_id, $product_id): void
+    public function updatePrice($row_id, $product_id)
     {
-
-        Cart::instance($this->cart_instance)->update($row_id, $this->price[$product_id]);
-
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'price' => $this->price[$product_id],
-            'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $cart_item->options->product_discount,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-            ],
-        ]);
+        Cart::instance($this->cart_instance)->update($row_id, ['options' => [
+            'sub_total' => $price * $cart_item->qty,
+            'code' => $cart_item->options->code,
+            'stock' => $cart_item->options->stock,
+            'unit' => $cart_item->options->unit,
+            'product_tax' => $cart_item->options->product_tax,
+            'unit_price' => $price,
+            'product_discount' => $this->discount_amount,
+            'product_discount_type' => $this->discount_type[$product_id],
+        ]]);
     }
 
     public function updatedDiscountType($value, $name): void

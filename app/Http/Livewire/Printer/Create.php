@@ -17,6 +17,8 @@ class Create extends Component
 
     public $createPrinter;
 
+    public $printer;
+
     public array $rules = [
         'printer.name' => 'required|string|max:255',
         'printer.connection_type' => 'required|string|max:255',

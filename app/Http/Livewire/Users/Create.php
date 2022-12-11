@@ -16,6 +16,8 @@ class Create extends Component
     /** @var boolean */
     public $createUser = false;
 
+    public $user;
+
     public array $rules = [
         'user.name' => 'required|string|max:255',
         'user.email' => 'required|email|unique:users,email',

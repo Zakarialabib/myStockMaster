@@ -77,7 +77,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }

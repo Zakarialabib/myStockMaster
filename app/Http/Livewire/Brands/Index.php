@@ -2,10 +2,8 @@
 
 namespace App\Http\Livewire\Brands;
 
-use App\Http\Livewire\WithSorting;
 use App\Imports\BrandsImport;
 use App\Models\Brand;
-use App\Support\HasAdvancedFilter;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -19,9 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class Index extends Component
 {
     use WithPagination;
-    use WithSorting;
     use LivewireAlert;
-    use HasAdvancedFilter;
     use WithFileUploads;
 
     public $brand;
@@ -35,6 +31,8 @@ class Index extends Component
     
     public $image;
     
+    public $file;
+    
     public $refreshIndex;
 
     /** @var boolean */
@@ -46,7 +44,7 @@ class Index extends Component
     /** @var boolean */
     public $editModal = false;
 
-    public int $selectPage;
+    public $selectPage;
 
     public array $orderable;
 

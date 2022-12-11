@@ -15,6 +15,8 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    public $user;
+
     public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'refreshIndex', 'showModal', 'editModal'];
 
    /** @var boolean */
@@ -62,7 +64,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }

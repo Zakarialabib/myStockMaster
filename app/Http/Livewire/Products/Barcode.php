@@ -17,6 +17,8 @@ class Barcode extends Component
 
     public $product;
 
+    public $products;
+
     public $quantity;
 
     public $barcodes;
@@ -25,36 +27,35 @@ class Barcode extends Component
 
     public function mount(): void
     {
+        $this->products = [];
         $this->product = '';
         $this->quantity = 0;
         $this->barcodes = [];
     }
 
-    public function render(): View|Factory
+       public function render(): View|Factory
     {
         return view('livewire.products.barcode');
     }
-
-    // selecte multiple products without barcode
-    public function productSelected(Product $product): void
+    
+    public function productSelected($product): void
     {
-        $this->product = $product;
+        $this->products = Product::find($product);
         $this->quantity = 1;
         $this->barcodes = [];
-        // $this->emit('productSelected', $this->product, $this->quantity, $this->barcodes);
+        $this->generateBarcodes($product, $this->quantity);
     }
 
-    // generate barcodes for selected products
-    public function generateBarcodes(Product $product, $quantity): void
+    public function generateBarcodes($product, $quantity): void
     {
         if ($quantity > 100) {
             $this->alert('error', __('Max quantity is 100 per barcode generation!'));
         }
 
         $this->barcodes = [];
-
+        // dd($product->);
         for ($i = 0; $i < $this->quantity; $i++) {
-            $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology, 2, 60, 'black', false);
+            $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
     }
@@ -65,13 +66,14 @@ class Barcode extends Component
 
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
-            'price' => $this->product->price,
-            'name' => $this->product->name,
+            'products' => $this->products,
+            // 'price' => $this->product->price,
+            // 'name' => $this->product->name,
         ])->output();
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-' . $this->product->name . '.pdf'
+            'barcodes-' . date('Y-m-d') . '.pdf'
         );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }

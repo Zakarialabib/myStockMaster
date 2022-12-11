@@ -52,6 +52,9 @@
 @endsection
 <x-app-layout>
     <div class="px-2 mx-auto">
+
+        <livewire:livesearch />
+
         {{-- <livewire:calculator /> --}}
         <div class="bg-white ">
             <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right py-2">

@@ -29,7 +29,7 @@
             <div class="flex flex-col min-h-screen pl-2"
                 :class="{
                     'lg:ml-64': isSidebarOpen,
-                    'md:ml-0': !isSidebarOpen,
+                    'lg:ml-16': !isSidebarOpen,
                 }"
                 style="transition-property: margin; transition-duration: 150ms;">
 

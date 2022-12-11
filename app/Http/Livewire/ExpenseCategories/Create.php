@@ -15,7 +15,9 @@ class Create extends Component
 
     public $listeners = ['createExpenseCategory'];
 
-    public $createExpenseCategory;
+    public $createExpenseCategory  = false;
+    
+    public $expenseCategory;
 
     public array $rules = [
         'expenseCategory.name' => 'required',
