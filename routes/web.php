@@ -63,10 +63,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('adjustments', AdjustmentController::class);
 
     //Currencies
-    Route::get('currencies', CurrencyController::class)->except('show');
+    Route::get('currencies', CurrencyController::class);
 
     //Expense Category
-    Route::get('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
+    Route::get('expense-categories', ExpenseCategoriesController::class);
 
     //Expense
     Route::get('expenses', ExpenseController::class);
@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class)->except(['show']);
 
     // Permissions
-    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
+    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
