@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class BrandsController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
-        if (! Gate::allows('brand_access')) {
+        if (!Gate::allows('brand_access')) {
             return abort(401);
         }
 
