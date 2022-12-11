@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 class CurrencyController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('access_currencies'), 403);
 

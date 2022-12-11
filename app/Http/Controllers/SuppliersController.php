@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 class SuppliersController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('access_suppliers'), 403);
 

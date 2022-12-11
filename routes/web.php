@@ -63,36 +63,36 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('adjustments', AdjustmentController::class);
 
     //Currencies
-    Route::resource('currencies', CurrencyController::class)->except('show');
+    Route::get('currencies', CurrencyController::class)->except('show');
 
     //Expense Category
-    Route::resource('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
+    Route::get('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
 
     //Expense
-    Route::resource('expenses', ExpenseController::class);
+    Route::get('expenses', ExpenseController::class);
 
     //Customers
-    Route::resource('customers', CustomersController::class);
+    Route::get('customers', CustomersController::class);
     Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
 
     //Suppliers
-    Route::resource('suppliers', SuppliersController::class);
+    Route::get('suppliers', SuppliersController::class);
     Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
 
     //Warehouses
-    Route::resource('warehouses', WarehouseController::class);
+    Route::get('warehouses', WarehouseController::class);
 
     //Brands
-    Route::resource('brands', BrandsController::class);
+    Route::get('brands', BrandsController::class);
 
     //Print Barcode
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
     //Product
-    Route::resource('products', ProductController::class);
+    Route::get('products', ProductController::class);
 
     //Product Category
-    Route::resource('product-categories', CategoriesController::class)->except('show', 'create');
+    Route::get('product-categories', CategoriesController::class);
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class)->except(['show']);
 
     // Permissions
-    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
+    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');

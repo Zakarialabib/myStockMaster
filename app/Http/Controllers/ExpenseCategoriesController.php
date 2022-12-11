@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 class ExpenseCategoriesController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('access_expense_categories'), 403);
 
