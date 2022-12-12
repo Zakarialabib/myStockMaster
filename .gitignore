@@ -10,6 +10,7 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+_ide_helper.php
 /public/images/products/*
 /public/images/livewire-temp/*
 /public/storage/
