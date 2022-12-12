@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use NumberToWords\Legacy\Numbers\Words\Locale\Cs;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
+            WarehouseSeeder::class,
         ]);
     }
 }

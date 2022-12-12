@@ -1,27 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
+use App\Models\PurchasePayment;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Purchase;
-use App\Models\PurchasePayment;
 
 class PurchasePaymentsController extends Controller
 {
-
-    public function index($purchase_id) {
+    public function index()
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
-        $purchase = Purchase::findOrFail($purchase_id);
-
-        return view('admin.purchases.payments.index', compact('purchase'));
+        return view('admin.purchases.payments.index');
     }
 
-
-    public function create($purchase_id) {
+    public function create($purchase_id)
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $purchase = Purchase::findOrFail($purchase_id);
@@ -29,27 +29,27 @@ class PurchasePaymentsController extends Controller
         return view('admin.purchases.payments.create', compact('purchase'));
     }
 
-
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
-            'purchase_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
+            'purchase_id'    => 'required',
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
             PurchasePayment::create([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
-                'purchase_id' => $request->purchase_id,
-                'payment_method' => $request->payment_method
+                'date'           => $request->date,
+                'reference'      => settings()->purchasepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $request->amount,
+                'note'           => $request->note,
+                'purchase_id'    => $request->purchase_id,
+                'payment_method' => $request->payment_method,
             ]);
 
             $purchase = Purchase::findOrFail($request->purchase_id);
@@ -65,9 +65,9 @@ class PurchasePaymentsController extends Controller
             }
 
             $purchase->update([
-                'paid_amount' => ($purchase->paid_amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'paid_amount'    => ($purchase->paid_amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
+                'payment_status' => $payment_status,
             ]);
         });
 
@@ -76,8 +76,8 @@ class PurchasePaymentsController extends Controller
         return redirect()->route('purchases.index');
     }
 
-
-    public function edit($purchase_id, PurchasePayment $purchasePayment) {
+    public function edit($purchase_id, PurchasePayment $purchasePayment)
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $purchase = Purchase::findOrFail($purchase_id);
@@ -85,17 +85,17 @@ class PurchasePaymentsController extends Controller
         return view('admin.purchases.payments.edit', compact('purchasePayment', 'purchase'));
     }
 
-
-    public function update(Request $request, PurchasePayment $purchasePayment) {
+    public function update(Request $request, PurchasePayment $purchasePayment)
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
-            'purchase_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
+            'purchase_id'    => 'required',
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request, $purchasePayment) {
@@ -112,18 +112,18 @@ class PurchasePaymentsController extends Controller
             }
 
             $purchase->update([
-                'paid_amount' => (($purchase->paid_amount - $purchasePayment->amount) + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'paid_amount'    => (($purchase->paid_amount - $purchasePayment->amount) + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
+                'payment_status' => $payment_status,
             ]);
 
             $purchasePayment->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
-                'purchase_id' => $request->purchase_id,
-                'payment_method' => $request->payment_method
+                'date'           => $request->date,
+                'reference'      => $request->reference,
+                'amount'         => $request->amount,
+                'note'           => $request->note,
+                'purchase_id'    => $request->purchase_id,
+                'payment_method' => $request->payment_method,
             ]);
         });
 
@@ -132,8 +132,8 @@ class PurchasePaymentsController extends Controller
         return redirect()->route('purchases.index');
     }
 
-
-    public function destroy(PurchasePayment $purchasePayment) {
+    public function destroy(PurchasePayment $purchasePayment)
+    {
         abort_if(Gate::denies('access_purchase_payments'), 403);
 
         $purchasePayment->delete();

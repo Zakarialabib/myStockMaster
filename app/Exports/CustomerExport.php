@@ -1,40 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Customer;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class CustomerExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
+    /** @var mixed */
+    protected $models;
 
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
-
+    /** @return Builder|EloquentBuilder|Relation */
     public function query()
     {
-        if ($this->selected) {
-            return Customer::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Customer::query()->whereIn('id', $this->models);
         }
 
         return Customer::query();
     }
 
     /**
-     * @var Customer $row
+     * @param  Customer  $row
+     * @return array
      */
     public function map($row): array
     {
         return [
-            $row->id,
             $row->name,
             $row->email,
             $row->phone,
@@ -46,7 +46,6 @@ class CustomerExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
-            '#',
             __('Name'),
             __('Email'),
             __('Phone'),

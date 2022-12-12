@@ -4,12 +4,12 @@
 
 @section('breadcrumb')
 <section class="py-3 px-4">
-    <div class="flex flex-wrap items-center justify-between">
+    <div class="flex flex-wrap items-center rtl:justify-start justify-between ">
         <div class="mb-5 lg:mb-0">
             <h2 class="mb-1 text-2xl font-bold">{{ __('Pos') }}</h2>
             <div class="flex items-center">
                 <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                    <span class="inline-block mr-2">
+                    <span class="inline-block mx-2">
                         <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -26,7 +26,7 @@
                             fill="currentColor"></path>
                     </svg></span>
                 <a class="flex items-center text-sm" href="{{ route('app.pos.index') }}">
-                    <span class="inline-block mr-2">
+                    <span class="inline-block mx-2">
                         <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -43,13 +43,9 @@
 
 @section('content')
     <div class="px-4 mx-auto">
-        <div class="w-full">
-            @include('utils.alerts')
-        </div>
         <div class="flex flex-row">
             <div class="w-3/12 sm:w-full h-full">
-                <livewire:search-product/>
-                <livewire:pos.product-list :categories="$product_categories"/>
+                <livewire:search-product />
             </div>
             <div class="w-9/12 sm:w-full h-full">
                 <livewire:pos.index :cartInstance="'sale'" />
@@ -57,39 +53,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            window.addEventListener('showCheckoutModal', event => {
-                $('#checkoutModal').modal('show');
-
-                $('#paid_amount').maskMoney({
-                    prefix:'{{ settings()->currency->symbol }}',
-                    thousands:'{{ settings()->currency->thousand_separator }}',
-                    decimal:'{{ settings()->currency->decimal_separator }}',
-                    allowZero: false,
-                });
-
-                $('#total_amount').maskMoney({
-                    prefix:'{{ settings()->currency->symbol }}',
-                    thousands:'{{ settings()->currency->thousand_separator }}',
-                    decimal:'{{ settings()->currency->decimal_separator }}',
-                    allowZero: true,
-                });
-
-                $('#paid_amount').maskMoney('mask');
-                $('#total_amount').maskMoney('mask');
-
-                $('#checkout-form').submit(function () {
-                    var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                    $('#paid_amount').val(paid_amount);
-                    var total_amount = $('#total_amount').maskMoney('unmasked')[0];
-                    $('#total_amount').val(total_amount);
-                });
-            });
-        });
-    </script>
-
-@endpush

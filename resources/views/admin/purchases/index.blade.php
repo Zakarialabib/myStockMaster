@@ -2,12 +2,12 @@
 
 @section('breadcrumb')
     <section class="py-3 px-4">
-        <div class="flex flex-wrap items-center justify-between">
+        <div class="flex flex-wrap items-center rtl:justify-start justify-between ">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Purchases') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -25,7 +25,7 @@
                         </svg>
                     </span>
                     <a class="flex items-center text-sm" href="{{ route('purchases.index') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -40,7 +40,7 @@
                 <!-- Button trigger livewire modal -->
                 {{-- <x-button primary onclick="Livewire.emit('createPurchase', 'show')">{{ __('Create') }}</x-button> --}}
                 <x-button primary href="{{ route('purchases.create') }}" wire:loading.attr="disabled" >
-                    {{__('Create')}} 
+                    {{__('Create Purchase')}} 
                 </x-button>
 
             </div>
@@ -50,7 +50,7 @@
 
 <x-app-layout>
     <x-card>
-        @include('utils.alerts')
+
         <div>
             <livewire:purchase.index />
         </div>

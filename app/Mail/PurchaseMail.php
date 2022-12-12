@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -8,9 +10,11 @@ use Illuminate\Queue\SerializesModels;
 
 class PurchaseMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $purchase;
+
     public $pdf;
 
     /**
@@ -29,13 +33,12 @@ class PurchaseMail extends Mailable
      *
      * @return $this
      */
-
     public function build()
     {
         return
         $this->subject('Purchase Details')
             ->markdown('emails.purchase')
-            ->attachData($this->pdf, 'Purchase_' . $this->purchase['Ref'] . '.pdf', [
+            ->attachData($this->pdf, 'Purchase_'.$this->purchase['Ref'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->purchase);

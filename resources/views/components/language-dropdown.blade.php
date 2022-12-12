@@ -1,17 +1,16 @@
 <div>
     <x-dropdown>
         <x-slot name="trigger">
-            <button type="button"
-                class="text-base font-semibold text-gray-500 hover:text-sky-800 dark:text-slate-400 dark:hover:text-sky-400 flex flex-wrap">
+            <x-button type="button" secondary>
                 <span class="mr-1">{{ strtoupper(app()->getLocale()) }}</span>
-            </button>
+            </x-button>
         </x-slot>
         <x-slot name="content">
-            {{-- @foreach ($languages as $locale)
-                <x-dropdown-link href="{{ route('admin.changelanguage', $locale->code) }}">
-                    {{ $locale->name }}
+            @foreach (\App\Models\Language::all() as $language)
+                <x-dropdown-link href="{{ route('changelanguage', $language->code) }}">
+                    {{ $language->name }}
                 </x-dropdown-link>
-            @endforeach --}}
+            @endforeach
         </x-slot>
     </x-dropdown>
 </div>

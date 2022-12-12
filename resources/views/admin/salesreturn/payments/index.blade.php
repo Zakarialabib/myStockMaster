@@ -16,8 +16,8 @@
 @section('content')
     <div class="px-4 mx-auto">
         <div class="row">
-            <div class="col-12">
-                @include('utils.alerts')
+            <div class="w-full px-4">
+        
                 <div class="card">
                     <div class="p-4">
                         <div class="table-responsive">

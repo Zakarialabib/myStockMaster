@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'date_format'               => 'Y-m-d',
-    'time_format'               => 'H:i:s',
-    'datetime_format'           => 'Y-m-d H:i:s',
-    'flatpickr_date_format'     => 'Y-m-d',
-    'flatpickr_time_format'     => 'H:i:S',
+    'date_format' => 'Y-m-d',
+    'time_format' => 'H:i:s',
+    'datetime_format' => 'Y-m-d H:i:s',
+    'flatpickr_date_format' => 'Y-m-d',
+    'flatpickr_time_format' => 'H:i:S',
     'flatpickr_datetime_format' => 'Y-m-d H:i:S',
-    'supported_languages'       => [
+    'supported_languages' => [
         [
-            'title'      => 'French',
+            'title' => 'French',
             'short_code' => 'fr',
         ],
     ],
@@ -37,7 +37,7 @@ return [
         'show_order_tax' => 1,
         'show_discount' => 1,
     ],
-    
+
     'ref_no_prefixes' => [
         'purchase' => 'PO',
         'sell' => 'SL',
@@ -47,6 +47,6 @@ return [
         'expense' => 'EP',
         'purchase_return' => 'PR',
         'purchase_payment' => 'PP',
-        'quotation' => 'BL'
-    ] 
+        'quotation' => 'BL',
+    ],
 ];

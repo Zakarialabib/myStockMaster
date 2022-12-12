@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateExpensesTable extends Migration
 {
@@ -23,9 +25,9 @@ class CreateExpensesTable extends Migration
             $table->foreign('category_id')->references('id')->on('expense_categories')->restrictOnDelete();
             $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
             $table->foreign('warehouse_id')->references('id')->on('warehouses')->restrictOnDelete();
-			$table->string('details', 192);
-			$table->float('amount', 10, 0);
-			$table->softDeletes();
+            $table->string('details', 192)->nullable();
+            $table->float('amount', 10, 0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

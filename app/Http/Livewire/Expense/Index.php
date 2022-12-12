@@ -1,37 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Expense;
 
-use Livewire\Component;
+use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
-use App\Exports\ExpenseExport;
-use App\Support\HasAdvancedFilter;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, HasAdvancedFilter;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
     public $expense;
 
     public int $perPage;
 
-    public int $selectPage;
-    
-    public $listeners = ['confirmDelete','exportAll','downloadAll', 'delete', 'export','refreshIndex', 'showModal', 'editModal'];
-    
-    public $showModal;
+    public $selectPage;
 
-    public $editModal;
+    public $listeners = ['confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'refreshIndex', 'showModal', 'editModal'];
+
+    public $showModal = false;
+
+    public $editModal = false;
+
+    public $showDeleteModal;
 
     public $refreshIndex;
 
     public $export;
-    
+
     public array $orderable;
 
     public string $search = '';
@@ -41,7 +49,6 @@ class Index extends Component
     public bool $showFilters = false;
 
     public array $listsForFields = [];
-
 
     public array $paginationOptions;
 
@@ -57,45 +64,45 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
     public array $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|max:255',
-        'expense.user_id' => '',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|max:255',
+        'expense.user_id'      => '',
         'expense.warehouse_id' => '',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
-        $this->sortField = 'id';
+        $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
@@ -103,23 +110,23 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('expense_access'), 403);
 
-        $query = Expense::with(['category','user','warehouse'])
-                         ->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+        $query = Expense::with(['category', 'user', 'warehouse'])
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $expenses = $query->paginate($this->perPage);
 
         return view('livewire.expense.index', compact('expenses'));
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('expense_delete'), 403);
 
@@ -128,23 +135,23 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Expense $expense)
+    public function delete(Expense $expense): void
     {
         abort_if(Gate::denies('expense_delete'), 403);
 
         $expense->delete();
     }
 
-    public function showModal(Expense $expense)
+    public function showModal(Expense $expense): void
     {
         abort_if(Gate::denies('expense_show'), 403);
 
-        $this->expense = $expense;
+        $this->expense = Expense::find($expense->id);
 
         $this->showModal = true;
     }
 
-    public function editModal(Expense $expense)
+    public function editModal(Expense $expense): void
     {
         abort_if(Gate::denies('expense_edit'), 403);
 
@@ -152,62 +159,59 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->expense = $expense;
+        $this->expense = Expense::find($expense->id);
 
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
         $this->expense->save();
 
-        $this->alert('success', 'Expense updated successfully.');
-        
+        $this->alert('success', __('Expense updated successfully.'));
+
         $this->emit('refreshIndex');
 
         $this->editModal = false;
     }
 
-
-    public function downloadSelected()
+    public function downloadSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        $expenses = Expense::whereIn('id', $this->selected)->get();
-
-        return (new ExpenseExport($expenses))->download('expenses.xlsx');
-
+        return $this->callExport()->forModels($this->selected)->download('expenses.xlsx');
     }
 
-    public function downloadAll(Expense $expense)
+    public function downloadAll(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        return (new ExpenseExport([$expense]))->download('expenses.xlsx');
+        return $this->callExport()->download('expenses.xlsx');
     }
 
-    public function exportSelected()
+    public function exportSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        $expenses = Expense::whereIn('id', $this->selected)->get();
-
-        return (new ExpenseExport($expenses))->download('expenses.pdf');
-
+        return $this->callExport()->forModels($this->selected)->download('expenses.pdf');
     }
 
-    public function exportAll(Expense $expense)
+    public function exportAll(Expense $expense): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        return (new ExpenseExport([$expense]))->download('expenses.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->forModels($expense)->download('expenses.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
-    protected function initListsForFields(): void
+    private function callExport(): ExpenseExport
+    {
+        return (new ExpenseExport());
+    }
+
+    protected function initListsForFields()
     {
         $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
     }
-
 }

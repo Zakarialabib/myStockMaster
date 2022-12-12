@@ -1,6 +1,7 @@
 import './bootstrap';
 import '../css/app.css'; 
 import "../css/theme.css";
+import "../css/font.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import swal from 'sweetalert2';
@@ -75,17 +76,19 @@ Alpine.data("mainState", () => {
     const RTL = () => {
         if (window.localStorage.getItem("rtl")) {
             return JSON.parse(window.localStorage.getItem("rtl"));
-        }
-        return false;
-    };
+          }
+          return false;
+    }
 
     const enableTheme = (isRtl) => {
         if (isRtl) {
-            document.body.dir = "rtl";
+          document.body.dir = "rtl";
         } else {
-            document.body.dir = "ltr";
+          document.body.dir = "ltr";
         }
-    };
+      };
+      
+      enableTheme(false); // sets document.body.dir to "ltr"      
 
     return {
         init,
@@ -96,8 +99,9 @@ Alpine.data("mainState", () => {
         },
         isRtl : RTL(),
         toggleRtl() {
-           this.isRtl = !this.isRtl;
-           enableTheme(this.isRtl);
+            this.isRtl = !this.isRtl;
+            enableTheme(this.isRtl);
+            window.localStorage.setItem("rtl", this.isRtl);
        },
         isSidebarOpen: window.innerWidth > 1024,
         isSidebarHovered: false,

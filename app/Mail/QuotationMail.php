@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class QuotationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $quotation;
+
     /**
      * Create a new message instance.
      *
@@ -29,10 +32,10 @@ class QuotationMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Quotation - ' . settings()->company_name)
-            ->view('quotation::emails.quotation', [
+        return $this->subject('Quotation - '.settings()->company_name)
+            ->view('emails.quotation', [
                 'settings' => settings(),
-                'customer' => $this->quotation->customer
+                'customer' => $this->quotation->customer,
             ]);
     }
 }

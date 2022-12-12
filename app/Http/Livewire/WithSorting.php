@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 trait WithSorting
 {
-    public $sortBy        = 'id';
+    public $sortBy = 'id';
+
     public $sortDirection = 'desc';
 
     public function sortBy($field)

@@ -1,28 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Expense;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class ExpenseExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
+    /** @var mixed */
+    protected $models;
 
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
-
+    /** @return Builder|EloquentBuilder|Relation */
     public function query()
     {
-        if ($this->selected) {
-            return Expense::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Expense::query()->whereIn('id', $this->models);
         }
 
         return Expense::query();
@@ -31,23 +31,24 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
-            '#',
-            'Name',
-            'Amount',
-            'Created At'
+            __('#'),
+            __('Reference'),
+            __('Amount'),
+            __('Created At'),
         ];
     }
 
     /**
-     * @var Expense $row
+     * @param  Expense  $row
+     * @return array
      */
     public function map($row): array
     {
-        return[
+        return [
             $row->id,
-            $row->name,
+            $row->reference,
             $row->amount,
-            $row->created_at,
+            $row->created_at->format('d-m-Y'),
         ];
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Artisan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Cache extends Component
 {
@@ -23,7 +25,6 @@ class Cache extends Component
         Artisan::call('view:clear');
         Artisan::call('optimize');
 
-        $this->alert('success', __('All caches have been cleared!') );
-
+        $this->alert('success', __('All caches have been cleared!'));
     }
 }

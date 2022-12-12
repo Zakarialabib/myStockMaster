@@ -2,12 +2,12 @@
 
 @section('breadcrumb')
     <section class="py-3 px-4">
-        <div class="flex flex-wrap items-center justify-between">
+        <div class="flex flex-wrap items-center rtl:justify-start justify-between ">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Suppliers') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -24,7 +24,7 @@
                                 fill="currentColor"></path>
                         </svg></span>
                     <a class="flex items-center text-sm" href="{{ route('suppliers.index') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -35,13 +35,23 @@
                     </a>
                 </div>
             </div>
-            <div class="float-right">
-                <x-button warning type="button" onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
-                    {{ __('Import') }}
+            <div class="flex space-x-2">
+                <x-dropdown align="right" class="w-auto mr-2">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button secondary type="button" class="text-white flex items-center">
+                            <i class="fas fa-angle-double-down w-4 h-4"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                
+                <x-button primary onclick="Livewire.emit('createSupplier')">
+                    {{ __('Create Supplier') }}
                 </x-button>
-
-                <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.emit('createSupplier', 'show')">{{ __('Create') }}</x-button>
             </div>
         </div>
     </section>
@@ -49,7 +59,7 @@
 
 <x-app-layout>
     <x-card>
-        @include('utils.alerts')
+
         <div>
             <livewire:suppliers.index />
         </div>

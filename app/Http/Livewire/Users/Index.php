@@ -1,23 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
+use App\Http\Livewire\WithSorting;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithSorting;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
+    public $user;
 
-    public $showModal;
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $editModal;
+    /** @var bool */
+    public $showModal = false;
+
+    /** @var bool */
+    public $editModal = false;
 
     public int $perPage;
 
@@ -58,7 +66,7 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
@@ -69,23 +77,23 @@ class Index extends Component
     }
 
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
+        'user.name'       => 'required|string|max:255',
+        'user.email'      => 'required|email|unique:users,email',
+        'user.password'   => 'required|string|min:8',
+        'user.phone'      => 'required|numeric',
+        'user.city'       => 'nullable',
+        'user.country'    => 'nullable',
+        'user.address'    => 'nullable',
         'user.tax_number' => 'nullable',
     ];
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new User())->orderable;
+        $this->orderable = (new User())->orderable;
     }
 
     public function render()
@@ -118,13 +126,12 @@ class Index extends Component
 
         $user->delete();
 
-        $this->alert('warning', __('User deleted successfully!') );
-
+        $this->alert('warning', __('User deleted successfully!'));
     }
 
     public function showModal(User $user)
     {
-        $this->user = $user;
+        $this->user = User::find($user->id);
 
         $this->showModal = true;
     }
@@ -136,8 +143,8 @@ class Index extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
-        $this->user = $user;
+
+        $this->user = User::find($user->id);
 
         $this->editModal = true;
     }
@@ -151,6 +158,5 @@ class Index extends Component
         $this->alert('success', __('User Updated Successfully'));
 
         $this->editModal = false;
-
     }
 }

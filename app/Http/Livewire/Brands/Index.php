@@ -1,53 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Brands;
 
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
-use App\Models\Brand;
-use App\Support\HasAdvancedFilter;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\BrandsImport;
+use App\Models\Brand;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting,
-         LivewireAlert, HasAdvancedFilter, WithFileUploads;
+    use WithPagination;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $brand;
 
     public $listeners = [
-    'show', 'confirmDelete', 'delete','refreshIndex',
-    'showModal','editModal','importModal'
-];
+        'confirmDelete', 'delete', 'refreshIndex',
+        'showModal', 'editModal', 'importModal',
+    ];
 
     public int $perPage;
 
-    public $show;
-    
     public $image;
 
-    public $showModal;
+    public $file;
 
     public $refreshIndex;
 
-    public $importModal;
+    /** @var bool */
+    public $showModal = false;
 
-    public $editModal; 
+    /** @var bool */
+    public $importModal = false;
+
+    /** @var bool */
+    public $editModal = false;
+
+    public $selectPage;
 
     public array $orderable;
 
     public string $search = '';
 
-    public array $selected = [];
+    /** @var array */
+    public $selected = [];
 
     public array $paginationOptions;
-    
+
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -61,61 +70,61 @@ class Index extends Component
     ];
 
     public array $rules = [
-        'brand.name' => ['required', 'string', 'max:255'],
+        'brand.name'        => ['required', 'string', 'max:255'],
         'brand.description' => ['nullable', 'string'],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->selectPage = false;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Brand())->orderable;
+        $this->orderable = (new Brand())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('brand_access'), 403);
 
         $query = Brand::advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $brands = $query->paginate($this->perPage);
 
         return view('livewire.brands.index', compact('brands'));
     }
 
-
-    public function editModal(Brand $brand)
+    public function editModal(Brand $brand): void
     {
         abort_if(Gate::denies('brand_edit'), 403);
 
@@ -123,21 +132,21 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->brand = $brand;
+        $this->brand = Brand::find($brand->id);
 
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         abort_if(Gate::denies('brand_edit'), 403);
 
         $this->validate();
         // upload image if it does or doesn't exist
 
-        if($this->image){
-            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
-            $this->image->storeAs('brands',$imageName);
+        if ($this->image) {
+            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }
 
@@ -145,10 +154,10 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Brand updated successfully.');
+        $this->alert('success', __('Brand updated successfully.'));
     }
-    
-    public function showModal(Brand $brand)
+
+    public function showModal(Brand $brand): void
     {
         abort_if(Gate::denies('brand_show'), 403);
 
@@ -156,12 +165,12 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->brand = $brand;
+        $this->brand = Brand::find($brand->id);
 
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('brand_delete'), 403);
 
@@ -169,25 +178,24 @@ class Index extends Component
 
         $this->resetSelected();
     }
-    
-    public function delete(Brand $brand)
+
+    public function delete(Brand $brand): void
     {
         abort_if(Gate::denies('brand_delete'), 403);
-       
+
         $brand->delete();
 
-        $this->alert('success', 'Brand deleted successfully.');
-
+        $this->alert('success', __('Brand deleted successfully.'));
     }
 
-    public function importModal()
+    public function importModal(): void
     {
         abort_if(Gate::denies('brand_create'), 403);
 
         $this->importModal = true;
     }
 
-    public function import()
+    public function import(): void
     {
         abort_if(Gate::denies('brand_create'), 403);
 
@@ -195,11 +203,8 @@ class Index extends Component
             'file' => 'required|mimes:xlsx',
         ]);
 
-        Excel::import(new BrandsImport, $this->file);
+        Excel::import(new BrandsImport(), $this->file);
 
-        $this->alert('success', 'Brand imported successfully.');
+        $this->alert('success', __('Brand imported successfully.'));
     }
-
-
 }
-

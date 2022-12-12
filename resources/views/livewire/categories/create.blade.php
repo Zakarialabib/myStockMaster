@@ -7,7 +7,7 @@
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
 
             <form wire:submit.prevent="create">
                 <div>
@@ -16,13 +16,13 @@
 
                     <div class="my-4">
                         <x-label for="name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model="name" />
+                        <x-input id="name" class="block mt-1 w-full" type="text" name="name" autofocus
+                            wire:model.lazy="name"  />
                         <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
 
                     <div class="w-full flex justify-start">
-                        <x-button primary wire:click="create" wire:loading.attr="disabled" type="button">
+                        <x-button primary type="submit" class="w-full text-center"  wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
                     </div>

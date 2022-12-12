@@ -1,80 +1,202 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\PurchaseReturn
+ *
+ * @property int $id
+ * @property string $date
+ * @property string $reference
+ * @property int|null $supplier_id
+ * @property int $tax_percentage
+ * @property int $tax_amount
+ * @property int $discount_percentage
+ * @property int $discount_amount
+ * @property int $shipping_amount
+ * @property int $total_amount
+ * @property int $paid_amount
+ * @property int $due_amount
+ * @property string $status
+ * @property string $payment_status
+ * @property string $payment_method
+ * @property string|null $note
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchaseReturnDetail[] $purchaseReturnDetails
+ * @property-read int|null $purchase_return_details_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchaseReturnPayment[] $purchaseReturnPayments
+ * @property-read int|null $purchase_return_payments_count
+ * @property-read \App\Models\Supplier|null $supplier
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn completed()
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDueAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn wherePaidAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereShippingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereSupplierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class PurchaseReturn extends Model
 {
     use HasAdvancedFilter;
 
+    public const PaymentPending = '0';
+
+    public const PaymentPaid = '1';
+
+    public const PaymentPartial = '2';
+
+    public const PaymentDue = '3';
+
+    public const PurchaseReturnPending = '0';
+
+    public const PurchaseReturnCanceled = '1';
+
+    public const PurchaseReturnCompleted = '2';
+
     public $orderable = [
         'id',
-        'purchase_id',
-        'product_id',
-        'quantity',
-        'price',
-        'total',
-        'created_at',
-        'updated_at',
+        'date',
+        'reference',
+        'supplier_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_status',
+        'payment_method',
+        'note',
+        'supplier_id',
     ];
 
     public $filterable = [
         'id',
-        'purchase_id',
-        'product_id',
-        'quantity',
-        'price',
-        'total',
-        'created_at',
-        'updated_at',
+        'date',
+        'reference',
+        'supplier_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_status',
+        'payment_method',
+        'note',
+        'supplier_id',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'date',
+        'reference',
+        'supplier_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_status',
+        'payment_method',
+        'note',
+        'supplier_id',
+    ];
 
-    public function purchaseReturnDetails() {
+    /** @return HasMany<PurchaseReturnDetail> */
+    public function purchaseReturnDetails(): HasMany
+    {
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
     }
 
-    public function purchaseReturnPayments() {
+    /** @return HasMany<PurchaseReturnPayment> */
+    public function purchaseReturnPayments(): HasMany
+    {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
     }
 
-    public static function boot() {
+    /** @return BelongsTo<Supplier> */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->whereStatus('2');
+    }
+
+    public function getShippingAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function getPaidAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function getTotalAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function getDueAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function getTaxAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function getDiscountAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public static function boot()
+    {
         parent::boot();
 
         static::creating(function ($model) {
             $number = PurchaseReturn::max('id') + 1;
             $model->reference = make_reference_id('PRRN', $number);
         });
-    }
-
-    public function scopeCompleted($query) {
-        return $query->where('status', 'Completed');
-    }
-
-    public function getShippingAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getPaidAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getTotalAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getDueAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getTaxAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getDiscountAmountAttribute($value) {
-        return $value / 100;
     }
 }

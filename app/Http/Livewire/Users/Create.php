@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
@@ -13,16 +15,19 @@ class Create extends Component
 
     public $listeners = ['createUser'];
 
-    public $createUser;
+    /** @var bool */
+    public $createUser = false;
+
+    public $user;
 
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
+        'user.name'       => 'required|string|max:255',
+        'user.email'      => 'required|email|unique:users,email',
+        'user.password'   => 'required|string|min:8',
+        'user.phone'      => 'required|numeric',
+        'user.city'       => 'nullable',
+        'user.country'    => 'nullable',
+        'user.address'    => 'nullable',
         'user.tax_number' => 'nullable',
     ];
 
@@ -51,15 +56,14 @@ class Create extends Component
 
         $this->user->save();
 
-        if($this->user) {
+        if ($this->user) {
             $wallet = Wallet::create([
                 'user_id' => $this->user->id,
                 'balance' => 0,
             ]);
-            $this->alert('success', 'User created successfully!');
+            $this->alert('success', __('User created successfully!'));
         } else {
-
-            $this->alert('warning', 'User was not created !');
+            $this->alert('warning', __('User was not created !'));
         }
 
         $this->emit('userCreated');

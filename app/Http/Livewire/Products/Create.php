@@ -1,66 +1,59 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Products;
 
 use App\Models\Brand;
 use App\Models\Category;
-use Livewire\Component;
 use App\Models\Product;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Warehouse;
 
 class Create extends Component
 {
-    use LivewireAlert, WithFileUploads;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $listeners = ['createProduct'];
-    
-    public $createProduct;
+
+    /** @var bool */
+    public $createProduct = null;
 
     public $image;
 
     public array $listsForFields = [];
 
-    public $name;
-    public $code;
-    public $barcode_symbology;
-    public $unit;
-    public $quantity;
-    public $cost;
-    public $price;
-    public $stock_alert;
-    public $order_tax;
-    public $tax_type;
-    public $note;
-    public $category_id;
-    public $brand_id;
-    public $warehouse_id;
+    public $product;
 
-    protected $rules = [
-        'name' => ['required', 'string', 'max:255'],
-        'code' => ['required', 'string', 'max:255', 'unique:products,code'],
-        'barcode_symbology' => ['required', 'string', 'max:255'],
-        'unit' => ['required', 'string', 'max:255'],
-        'quantity' => ['required', 'integer', 'min:1'],
-        'cost' => ['required', 'numeric', 'max:2147483647'],
-        'price' => ['required', 'numeric', 'max:2147483647'],
-        'stock_alert' => ['nullable', 'integer', 'min:0'],
-        'order_tax' => ['nullable', 'integer', 'min:0', 'max:100'],
-        'tax_type' => ['nullable', 'integer'],
-        'note' => ['nullable', 'string', 'max:1000'],
-        'category_id' => ['required', 'integer'],
-        'brand_id' => ['nullable', 'integer'],
-        'warehouse_id' => ['nullable', 'integer']
+    public array $rules = [
+        'product.name'              => ['required', 'string', 'max:255'],
+        'product.code'              => ['required', 'string', 'max:255'],
+        'product.barcode_symbology' => ['required', 'string', 'max:255'],
+        'product.unit'              => ['required', 'string', 'max:255'],
+        'product.quantity'          => ['required', 'integer', 'min:1'],
+        'product.cost'              => ['required', 'numeric', 'max:2147483647'],
+        'product.price'             => ['required', 'numeric', 'max:2147483647'],
+        'product.stock_alert'       => ['required', 'integer', 'min:0'],
+        'product.order_tax'         => ['nullable', 'integer', 'min:0', 'max:100'],
+        'product.tax_type'          => ['nullable', 'integer'],
+        'product.note'              => ['nullable', 'string', 'max:1000'],
+        'product.category_id'       => ['required', 'integer'],
+        'product.brand_id'          => ['nullable', 'integer'],
     ];
 
-    public function updated($propertyName)
+    public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product)
+    public function mount(Product $product): void
     {
         $this->product = $product;
         $this->product->stock_alert = 10;
@@ -69,42 +62,40 @@ class Create extends Component
         $this->product->barcode_symbology = 'C128';
         $this->initListsForFields();
     }
-    
-    public function render()
+
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('create_products'), 403);
 
         return view('livewire.products.create');
     }
 
-    public function createProduct()
+    public function createProduct(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createProduct = true;  
+        $this->createProduct = true;
     }
 
-    public function create()
+    public function create(): void
     {
-        $validatedData = $this->validate();
+        $this->validate();
 
-
-        if($this->image){
-            $imageName = Str::slug($this->product->name).'.'.$this->image->extension();
-            $this->image->storeAs('products',$imageName);
+        if ($this->image) {
+            $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
 
-        Product::create($validatedData);
-        
-        $this->alert('success', 'Product created successfully');
+        $this->product->save();
+
+        $this->alert('success', __('Product created successfully'));
 
         $this->emit('refreshIndex');
 
         $this->createProduct = false;
-
     }
 
     protected function initListsForFields(): void
@@ -113,5 +104,4 @@ class Create extends Component
         $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
         $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
     }
-
 }

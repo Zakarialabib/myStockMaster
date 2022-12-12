@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Models\SaleReturn;
+use App\Models\SaleReturnPayment;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use App\Models\SaleReturn;
-use App\Models\SaleReturnPayment;
 
 class SaleReturnPaymentsController extends Controller
 {
-
-    public function index($sale_return_id) {
+    public function index($sale_return_id)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $sale_return = SaleReturn::findOrFail($sale_return_id);
@@ -20,8 +22,8 @@ class SaleReturnPaymentsController extends Controller
         return view('admin.salesreturn.payments.index', compact('sale_return'));
     }
 
-
-    public function create($sale_return_id) {
+    public function create($sale_return_id)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $sale_return = SaleReturn::findOrFail($sale_return_id);
@@ -29,27 +31,27 @@ class SaleReturnPaymentsController extends Controller
         return view('admin.salesreturn.payments.create', compact('sale_return'));
     }
 
-
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
             'sale_return_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
             SaleReturnPayment::create([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
+                'date'           => $request->date,
+                'reference'      => $request->reference,
+                'amount'         => $request->amount,
+                'note'           => $request->note,
                 'sale_return_id' => $request->sale_return_id,
-                'payment_method' => $request->payment_method
+                'payment_method' => $request->payment_method,
             ]);
 
             $sale_return = SaleReturn::findOrFail($request->sale_return_id);
@@ -65,9 +67,9 @@ class SaleReturnPaymentsController extends Controller
             }
 
             $sale_return->update([
-                'paid_amount' => ($sale_return->paid_amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'paid_amount'    => ($sale_return->paid_amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
+                'payment_status' => $payment_status,
             ]);
         });
 
@@ -76,8 +78,8 @@ class SaleReturnPaymentsController extends Controller
         return redirect()->route('sale-returns.index');
     }
 
-
-    public function edit($sale_return_id, SaleReturnPayment $saleReturnPayment) {
+    public function edit($sale_return_id, SaleReturnPayment $saleReturnPayment)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $sale_return = SaleReturn::findOrFail($sale_return_id);
@@ -85,17 +87,17 @@ class SaleReturnPaymentsController extends Controller
         return view('admin.salesreturn.payments.edit', compact('saleReturnPayment', 'sale_return'));
     }
 
-
-    public function update(Request $request, SaleReturnPayment $saleReturnPayment) {
+    public function update(Request $request, SaleReturnPayment $saleReturnPayment)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
             'sale_return_id' => 'required',
-            'payment_method' => 'required|string|max:255'
+            'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request, $saleReturnPayment) {
@@ -112,18 +114,18 @@ class SaleReturnPaymentsController extends Controller
             }
 
             $sale_return->update([
-                'paid_amount' => (($sale_return->paid_amount - $saleReturnPayment->amount) + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
-                'payment_status' => $payment_status
+                'paid_amount'    => (($sale_return->paid_amount - $saleReturnPayment->amount) + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
+                'payment_status' => $payment_status,
             ]);
 
             $saleReturnPayment->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
+                'date'           => $request->date,
+                'reference'      => $request->reference,
+                'amount'         => $request->amount,
+                'note'           => $request->note,
                 'sale_return_id' => $request->sale_return_id,
-                'payment_method' => $request->payment_method
+                'payment_method' => $request->payment_method,
             ]);
         });
 
@@ -132,8 +134,8 @@ class SaleReturnPaymentsController extends Controller
         return redirect()->route('sale-returns.index');
     }
 
-
-    public function destroy(SaleReturnPayment $saleReturnPayment) {
+    public function destroy(SaleReturnPayment $saleReturnPayment)
+    {
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $saleReturnPayment->delete();

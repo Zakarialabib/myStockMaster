@@ -1,9 +1,33 @@
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ asset('js/chart-config.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/chart-config.js') }}"></script>
+    <script>
+        document.querySelectorAll('.js-date').forEach(el => {
+            el.addEventListener('click', event => {
+                clearActive();
+                hideAll();
+                el.classList.add('active:bg-indigo-800');
+                document.querySelector(`#${el.dataset.date}`).style.display = 'flex';
+            });
+        });
+
+        const clearActive = () => {
+            document.querySelectorAll('.js-date').forEach(el => {
+                el.classList.remove('active');
+            });
+        };
+
+        const hideAll = () => {
+            document.querySelectorAll('.js-date-row').forEach(el => {
+                el.style.display = 'none';
+            });
+        };
+    </script>
 @endpush
 
-@section('title', __('Home'))
+@section('title', __('Dashboard'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
@@ -12,7 +36,7 @@
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -27,14 +51,124 @@
     </section>
 @endsection
 <x-app-layout>
-    <div class="px-4 mx-auto">
-        <livewire:calculator />
+    <div class="px-2 mx-auto">
+
+        <livewire:livesearch />
+
+        {{-- <livewire:calculator /> --}}
+        <div class="bg-white ">
+            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right py-2">
+                <x-button type="button" primary data-date="today" class="js-date mr-2 py-2 active:bg-indigo-800">
+                    {{ __('Today') }}
+                </x-button>
+
+                <x-button type="button" primary data-date="month" class="js-date py-2  mr-2">
+                    {{ __('Last month') }}
+                </x-button>
+
+                <x-button type="button" primary data-date="semi" class="js-date py-2  mr-2">
+                    {{ __('Last 6 month') }}
+                </x-button>
+
+                <x-button type="button" primary data-date="year" class="js-date py-2 ">
+                    {{ __('Last year') }}
+                </x-button>
+            </div>
+            @foreach ($data as $key => $d)
+                @if ($loop->first)
+                    <div class="w-full flex flex-wrap align-center mb-4 js-date-row" id="{{ $key }}">
+                        <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
+                            <div
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                                <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-300">
+                                        {{ __('Sales') }}
+                                    </p>
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
+                                        {{ format_currency($d['salesTotal']) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                                <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
+                                        {{ __('Stock Value') }}
+                                    </p>
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
+                                        {{ format_currency($d['stockValue']) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="w-full flex flex-wrap align-center mb-4 js-date-row" style="display: none"
+                        id="{{ $key }}">
+                        <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
+                            <div
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                                <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
+                                        {{ __('Sales') }}
+                                    </p>
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
+                                        {{ format_currency($d['salesTotal']) }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                                <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-lg font-medium text-gray-600">
+                                        {{ __('Stock Value') }}
+                                    </p>
+                                    <p class="text-3xl sm:text-lg font-bold text-gray-700">
+                                        {{ format_currency($d['stockValue']) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        </div>
         @can('show_total_stats')
-            <div class="flex flex-wrap -m-4 py-4">
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full mb-4 py-4">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-bar-chart font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -45,10 +179,10 @@
                     </div>
                 </div>
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-arrow-return-left font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -59,10 +193,10 @@
                     </div>
                 </div>
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-arrow-return-right font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -74,15 +208,15 @@
                 </div>
 
 
-                <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 lg:p-3 sm:p-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                    <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-trophy font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
                                 {{ __('Profit') }}
-                            </h3>    
+                            </h3>
                         </div>
                         <h2 class="mb-2 text-3xl font-bold">{{ format_currency($profit) }}</h2>
                     </div>
@@ -91,10 +225,10 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="flex flex-wrap -m-2 py-4">
+            <div class="flex flex-wrap py-4">
                 @can('show_weekly_sales_purchases')
-                    <div class="lg:w-3/5 sm:w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                    <div class="lg:w-3/5 sm:w-full px-2 mb-4">
+                        <div>
                             <div class="text-xl mb-2">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
                             </div>
@@ -105,8 +239,8 @@
                     </div>
                 @endcan
                 @can('show_month_overview')
-                    <div class="lg:w-2/5 sm:w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                    <div class="lg:w-2/5 sm:w-full px-2 mb-4">
+                        <div>
                             <div class="text-xl mb-2">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
                             </div>
@@ -122,9 +256,9 @@
         @endcan
 
         @can('show_monthly_cashflow')
-            <div class="fle flex-wrap">
+            <div class="fle flex-wrap mb-4 py-4">
                 <div class="w-full px-2">
-                    <div class="p-6 rounded bg-white shadow-md">
+                    <div>
                         <div class="text-xl mb-2">
                             {{ __('Monthly Cash Flow (Payment Sent & Received)') }}
                         </div>

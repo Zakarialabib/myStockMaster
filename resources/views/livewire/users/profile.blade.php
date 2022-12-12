@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-row">
         <form wire:submit.prevent="update">
-            @include('utils.alerts')
+    
             <div class="w-full px-2">
                 <x-label for="image" :value="__('Profile Image')" required />
                 <img style="width: 100px;height: 100px;"
@@ -101,9 +101,9 @@
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <button type="submit"
-                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update
-                                {{ __('Password') }} <i class="bi bi-check"></i></button>
+                            <x-button type="submit" primary>
+                                {{ __('Update Password') }}
+                            </x-button>
                         </div>
                     </form>
                 </div>

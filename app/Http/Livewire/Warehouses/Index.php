@@ -1,30 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Warehouses;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Warehouse;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $warehouse;
 
     public int $perPage;
 
-    public $listeners = ['refreshIndex','confirmDelete', 'delete', 'showModal', 'editModal'];
+    public $listeners = ['refreshIndex', 'confirmDelete', 'delete', 'showModal', 'editModal'];
 
-    public $showModal;
+    /** @var bool */
+    public $showModal = false;
 
-    public $createModal;
+    /** @var bool */
+    public $importModal = false;
 
-    public $editModal;
+    /** @var bool */
+    public $editModal = false;
 
     public array $orderable;
 
@@ -69,16 +77,18 @@ class Index extends Component
     }
 
     public array $rules = [
-        'warehouse.name' => ['string', 'required'],
+        'warehouse.name'  => ['string', 'required'],
         'warehouse.phone' => ['string', 'nullable'],
+        'warehouse.city'  => ['string', 'nullable'],
+        'warehouse.email' => ['string', 'nullable'],
     ];
 
     public function mount()
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Warehouse())->orderable;
     }
 
@@ -101,11 +111,11 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_show'), 403);
 
-        $this->warehouse = $warehouse;
+        $this->warehouse = Warehouse::find($warehouse->id);
 
         $this->showModal = true;
     }
-    
+
     public function editModal(Warehouse $warehouse)
     {
         abort_if(Gate::denies('warehouse_edit'), 403);
@@ -114,7 +124,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->warehouse = $warehouse;
+        $this->warehouse = Warehouse::find($warehouse->id);
 
         $this->editModal = true;
     }
@@ -129,9 +139,8 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Warehouse updated successfully');
+        $this->alert('success', __('Warehouse updated successfully'));
     }
-
 
     public function delete(Warehouse $warehouse)
     {
@@ -139,7 +148,7 @@ class Index extends Component
 
         $warehouse->delete();
 
-        $this->alert('success', 'Warehouse successfully deleted.');
+        $this->alert('warning', __('Warehouse successfully deleted.'));
     }
 
     public function deleteSelected()
@@ -148,7 +157,6 @@ class Index extends Component
 
         Warehouse::whereIn('id', $this->selected)->delete();
 
-        $this->alert('success', 'Warehouses successfully deleted.');
+        $this->alert('warning', __('Warehouses successfully deleted.'));
     }
-
 }

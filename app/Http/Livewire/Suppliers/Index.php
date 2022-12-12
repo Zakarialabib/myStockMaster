@@ -1,33 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Suppliers;
 
-use Livewire\Component;
+use App\Exports\SupplierExport;
 use App\Http\Livewire\WithSorting;
+use App\Imports\SupplierImport;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Supplier;
-use App\Exports\SupplierExport;
-use App\Imports\SupplierImport;
-use App\Models\Wallet;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $supplier;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','importModal','refreshIndex','showModal','editModal'];
+    public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'importModal', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $showModal;
+    /** @var bool */
+    public $showModal = false;
 
-    public $editModal;
-    
-    public $importModal;
+    /** @var bool */
+    public $importModal = false;
+
+    /** @var bool */
+    public $editModal = false;
 
     public array $orderable;
 
@@ -69,27 +76,27 @@ class Index extends Component
     }
 
     public array $rules = [
-        'supplier.name' => ['required', 'string', 'max:255'],
-        'supplier.email' => ['nullable', 'string', 'max:255'],
-        'supplier.phone' => ['required'],
-        'supplier.address' => ['nullable', 'string', 'max:255'],
-        'supplier.city' => ['nullable', 'string', 'max:255'],
-        'supplier.country' => ['nullable', 'string', 'max:255'],
+        'supplier.name'       => ['required', 'string', 'max:255'],
+        'supplier.email'      => ['nullable', 'string', 'max:255'],
+        'supplier.phone'      => ['required'],
+        'supplier.address'    => ['nullable', 'string', 'max:255'],
+        'supplier.city'       => ['nullable', 'string', 'max:255'],
+        'supplier.country'    => ['nullable', 'string', 'max:255'],
         'supplier.tax_number' => ['nullable', 'string', 'max:255'],
     ];
 
     public function mount()
     {
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Supplier())->orderable;
     }
 
     public function render()
-    {   
+    {
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
@@ -105,7 +112,8 @@ class Index extends Component
 
     public function showModal(Supplier $supplier)
     {
-        $this->supplier = $supplier;
+        $this->supplier = Supplier::find($supplier->id);
+
         $this->showModal = true;
     }
 
@@ -116,8 +124,8 @@ class Index extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
-        $this->supplier = $supplier;
+
+        $this->supplier = Supplier::find($supplier->id);
 
         $this->editModal = true;
     }
@@ -128,10 +136,9 @@ class Index extends Component
 
         $this->supplier->save();
 
-        $this->alert('success', 'Supplier Updated Successfully');
+        $this->alert('success', __('Supplier Updated Successfully'));
 
         $this->editModal = false;
-
     }
 
     public function delete(Supplier $supplier)
@@ -140,7 +147,7 @@ class Index extends Component
 
         $supplier->delete();
 
-        $this->alert('warning', 'Supplier Deleted Successfully');
+        $this->alert('warning', __('Supplier Deleted Successfully'));
     }
 
     public function deleteSelected()
@@ -170,9 +177,9 @@ class Index extends Component
             ],
         ]);
 
-        Supplier::import(new SupplierImport, $this->file('import_file'));
+        Supplier::import(new SupplierImport(), $this->file('import_file'));
 
-        $this->alert('success', 'Supplier Imported Successfully');
+        $this->alert('success', __('Supplier Imported Successfully'));
 
         $this->importModal = false;
     }
@@ -181,8 +188,6 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_export'), 403);
 
-        return (new SupplierExport)->download('supplier.xlsx');
+        return (new SupplierExport())->download('supplier.xlsx');
     }
-
-    
 }

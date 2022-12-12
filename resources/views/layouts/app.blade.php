@@ -5,8 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>@yield('title') || {{ config('app.name') }}</title>
+    <meta name="robots" content="nofollow">
+    
+    <title>@yield('title') || {{ settings()->company_name }}</title>
     <!-- Styles -->
    
     <!-- Favicon -->
@@ -28,14 +29,14 @@
             <div class="flex flex-col min-h-screen pl-2"
                 :class="{
                     'lg:ml-64': isSidebarOpen,
-                    'md:ml-16': !isSidebarOpen,
+                    'lg:ml-16': !isSidebarOpen,
                 }"
                 style="transition-property: margin; transition-duration: 150ms;">
 
                 <!-- Navigation Bar-->
                 <x-navbar />
 
-                <main class="pt-5 px-2 flex-1">
+                <main class="flex-1">
                     
                     @yield('breadcrumb')
                     
@@ -44,7 +45,8 @@
                     @isset($slot)
                     {{ $slot }}
                     @endisset
-                        
+                    <x-settings-bar />
+                    
                 </main>
                 
                 <!-- Footer -->

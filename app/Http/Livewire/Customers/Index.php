@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Customers;
 
-use Livewire\Component;
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
-use App\Models\Customer;
 use App\Exports\CustomerExport;
-use App\Support\HasAdvancedFilter;
+use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
-use App\Models\Wallet;
+use App\Models\Customer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert,
-        HasAdvancedFilter, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use WithFileUploads;
 
     public $customer;
 
@@ -26,15 +30,15 @@ class Index extends Component
 
     public int $perPage;
 
-    public int $selectPage;
+    public $selectPage;
 
-    public $listeners = ['resetSelected','confirmDelete','exportAll','downloadAll','delete', 'export', 'import', 'importExcel','refreshIndex','showModal','editModal'];
+    public $listeners = ['resetSelected', 'confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'import', 'importExcel', 'refreshIndex', 'showModal', 'editModal'];
 
-    public $showModal;
+    public $showModal = false;
+
+    public $editModal = false;
 
     public $refreshIndex;
-
-    public $editModal; 
 
     public $import;
 
@@ -58,47 +62,47 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function resetSelected()
+    public function resetSelected(): void
     {
         $this->selected = [];
     }
 
-    public function refreshIndex()
+    public function refreshIndex(): void
     {
         $this->resetPage();
     }
 
     public array $rules = [
-        'customer.name' => 'required|string|max:255',
-        'customer.email' => 'nullable|max:255',
-        'customer.phone' => 'required|numeric',
-        'customer.city' => 'nullable',
-        'customer.country' => 'nullable',
-        'customer.address' => 'nullable',
+        'customer.name'       => 'required|string|max:255',
+        'customer.email'      => 'nullable|max:255',
+        'customer.phone'      => 'required|numeric',
+        'customer.city'       => 'nullable',
+        'customer.country'    => 'nullable',
+        'customer.address'    => 'nullable',
         'customer.tax_number' => 'nullable',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Customer())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('customer_access'), 403);
 
@@ -130,38 +134,12 @@ class Index extends Component
 
         $this->alert('warning', __('Customer deleted successfully'));
     }
-    
-    public function createModal()
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->customer = new Customer();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        $this->customer->save();
-
-        $this->alert('success', __('Customer created successfully'));
-        
-        $this->emit('refreshIndex');
-        
-        $this->createModal = false;
-    }
 
     public function showModal(Customer $customer)
     {
         abort_if(Gate::denies('customer_show'), 403);
 
-        $this->customer = $customer;
+        $this->customer = Customer::find($customer->id);
 
         $this->showModal = true;
     }
@@ -174,10 +152,9 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->customer = $customer;
+        $this->customer = Customer::find($customer->id);
 
         $this->editModal = true;
-
     }
 
     public function update()
@@ -190,7 +167,7 @@ class Index extends Component
 
         $this->alert('success', __('Customer updated successfully.'));
     }
-    
+
     public function downloadSelected()
     {
         abort_if(Gate::denies('customer_access'), 403);
@@ -227,22 +204,21 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-       $this->import = true;
+        $this->import = true;
     }
 
     public function importExcel()
     {
         abort_if(Gate::denies('customer_access'), 403);
-        
+
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Excel::import(new CustomerImport, $this->file('file'));
+        Excel::import(new CustomerImport(), $this->file('file'));
 
         $this->import = false;
 
         $this->alert('success', __('Customer imported successfully.'));
     }
-
 }

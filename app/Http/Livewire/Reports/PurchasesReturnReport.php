@@ -1,24 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Reports;
 
+use App\Models\PurchaseReturn;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\PurchaseReturn;
 
 class PurchasesReturnReport extends Component
 {
-
-
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
-
     public $suppliers;
+
     public $start_date;
+
     public $end_date;
+
     public $supplier_id;
+
     public $purchase_return_status;
+
     public $payment_status;
 
     protected $rules = [
@@ -26,7 +29,8 @@ class PurchasesReturnReport extends Component
         'end_date'   => 'required|date|after:start_date',
     ];
 
-    public function mount($suppliers) {
+    public function mount($suppliers)
+    {
         $this->suppliers = $suppliers;
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
@@ -35,7 +39,8 @@ class PurchasesReturnReport extends Component
         $this->payment_status = '';
     }
 
-    public function render() {
+    public function render()
+    {
         $purchase_returns = PurchaseReturn::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, function ($query) {
@@ -50,11 +55,12 @@ class PurchasesReturnReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.purchases-return-report', [
-            'purchase_returns' => $purchase_returns
+            'purchase_returns' => $purchase_returns,
         ]);
     }
 
-    public function generateReport() {
+    public function generateReport()
+    {
         $this->validate();
         $this->render();
     }

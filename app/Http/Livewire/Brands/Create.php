@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -11,33 +15,38 @@ use Illuminate\Support\Str;
 
 class Create extends Component
 {
-    use LivewireAlert , WithFileUploads;
+    use LivewireAlert;
+    use WithFileUploads;
 
-    public $createBrand;
-    
+    public $createBrand = false;
+
+    public $brand;
+
     public $image;
 
     public $listeners = ['createBrand'];
+
+    public array $rules = [
+        'brand.name'        => ['required', 'string', 'max:255'],
+        'brand.description' => ['nullable', 'string'],
+    ];
 
     public function mount(Brand $brand)
     {
         $this->brand = $brand;
     }
 
-    public array $rules = [
-        'brand.name' => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
-    ];
-
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('brand_create'), 403);
 
         return view('livewire.brands.create');
     }
 
-    public function createBrand()
+    public function createBrand(): void
     {
+        // strange behavior with reset()
+
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -45,22 +54,22 @@ class Create extends Component
         $this->createBrand = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
-        if($this->image){
-            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
-            $this->image->storeAs('brands',$imageName);
+        if ($this->image) {
+            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }
 
         $this->brand->save();
 
         $this->emit('refreshIndex');
-        
-        $this->alert('success', 'Brand created successfully.');
-        
+
+        $this->alert('success', __('Brand created successfully.'));
+
         $this->createBrand = false;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Imports;
 
 use App\Models\Purchase;
@@ -7,21 +9,20 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class PurchaseImport implements Tomodel
 {
-     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+    /**
+     * @param  array  $row
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         return new Purchase([
-            'product_id' => $row[0],
-            'quantity' => $row[1],
-            'price' => $row[2],
-            'total' => $row[3],
-            'date' => $row[4],
+            'product_id'  => $row[0],
+            'quantity'    => $row[1],
+            'price'       => $row[2],
+            'total'       => $row[3],
+            'date'        => $row[4],
             'supplier_id' => $row[5],
-            'user_id' => $row[6],
+            'user_id'     => $row[6],
         ]);
     }
 }

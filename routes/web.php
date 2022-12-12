@@ -1,34 +1,37 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\HomeController;
+
+declare(strict_types=1);
+
 use App\Http\Controllers\AdjustmentController;
-use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\ExpenseCategoriesController;
-use App\Http\Controllers\CustomersController;
-use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BarcodeController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\PurchasePaymentsController;
-use App\Http\Controllers\PurchaseReturnController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SalesReturnController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SendQuotationEmailController;
-use App\Http\Controllers\QuotationSalesController;
-use App\Http\Controllers\QuotationController;
-use App\Http\Controllers\PosController;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\SalePaymentsController;
-use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ExpenseCategoriesController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchasesReturnController;
+use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\QuotationSalesController;
+use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SalePaymentsController;
+use App\Http\Controllers\SalesReturnController;
+use App\Http\Controllers\SendQuotationEmailController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\WarehouseController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,65 +44,59 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
+require __DIR__ . '/auth.php';
+
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 Route::group(['middleware' => 'auth'], function () {
-
+    // change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
+    // Dashboard
     Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
 
+    // Charts
     Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
-
     Route::get('/current-month/chart-data', [HomeController::class, 'currentMonthChart'])->name('current-month.chart');
-
     Route::get('/payment-flow/chart-data', [HomeController::class, 'paymentChart'])->name('payment-flow.chart');
 
     //Product Adjustment
     Route::resource('adjustments', AdjustmentController::class);
 
     //Currencies
-    Route::resource('currencies', CurrencyController::class)->except('show');
+    Route::get('currencies', CurrencyController::class)->name('currencies.index');
 
     //Expense Category
-    Route::resource('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
+    Route::get('expense-categories', ExpenseCategoriesController::class)->name('expense-categories.index');
 
     //Expense
-    Route::resource('expenses', ExpenseController::class);
+    Route::get('expenses', ExpenseController::class)->name('expenses.index');
 
     //Customers
-    Route::resource('customers', CustomersController::class);
+    Route::get('customers', CustomersController::class)->name('customers.index');
+    Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
 
     //Suppliers
-    Route::resource('suppliers', SuppliersController::class);
+    Route::get('suppliers', SuppliersController::class)->name('suppliers.index');
+    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
 
     //Warehouses
-    Route::resource('warehouses', WarehouseController::class);
+    Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
 
     //Brands
-    Route::resource('brands', BrandsController::class);
+    Route::get('brands', BrandsController::class)->name('brands.index');
 
-     //Print Barcode
-     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
+    //Print Barcode
+    Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
-     //Product
-    Route::resource('products', ProductController::class);
+    //Product
+    Route::get('products', ProductController::class)->name('products.index');
 
-     //Product Category
-    Route::resource('product-categories', CategoriesController::class)->except('show', 'create');
+    //Product Category
+    Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
 
-    //Generate PDF
-    Route::get('/quotations/pdf/{id}', function ($id) {
-        $quotation = \App\Models\Quotation::findOrFail($id);
-        $customer = \App\Models\Customer::findOrFail($quotation->customer_id);
-
-        $pdf = PDF::loadView('admin.quotation.print', [
-            'quotation' => $quotation,
-            'customer' => $customer,
-        ])->setPaper('a4');
-
-        return $pdf->stream('quotation-' . $quotation->reference . '.pdf');
-    })->name('quotations.pdf');
+    //Generate Quotation PDF
+    Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
 
     //Send Quotation Mail
     Route::get('/quotation/mail/{quotation}', SendQuotationEmailController::class)->name('quotation.email');
@@ -107,21 +104,11 @@ Route::group(['middleware' => 'auth'], function () {
     //Sales Form Quotation
     Route::get('quotation-sales/{quotation]', QuotationSalesController::class)->name('quotation-sales.create');
 
-    //quotations
+    //Quotations
     Route::resource('quotations', QuotationController::class);
 
-     //Generate PDF
-    Route::get('/purchases/pdf/{id}', function ($id) {
-        $purchase = \App\Models\Purchase::findOrFail($id);
-        $supplier = \App\Models\Supplier::findOrFail($purchase->supplier_id);
-
-        $pdf = PDF::loadView('admin.purchases.print', [
-            'purchase' => $purchase,
-            'supplier' => $supplier,
-        ])->setPaper('a4');
-
-        return $pdf->stream('purchase-' . $purchase->reference . '.pdf');
-    })->name('purchases.pdf');
+    //Generate Purchase PDF
+    Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('purchases.pdf');
 
     //Purchases
     Route::resource('purchases', PurchaseController::class);
@@ -134,25 +121,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/purchase-payments/update/{purchasePayment}', [PurchasePaymentsController::class, 'update'])->name('purchase-payments.update');
     Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
 
-    //Generate PDF
-    Route::get('/purchase-returns/pdf/{id}', function ($id) {
-        $purchaseReturn = \App\Models\PurchaseReturn::findOrFail($id);
-        $supplier = \App\Models\Supplier::findOrFail($purchaseReturn->supplier_id);
-
-        $pdf = PDF::loadView('admin.purchasesreturn.print', [
-            'purchase_return' => $purchaseReturn,
-            'supplier' => $supplier,
-        ])->setPaper('a4');
-
-        return $pdf->stream('purchase-return-' . $purchaseReturn->reference . '.pdf');
-    })->name('purchase-returns.pdf');
+    //Generate Purchase Return PDF
+    Route::get('/purchase-returns/pdf/{id}', [ExportController::class, 'purchaseReturns'])->name('purchase-returns.pdf');
 
     //Purchase Returns
-    Route::resource('purchase-returns', PurchaseReturnController::class);
+    Route::resource('purchase-returns', PurchasesReturnController::class);
 
     //Purchase Returns Payments
-    Route::get('/purchase-return-payments/{purchase_return_id}', 'PurchaseReturnPaymentsController@index')
-        ->name('purchase-return-payments.index');
+    Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
+
     Route::get('/purchase-return-payments/{purchase_return_id}/create', 'PurchaseReturnPaymentsController@create')
         ->name('purchase-return-payments.create');
     Route::post('/purchase-return-payments/store', 'PurchaseReturnPaymentsController@store')
@@ -181,32 +158,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pos', [PosController::class, 'index'])->name('app.pos.index');
     Route::post('/app/pos', [PosController::class, 'store'])->name('app.pos.store');
 
-    //Generate PDF
-    Route::get('/sales/pdf/{id}', function ($id) {
-        $sale = \App\Models\Sale::findOrFail($id);
-        $customer = \App\Models\Customer::findOrFail($sale->customer_id);
-
-        $pdf = PDF::loadView('admin.sale.print', [
-            'sale' => $sale,
-            'customer' => $customer,
-        ])->setPaper('a4');
-
-        return $pdf->stream('sale-' . $sale->reference . '.pdf');
-    })->name('sales.pdf');
-
-    Route::get('/sales/pos/pdf/{id}', function ($id) {
-        $sale = \App\Models\Sale::findOrFail($id);
-
-        $pdf = PDF::loadView('admin.sale.print-pos', [
-            'sale' => $sale,
-        ])->setPaper('a7')
-            ->setOption('margin-top', 8)
-            ->setOption('margin-bottom', 8)
-            ->setOption('margin-left', 5)
-            ->setOption('margin-right', 5);
-
-        return $pdf->stream('sale-' . $sale->reference . '.pdf');
-    })->name('sales.pos.pdf');
+    //Generate Sale PDF
+    Route::get('/sales/pdf/{id}', [ExportController::class, 'sale'])->name('sales.pdf');
+    Route::get('/sales/pos/pdf/{id}', [ExportController::class, 'salePos'])->name('sales.pos.pdf');
 
     //Sales
     Route::resource('sales', SaleController::class);
@@ -219,18 +173,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
     Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
 
-     //Generate PDF
-    Route::get('/sale-returns/pdf/{id}', function ($id) {
-        $saleReturn = \App\Models\SaleReturn::findOrFail($id);
-        $customer = \App\Models\Customer::findOrFail($saleReturn->customer_id);
-
-        $pdf = PDF::loadView('admin.salesreturn.print', [
-        'sale_return' => $saleReturn,
-        'customer' => $customer,
-        ])->setPaper('a4');
-
-        return $pdf->stream('sale-return-' . $saleReturn->reference . '.pdf');
-    })->name('sale-returns.pdf');
+    //Generate Sale Returns PDF
+    Route::get('/sale-returns/pdf/{id}', [ExportController::class, 'saleReturns'])->name('sale-returns.pdf');
 
     //Sale Returns
     Route::resource('sale-returns', SalesReturnController::class);
@@ -249,26 +193,22 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/sale-return-payments/destroy/{saleReturnPayment}', 'SaleReturnPaymentsController@destroy')
         ->name('sale-return-payments.destroy');
 
-     //User Profile
+    //User Profile
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');
-    //  Route::patch('/user/profile', [ ProfileController::class , 'update'])->name('profile.update');
-    //  Route::patch('/user/password', [ ProfileController::class , 'updatePassword'])->name('profile.update.password');
 
-     //Users
+    //Users
     Route::resource('users', UsersController::class);
 
-     //Roles
+    //Roles
     Route::resource('roles', RoleController::class)->except(['show']);
 
-     // Permissions
-    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
+    // Permissions
+    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
 
     //General Settings
-    Route::get('/settings', [SettingController::class ,'index'])->name('settings.index');
-    Route::patch('/settings', [SettingController::class ,'update'])->name('settings.update');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::patch('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
-
-require __DIR__ . '/auth.php';

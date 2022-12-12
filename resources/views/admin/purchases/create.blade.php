@@ -1,17 +1,15 @@
-@extends('layouts.app')
-
 @section('title', __('Create Purchase'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
-        <div class="flex flex-wrap items-center justify-between">
+        <div class="flex flex-wrap items-center rtl:justify-start justify-between ">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">
                     {{ __('Add Purchase') }}
                 </h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -28,7 +26,7 @@
                                 fill="currentColor"></path>
                         </svg></span>
                     <a class="flex items-center text-sm" href="{{ route('purchases.index') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -47,7 +45,7 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <x-card>
         <div class="flex flex-row">
 
@@ -63,27 +61,4 @@
         <livewire:suppliers.create />
 
     </x-card>
-@endsection
-
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#getTotalAmount').click(function() {
-                $('#paid_amount').maskMoney('mask', {{ Cart::instance('purchase')->total() }});
-            });
-
-            $('#purchase-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush
+</x-app-layout>

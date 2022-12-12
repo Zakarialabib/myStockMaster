@@ -1,36 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
 class SupplierExport implements FromQuery, WithMapping, WithHeadings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
+    /** @var mixed */
+    protected $models;
 
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
-
+    /** @return Builder|EloquentBuilder|Relation */
     public function query()
     {
-        if ($this->selected) {
-            return Supplier::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return Supplier::query()->whereIn('id', $this->models);
         }
+
         return Supplier::query();
     }
 
     public function headings(): array
     {
         return [
-            '#',
             __('Name'),
             __('Email'),
             __('Phone'),
@@ -42,19 +42,19 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @var Supplier $row
+     * @param  Supplier  $row
+     * @return array
      */
     public function map($row): array
     {
         return[
-        $row->id,
-        $row->name,
-        $row->email,
-        $row->phone,
-        $row->city,
-        $row->country,
-        $row->address,
-        $row->tax_number,
+            $row->name,
+            $row->email,
+            $row->phone,
+            $row->city,
+            $row->country,
+            $row->address,
+            $row->tax_number,
         ];
     }
 }
