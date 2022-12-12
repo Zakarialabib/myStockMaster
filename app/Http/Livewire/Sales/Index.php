@@ -262,4 +262,46 @@ class Index extends Component
     {
         $this->initListsForFields();
     }
+
+    public function sendWhatsapp($sale)
+    {
+
+        $this->sale = Sale::find($sale);
+        
+        // Get the customer's phone number and due amount from the model.
+        $phone = $this->sale->customer->phone;
+        $name = $this->sale->customer->name;
+
+        $dueAmount = format_currency($this->sale->due_amount);
+        
+        // Delete the leading zero from the phone number, if it exists.
+        if (strpos($phone, "0") === 0) {
+            $phone = substr($phone, 1);
+        }
+
+        // Add the country code to the beginning of the phone number.
+        $phone = "+212" . $phone;
+        
+        $greeting = __('Hello');
+        
+        $message = __('You have a due amount of');
+
+        // Construct the message text.
+        $message = "$reeting $name $message $dueAmount.";
+
+        // Encode the message text for use in the URL.
+        $message = urlencode($message);
+
+        // Construct the WhatsApp API endpoint URL.
+        $url = "https://api.whatsapp.com/send?phone=$phone&text=$message";
+
+        return redirect()->away($url);      
+
+    }
+
+    public function openWhatapp($url)
+    {
+        // open whatsapp url in another tab
+    }
+
 }

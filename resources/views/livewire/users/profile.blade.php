@@ -39,10 +39,7 @@
                                 <select
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="role" id="role" wire:model="role" required>
-                                    @foreach (\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)
-                                        <option {{ $user->hasRole($role->name) ? 'selected' : '' }}
-                                            value="{{ $role->name }}">{{ $role->name }}</option>
-                                    @endforeach
+                                  
                                 </select>
                             </div>
 

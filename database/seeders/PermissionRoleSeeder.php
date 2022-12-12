@@ -20,7 +20,7 @@ class PermissionRoleSeeder extends Seeder
         $permissions = Permission::all();
 
         $admin_permissions = $permissions->filter(function ($permission) {
-            return substr($permission->title, 0, 7) != 'admin_';
+            return substr($permission->title, 0, 7);
         });
         // TODO: change 1 to Role::ROLE_ADMIN
         Role::findOrFail(1)->permissions()->sync($admin_permissions->pluck('id'));

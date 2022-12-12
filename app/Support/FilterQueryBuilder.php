@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 class FilterQueryBuilder
 {
     protected $model;
-
     protected $table;
 
     /**
@@ -63,7 +62,7 @@ class FilterQueryBuilder
             $relatedTable = $relatedModel->getTable();
             $as = "prefix_{$relatedTable}";
 
-            if ( ! $belongs instanceof BelongsTo) {
+            if (! $belongs instanceof BelongsTo) {
                 return;
             }
 
@@ -87,27 +86,29 @@ class FilterQueryBuilder
        * @param mixed $query
        * @return mixed
        */
-    protected function makeFilter($query, $filter)
-    {
-        if ($this->isNestedColumn($filter['column'])) {
-            [$relation, $filter['column']] = explode('.', $filter['column']);
-            $callable = Str::camel($relation);
-            $filter['match'] = 'and';
+      protected function makeFilter($query, $filter)
+      {
+          if ($this->isNestedColumn($filter['column'])) {
+              [$relation, $filter['column']] = explode('.', $filter['column']);
+              $callable = Str::camel($relation);
+              $filter['match'] = 'and';
 
-            $query->orWhereHas(Str::camel($callable), function ($q) use ($filter) {
-                $this->{Str::camel($filter['operator'])}(
-                    $filter,
-                    $q
-                );
-            });
-        } else {
-            $filter['column'] = "{$this->table}.{$filter['column']}";
-            $this->{Str::camel($filter['operator'])}(
-                $filter,
-                $query
-            );
-        }
-    }
+              // Use the `remember` method to cache the query.
+              $query->orWhereHas(Str::camel($callable), function ($q) use ($filter) {
+                  $this->{Str::camel($filter['operator'])}(
+                      $filter,
+                      $q
+                  );
+              })->remember(10); // Cache the result for 10 minutes.
+          } else {
+              $filter['column'] = "{$this->table}.{$filter['column']}";
+              $this->{Str::camel($filter['operator'])}(
+                  $filter,
+                  $query
+              );
+          }
+      }
+
 
     protected function isNestedColumn($column)
     {

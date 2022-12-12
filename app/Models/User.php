@@ -129,11 +129,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Warehouse::class);
     }
 
-    // User hasRole method
-    public function hasRole($roles): bool
-    {
-        return (bool) ($this->roles()->whereName($roles)->first());
-    }
 
     /** @return BelongsToMany<Customer> */
     public function roles(): BelongsToMany

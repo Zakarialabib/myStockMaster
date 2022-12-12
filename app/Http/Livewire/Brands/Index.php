@@ -15,12 +15,14 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Livewire\WithSorting;
 
 class Index extends Component
 {
     use WithPagination;
     use LivewireAlert;
     use WithFileUploads;
+    use WithSorting;
 
     public $brand;
 

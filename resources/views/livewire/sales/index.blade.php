@@ -111,6 +111,13 @@
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
                                     </x-dropdown-link>
+                                    @if ($sale->due_amount > 0)
+                                     <x-dropdown-link wire:click="sendWhatsapp({{ $sale->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-paper-plane"></i>
+                                        {{ __('Send to Whatsapp') }}
+                                    </x-dropdown-link>
+                                    @endif
                                     @can('edit_sales')
                                         <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
                                             wire:loading.attr="disabled">
@@ -456,4 +463,6 @@
             })
         })
     </script>
+    <script>
+        
 @endpush
