@@ -94,94 +94,117 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'id'   => 16,
+                'name'       => 'customer delete',
                 'name' => 'customer_delete',
             ],
             [
                 'id'   => 17,
+                'name'       => 'product access',
                 'name' => 'product_access',
             ],
             [
                 'id'   => 18,
+                'name'       => 'product create',
                 'name' => 'product_create',
             ],
             [
                 'id'   => 19,
+                'name'       => 'product access',
                 'name' => 'product_update',
             ],
             [
                 'id'   => 20,
+                'name'       => 'product delete',
                 'name' => 'product_delete',
             ],
             [
                 'id'   => 21,
+                'name'       => 'sale access',
                 'name' => 'sale_access',
             ],
             [
                 'id'   => 22,
+                'name'       => 'sale create',
                 'name' => 'sale_create',
             ],
             [
                 'id'   => 23,
+                'name'       => 'sale update',
                 'name' => 'sale_update',
             ],
             [
                 'id'   => 24,
+                'name'       => 'sale delete',
                 'name' => 'sale_delete',
             ],
             [
                 'id'   => 25,
+                'name'       => 'purchase access',
                 'name' => 'purchase_access',
             ],
             [
                 'id'   => 26,
+                'name'       => 'purchase create',
                 'name' => 'purchase_create',
             ],
             [
                 'id'   => 27,
+                'name'       => 'purchase update',
                 'name' => 'purchase_update',
             ],
             [
                 'id'   => 28,
+                'name'       => 'purchase delete',
                 'name' => 'purchase_delete',
             ],
             [
                 'id'   => 29,
+                'name'       => 'report access',
                 'name' => 'report_access',
             ],
             [
                 'id'   => 30,
+                'name'       => 'report create',
                 'name' => 'report_create',
             ],
             [
                 'id'   => 31,
+                'name'       => 'report  update',
                 'name' => 'report_update',
             ],
             [
                 'id'   => 32,
+                'name'       => 'report delete',
                 'name' => 'report_delete',
             ],
             [
                 'id'   => 33,
+                'name'       => 'setting access',
                 'name' => 'setting_access',
             ],
             [
                 'id'   => 34,
+                'name'       => 'dashboard access',
                 'name' => 'dashboard_access',
             ],
             [
                 'id'   => 35,
+                'name'       => 'category access',
                 'name' => 'category_access',
             ],
             [
                 'id'   => 36,
+                'name'       => 'category delete',
                 'name' => 'category_create',
             ],
             [
                 'id'   => 37,
+                'name'       => 'category update',
                 'name' => 'category_update',
             ],
             [
                 'id'   => 38,
+                'name'       => 'category delete',
                 'name' => 'category_delete',
             ],
             [

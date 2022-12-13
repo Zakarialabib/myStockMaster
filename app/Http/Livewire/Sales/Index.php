@@ -287,7 +287,7 @@ class Index extends Component
         $message = __('You have a due amount of');
 
         // Construct the message text.
-        $message = "$reeting $name $message $dueAmount.";
+        $message = "$greeting $name $message $dueAmount.";
 
         // Encode the message text for use in the URL.
         $message = urlencode($message);
