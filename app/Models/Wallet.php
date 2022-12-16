@@ -42,6 +42,9 @@ class Wallet extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'name',
@@ -55,6 +58,9 @@ class Wallet extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'name',
@@ -68,6 +74,11 @@ class Wallet extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     /**
      * The attributes that are mass assignable.
      *

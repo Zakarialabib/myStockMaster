@@ -18,7 +18,6 @@ class CreateSaleDetailsTable extends Migration
     public function up()
     {
         Schema::create('sale_details', function (Blueprint $table) {
-            
             $table->id();
 
             $table->foreignIdFor(Sale::class)->constrained()->cascadeOnDelete();

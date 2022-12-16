@@ -42,6 +42,9 @@ class PurchasePayment extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'purchase_id',
@@ -52,6 +55,9 @@ class PurchasePayment extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'purchase_id',
@@ -64,27 +70,45 @@ class PurchasePayment extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Purchase> */
+    /** 
+     * @return BelongsTo<Purchase> 
+    */
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = $value * 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeByPurchase($query)
     {
         return $query->wherePurchaseId(request()->route('purchase_id'));

@@ -36,6 +36,9 @@ class Adjustment extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'reference_no',
@@ -45,6 +48,9 @@ class Adjustment extends Model
         'updated_at',
     ];
 
+    /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'reference_no',
@@ -56,6 +62,10 @@ class Adjustment extends Model
 
     protected $guarded = [];
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');

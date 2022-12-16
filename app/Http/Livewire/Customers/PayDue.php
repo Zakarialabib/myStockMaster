@@ -9,6 +9,7 @@ use App\Models\Sale;
 use Auth;
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
 
 class PayDue extends Component
 {
@@ -33,10 +34,10 @@ class PayDue extends Component
 
                 if ($paid_amount_total >= $due_amount) {
                     $amount = $due_amount;
-                    $payment_status = Sale::PaymentPaid;
+                    $payment_status = PaymentStatus::Paid;
                 } else {
                     $amount = $paid_amount_total;
-                    $payment_status = Sale::PaymentPartial;
+                    $payment_status = PaymentStatus::Partial;
                 }
 
                 $payment_sale = new SalePayment();

@@ -8,6 +8,8 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 
 /**
  * App\Models\Purchase
@@ -64,6 +66,9 @@ class Purchase extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -85,6 +90,9 @@ class Purchase extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -106,6 +114,11 @@ class Purchase extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'id',
         'date',
@@ -127,68 +140,99 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    public const PaymentPending = '0';
+    /** 
+     * @return response() 
+     */
+    protected $casts = [
+        'status'         => PurchaseStatus::class,
+        'payment_status' => PaymentStatus::class,
+    ];
 
-    public const PaymentPaid = '1';
-
-    public const PaymentPartial = '2';
-
-    public const PaymentDue = '3';
-
-    public const PurchasePending = '0';
-
-    public const PurchaseOrdered = '1';
-
-    public const PurchaseCompleted = '2';
-
+    /** 
+     * @return HasMany<PurchaseDetail> 
+     */
     public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
+    /** 
+     * @return HasMany<PurchasePayment> 
+     */
     public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
-    public function scopeCompleted($query)
+     /** 
+     * @return BelongsTo<Supplier> 
+     */
+    public function supplier(): BelongsTo
     {
-        return $query->whereStatus('Completed');
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 
+    /**
+     * @param mixed $query
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereStatus(2);
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getShippingAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPaidAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTotalAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getDueAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTaxAmountAttribute($value)
     {
         return $value / 100;
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;
     }
 
-    /** @return BelongsTo<Supplier> */
-    public function supplier(): BelongsTo
-    {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
-    }
+   
 }

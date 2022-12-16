@@ -9,6 +9,8 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 
 /**
  * App\Models\Sale
@@ -69,6 +71,9 @@ class Sale extends Model
     use HasAdvancedFilter;
     use SaleScope;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -91,6 +96,9 @@ class Sale extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -113,6 +121,11 @@ class Sale extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'id',
         'date',
@@ -135,72 +148,97 @@ class Sale extends Model
         'updated_at',
     ];
 
-    public const PaymentPending = '0';
+    /** 
+     * @return response() 
+     */
+    protected $casts = [
+        'status'         => SaleStatus::class,
+        'payment_status' => PaymentStatus::class,
+    ];
 
-    public const PaymentPaid = '1';
-
-    public const PaymentPartial = '2';
-
-    public const PaymentDue = '3';
-
-    public const SalePending = '0';
-
-    public const SaleOrdered = '1';
-
-    public const SaleCompleted = '2';
-
-    public const SaleShipped = '3';
-
-    /** @return HasMany<SaleDetails> */
+    /** 
+     * @return HasMany<SaleDetails> 
+     */
     public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
     }
 
-    /** @return HasMany<SalePayment> */
+    /** 
+     * @return HasMany<SalePayment> 
+     */
     public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
-
-    public function scopeCompleted($query)
-    {
-        return $query->whereStatus('Completed');
-    }
-
-    public function getShippingAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public function getPaidAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public function getTotalAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public function getDueAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public function getTaxAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public function getDiscountAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
+    
     /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
+
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereStatus(2);
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
+    public function getShippingAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
+    public function getPaidAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
+    public function getTotalAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
+    public function getDueAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
+    public function getTaxAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
+    public function getDiscountAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
 }

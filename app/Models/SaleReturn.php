@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\PaymentStatus;
+use App\Enums\SaleReturnStatus;
 
 /**
  * App\Models\SaleReturn
@@ -65,20 +66,9 @@ class SaleReturn extends Model
 {
     use HasAdvancedFilter;
 
-    public const PaymentPending = '0';
-
-    public const PaymentPaid = '1';
-
-    public const PaymentPartial = '2';
-
-    public const PaymentDue = '3';
-
-    public const SaleReturnPending = '0';
-
-    public const SaleReturnCompleted = '1';
-
-    public const SaleReturnCanceld = '2';
-
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -99,6 +89,9 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -119,6 +112,11 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'date',
         'reference',
@@ -138,54 +136,94 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    /** @return HasMany<SaleReturnDetail> */
+    /** @return response() */
+    protected $casts = [
+        'status'         => SaleReturnStatus::class,
+        'payment_status' => PaymentStatus::class,
+    ];
+
+    /** 
+     * @return HasMany<SaleReturnDetail> 
+     */
     public function saleReturnDetails(): HasMany
     {
         return $this->hasMany(SaleReturnDetail::class, 'sale_return_id', 'id');
     }
 
-    /** @return HasMany<SaleReturnPayment> */
+    /** 
+     * @return HasMany<SaleReturnPayment> 
+     */
     public function saleReturnPayments(): HasMany
     {
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
+    /** 
+     * @return BelongsTo<Customer> 
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeCompleted($query)
     {
-        return $query->whereStatus('Completed');
+        return $query->whereStatus(2);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getShippingAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPaidAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTotalAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getDueAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTaxAmountAttribute($value)
     {
         return $value / 100;
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;

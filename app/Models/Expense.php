@@ -48,6 +48,9 @@ class Expense extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'category_id',
@@ -59,6 +62,9 @@ class Expense extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'category_id',
@@ -70,7 +76,12 @@ class Expense extends Model
         'updated_at',
     ];
 
-    public $fillable = [
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
         'category_id',
         'user_id',
         'warehouse_id',
@@ -80,25 +91,25 @@ class Expense extends Model
         'amount',
     ];
 
-    protected $dates = [
-        'date',
-        'created_at',
-        'updated_at',
-    ];
-
-    /** @return BelongsTo<ExpenseCategory> */
+    /** 
+     * @return BelongsTo<ExpenseCategory> 
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
-    /** @return BelongsTo<User> */
+    /** 
+     * @return BelongsTo<User> 
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /** @return BelongsTo<Warehouse> */
+    /** 
+     * @return BelongsTo<Warehouse> 
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
@@ -112,16 +123,28 @@ class Expense extends Model
         parent::__construct($attributes);
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = ($value * 100);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getAmountAttribute($value)
     {
         return $value / 100;

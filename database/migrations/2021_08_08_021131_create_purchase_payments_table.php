@@ -18,7 +18,7 @@ class CreatePurchasePaymentsTable extends Migration
     {
         Schema::create('purchase_payments', function (Blueprint $table) {
             $table->id();
-            
+
             $table->foreignIdFor(Purchase::class)->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('date');

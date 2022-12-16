@@ -6,10 +6,16 @@ namespace App\Http\Livewire;
 
 trait WithSorting
 {
+    /** @var mixed $sortBy */
     public $sortBy = 'id';
 
+    /** @var mixed $sortDirection */
     public $sortDirection = 'desc';
 
+    /**
+     * @param mixed $field
+     * @return void
+     */
     public function sortBy($field)
     {
         $this->sortBy = $field;
@@ -19,6 +25,7 @@ trait WithSorting
             : 'asc';
     }
 
+    /** @return string */
     public function reverseSort()
     {
         return $this->sortDirection === 'asc'

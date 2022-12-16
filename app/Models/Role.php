@@ -37,17 +37,28 @@ class Role extends Model
 
     public $table = 'roles';
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'title',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'title',
         'permissions.name',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'title',
     ];

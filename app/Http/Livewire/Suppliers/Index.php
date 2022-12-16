@@ -13,6 +13,8 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
@@ -21,11 +23,16 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
+    /** @var mixed $supplier */
     public $supplier;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import', 'importModal', 'refreshIndex', 'showModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+        'importModal', 'showModal', 'editModal',
+        'refreshIndex' => '$refresh',
+    ];
 
     /** @var bool */
     public $showModal = false;
@@ -35,19 +42,25 @@ class Index extends Component
 
     /** @var bool */
     public $editModal = false;
-
+    /** @var array $orderable */
     public array $orderable;
 
     public $selectPage;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public $refreshIndex;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -60,20 +73,16 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'supplier.name'       => ['required', 'string', 'max:255'],
@@ -85,7 +94,7 @@ class Index extends Component
         'supplier.tax_number' => ['nullable', 'string', 'max:255'],
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -95,7 +104,7 @@ class Index extends Component
         $this->orderable = (new Supplier())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
@@ -130,7 +139,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

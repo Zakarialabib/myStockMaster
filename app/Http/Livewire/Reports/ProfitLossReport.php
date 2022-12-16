@@ -52,7 +52,7 @@ class ProfitLossReport extends Component
         'end_date'   => 'required|date|after:start_date',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->start_date = '';
         $this->end_date = '';

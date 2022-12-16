@@ -19,7 +19,7 @@ return new class () extends Migration {
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->id();
             $table->double('cash_in_hand');
-           
+
             $table->foreignIdFor(User::class)->nullable()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
 

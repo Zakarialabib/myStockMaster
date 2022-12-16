@@ -51,6 +51,9 @@ class QuotationDetails extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'quotation_id',
@@ -68,6 +71,9 @@ class QuotationDetails extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'quotation_id',
@@ -87,40 +93,62 @@ class QuotationDetails extends Model
 
     protected $guarded = [];
 
-    protected $with = ['product'];
-
-    /** @return BelongsTo<Product> */
+    /** 
+     * @return BelongsTo<Product> 
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<Quotation> */
+    /** 
+     * @return BelongsTo<Quotation> 
+     */
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getUnitPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getSubTotalAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductDiscountAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductTaxAmountAttribute($value)
     {
         return $value / 100;

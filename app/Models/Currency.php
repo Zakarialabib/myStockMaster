@@ -40,6 +40,9 @@ class Currency extends Model
 
     public $table = 'currencies';
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'name',
@@ -50,6 +53,9 @@ class Currency extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'name',
@@ -60,6 +66,11 @@ class Currency extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'code',

@@ -8,11 +8,16 @@ use App\Models\PurchasePayment;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
 
 class PayDue extends Component
 {
     // get customer id
     // pay due amount
+
+    public $amount;
+    public $supplier_id;
+
 
     public function pay()
     {
@@ -32,10 +37,10 @@ class PayDue extends Component
 
                 if ($paid_amount_total >= $due) {
                     $amount = $due;
-                    $payment_status = Purchase::PaymentPaid;
+                    $payment_status = PaymentStatus::Paid;
                 } else {
                     $amount = $paid_amount_total;
-                    $payment_status = Purchase::PaymentPartial;
+                    $payment_status = PaymentStatus::Partial;
                 }
 
                 $payment_purchase = new PurchasePayment();

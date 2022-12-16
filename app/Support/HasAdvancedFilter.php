@@ -8,11 +8,21 @@ use Illuminate\Validation\ValidationException;
 
 trait HasAdvancedFilter
 {
+    /**
+     * @param mixed $query
+     * @param mixed $data
+     * @return mixed
+     */
     public function scopeAdvancedFilter($query, $data)
     {
         return $this->processQuery($query, $data);
     }
 
+    /**
+     * @param mixed $query
+     * @param mixed $data
+     * @return mixed
+     */
     public function processQuery($query, $data)
     {
         $data = $this->processGlobalSearch($data);
@@ -41,16 +51,19 @@ trait HasAdvancedFilter
         return (new FilterQueryBuilder())->apply($query, $data);
     }
 
+    /** @return string */
     protected function orderableColumns()
     {
         return implode(',', $this->orderable);
     }
 
+    /** @return string */
     protected function whiteListColumns()
     {
         return implode(',', $this->filterable);
     }
 
+    /** @return string */
     protected function allowedOperators()
     {
         return implode(',', [
@@ -58,6 +71,10 @@ trait HasAdvancedFilter
         ]);
     }
 
+    /**
+     * @param mixed $data
+     * @return mixed
+     */
     protected function processGlobalSearch($data)
     {
         if (isset($data['f']) || ! isset($data['s'])) {

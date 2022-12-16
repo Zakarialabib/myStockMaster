@@ -1,5 +1,6 @@
-
 <?php
+
+declare(strict_types=1);
 
 namespace App\Traits;
 
@@ -9,13 +10,10 @@ use Illuminate\Support\Facades\Schema;
 
 trait GenerateUuid
 {
-
     public static function bootGenerateUuid(): void
     {
         static::creating(function (Model $model) {
-
             if (Schema::hasColumn($model->getTable(), 'uuid')) {
-
                 $model->uuid = Str::uuid()->toString();
             }
         });

@@ -17,7 +17,6 @@ class CreateSalePaymentsTable extends Migration
     public function up()
     {
         Schema::create('sale_payments', function (Blueprint $table) {
-            
             $table->id();
 
             $table->foreignIdFor(Sale::class)->constrained()->cascadeOnDelete();

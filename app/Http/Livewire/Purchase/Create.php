@@ -16,11 +16,14 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\RedirectResponse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 
 class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['productSelected', 'refreshIndex'];
 
     public $cart_instance;
@@ -119,11 +122,11 @@ class Create extends Component
         $due_amount = $this->total_amount - $this->paid_amount;
 
         if ($due_amount == $this->total_amount) {
-            $payment_status = Purchase::PaymentPending;
+            $payment_status = PaymentStatus::Pending;
         } elseif ($due_amount > 0) {
-            $payment_status = Purchase::PaymentPartial;
+            $payment_status = PaymentStatus::Partial;
         } else {
-            $payment_status = Purchase::PaymentPaid;
+            $payment_status = PaymentStatus::Paid;
         }
 
         $purchase = Purchase::create([
@@ -158,7 +161,7 @@ class Create extends Component
                 'product_tax_amount'      => $cart_item->options->product_tax * 100,
             ]);
 
-            if ($this->status == Purchase::PurchasePending) {
+            if ($this->status == PurchaseStatus::Pending) {
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
                     'quantity' => $product->quantity + $cart_item->qty,

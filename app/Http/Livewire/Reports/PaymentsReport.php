@@ -31,7 +31,7 @@ class PaymentsReport extends Component
 
     protected $query;
 
-    public function mount()
+    public function mount(): void
     {
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');

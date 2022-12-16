@@ -21,6 +21,7 @@ class Create extends Component
     use LivewireAlert;
     use WithFileUploads;
 
+    /** @var string[] $listeners */
     public $listeners = ['createProduct'];
 
     /** @var bool */
@@ -30,6 +31,7 @@ class Create extends Component
 
     public array $listsForFields = [];
 
+    /** @var mixed $product */
     public $product;
 
     public array $rules = [

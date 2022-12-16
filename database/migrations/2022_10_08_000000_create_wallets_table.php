@@ -24,7 +24,7 @@ class CreateWalletsTable extends Migration
             $table->string('recieved_amount', 192)->nullable();
             $table->string('sent_amount', 192)->nullable();
             $table->string('balance', 192)->nullable();
- 
+
             $table->foreignIdFor(User::class)->nullable()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Customer::class)->nullable()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Supplier::class)->nullable()->constrained()->restrictOnDelete();

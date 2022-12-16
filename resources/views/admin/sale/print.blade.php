@@ -57,11 +57,11 @@
                                 </div>
                                 <div>
                                     {{ __('Status') }}: 
-                                    @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                                    @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
                                         <span clacc="badge badge-success">{{ __('Paid') }}</span>
-                                    @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
                                         <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
-                                    @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
                                         <span clacc="badge badge-danger">{{ __('Due') }}</span>
                                     @endif
                                 </div>

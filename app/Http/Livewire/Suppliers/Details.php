@@ -8,14 +8,17 @@ use App\Models\Purchase;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Details extends Component
 {
     public $supplier_id;
 
+    /** @var mixed $supplier */
     public $supplier;
 
-    public function mount($supplier)
+    public function mount($supplier): void
     {
         $this->supplier = Supplier::find($supplier->id);
         $this->supplier_id = $this->supplier->id;
@@ -72,7 +75,7 @@ class Details extends Component
     // show PurchaseInvoices
     // show PurchasePayments
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.suppliers.details');
     }

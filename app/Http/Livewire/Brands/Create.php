@@ -20,10 +20,12 @@ class Create extends Component
 
     public $createBrand = false;
 
+    /** @var mixed $brand */
     public $brand;
 
     public $image;
 
+    /** @var string[] $listeners */
     public $listeners = ['createBrand'];
 
     public array $rules = [

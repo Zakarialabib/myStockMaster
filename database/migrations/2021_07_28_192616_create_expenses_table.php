@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Category;
 use App\Models\ExpenseCategory;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -22,10 +21,10 @@ class CreateExpensesTable extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(ExpenseCategory::class,'category_id')->constrained()->restrictOnDelete();
+            $table->foreignIdFor(ExpenseCategory::class, 'category_id')->constrained()->restrictOnDelete();
             $table->foreignIdFor(User::class)->nullable()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
-            
+
             $table->date('date');
             $table->string('reference', 192);
             $table->string('details', 192)->nullable();

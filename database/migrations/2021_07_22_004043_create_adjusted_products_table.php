@@ -22,7 +22,7 @@ class CreateAdjustedProductsTable extends Migration
 
             $table->foreignIdFor(Adjustment::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->nullable()->constrained()->cascadeOnDelete();
- 
+
             $table->integer('quantity');
             $table->string('type');
             $table->timestamps();

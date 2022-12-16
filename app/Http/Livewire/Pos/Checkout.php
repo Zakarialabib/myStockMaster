@@ -15,6 +15,7 @@ class Checkout extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = [
         'productSelected', 'discountModalRefresh', 'checkoutModal',
         'refreshCustomers',

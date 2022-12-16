@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Wallet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +17,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-    
+
             $table->string('name', 192);
             $table->string('phone', 192);
             $table->string('email', 192)->nullable();

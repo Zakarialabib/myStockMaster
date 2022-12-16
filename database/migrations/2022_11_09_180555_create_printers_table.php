@@ -16,7 +16,7 @@ return new class () extends Migration {
     {
         Schema::create('printers', function (Blueprint $table) {
             $table->id();
-    
+
             $table->string('name');
             $table->enum('connection_type', ['network', 'windows', 'linux']);
             $table->enum('capability_profile', ['default', 'simple', 'SP2000', 'TEP-200M', 'P822D'])->default('default');

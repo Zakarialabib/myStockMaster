@@ -7,11 +7,9 @@
         </x-slot>
         <x-slot name="content">
             <form wire:submit.prevent="save">
-                {{-- @dd($sale->id) --}}
                 <x-validation-errors class="mb-4" :errors="$errors" />
 
                 <div class="flex flex-wrap -mx-2 mb-3">
-                    {{-- <input type="hidden" wire:model="sale_id" name="sale_id"> --}}
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="reference" :value="__('Reference')" required />
                         <x-input type="text" wire:model="reference" id="reference" class="block w-full mt-1" required />
