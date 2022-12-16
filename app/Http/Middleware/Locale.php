@@ -23,11 +23,11 @@ class Locale
     {
         if (Schema::hasTable('languages')) {
             $languages = Language::query()
-                ->where('status', Language::STATUS_ACTIVE)
+                ->whereStatus(Language::STATUS_ACTIVE)
                 ->get()->toArray();
 
             $language_default = Language::query()
-                ->where('is_default', Language::IS_DEFAULT)
+                ->whereIsDefault(Language::IS_DEFAULT)
                 ->first('code');
         }
 
@@ -36,7 +36,7 @@ class Locale
         if ($code) {
             App::setLocale($code);
         } else {
-            App::setLocale($language_default['code'] ?? 'en');// befor seed database it's throw exception so i add (?? 'en')
+            App::setLocale($language_default['code'] ?? App::currentLocale());
         }
 
         return $next($request);

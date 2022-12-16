@@ -1,5 +1,8 @@
-on: push
-name: Publish Website
+name: publish app
+on:
+  push:
+    branches:
+      - master
 jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action
