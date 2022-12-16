@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->integer('woocommerce_store_url')->nullable();
-            $table->integer('woocommerce_api_key')->nullable();
-            $table->integer('woocommerce_api_secret')->nullable();
-            $table->integer('shopify_store_url')->nullable();
-            $table->integer('shopify_api_key')->nullable();
-            $table->integer('shopify_api_secret')->nullable();
+            $table->string('woocommerce_store_url')->nullable();
+            $table->string('woocommerce_api_key')->nullable();
+            $table->string('woocommerce_api_secret')->nullable();
+            $table->string('shopify_store_url')->nullable();
+            $table->string('shopify_api_key')->nullable();
+            $table->string('shopify_api_secret')->nullable();
         });
     }
 
@@ -31,12 +31,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->removeColumn('woocommerce_store_url');
-            $table->removeColumn('woocommerce_api_key');
-            $table->removeColumn('woocommerce_api_secret');
-            $table->removeColumn('shopify_store_url');
-            $table->removeColumn('shopify_api_key');
-            $table->removeColumn('shopify_api_secret');
+            $table->dropColumn(['woocommerce_store_url','woocommerce_api_key','woocommerce_api_secret','shopify_store_url','shopify_api_key','shopify_api_secret']);
         });
     }
 };
