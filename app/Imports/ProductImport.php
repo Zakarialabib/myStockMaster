@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Imports;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -33,5 +35,35 @@ class ProductImport implements ToModel, SkipsEmptyRows
             'unit'              => 'pc',
             'stock_alert'       => '10',
         ]);
+use App\Models\Subcategory;
+use Helpers;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Str;
+
+class ProductImport implements ToCollection, WithHeadingRow
+{
+    public function collection(Collection $rows)
+    {
+        foreach ($rows as $row) {
+            Product::create([
+                'name' => $row['name'],
+                'description' => $row['description'],
+                'price' => $row['price'],
+                'old_price' => $row['cost'] ?? null,
+                'code' => Str::random(10),
+                'category_id' => Category::where('name', $row['category'])->first()->id ?? Category::create(['name' => $row['category']])->id ?? null,
+                'brand_id' => Brand::where('name', $row['brand'])->first()->id ?? Brand::create(['name' => $row['brand']])->id ?? null,
+                'image' => Helpers::uploadImage($row['image']) ?? 'default.jpg', // upload fromm url 
+                'status' => 0,
+                'barcode_symbology' => 'c128',
+                'quantity' = 5,
+                'unit' => 'pc',
+                'stock_alert'=> 0,
+                'order_tax' => 0,
+                'tax_type' => 'inclusive'
+            ]);
+        }
     }
 }
