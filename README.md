@@ -59,7 +59,7 @@ You can check the demo here:
 
 
 ## Login with the following credentials
-    -   Email: `admin@ggmail.com`
+    -   Email: `admin@gmail.com`
     -   Password: `password`
 
 ## Milstones : 
