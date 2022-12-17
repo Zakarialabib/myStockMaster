@@ -20,10 +20,23 @@ class SyncProducts extends Component
     public $listeners = ['syncModal'];
 
     public $type;
+    
+    public $store_url;
 
     public $syncModal = false;
 
-    public function sync()
+    public function updatedType() : void
+    {
+        if ($this->type === 'woocommerce') {
+            $this->store_url = settings()->woocommerce_store_url;
+        } elseif ($type === 'shopify') {
+            $this->store_url = settings()->shopify_store_url;
+        }
+    }
+
+
+    public function sync() : void
+
     {
         // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {
