@@ -15,6 +15,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createPrinter'];
 
     public $createPrinter;

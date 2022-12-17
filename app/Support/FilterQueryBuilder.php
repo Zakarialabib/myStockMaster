@@ -9,8 +9,10 @@ use Illuminate\Support\Str;
 
 class FilterQueryBuilder
 {
+    /** @var mixed */
     protected $model;
 
+    /** @var mixed */
     protected $table;
 
     /**
@@ -48,7 +50,7 @@ class FilterQueryBuilder
     }
 
     /**
-     * param mixed $query
+     * @param mixed $query
      * @param mixed $data
      * @return mixed
      */
@@ -82,11 +84,11 @@ class FilterQueryBuilder
             ->select("{$this->table}.*");
     }
 
-      /**
-       * @param mixed $filter
-       * @param mixed $query
-       * @return mixed
-       */
+    /**
+     * @param mixed $filter
+     * @param mixed $query
+     * @return mixed
+     */
     protected function makeFilter($query, $filter)
     {
         if ($this->isNestedColumn($filter['column'])) {
@@ -94,12 +96,13 @@ class FilterQueryBuilder
             $callable = Str::camel($relation);
             $filter['match'] = 'and';
 
+            // Use the `remember` method to cache the query.
             $query->orWhereHas(Str::camel($callable), function ($q) use ($filter) {
                 $this->{Str::camel($filter['operator'])}(
                     $filter,
                     $q
                 );
-            });
+            })->remember(10); // Cache the result for 10 minutes.
         } else {
             $filter['column'] = "{$this->table}.{$filter['column']}";
             $this->{Str::camel($filter['operator'])}(
@@ -109,6 +112,10 @@ class FilterQueryBuilder
         }
     }
 
+      /**
+       * @param mixed $column
+       * @return bool
+       */
     protected function isNestedColumn($column)
     {
         return strpos($column, '.') !== false;

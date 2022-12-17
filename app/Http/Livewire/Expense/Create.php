@@ -17,9 +17,13 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createExpense'];
 
     public $createExpense = false;
+
+    /** @var mixed $expense */
+    public $expense;
 
     public $reference;
 
@@ -34,8 +38,6 @@ class Create extends Component
     public $user_id;
 
     public $warehouse_id;
-
-    public $expense;
 
     public array $listsForFields = [];
 
@@ -79,8 +81,6 @@ class Create extends Component
     public function create(): void
     {
         $validatedData = $this->validate();
-
-        //$user_id = auth()->id();
 
         $expense = Expense::create($validatedData);
 

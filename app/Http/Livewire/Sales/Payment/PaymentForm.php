@@ -10,11 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
 
 class PaymentForm extends Component
 {
+    /** @var string[] $listeners */
     public $listeners = [
-        'paymentModal', 'refreshIndex', 'save',
+        'paymentModal', 
+        'refreshIndex' => '$refresh',
     ];
 
     public $paymentModal;
@@ -84,11 +87,11 @@ class PaymentForm extends Component
             $due_amount = $sale->due_amount - $this->amount;
 
             if ($due_amount == $sale->total_amount) {
-                $payment_status = Sale::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = Sale::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Sale::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $sale->update([

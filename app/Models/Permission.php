@@ -33,6 +33,9 @@ class Permission extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'name',
@@ -41,6 +44,9 @@ class Permission extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'name',
@@ -49,6 +55,11 @@ class Permission extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = ['name', 'label', 'description'];
 
     /** @return BelongsToMany<Role> */

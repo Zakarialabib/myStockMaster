@@ -45,6 +45,9 @@ class Customer extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'name',
@@ -57,6 +60,9 @@ class Customer extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'name',
@@ -69,6 +75,11 @@ class Customer extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'city',
         'tax_number',
@@ -79,11 +90,17 @@ class Customer extends Model
         'address',
     ];
 
+    /** 
+     * @return HasOne<Wallet> 
+     */
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
 
+    /** 
+     * @return HasOne<Sale> 
+     */
     public function sales(): HasOne
     {
         return $this->HasOne(Sale::class);

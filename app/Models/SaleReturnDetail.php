@@ -53,6 +53,9 @@ class SaleReturnDetail extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'sale_return_id',
@@ -64,6 +67,9 @@ class SaleReturnDetail extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'sale_return_id',
@@ -77,40 +83,62 @@ class SaleReturnDetail extends Model
 
     protected $guarded = [];
 
-    protected $with = ['product'];
-
-    /** @return BelongsTo<Product> */
+    /** 
+     * @return BelongsTo<Product> 
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<SaleReturnPayment> */
+    /** 
+     * @return BelongsTo<SaleReturnPayment> 
+     */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getUnitPriceAttribute($value)
     {
         return $value / 100;
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getSubTotalAttribute($value)
     {
         return $value / 100;
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getProductDiscountAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductTaxAmountAttribute($value)
     {
         return $value / 100;

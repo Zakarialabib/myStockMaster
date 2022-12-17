@@ -19,31 +19,39 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    /** @var mixed $currency */
     public $currency;
 
     public int $perPage;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'editModal', 'refreshIndex',
+        'showModal','editModal',
+        'refreshIndex' => '$refresh',
     ];
 
-    public $showModal;
+    public $showModal = false;
 
     public $refreshIndex;
 
-    public $editModal;
-
+    public $editModal = false;
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public $selectPage;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -74,11 +82,6 @@ class Index extends Component
     public function resetSelected(): void
     {
         $this->selected = [];
-    }
-
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
     }
 
     public array $rules = [

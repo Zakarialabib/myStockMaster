@@ -26,6 +26,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SalesReturnController;
+use App\Http\Controllers\PurchasePaymentsController;
+use App\Http\Controllers\PurchaseReturnPaymentsController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
@@ -44,7 +46,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
@@ -130,15 +132,15 @@ Route::group(['middleware' => 'auth'], function () {
     //Purchase Returns Payments
     Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
 
-    Route::get('/purchase-return-payments/{purchase_return_id}/create', 'PurchaseReturnPaymentsController@create')
+    Route::get('/purchase-return-payments/{purchase_return_id}/create',  [PurchaseReturnPaymentsController::class, 'create'])
         ->name('purchase-return-payments.create');
-    Route::post('/purchase-return-payments/store', 'PurchaseReturnPaymentsController@store')
+    Route::post('/purchase-return-payments/store',  [PurchaseReturnPaymentsController::class, 'store'])
         ->name('purchase-return-payments.store');
-    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}', 'PurchaseReturnPaymentsController@edit')
+    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'edit'])
         ->name('purchase-return-payments.edit');
-    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}', 'PurchaseReturnPaymentsController@update')
+    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'update'])
         ->name('purchase-return-payments.update');
-    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', 'PurchaseReturnPaymentsController@destroy')
+    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'destroy'])
         ->name('purchase-return-payments.destroy');
 
     //Profit Loss Report

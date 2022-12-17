@@ -5,7 +5,7 @@ declare(strict_types=1);
 if ( ! function_exists('settings')) {
     function settings()
     {
-        return cache()->remember('settings', 24 * 60, function () {
+        return cache()->rememberForever('settings', function () {
             return \App\Models\Setting::firstOrFail();
         });
     }

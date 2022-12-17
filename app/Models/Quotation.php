@@ -56,6 +56,9 @@ class Quotation extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -73,6 +76,9 @@ class Quotation extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -90,6 +96,11 @@ class Quotation extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'date',
         'reference',
@@ -106,48 +117,80 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    /** @return HasMany<QuotationDetails> */
+    /** 
+     * @return HasMany<QuotationDetails> 
+     */
     public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
+    /** 
+     * @return BelongsTo<Customer> 
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getShippingAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPaidAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTotalAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getDueAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTaxAmountAttribute($value)
     {
         return $value / 100;
     }
 
+     /**
+      * @param mixed $value
+      * @return int|float
+      */
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;

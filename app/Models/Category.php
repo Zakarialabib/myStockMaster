@@ -36,14 +36,25 @@ class Category extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id', 'code', 'name',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id', 'code', 'name',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'code', 'name',
     ];

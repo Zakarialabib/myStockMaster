@@ -15,6 +15,8 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 
 class SaleController extends Controller
 {
@@ -43,11 +45,11 @@ class SaleController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = Sale::PaymentPending;
+                $payment_status = PaymentStatus::Pending;
             } elseif ($due_amount > 0) {
-                $payment_status = Sale::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Sale::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $sale = Sale::create([
@@ -146,15 +148,15 @@ class SaleController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = Sale::PaymentPending;
+                $payment_status = PaymentStatus::Pending;
             } elseif ($due_amount > 0) {
-                $payment_status = Sale::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Sale::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             foreach ($sale->saleDetails as $sale_detail) {
-                if ($sale->status == Sale::SaleShipped || $sale->status == Sale::SaleCompleted) {
+                if ($sale->status == SaleStatus::Shipped || $sale->status == SaleStatus::Completed) {
                     $product = Product::findOrFail($sale_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity + $sale_detail->quantity,
@@ -196,7 +198,7 @@ class SaleController extends Controller
                     'product_tax_amount'      => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status == Sale::SaleShipped || $request->status == Sale::SaleCompleted) {
+                if ($request->status == SaleStatus::Shipped || $request->status == SaleStatus::Completed) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity - $cart_item->qty,

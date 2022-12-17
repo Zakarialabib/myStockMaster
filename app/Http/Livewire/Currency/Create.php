@@ -15,10 +15,12 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createCurrency'];
 
-    public $createCurrency;
+    public $createCurrency = false;
 
+    /** @var mixed $currency */
     public $currency;
 
     public array $rules = [

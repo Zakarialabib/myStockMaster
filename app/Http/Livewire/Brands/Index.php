@@ -15,17 +15,21 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Livewire\WithSorting;
 
 class Index extends Component
 {
     use WithPagination;
     use LivewireAlert;
     use WithFileUploads;
+    use WithSorting;
 
+    /** @var mixed $brand */
     public $brand;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'refreshIndex',
+        'refreshIndex' => '$refresh',
         'showModal', 'editModal', 'importModal',
     ];
 
@@ -46,17 +50,22 @@ class Index extends Component
     /** @var bool */
     public $editModal = false;
 
-    public $selectPage;
-
+    public $selectPage = false;
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
     /** @var array */
     public $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -94,14 +103,9 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
-    }
 
     public function mount(): void
     {
-        $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;

@@ -35,6 +35,9 @@ class RoleUser extends Model
 
     protected $table = 'role_user';
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'user_id',
@@ -43,6 +46,9 @@ class RoleUser extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'user_id',
@@ -51,11 +57,19 @@ class RoleUser extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id',
         'role_id',
     ];
 
+    /** 
+     * @return response() 
+     */
     protected $casts = [
         'user_id' => 'integer',
         'role_id' => 'integer',

@@ -16,6 +16,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
@@ -26,9 +27,11 @@ class Index extends Component
 
     public $salereturn;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'importModal', 'import', 'refreshIndex',
+        'showModal',
+        'importModal', 'import',
+        'refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave',
     ];
 
@@ -41,17 +44,23 @@ class Index extends Component
     public $paymentModal;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -64,17 +73,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -84,10 +93,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'customer_id'         => 'required|numeric',
@@ -102,7 +107,7 @@ class Index extends Component
         'note'                => 'string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -232,11 +237,11 @@ class Index extends Component
             $due_amount = $salereturn->due_amount - $this->amount;
 
             if ($due_amount == $salereturn->total_amount) {
-                $payment_status = SaleReturn::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = SaleReturn::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = SaleReturn::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $salereturn->update([

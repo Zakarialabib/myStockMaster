@@ -15,7 +15,8 @@ use Illuminate\Support\Str;
 class ProductImport implements ToModel, SkipsEmptyRows
 {
     /**
-     * @param  array  $row
+     * @param  array $row
+     * @return \App\Models\Product
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)

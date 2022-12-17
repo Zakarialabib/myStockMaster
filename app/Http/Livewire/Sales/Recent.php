@@ -21,9 +21,10 @@ class Recent extends Component
 
     public $sale;
 
+    /** @var string[] $listeners */
     public $listeners = [
         'recentSales', 'showModal',
-        'importModal', 'refreshIndex',
+        'importModal','refreshIndex' => '$refresh',
     ];
 
     public $refreshIndex;
@@ -33,17 +34,23 @@ class Recent extends Component
     public $recentSales;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -56,17 +63,17 @@ class Recent extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -76,12 +83,8 @@ class Recent extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';

@@ -20,8 +20,9 @@ class Index extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'refreshPos', 'productSelected', 'refreshIndex',
+        'refreshPos', 'productSelected', 'refreshIndex' => '$refresh',
         'discountModalRefresh', 'checkoutModal',
         'refreshCustomers',
     ];
@@ -104,11 +105,6 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function refreshIndex(): void
-    {
-        $this->reset();
-    }
-
     public function mount($cartInstance): void
     {
         $this->cart_instance = $cartInstance;
@@ -161,7 +157,7 @@ class Index extends Component
             } else {
                 $payment_status = '1';
             }
-            // dd(Cart::instance('sale')->content());
+
             $sale = Sale::create([
                 'date'                => now()->format('Y-m-d'),
                 'reference'           => settings()->sale_prefix.'-'.date('Y-m-d-h'),

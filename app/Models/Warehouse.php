@@ -45,6 +45,9 @@ class Warehouse extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'name',
@@ -56,6 +59,9 @@ class Warehouse extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'name',
@@ -67,6 +73,11 @@ class Warehouse extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name', 'phone', 'country', 'city', 'email',
     ];

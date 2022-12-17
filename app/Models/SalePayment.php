@@ -42,6 +42,9 @@ class SalePayment extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'sale_id',
@@ -52,6 +55,9 @@ class SalePayment extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'sale_id',
@@ -62,6 +68,11 @@ class SalePayment extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'date',
         'reference',
@@ -77,21 +88,37 @@ class SalePayment extends Model
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = $value * 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeBySale($query)
     {
         return $query->whereSaleId(request()->route('sale_id'));

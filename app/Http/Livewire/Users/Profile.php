@@ -9,22 +9,24 @@ use App\Rules\MatchCurrentPassword;
 use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Profile extends Component
 {
     use LivewireAlert;
 
-    public function mount(User $user)
+    public function mount(User $user): void
     {
         $this->user = User::find($user->id);
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.users.profile');
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

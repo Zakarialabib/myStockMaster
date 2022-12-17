@@ -10,7 +10,8 @@ use Maatwebsite\Excel\Concerns\ToModel;
 class PurchaseImport implements Tomodel
 {
     /**
-     * @param  array  $row
+     * @param  array $row
+     * @return \App\Models\Purchase
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)

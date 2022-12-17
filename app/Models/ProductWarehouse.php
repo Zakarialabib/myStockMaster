@@ -33,6 +33,11 @@ class ProductWarehouse extends Model
 {
     protected $table = 'product_warehouse';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'product_id', 'warehouse_id', 'qte',
     ];
@@ -43,13 +48,17 @@ class ProductWarehouse extends Model
         'qte'          => 'double',
     ];
 
-    /** @return BelongsTo<Warehouse> */
+    /** 
+     * @return BelongsTo<Warehouse> 
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
     }
 
-    /** @return BelongsTo<Product> */
+    /** 
+     * @return BelongsTo<Product> 
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

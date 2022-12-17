@@ -25,6 +25,11 @@ class UserWarehouse extends Model
 {
     protected $table = 'user_warehouse';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'user_id', 'warehouse_id',
     ];

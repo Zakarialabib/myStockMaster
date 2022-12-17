@@ -12,6 +12,7 @@ class ProductCart extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['productSelected', 'discountModalRefresh'];
 
     public $cart_instance;

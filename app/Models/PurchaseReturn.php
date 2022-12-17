@@ -8,6 +8,8 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseReturnStatus;
 
 /**
  * App\Models\PurchaseReturn
@@ -64,20 +66,9 @@ class PurchaseReturn extends Model
 {
     use HasAdvancedFilter;
 
-    public const PaymentPending = '0';
-
-    public const PaymentPaid = '1';
-
-    public const PaymentPartial = '2';
-
-    public const PaymentDue = '3';
-
-    public const PurchaseReturnPending = '0';
-
-    public const PurchaseReturnCanceled = '1';
-
-    public const PurchaseReturnCompleted = '2';
-
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -98,6 +89,9 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -118,6 +112,11 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'date',
         'reference',
@@ -135,6 +134,12 @@ class PurchaseReturn extends Model
         'payment_method',
         'note',
         'supplier_id',
+    ];
+
+    /** @return response() */
+    protected $casts = [
+        'status'         => PurchaseReturnStatus::class,
+        'payment_status' => PaymentStatus::class,
     ];
 
     /** @return HasMany<PurchaseReturnDetail> */
@@ -155,36 +160,64 @@ class PurchaseReturn extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeCompleted($query)
     {
-        return $query->whereStatus('2');
+        return $query->whereStatus(2);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getShippingAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPaidAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTotalAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getDueAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getTaxAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;

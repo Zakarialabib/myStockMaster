@@ -51,40 +51,62 @@ class PurchaseReturnDetail extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['product'];
-
-    /** @return BelongsTo<Product> */
+    /** 
+     * @return BelongsTo<Product> 
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<PurchaseReturn> */
+    /** 
+     * @return BelongsTo<PurchaseReturn> 
+     */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getUnitPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getSubTotalAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductDiscountAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductTaxAmountAttribute($value)
     {
         return $value / 100;

@@ -34,14 +34,25 @@ class Brand extends Model
 {
     use HasAdvancedFilter;
 
+    /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id', 'name', 'description', 'image',
     ];
 
+    /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id', 'name', 'description', 'image',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name', 'description', 'image',
     ];

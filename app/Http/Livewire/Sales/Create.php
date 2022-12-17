@@ -13,11 +13,14 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['productSelected', 'discountModalRefresh', 'proceed'];
 
     public $cart_instance;
@@ -97,7 +100,7 @@ class Create extends Component
         $this->updatedCustomerId();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 
@@ -128,7 +131,7 @@ class Create extends Component
         } else {
             $payment_status = '1';
         }
-        // dd(Cart::instance('sale')->content());
+
         $sale = Sale::create([
             'date'                => now()->format('Y-m-d'),
             'reference'           => settings()->sale_prefix.'-'.date('Y-m-d-h'),

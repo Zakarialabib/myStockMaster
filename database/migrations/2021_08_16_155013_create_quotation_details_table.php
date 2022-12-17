@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Product;
+use App\Models\Quotation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +19,10 @@ class CreateQuotationDetailsTable extends Migration
     {
         Schema::create('quotation_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('quotation_id');
-            $table->unsignedBigInteger('product_id')->nullable();
+
+            $table->foreignIdFor(Quotation::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->nullable()->constrained()->nullOnDelete();
+
             $table->string('name');
             $table->string('code');
             $table->integer('quantity');
@@ -28,10 +32,7 @@ class CreateQuotationDetailsTable extends Migration
             $table->integer('product_discount_amount');
             $table->string('product_discount_type')->default('fixed');
             $table->integer('product_tax_amount');
-            $table->foreign('quotation_id')->references('id')
-                ->on('quotations')->cascadeOnDelete();
-            $table->foreign('product_id')->references('id')
-                ->on('products')->nullOnDelete();
+
             $table->timestamps();
         });
     }

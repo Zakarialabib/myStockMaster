@@ -55,7 +55,7 @@ class Barcode extends Component
         }
 
         $this->barcodes = [];
-        // dd($product->);
+
         for ($i = 0; $i < $this->quantity; $i++) {
             $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
@@ -64,8 +64,6 @@ class Barcode extends Component
 
     public function getPdf(): StreamedResponse
     {
-        // dd($this->barcodes);
-
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'products' => $this->products,

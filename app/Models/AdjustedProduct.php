@@ -38,6 +38,9 @@ class AdjustedProduct extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'product_id',
@@ -46,6 +49,9 @@ class AdjustedProduct extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'product_id',

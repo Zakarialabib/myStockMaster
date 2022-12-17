@@ -14,6 +14,8 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 
 class PurchaseController extends Controller
 {
@@ -40,11 +42,11 @@ class PurchaseController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = Purchase::PaymentPending;
+                $payment_status = PaymentStatus::Pending;
             } elseif ($due_amount > 0) {
-                $payment_status = Purchase::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Purchase::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $purchase = Purchase::create([
@@ -79,7 +81,7 @@ class PurchaseController extends Controller
                     'product_tax_amount'      => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status == Purchase::PurchasePending) {
+                if ($request->status == PurchaseStatus::Pending) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity + $cart_item->qty,
@@ -143,15 +145,15 @@ class PurchaseController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount == $request->total_amount) {
-                $payment_status = Purchase::PaymentPending;
+                $payment_status = PaymentStatus::Pending;
             } elseif ($due_amount > 0) {
-                $payment_status = Purchase::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Purchase::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             foreach ($purchase->purchaseDetails as $purchase_detail) {
-                if ($purchase->status == Purchase::PurchaseCompleted) {
+                if ($purchase->status == PurchaseStatus::Completed) {
                     $product = Product::findOrFail($purchase_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity - $purchase_detail->quantity,
@@ -193,7 +195,7 @@ class PurchaseController extends Controller
                     'product_tax_amount'      => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status == Purchase::PurchaseCompleted) {
+                if ($request->status == PurchaseStatus::Completed) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity + $cart_item->qty,

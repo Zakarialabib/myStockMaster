@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Customer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,9 +18,11 @@ class CreateQuotationsTable extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignIdFor(Customer::class)->nullable()->constrained()->nullOnDelete();
+
             $table->date('date');
             $table->string('reference');
-            $table->unsignedBigInteger('customer_id')->nullable();
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);
@@ -28,7 +31,6 @@ class CreateQuotationsTable extends Migration
             $table->integer('total_amount');
             $table->string('status');
             $table->text('note')->nullable();
-            $table->foreign('customer_id')->references('id')->on('customers')->nullOnDelete();
             $table->timestamps();
         });
     }

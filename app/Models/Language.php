@@ -38,6 +38,11 @@ class Language extends Model
     public const IS_DEFAULT = 1;
     public const IS_NOT_DEFAULT = 0;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'code',

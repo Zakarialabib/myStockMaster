@@ -63,11 +63,11 @@
                                     {{ $sale->customer->name }}
                                 </x-table.td>
                                 <x-table.td>
-                                    @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                                    @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
                                         <x-badge success>{{ __('Paid') }}</x-badge>
-                                    @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
                                         <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                    @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
                                         <x-badge danger>{{ __('Due') }}</x-badge>
                                     @endif
                                 </x-table.td>
@@ -80,11 +80,11 @@
                                 </x-table.td>
 
                                 <x-table.td>
-                                    @if ($sale->status == \App\Models\Sale::SalePending)
+                                    @if ($sale->status == \App\Enums\SaleStatus::Pending)
                                         <x-badge warning>{{ __('Pending') }}</x-badge>
-                                    @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
+                                    @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
                                         <x-badge info>{{ __('Ordered') }}</x-badge>
-                                    @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                                    @elseif($sale->status == \App\Enums\SaleStatus::Completed)
                                         <x-badge success>{{ __('Completed') }}</x-badge>
                                     @endif
                                 </x-table.td>
@@ -185,21 +185,21 @@
                                                     </div>
                                                     <div>
                                                         {{ __('Status') }} :
-                                                        @if ($sale->status == \App\Models\Sale::SalePending)
+                                                        @if ($sale->status == \App\Enums\SaleStatus::Pending)
                                                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                        @elseif ($sale->status == \App\Models\Sale::SaleOrdered)
+                                                        @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
                                                             <x-badge info>{{ __('Ordered') }}</x-badge>
-                                                        @elseif($sale->status == \App\Models\Sale::SaleCompleted)
+                                                        @elseif($sale->status == \App\Enums\SaleStatus::Completed)
                                                             <x-badge success>{{ __('Completed') }}</x-badge>
                                                         @endif
                                                     </div>
                                                     <div>
                                                         {{ __('Payment Status') }} :
-                                                        @if ($sale->payment_status == \App\Models\Sale::PaymentPaid)
+                                                        @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
                                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                                        @elseif ($sale->payment_status == \App\Models\Sale::PaymentPartial)
+                                                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
                                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                                        @elseif($sale->payment_status == \App\Models\Sale::PaymentDue)
+                                                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
                                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                                         @endif
                                                     </div>

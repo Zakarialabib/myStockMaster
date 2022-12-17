@@ -37,7 +37,7 @@ class SearchProduct extends Component
 
     public $how_many;
 
-    public function mount()
+    public function mount(): void
     {
         $this->query = '';
         $this->how_many = 5;

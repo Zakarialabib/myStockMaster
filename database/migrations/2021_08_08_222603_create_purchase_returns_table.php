@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,9 +18,11 @@ class CreatePurchaseReturnsTable extends Migration
     {
         Schema::create('purchase_returns', function (Blueprint $table) {
             $table->id();
+
             $table->date('date');
             $table->string('reference');
-            $table->unsignedBigInteger('supplier_id')->nullable();
+
+            $table->foreignIdFor(Supplier::class)->nullable()->constrained()->nullOnDelete();
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);
@@ -32,7 +35,7 @@ class CreatePurchaseReturnsTable extends Migration
             $table->string('payment_status');
             $table->string('payment_method');
             $table->text('note')->nullable();
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->nullOnDelete();
+
             $table->timestamps();
         });
     }

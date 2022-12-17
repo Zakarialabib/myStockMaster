@@ -111,6 +111,11 @@
                                         <i class="fas fa-paper-plane"></i>
                                         {{ __('Send to telegram') }}
                                     </x-dropdown-link>
+                                    <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-paper-plane"></i>
+                                        {{ __('Send to Whatsapp') }}
+                                    </x-dropdown-link>
                                     <x-dropdown-link wire:click="editModal({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>

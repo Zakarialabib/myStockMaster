@@ -20,8 +20,10 @@ class Index extends Component
 
     public $sale;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'delete', 'showPayments', 'refreshIndex',
+        'showPayments', 
+        'refreshIndex' => '$refresh',
     ];
 
     public $refreshIndex;
@@ -29,19 +31,25 @@ class Index extends Component
     public $showPayments;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
     public $sale_id;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -54,17 +62,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -74,10 +82,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public function mount($sale)
     {

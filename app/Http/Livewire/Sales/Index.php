@@ -16,6 +16,9 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
@@ -24,36 +27,44 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
+    /** @var mixed $sale */
     public $sale;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'importModal', 'import', 'refreshIndex',
+        'showModal',
+        'importModal','refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave',
     ];
 
     public $refreshIndex;
 
-    public $showModal;
+    public $showModal = false;
 
-    public $importModal;
+    public $importModal = false;
 
-    public $paymentModal;
+    public $paymentModal = false;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     // public $salepayments;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -66,17 +77,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -84,11 +95,6 @@ class Index extends Component
     public function resetSelected(): void
     {
         $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
     }
 
     public array $rules = [
@@ -104,7 +110,7 @@ class Index extends Component
         'note'                => 'string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -114,7 +120,7 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('access_sales'), 403);
 
@@ -234,11 +240,11 @@ class Index extends Component
             $due_amount = $sale->due_amount - $this->amount;
 
             if ($due_amount == $sale->total_amount) {
-                $payment_status = Sale::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = Sale::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Sale::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $sale->update([
@@ -261,5 +267,44 @@ class Index extends Component
     public function refreshCustomers()
     {
         $this->initListsForFields();
+    }
+
+    public function sendWhatsapp($sale)
+    {
+        $this->sale = Sale::find($sale);
+
+        // Get the customer's phone number and due amount from the model.
+        $phone = $this->sale->customer->phone;
+        $name = $this->sale->customer->name;
+
+        $dueAmount = format_currency($this->sale->due_amount);
+
+        // Delete the leading zero from the phone number, if it exists.
+        if (strpos($phone, '0') === 0) {
+            $phone = substr($phone, 1);
+        }
+
+        // Add the country code to the beginning of the phone number.
+        $phone = '+212'.$phone;
+
+        $greeting = __('Hello');
+
+        $message = __('You have a due amount of');
+
+        // Construct the message text.
+        $message = "$greeting $name $message $dueAmount.";
+
+        // Encode the message text for use in the URL.
+        $message = urlencode($message);
+
+        // Construct the WhatsApp API endpoint URL.
+        $url = "https://api.whatsapp.com/send?phone=$phone&text=$message";
+
+        return redirect()->away($url);
+    }
+
+    public function openWhatapp($url)
+    {
+        // open whatsapp url in another tab
     }
 }
