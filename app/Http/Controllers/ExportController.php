@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
@@ -34,7 +36,7 @@ class ExportController extends Controller
         $customer = Customer::findOrFail($sale->customer_id);
 
         $pdf = PDF::loadView('admin.sale.print', [
-            'sale' => $sale,
+            'sale'     => $sale,
             'customer' => $customer,
         ])->setPaper('a4');
 
@@ -48,7 +50,7 @@ class ExportController extends Controller
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', [
             'purchase_return' => $purchaseReturn,
-            'supplier' => $supplier,
+            'supplier'        => $supplier,
         ])->setPaper('a4');
 
         return $pdf->stream('purchase-return-'.$purchaseReturn->reference.'.pdf');
@@ -56,17 +58,15 @@ class ExportController extends Controller
 
     public function quotation($id)
     {
-
         $quotation = Quotation::findOrFail($id);
         $customer = Customer::findOrFail($quotation->customer_id);
 
         $pdf = PDF::loadView('admin.quotation.print', [
             'quotation' => $quotation,
-            'customer' => $customer,
+            'customer'  => $customer,
         ])->setPaper('a4');
 
         return $pdf->stream('quotation-'.$quotation->reference.'.pdf');
-
     }
 
     public function purchase($id)
@@ -89,7 +89,7 @@ class ExportController extends Controller
 
         $pdf = PDF::loadView('admin.salesreturn.print', [
             'sale_return' => $saleReturn,
-            'customer' => $customer,
+            'customer'    => $customer,
         ])->setPaper('a4');
 
         return $pdf->stream('sale-return-'.$saleReturn->reference.'.pdf');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Settings;
 
 use App\Models\Currency;
@@ -17,6 +19,7 @@ class Index extends Component
 
     public $settings;
 
+    /** @var string[] $listeners */
     public $listeners = ['update'];
 
     public array $listsForFields = [];
@@ -24,32 +27,32 @@ class Index extends Component
     public $site_logo;
 
     public array $rules = [
-        'settings.company_name' => 'required|string|min:1|max:255',
-        'settings.company_email' => 'required|string|min:1|max:255',
-        'settings.company_phone' => 'required|string|min:1|max:255',
-        'settings.site_logo' => 'nullable|string|min:0|max:255',
-        'settings.default_currency_id' => 'required|integer|min:0|max:4294967295',
+        'settings.company_name'              => 'required|string|min:1|max:255',
+        'settings.company_email'             => 'required|string|min:1|max:255',
+        'settings.company_phone'             => 'required|string|min:1|max:255',
+        'settings.site_logo'                 => 'nullable|string|min:0|max:255',
+        'settings.default_currency_id'       => 'required|integer|min:0|max:4294967295',
         'settings.default_currency_position' => 'required|string|min:1|max:255',
-        'settings.notification_email' => 'required|string|min:1|max:255',
-        'settings.company_address' => 'required|string|min:1|max:255',
-        'settings.default_client_id' => 'nullable|integer|min:0|max:4294967295',
-        'settings.default_warehouse_id' => 'nullable|integer|min:0|max:4294967295',
-        'settings.default_language' => 'required|string|min:1|max:255',
-        'settings.is_invoice_footer' => 'boolean',
-        'settings.invoice_footer' => 'nullable|string|min:0|max:255',
-        'settings.company_tax' => 'nullable|string|min:0|max:255',
-        'settings.sale_prefix'   => 'nullable',
-        'settings.purchase_prefix'   => 'nullable',
-        'settings.quotation_prefix'   => 'nullable',
-        'settings.salepayment_prefix'    => 'nullable',
+        'settings.notification_email'        => 'required|string|min:1|max:255',
+        'settings.company_address'           => 'required|string|min:1|max:255',
+        'settings.default_client_id'         => 'nullable|integer|min:0|max:4294967295',
+        'settings.default_warehouse_id'      => 'nullable|integer|min:0|max:4294967295',
+        'settings.default_language'          => 'required|string|min:1|max:255',
+        'settings.is_invoice_footer'         => 'boolean',
+        'settings.invoice_footer'            => 'nullable|string|min:0|max:255',
+        'settings.company_tax'               => 'nullable|string|min:0|max:255',
+        'settings.sale_prefix'               => 'nullable',
+        'settings.purchase_prefix'           => 'nullable',
+        'settings.quotation_prefix'          => 'nullable',
+        'settings.salepayment_prefix'        => 'nullable',
         'settings.purchasepayment_prefix'    => 'nullable',
-        'settings.is_rtl' => 'boolean',
-        'settings.invoice_prefix' => 'required|string|min:1|max:255',
-        'settings.show_email' => 'boolean',
-        'settings.show_address' => 'boolean',
-        'settings.show_order_tax' => 'boolean',
-        'settings.show_discount' => 'boolean',
-        'settings.show_shipping' => 'boolean',
+        'settings.is_rtl'                    => 'boolean',
+        'settings.invoice_prefix'            => 'required|string|min:1|max:255',
+        'settings.show_email'                => 'boolean',
+        'settings.show_address'              => 'boolean',
+        'settings.show_order_tax'            => 'boolean',
+        'settings.show_discount'             => 'boolean',
+        'settings.show_shipping'             => 'boolean',
     ];
 
     public function render()
@@ -57,7 +60,7 @@ class Index extends Component
         return view('livewire.settings.index');
     }
 
-    public function mount()
+    public function mount(): void
     {
         abort_if(Gate::denies('access_settings'), 403);
 
@@ -68,9 +71,8 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function update()
+    public function update(): void
     {
-
         $this->validate();
 
         if ($this->site_logo != null) {

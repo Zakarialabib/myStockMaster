@@ -4,7 +4,10 @@ includes:
 parameters:
 
     paths:
-        - app/
+        - app
+        - database/factories
+        - database/seeders
+        - routes
 
     # Level 9 is the highest level
     level: 6

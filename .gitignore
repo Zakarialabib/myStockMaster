@@ -4,10 +4,13 @@ npm-debug.log
 yarn-error.log
 storage/*.key
 .env
+_ide_helper.php
+_ide_helper_models.php
 Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+_ide_helper.php
 /public/images/products/*
 /public/images/livewire-temp/*
 /public/storage/

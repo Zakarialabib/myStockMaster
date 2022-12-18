@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
@@ -57,9 +59,9 @@ class PasswordResetTest extends TestCase
 
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
             $response = $this->post('/reset-password', [
-                'token' => $notification->token,
-                'email' => $user->email,
-                'password' => 'password',
+                'token'                 => $notification->token,
+                'email'                 => $user->email,
+                'password'              => 'password',
                 'password_confirmation' => 'password',
             ]);
 

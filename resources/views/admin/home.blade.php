@@ -36,7 +36,7 @@
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -168,7 +168,7 @@
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                     <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-bar-chart font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -182,7 +182,7 @@
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                     <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-arrow-return-left font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -196,7 +196,7 @@
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                     <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-arrow-return-right font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">
@@ -211,7 +211,7 @@
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                     <div>
                         <div class="flex mb-2">
-                            <span class="inline-block mr-2">
+                            <span class="inline-block mx-2">
                                 <i class="bi bi-trophy font-2xl"></i>
                             </span>
                             <h3 class="text-sm text-gray-600">

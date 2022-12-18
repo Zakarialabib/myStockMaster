@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePurchaseReturnRequest;
@@ -46,35 +48,35 @@ class PurchasesReturnController extends Controller
             }
 
             $purchase_return = PurchaseReturn::create([
-                'date' => $request->date,
-                'supplier_id' => $request->supplier_id,
-                'tax_percentage' => $request->tax_percentage,
+                'date'                => $request->date,
+                'supplier_id'         => $request->supplier_id,
+                'tax_percentage'      => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
-                'shipping_amount' => $request->shipping_amount * 100,
-                'paid_amount' => $request->paid_amount * 100,
-                'total_amount' => $request->total_amount * 100,
-                'due_amount' => $due_amount * 100,
-                'status' => $request->status,
-                'payment_status' => $payment_status,
-                'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'tax_amount' => Cart::instance('purchase_return')->tax() * 100,
-                'discount_amount' => Cart::instance('purchase_return')->discount() * 100,
+                'shipping_amount'     => $request->shipping_amount * 100,
+                'paid_amount'         => $request->paid_amount * 100,
+                'total_amount'        => $request->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => $request->status,
+                'payment_status'      => $payment_status,
+                'payment_method'      => $request->payment_method,
+                'note'                => $request->note,
+                'tax_amount'          => Cart::instance('purchase_return')->tax() * 100,
+                'discount_amount'     => Cart::instance('purchase_return')->discount() * 100,
             ]);
 
             foreach (Cart::instance('purchase_return')->content() as $cart_item) {
                 PurchaseReturnDetail::create([
-                    'purchase_return_id' => $purchase_return->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
+                    'purchase_return_id'      => $purchase_return->id,
+                    'product_id'              => $cart_item->id,
+                    'name'                    => $cart_item->name,
+                    'code'                    => $cart_item->options->code,
+                    'quantity'                => $cart_item->qty,
+                    'price'                   => $cart_item->price * 100,
+                    'unit_price'              => $cart_item->options->unit_price * 100,
+                    'sub_total'               => $cart_item->options->sub_total * 100,
                     'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
+                    'product_discount_type'   => $cart_item->options->product_discount_type,
+                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
                 ]);
 
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {
@@ -89,11 +91,11 @@ class PurchasesReturnController extends Controller
 
             if ($purchase_return->paid_amount > 0) {
                 PurchaseReturnPayment::create([
-                    'date' => $request->date,
-                    'reference' => 'INV/'.$purchase_return->reference,
-                    'amount' => $purchase_return->paid_amount,
+                    'date'               => $request->date,
+                    'reference'          => 'INV/'.$purchase_return->reference,
+                    'amount'             => $purchase_return->paid_amount,
                     'purchase_return_id' => $purchase_return->id,
-                    'payment_method' => $request->payment_method,
+                    'payment_method'     => $request->payment_method,
                 ]);
             }
         });
@@ -124,19 +126,19 @@ class PurchasesReturnController extends Controller
 
         foreach ($purchase_return_details as $purchase_return_detail) {
             $cart->add([
-                'id' => $purchase_return_detail->product_id,
-                'name' => $purchase_return_detail->name,
-                'qty' => $purchase_return_detail->quantity,
-                'price' => $purchase_return_detail->price,
-                'weight' => 1,
+                'id'      => $purchase_return_detail->product_id,
+                'name'    => $purchase_return_detail->name,
+                'qty'     => $purchase_return_detail->quantity,
+                'price'   => $purchase_return_detail->price,
+                'weight'  => 1,
                 'options' => [
-                    'product_discount' => $purchase_return_detail->product_discount_amount,
+                    'product_discount'      => $purchase_return_detail->product_discount_amount,
                     'product_discount_type' => $purchase_return_detail->product_discount_type,
-                    'sub_total' => $purchase_return_detail->sub_total,
-                    'code' => $purchase_return_detail->code,
-                    'stock' => Product::findOrFail($purchase_return_detail->product_id)->quantity,
-                    'product_tax' => $purchase_return_detail->product_tax_amount,
-                    'unit_price' => $purchase_return_detail->unit_price,
+                    'sub_total'             => $purchase_return_detail->sub_total,
+                    'code'                  => $purchase_return_detail->code,
+                    'stock'                 => Product::findOrFail($purchase_return_detail->product_id)->quantity,
+                    'product_tax'           => $purchase_return_detail->product_tax_amount,
+                    'unit_price'            => $purchase_return_detail->unit_price,
                 ],
             ]);
         }
@@ -168,36 +170,36 @@ class PurchasesReturnController extends Controller
             }
 
             $purchase_return->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'supplier_id' => $request->supplier_id,
-                'tax_percentage' => $request->tax_percentage,
+                'date'                => $request->date,
+                'reference'           => $request->reference,
+                'supplier_id'         => $request->supplier_id,
+                'tax_percentage'      => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
-                'shipping_amount' => $request->shipping_amount * 100,
-                'paid_amount' => $request->paid_amount * 100,
-                'total_amount' => $request->total_amount * 100,
-                'due_amount' => $due_amount * 100,
-                'status' => $request->status,
-                'payment_status' => $payment_status,
-                'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'tax_amount' => Cart::instance('purchase_return')->tax() * 100,
-                'discount_amount' => Cart::instance('purchase_return')->discount() * 100,
+                'shipping_amount'     => $request->shipping_amount * 100,
+                'paid_amount'         => $request->paid_amount * 100,
+                'total_amount'        => $request->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => $request->status,
+                'payment_status'      => $payment_status,
+                'payment_method'      => $request->payment_method,
+                'note'                => $request->note,
+                'tax_amount'          => Cart::instance('purchase_return')->tax() * 100,
+                'discount_amount'     => Cart::instance('purchase_return')->discount() * 100,
             ]);
 
             foreach (Cart::instance('purchase_return')->content() as $cart_item) {
                 PurchaseReturnDetail::create([
-                    'purchase_return_id' => $purchase_return->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
+                    'purchase_return_id'      => $purchase_return->id,
+                    'product_id'              => $cart_item->id,
+                    'name'                    => $cart_item->name,
+                    'code'                    => $cart_item->options->code,
+                    'quantity'                => $cart_item->qty,
+                    'price'                   => $cart_item->price * 100,
+                    'unit_price'              => $cart_item->options->unit_price * 100,
+                    'sub_total'               => $cart_item->options->sub_total * 100,
                     'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
+                    'product_discount_type'   => $cart_item->options->product_discount_type,
+                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
                 ]);
 
                 if ($request->status == 'Shipped' || $request->status == 'Completed') {

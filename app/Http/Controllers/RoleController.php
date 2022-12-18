@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Role;
@@ -27,5 +29,4 @@ class RoleController extends Controller
 
         return view('admin.roles.edit', compact('role'));
     }
-
 }

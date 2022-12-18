@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Models\Product;
+use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +19,10 @@ class CreateProductWarehouseTable extends Migration
     {
         Schema::create('product_warehouse', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('warehouse_id');
-            $table->foreign('product_id')->references('id')->on('products')->restrictOnDelete();
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->restrictOnDelete();
+
+            $table->foreignIdFor(Product::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Warehouse::class)->constrained()->restrictOnDelete();
+
             $table->float('qty', 10, 0);
             $table->timestamps();
         });

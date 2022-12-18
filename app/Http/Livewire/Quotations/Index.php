@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Quotations;
 
 use App\Http\Livewire\WithSorting;
@@ -10,32 +12,44 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $quotation;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
+        'showModal',
     ];
 
-    /** @var boolean */
+    /** @var bool */
     public $showModal = false;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -68,23 +82,23 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Quotation)->orderable;
+        $this->orderable = (new Quotation())->orderable;
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('access_quotations'), 403);
 
         $query = Quotation::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

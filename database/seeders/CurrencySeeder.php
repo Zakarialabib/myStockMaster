@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Currency;
@@ -16,12 +18,12 @@ class CurrencySeeder extends Seeder
     public function run()
     {
         Currency::create([
-            'name' => 'Dirham Marocain',
-            'code' => Str::upper('MAD'),
-            'symbol' => 'DH',
+            'name'               => 'Dirham Marocain',
+            'code'               => Str::upper('MAD'),
+            'symbol'             => 'DH',
             'thousand_separator' => ',',
-            'decimal_separator' => '.',
-            'exchange_rate' => null,
+            'decimal_separator'  => '.',
+            'exchange_rate'      => null,
         ]);
     }
 }

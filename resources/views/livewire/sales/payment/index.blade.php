@@ -23,7 +23,7 @@
                     <x-table.th>{{ __('Actions') }}</x-table.th>
                 </x-slot>
                 <x-table.tbody>
-                    {{-- @dd($salepayments) --}}
+
                     @forelse ($salepayments as $salepayment)
                         <x-table.tr>
                             <x-table.td>{{ $salepayment->created_at }}</x-table.td>

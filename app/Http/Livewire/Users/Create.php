@@ -1,54 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createUser'];
+    /** @var string[] $listeners */
+    public $listeners = ['createModal'];
 
-    /** @var boolean */
-    public $createUser = false;
+    /** @var bool */
+    public $createModal = false;
 
+    /** @var mixed $user */
     public $user;
 
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
+        'user.name'       => 'required|string|max:255',
+        'user.email'      => 'required|email|unique:users,email',
+        'user.password'   => 'required|string|min:8',
+        'user.phone'      => 'required|numeric',
+        'user.city'       => 'nullable',
+        'user.country'    => 'nullable',
+        'user.address'    => 'nullable',
         'user.tax_number' => 'nullable',
     ];
 
-    public function mount(User $user)
+    public function mount(User $user): void 
     {
         $this->user = $user;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.users.create');
     }
 
-    public function createUser()
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createUser = true;
+        $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -66,6 +72,6 @@ class Create extends Component
 
         $this->emit('userCreated');
 
-        $this->createUser = false;
+        $this->createModal = false;
     }
 }

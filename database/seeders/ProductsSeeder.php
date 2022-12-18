@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Product;
@@ -15,6 +17,8 @@ class ProductsSeeder extends Seeder
      */
     public function run()
     {
+
         Product::factory(1000)->create();
+
     }
 }

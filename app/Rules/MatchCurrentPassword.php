@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
@@ -14,7 +16,6 @@ class MatchCurrentPassword implements Rule
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -36,6 +37,6 @@ class MatchCurrentPassword implements Rule
      */
     public function message()
     {
-        return __('validation.current_password');
+        return __('Current password');
     }
 }

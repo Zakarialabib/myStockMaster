@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Printer;
 use Illuminate\Http\Request;
+use Exception;
+use Log;
 
 class PrinterController extends Controller
 {
-    
     public function index()
     {
         return view('admin.printer.index');
@@ -42,11 +45,11 @@ class PrinterController extends Controller
                 $input['port'] = '';
             }
 
-            $printer = new Printer;
+            $printer = new Printer();
             $printer->fill($input)->save();
             // this->alert
-        } catch (\Exception $e) {
-            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+        } catch (Exception $e) {
+            Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             // this->alert
         }
@@ -58,7 +61,6 @@ class PrinterController extends Controller
     {
         // access_printers
 
-      
         $printer = Printer::find($id);
 
         $capability_profiles = Printer::capability_profiles();
@@ -67,7 +69,6 @@ class PrinterController extends Controller
         return view('admin.printer.edit')
             ->with(compact('printer', 'capability_profiles', 'connection_types'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -88,9 +89,8 @@ class PrinterController extends Controller
             $printer->fill($input)->save();
 
             // this->alert
-
-        } catch (\Exception $e) {
-            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+        } catch (Exception $e) {
+            Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
             // this->alert
         }
@@ -98,24 +98,22 @@ class PrinterController extends Controller
         return redirect('printers')->with('status', $output);
     }
 
-  
     public function destroy($id)
     {
-        if (! auth()->user()->can('access_printers')) {
+        if ( ! auth()->user()->can('access_printers')) {
             abort(403, 'Unauthorized action.');
         }
 
         if (request()->ajax()) {
             try {
-
                 $printer = Printer::findOrFail($id);
                 $printer->delete();
 
                 // this->alert
-            } catch (\Exception $e) {
-                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
+            } catch (Exception $e) {
+                Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
 
-             // this->alert
+                // this->alert
             }
 
             // return $output;

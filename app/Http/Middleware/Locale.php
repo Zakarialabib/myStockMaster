@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Models\Language;
@@ -14,18 +16,18 @@ class Locale
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         if (Schema::hasTable('languages')) {
             $languages = Language::query()
-                ->where('status', Language::STATUS_ACTIVE)
+                ->whereStatus(Language::STATUS_ACTIVE)
                 ->get()->toArray();
 
             $language_default = Language::query()
-                ->where('is_default', Language::IS_DEFAULT)
+                ->whereIsDefault(Language::IS_DEFAULT)
                 ->first('code');
         }
 
@@ -34,7 +36,6 @@ class Locale
         $code = request()->cookie("lang", $language_default['code'] ?? 'en');
 
         App::setLocale($code);
-
 
         return $next($request);
     }

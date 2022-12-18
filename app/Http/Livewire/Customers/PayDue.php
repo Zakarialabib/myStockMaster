@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Customers;
 
 use App\Models\SalePayment;
@@ -7,6 +9,7 @@ use App\Models\Sale;
 use Auth;
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
 
 class PayDue extends Component
 {
@@ -15,7 +18,7 @@ class PayDue extends Component
 
     public function pay()
     {
-        if($this['amount'] > 0) {
+        if ($this['amount'] > 0) {
             $customer_sales_due = Sale::where([
                 ['payment_statut', '!=', 'paid'],
                 ['customer_id', $this->customer_id],
@@ -23,20 +26,21 @@ class PayDue extends Component
 
             $paid_amount_total = $this->amount;
 
-            foreach($customer_sales_due as $key => $customer_sale) {
-                if($paid_amount_total == 0)
-                break;
+            foreach ($customer_sales_due as $key => $customer_sale) {
+                if ($paid_amount_total == 0) {
+                    break;
+                }
                 $due_amount = $customer_sale->GrandTotal - $customer_sale->paid_amount;
 
-                if($paid_amount_total >= $due_amount) {
+                if ($paid_amount_total >= $due_amount) {
                     $amount = $due_amount;
-                    $payment_status = Sale::PaymentPaid;
-                }else {
+                    $payment_status = PaymentStatus::Paid;
+                } else {
                     $amount = $paid_amount_total;
-                    $payment_status = Sale::PaymentPartial;
+                    $payment_status = PaymentStatus::Partial;
                 }
 
-                $payment_sale = new SalePayment;
+                $payment_sale = new SalePayment();
                 $payment_sale->sale_id = $customer_sale->id;
                 $payment_sale->reference = app('App\Http\Controllers\PaymentSalesController')->getNumberOrder();
                 $payment_sale->date = Carbon::now();

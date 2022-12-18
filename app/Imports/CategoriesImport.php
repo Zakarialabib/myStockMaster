@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Imports;
 
 use App\Models\Category;
@@ -11,9 +13,11 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**
-     * @param  array  $row
+     * @param array $row
+     * @return \App\Models\Category
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+    
     public function model(array $row)
     {
         return new Category([

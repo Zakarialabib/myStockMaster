@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Customer;
@@ -15,10 +17,10 @@ class CustomersSeeder extends Seeder
     public function run()
     {
         Customer::create([
-            'name' => 'John Doe',
-            'email' => 'customer@email.com ',
-            'phone' => '212600000000',
-            'city' => 'Casablanca',
+            'name'    => 'John Doe',
+            'email'   => 'customer@email.com ',
+            'phone'   => '212600000000',
+            'city'    => 'Casablanca',
             'country' => 'Morocco',
             'address' => 'Casablanca, Morocco',
         ]);

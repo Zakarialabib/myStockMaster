@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="createUser">
+    <x-modal wire:model="createModal">
         <x-slot name="title">
             {{ __('Create User') }}
         </x-slot>
@@ -27,9 +27,7 @@
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="role" id="role" required>
                             <option value="" selected disabled>{{ __('Select Role') }}</option>
-                            @foreach (\Spatie\Permission\Models\Role::where('name', '!=', 'Super Admin')->get() as $role)
-                                <option value="{{ $role->name }}">{{ $role->name }}</option>
-                            @endforeach
+                           
                         </select>
                     </div>
 

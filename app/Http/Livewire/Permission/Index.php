@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Permission;
 
 use App\Http\Livewire\WithSorting;
@@ -17,9 +19,14 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    /** @var mixed $permission */
     public $permission;
 
-    public $listeners = ['show', 'confirmDelete', 'delete', 'createModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+        'createModal', 'editModal',
+        'refreshIndex' => '$refresh',
+    ];
 
     public $show;
 
@@ -28,15 +35,21 @@ class Index extends Component
     public $editModal;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -93,14 +106,14 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Permission)->orderable;
+        $this->orderable = (new Permission())->orderable;
     }
 
     public function render(): View|Factory
     {
         $query = Permission::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

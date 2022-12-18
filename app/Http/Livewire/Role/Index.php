@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Role;
 
 use App\Http\Livewire\WithSorting;
@@ -12,30 +14,40 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
 
+    /** @var mixed $role */
     public $role;
-    
+
     public $permissions;
 
-    public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = ['createModal', 'editModal'];
 
-    public $createModal  = false;
+    public $createModal = false;
 
-    public $editModal  = false;
+    public $editModal = false;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -71,21 +83,21 @@ class Index extends Component
     protected function rules(): array
     {
         return [
-            'role.name' => 'required|string|max:255',
-            'role.label' => 'string|nullable|max:255',
-            'role.guard_name' => 'required|string|max:255',
+            'role.name'        => 'required|string|max:255',
+            'role.label'       => 'string|nullable|max:255',
+            'role.guard_name'  => 'required|string|max:255',
             'role.description' => 'string|nullable|max:255',
-            'role.status' => 'string|nullable|max:255',
+            'role.status'      => 'string|nullable|max:255',
         ];
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Role)->orderable;
+        $this->orderable = (new Role())->orderable;
         $this->permissions = $this->role->permissions->pluck('id')->toArray();
         $this->initListsForFields();
     }
@@ -93,8 +105,8 @@ class Index extends Component
     public function render()
     {
         $query = Role::with(['permissions'])->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -116,7 +128,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -142,7 +154,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

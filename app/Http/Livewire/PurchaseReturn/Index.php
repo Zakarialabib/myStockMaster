@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\PurchaseReturn;
 
 use App\Http\Livewire\WithSorting;
@@ -12,20 +14,26 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
     public $purchasereturn;
 
     public int $perPage;
-    
+
     public $selectPage;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal', 'editModal',
-        'createModal', 'paymentModal', 'paymentSave', 'refreshIndex',
+        'showModal', 'editModal',
+        'createModal', 'paymentModal', 'paymentSave', 
+        'refreshIndex' => '$refresh',
     ];
 
     public $showModal;
@@ -35,15 +43,21 @@ class Index extends Component
     public $editModal;
 
     public $purchase_id;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -56,17 +70,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -76,50 +90,45 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
-        'supplier_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'supplier_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|string|max:255',
+        'payment_method'      => 'required|string|max:255',
+        'note'                => 'nullable|string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-
         $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new PurchaseReturn)->orderable;
+        $this->orderable = (new PurchaseReturn())->orderable;
     }
 
     public function render()
     {
         $query = PurchaseReturn::with(['supplier', 'purchaseReturnPayments', 'purchaseReturnDetails'])
-                           ->advancedFilter([
-                               's' => $this->search ?: null,
-                               'order_column' => $this->sortBy,
-                               'order_direction' => $this->sortDirection,
-                           ]);
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $purchasereturns = $query->paginate($this->perPage);
 
         return view('livewire.purchase-return.index', compact('purchasereturns'));
     }
 
-    public function createModal()
+    public function createModal(): void
     {
         abort_if(Gate::denies('purchase_create'), 403);
 
@@ -132,7 +141,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         abort_if(Gate::denies('purchase_create'), 403);
 
@@ -158,7 +167,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -220,12 +229,11 @@ class Index extends Component
     public function paymentSave()
     {
         DB::transaction(function () {
-
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -233,11 +241,11 @@ class Index extends Component
             $purchasereturn = PurchaseReturn::find($this->purchase_id);
 
             PurchasePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'purchase_id' => $this->purchase_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'purchase_id'    => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -246,16 +254,16 @@ class Index extends Component
             $due_amount = $purchasereturn->due_amount - $this->amount;
 
             if ($due_amount == $purchasereturn->total_amount) {
-                $payment_status = PurchaseReturn::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = PurchaseReturn::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = PurchaseReturn::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $purchasereturn->update([
-                'paid_amount' => ($purchasereturn->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchasereturn->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
@@ -264,7 +272,6 @@ class Index extends Component
             $this->alert('success', 'Payment created successfully.');
 
             $this->paymentModal = false;
-
         });
     }
 }

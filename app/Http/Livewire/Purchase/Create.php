@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Purchase;
 
 use App\Models\Product;
@@ -14,11 +16,14 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\RedirectResponse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 
 class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['productSelected', 'refreshIndex'];
 
     public $cart_instance;
@@ -62,16 +67,16 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'supplier_id' => 'required|numeric',
-            'reference' => 'required|string|max:255',
-            'tax_percentage' => 'required|integer|min:0|max:100',
+            'supplier_id'         => 'required|numeric',
+            'reference'           => 'required|string|max:255',
+            'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
-            'shipping_amount' => 'required|numeric',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'required|numeric',
-            'status' => 'required|string|max:255',
-            'payment_method' => 'required|string|max:255',
-            'note' => 'nullable|string|max:1000',
+            'shipping_amount'     => 'required|numeric',
+            'total_amount'        => 'required|numeric',
+            'paid_amount'         => 'required|numeric',
+            'status'              => 'required|string|max:255',
+            'payment_method'      => 'required|string|max:255',
+            'note'                => 'nullable|string|max:1000',
         ];
     }
 
@@ -82,10 +87,9 @@ class Create extends Component
 
     public function mount($cartInstance): void
     {
-
         $this->cart_instance = $cartInstance;
 
-        $this->reference = 'PO-' . date('YmdHis');
+        $this->reference = 'PO-'.date('YmdHis');
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
@@ -113,52 +117,51 @@ class Create extends Component
 
     public function save(): RedirectResponse
     {
-
         $this->validate();
 
         $due_amount = $this->total_amount - $this->paid_amount;
 
         if ($due_amount == $this->total_amount) {
-            $payment_status = Purchase::PaymentPending;
+            $payment_status = PaymentStatus::Pending;
         } elseif ($due_amount > 0) {
-            $payment_status = Purchase::PaymentPartial;
+            $payment_status = PaymentStatus::Partial;
         } else {
-            $payment_status = Purchase::PaymentPaid;
+            $payment_status = PaymentStatus::Paid;
         }
 
         $purchase = Purchase::create([
-            'date' => $this->date,
-            'supplier_id' => $this->supplier_id,
-            'tax_percentage' => $this->tax_percentage,
+            'date'                => $this->date,
+            'supplier_id'         => $this->supplier_id,
+            'tax_percentage'      => $this->tax_percentage,
             'discount_percentage' => $this->discount_percentage,
-            'shipping_amount' => $this->shipping_amount * 100,
-            'paid_amount' => $this->paid_amount * 100,
-            'total_amount' => $this->total_amount * 100,
-            'due_amount' => $due_amount * 100,
-            'status' => $this->status,
-            'payment_status' => $payment_status,
-            'payment_method' => $this->payment_method,
-            'note' => $this->note,
-            'tax_amount' => Cart::instance('purchase')->tax() * 100,
-            'discount_amount' => Cart::instance('purchase')->discount() * 100,
+            'shipping_amount'     => $this->shipping_amount * 100,
+            'paid_amount'         => $this->paid_amount * 100,
+            'total_amount'        => $this->total_amount * 100,
+            'due_amount'          => $due_amount * 100,
+            'status'              => $this->status,
+            'payment_status'      => $payment_status,
+            'payment_method'      => $this->payment_method,
+            'note'                => $this->note,
+            'tax_amount'          => Cart::instance('purchase')->tax() * 100,
+            'discount_amount'     => Cart::instance('purchase')->discount() * 100,
         ]);
 
         foreach (Cart::instance('purchase')->content() as $cart_item) {
             PurchaseDetail::create([
-                'purchase_id' => $purchase->id,
-                'product_id' => $cart_item->id,
-                'name' => $cart_item->name,
-                'code' => $cart_item->options->code,
-                'quantity' => $cart_item->qty,
-                'price' => $cart_item->price * 100,
-                'unit_price' => $cart_item->options->unit_price * 100,
-                'sub_total' => $cart_item->options->sub_total * 100,
+                'purchase_id'             => $purchase->id,
+                'product_id'              => $cart_item->id,
+                'name'                    => $cart_item->name,
+                'code'                    => $cart_item->options->code,
+                'quantity'                => $cart_item->qty,
+                'price'                   => $cart_item->price * 100,
+                'unit_price'              => $cart_item->options->unit_price * 100,
+                'sub_total'               => $cart_item->options->sub_total * 100,
                 'product_discount_amount' => $cart_item->options->product_discount * 100,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-                'product_tax_amount' => $cart_item->options->product_tax * 100,
+                'product_discount_type'   => $cart_item->options->product_discount_type,
+                'product_tax_amount'      => $cart_item->options->product_tax * 100,
             ]);
 
-            if ($this->status == Purchase::PurchasePending) {
+            if ($this->status == PurchaseStatus::Pending) {
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
                     'quantity' => $product->quantity + $cart_item->qty,
@@ -170,10 +173,10 @@ class Create extends Component
 
         if ($purchase->paid_amount > 0) {
             PurchasePayment::create([
-                'date' => $this->date,
-                'reference' => 'INV/' . $purchase->reference,
-                'amount' => $purchase->paid_amount,
-                'purchase_id' => $purchase->id,
+                'date'           => $this->date,
+                'reference'      => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $purchase->paid_amount,
+                'purchase_id'    => $purchase->id,
                 'payment_method' => $this->payment_method,
             ]);
         }
@@ -208,20 +211,20 @@ class Create extends Component
         }
 
         $cart->add([
-            'id' => $product['id'],
-            'name' => $product['name'],
-            'qty' => 1,
-            'price' => $this->calculate($product)['price'],
-            'weight' => 1,
+            'id'      => $product['id'],
+            'name'    => $product['name'],
+            'qty'     => 1,
+            'price'   => $this->calculate($product)['price'],
+            'weight'  => 1,
             'options' => [
-                'product_discount' => 0.00,
+                'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total' => $this->calculate($product)['sub_total'],
-                'code' => $product['code'],
-                'stock' => $product['quantity'],
-                'unit' => $product['unit'],
-                'product_tax' => $this->calculate($product)['product_tax'],
-                'unit_price' => $this->calculate($product)['unit_price'],
+                'sub_total'             => $this->calculate($product)['sub_total'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
+                'product_tax'           => $this->calculate($product)['product_tax'],
+                'unit_price'            => $this->calculate($product)['unit_price'],
             ],
         ]);
 
@@ -251,13 +254,13 @@ class Create extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $cart_item->options->product_discount,
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ],
         ]);
@@ -293,13 +296,13 @@ class Create extends Component
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
     {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $cart_item->price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $cart_item->options->unit_price,
-            'product_discount' => $discount_amount,
+            'sub_total'             => $cart_item->price * $cart_item->qty,
+            'code'                  => $cart_item->options->code,
+            'stock'                 => $cart_item->options->stock,
+            'unit'                  => $cart_item->options->unit,
+            'product_tax'           => $cart_item->options->product_tax,
+            'unit_price'            => $cart_item->options->unit_price,
+            'product_discount'      => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }

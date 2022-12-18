@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales\Payment;
 
 use App\Http\Livewire\WithSorting;
@@ -18,8 +20,10 @@ class Index extends Component
 
     public $sale;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'delete', 'showPayments', 'refreshIndex',
+        'showPayments', 
+        'refreshIndex' => '$refresh',
     ];
 
     public $refreshIndex;
@@ -27,19 +31,25 @@ class Index extends Component
     public $showPayments;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
     public $sale_id;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -52,17 +62,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -72,10 +82,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public function mount($sale)
     {
@@ -89,7 +95,7 @@ class Index extends Component
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new SalePayment)->orderable;
+        $this->orderable = (new SalePayment())->orderable;
     }
 
     public function render()
@@ -97,8 +103,8 @@ class Index extends Component
         //    abort_if(Gate::denies('access_sale_payments'), 403);
 
         $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

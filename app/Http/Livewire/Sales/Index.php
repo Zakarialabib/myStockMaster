@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales;
 
 use App\Http\Livewire\WithSorting;
@@ -14,41 +16,55 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
 
+    /** @var mixed $sale */
     public $sale;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'importModal', 'import', 'refreshIndex',
+        'showModal',
+        'importModal','refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave',
     ];
 
     public $refreshIndex;
 
-    public $showModal;
+    public $showModal = false;
 
-    public $importModal;
+    public $importModal = false;
 
-    public $paymentModal;
+    public $paymentModal = false;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     // public $salepayments;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -61,17 +77,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -81,55 +97,50 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|string|max:255',
+        'payment_method'      => 'required|string|max:255',
+        'note'                => 'string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Sale)->orderable;
+        $this->orderable = (new Sale())->orderable;
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('access_sales'), 403);
 
         $query = Sale::with(['customer', 'salepayments'])
-                      ->advancedFilter([
-                          's' => $this->search ?: null,
-                          'order_column' => $this->sortBy,
-                          'order_direction' => $this->sortDirection,
-                      ]);
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $sales = $query->paginate($this->perPage);
 
         return view('livewire.sales.index', compact('sales'));
     }
 
-    public function showModal(Sale $sale)
+    public function showModal($sale)
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = Sale::find($sale->id);
+        $this->sale = Sale::find($sale);
 
         $this->showModal = true;
     }
@@ -176,14 +187,13 @@ class Index extends Component
             ],
         ]);
 
-        Sale::import(new SaleImport, $this->file('import_file'));
+        Sale::import(new SaleImport(), $this->file('import_file'));
 
         $this->alert('success', __('Sales imported successfully'));
 
         $this->emit('refreshIndex');
 
         $this->importModal = false;
-
     }
 
     //  Payment modal
@@ -205,12 +215,11 @@ class Index extends Component
     public function paymentSave()
     {
         DB::transaction(function () {
-
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -218,11 +227,11 @@ class Index extends Component
             $sale = Sale::find($this->sale_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->sale_id,
+                'date'           => $this->date,
+                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -231,23 +240,22 @@ class Index extends Component
             $due_amount = $sale->due_amount - $this->amount;
 
             if ($due_amount == $sale->total_amount) {
-                $payment_status = Sale::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = Sale::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Sale::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
             $this->emit('refreshIndex');
 
             $this->paymentModal = false;
-
         });
     }
 
@@ -259,5 +267,44 @@ class Index extends Component
     public function refreshCustomers()
     {
         $this->initListsForFields();
+    }
+
+    public function sendWhatsapp($sale)
+    {
+        $this->sale = Sale::find($sale);
+
+        // Get the customer's phone number and due amount from the model.
+        $phone = $this->sale->customer->phone;
+        $name = $this->sale->customer->name;
+
+        $dueAmount = format_currency($this->sale->due_amount);
+
+        // Delete the leading zero from the phone number, if it exists.
+        if (strpos($phone, '0') === 0) {
+            $phone = substr($phone, 1);
+        }
+
+        // Add the country code to the beginning of the phone number.
+        $phone = '+212'.$phone;
+
+        $greeting = __('Hello');
+
+        $message = __('You have a due amount of');
+
+        // Construct the message text.
+        $message = "$greeting $name $message $dueAmount.";
+
+        // Encode the message text for use in the URL.
+        $message = urlencode($message);
+
+        // Construct the WhatsApp API endpoint URL.
+        $url = "https://api.whatsapp.com/send?phone=$phone&text=$message";
+
+        return redirect()->away($url);
+    }
+
+    public function openWhatapp($url)
+    {
+        // open whatsapp url in another tab
     }
 }

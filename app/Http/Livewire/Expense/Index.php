@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Expense;
 
 use App\Exports\ExpenseExport;
@@ -20,36 +22,45 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    /** @var mixed $expense */
     public $expense;
 
     public int $perPage;
 
     public $selectPage;
 
-    public $listeners = ['confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'refreshIndex', 'showModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+         'showModal', 'editModal'
+    ];
 
-    public $showModal  = false;
+    public $showModal = false;
 
-    public $editModal  = false;
-
-    public $showDeleteModal;
+    public $editModal = false;
 
     public $refreshIndex;
 
     public $export;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
     public bool $showFilters = false;
 
     public array $listsForFields = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -82,18 +93,14 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|max:255',
-        'expense.user_id' => '',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|max:255',
+        'expense.user_id'      => '',
         'expense.warehouse_id' => '',
     ];
 
@@ -104,10 +111,9 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Expense)->orderable;
+        $this->orderable = (new Expense())->orderable;
         $this->initListsForFields();
     }
-
 
     public function render(): View|Factory
     {
@@ -115,8 +121,8 @@ class Index extends Component
 
         $query = Expense::with(['category', 'user', 'warehouse'])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -178,7 +184,6 @@ class Index extends Component
 
     public function downloadSelected(): BinaryFileResponse
     {
-
         abort_if(Gate::denies('expense_download'), 403);
 
         return $this->callExport()->forModels($this->selected)->download('expenses.xlsx');
@@ -186,7 +191,6 @@ class Index extends Component
 
     public function downloadAll(): BinaryFileResponse
     {
-
         abort_if(Gate::denies('expense_download'), 403);
 
         return $this->callExport()->download('expenses.xlsx');

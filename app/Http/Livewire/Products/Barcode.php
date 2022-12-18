@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
@@ -33,10 +35,12 @@ class Barcode extends Component
         $this->barcodes = [];
     }
 
-    public function render(): View|Factory
-    {
-        return view('livewire.products.barcode');
-    }
+
+     public function render(): View|Factory
+     {
+         return view('livewire.products.barcode');
+     }
+
 
     public function productSelected($product): void
     {
@@ -53,7 +57,7 @@ class Barcode extends Component
         }
 
         $this->barcodes = [];
-        // dd($product->);
+
         for ($i = 0; $i < $this->quantity; $i++) {
             $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
@@ -62,8 +66,6 @@ class Barcode extends Component
 
     public function getPdf(): StreamedResponse
     {
-        // dd($this->barcodes);
-
         $pdf = PDF::loadView('admin.barcode.print', [
             'barcodes' => $this->barcodes,
             'products' => $this->products,
@@ -73,7 +75,7 @@ class Barcode extends Component
 
         return response()->streamDownload(
             fn () => print($pdf),
-            'barcodes-' . date('Y-m-d') . '.pdf'
+            'barcodes-'.date('Y-m-d').'.pdf'
         );
         // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
     }

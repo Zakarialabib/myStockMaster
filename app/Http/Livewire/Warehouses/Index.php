@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Warehouses;
 
 use App\Http\Livewire\WithSorting;
@@ -9,6 +11,8 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
@@ -17,31 +21,41 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
+    /** @var mixed $warehouse */
     public $warehouse;
 
     public int $perPage;
 
-    public $listeners = ['refreshIndex', 'confirmDelete', 'delete', 'showModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+         'showModal', 'editModal'];
 
-   /** @var boolean */
-   public $showModal = false;
+    /** @var bool */
+    public $showModal = false;
 
-   /** @var boolean */
-   public $importModal = false;
-   
-   /** @var boolean */
-   public $editModal = false;
+    /** @var bool */
+    public $importModal = false;
 
+    /** @var bool */
+    public $editModal = false;
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public $refreshIndex;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -54,49 +68,44 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function refreshIndex()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
     public array $rules = [
-        'warehouse.name' => ['string', 'required'],
+        'warehouse.name'  => ['string', 'required'],
         'warehouse.phone' => ['string', 'nullable'],
-        'warehouse.city' => ['string', 'nullable'],
+        'warehouse.city'  => ['string', 'nullable'],
         'warehouse.email' => ['string', 'nullable'],
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Warehouse)->orderable;
+        $this->orderable = (new Warehouse())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('warehouse_access'), 403);
 
         $query = Warehouse::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -127,7 +136,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         abort_if(Gate::denies('warehouse_edit'), 403);
 

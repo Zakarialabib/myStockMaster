@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Pos;
 
 use App\Models\Customer;
@@ -12,14 +14,15 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Arr;
+use Exception;
 
 class Index extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'refreshPos', 'productSelected', 'refreshIndex',
+        'refreshPos', 'productSelected', 'refreshIndex' => '$refresh',
         'discountModalRefresh', 'checkoutModal',
         'refreshCustomers',
     ];
@@ -78,17 +81,17 @@ class Index extends Component
 
     public array $listsForFields = [];
 
-    public function rules():array
+    public function rules(): array
     {
         return [
-            'customer_id' => 'required|numeric',
-            'tax_percentage' => 'required|integer|min:0|max:100',
+            'customer_id'         => 'required|numeric',
+            'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
-            'shipping_amount' => 'nullable|numeric',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'nullable|numeric',
-            'note' => 'nullable|string|max:1000',
-            'price' =>'nullable|numeric',
+            'shipping_amount'     => 'nullable|numeric',
+            'total_amount'        => 'required|numeric',
+            'paid_amount'         => 'nullable|numeric',
+            'note'                => 'nullable|string|max:1000',
+            'price'               => 'nullable|numeric',
         ];
     }
 
@@ -102,14 +105,8 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function refreshIndex(): void
-    {
-        $this->reset();
-    }
-
     public function mount($cartInstance): void
     {
-
         $this->cart_instance = $cartInstance;
         $this->global_discount = 0;
         $this->global_tax = 0;
@@ -137,9 +134,8 @@ class Index extends Component
         $this->updatedCustomerId();
     }
 
-    public function render():View|Factory
+    public function render(): View|Factory
     {
-
         $cart_items = Cart::instance($this->cart_instance)->content();
 
         return view('livewire.pos.index', [
@@ -149,81 +145,78 @@ class Index extends Component
 
     public function store(): void
     {
-
         try {
-        $this->validate();
+            $this->validate();
 
-        $due_amount = $this->total_amount - $this->paid_amount;
+            $due_amount = $this->total_amount - $this->paid_amount;
 
-        if ($due_amount == $this->total_amount) {
-            $payment_status = '3';
-        } elseif ($due_amount > 0) {
-            $payment_status = '2';
-        } else {
-            $payment_status = '1';
-        }
-        // dd(Cart::instance('sale')->content());
-        $sale = Sale::create([
-            'date' => now()->format('Y-m-d'),
-            'reference' => 'PSL',
-            'customer_id' => $this->customer_id,
-            'tax_percentage' => $this->tax_percentage,
-            'discount_percentage' => $this->discount_percentage,
-            'shipping_amount' => $this->shipping_amount * 100,
-            'paid_amount' => $this->paid_amount * 100,
-            'total_amount' => $this->total_amount * 100,
-            'due_amount' => $due_amount * 100,
-            'status' => '2',
-            'payment_status' => $payment_status,
-            'payment_method' => $this->payment_method,
-            'note' => $this->note,
-            'tax_amount' => Cart::instance('sale')->tax() * 100,
-            'discount_amount' => Cart::instance('sale')->discount() * 100,
-        ]);
+            if ($due_amount == $this->total_amount) {
+                $payment_status = '3';
+            } elseif ($due_amount > 0) {
+                $payment_status = '2';
+            } else {
+                $payment_status = '1';
+            }
 
-        // foreach ($this->cart_instance as cart_items) {}
-        foreach (Cart::instance('sale')->content() as $cart_item) {
-            SaleDetails::create([
-                'sale_id' => $sale->id,
-                'product_id' => $cart_item->id,
-                'name' => $cart_item->name,
-                'code' => $cart_item->options->code,
-                'quantity' => $cart_item->qty,
-                'price' => $cart_item->price * 100,
-                'unit_price' => $cart_item->options->unit_price * 100,
-                'sub_total' => $cart_item->options->sub_total * 100,
-                'product_discount_amount' => $cart_item->options->product_discount * 100,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-                'product_tax_amount' => $cart_item->options->product_tax * 100,
+            $sale = Sale::create([
+                'date'                => now()->format('Y-m-d'),
+                'reference'           => settings()->sale_prefix.'-'.date('Y-m-d-h'),
+                'customer_id'         => $this->customer_id,
+                'tax_percentage'      => $this->tax_percentage,
+                'discount_percentage' => $this->discount_percentage,
+                'shipping_amount'     => $this->shipping_amount * 100,
+                'paid_amount'         => $this->paid_amount * 100,
+                'total_amount'        => $this->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => '2',
+                'payment_status'      => $payment_status,
+                'payment_method'      => $this->payment_method,
+                'note'                => $this->note,
+                'tax_amount'          => Cart::instance('sale')->tax() * 100,
+                'discount_amount'     => Cart::instance('sale')->discount() * 100,
             ]);
 
-            $product = Product::findOrFail($cart_item->id);
-            $product->update([
-                'quantity' => $product->quantity - $cart_item->qty,
-            ]);
+            // foreach ($this->cart_instance as cart_items) {}
+            foreach (Cart::instance('sale')->content() as $cart_item) {
+                SaleDetails::create([
+                    'sale_id'                 => $sale->id,
+                    'product_id'              => $cart_item->id,
+                    'name'                    => $cart_item->name,
+                    'code'                    => $cart_item->options->code,
+                    'quantity'                => $cart_item->qty,
+                    'price'                   => $cart_item->price * 100,
+                    'unit_price'              => $cart_item->options->unit_price * 100,
+                    'sub_total'               => $cart_item->options->sub_total * 100,
+                    'product_discount_amount' => $cart_item->options->product_discount * 100,
+                    'product_discount_type'   => $cart_item->options->product_discount_type,
+                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
+                ]);
 
-        }
+                $product = Product::findOrFail($cart_item->id);
+                $product->update([
+                    'quantity' => $product->quantity - $cart_item->qty,
+                ]);
+            }
 
-        Cart::instance('sale')->destroy();
+            Cart::instance('sale')->destroy();
 
-        if ($sale->paid_amount > 0) {
-            SalePayment::create([
-                'date' => now()->format('Y-m-d'),
-                'reference' => 'INV/'.$sale->reference,
-                'amount' => $sale->paid_amount,
-                'sale_id' => $sale->id,
-                'payment_method' => $this->payment_method,
-            ]);
-        }
+            if ($sale->paid_amount > 0) {
+                SalePayment::create([
+                    'date'           => now()->format('Y-m-d'),
+                    'reference'      => settings()->sale_prefix.'-'.date('Y-m-d-h'),
+                    'amount'         => $sale->paid_amount,
+                    'sale_id'        => $sale->id,
+                    'payment_method' => $this->payment_method,
+                ]);
+            }
 
-        $this->alert('success', __('Sale created successfully!'));
+            $this->alert('success', __('Sale created successfully!'));
 
-        $this->checkoutModal = false;
-
-        } catch (\Exception $e) {
+            $this->checkoutModal = false;
+        } catch (Exception $e) {
             $this->alert('error', $e->getMessage());
         }
-}
+    }
 
     public function refreshPos(): void
     {
@@ -239,7 +232,7 @@ class Index extends Component
         }
     }
 
-    public function calculateTotal():mixed
+    public function calculateTotal(): mixed
     {
         return Cart::instance($this->cart_instance)->total() + $this->shipping;
     }
@@ -264,20 +257,20 @@ class Index extends Component
         }
 
         $cart->add([
-            'id' => $product['id'],
-            'name' => $product['name'],
-            'qty' => 1,
-            'price' => $this->calculate($product)['price'],
-            'weight' => 1,
+            'id'      => $product['id'],
+            'name'    => $product['name'],
+            'qty'     => 1,
+            'price'   => $this->calculate($product)['price'],
+            'weight'  => 1,
             'options' => [
-                'product_discount' => 0.00,
+                'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total' => $this->calculate($product)['sub_total'],
-                'code' => $product['code'],
-                'stock' => $product['quantity'],
-                'unit' => $product['unit'],
-                'product_tax' => $this->calculate($product)['product_tax'],
-                'unit_price' => $this->calculate($product)['unit_price'],
+                'sub_total'             => $this->calculate($product)['sub_total'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
+                'product_tax'           => $this->calculate($product)['product_tax'],
+                'unit_price'            => $this->calculate($product)['unit_price'],
             ],
         ]);
 
@@ -306,7 +299,6 @@ class Index extends Component
     public function updateQuantity($row_id, $product_id): void
     {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
-
             $this->alert('error', 'Quantity not available in stock!');
 
             return;
@@ -318,13 +310,13 @@ class Index extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $cart_item->options->product_discount,
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ],
         ]);
@@ -333,13 +325,13 @@ class Index extends Component
     public function updatePrice($row_id, $product_id)
     {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $price,
-            'product_discount' => $this->discount_amount,
+            'sub_total'             => $price * $cart_item->qty,
+            'code'                  => $cart_item->options->code,
+            'stock'                 => $cart_item->options->stock,
+            'unit'                  => $cart_item->options->unit,
+            'product_tax'           => $cart_item->options->product_tax,
+            'unit_price'            => $price,
+            'product_discount'      => $this->discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }
@@ -380,7 +372,7 @@ class Index extends Component
         $this->alert('success', __('Product discount set successfully!'));
     }
 
-    public function calculate($product):array
+    public function calculate($product): array
     {
         $price = 0;
         $unit_price = 0;
@@ -410,13 +402,13 @@ class Index extends Component
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount): void
     {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $cart_item->price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $cart_item->options->unit_price,
-            'product_discount' => $this->discount_amount,
+            'sub_total'             => $cart_item->price * $cart_item->qty,
+            'code'                  => $cart_item->options->code,
+            'stock'                 => $cart_item->options->stock,
+            'unit'                  => $cart_item->options->unit,
+            'product_tax'           => $cart_item->options->product_tax,
+            'unit_price'            => $cart_item->options->unit_price,
+            'product_discount'      => $this->discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
     }

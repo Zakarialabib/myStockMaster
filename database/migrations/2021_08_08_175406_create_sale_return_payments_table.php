@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Models\SaleReturn;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,13 +18,13 @@ class CreateSaleReturnPaymentsTable extends Migration
     {
         Schema::create('sale_return_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_return_id');
+
+            $table->foreignIdFor(SaleReturn::class)->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('date');
             $table->string('reference');
             $table->string('payment_method');
             $table->text('note')->nullable();
-            $table->foreign('sale_return_id')->references('id')->on('sale_returns')->cascadeOnDelete();
             $table->timestamps();
         });
     }

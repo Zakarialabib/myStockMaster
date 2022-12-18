@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
@@ -7,27 +9,29 @@ use App\Rules\MatchCurrentPassword;
 use Illuminate\Support\Facades\Hash;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Profile extends Component
 {
     use LivewireAlert;
 
-    public function mount(User $user)
+    public function mount(User $user): void
     {
         $this->user = User::find($user->id);
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.users.profile');
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
         auth()->user()->update([
-            'name' => $this->name,
+            'name'  => $this->name,
             'email' => $this->email,
         ]);
 
@@ -44,8 +48,8 @@ class Profile extends Component
     public function updatePassword()
     {
         $this->validate([
-            'current_password' => ['required', 'max:255', new MatchCurrentPassword],
-            'password' => 'required|min:8|max:255|confirmed',
+            'current_password' => ['required', 'max:255', new MatchCurrentPassword()],
+            'password'         => 'required|min:8|max:255|confirmed',
         ]);
 
         auth()->user()->update([

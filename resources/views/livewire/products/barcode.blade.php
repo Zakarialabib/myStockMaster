@@ -65,7 +65,6 @@
                         <div class="lg:w-1/3 md:w-1/4 sm:w-1/2"
                             style="border: 1px solid #ffffff;border-style: dashed;">
                             <p class="text-black font-bold text-lg text-center my-2">
-                                {{-- @dd($products) --}}
                                 {{ $product->name }}
                             </p>
                             <div>

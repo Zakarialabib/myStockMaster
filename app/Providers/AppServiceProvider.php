@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Language;
+use App\Models\Setting;
+use App\Observers\SettingsObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
@@ -32,18 +36,18 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.force_https_scheme') || app()->environment('production')) {
             URL::forceScheme('https');
         }
-        
+
         View::share('languages', $this->getLanguages());
-        
-        Model::shouldBeStrict(! $this->app->isProduction());
+
+        Setting::observe(SettingsObserver::class);
+
+        Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
-    /**
-     * @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null
-     */
+    /** @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null */
     private function getLanguages()
     {
-        if (! Schema::hasTable('languages')) {
+        if ( ! Schema::hasTable('languages')) {
             return;
         }
 

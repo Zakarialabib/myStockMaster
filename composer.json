@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.1",
         "barryvdh/laravel-dompdf": "^2.0",
         "bumbummen99/shoppingcart": "^4.2",
         "guzzlehttp/guzzle": "^7.2",
@@ -22,11 +22,13 @@
         "psr/simple-cache": "^2.0",
         "realrashid/sweet-alert": "^5.1",
         "spatie/laravel-backup": "^8.1",
+        "shopify/shopify-api": "^4.1",
         "spatie/laravel-medialibrary": "^10.7",
         "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
+        "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.17",
         "laravel/breeze": "^1.14",
@@ -55,12 +57,18 @@
         }
     },
     "scripts": {
+        "static-analysis": "phpstan analyse --ansi --memory-limit 512M",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:models --nowrite",
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ],
         "post-update-cmd": [
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models --nowrite",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [

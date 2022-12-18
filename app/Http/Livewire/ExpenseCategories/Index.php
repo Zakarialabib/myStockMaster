@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Http\Livewire\WithSorting;
@@ -17,28 +19,39 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    /** @var mixed $expenseCategory */
     public $expenseCategory;
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'refreshIndex', 'showModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+         'showModal', 'editModal',
+         'refreshIndex' => '$refresh',
+    ];
 
-    public $selectPage;
+    public $showModal = false;
 
-    public $showModal;
-
+    public $editModal = false;
+    
     public $refreshIndex;
 
-    public $editModal;
-
+    public $selectPage;
+        /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -71,13 +84,9 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
-        'expenseCategory.name' => 'required',
+        'expenseCategory.name'        => 'required',
         'expenseCategory.description' => '',
     ];
 
@@ -88,7 +97,7 @@ class Index extends Component
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new ExpenseCategory)->orderable;
+        $this->orderable = (new ExpenseCategory())->orderable;
     }
 
     public function render(): View|Factory
@@ -96,8 +105,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_category_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

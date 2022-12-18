@@ -40,7 +40,7 @@
 
                         <x-slot name="content">
                             @forelse($low_quantity_products as $product)
-                                <x-dropdown-link href="{{ route('products.show', $product->id) }}">
+                                <x-dropdown-link href="#">
                                     <i class="fas fa-bell w-5 h-5" aria-hidden="true"></i>
                                     <span class="ml-2">{{ __('Product') }}: "{{ $product->code }}"
                                         {{ __('is low in quantity !') }}</span>
@@ -67,11 +67,11 @@
         </x-button> --}}
 
 
-        {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
+        <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
             @click="toggleRtl">
             <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
             <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
-        </x-button> --}}
+        </x-button>
 
         <ul class="flex-col md:flex-row list-none items-center md:flex">
             <x-dropdown align="right" width="56">

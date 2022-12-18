@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -10,24 +12,37 @@ class ProductTelegram extends Notification
 {
     use Queueable;
 
-    public function __construct($telegramChannel, $productName, $productPrice)
+    /**
+     * @param mixed $Product
+     * @return void
+     */
+    public function __construct($telegramChannel, $productName, $productPrice, $productImage)
     {
         $this->telegramChannel = $telegramChannel;
         $this->productName = $productName;
         $this->productPrice = $productPrice;
+        $this->productImage = $productImage;
     }
 
-    public function via($notifiable) 
+    /**
+     * @param mixed $notifiable
+     * @return string[]
+     */
+    public function via($notifiable)
     {
         return ['telegram'];
     }
 
-    public function toTelegram($notifiable) 
+    /**
+     * @param mixed $notifiable
+     * @return \NotificationChannels\Telegram\TelegramMessage
+     */
+    public function toTelegram($notifiable)
     {
         return TelegramMessage::create()
-        ->to($this->telegramChannel)
-        ->content("Check out our new product: $this->productName for $$this->productPrice");
-    
+            ->to($this->telegramChannel)
+            ->content("Check out our new product: $this->productName for $$this->productPrice")
+            ->file("/$this->productImage", 'photo');
     }
 
     /**
@@ -39,8 +54,8 @@ class ProductTelegram extends Notification
     public function toArray($notifiable)
     {
         return [
-            'product_name' => $this->productName,
-            'product_price' => $this->productPrice
+            'product_name'  => $this->productName,
+            'product_price' => $this->productPrice,
         ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\SaleReturn;
 
 use App\Http\Livewire\WithSorting;
@@ -14,6 +16,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
@@ -24,9 +27,11 @@ class Index extends Component
 
     public $salereturn;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'importModal', 'import', 'refreshIndex',
+        'showModal',
+        'importModal', 'import',
+        'refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave',
     ];
 
@@ -39,17 +44,23 @@ class Index extends Component
     public $paymentModal;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -62,17 +73,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -82,31 +93,27 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|string|max:255',
+        'payment_method'      => 'required|string|max:255',
+        'note'                => 'string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new SaleReturn)->orderable;
+        $this->orderable = (new SaleReturn())->orderable;
         $this->initListsForFields();
     }
 
@@ -115,11 +122,11 @@ class Index extends Component
         abort_if(Gate::denies('access_sales'), 403);
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
-                      ->advancedFilter([
-                          's' => $this->search ?: null,
-                          'order_column' => $this->sortBy,
-                          'order_direction' => $this->sortDirection,
-                      ]);
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $salereturns = $query->paginate($this->perPage);
 
@@ -177,7 +184,7 @@ class Index extends Component
             ],
         ]);
 
-        SaleReturn::import(new SaleImport, $this->file('import_file'));
+        SaleReturn::import(new SaleImport(), $this->file('import_file'));
 
         $this->alert('success', 'Sales imported successfully');
 
@@ -207,9 +214,9 @@ class Index extends Component
         DB::transaction(function () {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -217,11 +224,11 @@ class Index extends Component
             $salereturn = SaleReturn::find($this->salereturn_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->salereturn_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->salereturn_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -230,16 +237,16 @@ class Index extends Component
             $due_amount = $salereturn->due_amount - $this->amount;
 
             if ($due_amount == $salereturn->total_amount) {
-                $payment_status = SaleReturn::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = SaleReturn::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = SaleReturn::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $salereturn->update([
-                'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($salereturn->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

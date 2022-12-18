@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Models\ExpenseCategory;
@@ -13,14 +15,16 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createExpenseCategory'];
 
-    public $createExpenseCategory  = false;
-    
+    public $createExpenseCategory = false;
+
+    /** @var mixed $expenseCategory */
     public $expenseCategory;
 
     public array $rules = [
-        'expenseCategory.name' => 'required',
+        'expenseCategory.name'        => 'required',
         'expenseCategory.description' => '',
     ];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,8 +19,8 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
 
-            // UsersSeeder::class,
             SuperUserSeeder::class,
+            // UsersSeeder::class,
             RoleUserSeeder::class,
             // PermissionsSeeder::class,
             // PermissionRoleSeeder::class,
@@ -28,7 +30,7 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
-            WarehouseSeeder::class
+            WarehouseSeeder::class,
         ]);
     }
 }

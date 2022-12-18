@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Currency;
 
 use App\Models\Currency;
@@ -13,16 +15,18 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createCurrency'];
 
-    public $createCurrency;
-    
+    public $createCurrency = false;
+
+    /** @var mixed $currency */
     public $currency;
-    
+
     public array $rules = [
-        'currency.name' => 'required|string|max:255',
-        'currency.code' => 'required|string|max:255',
-        'currency.symbol' => 'required|string|max:255',
+        'currency.name'          => 'required|string|max:255',
+        'currency.code'          => 'required|string|max:255',
+        'currency.symbol'        => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
     ];
 
