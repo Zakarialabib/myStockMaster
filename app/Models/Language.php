@@ -49,4 +49,20 @@ class Language extends Model
         'status',
         'is_default',
     ];
+
+
+    public $timestamps = false;
+
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'language_id');
+    }
+
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'language_id');
+    }
+
 }

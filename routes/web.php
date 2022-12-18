@@ -91,11 +91,10 @@ Route::group(['middleware' => 'auth'], function () {
     //Print Barcode
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
-    //Product
-    Route::get('products', ProductController::class)->name('products.index');
-
     //Product Category
-    Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
+    Route::get('product-categories', CategoriesController::class)->name("product-categories.index");
+
+    Route::get('products', ProductController::class)->name('products.index');
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
@@ -205,7 +204,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class)->except(['show']);
 
     // Permissions
-    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
+    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');

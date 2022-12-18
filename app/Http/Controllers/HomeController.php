@@ -15,6 +15,7 @@ use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -245,8 +246,10 @@ class HomeController extends Controller
 
     public function changeLanguage($locale)
     {
-        Session::put('code', $locale);
-        $language = Session::get('code');
+        // Session::put('code', $locale);
+        // $language = Session::get('code');
+
+        Cookie::queue("lang", $locale);
 
         return redirect()->back();
     }
