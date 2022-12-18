@@ -5,15 +5,14 @@ namespace App\Models;
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
 use App\Support\Helper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class Product extends Model
 {
-    use HasAdvancedFilter;
-    use Notifiable;
-    use ProductScope;
+    use HasAdvancedFilter, Notifiable, ProductScope, HasFactory;
 
     public $orderable = [
         'id',

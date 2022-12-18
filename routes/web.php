@@ -63,36 +63,36 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('adjustments', AdjustmentController::class);
 
     //Currencies
-    Route::get('currencies', CurrencyController::class);
+    Route::resource('currencies', CurrencyController::class)->except('show');
 
     //Expense Category
-    Route::get('expense-categories', ExpenseCategoriesController::class);
+    Route::resource('expense-categories', ExpenseCategoriesController::class)->except('show', 'create');
 
     //Expense
-    Route::get('expenses', ExpenseController::class);
+    Route::resource('expenses', ExpenseController::class);
 
     //Customers
-    Route::get('customers', CustomersController::class);
+    Route::resource('customers', CustomersController::class);
     Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
 
     //Suppliers
-    Route::get('suppliers', SuppliersController::class);
+    Route::resource('suppliers', SuppliersController::class);
     Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
 
     //Warehouses
-    Route::get('warehouses', WarehouseController::class);
+    Route::resource('warehouses', WarehouseController::class);
 
     //Brands
-    Route::get('brands', BrandsController::class);
+    Route::resource('brands', BrandsController::class);
 
     //Print Barcode
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
     //Product
-    Route::get('products', ProductController::class);
+    Route::resource('products', ProductController::class);
 
     //Product Category
-    Route::get('product-categories', CategoriesController::class);
+    Route::get('product-categories', CategoriesController::class)->name("product-categories.index");
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('roles', RoleController::class)->except(['show']);
 
     // Permissions
-    Route::resource('permissions', PermissionController::class)->except(['store', 'update', 'destroy']);
+    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');

@@ -21,16 +21,11 @@ class ProductWarehouse extends Model
 
     public function warehouse(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Warehouse');
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Product');
-    }
-
-    public function productVariant(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\ProductVariant');
+        return $this->belongsTo(Product::class);
     }
 }

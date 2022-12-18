@@ -29,13 +29,12 @@ class Locale
                 ->first('code');
         }
 
-        $code = Session::get('code');
+        // $code = Session::get('code');
 
-        if ($code) {
-            App::setLocale($code);
-        } else {
-            App::setLocale($language_default['code'] ?? 'en');// befor seed database it's throw exception so i add (?? 'en')
-        }
+        $code = request()->cookie("lang", $language_default['code'] ?? 'en');
+
+        App::setLocale($code);
+
 
         return $next($request);
     }

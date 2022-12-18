@@ -38,7 +38,7 @@ class Warehouse extends Model
 
     public function assignedUsers(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class);
     }
 
     public function products(): BelongsToMany

@@ -20,6 +20,6 @@ class UserWarehouse extends Model
 
     public function assignedWarehouses(): HasMany
     {
-        return $this->hasMany('App\Models\Warehouse', 'id', 'warehouse_id');
+        return $this->hasMany(Warehouse::class, 'id', 'warehouse_id');
     }
 }

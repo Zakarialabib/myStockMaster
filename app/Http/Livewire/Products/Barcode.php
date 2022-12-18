@@ -33,11 +33,11 @@ class Barcode extends Component
         $this->barcodes = [];
     }
 
-       public function render(): View|Factory
+    public function render(): View|Factory
     {
         return view('livewire.products.barcode');
     }
-    
+
     public function productSelected($product): void
     {
         $this->products = Product::find($product);

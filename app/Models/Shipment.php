@@ -21,11 +21,11 @@ class Shipment extends Model
 
     public function sale(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Sale');
+        return $this->belongsTo(Sale::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 }
