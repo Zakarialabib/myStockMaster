@@ -76,12 +76,18 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'statut', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'statut', 'is_all_warehouses',
@@ -118,30 +124,53 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @return mixed
+     */
     public function scopeIsActive(Builder $builder)
     {
         return $builder->whereIsActive(true);
     }
 
-    /** @return BelongsToMany<Customer> */
+    /** 
+     * @return BelongsToMany<Warehouse> 
+     */
     public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class);
     }
 
+    // User hasRole method
+    public function hasRole($roles): bool
+    {
+        if ($this->roles()->whereName($roles)->first()) {
+            return true;
+        }
 
-    /** @return BelongsToMany<Customer> */
+        return false;
+    }
+
+    /** 
+     * @return BelongsToMany<Role> 
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
+    /**
+     * @param mixed $permission
+     * @return mixed
+     */
     public function hasPermission($permission)
     {
         return $this->role->permissions->contains('name', $permission);
     }
 
-    /** @return HasOne<Wallet> */
+    /** 
+     * @return HasOne<Wallet> 
+     */
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);

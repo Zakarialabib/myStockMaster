@@ -22,7 +22,7 @@ class CreateSaleReturnDetailsTable extends Migration
 
             $table->foreignIdFor(SaleReturn::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
-  
+
             $table->string('name');
             $table->string('code');
             $table->integer('quantity');
@@ -32,7 +32,7 @@ class CreateSaleReturnDetailsTable extends Migration
             $table->integer('discount_amount');
             $table->string('discount_type')->default('fixed');
             $table->integer('tax_amount');
-           // $table->foreign('id')->references('id')->on('products')->cascadeOnDelete();
+            // $table->foreign('id')->references('id')->on('products')->cascadeOnDelete();
             $table->timestamps();
         });
     }

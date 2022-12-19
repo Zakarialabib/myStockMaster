@@ -19,7 +19,7 @@ class CreateProductWarehouseTable extends Migration
     {
         Schema::create('product_warehouse', function (Blueprint $table) {
             $table->id();
-          
+
             $table->foreignIdFor(Product::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Warehouse::class)->constrained()->restrictOnDelete();
 

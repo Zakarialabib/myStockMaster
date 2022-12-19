@@ -15,10 +15,12 @@ class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createExpenseCategory'];
 
     public $createExpenseCategory = false;
 
+    /** @var mixed $expenseCategory */
     public $expenseCategory;
 
     public array $rules = [

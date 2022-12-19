@@ -14,6 +14,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
@@ -28,9 +29,11 @@ class Index extends Component
 
     public $selectPage;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal', 'editModal',
-        'createModal', 'paymentModal', 'paymentSave', 'refreshIndex',
+        'showModal', 'editModal',
+        'createModal', 'paymentModal', 'paymentSave', 
+        'refreshIndex' => '$refresh',
     ];
 
     public $showModal;
@@ -40,15 +43,21 @@ class Index extends Component
     public $editModal;
 
     public $purchase_id;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -61,17 +70,17 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }
 
-    public function updatingSearch()
+    public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatingPerPage()
+    public function updatingPerPage(): void
     {
         $this->resetPage();
     }
@@ -81,10 +90,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'supplier_id'         => 'required|numeric',
@@ -99,7 +104,7 @@ class Index extends Component
         'note'                => 'nullable|string|max:1000',
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -123,7 +128,7 @@ class Index extends Component
         return view('livewire.purchase-return.index', compact('purchasereturns'));
     }
 
-    public function createModal()
+    public function createModal(): void
     {
         abort_if(Gate::denies('purchase_create'), 403);
 
@@ -136,7 +141,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         abort_if(Gate::denies('purchase_create'), 403);
 
@@ -162,7 +167,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -249,11 +254,11 @@ class Index extends Component
             $due_amount = $purchasereturn->due_amount - $this->amount;
 
             if ($due_amount == $purchasereturn->total_amount) {
-                $payment_status = PurchaseReturn::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = PurchaseReturn::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = PurchaseReturn::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $purchasereturn->update([

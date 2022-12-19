@@ -34,9 +34,9 @@
                     <x-label for="status" :value="__('Status')" required />
                     <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="status" id="status" wire:model="status" required>
-                        <option value="{{ App\Models\Purchase::PurchasePending }}">{{ __('Pending') }}</option>
-                        <option value="{{ App\Models\Purchase::PurchaseOrdered }}">{{ __('Ordered') }}</option>
-                        <option value="{{ App\Models\Purchase::PurchaseCompleted }}">{{ __('Completed') }}</option>
+                        <option value="{{ App\Enums\PurchaseStatus::Pending }}">{{ __('Pending') }}</option>
+                        <option value="{{ App\Enums\PurchaseStatus::Ordered }}">{{ __('Ordered') }}</option>
+                        <option value="{{ App\Enums\PurchaseStatus::Completed }}">{{ __('Completed') }}</option>
                     </select>
                     <x-input-error :messages="$errors->get('status')" class="mt-2" />
                 </div>

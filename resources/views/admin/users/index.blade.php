@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary onclick="Livewire.emit('createYser')">
+                <x-button primary onclick="Livewire.emit('createModal')">
                     {{ __('Create User') }}
                 </x-button>
             </div>

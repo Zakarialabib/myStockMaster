@@ -42,6 +42,9 @@ class PurchaseReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'date',
@@ -54,6 +57,9 @@ class PurchaseReturnPayment extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'date',
@@ -68,27 +74,45 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<PurchaseReturn> */
+    /** 
+     * @return BelongsTo<PurchaseReturn> 
+     */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = $value * 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeByPurchaseReturn($query)
     {
         return $query->wherePurchaseReturnId(request()->route('purchase_return_id'));

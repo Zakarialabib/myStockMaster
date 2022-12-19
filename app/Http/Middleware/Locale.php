@@ -31,13 +31,11 @@ class Locale
                 ->first('code');
         }
 
-        $code = Session::get('code');
+        // $code = Session::get('code');
 
-        if ($code) {
-            App::setLocale($code);
-        } else {
-            App::setLocale($language_default['code'] ?? App::currentLocale());
-        }
+        $code = request()->cookie("lang", $language_default['code'] ?? 'en');
+
+        App::setLocale($code);
 
         return $next($request);
     }

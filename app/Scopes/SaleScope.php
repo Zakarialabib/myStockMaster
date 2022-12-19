@@ -12,7 +12,6 @@ trait SaleScope
     /**
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @param \Illuminate\Support\Carbon $date
-     * @param \Illuminate\Support\Carbon $date
      * @param int $dividedNumber
      * @return mixed
      */

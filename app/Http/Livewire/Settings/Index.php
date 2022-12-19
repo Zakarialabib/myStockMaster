@@ -19,6 +19,7 @@ class Index extends Component
 
     public $settings;
 
+    /** @var string[] $listeners */
     public $listeners = ['update'];
 
     public array $listsForFields = [];
@@ -59,7 +60,7 @@ class Index extends Component
         return view('livewire.settings.index');
     }
 
-    public function mount()
+    public function mount(): void
     {
         abort_if(Gate::denies('access_settings'), 403);
 
@@ -70,7 +71,7 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

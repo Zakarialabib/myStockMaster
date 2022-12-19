@@ -23,24 +23,31 @@ class Index extends Component
 
     public int $perPage;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
+    /** @var string[] $listeners */
+    public $listeners = ['showModal', 'editModal', 'refreshIndex'];
 
     public $showModal;
 
     public $refreshIndex;
 
     public $editModal;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public $selectPage;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -73,10 +80,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'printer.name'               => 'required|string|max:255',

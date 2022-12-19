@@ -18,28 +18,36 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
+    /** @var mixed $role */
     public $role;
 
     public $permissions;
 
-    public $listeners = ['confirmDelete', 'delete', 'createModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = ['createModal', 'editModal'];
 
     public $createModal = false;
 
     public $editModal = false;
 
     public int $perPage;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -83,7 +91,7 @@ class Index extends Component
         ];
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -120,7 +128,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -146,7 +154,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

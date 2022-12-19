@@ -51,6 +51,9 @@ class SaleDetails extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'sale_id',
@@ -66,6 +69,9 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'sale_id',
@@ -81,6 +87,11 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'sale_id',
         'product_id',
@@ -95,40 +106,62 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
-    protected $with = ['product'];
-
-    /** @return BelongsTo<Product> */
+    /** 
+     * @return BelongsTo<Product> 
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<Sale> */
+    /** 
+     * @return BelongsTo<Sale> 
+     */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getUnitPriceAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getSubTotalAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductDiscountAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductTaxAmountAttribute($value)
     {
         return $value / 100;

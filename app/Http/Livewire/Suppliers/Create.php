@@ -8,16 +8,20 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createSupplier'];
 
     /** @var bool */
     public $createSupplier = false;
 
+    /** @var mixed $supplier */
     public $supplier;
 
     public array $rules = [
@@ -30,12 +34,12 @@ class Create extends Component
         'supplier.tax_number' => ['nullable', 'string', 'max:255'],
     ];
 
-    public function mount(Supplier $supplier)
+    public function mount(Supplier $supplier): void
     {
         $this->supplier = $supplier;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('supplier_create'), 403);
 
@@ -51,7 +55,7 @@ class Create extends Component
         $this->createSupplier = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 

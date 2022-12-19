@@ -24,6 +24,7 @@ class Index extends Component
     use LivewireAlert;
     use WithFileUploads;
 
+    /** @var mixed $customer */
     public $customer;
 
     public $file;
@@ -32,7 +33,11 @@ class Index extends Component
 
     public $selectPage;
 
-    public $listeners = ['resetSelected', 'confirmDelete', 'exportAll', 'downloadAll', 'delete', 'export', 'import', 'importExcel', 'refreshIndex', 'showModal', 'editModal'];
+    /** @var string[] $listeners */
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+         'showModal', 'editModal'
+    ];
 
     public $showModal = false;
 
@@ -41,15 +46,21 @@ class Index extends Component
     public $refreshIndex;
 
     public $import;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -75,11 +86,6 @@ class Index extends Component
     public function resetSelected(): void
     {
         $this->selected = [];
-    }
-
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
     }
 
     public array $rules = [
@@ -157,7 +163,7 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 

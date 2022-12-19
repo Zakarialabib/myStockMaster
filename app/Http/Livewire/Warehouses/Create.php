@@ -8,16 +8,20 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
+    /** @var string[] $listeners */
     public $listeners = ['createWarehouse'];
 
     /** @var bool */
     public $createWarehouse = false;
 
+    /** @var mixed $warehouse */
     public $warehouse;
 
     public array $rules = [
@@ -28,12 +32,12 @@ class Create extends Component
         'warehouse.email'   => ['string', 'nullable'],
     ];
 
-    public function mount(Warehouse $warehouse)
+    public function mount(Warehouse $warehouse): void
     {
         $this->warehouse = $warehouse;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.warehouses.create');
     }
@@ -49,7 +53,7 @@ class Create extends Component
         $this->createWarehouse = true;
     }
 
-    public function create()
+    public function create(): void
     {
         abort_if(Gate::denies('warehouse_create'), 403);
 

@@ -16,6 +16,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use App\Enums\PaymentStatus;
 
 class Index extends Component
 {
@@ -30,25 +31,32 @@ class Index extends Component
 
     public $selectPage;
 
+    /** @var string[] $listeners */
     public $listeners = [
-        'confirmDelete', 'delete', 'showModal',
-        'paymentModal', 'refreshIndex',
+        'showModal','paymentModal',
+        'refreshIndex' => '$refresh',
     ];
 
-    public $showModal;
+    public $showModal = false;
 
-    public $paymentModal;
+    public $paymentModal = false;
 
     public $purchase_id;
-
+    /** @var array $orderable */
     public array $orderable;
 
+    /** @var string $search */
     public string $search = '';
 
+    /** @var array $selected */
     public array $selected = [];
 
+    /** @var array $paginationOptions */
     public array $paginationOptions;
 
+    /**
+     * @var string[][] $queryString
+     */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -81,10 +89,6 @@ class Index extends Component
         $this->selected = [];
     }
 
-    public function refreshIndex(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'supplier_id'         => 'required|numeric',
@@ -199,11 +203,11 @@ class Index extends Component
             $due_amount = $purchase->due_amount - $this->amount;
 
             if ($due_amount == $purchase->total_amount) {
-                $payment_status = Purchase::PaymentDue;
+                $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
-                $payment_status = Purchase::PaymentPartial;
+                $payment_status = PaymentStatus::Partial;
             } else {
-                $payment_status = Purchase::PaymentPaid;
+                $payment_status = PaymentStatus::Paid;
             }
 
             $purchase->update([

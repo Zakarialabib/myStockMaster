@@ -12,7 +12,6 @@ class CustomersController extends Controller
 {
     public function __invoke()
     {
-
         abort_if(Gate::denies('access_customers'), 403);
 
         return view('admin.customers.index');

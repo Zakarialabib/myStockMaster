@@ -63,11 +63,11 @@
                         {{ $salereturn->customer->name }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($salereturn->payment_status == \App\Models\SaleReturn::PaymentPaid)
+                        @if ($salereturn->payment_status == \App\Enums\PaymentStatus::Paid)
                             <x-badge success>{{ __('Paid') }}</x-badge>
-                        @elseif ($salereturn->payment_status == \App\Models\SaleReturn::PaymentPartial)
+                        @elseif ($salereturn->payment_status == \App\Enums\PaymentStatus::Partial)
                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                        @elseif($salereturn->payment_status == \App\Models\SaleReturn::PaymentDue)
+                        @elseif($salereturn->payment_status == \App\Enums\PaymentStatus::Due)
                             <x-badge danger>{{ __('Due') }}</x-badge>
                         @endif
                     </x-table.td>
@@ -80,11 +80,11 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @if ($salereturn->status == \App\Models\SaleReturn::SaleReturnPending)
+                        @if ($salereturn->status == \App\Enums\SaleReturnStatus::Pending)
                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($salereturn->status == \App\Models\SaleReturn::SaleReturnCompleted)
+                        @elseif ($salereturn->status == \App\Enums\SaleReturnStatus::Completed)
                             <x-badge success>{{ __('Completed') }}</x-badge>
-                        @elseif($salereturn->status == \App\Models\SaleReturn::SaleReturnCanceld)
+                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Canceld)
                             <x-badge danger>{{ __('Canceled') }}</x-badge>
                         @endif
                     </x-table.td>
@@ -221,11 +221,11 @@
                                                 </div>
                                                 <div>
                                                     {{ __('Status') }}: <strong>
-                                                        @if ($this->salereturn == \App\Models\SaleReturn::SaleReturnPending)
+                                                        @if ($this->salereturn == \App\Enums\SaleReturnStatus::Pending)
                                                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                        @elseif ($this->salereturn == \App\Models\SaleReturn::SaleReturnCompleted)
+                                                        @elseif ($this->salereturn == \App\Enums\SaleReturnStatus::Completed)
                                                             <x-badge success>{{ __('Completed') }}</x-badge>
-                                                        @elseif($this->salereturn == \App\Models\SaleReturn::SaleReturnCanceld)
+                                                        @elseif($this->salereturn == \App\Enums\SaleReturnStatus::Canceld)
                                                             <x-badge danger>{{ __('Canceled') }}</x-badge>
                                                         @endif
                                                     </strong>

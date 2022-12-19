@@ -38,10 +38,31 @@ class Language extends Model
     public const IS_DEFAULT = 1;
     public const IS_NOT_DEFAULT = 0;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'code',
         'status',
         'is_default',
     ];
+
+
+    public $timestamps = false;
+
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'language_id');
+    }
+
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'language_id');
+    }
+
 }

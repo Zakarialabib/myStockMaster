@@ -18,7 +18,7 @@ class CreateQuotationsTable extends Migration
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-            
+
             $table->foreignIdFor(Customer::class)->nullable()->constrained()->nullOnDelete();
 
             $table->date('date');

@@ -7,9 +7,11 @@ namespace App\Models;
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
 use App\Support\Helper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 /**
  * App\Models\Product
@@ -67,10 +69,11 @@ use Illuminate\Notifications\Notifiable;
  */
 class Product extends Model
 {
-    use HasAdvancedFilter;
-    use Notifiable;
-    use ProductScope;
+    use HasAdvancedFilter, Notifiable, ProductScope, HasFactory;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'category_id',
@@ -89,6 +92,9 @@ class Product extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'category_id',
@@ -107,7 +113,12 @@ class Product extends Model
         'updated_at',
     ];
 
-    public $fillable = [
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
         'category_id',
         'name',
         'code',
@@ -125,38 +136,58 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Helper::genCode(),
+            'code' => Carbon::now()->format('ymd').mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
 
-    /** @return BelongsTo<Category> */
+    /** 
+     * @return BelongsTo<Category> 
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    /** @return BelongsTo<Brand> */
+    /** 
+     * @return BelongsTo<Brand> 
+     */
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setProductCostAttribute($value)
     {
         $this->attributes['cost'] = ($value * 100);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductCostAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setProductPriceAttribute($value)
     {
         $this->attributes['price'] = ($value * 100);
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getProductPriceAttribute($value)
     {
         return $value / 100;

@@ -42,6 +42,9 @@ class SaleReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
+   /** 
+     * @var string[] 
+    */
     public $orderable = [
         'id',
         'sale_return_id',
@@ -52,6 +55,9 @@ class SaleReturnPayment extends Model
         'updated_at',
     ];
 
+   /** 
+     * @var string[] 
+    */
     public $filterable = [
         'id',
         'sale_return_id',
@@ -64,26 +70,45 @@ class SaleReturnPayment extends Model
 
     protected $guarded = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturn::class, 'sale_return_id', 'id');
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = $value * 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return int|float
+     */
     public function getAmountAttribute($value)
     {
         return $value / 100;
     }
 
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
     public function getDateAttribute($value)
     {
         return Carbon::parse($value)->format('d M, Y');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeBySaleReturn($query)
     {
         return $query->whereSaleReturnId(request()->route('sale_return_id'));

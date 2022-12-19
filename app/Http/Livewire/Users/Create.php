@@ -8,16 +8,20 @@ use App\Models\User;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createUser'];
+    /** @var string[] $listeners */
+    public $listeners = ['createModal'];
 
     /** @var bool */
-    public $createUser = false;
+    public $createModal = false;
 
+    /** @var mixed $user */
     public $user;
 
     public array $rules = [
@@ -31,26 +35,26 @@ class Create extends Component
         'user.tax_number' => 'nullable',
     ];
 
-    public function mount(User $user)
+    public function mount(User $user): void 
     {
         $this->user = $user;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.users.create');
     }
 
-    public function createUser()
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createUser = true;
+        $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -68,6 +72,6 @@ class Create extends Component
 
         $this->emit('userCreated');
 
-        $this->createUser = false;
+        $this->createModal = false;
     }
 }

@@ -11,9 +11,11 @@ use Maatwebsite\Excel\Concerns\ToModel;
 class BrandsImport implements ToModel, SkipsEmptyRows
 {
     /**
-     * @param  array  $row
+     * @param array $row
+     * @return \App\Models\Brand
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+    
     public function model(array $row)
     {
         return new Brand([
