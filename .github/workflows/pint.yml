@@ -5,7 +5,7 @@ on: push
 jobs:
   pint:
     runs-on: ubuntu-latest
-    
+
     services:
       mysql:
         image: mysql:5.7
@@ -26,7 +26,7 @@ jobs:
           run: composer install
 
       -   name: Run Laravel Pint
-          run: composer pint
+          run: ./vendor/bin/pint
 
       -   name: Commit changes
           uses: stefanzweifel/git-auto-commit-action@v4
