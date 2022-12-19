@@ -249,7 +249,7 @@ class HomeController extends Controller
         // Session::put('code', $locale);
         // $language = Session::get('code');
 
-        Cookie::queue("lang", $locale);
+        Cookie::queue('lang', $locale);
 
         return redirect()->back();
     }

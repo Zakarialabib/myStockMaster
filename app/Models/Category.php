@@ -36,16 +36,12 @@ class Category extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id', 'code', 'name',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id', 'code', 'name',
     ];

@@ -42,9 +42,7 @@ class PurchasePayment extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'purchase_id',
@@ -55,9 +53,7 @@ class PurchasePayment extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'purchase_id',
@@ -70,9 +66,7 @@ class PurchasePayment extends Model
 
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<Purchase> 
-    */
+    /** @return BelongsTo<Purchase> */
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');

@@ -71,9 +71,7 @@ class Sale extends Model
     use HasAdvancedFilter;
     use SaleScope;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -96,9 +94,7 @@ class Sale extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -148,30 +144,24 @@ class Sale extends Model
         'updated_at',
     ];
 
-    /** 
-     * @return response() 
-     */
+    /** @return response() */
     protected $casts = [
         'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** 
-     * @return HasMany<SaleDetails> 
-     */
+    /** @return HasMany<SaleDetails> */
     public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
     }
 
-    /** 
-     * @return HasMany<SalePayment> 
-     */
+    /** @return HasMany<SalePayment> */
     public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
-    
+
     /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
@@ -240,5 +230,4 @@ class Sale extends Model
     {
         return $value / 100;
     }
-
 }

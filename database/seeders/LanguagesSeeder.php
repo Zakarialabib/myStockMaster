@@ -22,21 +22,21 @@ class LanguagesSeeder extends Seeder
                 'name'       => 'English',
                 'code'       => 'en',
                 'status'     => 1,
-                'is_default' => 0,
+                'is_default' => false,
             ],
             [
                 'id'         => 2,
                 'name'       => 'Arabic',
                 'code'       => 'ar',
                 'status'     => 1,
-                'is_default' => 0,
+                'is_default' => false,
             ],
             [
                 'id'         => 3,
                 'name'       => 'French',
                 'code'       => 'fr',
                 'status'     => 1,
-                'is_default' => 1,
+                'is_default' => true,
             ],
         ]);
     }

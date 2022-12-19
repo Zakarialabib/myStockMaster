@@ -36,9 +36,7 @@ class Adjustment extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'reference_no',
@@ -48,9 +46,7 @@ class Adjustment extends Model
         'updated_at',
     ];
 
-    /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'reference_no',

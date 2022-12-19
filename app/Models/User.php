@@ -76,18 +76,14 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'statut', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'statut', 'is_all_warehouses',
@@ -133,9 +129,7 @@ class User extends Authenticatable
         return $builder->whereIsActive(true);
     }
 
-    /** 
-     * @return BelongsToMany<Warehouse> 
-     */
+    /** @return BelongsToMany<Warehouse> */
     public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class);
@@ -144,16 +138,10 @@ class User extends Authenticatable
     // User hasRole method
     public function hasRole($roles): bool
     {
-        if ($this->roles()->whereName($roles)->first()) {
-            return true;
-        }
-
-        return false;
+        return (bool) ($this->roles()->whereName($roles)->first());
     }
 
-    /** 
-     * @return BelongsToMany<Role> 
-     */
+    /** @return BelongsToMany<Role> */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
@@ -168,9 +156,7 @@ class User extends Authenticatable
         return $this->role->permissions->contains('name', $permission);
     }
 
-    /** 
-     * @return HasOne<Wallet> 
-     */
+    /** @return HasOne<Wallet> */
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);

@@ -6,10 +6,10 @@ namespace App\Http\Livewire;
 
 trait WithSorting
 {
-    /** @var mixed $sortBy */
+    /** @var mixed */
     public $sortBy = 'id';
 
-    /** @var mixed $sortDirection */
+    /** @var mixed */
     public $sortDirection = 'desc';
 
     /**

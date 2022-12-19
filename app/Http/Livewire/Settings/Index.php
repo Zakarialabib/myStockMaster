@@ -19,7 +19,7 @@ class Index extends Component
 
     public $settings;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['update'];
 
     public array $listsForFields = [];

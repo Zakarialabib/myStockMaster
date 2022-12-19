@@ -20,7 +20,7 @@ class Index extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'refreshPos', 'productSelected', 'refreshIndex' => '$refresh',
         'discountModalRefresh', 'checkoutModal',

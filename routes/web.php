@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
 
     //Product Category
-    Route::get('product-categories', CategoriesController::class)->name("product-categories.index");
+    Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
 
     Route::get('products', ProductController::class)->name('products.index');
 

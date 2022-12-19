@@ -22,9 +22,9 @@ class Index extends Component
 
     public $purchase;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
-        'showPayments', 
+        'showPayments',
         'refreshIndex' => '$refresh',
     ];
 
@@ -33,25 +33,23 @@ class Index extends Component
     public $showPayments;
 
     public int $perPage;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
     public $purchase_id;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -83,7 +81,6 @@ class Index extends Component
     {
         $this->selected = [];
     }
-
 
     public function mount($purchase): void
     {

@@ -17,7 +17,6 @@ class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
      * @return \App\Models\Category
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    
     public function model(array $row)
     {
         return new Category([

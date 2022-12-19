@@ -24,7 +24,7 @@ class Index extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    /** @var mixed $customer */
+    /** @var mixed */
     public $customer;
 
     public $file;
@@ -33,10 +33,10 @@ class Index extends Component
 
     public $selectPage;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-         'showModal', 'editModal'
+        'showModal', 'editModal',
     ];
 
     public $showModal = false;
@@ -46,21 +46,19 @@ class Index extends Component
     public $refreshIndex;
 
     public $import;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',

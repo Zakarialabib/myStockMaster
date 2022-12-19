@@ -24,7 +24,7 @@ class Index extends Component
 
     public $quotation;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'showModal',
     ];
@@ -33,23 +33,21 @@ class Index extends Component
     public $showModal = false;
 
     public int $perPage;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',

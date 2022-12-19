@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
-use App\Support\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,11 +68,12 @@ use Carbon\Carbon;
  */
 class Product extends Model
 {
-    use HasAdvancedFilter, Notifiable, ProductScope, HasFactory;
+    use HasAdvancedFilter;
+    use Notifiable;
+    use ProductScope;
+    use HasFactory;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'category_id',
@@ -92,9 +92,7 @@ class Product extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'category_id',
@@ -141,17 +139,13 @@ class Product extends Model
         parent::__construct($attributes);
     }
 
-    /** 
-     * @return BelongsTo<Category> 
-     */
+    /** @return BelongsTo<Category> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<Brand> 
-     */
+    /** @return BelongsTo<Brand> */
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');

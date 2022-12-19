@@ -19,15 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Shipment extends Model
 {
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
     ];
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
     ];
@@ -45,17 +41,13 @@ class Shipment extends Model
         'sale_id' => 'integer',
     ];
 
-    /** 
-     * @return BelongsTo<Sale> 
-     */
+    /** @return BelongsTo<Sale> */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
     }
 
-    /** 
-     * @return BelongsTo<User> 
-     */
+    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

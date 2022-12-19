@@ -45,9 +45,7 @@ class Customer extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -60,9 +58,7 @@ class Customer extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -90,17 +86,13 @@ class Customer extends Model
         'address',
     ];
 
-    /** 
-     * @return HasOne<Wallet> 
-     */
+    /** @return HasOne<Wallet> */
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
 
-    /** 
-     * @return HasOne<Sale> 
-     */
+    /** @return HasOne<Sale> */
     public function sales(): HasOne
     {
         return $this->HasOne(Sale::class);

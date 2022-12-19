@@ -42,9 +42,7 @@ class PurchaseReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -57,9 +55,7 @@ class PurchaseReturnPayment extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -74,9 +70,7 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<PurchaseReturn> 
-     */
+    /** @return BelongsTo<PurchaseReturn> */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');

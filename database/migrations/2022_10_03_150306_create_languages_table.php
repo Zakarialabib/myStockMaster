@@ -20,7 +20,7 @@ return new class () extends Migration {
             $table->string('code');
             $table->string('rtl')->default('0');
             $table->string('status')->default('1');
-            $table->string('is_default')->default('0');
+            $table->boolean('is_default')->default('0');
             $table->timestamps();
         });
     }

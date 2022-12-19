@@ -43,9 +43,7 @@ class Supplier extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -58,9 +56,7 @@ class Supplier extends Model
         'tax_number',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -87,17 +83,13 @@ class Supplier extends Model
         'address',
     ];
 
-    /** 
-     * @return HasOne<Wallet> 
-     */
+    /** @return HasOne<Wallet> */
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
     }
-    
-    /** 
-     * @return HasOne<Purchase> 
-     */
+
+    /** @return HasOne<Purchase> */
     public function purchases(): HasOne
     {
         return $this->HasOne(Purchase::class);

@@ -15,13 +15,13 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createWarehouse'];
 
     /** @var bool */
     public $createWarehouse = false;
 
-    /** @var mixed $warehouse */
+    /** @var mixed */
     public $warehouse;
 
     public array $rules = [

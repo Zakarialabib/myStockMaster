@@ -34,16 +34,12 @@ class Brand extends Model
 {
     use HasAdvancedFilter;
 
-    /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id', 'name', 'description', 'image',
     ];
 
-    /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id', 'name', 'description', 'image',
     ];

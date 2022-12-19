@@ -66,9 +66,7 @@ class PurchaseReturn extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -89,9 +87,7 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',

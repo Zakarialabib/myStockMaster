@@ -53,9 +53,7 @@ class SaleReturnDetail extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'sale_return_id',
@@ -67,9 +65,7 @@ class SaleReturnDetail extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'sale_return_id',
@@ -83,17 +79,13 @@ class SaleReturnDetail extends Model
 
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<Product> 
-     */
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<SaleReturnPayment> 
-     */
+    /** @return BelongsTo<SaleReturnPayment> */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturnPayment::class, 'sale_return_id', 'id');

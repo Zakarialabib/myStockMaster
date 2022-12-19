@@ -23,7 +23,7 @@ class Index extends Component
 
     public int $perPage;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['showModal', 'editModal', 'refreshIndex'];
 
     public $showModal;
@@ -31,23 +31,21 @@ class Index extends Component
     public $refreshIndex;
 
     public $editModal;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public $selectPage;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -79,7 +77,6 @@ class Index extends Component
     {
         $this->selected = [];
     }
-
 
     public array $rules = [
         'printer.name'               => 'required|string|max:255',

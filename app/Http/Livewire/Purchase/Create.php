@@ -23,7 +23,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['productSelected', 'refreshIndex'];
 
     public $cart_instance;

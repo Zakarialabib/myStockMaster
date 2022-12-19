@@ -51,17 +51,13 @@ class PurchaseReturnDetail extends Model
 {
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<Product> 
-     */
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<PurchaseReturn> 
-     */
+    /** @return BelongsTo<PurchaseReturn> */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');

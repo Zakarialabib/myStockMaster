@@ -23,16 +23,14 @@ class Livesearch extends Component
     public $sale;
     public $purchase;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'searchQuery' => [
             'except' => '',
-             'as' => 'q'
-        ]];
+            'as'     => 'q',
+        ], ];
 
-    public function updatedSearchQuery() : void
+    public function updatedSearchQuery(): void
     {
         $this->product = Product::query()->where('name', 'LIKE', '%'.$this->searchQuery.'%')->orWhere('code', 'like', '%'.$this->searchQuery.'%')->get();
 

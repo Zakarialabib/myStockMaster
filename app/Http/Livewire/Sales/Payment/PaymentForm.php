@@ -14,9 +14,9 @@ use App\Enums\PaymentStatus;
 
 class PaymentForm extends Component
 {
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
-        'paymentModal', 
+        'paymentModal',
         'refreshIndex' => '$refresh',
     ];
 
