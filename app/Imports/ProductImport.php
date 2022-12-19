@@ -36,16 +36,10 @@ class ProductImport implements ToModel, SkipsEmptyRows
             'unit'              => 'pc',
             'stock_alert'       => '10',
         ]);
-use App\Models\Subcategory;
-use Helpers;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Str;
 
-class ProductImport implements ToCollection, WithHeadingRow
-{
-    public function collection(Collection $rows)
+    }
+
+    /*public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
             Product::create([
@@ -66,5 +60,5 @@ class ProductImport implements ToCollection, WithHeadingRow
                 'tax_type' => 'inclusive'
             ]);
         }
-    }
+    }*/
 }
