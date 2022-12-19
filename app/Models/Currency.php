@@ -40,9 +40,7 @@ class Currency extends Model
 
     public $table = 'currencies';
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -53,9 +51,7 @@ class Currency extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'name',

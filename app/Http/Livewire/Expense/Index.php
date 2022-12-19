@@ -22,17 +22,17 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
-    /** @var mixed $expense */
+    /** @var mixed */
     public $expense;
 
     public int $perPage;
 
     public $selectPage;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-         'showModal', 'editModal'
+        'showModal', 'editModal',
     ];
 
     public $showModal = false;
@@ -42,25 +42,23 @@ class Index extends Component
     public $refreshIndex;
 
     public $export;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
     public bool $showFilters = false;
 
     public array $listsForFields = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -92,7 +90,6 @@ class Index extends Component
     {
         $this->selected = [];
     }
-
 
     public array $rules = [
         'expense.reference'    => 'required|string|max:255',

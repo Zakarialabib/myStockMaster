@@ -18,7 +18,6 @@ class PayDue extends Component
     public $amount;
     public $supplier_id;
 
-
     public function pay()
     {
         if ($this->amount > 0) {

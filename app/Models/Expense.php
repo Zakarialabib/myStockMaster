@@ -48,9 +48,7 @@ class Expense extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'category_id',
@@ -62,9 +60,7 @@ class Expense extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'category_id',
@@ -91,25 +87,19 @@ class Expense extends Model
         'amount',
     ];
 
-    /** 
-     * @return BelongsTo<ExpenseCategory> 
-     */
+    /** @return BelongsTo<ExpenseCategory> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
-    /** 
-     * @return BelongsTo<User> 
-     */
+    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /** 
-     * @return BelongsTo<Warehouse> 
-     */
+    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');

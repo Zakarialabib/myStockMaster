@@ -15,13 +15,13 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createCategory'];
 
     /** @var bool */
     public $createCategory = false;
 
-    /** @var mixed $category */
+    /** @var mixed */
     public $category;
 
     /** @var string */
@@ -30,7 +30,7 @@ class Create extends Component
     protected function rules(): array
     {
         return [
-            'name' => 'required|string|max:255', 
+            'name' => 'required|string|max:255',
         ];
     }
 

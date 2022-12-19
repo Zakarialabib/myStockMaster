@@ -40,9 +40,7 @@ class Printer extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -54,9 +52,7 @@ class Printer extends Model
         'path',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'name',

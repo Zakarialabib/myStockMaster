@@ -29,10 +29,10 @@ class Index extends Component
     use WithPagination;
     use WithFileUploads;
 
-    /** @var mixed $product */
+    /** @var mixed */
     public $product;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'showModal', 'editModal',
         'refreshIndex' => '$refresh',
@@ -50,25 +50,23 @@ class Index extends Component
     public $refreshIndex;
 
     public $sendTelegram;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
     public $image;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -100,7 +98,6 @@ class Index extends Component
     {
         $this->selected = [];
     }
-
 
     public array $rules = [
         'product.name'              => ['required', 'string', 'max:255'],

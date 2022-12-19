@@ -21,15 +21,15 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
-    /** @var mixed $warehouse */
+    /** @var mixed */
     public $warehouse;
 
     public int $perPage;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-         'showModal', 'editModal'];
+        'showModal', 'editModal', ];
 
     /** @var bool */
     public $showModal = false;
@@ -39,23 +39,21 @@ class Index extends Component
 
     /** @var bool */
     public $editModal = false;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public $refreshIndex;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',

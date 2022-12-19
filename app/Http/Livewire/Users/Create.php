@@ -15,13 +15,13 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createModal'];
 
     /** @var bool */
     public $createModal = false;
 
-    /** @var mixed $user */
+    /** @var mixed */
     public $user;
 
     public array $rules = [
@@ -35,7 +35,7 @@ class Create extends Component
         'user.tax_number' => 'nullable',
     ];
 
-    public function mount(User $user): void 
+    public function mount(User $user): void
     {
         $this->user = $user;
     }

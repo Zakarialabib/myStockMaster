@@ -27,13 +27,13 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
-    /** @var mixed $sale */
+    /** @var mixed */
     public $sale;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'showModal',
-        'importModal','refreshIndex' => '$refresh',
+        'importModal', 'refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave',
     ];
 
@@ -46,25 +46,23 @@ class Index extends Component
     public $paymentModal = false;
 
     public int $perPage;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     // public $salepayments;
 
     public array $listsForFields = [];
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',

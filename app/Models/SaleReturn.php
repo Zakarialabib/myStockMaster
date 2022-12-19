@@ -66,9 +66,7 @@ class SaleReturn extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -89,9 +87,7 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -142,25 +138,19 @@ class SaleReturn extends Model
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** 
-     * @return HasMany<SaleReturnDetail> 
-     */
+    /** @return HasMany<SaleReturnDetail> */
     public function saleReturnDetails(): HasMany
     {
         return $this->hasMany(SaleReturnDetail::class, 'sale_return_id', 'id');
     }
 
-    /** 
-     * @return HasMany<SaleReturnPayment> 
-     */
+    /** @return HasMany<SaleReturnPayment> */
     public function saleReturnPayments(): HasMany
     {
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<Customer> 
-     */
+    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

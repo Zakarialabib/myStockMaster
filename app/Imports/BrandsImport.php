@@ -15,7 +15,6 @@ class BrandsImport implements ToModel, SkipsEmptyRows
      * @return \App\Models\Brand
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    
     public function model(array $row)
     {
         return new Brand([

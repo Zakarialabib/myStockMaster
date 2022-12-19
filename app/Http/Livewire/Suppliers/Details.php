@@ -15,7 +15,7 @@ class Details extends Component
 {
     public $supplier_id;
 
-    /** @var mixed $supplier */
+    /** @var mixed */
     public $supplier;
 
     public function mount($supplier): void

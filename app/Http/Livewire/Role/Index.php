@@ -18,12 +18,12 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
 
-    /** @var mixed $role */
+    /** @var mixed */
     public $role;
 
     public $permissions;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createModal', 'editModal'];
 
     public $createModal = false;
@@ -31,23 +31,21 @@ class Index extends Component
     public $editModal = false;
 
     public int $perPage;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public array $listsForFields = [];
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',

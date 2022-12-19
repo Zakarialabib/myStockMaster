@@ -56,9 +56,7 @@ class Quotation extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -76,9 +74,7 @@ class Quotation extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -117,17 +113,13 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    /** 
-     * @return HasMany<QuotationDetails> 
-     */
+    /** @return HasMany<QuotationDetails> */
     public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<Customer> 
-     */
+    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

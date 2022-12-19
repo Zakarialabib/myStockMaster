@@ -16,12 +16,12 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createCustomer'];
 
     public $createCustomer = false;
 
-    /** @var mixed $customer */
+    /** @var mixed */
     public $customer;
 
     public $name;

@@ -22,7 +22,7 @@ class ToggleButton extends Component
 
     public $uniqueId;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     protected $listeners = ['updating'];
 
     public function mount(): void

@@ -35,9 +35,7 @@ class RoleUser extends Model
 
     protected $table = 'role_user';
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'user_id',
@@ -46,9 +44,7 @@ class RoleUser extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'user_id',
@@ -67,9 +63,7 @@ class RoleUser extends Model
         'role_id',
     ];
 
-    /** 
-     * @return response() 
-     */
+    /** @return response() */
     protected $casts = [
         'user_id' => 'integer',
         'role_id' => 'integer',

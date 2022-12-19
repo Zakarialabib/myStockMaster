@@ -16,16 +16,16 @@ class SyncProducts extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['syncModal'];
 
     public $type;
-    
+
     public $store_url;
 
     public $syncModal = false;
 
-    public function updatedType() : void
+    public function updatedType(): void
     {
         if ($this->type === 'woocommerce') {
             $this->store_url = settings()->woocommerce_store_url;
@@ -34,9 +34,7 @@ class SyncProducts extends Component
         }
     }
 
-
-    public function sync() : void
-
+    public function sync(): void
     {
         // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {

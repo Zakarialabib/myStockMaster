@@ -23,12 +23,12 @@ class Index extends Component
     use WithFileUploads;
     use LivewireAlert;
 
-    /** @var mixed $supplier */
+    /** @var mixed */
     public $supplier;
 
     public int $perPage;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = [
         'importModal', 'showModal', 'editModal',
         'refreshIndex' => '$refresh',
@@ -42,25 +42,23 @@ class Index extends Component
 
     /** @var bool */
     public $editModal = false;
-    /** @var array $orderable */
+    /** @var array */
     public array $orderable;
 
     public $selectPage;
 
-    /** @var string $search */
+    /** @var string */
     public string $search = '';
 
-    /** @var array $selected */
+    /** @var array */
     public array $selected = [];
 
-    /** @var array $paginationOptions */
+    /** @var array */
     public array $paginationOptions;
 
     public $refreshIndex;
 
-    /**
-     * @var string[][] $queryString
-     */
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -82,7 +80,6 @@ class Index extends Component
     {
         $this->resetPage();
     }
-
 
     public array $rules = [
         'supplier.name'       => ['required', 'string', 'max:255'],

@@ -51,9 +51,7 @@ class QuotationDetails extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'quotation_id',
@@ -71,9 +69,7 @@ class QuotationDetails extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'quotation_id',
@@ -93,17 +89,13 @@ class QuotationDetails extends Model
 
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<Product> 
-     */
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<Quotation> 
-     */
+    /** @return BelongsTo<Quotation> */
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');

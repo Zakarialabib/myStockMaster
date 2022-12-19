@@ -82,9 +82,7 @@ class Setting extends Model
 {
     protected $guarded = [];
 
-    /** 
-     * @return BelongsTo<Currency> 
-     */
+    /** @return BelongsTo<Currency> */
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');

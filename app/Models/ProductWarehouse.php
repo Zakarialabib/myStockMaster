@@ -48,17 +48,13 @@ class ProductWarehouse extends Model
         'qte'          => 'double',
     ];
 
-    /** 
-     * @return BelongsTo<Warehouse> 
-     */
+    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
     }
 
-    /** 
-     * @return BelongsTo<Product> 
-     */
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

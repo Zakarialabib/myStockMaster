@@ -33,7 +33,7 @@ class Locale
 
         // $code = Session::get('code');
 
-        $code = request()->cookie("lang", $language_default['code'] ?? 'en');
+        $code = request()->cookie('lang', $language_default['code'] ?? 'en');
 
         App::setLocale($code);
 

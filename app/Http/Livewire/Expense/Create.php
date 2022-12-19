@@ -17,12 +17,12 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] $listeners */
+    /** @var string[] */
     public $listeners = ['createExpense'];
 
     public $createExpense = false;
 
-    /** @var mixed $expense */
+    /** @var mixed */
     public $expense;
 
     public $reference;

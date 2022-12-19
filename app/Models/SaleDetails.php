@@ -51,9 +51,7 @@ class SaleDetails extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'sale_id',
@@ -69,9 +67,7 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'sale_id',
@@ -106,17 +102,13 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
-    /** 
-     * @return BelongsTo<Product> 
-     */
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** 
-     * @return BelongsTo<Sale> 
-     */
+    /** @return BelongsTo<Sale> */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');

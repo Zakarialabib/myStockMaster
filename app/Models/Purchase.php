@@ -66,9 +66,7 @@ class Purchase extends Model
 {
     use HasAdvancedFilter;
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -90,9 +88,7 @@ class Purchase extends Model
         'updated_at',
     ];
 
-   /** 
-     * @var string[] 
-    */
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -140,41 +136,31 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    /** 
-     * @return response() 
-     */
+    /** @return response() */
     protected $casts = [
         'status'         => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** 
-     * @return HasMany<PurchaseDetail> 
-     */
+    /** @return HasMany<PurchaseDetail> */
     public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
-    /** 
-     * @return HasMany<PurchasePayment> 
-     */
+    /** @return HasMany<PurchasePayment> */
     public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
-     /** 
-     * @return BelongsTo<Supplier> 
-     */
+     /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 
-    /**
-     * @param mixed $query
-     */
+    /** @param mixed $query */
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
@@ -233,6 +219,4 @@ class Purchase extends Model
     {
         return $value / 100;
     }
-
-   
 }
