@@ -29,6 +29,7 @@
                                 @php
                                     $low_quantity_products = \App\Models\Product::select('id', 'quantity', 'stock_alert', 'code')
                                         ->whereColumn('quantity', '<=', 'stock_alert')
+                                        ->take(5)
                                         ->get();
                                 @endphp
                                 <div class="text-xs font-semibold text-white justify-center">
@@ -39,6 +40,7 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            
                             @forelse($low_quantity_products as $product)
                                 <x-dropdown-link href="#">
                                     <i class="fas fa-bell w-5 h-5" aria-hidden="true"></i>

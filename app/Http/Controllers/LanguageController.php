@@ -7,14 +7,12 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 
-class BackupController extends Controller
+class LanguageController extends Controller
 {
     public function __invoke()
     {
-        if ( ! Gate::allows('access_backup')) {
-            return abort(401);
-        }
+        abort_if(Gate::denies('access_languages'), 403);
 
-        return view('admin.backup.index');
+        return view('admin.language.index');
     }
 }

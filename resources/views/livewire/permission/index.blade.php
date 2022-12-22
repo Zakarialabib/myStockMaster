@@ -45,7 +45,7 @@
         </x-slot>
         <x-table.tbody>
             @forelse($permissions as $permission)
-                <x-table.tr>
+                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $permission->id }}">
                     <x-table.td>
                         <input type="checkbox" value="{{ $permission->id }}" wire:model="selected">
                     </x-table.td>

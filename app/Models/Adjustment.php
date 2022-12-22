@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\Adjustment
@@ -59,12 +60,15 @@ class Adjustment extends Model
     protected $guarded = [];
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * Get ajustement date attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getDateAttribute($value)
+    public function date(): Attribute
     {
-        return Carbon::parse($value)->format('d M, Y');
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
     }
 
     /** @return HasMany<AdjustedProduct> */

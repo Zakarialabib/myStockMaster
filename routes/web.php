@@ -6,8 +6,10 @@ use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
@@ -208,6 +210,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
+
+    //Language Settings
+    Route::get('languages', LanguageController::class)->name('languages.index');
+
+    //Backup
+    Route::get('backup', BackupController::class)->name('backup.index');
 
     //General Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

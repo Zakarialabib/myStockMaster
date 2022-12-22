@@ -10,15 +10,15 @@
                 {{ __('Dashboard') }}
             </x-button>
 
-            <x-button primary type="button" onclick="Livewire.emit('createProduct', 'show')">
+            <x-button primary type="button" onclick="Livewire.emit('createProduct')">
                 {{ __('Create Product') }}
             </x-button>
 
-            <x-button primary type="button" onclick="Livewire.emit('createCustomer', 'show')">
+            <x-button primary type="button" onclick="Livewire.emit('createCustomer')">
                 {{ __('Create Customer') }}
             </x-button>
 
-            <x-button primary type="button" onclick="Livewire.emit('recentSales', 'show')">
+            <x-button primary type="button" onclick="Livewire.emit('recentSales')">
                 {{ __('Recent Sales') }}
             </x-button>
         </div>

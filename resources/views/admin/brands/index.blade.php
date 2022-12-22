@@ -68,7 +68,7 @@
                     </x-slot>
                 </x-dropdown>
 
-                <x-button primary type="button" onclick="Livewire.emit('createBrand', 'show')">
+                <x-button primary type="button" onclick="Livewire.emit('createBrand')">
                 {{ __('Create Brand') }}
                 </x-button>
             </div>

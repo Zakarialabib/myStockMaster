@@ -362,6 +362,11 @@ class PermissionsSeeder extends Seeder
                 'name'       => 'sale return delete',
                 'guard_name' => 'sale_return_delete',
             ],
+            [
+                'id'         => 65,
+                'name'       => 'access language',
+                'guard_name' => 'access_languages',
+            ],
 
         ];
 

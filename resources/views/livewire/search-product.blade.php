@@ -3,25 +3,24 @@
         <div class="mb-2 w-full relative text-gray-600 focus-within:text-gray-400">
             <span class="absolute inset-y-0 left-0 flex items-center pl-2">
                 {{-- emit show modal --}}
-              <a  href="#" class="p-1 focus:outline-none focus:shadow-outline" 
-                    wire:click="show" 
-                    onkeydown="initQuaggaJS();"
-                    onclick="initQuaggaJS();">
-                <i class="fas fa-camera"></i>
-              </a>
+                <a href="#" class="p-1 focus:outline-none focus:shadow-outline" wire:click="show"
+                    onkeydown="initQuaggaJS();" onclick="initQuaggaJS();">
+                    <i class="fas fa-camera"></i>
+                </a>
             </span>
             {{-- show modal --}}
             <x-modal wire:model="show">
                 <x-slot name="title">
-                    {{__('Scan here')}}
+                    {{ __('Scan here') }}
                 </x-slot>
                 <x-slot name="content">
                     <div id="scanner-container"></div>
                 </x-slot>
             </x-modal>
-            <input id="productSearch" wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus
+            <input id="productSearch" wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search"
+                autofocus
                 class="w-full pl-10 shadow-sm focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                placeholder="{{ __('Type product name or code....') }}" >
+                placeholder="{{ __('Type product name or code....') }}">
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="md:w-1/3 px-2">
@@ -150,46 +149,45 @@
                         </div>
                     @endforelse
                 </div>
-                <div @class(['mt-3' => $products->hasPages()])>
-                    {{ $products->links() }}
-                </div>
+            </div>
+            <div @class(['mt-3' => $products->hasPages()])>
+                {{ $products->links() }}
             </div>
         </div>
     @endif
 </div>
 
 @push('scripts')
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js" integrity="sha512-bCsBoYoW6zE0aja5xcIyoCDPfT27+cGr7AOCqelttLVRGay6EKGQbR6wm6SUcUGOMGXJpj+jrIpMS6i80+kZPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"
+        integrity="sha512-bCsBoYoW6zE0aja5xcIyoCDPfT27+cGr7AOCqelttLVRGay6EKGQbR6wm6SUcUGOMGXJpj+jrIpMS6i80+kZPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script>
+    <script>
+        function initQuaggaJS() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#scanner-container') // Or '#yourElement' (optional)
+                },
+                decoder: {
+                    readers: ["code_128_reader"]
+                }
+            }, function(err) {
+                if (err) {
+                    console.log(err);
+                    return
+                }
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
+            });
+            document.querySelector("#scanner-container").classList.remove("hidden");
+        }
 
-function initQuaggaJS() {
-    Quagga.init({
-      inputStream : {
-        name : "Live",
-        type : "LiveStream",
-        target: document.querySelector('#scanner-container') // Or '#yourElement' (optional)
-      },
-      decoder : {
-        readers : ["code_128_reader"]
-      }
-    }, function(err) {
-      if (err) {
-        console.log(err);
-        return
-      }
-      console.log("Initialization finished. Ready to start");
-      Quagga.start();
-    });
-    document.querySelector("#scanner-container").classList.remove("hidden");
-  }
-
-  Quagga.onDetected(function(result) {
-    document.querySelector("#productSearch").value = result.codeResult.code;
-    document.querySelector("#scanner-container").classList.add("hidden");
-    Quagga.stop();
-  });
-</script>
-
+        Quagga.onDetected(function(result) {
+            document.querySelector("#productSearch").value = result.codeResult.code;
+            document.querySelector("#scanner-container").classList.add("hidden");
+            Quagga.stop();
+        });
+    </script>
 @endpush

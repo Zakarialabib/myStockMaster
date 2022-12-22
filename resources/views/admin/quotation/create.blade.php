@@ -42,7 +42,7 @@
                     {{ __('Create Quotation') }}
                 </x-button>
                 <!-- Button trigger livewire modal -->
-                {{-- <x-button primary onclick="Livewire.emit('createModal', 'show')">{{ __('Create') }}</x-button> --}}
+                {{-- <x-button primary onclick="Livewire.emit('createModal')">{{ __('Create') }}</x-button> --}}
             </div>
         </div>
     </section>

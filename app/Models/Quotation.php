@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 
 /**
@@ -125,67 +126,87 @@ class Quotation extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    public function getDateAttribute($value)
+   /**
+    * Get ajustement date.
+    * @return \Illuminate\Database\Eloquent\Casts\Attribute
+    */
+    public function date(): Attribute
     {
-        return Carbon::parse($value)->format('d M, Y');
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getShippingAmountAttribute($value)
+    protected function shippingAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get paid amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getPaidAmountAttribute($value)
+    protected function paidAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get total amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getTotalAmountAttribute($value)
+    protected function totalAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get due amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getDueAmountAttribute($value)
+    protected function dueAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get tax amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getTaxAmountAttribute($value)
+    protected function taxAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
-     /**
-      * @param mixed $value
-      * @return int|float
-      */
-    public function getDiscountAmountAttribute($value)
+    /**
+     * get discount amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function discountAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     public static function boot()

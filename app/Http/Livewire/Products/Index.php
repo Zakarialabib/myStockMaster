@@ -64,8 +64,6 @@ class Index extends Component
     /** @var array */
     public array $paginationOptions;
 
-    public array $listsForFields = [];
-
     /** @var string[][] */
     protected $queryString = [
         'search' => [
@@ -122,7 +120,6 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Product())->orderable;
-        $this->initListsForFields();
     }
 
     public function deleteSelected(): void
@@ -260,10 +257,18 @@ class Index extends Component
         return (new ProductExport());
     }
 
-    protected function initListsForFields(): void
+    public function getCategoriesProperty()
     {
-        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
-        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
+        return Category::select('name', 'id')->get();
+    }
+
+    public function getBrandsProperty()
+    {
+        return Brand::select('name', 'id')->get();
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::select('name', 'id')->get();
     }
 }

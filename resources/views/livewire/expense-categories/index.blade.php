@@ -30,12 +30,6 @@
         </div>
     </div>
 
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
-        </div>
-    </div>
-
     <x-table>
         <x-slot name="thead">
             <x-table.th>

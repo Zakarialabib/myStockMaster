@@ -6,7 +6,7 @@ if ( ! function_exists('settings')) {
     function settings()
     {
         return cache()->rememberForever('settings', function () {
-            return \App\Models\Setting::firstOrFail();
+            return \App\Models\Setting::with('currency')->firstOrFail();
         });
     }
 }

@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\SaleReturnPayment
@@ -73,30 +74,27 @@ class SaleReturnPayment extends Model
     }
 
     /**
-     * @param mixed $value
-     * @return void
+     * Interact with the expenses amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function setAmountAttribute($value)
+    protected function amount(): Attribute
     {
-        $this->attributes['amount'] = $value * 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
+        );
     }
 
-    /**
-     * @param mixed $value
-     * @return int|float
-     */
-    public function getAmountAttribute($value)
+   /**
+    * Get ajustement date.
+    * @return \Illuminate\Database\Eloquent\Casts\Attribute
+    */
+    public function date(): Attribute
     {
-        return $value / 100;
-    }
-
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    public function getDateAttribute($value)
-    {
-        return Carbon::parse($value)->format('d M, Y');
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
     }
 
     /**

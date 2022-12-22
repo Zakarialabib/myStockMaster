@@ -6,9 +6,10 @@ namespace App\Models;
 
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
 
@@ -152,38 +153,28 @@ class Product extends Model
     }
 
     /**
-     * @param mixed $value
-     * @return void
+     * Interact with product cost
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function setProductCostAttribute($value)
+    protected function productCost(): Attribute
     {
-        $this->attributes['cost'] = ($value * 100);
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * Interact with product price
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getProductCostAttribute($value)
+    protected function productPrice(): Attribute
     {
-        return $value / 100;
-    }
-
-    /**
-     * @param mixed $value
-     * @return void
-     */
-    public function setProductPriceAttribute($value)
-    {
-        $this->attributes['price'] = ($value * 100);
-    }
-
-    /**
-     * @param mixed $value
-     * @return int|float
-     */
-    public function getProductPriceAttribute($value)
-    {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
+        );
     }
 }

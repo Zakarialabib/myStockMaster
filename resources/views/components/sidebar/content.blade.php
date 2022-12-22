@@ -207,12 +207,19 @@
                     <i class="fas fa-cog w-5 h-5"></i>
                 </span>
             </x-slot>
-            @can('access_currencies')
-                <x-sidebar.sublink title="{{ __('Currencies') }}" href="{{ route('currencies.index') }}" :active="request()->routeIs('currencies.index')" />
-            @endcan
             @can('access_settings')
                 <x-sidebar.sublink title="{{ __('Settings') }}" href="{{ route('settings.index') }}" :active="request()->routeIs('settings.index')" />
             @endcan
+            @can('access_currencies')
+                <x-sidebar.sublink title="{{ __('Currencies') }}" href="{{ route('currencies.index') }}" :active="request()->routeIs('currencies.index')" />
+            @endcan
+            @can('access_languages')
+                <x-sidebar.sublink title="{{ __('Languages') }}" href="{{ route('languages.index') }}" :active="request()->routeIs('languages.index')" />
+            @endcan
+            @can('access_backup')
+                <x-sidebar.sublink title="{{ __('Backup') }}" href="{{ route('backup.index') }}" :active="request()->routeIs('backup.index')" />
+            @endcan
+
         </x-sidebar.dropdown>
     @endcan
 

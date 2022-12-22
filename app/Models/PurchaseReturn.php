@@ -166,48 +166,63 @@ class PurchaseReturn extends Model
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getShippingAmountAttribute($value)
+    protected function shippingAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get paid amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getPaidAmountAttribute($value)
+    protected function paidAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get total amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getTotalAmountAttribute($value)
+    protected function totalAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get due amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getDueAmountAttribute($value)
+    protected function dueAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get tax amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getTaxAmountAttribute($value)
+    protected function taxAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**

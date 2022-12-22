@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchaseReturnDetail
@@ -64,47 +65,62 @@ class PurchaseReturnDetail extends Model
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * get price attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getPriceAttribute($value)
+    protected function price(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * Interact with unit price
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getUnitPriceAttribute($value)
+    protected function unitPrice(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+     /**
+      * get subtotal attribute
+      *
+      * @return \Illuminate\Database\Eloquent\Casts\Attribute
+      */
+    protected function subTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * Interact with shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getSubTotalAttribute($value)
+    protected function productDiscountAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
-     * @param mixed $value
-     * @return int|float
+     * Interact with shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
-    public function getProductDiscountAmountAttribute($value)
+    protected function productTaxAmountAttribute(): Attribute
     {
-        return $value / 100;
-    }
-
-    /**
-     * @param mixed $value
-     * @return int|float
-     */
-    public function getProductTaxAmountAttribute($value)
-    {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 }
