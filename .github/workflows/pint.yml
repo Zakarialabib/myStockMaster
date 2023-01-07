@@ -1,34 +1,39 @@
 name: fix-code-style using pint
 
-on: push
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
 
 jobs:
   pint:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
-        ports:
-          - 33306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
-      -   name: Checkout code
-          uses: actions/checkout@v2
-          with:
-            ref: ${{ github.head_ref }}
+      - name: Checking your input
 
-      -   name: Install Composer
-          run: composer install
+        run: |
+          echo "github.event.pull_request.merged           : $MERGED_RAW"
+          echo "github.event.pull_request.merged == 'true' : $MERGED_TRUE_STR"
+          echo "github.event.pull_request.merged  == true  : $MERGED_TRUE_BOOL"
+        env:
+          MERGED_RAW: ${{ github.event.pull_request.merged }}
+          MERGED_TRUE_STR: ${{ github.event.pull_request.merged == 'true' }}
+          MERGED_TRUE_BOOL: ${{ github.event.pull_request.merged == true }}
 
-      -   name: Run Laravel Pint
-          run: ./vendor/bin/pint
+      - name: Checkout code
 
-      -   name: Commit changes
-          uses: stefanzweifel/git-auto-commit-action@v4
-          with:
-            commit_message: Apply laravel pint formatting
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Composer
+        run: composer install
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply laravel pint formatting
