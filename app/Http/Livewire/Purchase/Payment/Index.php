@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Purchase\Payment;
 use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,6 +20,7 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     public $purchase;
 
@@ -31,19 +33,6 @@ class Index extends Component
     public $refreshIndex;
 
     public $showPayments;
-
-    public int $perPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     public array $listsForFields = [];
 
@@ -61,26 +50,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public function mount($purchase): void
     {

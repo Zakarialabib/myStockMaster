@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Sales;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\Sale;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class Recent extends Component
     use WithSorting;
     use WithFileUploads;
     use LivewireAlert;
+    use Datatable;
 
     public $sale;
 
@@ -27,24 +29,9 @@ class Recent extends Component
         'importModal', 'refreshIndex' => '$refresh',
     ];
 
-    public $refreshIndex;
-
-    public $showModal;
+    public $showModal = false;
 
     public $recentSales;
-
-    public int $perPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     public array $listsForFields = [];
 
@@ -60,26 +47,6 @@ class Recent extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public function mount(): void
     {

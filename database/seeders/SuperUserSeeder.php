@@ -25,7 +25,7 @@ class SuperUserSeeder extends Seeder
             'avatar'            => 'avatar.png',
             'phone'             => '0123456789',
             'role_id'           => 1,
-            'statut'            => 1,
+            'status'            => 1,
             'is_all_warehouses' => 1,
             'remember_token'    => null,
             'created_at'        => now(),

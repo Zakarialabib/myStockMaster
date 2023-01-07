@@ -101,7 +101,7 @@
         </div>
     </div>
 
-    @if (null !== $showModal)
+    @if ($showModal)
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 {{ __('Show Expense Category') }}
@@ -124,7 +124,7 @@
         </x-modal>
     @endif
 
-    @if (null !== $editModal)
+    @if ($editModal)
         <x-modal wire:click="editModal">
             <x-slot name="title">
                 {{ __('Edit Expense Category') }}

@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Return')}} _{{$return_$sale['reference']}}</title>
+      <title>{{__('Return')}} _{{$return_$sale->reference}}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -15,12 +15,12 @@
          </div>
          <div id="company">
             <div><strong> Date: </strong>{{$return_sale['date']}}</div>
-            <div><strong> Numéro: </strong> {{$return_$sale['reference']}}</div>
+            <div><strong> Numéro: </strong> {{$return_$sale->reference}}</div>
             <div><strong> Réf vente: </strong> {{$return_sale['sale_ref']}}</div>
 
          </div>
          <div id="Title-heading">
-            Retour  : {{$return_$sale['reference']}}
+            Retour  : {{$return_$sale->reference}}
          </div>
          </div>
       </header>
@@ -56,11 +56,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
+                           <div id="comp">{{settings()->company_name}}</div>
                            <div><strong>ICE:</strong>{{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>{{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>{{$setting['CompanyPhone']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>{{$setting['email']}}</div>
+                           <div><strong>Adresse:</strong>{{settings()->company_address}}</div>
+                           <div><strong>Téle:</strong>{{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>{{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -83,16 +83,16 @@
                   @foreach ($details as $detail)    
                   <tr>
                      <td>
-                        <span>{{$detail['code']}} ({{$detail['name']}})</span>
+                        <span>{{$detail->code}} ({{$detail->name}})</span>
                            @if($detail['is_imei'] && $detail['imei_number'] !==null)
                               <p>IMEI/SN : {{$detail['imei_number']}}</p>
                            @endif
                      </td>
-                     <td>{{$detail['price']}} </td>
-                     <td>{{$detail['quantity']}}/{{$detail['unitSale']}}</td>
+                     <td>{{$detail->unit_price}} </td>
+                     <td>{{$detail->quantity}}/{{$detail['unitSale']}}</td>
                      <td>{{$detail['DiscountNet']}} </td>
                      <td>{{$detail['taxe']}} </td>
-                     <td>{{$detail['total']}} </td>
+                     <td>{{$detail->total_amount}} </td>
                   </tr>
                   @endforeach
                </tbody>

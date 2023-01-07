@@ -6,6 +6,7 @@ namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\ExpenseCategory;
+use App\Traits\Datatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -18,11 +19,10 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $expenseCategory;
-
-    public int $perPage;
 
     /** @var string[] */
     public $listeners = [
@@ -33,21 +33,6 @@ class Index extends Component
     public $showModal = false;
 
     public $editModal = false;
-
-    public $refreshIndex;
-
-    public $selectPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [
@@ -61,26 +46,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public array $rules = [
         'expenseCategory.name'        => 'required',

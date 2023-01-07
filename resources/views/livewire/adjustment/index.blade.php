@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    @if (null !== $showModal)
+    @if ($showModal)
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 {{ __('Show Adjustment') }} - {{ $adjustment->date }}

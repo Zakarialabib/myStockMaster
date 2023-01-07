@@ -98,7 +98,7 @@
                                     <i class="fas fa-eye"></i>
                                     {{ __('Show') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link wire:click="editModal({{ $category->id }})"
+                                <x-dropdown-link wire:click="$emit('editModal', {{ $category->id }})"
                                     wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                     {{ __('Edit') }}
@@ -136,44 +136,10 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    @if (null !== $editModal)
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit Category') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <!-- Validation Errors -->
-            <x-validation-errors class="mb-4" :errors="$errors" />
-            <form wire:submit.prevent="update">
-                <div class="mb-6">
-                    <div class="mt-4 w-full">
-                        <x-label for="code" :value="__('Code')" />
-                        <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
-                            wire:model.defer="category.code" />
-                        <x-input-error :messages="$errors->get('category.code')" for="category.code" class="mt-2" />
-                    </div>
-                    <div class="my-4 p w-full">
-                        <x-label for="name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.defer="category.name" />
-                        <x-input-error :messages="$errors->get('category.name')" for="category.name" class="mt-2" />
-                    </div>
-                    <div class="w-full flex justify-start">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
-    @endif
-    <!-- End Edit Modal -->
+    @livewire('categories.edit', ['category' => $category])
 
     <!-- Show Modal -->
-    @if (null !== $showModal)
+    @if ($showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Category') }}
@@ -200,7 +166,6 @@
     <!-- End Show Modal -->
 
     {{-- Import modal --}}
-
     <x-modal wire:model="importModal">
         <x-slot name="title">
             {{ __('Import Categories') }}
@@ -225,7 +190,6 @@
             </form>
         </x-slot>
     </x-modal>
-
     {{-- End Import modal --}}
 
     <livewire:categories.create />

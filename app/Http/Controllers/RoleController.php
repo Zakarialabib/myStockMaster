@@ -9,24 +9,10 @@ use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('role_access'), 403);
 
         return view('admin.roles.index');
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('role_create'), 403);
-
-        return view('admin.roles.create');
-    }
-
-    public function edit(Role $role)
-    {
-        abort_if(Gate::denies('role_edit'), 403);
-
-        return view('admin.roles.edit', compact('role'));
     }
 }

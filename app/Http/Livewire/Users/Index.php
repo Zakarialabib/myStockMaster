@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Users;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\User;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $user;
@@ -34,22 +36,6 @@ class Index extends Component
     /** @var bool */
     public $editModal = false;
 
-    public int $perPage;
-
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
-
-    public $refreshIndex;
-
     /** @var string[][] */
     protected $queryString = [
         'search' => [
@@ -62,26 +48,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public array $rules = [
         'user.name'       => 'required|string|max:255',

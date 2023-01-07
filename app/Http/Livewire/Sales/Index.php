@@ -19,6 +19,7 @@ use Livewire\WithPagination;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use App\Enums\PaymentStatus;
+use App\Traits\Datatable;
 
 class Index extends Component
 {
@@ -26,6 +27,7 @@ class Index extends Component
     use WithSorting;
     use WithFileUploads;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $sale;
@@ -37,26 +39,11 @@ class Index extends Component
         'paymentModal', 'paymentSave',
     ];
 
-    public $refreshIndex;
-
     public $showModal = false;
 
     public $importModal = false;
 
     public $paymentModal = false;
-
-    public int $perPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     // public $salepayments;
 
@@ -74,26 +61,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public array $rules = [
         'customer_id'         => 'required|numeric',

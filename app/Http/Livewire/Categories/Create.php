@@ -27,12 +27,9 @@ class Create extends Component
     /** @var string */
     public $name;
 
-    protected function rules(): array
-    {
-        return [
-            'name' => 'required|string|max:255',
-        ];
-    }
+    protected array $rules = [
+            'name' => 'required|min:3|max:255',
+    ];
 
     public function updated($propertyName): void
     {

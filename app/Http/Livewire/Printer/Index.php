@@ -21,29 +21,14 @@ class Index extends Component
 
     public $printer;
 
-    public int $perPage;
-
     /** @var string[] */
     public $listeners = ['showModal', 'editModal', 'refreshIndex'];
 
-    public $showModal;
+    public $showModal = false;
 
     public $refreshIndex;
 
-    public $editModal;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
-
-    public $selectPage;
+    public $editModal = false;
 
     /** @var string[][] */
     protected $queryString = [
@@ -57,26 +42,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public array $rules = [
         'printer.name'               => 'required|string|max:255',

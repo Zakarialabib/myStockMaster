@@ -35,7 +35,7 @@
                     </a>
                 </div>
             </div>
-            <div class="w-full">
+            <div class="flex space-x-2">
                 <x-button primary type="button" onclick="Livewire.emit('generate')">
                     {{ __('Create Backup') }}
                 </x-button>
@@ -47,7 +47,7 @@
 <x-app-layout>
     <x-card>
         <div>
-            <livewire:backup.index />
+            @livewire('backup.index')
         </div>
     </x-card>
 </x-app-layout>

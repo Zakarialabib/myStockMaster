@@ -37,8 +37,8 @@ class PurchaseMail extends Mailable
     {
         return
         $this->subject('Purchase Details')
-            ->markdown('emails.purchase')
-            ->attachData($this->pdf, 'Purchase_'.$this->purchase['Ref'].'.pdf', [
+            ->markdown('emails.purchaseMail')
+            ->attachData($this->pdf, 'Purchase_'.$this->purchase['reference'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->purchase);

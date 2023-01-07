@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Mail\SaleMail;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
+use Dompdf\Dompdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 
 class Create extends Component
 {
@@ -185,7 +188,28 @@ class Create extends Component
         }
 
         $this->alert('success', __('Sale created successfully!'));
+        
+        if ($sale->customer->email) {
+            Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));
+        }
+
     }
+    // public function salePdf($sale)
+    // {
+    //     $pdf = PDF::loadView('pdf.salePdf', compact('sale'));
+    //     return $pdf->download("sale-{$sale->id}.pdf");
+    // }
+
+    public function salePdf($sale)
+    {
+        $pdf = new Dompdf();
+        $pdf->loadHtml($this->renderView('pdf.salePdf', ['sale' => $sale]));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
+
+        return $pdf->output();
+    }
+
 
     public function calculateTotal()
     {

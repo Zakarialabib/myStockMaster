@@ -8,6 +8,7 @@ use App\Exports\SupplierExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\SupplierImport;
 use App\Models\Supplier;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -22,11 +23,10 @@ class Index extends Component
     use WithSorting;
     use WithFileUploads;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $supplier;
-
-    public int $perPage;
 
     /** @var string[] */
     public $listeners = [
@@ -42,21 +42,6 @@ class Index extends Component
 
     /** @var bool */
     public $editModal = false;
-    /** @var array */
-    public array $orderable;
-
-    public $selectPage;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
-
-    public $refreshIndex;
 
     /** @var string[][] */
     protected $queryString = [
@@ -70,16 +55,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'supplier.name'       => ['required', 'string', 'max:255'],

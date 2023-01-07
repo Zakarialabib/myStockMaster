@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Gate;
 
 class UsersController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('access_user_management'), 403);
 

@@ -8,6 +8,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,7 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $avatar
  * @property string $phone
  * @property int $role_id
- * @property int $statut
+ * @property int $status
  * @property int $is_all_warehouses
  * @property int|null $wallet_id
  * @property int|null $default_client_id
@@ -75,18 +76,19 @@ class User extends Authenticatable
     use Notifiable;
     use HasApiTokens;
     use HasAdvancedFilter;
+    use HasFactory;
 
     /** @var string[] */
     public $orderable = [
         'id', 'name', 'email', 'password', 'avatar',
-        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
 
     /** @var string[] */
     public $filterable = [
         'id', 'name', 'email', 'password', 'avatar',
-        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];
 
@@ -97,7 +99,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id', 'name', 'email', 'password', 'avatar',
-        'phone', 'role_id', 'statut', 'is_all_warehouses',
+        'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];
 

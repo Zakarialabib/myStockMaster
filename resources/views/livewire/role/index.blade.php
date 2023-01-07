@@ -90,7 +90,7 @@
             {{ $roles->links() }}
         </div>
     </div>
-    @if (null !== $editModal)
+    @if ($editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Role') }}

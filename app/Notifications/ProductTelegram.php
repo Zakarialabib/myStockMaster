@@ -41,7 +41,7 @@ class ProductTelegram extends Notification
     {
         return TelegramMessage::create()
             ->to($this->telegramChannel)
-            ->content("Check out our new product: $this->productName for $$this->productPrice")
+            ->content("Check out our new product: $this->productName for $this->productPrice")
             ->file("/$this->productImage", 'photo');
     }
 

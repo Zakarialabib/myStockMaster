@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Role;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -17,6 +18,7 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $role;
@@ -29,19 +31,6 @@ class Index extends Component
     public $createModal = false;
 
     public $editModal = false;
-
-    public int $perPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     public array $listsForFields = [];
 
@@ -57,26 +46,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     protected function rules(): array
     {

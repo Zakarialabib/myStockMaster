@@ -156,7 +156,7 @@
 
 
     {{-- Show Purchase --}}
-    @if (null !== $showModal)
+    @if ($showModal)
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 <div class="w-full flex">

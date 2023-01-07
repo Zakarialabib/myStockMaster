@@ -36,8 +36,8 @@ class SaleMail extends Mailable
     public function build()
     {
         return $this->subject('Sale Details')
-            ->markdown('emails.sale')
-            ->attachData($this->pdf, 'Sale_'.$this->sale['Ref'].'.pdf', [
+            ->markdown('emails.saleMail')
+            ->attachData($this->pdf, 'Sale_'.$this->sale->reference.'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->sale);

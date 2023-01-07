@@ -28,7 +28,8 @@ class Livesearch extends Component
         'searchQuery' => [
             'except' => '',
             'as'     => 'q',
-        ], ];
+        ],
+    ];
 
     public function updatedSearchQuery(): void
     {

@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Payment')}}_{{$payment['Ref']}}</title>
+      <title>{{__('Payment')}}_{{$payment['reference']}}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -15,10 +15,10 @@
          </div>
          <div id="company">
             <div><strong> Date: </strong>{{$payment['date']}}</div>
-            <div><strong> Number: </strong> {{$payment['Ref']}}</div>
+            <div><strong> Number: </strong> {{$payment['reference']}}</div>
          </div>
          <div id="Title-heading">
-           Paiement  : {{$payment['Ref']}}
+           Paiement  : {{$payment['reference']}}
          </div>
          </div>
       </header>
@@ -53,10 +53,10 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
-                           <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
+                           <div id="comp">{{settings()->company_name}}</div>
+                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
+                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>

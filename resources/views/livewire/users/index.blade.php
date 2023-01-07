@@ -131,7 +131,7 @@
         </div>
     </div>
 
-    @if (null !== $showModal)
+    @if ($showModal)
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 {{ __('Show User') }} - {{ $user->name }}
@@ -185,7 +185,7 @@
         </x-modal>
     @endif
 
-    @if (null !== $editModal)
+    @if ($editModal)
         <x-modal wire:model="editModal">
             <x-slot name="title">
                 {{ __('Edit User') }}
@@ -214,7 +214,7 @@
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="role" id="role" required>
                                 <option value="" selected disabled>{{ __('Select Role') }}</option>
-                              
+
                             </select>
                         </div>
 
@@ -269,8 +269,7 @@
                         </x-accordion>
 
                         <div class="w-full px-3">
-                            <x-button primary type="submit" class="w-full text-center"
-                                wire:loading.attr="disabled">
+                            <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                                 {{ __('Update') }}
                             </x-button>
                         </div>
@@ -279,8 +278,6 @@
             </x-slot>
         </x-modal>
     @endif
-
-    <livewire:users.create />
 
 </div>
 

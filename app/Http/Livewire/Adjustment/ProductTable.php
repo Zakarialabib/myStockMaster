@@ -43,7 +43,7 @@ class ProductTable extends Component
                 if (in_array($product, array_map(function ($adjustment) {
                     return $adjustment['product'];
                 }, $this->products))) {
-                    $this->alert('error', 'Product already added');
+                    $this->alert('error', __('Product already added'));
 
                     return;
                 }
@@ -51,14 +51,14 @@ class ProductTable extends Component
                 break;
             case false:
                 if (in_array($product, $this->products)) {
-                    $this->alert('error', 'Already exists in the product list!');
+                    $this->alert('error', __('Already exists in the product list!'));
 
                     return;
                 }
 
                 break;
             default:
-                $this->alert('error', 'Something went wrong!');
+                $this->alert('error', __('Something went wrong!'));
 
                 return;
         }

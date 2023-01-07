@@ -94,7 +94,7 @@
         {{ $warehouses->links() }}
     </div>
 
-    @if (null !== $editModal)
+    @if ($editModal)
         <x-modal wire:model="editModal">
             <x-slot name="title">
                 {{ __('Edit Warehouse') }}

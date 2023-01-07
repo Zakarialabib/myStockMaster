@@ -200,13 +200,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');
 
     //Users
-    Route::resource('users', UsersController::class);
+    Route::get('users', UsersController::class)->name('users.index');
 
     //Roles
-    Route::resource('roles', RoleController::class)->except(['show']);
+    Route::get('roles', RoleController::class)->name('roles.index');
 
     // Permissions
-    Route::resource('permissions', PermissionController::class, ['except' => ['store', 'update', 'destroy']]);
+    Route::get('permissions', PermissionController::class)->name('permissions.index');
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
@@ -219,5 +219,4 @@ Route::group(['middleware' => 'auth'], function () {
 
     //General Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::patch('/settings', [SettingController::class, 'update'])->name('settings.update');
 });

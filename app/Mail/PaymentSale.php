@@ -36,8 +36,8 @@ class PaymentSale extends Mailable
     public function build()
     {
         return $this->subject('PAYMENT RECEIPT')
-            ->markdown('emails.paymentSale')
-            ->attachData($this->pdf, 'PaymentSale_'.$this->invoice['Ref'].'.pdf', [
+            ->markdown('emails.paymentSaleMail')
+            ->attachData($this->pdf, 'PaymentSale_'.$this->invoice['reference'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
             ->with('data', $this->invoice);

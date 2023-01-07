@@ -161,7 +161,7 @@
     </div>
 
     {{-- Show SaleReturn --}}
-    @if (null !== $showModal)
+    @if ($showModal)
         <div>
             <x-modal wire:model="showModal">
                 <x-slot name="title">
@@ -295,7 +295,7 @@
                                                                 {{ format_currency($this->salereturn->discount_amount) }}
                                                             </td>
                                                         </tr>
-                                                        @if()
+                                                        @if( settings()->show_tax == true )
                                                         <tr>
                                                             <td class="left"><strong>{{ __('Tax') }}
                                                                     ({{ $this->salereturn->tax_percentage }}%)</strong>
@@ -304,6 +304,7 @@
                                                                 {{ format_currency($this->salereturn->tax_amount) }}
                                                             </td>
                                                         </tr>
+                                                        @endif
                                                         @if ( settings()->show_shipping == true )
                                                         <tr>
                                                             <td class="left"><strong>{{ __('Shipping') }}</strong>

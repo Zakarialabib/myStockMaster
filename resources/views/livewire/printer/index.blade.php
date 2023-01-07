@@ -150,7 +150,7 @@
             </div>
         </x-slot>
     </x-modal>
-    @if (null !== $editModal)
+    @if ($editModal)
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit printer') }}

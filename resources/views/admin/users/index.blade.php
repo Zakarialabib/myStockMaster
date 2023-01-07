@@ -49,9 +49,10 @@
 
 <x-app-layout>
     <x-card>
-
         <div>
             <livewire:users.index />
+            
+            <livewire:users.create />
         </div>
     </x-card>
 </x-app-layout>

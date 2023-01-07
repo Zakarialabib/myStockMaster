@@ -51,11 +51,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
+                           <div id="comp">{{settings()->company_name}}</div>
                            <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
+                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
+                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -79,8 +79,8 @@
                <tbody>
                   @foreach ($purchases as $purchase)
                   <tr>
-                     <td>{{$purchase['date']}} </td>
-                     <td>{{$purchase['Ref']}}</td>
+                     <td>{{$purchase->date}} </td>
+                     <td>{{$purchase->reference}}</td>
                      <td>{{$symbol}} {{$purchase['paid_amount']}} </td>
                      <td>{{$symbol}} {{$purchase['due']}} </td>
                      <td>{{$purchase['payment_status']}} </td>

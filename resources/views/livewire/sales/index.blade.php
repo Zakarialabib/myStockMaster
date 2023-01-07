@@ -177,7 +177,7 @@
     </div>
 
     {{-- Show Sale --}}
-    @if (null !== $showModal)
+    @if ($showModal)
         <div>
             <x-modal wire:model="showModal">
                 <x-slot name="title">

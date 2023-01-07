@@ -6,7 +6,8 @@ namespace App\Http\Livewire\Language;
 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use File, App;
+use File;
+use App;
 
 class Create extends Component
 {

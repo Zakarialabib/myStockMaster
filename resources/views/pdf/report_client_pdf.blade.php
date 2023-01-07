@@ -12,7 +12,7 @@
 <body>
     <header class="clearfix">
         <div id="logo">
-            <img src="{{ asset('/images/' . $setting['logo']) }}">
+            <img src="{{ asset('images/logo.png') }}">
         </div>
 
         <div id="Title-heading">
@@ -57,10 +57,10 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div id="comp">{{ $setting['CompanyName'] }}</div>
+                                <div id="comp">{{ settings()->company_name }}</div>
                                 <div><strong>{{ __('Tax Number') }}:</strong> {{ $setting['CompanyTaxNumber'] }}</div>
-                                <div><strong>{{ __('Address') }}:</strong> {{ $setting['CompanyAdress'] }}</div>
-                                <div><strong>{{ __('Phone') }}:</strong> {{ $setting['CompanyPhone'] }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -83,9 +83,9 @@
                 <tbody>
                     @foreach ($sales as $sale)
                         <tr>
-                            <td>{{ $sale['date'] }} </td>
-                            <td>{{ $$sale['reference'] }}</td>
-                            <td>{{ $symbol }} {{ $sale['paid_amount'] }} </td>
+                            <td>{{ $sale->date }} </td>
+                            <td>{{ $$sale->reference }}</td>
+                            <td>{{ $symbol }} {{ $sale->paid_amount }} </td>
                             <td>{{ $sale['payment_status'] }} </td>
                         </tr>
                     @endforeach

@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Categories;
 use App\Http\Livewire\WithSorting;
 use App\Imports\CategoriesImport;
 use App\Models\Category;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -20,6 +21,7 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
     use WithFileUploads;
+    use Datatable;
 
     /** @var mixed */
     public $category;
@@ -31,11 +33,9 @@ class Index extends Component
 
     /** @var string[] */
     public $listeners = [
-        'importModal', 'showModal', 'editModal',
+        'importModal', 'showModal',
         'refreshIndex' => '$refresh',
     ];
-
-    public int $perPage;
 
     public $refreshIndex;
 
@@ -44,21 +44,6 @@ class Index extends Component
 
     /** @var bool */
     public $importModal = false;
-
-    /** @var bool */
-    public $editModal = false;
-
-    /** @var array */
-    public $orderable;
-
-    /** @var string */
-    public $search = '';
-
-    /** @var array */
-    public $selected = [];
-
-    /** @var array */
-    public $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [
@@ -73,33 +58,7 @@ class Index extends Component
         ],
     ];
 
-    protected function rules(): array
-    {
-        return
-            [
-                'category.name' => 'required|string|max:255',
-            ];
-    }
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
+  
 
     public function mount(): void
     {
@@ -125,31 +84,6 @@ class Index extends Component
         return view('livewire.categories.index', compact('categories'));
     }
 
-    public function editModal(Category $category): void
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->category = Category::find($category->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->validate();
-
-        $this->category->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Category updated successfully.'));
-    }
 
     public function showModal(Category $category): void
     {

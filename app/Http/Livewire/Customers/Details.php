@@ -8,6 +8,7 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleReturn;
+use App\Traits\Datatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,23 +21,9 @@ class Details extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
-
-    public int $perPage;
-
-    public $selectPage;
+    use Datatable;
 
     public $customer_id;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [

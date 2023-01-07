@@ -15,6 +15,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Enums\PaymentStatus;
+use App\Traits\Datatable;
 
 class Index extends Component
 {
@@ -22,12 +23,9 @@ class Index extends Component
     use WithSorting;
     use WithFileUploads;
     use LivewireAlert;
+    use Datatable;
 
     public $purchasereturn;
-
-    public int $perPage;
-
-    public $selectPage;
 
     /** @var string[] */
     public $listeners = [
@@ -36,24 +34,13 @@ class Index extends Component
         'refreshIndex' => '$refresh',
     ];
 
-    public $showModal;
+    public $showModal = false;
 
     public $createModal;
 
-    public $editModal;
+    public $editModal = false;
 
     public $purchase_id;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [
@@ -67,26 +54,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public array $rules = [
         'supplier_id'         => 'required|numeric',

@@ -22,7 +22,7 @@ class PurchasesReturnController extends Controller
     {
         abort_if(Gate::denies('access_purchase_returns'), 403);
 
-        return view('admin.purchasereturn.index');
+        return view('admin.purchasesreturn.index');
     }
 
     public function create()
@@ -31,7 +31,7 @@ class PurchasesReturnController extends Controller
 
         Cart::instance('purchase_return')->destroy();
 
-        return view('admin.purchasereturn.create');
+        return view('admin.purchasesreturn.create');
     }
 
     public function store(StorePurchaseReturnRequest $request)
@@ -111,7 +111,7 @@ class PurchasesReturnController extends Controller
 
         $supplier = Supplier::findOrFail($purchase_return->supplier_id);
 
-        return view('admin.purchasereturn.show', compact('purchase_return', 'supplier'));
+        return view('admin.purchasesreturn.show', compact('purchase_return', 'supplier'));
     }
 
     public function edit(PurchaseReturn $purchase_return)
@@ -143,7 +143,7 @@ class PurchasesReturnController extends Controller
             ]);
         }
 
-        return view('admin.purchasereturn.edit', compact('purchase_return'));
+        return view('admin.purchasesreturn.edit', compact('purchase_return'));
     }
 
     public function update(UpdatePurchaseReturnRequest $request, PurchaseReturn $purchase_return)

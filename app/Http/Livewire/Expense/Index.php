@@ -8,6 +8,7 @@ use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Traits\Datatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -21,13 +22,10 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $expense;
-
-    public int $perPage;
-
-    public $selectPage;
 
     /** @var string[] */
     public $listeners = [
@@ -39,24 +37,9 @@ class Index extends Component
 
     public $editModal = false;
 
-    public $refreshIndex;
-
-    public $export;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
     public bool $showFilters = false;
 
     public array $listsForFields = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [
@@ -71,26 +54,6 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
-
     public array $rules = [
         'expense.reference'    => 'required|string|max:255',
         'expense.category_id'  => 'required|integer|exists:expense_categories,id',
@@ -103,7 +66,6 @@ class Index extends Component
 
     public function mount(): void
     {
-        $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;

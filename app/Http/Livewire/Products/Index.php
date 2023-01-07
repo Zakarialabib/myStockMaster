@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\View\Factory;
@@ -28,41 +29,22 @@ class Index extends Component
     use LivewireAlert;
     use WithPagination;
     use WithFileUploads;
+    use Datatable;
 
     /** @var mixed */
     public $product;
 
     /** @var string[] */
     public $listeners = [
-        'showModal', 'editModal',
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
     ];
 
-    public int $perPage;
-
-    public $showModal = false;
-
     public $importModal = false;
 
-    public $editModal = false;
-
-    public $refreshIndex;
-
     public $sendTelegram;
-    /** @var array */
-    public array $orderable;
-
-    public $image;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
+    
+    public $selectAll;
 
     /** @var string[][] */
     protected $queryString = [
@@ -77,41 +59,6 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
-
-    public array $rules = [
-        'product.name'              => ['required', 'string', 'max:255'],
-        'product.code'              => ['required', 'string', 'max:255'],
-        'product.barcode_symbology' => ['required', 'string', 'max:255'],
-        'product.unit'              => ['required', 'string', 'max:255'],
-        'product.quantity'          => ['required', 'integer', 'min:1'],
-        'product.cost'              => ['required', 'numeric', 'max:2147483647'],
-        'product.price'             => ['required', 'numeric', 'max:2147483647'],
-        'product.stock_alert'       => ['required', 'integer', 'min:0'],
-        'product.order_tax'         => ['nullable', 'integer', 'min:0', 'max:100'],
-        'product.tax_type'          => ['nullable', 'integer'],
-        'product.note'              => ['nullable', 'string', 'max:1000'],
-        'product.category_id'       => ['required', 'integer'],
-        'product.brand_id'          => ['nullable', 'integer'],
-    ];
 
     public function mount(): void
     {
@@ -159,13 +106,22 @@ class Index extends Component
         return view('livewire.products.index', compact('products'));
     }
 
-    public function showModal(Product $product): void
+    public function selectAll()
     {
-        abort_if(Gate::denies('product_access'), 403);
+        if (count(array_intersect($this->selected, Product::pluck('id')->toArray())) == count(Product::pluck('id')->toArray())) {
+            $this->selected = [];
+        } else {
+            $this->selected = Product::pluck('id')->toArray();
+        }
+    }
 
-        $this->product = Product::find($product->id);
-
-        $this->showModal = true;
+    public function selectPage()
+    {
+        if (count(array_intersect($this->selected, Product::paginate($this->perPage)->pluck('id')->toArray())) == count(Product::paginate($this->perPage)->pluck('id')->toArray())) {
+            $this->selected = [];
+        } else {
+            $this->selected = $productIds;
+        }
     }
 
     public function sendTelegram($product): void
@@ -181,36 +137,6 @@ class Index extends Component
         $productImage = $this->product->image;
 
         $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice, $productImage));
-    }
-
-    public function editModal(Product $product): void
-    {
-        abort_if(Gate::denies('product_update'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->product = Product::find($product);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        if ($this->image) {
-            $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
-            $this->image->storeAs('products', $imageName);
-            $this->product->image = $imageName;
-        }
-
-        $this->product->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Product updated successfully.'));
     }
 
     public function importModal(): void

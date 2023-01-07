@@ -29,7 +29,7 @@
                     <div class="p-4">
                         <div class="flex flex-row mb-4">
                             <div class="md-w-1/4 sm:w-full px-2 mb-2">
-                                <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Company Info')}}:</h5>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 @if (settings()->show_email == true)
@@ -39,7 +39,7 @@
                             </div>
 
                             <div class="md-w-1/4 sm:w-full px-2 mb-2">
-                                <h5 class="mb-2 border-bottom pb-2">Customer Info:</h5>
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Customer Info')}}:</h5>
                                 <div><strong>{{ $customer->name }}</strong></div>
                                 <div>{{ $customer->address }}</div>
                                 <div>{{__('Email')}}: {{ $customer->email }}</div>

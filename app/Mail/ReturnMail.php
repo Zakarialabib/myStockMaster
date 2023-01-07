@@ -13,7 +13,7 @@ class ReturnMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $Return_Mail;
+    public $returnMail;
 
     public $pdf;
 
@@ -22,9 +22,9 @@ class ReturnMail extends Mailable
      *
      * @return void
      */
-    public function __construct($Return_Mail, $pdf)
+    public function __construct($returnMail, $pdf)
     {
-        $this->Return_Mail = $Return_Mail;
+        $this->returnMail = $returnMail;
         $this->pdf = $pdf;
     }
 
@@ -36,10 +36,10 @@ class ReturnMail extends Mailable
     public function build()
     {
         return $this->subject('Return Details')
-            ->markdown('emails.ReturnMail')
-            ->attachData($this->pdf, 'Return_'.$this->Return_Mail['Ref'].'.pdf', [
+            ->markdown('emails.returnMail')
+            ->attachData($this->pdf, 'Return_'.$this->returnMail['reference'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
-            ->with('data', $this->Return_Mail);
+            ->with('data', $this->returnMail);
     }
 }

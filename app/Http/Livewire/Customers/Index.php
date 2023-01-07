@@ -8,6 +8,7 @@ use App\Exports\CustomerExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
+use App\Traits\Datatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -23,15 +24,12 @@ class Index extends Component
     use WithSorting;
     use LivewireAlert;
     use WithFileUploads;
+    use Datatable;
 
     /** @var mixed */
     public $customer;
 
     public $file;
-
-    public int $perPage;
-
-    public $selectPage;
 
     /** @var string[] */
     public $listeners = [
@@ -43,20 +41,7 @@ class Index extends Component
 
     public $editModal = false;
 
-    public $refreshIndex;
-
     public $import;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     /** @var string[][] */
     protected $queryString = [
@@ -71,21 +56,6 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
-
     public array $rules = [
         'customer.name'       => 'required|string|max:255',
         'customer.email'      => 'nullable|max:255',
@@ -98,7 +68,6 @@ class Index extends Component
 
     public function mount(): void
     {
-        $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->perPage = 100;

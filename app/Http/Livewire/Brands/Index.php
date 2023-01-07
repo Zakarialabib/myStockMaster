@@ -9,13 +9,13 @@ use App\Models\Brand;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Livewire\WithSorting;
+use App\Traits\Datatable;
 
 class Index extends Component
 {
@@ -23,6 +23,7 @@ class Index extends Component
     use LivewireAlert;
     use WithFileUploads;
     use WithSorting;
+    use Datatable;
 
     /** @var mixed */
     public $brand;
@@ -30,16 +31,12 @@ class Index extends Component
     /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal', 'importModal',
+        'showModal', 'importModal',
     ];
-
-    public int $perPage;
 
     public $image;
 
     public $file;
-
-    public $refreshIndex;
 
     /** @var bool */
     public $showModal = false;
@@ -47,21 +44,7 @@ class Index extends Component
     /** @var bool */
     public $importModal = false;
 
-    /** @var bool */
-    public $editModal = false;
-
-    public $selectPage = false;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
+    public $selectAll;
 
     /** @var string[][] */
     protected $queryString = [
@@ -76,29 +59,22 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'brand.name'        => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
-    ];
-
-    public function getSelectedCountProperty(): int
+    public function selectAll()
     {
-        return count($this->selected);
+        if (count(array_intersect($this->selected, Brand::pluck('id')->toArray())) == count(Brand::pluck('id')->toArray())) {
+            $this->selected = [];
+        } else {
+            $this->selected = Brand::pluck('id')->toArray();
+        }
     }
 
-    public function updatingSearch(): void
+    public function selectPage()
     {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
+        if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) == count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
+            $this->selected = [];
+        } else {
+            $this->selected = $brandIds;
+        }
     }
 
     public function mount(): void
@@ -125,39 +101,7 @@ class Index extends Component
         return view('livewire.brands.index', compact('brands'));
     }
 
-    public function editModal(Brand $brand): void
-    {
-        abort_if(Gate::denies('brand_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->brand = Brand::find($brand->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        abort_if(Gate::denies('brand_edit'), 403);
-
-        $this->validate();
-        // upload image if it does or doesn't exist
-
-        if ($this->image) {
-            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
-            $this->image->storeAs('brands', $imageName);
-            $this->brand->image = $imageName;
-        }
-
-        $this->brand->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Brand updated successfully.'));
-    }
-
+    
     public function showModal(Brand $brand): void
     {
         abort_if(Gate::denies('brand_show'), 403);

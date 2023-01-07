@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Purchase')}} _{{$purchase['Ref']}}</title>
+      <title>{{__('Purchase')}} _{{$purchase->reference}}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -14,11 +14,11 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$purchase['date']}}</div>
-            <div><strong> Numéro: </strong> {{$purchase['Ref']}}</div>
+            <div><strong> Date: </strong>{{$purchase->date}}</div>
+            <div><strong> Numéro: </strong> {{$purchase->reference}}</div>
          </div>
          <div id="Title-heading">
-             Achat  : {{$purchase['Ref']}}
+             Achat  : {{$purchase->reference}}
          </div>
          </div>
       </header>
@@ -34,7 +34,7 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$purchase['name']}}</div>
+                           <div><strong>Nom:</strong> {{$purchase->supplier->name}}</div>
                            <div><strong>ICE:</strong> {{$purchase['tax_number']}}</div>
                            <div><strong>Téle:</strong> {{$purchase['phone']}}</div>
                            <div><strong>Adresse:</strong>   {{$purchase['adress']}}</div>
@@ -54,11 +54,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
+                           <div id="comp">{{settings()->company_name}}</div>
                            <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
+                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
+                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -81,16 +81,16 @@
                   @foreach ($details as $detail)    
                   <tr>
                      <td>
-                        <span>{{$detail['code']}} ({{$detail['name']}})</span>
+                        <span>{{$detail->code}} ({{$detail->name}})</span>
                            @if($detail['is_imei'] && $detail['imei_number'] !==null)
                               <p>IMEI/SN : {{$detail['imei_number']}}</p>
                            @endif
                      </td>
                      <td>{{$detail['cost']}} </td>
-                     <td>{{$detail['quantity']}}/{{$detail['unit_purchase']}}</td>
+                     <td>{{$detail->quantity}}/{{$detail['unit_purchase']}}</td>
                      <td>{{$detail['DiscountNet']}} </td>
                      <td>{{$detail['taxe']}} </td>
-                     <td>{{$detail['total']}} </td>
+                     <td>{{$detail->total_amount}} </td>
                   </tr>
                   @endforeach
                </tbody>

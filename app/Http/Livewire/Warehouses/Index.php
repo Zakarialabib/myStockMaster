@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Warehouses;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\Warehouse;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -20,11 +21,10 @@ class Index extends Component
     use WithSorting;
     use WithFileUploads;
     use LivewireAlert;
+    use Datatable;
 
     /** @var mixed */
     public $warehouse;
-
-    public int $perPage;
 
     /** @var string[] */
     public $listeners = [
@@ -39,19 +39,6 @@ class Index extends Component
 
     /** @var bool */
     public $editModal = false;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
-
-    public $refreshIndex;
 
     /** @var string[][] */
     protected $queryString = [
@@ -65,21 +52,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
 
     public array $rules = [
         'warehouse.name'  => ['string', 'required'],
@@ -101,7 +73,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_access'), 403);
 
-        $query = Warehouse::advancedFilter([
+        $query = Warehouse::with('products')->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

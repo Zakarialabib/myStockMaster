@@ -14,13 +14,13 @@
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.lazy="brand.name" />
+                            wire:model.lazy="name" />
                         <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
                     <div class="xl:w-1/2 md:w-1/2 px-3">
                         <x-label for="description" :value="__('Description')" />
                         <x-input id="description" class="block mt-1 w-full" type="text" name="description"
-                            wire:model.lazy="brand.description" />
+                            wire:model.lazy="description" />
                         <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
                     </div>
                     <div class="w-full py-2 px-3">

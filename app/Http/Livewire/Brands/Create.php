@@ -25,18 +25,23 @@ class Create extends Component
 
     public $image;
 
+    public $name;
+
+    public $description;
+
     /** @var string[] */
     public $listeners = ['createBrand'];
-
-    public array $rules = [
-        'brand.name'        => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
-    ];
-
-    public function mount(Brand $brand)
+    
+    public function updated($propertyName): void
     {
-        $this->brand = $brand;
+        $this->validateOnly($propertyName);
     }
+
+    protected array $rules = [
+            'name'        => 'required|min:3|max:255',
+            'description' => 'nullable',
+            'image' => 'nullable|image|max:1024',
+    ];
 
     public function render(): View|Factory
     {
@@ -45,28 +50,30 @@ class Create extends Component
         return view('livewire.brands.create');
     }
 
+    public function hydrate()
+    {
+        // $this->image = $imageName;
+    }
+
     public function createBrand(): void
     {
-        // strange behavior with reset()
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->reset();
 
         $this->createBrand = true;
     }
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
+        // image not working with realtime validation
         if ($this->image) {
-            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
             $this->image->storeAs('brands', $imageName);
-            $this->brand->image = $imageName;
+            $this->image = $imageName;
         }
-
-        $this->brand->save();
+        
+        Brand::create($validatedData);
 
         $this->emit('refreshIndex');
 

@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Sales\Payment;
 use App\Http\Livewire\WithSorting;
 use App\Models\Sale;
 use App\Models\SalePayment;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -17,6 +18,7 @@ class Index extends Component
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     public $sale;
 
@@ -26,22 +28,7 @@ class Index extends Component
         'refreshIndex' => '$refresh',
     ];
 
-    public $refreshIndex;
-
     public $showPayments;
-
-    public int $perPage;
-    /** @var array */
-    public array $orderable;
-
-    /** @var string */
-    public string $search = '';
-
-    /** @var array */
-    public array $selected = [];
-
-    /** @var array */
-    public array $paginationOptions;
 
     public array $listsForFields = [];
 
@@ -59,26 +46,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty(): int
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage(): void
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected(): void
-    {
-        $this->selected = [];
-    }
 
     public function mount($sale)
     {

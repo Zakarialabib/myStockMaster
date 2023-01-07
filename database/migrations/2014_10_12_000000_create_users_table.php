@@ -23,7 +23,7 @@ return new class () extends Migration {
             $table->string('avatar')->nullable();
             $table->string('phone', 192)->nullable();
             $table->integer('role_id')->default(1);
-            $table->boolean('statut')->default(1);
+            $table->boolean('status')->default(1);
             $table->boolean('is_all_warehouses')->default(0);
             $table->integer('wallet_id')->nullable();
             $table->integer('default_client_id')->nullable();
