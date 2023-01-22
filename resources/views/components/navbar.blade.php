@@ -22,8 +22,8 @@
         <x-language-dropdown />
 
         @can('show_notifications')
-                <div>
-                    <x-dropdown align="right" width="56">
+                <div class="md:flex hidden flex-wrap items-center">
+                    <x-dropdown align="left" width="48">
                         <x-slot name="trigger" class="inline-flex">
                             <x-button type="button" iconOnly secondary srText="Open notifications">
                                 @php
