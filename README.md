@@ -1,4 +1,4 @@
-Mystock is a Laravel-based inventory management system that offers an easy and straightforward way to keep track of your inventory, sales, purchases, and more. It features a user-friendly dashboard, intuitive reports, and a wide range of features to help you manage and grow your business.
+7Mystock is a Laravel-based inventory management system that offers an easy and straightforward way to keep track of your inventory, sales, purchases, and more. It features a user-friendly dashboard, intuitive reports, and a wide range of features to help you manage and grow your business.
 
 Features:
 - Dashboard with key insights and metrics
@@ -41,14 +41,14 @@ Mystock is built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring 
 - [x] Calculator dashboard
 - [x] Backup - Local
 - [x] Backup GDrive & others
-- [] Print Barcode -- problem with barcode generator
+- [x] Print Barcode -- problem with barcode generator
 - [ ] Printers
-- [ ] User Profile 
+- [x] User Profile 
 - [ ] Notifications
 - [ ] SMS Notifications
 - [ ] Email Templates
-- [ ] Import/Export 
-- [ ] Multi language 
+- [x] Import/Export 
+- [x] Multi language 
 - [ ] Cash register (pos , sales, expenses)
 
 
