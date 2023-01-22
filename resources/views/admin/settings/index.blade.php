@@ -43,10 +43,9 @@
 
 <x-app-layout>
     <div class="w-full px-2">
-
         <livewire:settings.index />
     </div>
-
+    
     <div class="w-full px-2">
         @if (session()->has('settings_smtp_message'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

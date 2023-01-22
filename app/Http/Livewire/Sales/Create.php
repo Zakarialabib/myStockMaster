@@ -11,7 +11,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use Dompdf\Dompdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -189,21 +189,16 @@ class Create extends Component
 
         $this->alert('success', __('Sale created successfully!'));
         
-        if ($sale->customer->email) {
-            Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));
-        }
+        // if ($sale->customer->email) {
+        //     Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));
+        // }
+        
 
     }
-    // public function salePdf($sale)
-    // {
-    //     $pdf = PDF::loadView('pdf.salePdf', compact('sale'));
-    //     return $pdf->download("sale-{$sale->id}.pdf");
-    // }
-
+   
     public function salePdf($sale)
     {
-        $pdf = new Dompdf();
-        $pdf->loadHtml($this->renderView('pdf.salePdf', ['sale' => $sale]));
+        $pdf = Pdf::loadView('pdf.salePdf', ['sale' => $sale]);
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
 

@@ -54,7 +54,7 @@
                         <tr>
                             <td>
                                 <div id="comp">{{ settings()->company_name }}</div>
-                                <div><strong>{{ __('Tax number') }}</strong> {{ $setting['CompanyTaxNumber'] }}</div>
+                                <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
                                 <div><strong>{{ __('Adresse') }}:</strong> {{ settings()->company_address }}</div>
                                 <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
                             </td>

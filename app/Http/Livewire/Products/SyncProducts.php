@@ -54,7 +54,7 @@ class SyncProducts extends Component
 
         // Retrieve the products from the user's e-commerce store
         $products = $client->get('products');
-        // dd($products);
+
         // Compare the products in the user's e-commerce store with the products in your app
         $missing_products = array_diff($products, $app_products);
 

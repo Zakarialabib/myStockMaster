@@ -20,6 +20,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use App\Enums\PaymentStatus;
 use App\Traits\Datatable;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Index extends Component
 {
@@ -272,4 +273,5 @@ class Index extends Component
     {
         // open whatsapp url in another tab
     }
+
 }

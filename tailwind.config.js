@@ -603,8 +603,15 @@ module.exports = {
     },
 
     plugins: [
-        require('@tailwindcss/forms',
+        require('@tailwindcss/forms'),
         require('tailwindcss-rtl'),
+        require('tailwindcss-plugins/pagination')({
+        color: 'purple-dark',
+        linkFirst: 'mr-6 border rounded',
+        linkSecond: 'rounded-l border-l',
+        linkBeforeLast: 'rounded-r border-r',
+        linkLast: 'ml-6 border rounded',
+        }),
         require('tailwindcss-tables')({
           cellPadding: '.75rem',  // default: .75rem
           tableBorderColor: '#dee2e6',  // default: #dee2e6
@@ -613,5 +620,5 @@ module.exports = {
           tableBodyBorder: true, // default: true. If set to false, borders for the table body will be removed. Only works for normal tables (i.e. does not apply to .table-bordered)
           verticalAlign: 'top', // default: 'top'
         }),
-      )]
+      ]
 };

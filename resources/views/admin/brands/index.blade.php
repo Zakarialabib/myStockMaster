@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="flex space-x-2">
-                <x-dropdown align="right" class="w-auto mr-2">
+                <x-dropdown align="right" width="48" class="w-auto mr-2">
                     <x-slot name="trigger" class="inline-flex">
                         <x-button secondary type="button" class="text-white flex items-center">
                             <i class="fas fa-angle-double-down w-4 h-4"></i>

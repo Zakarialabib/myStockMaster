@@ -1,14 +1,22 @@
 <div>
-    <livewire:livesearch />
     <div>
-        <div class="w-full py-2 px-4">
+        <div class="w-full px-2">
             <div>
                 <x-validation-errors class="mb-4" :errors="$errors" />
+                @php
+                $default_client = \App\Models\Customer::find(settings()->default_client_id);
+                @endphp
 
                 <div class="w-full relative inline-flex">
-                    <x-select-list
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->listsForFields['customers']" />
+                    <select required id="customer_id" name="customer_id" wire:model="customer_id" 
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                    @if(settings()->default_client_id == true)
+                    <option value="{{ $default_client->id }}" selected>{{ $default_client->name }}</option>
+                    @endif
+                    @foreach ($this->customers as $customer)
+                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                    @endforeach
+                    </select>
                 </div>
 
                 <div>
@@ -31,9 +39,9 @@
                                             {{-- @include('livewire.includes.product-cart-modal') --}}
                                         </x-table.td>
 
-                                        <x-table.td>
+                                        <x-table.td class="flex justify-center flex-col">
                                             {{ format_currency($cart_item->price) }}
-                                            {{-- @include('livewire.includes.product-cart-price') --}}
+                                            @include('livewire.includes.product-cart-price')
                                         </x-table.td>
 
                                         <x-table.td>
@@ -65,16 +73,20 @@
                 <div class="w-full">
                     <div class="w-full mb-5 p-0">
                         <x-table-responsive>
+                            @if (settings()->show_order_tax == true)
                             <x-table.tr>
                                 <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
                                 <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}
                                 </x-table.td>
                             </x-table.tr>
+                            @endif
+                            @if (settings()->show_discount == true)
                             <x-table.tr>
                                 <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
                                 <x-table.td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
                                 </x-table.td>
                             </x-table.tr>
+                            @endif
                             <x-table.tr>
                                 <x-table.th>{{ __('Shipping') }}</x-table.th>
                                 <input type="hidden" value="{{ $shipping }}" name="shipping_amount">

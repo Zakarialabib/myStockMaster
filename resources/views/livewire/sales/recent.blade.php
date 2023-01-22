@@ -181,7 +181,7 @@
                                                         <strong>{{ settings()->sale_prefix }} - {{ $sale->reference }}</strong>
                                                     </div>
                                                     <div>{{ __('Date') }}:
-                                                        {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}
+                                                        {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}
                                                     </div>
                                                     <div>
                                                         {{ __('Status') }} :

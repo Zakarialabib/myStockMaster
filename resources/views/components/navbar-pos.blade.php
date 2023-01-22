@@ -5,23 +5,7 @@
             <img class="w-14 h-auto" src="{{ asset('images/logo.png') }}" alt="Site Logo">
             <span class="sr-only">{{ config('settings.site_title') }}</span>
         </a>
-        <div class="md:hidden">
-            <x-button primary href="{{ route('home') }}">
-                {{ __('Dashboard') }}
-            </x-button>
-
-            <x-button primary type="button" onclick="Livewire.emit('createProduct')">
-                {{ __('Create Product') }}
-            </x-button>
-
-            <x-button primary type="button" onclick="Livewire.emit('createCustomer')">
-                {{ __('Create Customer') }}
-            </x-button>
-
-            <x-button primary type="button" onclick="Livewire.emit('recentSales')">
-                {{ __('Recent Sales') }}
-            </x-button>
-        </div>
+       
         <div class="md:flex">
             <x-dropdown align="right" width="56">
                 <x-slot name="trigger">

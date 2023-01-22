@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Backup;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -15,27 +16,39 @@ class Index extends Component
 
     public $data = [];
 
+    protected $listeners = [
+        'deleteModel', 'generate',
+        'refreshTable' => '$refresh',
+    ];
+
+
     public function render()
     {
-        // abort_if(Gate::denies('access_backup'), 403);
 
-        foreach (glob(storage_path().'/public/backup/*') as $filename) {
-            $item['id'] = $id += 1;
-            $item['date'] = basename($filename);
-            $size = $this->formatSizeUnits(filesize($filename));
-            $item['size'] = $size;
-
-            $data[] = $item;
-        }
-
-        return view('livewire.backup.index');
+        $files = Storage::allFiles( env("APP_NAME") );
+        return view('livewire.backup.index',[
+            "backups" => $files,
+        ]);
     }
 
     public function generate()
     {
-        Artisan::call('backup:run');
+        try{
 
-        $this->alert('success', __('Backup Generated with success.'));
+            Artisan::call("backup:run --only-db");
+            $this->alert('success', __('Backup Generated with success.'));
+
+        }catch(Exception $error){
+            $this->alert('success', __('Database backup failed.'));
+
+        }
+
+        
+    }
+
+    public function downloadBackup($file)
+    {
+        return Storage::download($file);
     }
 
     public function delete($name)
@@ -49,22 +62,5 @@ class Index extends Component
         }
     }
 
-    public function formatSizeUnits($bytes)
-    {
-        if ($bytes >= 1073741824) {
-            $bytes = number_format($bytes / 1073741824, 2).' GB';
-        } elseif ($bytes >= 1048576) {
-            $bytes = number_format($bytes / 1048576, 2).' MB';
-        } elseif ($bytes >= 1024) {
-            $bytes = number_format($bytes / 1024, 2).' KB';
-        } elseif ($bytes > 1) {
-            $bytes = $bytes.' bytes';
-        } elseif ($bytes == 1) {
-            $bytes = $bytes.' byte';
-        } else {
-            $bytes = '0 bytes';
-        }
-
-        return $bytes;
-    }
+    
 }

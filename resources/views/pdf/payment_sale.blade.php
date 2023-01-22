@@ -83,8 +83,8 @@
          </div>
          
          <div id="signature">
-            @if($setting['is_invoice_footer'] && $setting['invoice_footer'] !==null)
-               <p>{{$setting['invoice_footer']}}</p>
+            @if (settings()->invoice_footer !== null)
+                <p>{{ settings()->invoice_footer }}</p>
             @endif
          </div>
       </main>

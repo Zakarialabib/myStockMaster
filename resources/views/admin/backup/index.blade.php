@@ -35,11 +35,6 @@
                     </a>
                 </div>
             </div>
-            <div class="flex space-x-2">
-                <x-button primary type="button" onclick="Livewire.emit('generate')">
-                    {{ __('Create Backup') }}
-                </x-button>
-            </div>
         </div>
     </section>
 @endsection

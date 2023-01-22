@@ -14,9 +14,9 @@
 
     <div class="flex items-center gap-3">
         <div class="md:flex hidden flex-wrap items-center">
-            <x-button type="button" secondary id="fullScreen" >
+            <x-button type="button" secondary id="fullScreen">
                 <i class="fa fa-expand w-4 h-4"></i>
-            </x-button >
+            </x-button>
         </div>
 
         <x-language-dropdown />
@@ -40,7 +40,7 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            
+
                             @forelse($low_quantity_products as $product)
                                 <x-dropdown-link href="#">
                                     <i class="fas fa-bell w-5 h-5" aria-hidden="true"></i>
@@ -58,68 +58,68 @@
                 </div>
             @endcan
 
-            <x-button primary :href="route('app.pos.index')" >
+            <x-button primary :href="route('app.pos.index')">
                 {{ __('POS') }}
             </x-button>
 
-        {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
+            {{-- <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
             @click="toggleTheme">
             <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-5 h-5" />
             <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-5 h-5" />
         </x-button> --}}
 
 
-        <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
-            @click="toggleRtl">
-            <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
-            <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
-        </x-button>
+            <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
+                @click="toggleRtl">
+                <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
+                <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
+            </x-button>
 
-        <ul class="flex-col md:flex-row list-none items-center md:flex">
-            <x-dropdown align="right" width="56">
-                <x-slot name="trigger">
-                    <x-button type="button" primary>
-                        {{ Auth::user()->name }}
-                    </x-button>
-                </x-slot>
+            <ul class="flex-col md:flex-row list-none items-center md:flex">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger">
+                        <x-button type="button" primary>
+                            {{ Auth::user()->name }}
+                        </x-button>
+                    </x-slot>
 
-                <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.index')">
-                        {{ __('Profile') }}
-                    </x-dropdown-link>
-                    
-                    <div class="border-t border-gray-100"></div>
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.index')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
 
-                    <x-dropdown-link :href="route('settings.index')">
-                        {{ __('Settings') }}
-                    </x-dropdown-link>
+                        <div class="border-t border-gray-100"></div>
 
-                    <div class="border-t border-gray-100"></div>
+                        <x-dropdown-link :href="route('settings.index')">
+                            {{ __('Settings') }}
+                        </x-dropdown-link>
 
-                    <x-dropdown-link >
-                        @livewire('cache')
-                    </x-dropdown-link>
-                    
+                        <div class="border-t border-gray-100"></div>
 
-                    {{-- <x-dropdown-link href="{{ route('profile.show') }}">
+                        <x-dropdown-link>
+                            @livewire('cache')
+                        </x-dropdown-link>
+
+
+                        {{-- <x-dropdown-link href="{{ route('profile.show') }}">
                         {{ __('Profile') }}
                     </x-dropdown-link> --}}
 
-                    <div class="border-t border-gray-100"></div>
+                        <div class="border-t border-gray-100"></div>
 
-                    <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <x-dropdown-link :href="route('logout')"
-                            onclick="event.preventDefault();
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-dropdown-link>
-                    </form>
-                </x-slot>
-            </x-dropdown>
-        </ul>
-    </div>
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
+            </ul>
+        </div>
 </nav>
 
 {{-- <!-- Mobile bottom bar -->
@@ -137,11 +137,11 @@
 
 
 @push('scripts')
-<script>
-
-    function toggleFullscreen(elem) {
-        elem = elem || document.documentElement;
-        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    <script>
+        function toggleFullscreen(elem) {
+            elem = elem || document.documentElement;
+            if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !
+                document.msFullscreenElement) {
                 if (elem.requestFullscreen) {
                     elem.requestFullscreen();
                 } else if (elem.msRequestFullscreen) {
@@ -152,27 +152,25 @@
                     elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
                 }
             } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
             }
         }
-    }
 
-    if(('#fullScreen').length > 0) {
-       document.getElementById('fullScreen').addEventListener('click', function() {
-           toggleFullscreen();
-        });
-    }
-   
+        if (('#fullScreen').length > 0) {
+            document.getElementById('fullScreen').addEventListener('click', function() {
+                toggleFullscreen();
+            });
+        }
 
-// });
 
-</script>
-    
+        // });
+    </script>
 @endpush

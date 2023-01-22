@@ -27,7 +27,7 @@ class ExportController extends Controller
             ->setOption('margin-left', 5)
             ->setOption('margin-right', 5);
 
-        return $pdf->stream('sale-'.$sale->reference.'.pdf');
+        return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
     public function sale($id)
@@ -40,7 +40,7 @@ class ExportController extends Controller
             'customer' => $customer,
         ])->setPaper('a4');
 
-        return $pdf->stream('sale-'.$sale->reference.'.pdf');
+        return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
     public function purchaseReturns($id)
@@ -53,7 +53,7 @@ class ExportController extends Controller
             'supplier'        => $supplier,
         ])->setPaper('a4');
 
-        return $pdf->stream('purchase-return-'.$purchaseReturn->reference.'.pdf');
+        return $pdf->stream(__('Purchase Return').$purchaseReturn->reference.'.pdf');
     }
 
     public function quotation($id)
@@ -66,7 +66,7 @@ class ExportController extends Controller
             'customer'  => $customer,
         ])->setPaper('a4');
 
-        return $pdf->stream('quotation-'.$quotation->reference.'.pdf');
+        return $pdf->stream(__('Quotation').$quotation->reference.'.pdf');
     }
 
     public function purchase($id)
@@ -79,7 +79,7 @@ class ExportController extends Controller
             'supplier' => $supplier,
         ])->setPaper('a4');
 
-        return $pdf->stream('purchase-'.$purchase->reference.'.pdf');
+        return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
     }
 
     public function saleReturns($id)
@@ -92,6 +92,6 @@ class ExportController extends Controller
             'customer'    => $customer,
         ])->setPaper('a4');
 
-        return $pdf->stream('sale-return-'.$saleReturn->reference.'.pdf');
+        return $pdf->stream(__('Sale Return').$saleReturn->reference.'.pdf');
     }
 }

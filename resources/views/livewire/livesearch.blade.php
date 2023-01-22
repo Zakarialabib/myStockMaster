@@ -1,8 +1,8 @@
 <div>
-    <div class="relative mb-6">
+    <div class="relative mb-4">
         <div class="w-full rounded-lg">
             <input type="text" wire:model="searchQuery"
-                placeholder="{{ __('Search for Products with name and code, Customers and Suppliers with names, Sales and Purchasee with refrence') }}"
+                placeholder="{{ __('Search with names and codes, or reference') }}"
                 autocomplete=""
                 class="w-full border-0 focus:ring-transparent text-gray-900 focus:outline-none py-2 mr-4 rounded-md">
         </div>
@@ -15,12 +15,20 @@
                             @foreach ($this->product as $item)
                                 <div class="mx-4">
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Name') }} :{{ $item->name }}</p>
+                                        {{ __('Name') }} <br>
+                                        {{ $item->name }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Price') }}
-                                        :{{ format_currency($item->price) }}</p>
+                                        {{ __('Price') }} <br>
+                                        {{ format_currency($item->price) }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Quantity') }} :{{ $item->quantity }}
+                                        {{ __('Price') }} <br>
+                                        {{ format_currency($item->cost) }}
+                                    </p>
+                                    <p class="font-semibold text-gray-700">
+                                        {{ __('Quantity') }} <br>
+                                        {{ $item->quantity }}
                                     </p>
                                 </div>
                             @endforeach
@@ -32,9 +40,12 @@
                             @foreach ($this->customer as $item)
                                 <div class="mx-4">
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Name') }} :{{ $item->name }}</p>
+                                        {{ __('Name') }} <br>
+                                        {{ $item->name }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Phone') }} :{{ $item->phone }}
+                                        {{ __('Phone') }} <br>
+                                        {{ $item->phone }}
                                     </p>
                                     {{-- Adding a button link to details --}}
                                     {{-- Sales total --}}
@@ -51,10 +62,12 @@
                             @foreach ($this->supplier as $item)
                                 <div class="mx-4">
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Name') }} :{{ $item->name }}
+                                        {{ __('Name') }} <br>
+                                        {{ $item->name }}
                                     </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Phone') }} :{{ $item->phone }}
+                                        {{ __('Phone') }} <br>
+                                        {{ $item->phone }}
                                     </p>
                                     {{-- Adding a button link to details --}}
                                     {{-- Purchase total --}}
@@ -90,18 +103,29 @@
                             <h3 class="font-semibold text-gray-700 mb-2">{{ __('Purchase') }}</h3>
                             @foreach ($this->purchase as $item)
                                 <div class="mx-4">
-                                    <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
+                                    <p class="font-semibold text-gray-700">{{ __('Date') }} <br>
+                                        {{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Supplier name') }}
-                                        :{{ $item->supplier->name }}</p>
+                                        <br>
+                                        {{ $item->supplier->name }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Reference') }}
-                                        :{{ $item->reference }}</p>
+                                        <br>
+                                        {{ $item->reference }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Total amount') }}
-                                        :{{ format_currency($item->total_amount) }}</p>
+                                        <br>
+                                        {{ format_currency($item->total_amount) }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Paid amount') }}
-                                        :{{ format_currency($item->paid_amount) }}</p>
+                                        <br>
+                                        {{ format_currency($item->paid_amount) }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Due amount') }}
-                                        :{{ format_currency($item->due_amount) }}</p>
+                                        <br>
+                                        {{ format_currency($item->due_amount) }}
+                                    </p>
                                 </div>
                             @endforeach
                         </li>

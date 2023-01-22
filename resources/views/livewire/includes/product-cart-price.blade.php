@@ -1,5 +1,20 @@
-<form wire:submit.prevent="updatePrice('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
-    class="flex  justify-center">
-    <input style="min-width: 40px;max-width: 90px;" type="number" class="form-control" type="number" value="{{ $cart_item->price }}"
-        min="1" wire:model.defer="price.{{ $cart_item->id }}">
-</form>
+<div x-data="{
+    editPrice: false,
+    selectedRowId: null,
+    buttonHidden: false,
+}">
+
+    <button type="button"
+    @click="editPrice = !editPrice; selectedRowId = '{{ $cart_item->rowId }}'; buttonHidden = true"
+    x-show="!buttonHidden">
+        <i class="fa fa-pen text-red-500"></i>
+    </button>
+
+    <div x-show="editPrice && selectedRowId === '{{ $cart_item->rowId }}'">
+        <form wire:change="updatePrice('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')" class="flex  justify-center">
+            <x-input type="number" min="1"
+                wire:model.defer="price.{{ $cart_item->id }}" />
+        </form>
+    </div>
+
+</div>

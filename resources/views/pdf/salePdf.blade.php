@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('Sale') }} _{{ $sale->reference }}</title>
+    <title>{{ __('Sale') }} : {{ $sale->reference }}</title>
     <link rel="stylesheet" href="{{ asset('/print/pdfStyle.css') }}" media="all" />
 </head>
 
@@ -56,7 +56,7 @@
                         <tr>
                             <td>
                                 <div id="comp">{{ settings()->company_name }}</div>
-                                <div><strong>{{ __('ICE') }}:</strong> {{ $setting['CompanyTaxNumber'] }}</div>
+                                <div><strong>{{ __('ICE') }}:</strong> {{ settings()->company_tax }}</div>
                                 <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
                                 <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
                                 <div><strong>{{ __('Email') }}:</strong> {{ settings()->company_email }}</div>
@@ -70,7 +70,7 @@
             <table class="table-sm">
                 <thead>
                     <tr>
-                        <th>{{ __('EPRODUCT') }}</th>
+                        <th>{{ __('PRODUCT') }}</th>
                         <th>{{ __('Unit Price') }}</th>
                         <th>{{ __('QTY') }}</th>
                         <th>{{ __('TOTAL') }}</th>
@@ -103,29 +103,29 @@
                     <td>{{ $sale->discount_amount }} </td>
                 </tr>
                 <tr>
-                    <td>{{ __('Livraison') }}</td>
+                    <td>{{ __('Shipping') }}</td>
                     <td>{{ $sale->shipping_amount }} </td>
                 </tr>
                 <tr>
                     <td>{{ __('Total') }}</td>
-                    <td>{{ $symbol }} {{ $sale->total_amount }} </td>
+                    <td>{{ format_currency($sale->total_amount) }} </td>
                 </tr>
 
                 <tr>
-                    <td>{{__('Paid Amount')}}</td>
-                    <td>{{ $symbol }} {{ $sale->paid_amount }} </td>
+                    <td>{{ __('Paid Amount') }}</td>
+                    <td>{{ format_currency($sale->paid_amount) }} </td>
                 </tr>
 
                 <tr>
-                    <td>{{__('Due Amount')}}</td>
-                    <td>{{ $symbol }} {{ $sale->due_amount }} </td>
+                    <td>{{ __('Due Amount') }}</td>
+                    <td>{{ format_currency($sale->due_amount) }} </td>
                 </tr>
             </table>
         </div>
         <div id="signature">
-            {{-- @if ($setting['is_invoice_footer'] && $setting['invoice_footer'] !== null)
-                <p>{{ $setting['invoice_footer'] }}</p>
-            @endif --}}
+            @if (settings()->invoice_footer !== null)
+                <p>{{ settings()->invoice_footer }}</p>
+            @endif
         </div>
     </main>
 </body>

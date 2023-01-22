@@ -43,11 +43,14 @@
 
 @section('content')
     <div class="px-4 mx-auto">
-        <div class="flex flex-row">
-            <div class="w-3/12 sm:w-full h-full">
+        <div class="w-full py-5">
+            <livewire:livesearch />
+        </div>
+        <div class="flex flex-wrap">
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>
-            <div class="w-9/12 sm:w-full h-full">
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:pos.index :cartInstance="'sale'" />
             </div>
         </div>

@@ -29,7 +29,7 @@ class Index extends Component
 
     public $cart_instance;
 
-    public $customers;
+    // public $customers;
 
     public $global_discount;
 
@@ -40,6 +40,8 @@ class Index extends Component
     public $quantity;
 
     public $check_quantity;
+
+    public $price;
 
     public $discount_type;
 
@@ -54,8 +56,6 @@ class Index extends Component
     public $checkoutModal;
 
     public $product;
-
-    public $price;
 
     public $paid_amount;
 
@@ -79,8 +79,6 @@ class Index extends Component
 
     public $refreshIndex;
 
-    public array $listsForFields = [];
-
     public function rules(): array
     {
         return [
@@ -95,22 +93,13 @@ class Index extends Component
         ];
     }
 
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
-    }
-
-    public function refreshCustomers(): void
-    {
-        $this->initListsForFields();
-    }
-
     public function mount($cartInstance): void
     {
         $this->cart_instance = $cartInstance;
         $this->global_discount = 0;
         $this->global_tax = 0;
         $this->shipping = 0.00;
+        
         $this->check_quantity = [];
         $this->quantity = [];
         $this->discount_type = [];
@@ -121,8 +110,6 @@ class Index extends Component
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
         $this->paid_amount = 0;
-
-        $this->initListsForFields();
     }
 
     public function hydrate(): void
@@ -251,7 +238,7 @@ class Index extends Component
         });
 
         if ($exists->isNotEmpty()) {
-            $this->alert('error', 'Product already added to cart!');
+            $this->alert('error', __('Product already added to cart!'));
 
             return;
         }
@@ -296,6 +283,7 @@ class Index extends Component
         Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
     }
 
+
     public function updateQuantity($row_id, $product_id): void
     {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
@@ -324,16 +312,24 @@ class Index extends Component
 
     public function updatePrice($row_id, $product_id)
     {
+        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
+
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'price' => $this->price[$product_id],
+        ]);
+        
+        // $this->calculate($product)
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total'             => $price * $cart_item->qty,
+            'sub_total'             => $cart_item->price * $cart_item->qty,
             'code'                  => $cart_item->options->code,
             'stock'                 => $cart_item->options->stock,
             'unit'                  => $cart_item->options->unit,
             'product_tax'           => $cart_item->options->product_tax,
-            'unit_price'            => $price,
+            'unit_price'            => $cart_item->price,
             'product_discount'      => $this->discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
+
     }
 
     public function updatedDiscountType($value, $name): void
@@ -411,5 +407,10 @@ class Index extends Component
             'product_discount'      => $this->discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
+    }
+
+    public function getCustomersProperty()
+    {
+        return Customer::select('name', 'id')->get();
     }
 }

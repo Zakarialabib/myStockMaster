@@ -136,6 +136,12 @@
                                     <x-dropdown-link target="_blank" href="{{ route('sales.pos.pdf', $sale->id) }}"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-print"></i>
+                                        {{ __('Print Pos') }}
+                                    </x-dropdown-link>
+
+                                    <x-dropdown-link target="_blank" href="{{ route('sales.pdf', $sale->id) }}"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-print"></i>
                                         {{ __('Print') }}
                                     </x-dropdown-link>
 
@@ -224,7 +230,7 @@
                                             <div>{{ __('Invoice') }}: <strong>{{ settings()->sale_prefix }}/{{ $sale->reference }}</strong>
                                             </div>
                                             <div>{{ __('Date') }}:
-                                                {{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</div>
+                                                {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</div>
                                             <div>
                                                 {{ __('Status') }} :
                                                 @if ($sale->status == \App\Enums\SaleStatus::Pending)

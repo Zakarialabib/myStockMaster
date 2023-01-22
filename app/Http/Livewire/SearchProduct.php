@@ -40,7 +40,7 @@ class SearchProduct extends Component
     public function mount(): void
     {
         $this->query = '';
-        $this->how_many = 5;
+        $this->how_many = 9;
         $this->search_results = Collection::empty();
         $this->category_id = '';
         $this->warehouse_id = '';

@@ -57,9 +57,9 @@
                      <tr>
                         <td>
                            <div id="comp">{{settings()->company_name}}</div>
-                           <div><strong>ICE:</strong>{{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>{{settings()->company_address}}</div>
-                           <div><strong>Téle:</strong>{{settings()->company_phone}}</div>
+                           <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
+                           <div><strong>{{__('Address')}}:</strong>{{settings()->company_address}}</div>
+                           <div><strong>{{__('Phone')}}:</strong>{{settings()->company_phone}}</div>
                            <div><strong>{{__('Email')}}:</strong>{{settings()->company_email}}</div>
                         </td>
                      </tr>
@@ -129,8 +129,8 @@
             </table>
          </div>
          <div id="signature">
-            @if($setting['is_invoice_footer'] && $setting['invoice_footer'] !==null)
-               <p>{{$setting['invoice_footer']}}</p>
+            @if (settings()->invoice_footer !== null)
+                <p>{{ settings()->invoice_footer }}</p>
             @endif
          </div>
       </main>
