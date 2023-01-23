@@ -41,14 +41,15 @@ Mystock is built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring 
 - [x] Calculator dashboard
 - [x] Backup - Local
 - [x] Backup GDrive & others
-- [x] Print Barcode -- problem with barcode generator
-- [ ] Printers
+- [x] Print Barcode
 - [x] User Profile 
+- [x] Import/Export 
+- [x] Multi language 
+- [x] Arabic Supported
+- [ ] Printers
 - [ ] Notifications
 - [ ] SMS Notifications
 - [ ] Email Templates
-- [x] Import/Export 
-- [x] Multi language 
 - [ ] Cash register (pos , sales, expenses)
 
 
@@ -114,18 +115,31 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ![Login](screens/login.png)
 - Dashboard
 ![Dashboard](screens/dashboard.png)
+- Pos
+![Pos](screens/pos.png)
 - Products
 ![Products](screens/products.png)
 - Product Create
 ![Product Create](screens/product-modal.png)
 - Purchase Create
 ![Purchase Create](screens/purchase-create.png)
+- Sale Create
+![Sale Create](screens/sale-create.png)
+- Customer Create
+![Customer Create](screens/customer-modal.png)
 
 ## Contact
 
 -   [Twitter](https://twitter.com/zakarialabib)
 -   [LinkedIn](https://www.linkedin.com/in/zakaria-labib/)
 -   [GitHub](https://www.github.com/zakarialabib/)
+
+## Contributors
+
+-   [zakarialabib](https://www.github.com/zakarialabib)
+-   [elmarzouguidev](https://github.com/ismaail)
+-   [yassinebenaid](https://github.com/yassinebenaid)
+-   [ismaail](https://www.github.com/zakarialabib)
 
 ## Donate
 
