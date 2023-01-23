@@ -11,14 +11,15 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class Profile extends Component
 {
     use LivewireAlert;
 
-    public function mount(User $user): void
+    public function mount(): void
     {
-        $this->user = User::find($user->id);
+        $this->user = User::find(Auth::user()->id);
     }
 
     public function render(): View|Factory
