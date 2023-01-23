@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Milon\Barcode\Facades\DNS1DFacade;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Barcode extends Component
 {
@@ -62,20 +61,16 @@ class Barcode extends Component
         }
     }
 
-    public function getPdf(): StreamedResponse
+    public function getPdf()
     {
-        $pdf = PDF::loadView('admin.barcode.print', [
-            'barcodes' => $this->barcodes,
-            'products' => $this->products,
-            // 'price' => $this->product->price,
-            // 'name' => $this->product->name,
-        ])->output();
+        $data = [
+        'barcodes' => $this->barcodes,
+        'products' => $this->products,
+        ];
 
-        return response()->streamDownload(
-            fn () => print($pdf),
-            'barcodes-'.date('Y-m-d').'.pdf'
-        );
-        // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
+        $pdf = PDF::loadView('admin.barcode.print', $data);
+
+        return $pdf->stream('barcodes-'.date('Y-m-d').'.pdf');
     }
 
     public function updatedQuantity(): void

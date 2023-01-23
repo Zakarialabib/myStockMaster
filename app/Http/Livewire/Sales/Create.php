@@ -11,7 +11,6 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -195,16 +194,6 @@ class Create extends Component
         
 
     }
-   
-    public function salePdf($sale)
-    {
-        $pdf = Pdf::loadView('pdf.salePdf', ['sale' => $sale]);
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
-
-        return $pdf->output();
-    }
-
 
     public function calculateTotal()
     {

@@ -45,7 +45,7 @@
     </div>
 
     @if (!empty($query))
-        <div wire:click="resetQuery" class="fixed w-full h-full  left-0 right-0 top-0 bottom-0 z-10"></div>
+        {{-- <div wire:click="resetQuery" class="fixed w-full h-full  left-0 right-0 top-0 bottom-0 z-10"></div> --}}
         @if ($search_results->isNotEmpty())
             <div class="flex flex-row relative">
                 <div

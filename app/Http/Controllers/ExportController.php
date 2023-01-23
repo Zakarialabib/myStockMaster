@@ -11,86 +11,98 @@ use App\Models\Quotation;
 use App\Models\Sale;
 use App\Models\SaleReturn;
 use App\Models\Supplier;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 
 class ExportController extends Controller
 {
     public function salePos($id)
     {
-        $sale = Sale::findOrFail($id);
+        $sale = Sale::where('id', $id)->firstOrFail();
 
-        $pdf = PDF::loadView('admin.sale.print-pos', [
+        $data = [
             'sale' => $sale,
-        ])->setPaper('a7')
-            ->setOption('margin-top', 8)
-            ->setOption('margin-bottom', 8)
-            ->setOption('margin-left', 5)
-            ->setOption('margin-right', 5);
+        ];
+
+        $pdf = PDF::loadView('admin.sale.print-pos', $data, [], [
+            'format' => 'a5',
+        ]);
 
         return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
     public function sale($id)
     {
-        $sale = Sale::findOrFail($id);
-        $customer = Customer::findOrFail($sale->customer_id);
+        $sale = Sale::where('id', $id)->firstOrFail();
+        $customer = Customer::where('id', $sale->customer_id)->firstOrFail();
 
-        $pdf = PDF::loadView('admin.sale.print', [
+        $data =  [
             'sale'     => $sale,
             'customer' => $customer,
-        ])->setPaper('a4');
+        ];
+
+        $pdf = PDF::loadView('admin.sale.print', $data, [], [
+            'format' => 'a4',
+        ]);
 
         return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
     public function purchaseReturns($id)
     {
-        $purchaseReturn = PurchaseReturn::findOrFail($id);
-        $supplier = Supplier::findOrFail($purchaseReturn->supplier_id);
-
-        $pdf = PDF::loadView('admin.purchasesreturn.print', [
+        $purchaseReturn = PurchaseReturn::where('id', $id)->firstOrFail();
+        $supplier = Supplier::where('id',$purchaseReturn->supplier_id)->firstOrFail();
+        
+        $data = [
             'purchase_return' => $purchaseReturn,
             'supplier'        => $supplier,
-        ])->setPaper('a4');
+        ];
+
+        $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
 
         return $pdf->stream(__('Purchase Return').$purchaseReturn->reference.'.pdf');
     }
 
     public function quotation($id)
     {
-        $quotation = Quotation::findOrFail($id);
-        $customer = Customer::findOrFail($quotation->customer_id);
+        $quotation = Quotation::where('id', $id)->firstOrFail();
+        $customer = Customer::where('id',$quotation->customer_id)->firstOrFail();
+       
+        $data = [
+        'quotation' => $quotation,
+        'customer'  => $customer,
+        ];
 
-        $pdf = PDF::loadView('admin.quotation.print', [
-            'quotation' => $quotation,
-            'customer'  => $customer,
-        ])->setPaper('a4');
+        $pdf = PDF::loadView('admin.quotation.print', $data);
 
         return $pdf->stream(__('Quotation').$quotation->reference.'.pdf');
     }
 
     public function purchase($id)
     {
-        $purchase = Purchase::findOrFail($id);
-        $supplier = Supplier::findOrFail($purchase->supplier_id);
-
-        $pdf = PDF::loadView('admin.purchases.print', [
+        $purchase = Purchase::where('id', $id)->firstOrFail();
+        $supplier = Supplier::where('id', $purchase->supplier_id)->firstOrFail();
+        
+        $data = [
             'purchase' => $purchase,
             'supplier' => $supplier,
-        ])->setPaper('a4');
+        ];
+
+        $pdf = PDF::loadView('admin.purchases.print', $data);
 
         return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
     }
 
     public function saleReturns($id)
     {
-        $saleReturn = SaleReturn::findOrFail($id);
-        $customer = Customer::findOrFail($saleReturn->customer_id);
-
-        $pdf = PDF::loadView('admin.salesreturn.print', [
+        $saleReturn = SaleReturn::where('id', $id)->firstOrFail();
+        $customer = Customer::where('id', $saleReturn->customer_id)->firstOrFail();
+        
+        $data = [
             'sale_return' => $saleReturn,
             'customer'    => $customer,
-        ])->setPaper('a4');
+        ];
+
+        $pdf = PDF::loadView('admin.salesreturn.print', $data);
 
         return $pdf->stream(__('Sale Return').$saleReturn->reference.'.pdf');
     }

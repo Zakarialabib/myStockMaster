@@ -67,7 +67,8 @@ class Details extends Component
 
     public function getSalesProperty(): mixed
     {
-        $query = $this->customer()
+        $query = Sale::where('customer_id', $this->customer_id)
+            ->with('customer')
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
@@ -79,7 +80,7 @@ class Details extends Component
 
     public function getCustomerPaymentsProperty(): mixed
     {
-        $query = $this->customer()
+        $query = Sale::where('customer_id', $this->customer_id)
             ->with('salepayments')
             ->advancedFilter([
                 's'               => $this->search ?: null,
@@ -114,14 +115,15 @@ class Details extends Component
     // show profit
     public function getProfitProperty(): int|float
     {
-        $sales = $this->customer()
+        $sales = Sale::where('customer_id', $this->customer_id)
             ->completed()->sum('total_amount');
+
         $sale_returns = SaleReturn::whereBelongsTo($this->customer)
             ->completed()->sum('total_amount');
 
         $product_costs = 0;
 
-        foreach ($this->customer()->with('saleDetails')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }

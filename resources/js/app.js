@@ -8,10 +8,6 @@ import swal from 'sweetalert2';
 
 window.Swal = swal;
 
-// import {livewire_hot_reload} from 'virtual:livewire-hot-reload'
-
-// livewire_hot_reload();
-
 import Alpine from 'alpinejs'
 import collapse from '@alpinejs/collapse'
 import focus from "@alpinejs/focus";

@@ -10,7 +10,6 @@
                     <h2><img width="100" src="{{ public_path('images/logo.png') }}" alt="Logo"></h2>
                 </div>
                 <hr>
-
                 <div class="col-lg-6">
                     <address>
                         <strong>{{ settings()->company_name }}</strong><br>

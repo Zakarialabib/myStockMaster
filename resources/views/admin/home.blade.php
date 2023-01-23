@@ -57,7 +57,7 @@
 
         {{-- <livewire:calculator /> --}}
         <div class="bg-white ">
-            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right py-2">
+            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right space-y-2 py-2">
                 <x-button type="button" primary data-date="today" class="js-date mr-2 py-2 active:bg-indigo-800">
                     {{ __('Today') }}
                 </x-button>
@@ -225,7 +225,7 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="flex flex-wrap py-4">
+            <div class="bg-white flex flex-wrap py-4">
                 @can('show_weekly_sales_purchases')
                     <div class="lg:w-3/5 sm:w-full px-2 mb-4">
                         <div>
@@ -256,7 +256,7 @@
         @endcan
 
         @can('show_monthly_cashflow')
-            <div class="fle flex-wrap mb-4 py-4">
+            <div class="bg-white flex flex-wrap mb-4 py-4">
                 <div class="w-full px-2">
                     <div>
                         <div class="text-xl mb-2">
