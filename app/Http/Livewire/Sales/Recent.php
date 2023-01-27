@@ -72,11 +72,11 @@ class Recent extends Component
         return view('livewire.sales.recent', compact('sales'));
     }
 
-    public function showModal(Sale $sale)
+    public function showModal($id)
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = Sale::find($sale->id);
+        $this->sale = Sale::with('saleDetails')->findOrFail($id);
 
         $this->showModal = true;
     }

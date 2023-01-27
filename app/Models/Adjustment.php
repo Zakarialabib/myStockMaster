@@ -71,7 +71,7 @@ class Adjustment extends Model
         );
     }
 
-    /** @return HasMany<AdjustedProduct> */
+
     public function adjustedProducts(): HasMany
     {
         return $this->hasMany(AdjustedProduct::class, 'adjustment_id', 'id');

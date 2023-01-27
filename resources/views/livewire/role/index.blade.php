@@ -24,9 +24,7 @@
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <input type="text" wire:model.debounce.300ms="search"
-                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                placeholder="{{ __('Search') }}" />
+            <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
         </div>
     </div>
 
@@ -35,9 +33,6 @@
             <x-table.th>#</x-table.th>
             <x-table.th sortable wire:click="sortBy('title')" :direction="$sorts['title'] ?? null">
                 {{ __('Title') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Permissions') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
@@ -52,16 +47,9 @@
                     <x-table.td>
                         {{ $role->name }}
                     </x-table.td>
-                    <x-table.td class="flex flex-wrap space-x-2 space-y-2">
-                        @foreach ($role->permissions as $permission)
-                            <x-badge primary>{{ $permission->name }}</x-badge>
-                        @endforeach
-                    </x-table.td>
+
                     <x-table.td>
                         <div class="inline-flex">
-                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-info btn-sm">
-                                <i class="bi bi-pencil"></i>
-                            </a>
                             <x-button primary wire:click="editModal({{ $role->id }})" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>

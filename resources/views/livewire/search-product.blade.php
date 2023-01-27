@@ -6,10 +6,7 @@
                     <i class="fas fa-camera"></i>
                 </a>
             </span>
-            <input id="productSearch" wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search"
-                autofocus
-                class="w-full pl-10 shadow-sm focus:ring-indigo-500 active:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                placeholder="{{ __('Type product name or code....') }}">
+            <x-input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus />
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="lg:w-1/3 md:w-1/4 sm:w-1/2 px-2">

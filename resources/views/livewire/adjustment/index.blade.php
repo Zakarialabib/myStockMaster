@@ -15,9 +15,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    placeholder="{{ __('Search') }}" />
+                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -56,7 +54,8 @@
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
-                            <x-button danger type="button" wire:click="confirm('delete', {{ $adjustment->id }})"
+                            <x-button danger type="button" 
+                            wire:click="$emit('deleteModal', {{ $adjustment->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -146,26 +145,24 @@
 
 </div>
 
+
 @push('scripts')
     <script>
-        window.addEventListener('confirm', event => {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.livewire.emit('delete', event.detail.id)
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
+        document.addEventListener('livewire:load', function() {
+            window.livewire.on('deleteModal', adjustmentId => {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.livewire.emit('delete', adjustmentId)
+                    }
+                })
             })
         })
     </script>

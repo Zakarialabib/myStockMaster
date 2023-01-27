@@ -7,7 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
+use  Spatie\Permission\Models\Permission as SpatiePermission;
 /**
  * App\Models\Permission
  *
@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Permission extends Model
+class Permission extends SpatiePermission
 {
     use HasAdvancedFilter;
 
@@ -56,7 +56,7 @@ class Permission extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'label', 'description'];
+    protected $fillable = ['name', 'label','guard_name','name', 'description'];
 
     /** @return BelongsToMany<Role> */
     public function roles(): BelongsToMany

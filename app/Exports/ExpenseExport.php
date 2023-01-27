@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExpenseExport implements FromQuery, WithMapping, WithHeadings
 {
@@ -18,7 +19,7 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
     /** @var mixed */
     protected $models;
 
-    /** @return Builder|EloquentBuilder|Relation */
+    
     public function query()
     {
         if ($this->models) {

@@ -101,7 +101,7 @@
                                 <div class="flex flex-wrap -mx-2 mb-3">
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                         <div class="mb-4">
-                                            <label for="status">{{ __('Status') }} <span
+                                            <label for="™">{{ __('Status') }} <span
                                                     class="text-red-500">*</span></label>
                                             <select
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"

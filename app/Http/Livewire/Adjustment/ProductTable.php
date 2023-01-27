@@ -43,7 +43,7 @@ class ProductTable extends Component
                 if (in_array($product, array_map(function ($adjustment) {
                     return $adjustment['product'];
                 }, $this->products))) {
-                    $this->alert('error', __('Product already added'));
+                    $this->alert('error', __('Product added succesfully'));
 
                     return;
                 }

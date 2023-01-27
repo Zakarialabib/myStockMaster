@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Models;
-
+use Spatie\Permission\Models\Role as SpatieRole;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Role extends Model
+class Role extends SpatieRole
 {
     use HasFactory;
     use HasAdvancedFilter;
@@ -57,6 +57,7 @@ class Role extends Model
      */
     protected $fillable = [
         'title',
+        'guard_name',
     ];
 
     /** @return BelongsToMany<Permission> */

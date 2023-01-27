@@ -91,9 +91,7 @@
                 </div>
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                     <div class="my-2">
-                        <input type="text" wire:model.debounce.300ms="search"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            placeholder="{{ __('Search') }}" />
+                        <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
                     </div>
                 </div>
             </div>
@@ -227,6 +225,7 @@
             <x-table>
                 <x-slot name="thead">
                     <x-table.th>{{ __('Date') }}</x-table.th>
+                    <x-table.th>{{ __('Invoice reference') }}</x-table.th>
                     <x-table.th>{{ __('Amount') }}</x-table.th>
                     <x-table.th>{{ __('Due Amount') }}</x-table.th>
                     <x-table.th>{{ __('Payment Method') }}</x-table.th>
@@ -237,6 +236,7 @@
                         @forelse ($customerPayment->salepayments as $salepayment)
                             <x-table.tr>
                                 <x-table.td>{{ $salepayment->created_at }}</x-table.td>
+                                <x-table.td>{{ $salepayment->sale->reference }}</x-table.td>
                                 <x-table.td>
                                     {{ format_currency($salepayment->amount) }}
                                 </x-table.td>
@@ -248,12 +248,8 @@
                                     @can('access_sale_payments')
                                         <x-button wire:click="$emit('paymentModal', {{ $salepayment->id }} )"
                                             type="button" primary>
-                                            {{ __('Edit') }}
-                                        </x-button>
-                                        <a href="{{ route('sale-payments.edit', [$salepayment->sale->id, $salepayment->id]) }}"
-                                            class="btn btn-info btn-sm">
                                             <i class="bi bi-pencil"></i>
-                                        </a>
+                                        </x-button>
                                     @endcan
                                     {{-- <x-button wire:click="delete({{ $salepayment->id }})"
                                         class="bg-red-500 hover:bg-red-700">

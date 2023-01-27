@@ -37,8 +37,6 @@ class Index extends Component
         'refreshIndex' => '$refresh',
     ];
 
-    public $refreshIndex;
-
     /** @var bool */
     public $showModal = false;
 
@@ -57,8 +55,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-  
 
     public function mount(): void
     {
@@ -83,7 +79,6 @@ class Index extends Component
 
         return view('livewire.categories.index', compact('categories'));
     }
-
 
     public function showModal(Category $category): void
     {

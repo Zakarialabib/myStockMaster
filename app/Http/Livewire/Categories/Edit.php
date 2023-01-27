@@ -25,8 +25,8 @@ class Edit extends Component
     public $category;
 
     protected array $rules = [
-            'category.name' => 'required|min:3|max:255',
-            'category.code' => 'required',
+        'category.name' => 'required|min:3|max:255',
+        'category.code' => 'required',
     ];
 
     public function render(): View|Factory
@@ -56,7 +56,7 @@ class Edit extends Component
         $this->validate();
 
         $this->category->save();
-        
+
         $this->emit('refreshIndex');
 
         $this->editModal = false;

@@ -29,7 +29,7 @@ class Index extends Component
     /** @var string[] */
     public $listeners = [
         'showModal', 'editModal', 'createModal',
-        'refreshIndex' => '$refresh',
+        'refreshIndex' => '$refresh', 'delete'
     ];
 
     public $showModal = false;

@@ -65,13 +65,13 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Role())->orderable;
-        $this->permissions = $this->role->permissions->pluck('id')->toArray();
+        // $this->permissions = $this->role->permissions->pluck('id')->toArray();
         $this->initListsForFields();
     }
 
     public function render()
     {
-        $query = Role::with(['permissions'])->advancedFilter([
+        $query = Role::advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

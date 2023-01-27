@@ -60,7 +60,6 @@
             <div class="flex flex-row mt-4">
                 <div class="w-full px-4">
 
-                    @include('utils.alerts')
                     <form id="quotation-form" action="{{ route('quotations.store') }}" method="POST">
                         @csrf
 
@@ -118,6 +117,27 @@
                                 <label for="note">{{ __('Note (If Needed)') }}</label>
                                 <textarea name="note" id="note" rows="5"
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap my-2">
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="mb-4">
+                                    <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
+                                    <x-input name="tax_percentage" id="tax_percentage" value="0" />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="mb-4">
+                                    <label for="discount_percentage">{{ __('Discount (%)') }}</label>
+                                    <x-input name="discount_percentage" id="discount_percentage"  value="0" />
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="mb-4">
+                                    <label for="shipping_amount">{{ __('Shipping') }}</label>
+                                    <x-input name="shipping_amount" id="shipping_amount" value="0" />
+                                </div>
                             </div>
                         </div>
 

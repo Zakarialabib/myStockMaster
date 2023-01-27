@@ -25,6 +25,8 @@ class Details extends Component
 
     public $customer_id;
 
+    public $customer;
+
     /** @var string[][] */
     protected $queryString = [
         'search' => [
@@ -81,7 +83,7 @@ class Details extends Component
     public function getCustomerPaymentsProperty(): mixed
     {
         $query = Sale::where('customer_id', $this->customer_id)
-            ->with('salepayments')
+            ->with('salepayments.sale')
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
@@ -123,7 +125,7 @@ class Details extends Component
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails.product')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }
@@ -138,11 +140,6 @@ class Details extends Component
     private function customerSum(string $field): int|float
     {
         return Sale::whereBelongsTo($this->customer)->sum($field) / 100;
-    }
-
-    private function customer(): Builder
-    {
-        return Sale::whereCustomerId($this->customer_id);
     }
 
     public function render(): View|Factory

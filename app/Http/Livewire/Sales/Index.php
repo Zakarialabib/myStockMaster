@@ -34,9 +34,8 @@ class Index extends Component
 
     /** @var string[] */
     public $listeners = [
-        'showModal',
         'importModal', 'refreshIndex' => '$refresh',
-        'paymentModal', 'paymentSave',
+        'paymentModal', 'paymentSave', 'showModal'
     ];
 
     public $showModal = false;
@@ -89,7 +88,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $query = Sale::with(['customer', 'salepayments'])
+        $query = Sale::with(['customer', 'salepayments','saleDetails'])
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
@@ -101,11 +100,11 @@ class Index extends Component
         return view('livewire.sales.index', compact('sales'));
     }
 
-    public function showModal($sale)
+    public function showModal($id)
     {
         abort_if(Gate::denies('access_sales'), 403);
 
-        $this->sale = Sale::find($sale);
+        $this->sale = Sale::find($id);
 
         $this->showModal = true;
     }
@@ -272,5 +271,4 @@ class Index extends Component
     {
         // open whatsapp url in another tab
     }
-
 }

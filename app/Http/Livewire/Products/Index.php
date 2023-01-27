@@ -14,7 +14,6 @@ use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -34,6 +33,8 @@ class Index extends Component
     /** @var mixed */
     public $product;
 
+    public $productIds;
+
     /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
@@ -43,7 +44,7 @@ class Index extends Component
     public $importModal = false;
 
     public $sendTelegram;
-    
+
     public $selectAll;
 
     /** @var string[][] */
@@ -58,7 +59,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
 
     public function mount(): void
     {
@@ -134,9 +134,8 @@ class Index extends Component
         // Pass in product details
         $productName = $this->product->name;
         $productPrice = $this->product->price;
-        $productImage = $this->product->image;
 
-        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice, $productImage));
+        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
     }
 
     public function importModal(): void

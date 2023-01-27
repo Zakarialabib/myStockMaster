@@ -33,11 +33,12 @@ class ExportController extends Controller
     public function sale($id)
     {
         $sale = Sale::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id', $sale->customer_id)->firstOrFail();
 
-        $data =  [
+        $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
+
+        $data = [
             'sale'     => $sale,
-            'customer' => $customer,
+            'customer' => $customer
         ];
 
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
@@ -50,11 +51,11 @@ class ExportController extends Controller
     public function purchaseReturns($id)
     {
         $purchaseReturn = PurchaseReturn::where('id', $id)->firstOrFail();
-        $supplier = Supplier::where('id',$purchaseReturn->supplier_id)->firstOrFail();
-        
+        $supplier = Supplier::where('id', $purchaseReturn->supplier->id)->firstOrFail();
+
         $data = [
             'purchase_return' => $purchaseReturn,
-            'supplier'        => $supplier,
+            'supplier'        => $supplier
         ];
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
@@ -65,11 +66,11 @@ class ExportController extends Controller
     public function quotation($id)
     {
         $quotation = Quotation::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id',$quotation->customer_id)->firstOrFail();
-       
+        $customer = Customer::where('id', $quotation->customer->id)->firstOrFail();
+
         $data = [
-        'quotation' => $quotation,
-        'customer'  => $customer,
+            'quotation' => $quotation,
+            'customer'  => $customer,
         ];
 
         $pdf = PDF::loadView('admin.quotation.print', $data);
@@ -79,15 +80,19 @@ class ExportController extends Controller
 
     public function purchase($id)
     {
-        $purchase = Purchase::where('id', $id)->firstOrFail();
-        $supplier = Supplier::where('id', $purchase->supplier_id)->firstOrFail();
-        
+        $purchase = Purchase::with('supplier', 'purchaseDetails')->where('id', $id)->firstOrFail();
+        $supplier = Supplier::where('id', $purchase->supplier->id)->firstOrFail();
+
         $data = [
             'purchase' => $purchase,
-            'supplier' => $supplier,
+            'supplier' => $supplier
         ];
-
-        $pdf = PDF::loadView('admin.purchases.print', $data);
+        
+        // dd($data);
+        $pdf = PDF::loadView('admin.purchases.print', $data, [], [
+            'format' => 'a5',
+        ]);
+        
 
         return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
     }
@@ -95,11 +100,11 @@ class ExportController extends Controller
     public function saleReturns($id)
     {
         $saleReturn = SaleReturn::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id', $saleReturn->customer_id)->firstOrFail();
-        
+        $customer = Customer::where('id', $saleReturn->customer->id)->firstOrFail();
+
         $data = [
             'sale_return' => $saleReturn,
-            'customer'    => $customer,
+            'customer'    => $customer
         ];
 
         $pdf = PDF::loadView('admin.salesreturn.print', $data);

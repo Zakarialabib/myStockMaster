@@ -23,9 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                    placeholder="{{ __('Search') }}" />
+                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>

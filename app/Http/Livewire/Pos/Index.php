@@ -99,7 +99,7 @@ class Index extends Component
         $this->global_discount = 0;
         $this->global_tax = 0;
         $this->shipping = 0.00;
-        
+
         $this->check_quantity = [];
         $this->quantity = [];
         $this->discount_type = [];
@@ -118,7 +118,6 @@ class Index extends Component
             $this->paid_amount = $this->total_amount;
         }
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
     }
 
     public function render(): View|Factory
@@ -283,7 +282,6 @@ class Index extends Component
         Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
     }
 
-
     public function updateQuantity($row_id, $product_id): void
     {
         if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
@@ -317,7 +315,7 @@ class Index extends Component
         Cart::instance($this->cart_instance)->update($row_id, [
             'price' => $this->price[$product_id],
         ]);
-        
+
         // $this->calculate($product)
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
             'sub_total'             => $cart_item->price * $cart_item->qty,
@@ -329,7 +327,6 @@ class Index extends Component
             'product_discount'      => $this->discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ]]);
-
     }
 
     public function updatedDiscountType($value, $name): void

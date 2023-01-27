@@ -97,11 +97,10 @@ class Edit extends Component
         $this->product->save();
 
         $this->emit('refreshIndex');
-        
-        $this->alert('success', __('Product updated successfully.'));
-        
-        $this->editModal = false;
 
+        $this->alert('success', __('Product updated successfully.'));
+
+        $this->editModal = false;
     }
 
     public function getCategoriesProperty()

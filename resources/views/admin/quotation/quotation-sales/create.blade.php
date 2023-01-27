@@ -22,7 +22,7 @@
             <div class="w-full px-4">
                 <div class="card">
                     <div class="p-4">
-                        @include('utils.alerts')
+                        
                         <form id="sale-form" action="{{ route('sales.store') }}" method="POST">
                             @csrf
 

@@ -91,14 +91,18 @@ class Index extends Component
         return view('livewire.suppliers.index', compact('suppliers'));
     }
 
-    public function showModal(Supplier $supplier)
+    public function showModal($id)
     {
-        $this->supplier = Supplier::find($supplier->id);
+        $this->supplier = Supplier::find($id);
+        
+        $this->resetErrorBag();
+
+        $this->resetValidation();
 
         $this->showModal = true;
     }
 
-    public function editModal(Supplier $supplier)
+    public function editModal($id)
     {
         abort_if(Gate::denies('supplier_edit'), 403);
 
@@ -106,7 +110,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->supplier = Supplier::find($supplier->id);
+        $this->supplier = Supplier::find($id);
 
         $this->editModal = true;
     }

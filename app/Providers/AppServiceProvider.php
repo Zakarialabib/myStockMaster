@@ -44,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
-    /** @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null */
     private function getLanguages()
     {
         if ( ! app()->runningInConsole()) {

@@ -26,12 +26,10 @@ class Index extends Component
     use WithFileUploads;
     use Datatable;
 
-    /** @var mixed */
     public $customer;
 
     public $file;
 
-    /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
@@ -108,18 +106,18 @@ class Index extends Component
         $this->alert('warning', __('Customer deleted successfully'));
     }
 
-    public function showModal(Customer $customer)
+    public function showModal($id)
     {
-        abort_if(Gate::denies('customer_show'), 403);
+        abort_if(Gate::denies('customer_access'), 403);
 
-        $this->customer = Customer::find($customer->id);
+        $this->customer = Customer::find($id);
 
         $this->showModal = true;
     }
 
     public function editModal(Customer $customer)
     {
-        abort_if(Gate::denies('customer_edit'), 403);
+        abort_if(Gate::denies('customer_update'), 403);
 
         $this->resetErrorBag();
 
@@ -187,6 +185,8 @@ class Index extends Component
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
         ]);
+
+        $file = $this->file('file');
 
         Excel::import(new CustomerImport(), $this->file('file'));
 

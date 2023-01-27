@@ -49,7 +49,7 @@ class Checkout extends Component
 
     public $refreshCustomers;
 
-    public $initListsForFields = [];
+    public array $listsForFields = [];
 
     public function mount($cartInstance, $customers): void
     {
@@ -69,7 +69,6 @@ class Checkout extends Component
     public function hydrate(): void
     {
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
     }
 
     public function render(): View|Factory

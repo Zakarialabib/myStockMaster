@@ -23,9 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    placeholder="{{ __('Search') }}" />
+                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -149,15 +147,11 @@
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
-                    <input
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="code" wire:model="category.code" disabled />
+                    <x-input type="text" name="code" wire:model="category.code" disabled />
                 </div>
                 <div class="w-full mb-4">
                     <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
-                    <input
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="name" wire:model="category.name" disabled />
+                    <x-input type="text" name="name" wire:model="category.name" disabled />
                 </div>
             </div>
         </x-slot>

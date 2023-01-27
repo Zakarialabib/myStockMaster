@@ -17,6 +17,21 @@ class Profile extends Component
 {
     use LivewireAlert;
 
+    /** @var mixed */
+    public $user;
+
+    public $name;
+    public $email;
+    public $image;
+    public $password;
+
+    public array $rules = [
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8',
+        'phone'    => 'required|numeric',
+    ];
+
     public function mount(): void
     {
         $this->user = User::find(Auth::user()->id);

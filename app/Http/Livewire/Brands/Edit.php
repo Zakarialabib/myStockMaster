@@ -67,12 +67,11 @@ class Edit extends Component
         }
 
         $this->brand->save();
-        
+
         $this->emit('refreshIndex');
 
         $this->alert('success', __('Brand updated successfully.'));
-        
+
         $this->editModal = false;
     }
-
 }

@@ -39,7 +39,7 @@
                         <x-label for="warehouse_id" :value="__('Warehouse')" />
                         <x-select-list
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id" :options="$this->listsForFields['warehouses']" />
+                            id="warehouse_id" name="warehouse_id" wire:model="warehouse_id" :options="$this->listsForFields['warehouses']" />
                     </div>
                     <div class="w-full px-3">
                         <x-label for="details" :value="__('Description')" />

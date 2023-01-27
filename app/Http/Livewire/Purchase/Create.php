@@ -74,7 +74,7 @@ class Create extends Component
             'shipping_amount'     => 'required|numeric',
             'total_amount'        => 'required|numeric',
             'paid_amount'         => 'required|numeric',
-            'status'              => 'required|string|max:255',
+            'status'              => 'required|int|max:255',
             'payment_method'      => 'required|string|max:255',
             'note'                => 'nullable|string|max:1000',
         ];
@@ -89,12 +89,13 @@ class Create extends Component
     {
         $this->cart_instance = $cartInstance;
 
-        $this->reference = 'PO-'.date('YmdHis');
+        $this->reference = settings()->purchase_prefix.'-'.date('Y-m-d-h');
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
         $this->paid_amount = 0;
         $this->payment_method = 'cash';
+        $this->status = 0;
         $this->date = Carbon::today()->format('Y-m-d');
 
         $this->initListsForFields();
@@ -115,7 +116,7 @@ class Create extends Component
         // $this->updatedCustomerId();
     }
 
-    public function save(): RedirectResponse
+    public function save()
     {
         $this->validate();
 
@@ -130,6 +131,7 @@ class Create extends Component
         }
 
         $purchase = Purchase::create([
+            'reference'           => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
             'date'                => $this->date,
             'supplier_id'         => $this->supplier_id,
             'tax_percentage'      => $this->tax_percentage,

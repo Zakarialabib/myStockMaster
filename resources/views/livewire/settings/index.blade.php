@@ -8,36 +8,31 @@
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_name" :value="__('Company Name')" required />
-                        <input type="text" wire:model.defer="settings.company_name" id="company_name"
+                        <x-input type="text" wire:model.defer="settings.company_name" id="company_name"
                             name="company_name"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required>
+                            required />
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_email" :value="__('Company Email')" required />
-                        <input type="text" wire:model.defer="settings.company_email" id="company_email"
-                            name="company_email" required
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                        <x-input type="text" wire:model.defer="settings.company_email" id="company_email"
+                            name="company_email" required />
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_phone" :value="__('Company Phone')" required />
                         <input type="text" wire:model.defer="settings.company_phone" id="company_phone"
-                            name="company_phone" required
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            name="company_phone" required />
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="company_address" :value="__('Company Address')" required />
                         <input type="text" wire:model.defer="settings.company_address" id="company_address"
-                            name="company_address"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            name="company_address" />
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="company_tax" :value="__('Company Tax')" />
                         <input type="text" wire:model.defer="settings.company_tax" id="company_tax"
-                            name="company_tax"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            name="company_tax" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4">

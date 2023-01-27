@@ -41,7 +41,7 @@ class QuotationSalesController extends Controller
             ]);
         }
 
-        return view('quotation::quotation-sales.create', [
+        return view('admin.quotation.quotation-sales.create', [
             'quotation_id' => $quotation->id,
             'sale'         => $quotation,
         ]);

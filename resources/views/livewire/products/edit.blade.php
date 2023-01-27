@@ -54,9 +54,7 @@
 
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="quantity" :value="__('Quantity')" required />
-                            <input type="number" wire:model="product.quantity" name="quantity" disabled
-                                class="block w-full px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded"
-                                required min="1">
+                            <x-input type="text" wire:model="product.quantity" name="quantity" disabled required />
                             <x-input-error :messages="$errors->get('product.quantity')" for="product.quantity" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">

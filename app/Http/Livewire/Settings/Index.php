@@ -26,6 +26,8 @@ class Index extends Component
 
     public $site_logo;
 
+    public $image;
+
     public array $rules = [
         'settings.company_name'              => 'required|string|min:1|max:255',
         'settings.company_email'             => 'required|string|min:1|max:255',
@@ -76,7 +78,7 @@ class Index extends Component
         $this->validate();
 
         if ($this->site_logo != null) {
-            $imageName = Str::slug($this->company_name).'.'.$this->image->extension();
+            $imageName = Str::slug($this->settings->company_name).'.'.$this->image->extension();
             $this->image->storeAs('settings', $imageName);
             $this->site_logo = $imageName;
         }

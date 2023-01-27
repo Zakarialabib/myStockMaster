@@ -30,8 +30,6 @@ class Index extends Component
         'refreshIndex' => '$refresh',
     ];
 
-    public $refreshIndex;
-
     public $showPayments;
 
     public array $listsForFields = [];

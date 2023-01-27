@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller

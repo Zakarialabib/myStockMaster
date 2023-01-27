@@ -12,12 +12,14 @@ use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Traits\Datatable;
 
 class Index extends Component
 {
     use WithPagination;
     use WithSorting;
     use LivewireAlert;
+    use Datatable;
 
     public $printer;
 

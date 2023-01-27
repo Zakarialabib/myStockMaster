@@ -13,15 +13,16 @@ class ProductTelegram extends Notification
     use Queueable;
 
     /**
-     * @param mixed $Product
+     * @param mixed $telegramChannel
+     * @param mixed $productName
+     * @param mixed $productPrice
      * @return void
      */
-    public function __construct($telegramChannel, $productName, $productPrice, $productImage)
+    public function __construct($telegramChannel, $productName, $productPrice)
     {
         $this->telegramChannel = $telegramChannel;
         $this->productName = $productName;
         $this->productPrice = $productPrice;
-        $this->productImage = $productImage;
     }
 
     /**
@@ -41,8 +42,7 @@ class ProductTelegram extends Notification
     {
         return TelegramMessage::create()
             ->to($this->telegramChannel)
-            ->content("Check out our new product: $this->productName for $this->productPrice")
-            ->file("/$this->productImage", 'photo');
+            ->content("Check out our new product: $this->productName for $this->productPrice");
     }
 
     /**

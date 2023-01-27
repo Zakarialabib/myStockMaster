@@ -187,12 +187,10 @@ class Create extends Component
         }
 
         $this->alert('success', __('Sale created successfully!'));
-        
+
         // if ($sale->customer->email) {
         //     Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));
         // }
-        
-
     }
 
     public function calculateTotal()

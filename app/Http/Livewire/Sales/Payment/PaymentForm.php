@@ -22,6 +22,10 @@ class PaymentForm extends Component
 
     public $paymentModal;
 
+    public $sale;
+
+    public $salepayment;
+
     public $sale_id;
 
     public $reference;

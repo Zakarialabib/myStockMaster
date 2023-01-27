@@ -181,7 +181,7 @@ module.exports = {
         },
         backgroundColor: theme => ({
             ...theme('colors'),
-            body: '#F1F5FB',
+            body: 'bg-blue-100',
         }),
         backgroundImage: {
             none: 'none',

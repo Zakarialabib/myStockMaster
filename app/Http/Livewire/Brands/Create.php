@@ -31,16 +31,16 @@ class Create extends Component
 
     /** @var string[] */
     public $listeners = ['createBrand'];
-    
+
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
     protected array $rules = [
-            'name'        => 'required|min:3|max:255',
-            'description' => 'nullable',
-            'image' => 'nullable|image|max:1024',
+        'name'        => 'required|min:3|max:255',
+        'description' => 'nullable',
+        'image'       => 'nullable|image|max:1024',
     ];
 
     public function render(): View|Factory
@@ -72,7 +72,7 @@ class Create extends Component
             $this->image->storeAs('brands', $imageName);
             $this->image = $imageName;
         }
-        
+
         Brand::create($validatedData);
 
         $this->emit('refreshIndex');

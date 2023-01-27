@@ -1,21 +1,21 @@
 <div>
     <div>
-        <div class="w-full px-2">
+        <div class="w-full px-2" dir="ltr">
             <div>
                 <x-validation-errors class="mb-4" :errors="$errors" />
                 @php
-                $default_client = \App\Models\Customer::find(settings()->default_client_id);
+                    $default_client = \App\Models\Customer::find(settings()->default_client_id);
                 @endphp
 
                 <div class="w-full relative inline-flex">
-                    <select required id="customer_id" name="customer_id" wire:model="customer_id" 
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                    @if(settings()->default_client_id == true)
-                    <option value="{{ $default_client->id }}" selected>{{ $default_client->name }}</option>
-                    @endif
-                    @foreach ($this->customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                    @endforeach
+                    <select required id="customer_id" name="customer_id" wire:model="customer_id"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                        @if (settings()->default_client_id == true)
+                            <option value="{{ $default_client->id }}" selected>{{ $default_client->name }}</option>
+                        @endif
+                        @foreach ($this->customers as $customer)
+                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -49,7 +49,8 @@
                                         </x-table.td>
 
                                         <x-table.td>
-                                            <a href="#" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
+                                            <a href="#"
+                                                wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
                                                 <i class="bi bi-x-circle font-2xl text-danger"></i>
                                             </a>
                                         </x-table.td>
@@ -74,22 +75,21 @@
                     <div class="w-full mb-5 p-0">
                         <x-table-responsive>
                             @if (settings()->show_order_tax == true)
-                            <x-table.tr>
-                                <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
-                                <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}
-                                </x-table.td>
-                            </x-table.tr>
+                                <x-table.tr>
+                                    <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
+                                    <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}
+                                    </x-table.td>
+                                </x-table.tr>
                             @endif
                             @if (settings()->show_discount == true)
-                            <x-table.tr>
-                                <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
-                                <x-table.td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
-                                </x-table.td>
-                            </x-table.tr>
+                                <x-table.tr>
+                                    <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
+                                    <x-table.td>(-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
+                                    </x-table.td>
+                                </x-table.tr>
                             @endif
                             <x-table.tr>
                                 <x-table.th>{{ __('Shipping') }}</x-table.th>
-                                <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
                                 <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
                             </x-table.tr>
                             <x-table.tr class="text-primary">
@@ -110,38 +110,32 @@
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
-                        <input wire:model.lazy="tax_percentage" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" max="100" value="{{ $global_tax }}" required>
+                        <x-input wire:model.lazy="tax_percentage" type="text" value="{{ $global_tax }}" />
                     </div>
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="discount_percentage">{{ __('Discount') }} (%)</label>
-                        <input wire:model.lazy="discount_percentage" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" max="100" value="{{ $global_discount }}" required>
+                        <x-input wire:model.lazy="discount_percentage" type="text" value="{{ $global_discount }}" />
                     </div>
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="shipping_amount">{{ __('Shipping') }}</label>
-                        <input wire:model.lazy="shipping" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" value="0" required step="0.01">
+                        <x-input wire:model.lazy="shipping" type="text" />
                     </div>
                 </div>
             </div>
 
             <div class="mb-4 d-flex justify-center flex-wrap">
                 <x-button danger wire:click="resetCart" wire:loading.attr="disabled" class="ml-2 font-bold">
-                     {{ __('Reset') }}
+                    {{ __('Reset') }}
                 </x-button>
                 <button
                     class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
                     type="submit" wire:click="proceed" wire:loading.attr="disabled"
                     {{ $total_amount == 0 ? 'disabled' : '' }}>
-                     {{ __('Proceed') }}
+                    {{ __('Proceed') }}
                 </button>
             </div>
         </div>
@@ -157,25 +151,18 @@
                     <div>
                         <div class="flex flex-wrap">
                             <div class="w-1/2 px-2">
-                                <input type="hidden" value="{{ $customer_id }}" name="customer_id"
-                                    wire:model="customer_id">
-                                <input type="hidden" value="{{ $global_tax }}" name="tax_percentage" wire:mdeol="">
-                                <input type="hidden" value="{{ $global_discount }}" name="discount_percentage"
-                                    wire:mdeol="discount_percentage">
-                                <input type="hidden" value="{{ $shipping }}" name="shipping_amount"
-                                    wire:mdeol="shipping_amount">
                                 <div class="flex flex-wrap -mx-2 mb-3">
                                     <div class="w-full px-2">
                                         <x-label for="total_amount" :value="__('Total Amount')" required />
                                         <input id="total_amount" type="text" wire:model="total_amount"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="total_amount" value="{{ $total_amount }}" readonly required>
+                                            name="total_amount" readonly required>
                                     </div>
                                     <div class="w-full px-2">
                                         <x-label for="paid_amount" :value="__('Paid Amount')" required />
                                         <input id="paid_amount" type="text" wire:model="paid_amount"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="paid_amount" value="{{ $total_amount }}" required>
+                                            name="paid_amount"  required>
                                     </div>
                                     <div class="w-full px-2">
                                         <x-label for="payment_method" :value="__('Payment Method')" required />
@@ -228,8 +215,6 @@
                                             <x-table.th>
                                                 {{ __('Shipping') }}
                                             </x-table.th>
-                                            <input type="hidden" value="{{ $shipping }}" name="shipping_amount"
-                                                wire:model="shipping_amount">
                                             <x-table.td>
                                                 (+) {{ format_currency($shipping) }}
                                             </x-table.td>

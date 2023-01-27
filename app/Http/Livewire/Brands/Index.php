@@ -28,6 +28,8 @@ class Index extends Component
     /** @var mixed */
     public $brand;
 
+    public $brandIds;
+
     /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
@@ -101,7 +103,6 @@ class Index extends Component
         return view('livewire.brands.index', compact('brands'));
     }
 
-    
     public function showModal(Brand $brand): void
     {
         abort_if(Gate::denies('brand_show'), 403);

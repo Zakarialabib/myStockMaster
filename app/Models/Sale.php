@@ -154,7 +154,7 @@ class Sale extends Model
     /** @return HasMany<SaleDetails> */
     public function saleDetails(): HasMany
     {
-        return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
+        return $this->hasMany(SaleDetails::class);
     }
 
     /** @return HasMany<SalePayment> */

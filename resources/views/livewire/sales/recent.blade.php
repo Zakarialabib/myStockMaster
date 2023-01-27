@@ -15,9 +15,7 @@
                 </div>
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                     <div class="my-2">
-                        <input type="text" wire:model.debounce.300ms="search"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            placeholder="{{ __('Search') }}" />
+                        <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
                     </div>
                 </div>
             </div>
@@ -217,7 +215,7 @@
                                                     </x-slot>
 
                                                     <x-table.tbody>
-                                                        @foreach ($sale->saleDetails as $item)
+                                                        @foreach ($this->sale->saleDetails as $item)
                                                             <x-table.tr>
                                                                 <x-table.td>
                                                                     {{ $item->name }} <br>

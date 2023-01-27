@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 
 class PermissionController extends Controller
@@ -15,5 +14,4 @@ class PermissionController extends Controller
 
         return view('admin.permission.index');
     }
-
 }

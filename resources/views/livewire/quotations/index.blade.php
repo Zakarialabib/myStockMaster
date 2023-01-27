@@ -15,9 +15,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    placeholder="{{ __('Search') }}" />
+                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -139,10 +137,6 @@
                             <x-button target="_blank" secondary class="d-print-none"
                                 href="{{ route('quotations.pdf', $quotation->id) }}">
                                 {{ __('Print') }}
-                            </x-button>
-                            <x-button target="_blank" info class="d-print-none"
-                                href="{{ route('quotations.pdf', $quotation->id) }}">
-                                {{ __('Save') }}
                             </x-button>
                         </div>
                         <div class="p-4">

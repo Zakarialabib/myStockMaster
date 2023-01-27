@@ -38,23 +38,8 @@
                 </div>
             </div>
             <div class="flex space-x-2">
-                <x-dropdown align="right" width="48" class="w-auto mr-2">
-                    <x-slot name="trigger" class="inline-flex">
-                        <x-button secondary type="button" class="text-white flex items-center">
-                            <i class="fas fa-angle-double-down w-4 h-4"></i>
-                        </x-button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
-                            {{ __('PDF') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
-                            {{ __('Excel') }}
-                        </x-dropdown-link>
-                    </x-slot>
-                </x-dropdown>
                 @can('permission_create')
-                    <x-button primary href="{{ route('permissions.create') }}">
+                    <x-button primary >
                         {{ __('Create') }}
                     </x-button>
                 @endcan

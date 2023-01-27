@@ -57,20 +57,20 @@
 
         {{-- <livewire:calculator /> --}}
         <div class="bg-white ">
-            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right space-y-2 py-2">
-                <x-button type="button" primary data-date="today" class="js-date mr-2 py-2 active:bg-indigo-800">
+            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right gap-4 py-2">
+                <x-button type="button" primary data-date="today" class="js-date mr-2 active:bg-indigo-800">
                     {{ __('Today') }}
                 </x-button>
 
-                <x-button type="button" primary data-date="month" class="js-date py-2  mr-2">
+                <x-button type="button" primary data-date="month" class="js-date mr-2">
                     {{ __('Last month') }}
                 </x-button>
-
-                <x-button type="button" primary data-date="semi" class="js-date py-2  mr-2">
+                
+                <x-button type="button" primary data-date="semi" class="js-date mr-2">
                     {{ __('Last 6 month') }}
                 </x-button>
 
-                <x-button type="button" primary data-date="year" class="js-date py-2 ">
+                <x-button type="button" primary data-date="year" class="js-date">
                     {{ __('Last year') }}
                 </x-button>
             </div>

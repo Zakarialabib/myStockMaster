@@ -1,10 +1,8 @@
 <div>
     <div class="relative mb-4">
         <div class="w-full rounded-lg">
-            <input type="text" wire:model="searchQuery"
-                placeholder="{{ __('Search with names and codes, or reference') }}"
-                autocomplete=""
-                class="w-full border-0 focus:ring-transparent text-gray-900 focus:outline-none py-2 mr-4 rounded-md">
+            <x-input wire:model.lazy="searchQuery" autofocus
+            placeholder="{{ __('Search with names and codes, or reference') }}" />
         </div>
         @if (!empty($searchQuery))
             <div class="absolute top-0 left-0 w-full mt-12 bg-white rounded-md shadow-xl overflow-y-auto max-h-52 z-50">

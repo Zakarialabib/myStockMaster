@@ -31,8 +31,7 @@
 
                                     <x-table.td>
                                         {{ format_currency($cart_item->price) }}
-                                        <input style="min-width: 40px;max-width: 90px;" type="number" 
-                                               class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"        
+                                        <x-input style="min-width: 40px;max-width: 90px;" type="text" 
                                                type="number" value="{{ $cart_item->price }}"
                                                min="1" wire:model.lazy="price">
                                     </x-table.td>
@@ -42,9 +41,9 @@
                                     </x-table.td>
 
                                     <x-table.td>
-                                        <a href="#" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
+                                        <button type="button" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
                                             <i class="bi bi-x-circle font-2xl text-danger"></i>
-                                        </a>
+                                        </button>
                                     </x-table.td>
                                 </x-table.tr>
                             @endforeach
@@ -77,7 +76,6 @@
                         </x-table.tr>
                         <x-table.tr>
                             <x-table.th>{{ __('Shipping') }}</x-table.th>
-                            <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
                             <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
                         </x-table.tr>
                         <x-table.tr class="text-primary">
@@ -96,16 +94,14 @@
         <div class="flex flex-row">
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="total_amount">{{ __('Total Amount') }} <span class="text-red-500">*</span></label>
-                <input id="total_amount" type="text" wire:model="total_amount"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    name="total_amount" value="{{ $total_amount }}" readonly required>
+                <x-input id="total_amount" type="text" wire:model="total_amount"
+                    name="total_amount" value="{{ $total_amount }}" readonly required />
             </div>
 
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="paid_amount">{{ __('Received Amount') }} <span class="text-red-500">*</span></label>
-                <input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    name="paid_amount" required>
+                <x-input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}" 
+                name="paid_amount" required />
             </div>
 
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
@@ -127,9 +123,7 @@
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
-                        <input wire:model.lazy="tax_percentage" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" max="100" required>
+                        <x-input wire:model.lazy="tax_percentage" type="text" required />
                     </div>
                 </div>
                 @endif
@@ -137,9 +131,7 @@
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="discount_percentage">{{ __('Discount') }} (%)</label>
-                        <input wire:model.lazy="discount_percentage" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" max="100" required>
+                        <x-input wire:model.lazy="discount_percentage" type="text" required />
                     </div>
                 </div>
                 @endif
@@ -147,9 +139,7 @@
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <div class="mb-4">
                         <label for="shipping_amount">{{ __('Shipping') }}</label>
-                        <input wire:model.lazy="shipping_amount" type="number"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            min="0" value="0" required step="0.01">
+                        <x-input wire:model.lazy="shipping_amount" type="number" required />
                     </div>
                 </div>
                 @endif

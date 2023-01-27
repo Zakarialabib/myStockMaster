@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
             SuperUserSeeder::class,
             // UsersSeeder::class,
-            RoleUserSeeder::class,
+            RolesAndPermissionsSeeder::class,
             // PermissionsSeeder::class,
             // PermissionRoleSeeder::class,
             CategoriesSeeder::class,

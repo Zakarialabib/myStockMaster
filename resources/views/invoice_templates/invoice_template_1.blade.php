@@ -12,13 +12,25 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css" integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css"
+        integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
 <body>
     <main>
-       
+        <header>
+            <div>
+                <img src="{{ asset('images/logo.png') }}">
+            </div>
+        </header>
+        <section>
+
+        </section>
+        <footer>
+
+        </footer>
     </main>
 </body>
 

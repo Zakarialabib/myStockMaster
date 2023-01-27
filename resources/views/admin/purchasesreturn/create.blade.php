@@ -77,7 +77,7 @@
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                         <div class="from-group">
                                             <div class="mb-4">
-                                                <label for="supplier_id">{{__('Supplier')}} <span
+                                                <label for="supplier_id">{{ __('Supplier') }} <span
                                                         class="text-red-500">*</span></label>
                                                 <select
                                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -114,7 +114,7 @@
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                                 name="status" id="status" required>
                                                 <option value="0">{{ __('Pending') }}</option>
-                                                <option value="1">{{__('Canceled')}}</option>
+                                                <option value="1">{{ __('Canceled') }}</option>
                                                 <option value="2">{{ __('Completed') }}</option>
                                             </select>
                                         </div>
@@ -127,17 +127,17 @@
                                                 <select
                                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                                     name="payment_method" id="payment_method" required>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Cheque">Cheque</option>
-                                                    <option value="Other">Other</option>
+                                                    <option value="Cash">{{ __('Cash') }}</option>
+                                                    <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
+                                                    <option value="Cheque">{{ __('Cheque') }}</option>
+                                                    <option value="Other">{{ __('Other') }}</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                         <div class="mb-4">
-                                            <label for="paid_amount">{{__('Amount Received')}} <span
+                                            <label for="paid_amount">{{ __('Amount Received') }} <span
                                                     class="text-red-500">*</span></label>
                                             <div class="input-group">
                                                 <input id="paid_amount" type="text"
@@ -156,7 +156,7 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="note">{{__('Note (If Needed)')}}</label>
+                                    <label for="note">{{ __('Note (If Needed)') }}</label>
                                     <textarea name="note" id="note" rows="5"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                                 </div>
@@ -164,7 +164,7 @@
                                 <div class="mt-3">
                                     <button type="submit"
                                         class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                        {{__('Create Purchase Return')}} <i class="bi bi-check"></i>
+                                        {{ __('Create Purchase Return') }} <i class="bi bi-check"></i>
                                     </button>
                                 </div>
                             </form>
@@ -173,5 +173,5 @@
                 </div>
             </div>
         </div>
-    </x-card>
+        </x-card>
 </x-app-layout>

@@ -18,7 +18,7 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     /** @var mixed */
     protected $models;
 
-    /** @return Builder|EloquentBuilder|Relation */
+    
     public function query()
     {
         if ($this->models) {

@@ -143,12 +143,6 @@ class User extends Authenticatable
         return (bool) ($this->roles()->whereName($roles)->first());
     }
 
-    /** @return BelongsToMany<Role> */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
     /**
      * @param mixed $permission
      * @return mixed

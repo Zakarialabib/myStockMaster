@@ -58,13 +58,11 @@ class AdjustedProduct extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Adjustment> */
     public function adjustment(): BelongsTo
     {
         return $this->belongsTo(Adjustment::class, 'adjustment_id', 'id');
     }
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');

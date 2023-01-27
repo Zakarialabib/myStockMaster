@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -37,7 +37,9 @@
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
                                     {{ __('Supplier Info') }}:</h4>
                                 <div><strong>{{ $supplier->name }}</strong></div>
+                                @if (settings()->show_address == true)
                                 <div>{{ $supplier->address }}</div>
+                                @endif
                                 @if (settings()->show_email == true)
                                 <div>{{ __('Email') }}: {{ $supplier->email }}</div>
                                 @endif
@@ -56,6 +58,28 @@
                                 </div>
                                 <div>
                                     {{ __('Payment Status') }}: <strong>{{ $purchase->payment_status }}</strong>
+                                </div>
+                                <div>
+                                    <strong>{{ __('Status') }}:</strong><br>
+                                    @if ($purchase->status == \App\Enums\PurchaseStatus::Pending)
+                                        <span clacc="badge badge-warning">{{ __('Pending') }}</span>
+                                    @elseif ($purchase->status == \App\Enums\PurchaseStatus::Ordered)
+                                        <span clacc="badge badge-info">{{ __('Ordered') }}</span>
+                                    @elseif($purchase->status == \App\Enums\PurchaseStatus::Completed)
+                                        <span clacc="badge badge-success">{{ __('Completed') }}</span>
+                                    @elseif($purchase->status == \App\Enums\PurchaseStatus::Returned)
+                                        <span clacc="badge badge-success">{{ __('Returned') }}</span>
+                                    @endif
+                                </div>
+                                <div>
+                                    <strong>{{ __('Payment Status') }}:</strong><br>
+                                    @if ($purchase->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        <span clacc="badge badge-success">{{ __('Paid') }}</span>
+                                    @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
+                                    @elseif($purchase->payment_status == \App\Enums\PaymentStatus::Due)
+                                        <span clacc="badge badge-danger">{{ __('Due') }}</span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -155,7 +179,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
 </body>
 

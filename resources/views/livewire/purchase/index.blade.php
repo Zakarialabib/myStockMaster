@@ -23,9 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    placeholder="{{ __('Search') }}" />
+                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -47,8 +45,11 @@
                 <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                     {{ __('Status') }}
                 </x-table.th>
-                <x-table.th sortable>
+                <x-table.th>
                     {{ __('Total') }}
+                </x-table.th>
+                <x-table.th>
+                    {{ __('Credit') }}
                 </x-table.th>
                 <x-table.th>
                     {{ __('Actions') }}
@@ -82,6 +83,9 @@
                             {{ format_currency($purchase->total_amount) }}
                         </x-table.td>
                         <x-table.td>
+                            {{ format_currency($purchase->due_amount) }}
+                        </x-table.td>
+                        <x-table.td>
                             <div class="flex justify-start space-x-2">
                                 <x-dropdown align="right" width="56">
                                     <x-slot name="trigger" class="inline-flex">
@@ -93,7 +97,7 @@
                                     <x-slot name="content">
                                         @can('access_purchase_payments')
                                             <x-dropdown-link wire:click="$emit('showPayments', {{ $purchase->id }})"
-                                                primary wire:loading.attr="disabled">
+                                                wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Payments') }}
                                             </x-dropdown-link>
@@ -101,7 +105,7 @@
 
                                         @can('access_purchase_payments')
                                             @if ($purchase->due_amount > 0)
-                                                <x-dropdown-link wire:click="paymentModal({{ $purchase->id }})" primary
+                                                <x-dropdown-link wire:click="paymentModal({{ $purchase->id }})" 
                                                     wire:loading.attr="disabled">
                                                     <i class="fas fa-money-bill-wave"></i>
                                                     {{ __('Add Payment') }}
@@ -126,7 +130,7 @@
                                         @endcan
 
                                         @can('delete_purchases')
-                                            <x-dropdown-link wire:click="confirm('delete', {{ $purchase->id }})"
+                                            <x-dropdown-link wire:click="$emit('deleteModal', {{ $purchase->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-trash"></i>
                                                 {{ __('Delete') }}
@@ -164,14 +168,10 @@
                 
                 <div class="float-right">
                     <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
+                        target="_blank"
                         wire:loading.attr="disabled">
                         <i class="fas fa-file-pdf"></i>
                         {{ __('PDF') }}
-                    </x-button>
-                    <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
-                        wire:loading.attr="disabled">
-                        <i class="fas fa-print"></i>
-                        {{ __('Save') }}
                     </x-button>
                 </div>
             </div>
@@ -216,6 +216,10 @@
                                         @elseif ($purchase->status == \App\Enums\PurchaseStatus::Completed)
                                             <x-badge success class="text-xs">
                                                 {{ __('Completed') }}
+                                            </x-badge>
+                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::Returned)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Returned') }}
                                             </x-badge>
                                         @endif
                                     </div>
@@ -320,7 +324,7 @@
     {{-- Purchase Payment payment component   --}}
     <div>
         {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($purchase))
+        @if (empty($showPayments))
         <livewire:purchase.payment.index :purchase="$purchase" />
         @endif
     </div>

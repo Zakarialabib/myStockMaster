@@ -6,9 +6,7 @@
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <x-label for="reference" :value="__('Reference')" required />
-                    <input type="text" wire:model="reference"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        name="reference" required readonly value="PR">
+                    <x-input type="text" wire:model="reference" name="reference" required readonly />
                     <x-input-error :messages="$errors->get('reference')" class="mt-2" />
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
@@ -20,9 +18,7 @@
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <x-label for="date" :value="__('Date')" required />
-                    <input type="date" wire:model="date"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        name="date" required value="{{ now()->format('Y-m-d') }}">
+                    <x-input type="date" wire:model="date" name="date" required value="{{ now()->format('Y-m-d') }}" />
                     <x-input-error :messages="$errors->get('date')" class="mt-2" />
                 </div>
             </div>
@@ -34,9 +30,9 @@
                     <x-label for="status" :value="__('Status')" required />
                     <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="status" id="status" wire:model="status" required>
-                        <option value="{{ App\Enums\PurchaseStatus::Pending }}">{{ __('Pending') }}</option>
-                        <option value="{{ App\Enums\PurchaseStatus::Ordered }}">{{ __('Ordered') }}</option>
-                        <option value="{{ App\Enums\PurchaseStatus::Completed }}">{{ __('Completed') }}</option>
+                        <option value="{{ \App\Enums\PurchaseStatus::Pending }}" selected>{{ __('Pending') }}</option>
+                        <option value="{{ \App\Enums\PurchaseStatus::Ordered }}">{{ __('Ordered') }}</option>
+                        <option value="{{ \App\Enums\PurchaseStatus::Completed }}">{{ __('Completed') }}</option>
                     </select>
                     <x-input-error :messages="$errors->get('status')" class="mt-2" />
                 </div>
@@ -53,9 +49,7 @@
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <x-label for="paid_amount" :value="__('Amount Paid')" required />
-                        <input id="paid_amount" type="text" wire:model="paid_amount"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="paid_amount" required>
+                        <x-input id="paid_amount" type="text" wire:model="paid_amount" name="paid_amount" required />
                         <x-input-error :messages="$errors->get('paid_amount')" class="mt-2" />
                     </div>
                 </div>

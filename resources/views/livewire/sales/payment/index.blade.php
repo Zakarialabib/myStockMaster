@@ -38,16 +38,13 @@
                                 @can('access_sale_payments')
                                 <x-button wire:click="$emit('paymentModal', {{$salepayment->id}} )"
                                     type="button" primary>
-                                    {{ __('Edit') }}
+                                    <i class="fa fa-pen"></i>
                                 </x-button>
-                                <a href="{{ route('sale-payments.edit', [$salepayment->sale->id, $salepayment->id]) }}" class="btn btn-info btn-sm">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
                                 @endcan
-                                {{-- <x-button wire:click="delete({{ $salepayment->id }})"
+                                <x-button wire:click="delete({{ $salepayment->id }})"
                                     class="bg-red-500 hover:bg-red-700">
-                                    {{ __('Delete') }}
-                                </x-button> --}}
+                                    <i class="fa fa-trash"></i>
+                                </x-button>
                             </x-table.td>
                         </x-table.tr>
                     @empty

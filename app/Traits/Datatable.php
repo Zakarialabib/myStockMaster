@@ -8,19 +8,19 @@ trait Datatable
 {
     public int $perPage;
 
-    public array $orderable;
+    public $orderable = [];
 
     public string $search = '';
 
-    public array $selected = [];
+    public $selected = [];
 
-    public array $paginationOptions;
+    public $paginationOptions = [];
 
-    public $refreshIndex;
+    public bool $refreshIndex;
 
-    public $selectPage = false;
+    public bool $selectPage = false;
 
-    public function getSelectedCountProperty()
+    public function getSelectedCountProperty(): int
     {
         return count($this->selected);
     }

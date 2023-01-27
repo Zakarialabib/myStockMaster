@@ -26,6 +26,12 @@
                         <x-input type="text" wire:model="amount" id="amount" class="block w-full mt-1" required />
                         <x-input-error :messages="$errors->first('amount')" />
                     </div>
+                    
+                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <x-label for="amount_due" :value="__('Amount due')" required />
+                        <x-input type="text" wire:model="amount_due" id="amount_due" class="block w-full mt-1" required />
+                        <x-input-error :messages="$errors->first('amount_due')" />
+                    </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                         <x-label for="payment_method" :value="__('Payment Method')" required />
