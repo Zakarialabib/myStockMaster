@@ -122,7 +122,7 @@
         </x-modal>
     @endif
 
-    @if ($editModal)
+
         <x-modal wire:click="editModal">
             <x-slot name="title">
                 {{ __('Edit Expense Category') }}
@@ -150,7 +150,7 @@
                 </div>
             </x-slot>
         </x-modal>
-    @endif
+
 
     <livewire:expense-categories.create />
 

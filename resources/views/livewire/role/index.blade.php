@@ -78,7 +78,7 @@
             {{ $roles->links() }}
         </div>
     </div>
-    @if ($editModal)
+
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Role') }}
@@ -110,7 +110,7 @@
             </form>
         </x-slot>
     </x-modal>
-    @endif
+
     
     <x-modal wire:model="createModal">
         <x-slot name="title">

@@ -148,7 +148,7 @@
             </div>
         </x-slot>
     </x-modal>
-    @if ($editModal)
+
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit printer') }}
@@ -203,7 +203,7 @@
             </form>
         </x-slot>
     </x-modal>
-    @endif
+
     <livewire:printer.create />
 </div>
 

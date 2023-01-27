@@ -112,7 +112,6 @@
         </div>
     </div>
     
-    @if ($showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Currency') }}
@@ -143,9 +142,7 @@
             </div>
         </x-slot>
     </x-modal>
-    @endif
-    
-    @if ($editModal)
+
     <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Currency') }}
@@ -187,7 +184,6 @@
             </form>
         </x-slot>
     </x-modal>
-    @endif
 
     <livewire:currency.create />
 </div>

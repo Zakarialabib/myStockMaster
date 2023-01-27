@@ -66,7 +66,8 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info type="button" wire:click="editModal({{ $warehouse->id }})" wire:loading.attr="disabled">
+                            <x-button info type="button" wire:click="editModal({{ $warehouse->id }})"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
                             <x-button danger type="button" wire:click="$emit('deleteModal', {{ $warehouse->id }})"
@@ -92,48 +93,46 @@
         {{ $warehouses->links() }}
     </div>
 
-    @if ($editModal)
-        <x-modal wire:model="editModal">
-            <x-slot name="title">
-                {{ __('Edit Warehouse') }}
-            </x-slot>
-            <x-slot name="content">
-                <form wire:submit.prevent="update">
-                    <div class="flex flex-wrap mb-3">
+
+    <x-modal wire:model="editModal">
+        <x-slot name="title">
+            {{ __('Edit Warehouse') }}
+        </x-slot>
+        <x-slot name="content">
+            <form wire:submit.prevent="update">
+                <div class="flex flex-wrap mb-3">
+                    <div class="lg:w-1/2 sm:full px-3 mb-6">
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model="warehouse.name"
+                            required />
+                    </div>
+                    <div class="lg:w-1/2 sm:full px-3 mb-6">
+                        <x-label for="phone" :value="__('Phone')" />
+                        <x-input id="phone" class="block mt-1 w-full" type="text" wire:model="warehouse.phone" />
+                    </div>
+                    <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
                         <div class="lg:w-1/2 sm:full px-3 mb-6">
-                            <x-label for="name" :value="__('Name')" />
-                            <x-input id="name" class="block mt-1 w-full" type="text" wire:model="warehouse.name"
-                                required />
+                            <x-label for="email" :value="__('Email')" />
+                            <x-input id="email" class="block mt-1 w-full" type="email"
+                                wire:model="warehouse.email" />
                         </div>
                         <div class="lg:w-1/2 sm:full px-3 mb-6">
-                            <x-label for="phone" :value="__('Phone')" />
-                            <x-input id="phone" class="block mt-1 w-full" type="text"
-                                wire:model="warehouse.phone" />
+                            <x-label for="city" :value="__('City')" />
+                            <x-input id="city" class="block mt-1 w-full" type="text"
+                                wire:model="warehouse.city" />
                         </div>
-                        <x-accordion title="{{ __('Details') }}" class="flex flex-wrap">
-                            <div class="lg:w-1/2 sm:full px-3 mb-6">
-                                <x-label for="email" :value="__('Email')" />
-                                <x-input id="email" class="block mt-1 w-full" type="email"
-                                    wire:model="warehouse.email" />
-                            </div>
-                            <div class="lg:w-1/2 sm:full px-3 mb-6">
-                                <x-label for="city" :value="__('City')" />
-                                <x-input id="city" class="block mt-1 w-full" type="text"
-                                    wire:model="warehouse.city" />
-                            </div>
-                        </x-accordion>
-                    </div>
-                    <div class="w-full px-3">
-                        <x-button primary type="submit" class="w-full text-center" 
-                            wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-                    </div>
-                </form>
-            </x-slot>
-        </x-modal>
-    @endif
-    
+                    </x-accordion>
+                </div>
+                <div class="w-full px-3">
+                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                        {{ __('Update') }}
+                    </x-button>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+
+
     <livewire:warehouses.create />
 
 </div>
