@@ -11,7 +11,7 @@ class LanguageController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_languages'), 403);
+        abort_if(Gate::denies('languages_access'), 403);
 
         return view('admin.language.index');
     }

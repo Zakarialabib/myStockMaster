@@ -66,7 +66,7 @@ class Index extends Component
 
     public function render(): View|Factory
     {
-        //    abort_if(Gate::denies('access_purchase_payments'), 403);
+           abort_if(Gate::denies('purchase_payment_access'), 403);
 
         $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
             's'               => $this->search ?: null,
@@ -81,7 +81,7 @@ class Index extends Component
 
     public function showPayments($purchase_id): void
     {
-        abort_if(Gate::denies('access_purchases'), 403);
+        abort_if(Gate::denies('purchase_payment_access'), 403);
 
         $this->purchase_id = $purchase_id;
 

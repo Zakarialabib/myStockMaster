@@ -11,7 +11,7 @@ class CurrencyController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_currencies'), 403);
+        abort_if(Gate::denies('currency_access'), 403);
 
         return view('admin.currency.index');
     }

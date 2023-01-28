@@ -21,14 +21,14 @@ class PurchaseController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_purchases'), 403);
+        abort_if(Gate::denies('purchase_access'), 403);
 
         return view('admin.purchases.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_purchases'), 403);
+        abort_if(Gate::denies('purchase_create'), 403);
 
         Cart::instance('purchase')->destroy();
 
@@ -109,7 +109,7 @@ class PurchaseController extends Controller
 
     public function edit(Purchase $purchase)
     {
-        abort_if(Gate::denies('edit_purchases'), 403);
+        abort_if(Gate::denies('purchase_update'), 403);
 
         $purchase_details = $purchase->purchaseDetails;
 
@@ -213,7 +213,7 @@ class PurchaseController extends Controller
 
     public function destroy(Purchase $purchase)
     {
-        abort_if(Gate::denies('delete_purchases'), 403);
+        abort_if(Gate::denies('purchase_delete'), 403);
 
         $purchase->delete();
 

@@ -94,7 +94,7 @@ class Index extends Component
 
     public function showModal(Purchase $purchase): void
     {
-        abort_if(Gate::denies('purchase_show'), 403);
+        abort_if(Gate::denies('purchase_access'), 403);
 
         $this->resetErrorBag();
 

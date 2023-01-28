@@ -38,14 +38,12 @@ class Create extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
         return view('livewire.categories.create');
     }
 
     public function createCategory(): void
     {
-        $this->reset();
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->createCategory = true;
     }

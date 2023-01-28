@@ -162,9 +162,9 @@
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="create_products" name="permissions[]"
-                                                               value="create_products" {{ $role->hasPermissionTo('create_products') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="create_products">Create</label>
+                                                               id="product_create" name="permissions[]"
+                                                               value="product_create" {{ $role->hasPermissionTo('product_create') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="product_create">Create</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">

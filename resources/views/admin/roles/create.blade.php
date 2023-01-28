@@ -159,9 +159,9 @@
                                                 <div class="col-6">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input"
-                                                               id="create_products" name="permissions[]"
-                                                               value="create_products" {{ old('create_products') ? 'checked' : '' }}>
-                                                        <label class="custom-control-label" for="create_products">{{__('Create')}}</label>
+                                                               id="product_create" name="permissions[]"
+                                                               value="product_create" {{ old('product_create') ? 'checked' : '' }}>
+                                                        <label class="custom-control-label" for="product_create">{{__('Create')}}</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-6">

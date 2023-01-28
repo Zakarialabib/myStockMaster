@@ -20,14 +20,14 @@ class SalesReturnController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_sale_returns'), 403);
+        abort_if(Gate::denies('sale_return_access'), 403);
 
         return view('admin.salesreturn.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_sale_returns'), 403);
+        abort_if(Gate::denies('sale_return_create'), 403);
 
         Cart::instance('sale_return')->destroy();
 
@@ -117,7 +117,7 @@ class SalesReturnController extends Controller
 
     public function edit(SaleReturn $sale_return)
     {
-        abort_if(Gate::denies('edit_sale_returns'), 403);
+        abort_if(Gate::denies('sale_return_update'), 403);
 
         $sale_return_details = $sale_return->saleReturnDetails;
 
@@ -221,7 +221,7 @@ class SalesReturnController extends Controller
 
     public function destroy(SaleReturn $sale_return)
     {
-        abort_if(Gate::denies('delete_sale_returns'), 403);
+        abort_if(Gate::denies('sale_return_delete'), 403);
 
         $sale_return->delete();
 

@@ -59,7 +59,7 @@ class Recent extends Component
 
     public function render()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $query = Sale::with('customer', 'saleDetails')->advancedFilter([
             's'               => $this->search ?: null,
@@ -74,7 +74,7 @@ class Recent extends Component
 
     public function showModal($id)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale = Sale::with('saleDetails')->findOrFail($id);
 
@@ -83,7 +83,7 @@ class Recent extends Component
 
     public function recentSales()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->recentSales = true;
     }

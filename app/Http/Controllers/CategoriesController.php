@@ -11,7 +11,7 @@ class CategoriesController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         return view('admin.categories.index');
     }

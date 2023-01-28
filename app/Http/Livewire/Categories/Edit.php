@@ -31,14 +31,13 @@ class Edit extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
 
         return view('livewire.categories.edit');
     }
 
     public function editModal($id): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_update'), 403);
 
         $this->resetErrorBag();
 
@@ -51,7 +50,6 @@ class Edit extends Component
 
     public function update(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
 
         $this->validate();
 

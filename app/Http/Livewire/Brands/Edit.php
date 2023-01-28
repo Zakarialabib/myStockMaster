@@ -35,7 +35,6 @@ class Edit extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('brand_create'), 403);
 
         return view('livewire.brands.edit');
     }
@@ -55,10 +54,8 @@ class Edit extends Component
 
     public function update(): void
     {
-        abort_if(Gate::denies('brand_edit'), 403);
 
         $this->validate();
-        // upload image if it does or doesn't exist
 
         if ($this->image) {
             $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();

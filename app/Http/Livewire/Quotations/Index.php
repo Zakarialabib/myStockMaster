@@ -61,7 +61,7 @@ class Index extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('access_quotations'), 403);
+        abort_if(Gate::denies('quotation_access'), 403);
 
         $query = Quotation::advancedFilter([
             's'               => $this->search ?: null,
@@ -76,7 +76,7 @@ class Index extends Component
 
     public function showModal(Quotation $quotation)
     {
-        abort_if(Gate::denies('access_quotations'), 403);
+        abort_if(Gate::denies('quotation_access'), 403);
 
         $this->quotation = Customer::findOrFail($quotation->customer_id);
 

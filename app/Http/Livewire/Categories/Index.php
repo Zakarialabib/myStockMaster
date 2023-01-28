@@ -67,7 +67,7 @@ class Index extends Component
 
     public function render(): mixed
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $query = Category::with('products')->advancedFilter([
             's'               => $this->search ?: null,
@@ -82,7 +82,7 @@ class Index extends Component
 
     public function showModal(Category $category): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->resetErrorBag();
 
@@ -95,7 +95,7 @@ class Index extends Component
 
     public function deleteSelected(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_delete'), 403);
 
         Category::whereIn('id', $this->selected)->delete();
 
@@ -104,7 +104,7 @@ class Index extends Component
 
     public function delete(Category $category): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_delete'), 403);
 
         if ($category->products->count() > 0) {
             $this->alert('error', __('Category has products.'));
@@ -116,14 +116,14 @@ class Index extends Component
 
     public function importModal(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->importModal = true;
     }
 
     public function import(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->validate([
             'file' => 'required|mimes:xlsx,xls,csv,txt',

@@ -18,14 +18,14 @@ class QuotationController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_quotations'), 403);
+        abort_if(Gate::denies('quotation_access'), 403);
 
         return view('admin.quotation.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_quotations'), 403);
+        abort_if(Gate::denies('quotation_create'), 403);
 
         return view('admin.quotation.create');
     }

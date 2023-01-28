@@ -67,7 +67,7 @@ class Create extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('create_products'), 403);
+        abort_if(Gate::denies('product_create'), 403);
 
         return view('livewire.products.create');
     }

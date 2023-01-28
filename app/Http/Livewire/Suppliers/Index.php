@@ -104,7 +104,7 @@ class Index extends Component
 
     public function editModal($id)
     {
-        abort_if(Gate::denies('supplier_edit'), 403);
+        abort_if(Gate::denies('supplier_update'), 403);
 
         $this->resetErrorBag();
 

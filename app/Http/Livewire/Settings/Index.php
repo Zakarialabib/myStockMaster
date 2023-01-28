@@ -64,7 +64,7 @@ class Index extends Component
 
     public function mount(): void
     {
-        abort_if(Gate::denies('access_settings'), 403);
+        abort_if(Gate::denies('setting_access'), 403);
 
         $settings = Setting::firstOrFail();
 

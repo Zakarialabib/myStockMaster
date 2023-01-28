@@ -307,6 +307,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'name' => 'quotation_sale',
             ],
             [
+                'id'         => 59,
+                'guard_name'       => 'web',
+                'name' => 'print_barcodes',
+            ],
+            [
                 'id'         => 60,
                 'guard_name'       => 'web',
                 'name' => 'purchase_return_access',
@@ -359,7 +364,127 @@ class RolesAndPermissionsSeeder extends Seeder
             [
                 'id'         => 70,
                 'guard_name'       => 'web',
-                'name' => 'access_languages',
+                'name' => 'languages_access',
+            ],
+            [
+                'id'         => 71,
+                'guard_name'       => 'web',
+                'name' => 'currency_access',
+            ],
+            [
+                'id'         => 72,
+                'guard_name'       => 'web',
+                'name' => 'expense_categories_access',
+            ],
+            [
+                'id'         => 73,
+                'guard_name'       => 'web',
+                'name' => 'expense_categories_create',
+            ],
+            [
+                'id'         => 74,
+                'guard_name'       => 'web',
+                'name' => 'expense_categories_edit',
+            ],
+            [
+                'id'         => 75,
+                'guard_name'       => 'web',
+                'name' => 'expense_categories_delete',
+            ],
+            [
+                'id'         => 76,
+                'guard_name'       => 'web',
+                'name' => 'purchase_payment_access',
+            ],
+            [
+                'id'         => 77,
+                'guard_name'       => 'web',
+                'name' => 'purchase_payment_create',
+            ],
+            [
+                'id'         => 78,
+                'guard_name'       => 'web',
+                'name' => 'purchase_payment_update',
+            ],
+            [
+                'id'         => 79,
+                'guard_name'       => 'web',
+                'name' => 'purchase_payment_delete',
+            ],
+            [
+                'id'         => 80,
+                'guard_name'       => 'web',
+                'name' => 'quotation_access',
+            ],
+            [
+                'id'         => 81,
+                'guard_name'       => 'web',
+                'name' => 'supplier_access',
+            ],
+            [
+                'id'         => 82,
+                'guard_name'       => 'web',
+                'name' => 'supplier_create',
+            ],
+            [
+                'id'         => 83,
+                'guard_name'       => 'web',
+                'name' => 'supplier_show',
+            ],
+            [
+                'id'         => 84,
+                'guard_name'       => 'web',
+                'name' => 'supplier_update',
+            ],
+            [
+                'id'         => 85,
+                'guard_name'       => 'web',
+                'name' => 'supplier_delete',
+            ],
+            [
+                'id'         => 86,
+                'guard_name'       => 'web',
+                'name' => 'sale_payment_access',
+            ],
+            [
+                'id'         => 88,
+                'guard_name'       => 'web',
+                'name' => 'sale_payment_create',
+            ],
+            [
+                'id'         => 89,
+                'guard_name'       => 'web',
+                'name' => 'sale_payment_update',
+            ],
+            [
+                'id'         => 90,
+                'guard_name'       => 'web',
+                'name' => 'sale_payment_delete',
+            ],
+            [
+                'id'         => 91,
+                'guard_name'       => 'web',
+                'name' => 'warehouse_access',
+            ],
+            [
+                'id'         => 92,
+                'guard_name'       => 'web',
+                'name' => 'warehouse_create',
+            ],
+            [
+                'id'         => 93,
+                'guard_name'       => 'web',
+                'name' => 'warehouse_show',
+            ],
+            [
+                'id'         => 94,
+                'guard_name'       => 'web',
+                'name' => 'warehouse_update',
+            ],
+            [
+                'id'         => 95,
+                'guard_name'       => 'web',
+                'name' => 'warehouse_delete',
             ],
 
         ];

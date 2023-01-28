@@ -64,7 +64,7 @@ class Index extends Component
 
     public function render()
     {
-        //    abort_if(Gate::denies('access_sale_payments'), 403);
+           abort_if(Gate::denies('sale_payment_access'), 403);
 
         $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
             's'               => $this->search ?: null,
@@ -79,7 +79,7 @@ class Index extends Component
 
     public function showPayments($sale_id)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale_id = $sale_id;
 

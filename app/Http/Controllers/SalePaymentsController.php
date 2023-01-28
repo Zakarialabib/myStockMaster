@@ -12,7 +12,7 @@ class SalePaymentsController extends Controller
 {
     public function index($sale_id)
     {
-        abort_if(Gate::denies('access_sale_payments'), 403);
+        abort_if(Gate::denies('sale_payment_access'), 403);
 
         $sale = Sale::findOrFail($sale_id);
 

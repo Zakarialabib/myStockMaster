@@ -22,14 +22,14 @@ class SaleController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         return view('admin.sale.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_sales'), 403);
+        abort_if(Gate::denies('sale_create'), 403);
 
         Cart::instance('sale')->destroy();
 
@@ -112,7 +112,7 @@ class SaleController extends Controller
 
     public function edit(Sale $sale)
     {
-        abort_if(Gate::denies('edit_sales'), 403);
+        abort_if(Gate::denies('sale_update'), 403);
 
         $sale_details = $sale->saleDetails;
 

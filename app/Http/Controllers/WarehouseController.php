@@ -11,7 +11,7 @@ class WarehouseController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_warehouses'), 403);
+        abort_if(Gate::denies('warehouse_access'), 403);
 
         return view('admin.warehouses.index');
     }

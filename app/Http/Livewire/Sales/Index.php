@@ -86,7 +86,7 @@ class Index extends Component
 
     public function render(): View|Factory
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $query = Sale::with(['customer', 'salepayments','saleDetails'])
             ->advancedFilter([
@@ -102,7 +102,7 @@ class Index extends Component
 
     public function showModal($id)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale = Sale::find($id);
 
@@ -131,7 +131,7 @@ class Index extends Component
 
     public function importModal()
     {
-        abort_if(Gate::denies('create_sales'), 403);
+        abort_if(Gate::denies('sale_create'), 403);
 
         $this->resetSelected();
 
@@ -142,7 +142,7 @@ class Index extends Component
 
     public function import()
     {
-        abort_if(Gate::denies('create_sales'), 403);
+        abort_if(Gate::denies('sale_create'), 403);
 
         $this->validate([
             'import_file' => [
@@ -164,7 +164,7 @@ class Index extends Component
 
     public function paymentModal(Sale $sale)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale = $sale;
         $this->date = Carbon::now()->format('Y-m-d');

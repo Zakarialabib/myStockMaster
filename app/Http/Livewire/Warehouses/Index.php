@@ -95,7 +95,7 @@ class Index extends Component
 
     public function editModal(Warehouse $warehouse)
     {
-        abort_if(Gate::denies('warehouse_edit'), 403);
+        abort_if(Gate::denies('warehouse_update'), 403);
 
         $this->resetErrorBag();
 
@@ -108,7 +108,7 @@ class Index extends Component
 
     public function update(): void
     {
-        abort_if(Gate::denies('warehouse_edit'), 403);
+        abort_if(Gate::denies('warehouse_update'), 403);
 
         $this->validate();
 

@@ -120,7 +120,7 @@ class Index extends Component
 
     public function editModal(PurchaseReturn $purchasereturn)
     {
-        abort_if(Gate::denies('purchase_edit'), 403);
+        abort_if(Gate::denies('purchase_update'), 403);
 
         $this->resetErrorBag();
 
@@ -144,7 +144,7 @@ class Index extends Component
 
     public function showModal(PurchaseReturn $purchasereturn)
     {
-        abort_if(Gate::denies('purchase_show'), 403);
+        abort_if(Gate::denies('purchase_access'), 403);
 
         $this->resetErrorBag();
 

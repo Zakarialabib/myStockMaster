@@ -11,7 +11,7 @@ class UsersController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_user_management'), 403);
+        abort_if(Gate::denies('user_access'), 403);
 
         return view('admin.users.index');
     }

@@ -83,7 +83,7 @@ class Index extends Component
 
     public function render()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
             ->advancedFilter([
@@ -99,7 +99,7 @@ class Index extends Component
 
     public function showModal(SaleReturn $salereturn)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->salereturn = SaleReturn::find($salereturn->id);
 
@@ -128,7 +128,7 @@ class Index extends Component
 
     public function importModal()
     {
-        abort_if(Gate::denies('create_sales'), 403);
+        abort_if(Gate::denies('sale_create'), 403);
 
         $this->resetSelected();
 
@@ -139,7 +139,7 @@ class Index extends Component
 
     public function import()
     {
-        abort_if(Gate::denies('create_sales'), 403);
+        abort_if(Gate::denies('sale_create'), 403);
 
         $this->validate([
             'import_file' => [
@@ -161,7 +161,7 @@ class Index extends Component
 
     public function paymentModal(SaleReturn $salereturn)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->salereturn = $salereturn;
         $this->date = Carbon::now()->format('Y-m-d');

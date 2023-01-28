@@ -11,7 +11,7 @@ class ExpenseCategoriesController extends Controller
 {
     public function __invoke()
     {
-        abort_if(Gate::denies('access_expense_categories'), 403);
+        abort_if(Gate::denies('expense_categories_access'), 403);
 
         return view('admin.expenses.categories.index');
     }

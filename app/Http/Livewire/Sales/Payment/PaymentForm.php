@@ -63,7 +63,7 @@ class PaymentForm extends Component
 
     public function paymentModal($sale)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale_id = $sale;
 

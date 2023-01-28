@@ -20,14 +20,14 @@ class PurchasesReturnController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('access_purchase_returns'), 403);
+        abort_if(Gate::denies('purchase_return_access'), 403);
 
         return view('admin.purchasesreturn.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_purchase_returns'), 403);
+        abort_if(Gate::denies('purchase_return_create'), 403);
 
         Cart::instance('purchase_return')->destroy();
 
@@ -107,7 +107,7 @@ class PurchasesReturnController extends Controller
 
     public function show(PurchaseReturn $purchase_return)
     {
-        abort_if(Gate::denies('show_purchase_returns'), 403);
+        abort_if(Gate::denies('purchase_return_show'), 403);
 
         $supplier = Supplier::findOrFail($purchase_return->supplier_id);
 
@@ -116,7 +116,7 @@ class PurchasesReturnController extends Controller
 
     public function edit(PurchaseReturn $purchase_return)
     {
-        abort_if(Gate::denies('edit_purchase_returns'), 403);
+        abort_if(Gate::denies('purchase_return_update'), 403);
 
         $purchase_return_details = $purchase_return->purchaseReturnDetails;
 
@@ -220,7 +220,7 @@ class PurchasesReturnController extends Controller
 
     public function destroy(PurchaseReturn $purchase_return)
     {
-        abort_if(Gate::denies('delete_purchase_returns'), 403);
+        abort_if(Gate::denies('purchase_return_delete'), 403);
 
         $purchase_return->delete();
 

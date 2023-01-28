@@ -17,14 +17,14 @@ class AdjustmentController extends Controller
     /** @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory */
     public function index()
     {
-        abort_if(Gate::denies('access_adjustments'), 403);
+        abort_if(Gate::denies('adjustment_access'), 403);
 
         return view('admin.adjustment.index');
     }
 
     public function create()
     {
-        abort_if(Gate::denies('create_adjustments'), 403);
+        abort_if(Gate::denies('adjustment_create'), 403);
 
         return view('admin.adjustment.create');
     }
@@ -32,7 +32,7 @@ class AdjustmentController extends Controller
     // use livewire --------->
     public function store(Request $request)
     {
-        abort_if(Gate::denies('create_adjustments'), 403);
+        abort_if(Gate::denies('adjustment_create'), 403);
 
         $request->validate([
             'reference'   => 'required|string|max:255',
@@ -78,14 +78,14 @@ class AdjustmentController extends Controller
 
     public function edit(Adjustment $adjustment)
     {
-        abort_if(Gate::denies('edit_adjustments'), 403);
+        abort_if(Gate::denies('adjustment_edit'), 403);
 
         return view('admin.adjustment.edit', compact('adjustment'));
     }
 
     public function update(Request $request, Adjustment $adjustment)
     {
-        abort_if(Gate::denies('edit_adjustments'), 403);
+        abort_if(Gate::denies('adjustment_edit'), 403);
 
         $request->validate([
             'reference'   => 'required|string|max:255',
