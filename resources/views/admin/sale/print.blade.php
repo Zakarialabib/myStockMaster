@@ -5,13 +5,15 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="text-center">
-                    {{-- <h2><img width="100" src="{{ $image }}" alt="Logo"></h2> --}}
+                    <h2>
+                        {{ $customer->name }} - {{__('Sale Details')}}
+                    </h2>
                 </div>
                 <hr>
-                <div class="col-lg-6">
-                    <address>
+                <div class="col">
+                    <div>
                         <strong>{{ settings()->company_name }}</strong><br>
                         @if (settings()->show_address == true)
                             {{ settings()->company_address }}<br>
@@ -20,11 +22,10 @@
                             {{ __('Email') }}: {{ settings()->company_email }}<br>
                         @endif
                         {{ __('Phone') }}: {{ settings()->company_phone }}<br>
-                    </address>
-
+                    </div>
                 </div>
-                <div class="col-lg-6 text-right">
-                    <address>
+                <div class="col text-right">
+                    <div>
                         <strong>{{ $customer->name }}:</strong><br>
                         @if (settings()->show_address == true)
                             <div>{{ $customer->address }}</div>
@@ -34,46 +35,44 @@
                             <div>{{ __('Email') }}: {{ $customer->email }}</div>
                         @endif
                         <div>{{ __('Phone') }}: {{ $customer->phone }}</div>
-                    </address>
+                    </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div>
-                        <strong>{{ __('Status') }}:</strong><br>
-                        @if ($sale->status == \App\Enums\SaleStatus::Pending)
-                            <span clacc="badge badge-warning">{{ __('Pending') }}</span>
-                        @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
-                            <span clacc="badge badge-info">{{ __('Ordered') }}</span>
-                        @elseif($sale->status == \App\Enums\SaleStatus::Completed)
-                            <span clacc="badge badge-success">{{ __('Completed') }}</span>
-                        @endif
-                    </div>
-                    <div>
-                        <strong>{{ __('Payment Status') }}:</strong><br>
-                        @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
-                            <span clacc="badge badge-success">{{ __('Paid') }}</span>
-                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
-                            <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
-                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
-                            <span clacc="badge badge-danger">{{ __('Due') }}</span>
-                        @endif
-                    </div>
+                <div class="col">
+
+                    <strong>{{ __('Status') }}:</strong><br>
+                    @if ($sale->status == \App\Enums\SaleStatus::Pending)
+                        <span clacc="badge badge-warning">{{ __('Pending') }}</span>
+                    @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
+                        <span clacc="badge badge-info">{{ __('Ordered') }}</span>
+                    @elseif($sale->status == \App\Enums\SaleStatus::Completed)
+                        <span clacc="badge badge-success">{{ __('Completed') }}</span>
+                    @endif
+                    <br>
+                    <strong>{{ __('Payment Status') }}:</strong><br>
+                    @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
+                        <span clacc="badge badge-success">{{ __('Paid') }}</span>
+                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
+                        <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
+                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
+                        <span clacc="badge badge-danger">{{ __('Due') }}</span>
+                    @endif
+
                 </div>
-                <div class="col-lg-6 text-right">
-                    <address>
+                <div class="col text-right">
+                    <div>
                         <strong>{{ __('Reference') }}:</strong><br>
                         {{ $sale->reference }}<br>
                         <strong>{{ __('Date') }}:</strong><br>
                         {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}<br><br>
-                    </address>
+                    </div>
                 </div>
 
             </div>
         </div>
-
+        <br>
         <div class="row">
-
-            <div id="table" class="table-responsive-sm" style="margin-top: 30px;">
+            <div style="margin-top: 30px;">
                 <table>
                     <thead>
                         <tr class="title">
@@ -117,8 +116,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="row">
-                <div class="col-xs-4 col-xs-offset-8">
+            <div class="row" style="padding:10px 15px">
+                <div class="col">
                     <table class="table">
                         <tbody>
                             @if ($sale->discount_percentage)
@@ -152,7 +151,7 @@
                 </div>
             </div>
             <div class="row" style="margin-top: 25px;">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <p style="font-style: italic;text-align: center">{{ settings()->company_name }} &copy;
                         {{ date('Y') }}.</p>
                 </div>

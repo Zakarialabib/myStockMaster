@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 namespace App\Models;
+
 use Spatie\Permission\Models\Role as SpatieRole;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**

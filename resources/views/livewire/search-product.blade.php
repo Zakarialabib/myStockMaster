@@ -81,20 +81,17 @@
                 </div>
             </div>
         @else
-            <div class="w-full px-2">
-                <div
-                    class="relative px-3 py-3 mb-4 border rounded text-yellow-800 border-yellow-800 bg-yellow-400 md:mb-0">
-                    <span class="inline-block align-middle mr-8">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11a1 1 0 11-2 0 1 1 0 012 0zm-1-3a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </span>
-                    <span class="inline-block align-middle mr-8">
-                        {{ __('No product found') }}
-                    </span>
-                </div>
+            <div class="w-full px-2 py-3 mb-4 border rounded">
+                <span class="inline-block align-middle mr-8">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11a1 1 0 11-2 0 1 1 0 012 0zm-1-3a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </span>
+                <span class="inline-block align-middle mr-8">
+                    {{ __('No product found') }}
+                </span>
             </div>
         @endif
     @else
@@ -122,20 +119,17 @@
                             </span>
                         </div>
                     @empty
-                        <div class="w-full px-2">
-                            <div
-                                class="relative px-3 py-3 mb-4 border rounded text-yellow-800 border-yellow-800 bg-yellow-400 md:mb-0">
-                                <span class="inline-block align-middle mr-8">
-                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11a1 1 0 11-2 0 1 1 0 012 0zm-1-3a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </span>
-                                <span class="inline-block align-middle mr-8">
-                                    {{ __('No product found') }}
-                                </span>
-                            </div>
+                        <div class="w-full px-2 py-3 mb-4 border rounded">
+                            <span class="inline-block align-middle mr-8">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11a1 1 0 11-2 0 1 1 0 012 0zm-1-3a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </span>
+                            <span class="inline-block align-middle mr-8">
+                                {{ __('No product found') }}
+                            </span>
                         </div>
                     @endforelse
                 </div>

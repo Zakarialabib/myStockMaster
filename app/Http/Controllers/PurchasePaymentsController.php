@@ -31,7 +31,6 @@ class PurchasePaymentsController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'date'           => 'required|date',
             'reference'      => 'required|string|max:255',
@@ -86,7 +85,6 @@ class PurchasePaymentsController extends Controller
 
     public function update(Request $request, PurchasePayment $purchasePayment)
     {
-
         $request->validate([
             'date'           => 'required|date',
             'reference'      => 'required|string|max:255',

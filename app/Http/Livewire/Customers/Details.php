@@ -11,8 +11,6 @@ use App\Models\SaleReturn;
 use App\Traits\Datatable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,7 +18,6 @@ class Details extends Component
 {
     use WithPagination;
     use WithSorting;
-    use LivewireAlert;
     use Datatable;
 
     public $customer_id;

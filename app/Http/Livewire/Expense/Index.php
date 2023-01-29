@@ -31,8 +31,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
-        'exportAll','downloadAll',
-        'delete'
+        'exportAll', 'downloadAll',
+        'delete',
     ];
 
     public $showModal = false;

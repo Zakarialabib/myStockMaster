@@ -33,7 +33,7 @@ class Index extends Component
     public $listeners = [
         'showModal', 'paymentModal',
         'refreshIndex' => '$refresh',
-        'delete'
+        'delete',
     ];
 
     public $showModal = false;

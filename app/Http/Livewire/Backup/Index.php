@@ -19,7 +19,7 @@ class Index extends Component
     protected $listeners = [
         'deleteModel', 'generate',
         'refreshTable' => '$refresh',
-        'delete'
+        'delete',
     ];
 
     public function render()

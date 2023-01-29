@@ -28,8 +28,6 @@ class Index extends Component
 
     public $showModal = false;
 
-    public $refreshIndex;
-
     public $editModal = false;
 
     /** @var string[][] */

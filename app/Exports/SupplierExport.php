@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class SupplierExport implements FromView    
+class SupplierExport implements FromView
 {
     use Exportable;
     use ForModelsTrait;
@@ -31,6 +31,5 @@ class SupplierExport implements FromView
         return view('pdf.suppliers', [
             'data' => $this->query()->get(),
         ]);
-    }   
-
+    }
 }

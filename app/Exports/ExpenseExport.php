@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class ExpenseExport implements FromView    
+class ExpenseExport implements FromView
 {
     use Exportable;
     use ForModelsTrait;
@@ -17,7 +17,6 @@ class ExpenseExport implements FromView
     /** @var mixed */
     protected $models;
 
-    
     public function query()
     {
         if ($this->models) {
@@ -32,6 +31,5 @@ class ExpenseExport implements FromView
         return view('pdf.expenses', [
             'data' => $this->query()->get(),
         ]);
-    }   
-   
+    }
 }

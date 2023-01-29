@@ -18,7 +18,6 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
     /** @var mixed */
     protected $models;
 
-    
     public function query()
     {
         if ($this->models) {

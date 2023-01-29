@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Sales\Payment;
 
 use App\Http\Livewire\WithSorting;
-use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -64,7 +63,7 @@ class Index extends Component
 
     public function render()
     {
-           abort_if(Gate::denies('sale_payment_access'), 403);
+        abort_if(Gate::denies('sale_payment_access'), 403);
 
         $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
             's'               => $this->search ?: null,

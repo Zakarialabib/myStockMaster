@@ -15,8 +15,6 @@ use PDF;
 
 class ExportController extends Controller
 {
-
-    
     public function salePos($id)
     {
         $sale = Sale::where('id', $id)->firstOrFail();
@@ -40,11 +38,12 @@ class ExportController extends Controller
 
         $data = [
             'sale'     => $sale,
-            'customer' => $customer
+            'customer' => $customer,
         ];
-        
+
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
-            'format' => 'a4',
+            'format'    => 'a4',
+            'watermark' => $this->setWaterMark($sale),
         ]);
 
         return $pdf->stream(__('Sale').$sale->reference.'.pdf');
@@ -57,7 +56,7 @@ class ExportController extends Controller
 
         $data = [
             'purchase_return' => $purchaseReturn,
-            'supplier'        => $supplier
+            'supplier'        => $supplier,
         ];
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
@@ -87,14 +86,12 @@ class ExportController extends Controller
 
         $data = [
             'purchase' => $purchase,
-            'supplier' => $supplier
+            'supplier' => $supplier,
         ];
-        
-        // dd($data);
+
         $pdf = PDF::loadView('admin.purchases.print', $data, [], [
             'format' => 'a5',
         ]);
-        
 
         return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
     }
@@ -106,7 +103,7 @@ class ExportController extends Controller
 
         $data = [
             'sale_return' => $saleReturn,
-            'customer'    => $customer
+            'customer'    => $customer,
         ];
 
         $pdf = PDF::loadView('admin.salesreturn.print', $data);
@@ -117,5 +114,10 @@ class ExportController extends Controller
     private function getCompanyLogo()
     {
         return 'data:image/jpg;base64,'.base64_encode(file_get_contents(public_path('images/logo.png')));
+    }
+
+    private function setWaterMark($model)
+    {
+        return $model && $model->status ? $model->status : '';
     }
 }

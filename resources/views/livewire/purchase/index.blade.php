@@ -23,7 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -113,7 +113,7 @@
                                             @endif
                                         @endcan
 
-                                        @can('show_purchases')
+                                        @can('purchase_access')
                                             <x-dropdown-link wire:click="showModal({{ $purchase->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-eye"></i>
@@ -121,7 +121,7 @@
                                             </x-dropdown-link>
                                         @endcan
 
-                                        @can('edit_purchases')
+                                        @can('purchase_update')
                                             <x-dropdown-link href="{{ route('purchases.edit', $purchase->id) }}"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-edit"></i>
@@ -129,7 +129,13 @@
                                             </x-dropdown-link>
                                         @endcan
 
-                                        @can('delete_purchases')
+                                         <x-dropdown-link target="_blank" href="{{ route('purchases.pdf', $purchase->id) }}"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-print"></i>
+                                            {{ __('Print') }}
+                                        </x-dropdown-link>
+
+                                        @can('purchase_delete')
                                             <x-dropdown-link wire:click="$emit('deleteModal', {{ $purchase->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-trash"></i>

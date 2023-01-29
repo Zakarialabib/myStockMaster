@@ -265,7 +265,7 @@ class PermissionsSeeder extends Seeder
             [
                 'id'         => 50,
                 'name'       => 'adjustment show',
-                'guard_name' => 'expense_show',
+                'guard_name' => 'adjustment_show',
             ],
             [
                 'id'         => 51,
@@ -366,6 +366,96 @@ class PermissionsSeeder extends Seeder
                 'id'         => 65,
                 'name'       => 'access language',
                 'guard_name' => 'access_languages',
+            ],
+            [
+                'id'         => 66,
+                'name'       => 'access_purchase_payment',
+                'guard_name' => 'access_purchase_payments',
+            ],
+            [
+                'id'         => 67,
+                'name'       => 'create_purchase_payment',
+                'guard_name' => 'create_purchase_payment',
+            ],
+            [
+                'id'         => 68,
+                'name'       => 'update_purchase_payment',
+                'guard_name' => 'update_purchase_payment',
+            ],
+            [
+                'id'         => 69,
+                'name'       => 'delete_purchase_payment',
+                'guard_name' => 'delete_purchase_payment',
+            ],
+            [
+                'id'         => 69,
+                'name'       => 'show_purchase_payment',
+                'guard_name' => 'show_purchase_payment',
+            ],
+            [
+                'id'         => 70,
+                'name'       => 'access_sale_payments',
+                'guard_name' => 'access_sale_payments',
+            ],
+            [
+                'id'         => 71,
+                'name'       => 'create_sale_payment',
+                'guard_name' => 'create_sale_payment',
+            ],
+            [
+                'id'         => 72,
+                'name'       => 'update_sale_payment',
+                'guard_name' => 'update_sale_payment',
+            ],
+            [
+                'id'         => 73,
+                'name'       => 'delete_sale_payment',
+                'guard_name' => 'delete_sale_payment',
+            ],
+            [
+                'id'         => 74,
+                'name'       => 'quotations_access',
+                'guard_name' => 'quotations_access',
+            ],
+            [
+                'id'         => 75,
+                'name'       => 'access_warehouses',
+                'guard_name' => 'access_warehouses',
+            ],
+            [
+                'id'         => 76,
+                'name'       => 'warehouse_create',
+                'guard_name' => 'warehouse_create',
+            ],
+            [
+                'id'         => 77,
+                'name'       => 'warehouse_update',
+                'guard_name' => 'warehouse_update',
+            ],
+            [
+                'id'         => 78,
+                'name'       => 'warehouse_delete',
+                'guard_name' => 'warehouse_delete',
+            ],
+            [
+                'id'         => 79,
+                'name'       => 'suppliers access',
+                'guard_name' => 'suppliers_access',
+            ],
+            [
+                'id'         => 80,
+                'name'       => 'supplier create',
+                'guard_name' => 'supplier_create',
+            ],
+            [
+                'id'         => 81,
+                'name'       => 'supplier update',
+                'guard_name' => 'supplier_update',
+            ],
+            [
+                'id'         => 82,
+                'name'       => 'supplier delete',
+                'guard_name' => 'supplier_delete',
             ],
 
         ];

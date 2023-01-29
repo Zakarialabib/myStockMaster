@@ -34,8 +34,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
-        'exportAll','downloadAll',
-        'delete'
+        'exportAll', 'downloadAll',
+        'delete',
     ];
 
     public $showModal = false;
@@ -171,7 +171,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        return $this->callExport()->forModels($customer)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+        return $this->callExport()->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     private function callExport(): CustomerExport

@@ -17,7 +17,6 @@ class ProductExport implements FromView
     /** @var mixed */
     protected $models;
 
-    
     public function query()
     {
         if ($this->models) {
@@ -32,6 +31,5 @@ class ProductExport implements FromView
         return view('pdf.products', [
             'data' => $this->query()->get(),
         ]);
-    }   
-
+    }
 }

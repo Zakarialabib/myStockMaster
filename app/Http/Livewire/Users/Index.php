@@ -27,7 +27,7 @@ class Index extends Component
     /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal', 'delete'
+        'showModal', 'editModal', 'delete',
     ];
 
     /** @var bool */
@@ -50,10 +50,10 @@ class Index extends Component
     ];
 
     public array $rules = [
-        'user.name'       => 'required|string|max:255',
-        'user.email'      => 'required|email|unique:users,email',
-        'user.password'   => 'required|string|min:8',
-        'user.phone'      => 'required|numeric',
+        'user.name'     => 'required|string|max:255',
+        'user.email'    => 'required|email|unique:users,email',
+        'user.password' => 'required|string|min:8',
+        'user.phone'    => 'required|numeric',
     ];
 
     public function mount(): void

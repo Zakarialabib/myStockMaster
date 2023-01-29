@@ -35,7 +35,7 @@ class Index extends Component
     /** @var string[] */
     public $listeners = [
         'importModal', 'refreshIndex' => '$refresh',
-        'paymentModal', 'paymentSave', 'showModal'
+        'paymentModal', 'paymentSave', 'showModal',
     ];
 
     public $showModal = false;
@@ -88,7 +88,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $query = Sale::with(['customer', 'salepayments','saleDetails'])
+        $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,

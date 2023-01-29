@@ -20,7 +20,7 @@
             </span>
         </x-slot>
       
-        @can('access_product_categories')
+        @can('category_access')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />
         @endcan
@@ -28,7 +28,7 @@
         @can('print_barcodes')
             <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
         @endcan
-        @can('access_product_brands')
+        @can('brand_access')
             <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('product-brands.index')" />
         @endcan
         @can('access_warehouse')
@@ -38,7 +38,7 @@
        
     </x-sidebar.dropdown>
 
-    @can('access_adjustments')
+    @can('adjustment_access')
         <x-sidebar.dropdown title="{{ __('Adjustments') }}" :active="Str::startsWith(
             request()
                 ->route()
@@ -165,7 +165,7 @@
         </x-sidebar.dropdown>
     @endcan
 
-    @can('access_user_management')
+    @can('user_access')
         <x-sidebar.dropdown title="{{ __('People') }}" :active="Str::startsWith(
             request()
                 ->route()
@@ -177,13 +177,13 @@
                     <i class="fas fa-users w-5 h-5"></i>
                 </span>
             </x-slot>
-            @can('access_customers')
+            @can('customer_access')
                 <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
             @endcan
-            @can('access_suppliers')
+            @can('suppliers_access')
                 <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />
             @endcan
-            @can('access_users')
+            @can('user_access')
                 <x-sidebar.sublink title="{{ __('Users') }}" href="{{ route('users.index') }}" :active="request()->routeIs('users.index')" />
             @endcan
             @can('access_roles')
@@ -207,7 +207,7 @@
                     <i class="fas fa-cog w-5 h-5"></i>
                 </span>
             </x-slot>
-            @can('access_settings')
+            @can('setting_access')
                 <x-sidebar.sublink title="{{ __('Settings') }}" href="{{ route('settings.index') }}" :active="request()->routeIs('settings.index')" />
             @endcan
             @can('access_currencies')

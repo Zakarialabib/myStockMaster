@@ -28,7 +28,7 @@ class Index extends Component
     public $listeners = [
         'showModal', 'editModal',
         'refreshIndex' => '$refresh',
-        'delete'
+        'delete',
     ];
 
     public $showModal = false;

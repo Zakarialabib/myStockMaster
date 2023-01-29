@@ -15,7 +15,7 @@
                 </div>
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                     <div class="my-2">
-                        <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
+                        <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
                     </div>
                 </div>
             </div>
@@ -143,11 +143,13 @@
                                 <div class="flex flex-row">
                                     <div class="w-full">
                                         <div class="p-2 flex flex-wrap items-center">
+                                            @if($sale != null)
                                             <x-button secondary class="d-print-none" target="_blank"
                                                 wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
                                                 class="ml-auto">
                                                 <i class="fas fa-print"></i> {{ __('Print') }}
                                             </x-button>
+                                            @endif
                                         </div>
                                         <div class="p-4">
                                             <div class="flex flex-row mb-4">
@@ -209,7 +211,8 @@
                                                     </x-slot>
 
                                                     <x-table.tbody>
-                                                        @foreach ($sale?->saleDetails as $item)
+                                                        @if($sale != null)
+                                                        @foreach ($sale->saleDetails as $item)
                                                             <x-table.tr>
                                                                 <x-table.td>
                                                                     {{ $item->name }} <br>
@@ -230,6 +233,7 @@
                                                                 </x-table.td>
                                                             </x-table.tr>
                                                         @endforeach
+                                                        @endif
                                                     </x-table.tbody>
                                                 </x-table>
                                             </div>

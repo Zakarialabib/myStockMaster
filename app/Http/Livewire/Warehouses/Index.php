@@ -29,8 +29,8 @@ class Index extends Component
     /** @var string[] */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal', 
-        'delete'
+        'showModal', 'editModal',
+        'delete',
     ];
 
     /** @var bool */

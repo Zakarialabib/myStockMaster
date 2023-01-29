@@ -77,8 +77,6 @@ class Index extends Component
 
     public $refreshCustomers;
 
-    public $refreshIndex;
-
     public function rules(): array
     {
         return [
@@ -113,7 +111,6 @@ class Index extends Component
 
         $this->customer_id = settings()->default_client_id;
     }
-
 
     public function hydrate(): void
     {

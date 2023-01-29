@@ -39,8 +39,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
-        'downloadAll' ,'exportAll',
-        'delete'
+        'downloadAll', 'exportAll',
+        'delete',
     ];
 
     public $importModal = false;

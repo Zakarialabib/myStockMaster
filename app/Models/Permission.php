@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use  Spatie\Permission\Models\Permission as SpatiePermission;
+
 /**
  * App\Models\Permission
  *
@@ -56,7 +56,7 @@ class Permission extends SpatiePermission
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'label','guard_name','name', 'description'];
+    protected $fillable = ['name', 'label', 'guard_name', 'name', 'description'];
 
     /** @return BelongsToMany<Role> */
     public function roles(): BelongsToMany

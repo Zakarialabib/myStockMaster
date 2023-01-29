@@ -10,7 +10,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.debounce.300ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@
                                         @endif
                                     @endcan
 
-                                    @can('show_purchases')
+                                    @can('purchase_return_access')
                                         <x-dropdown-link wire:click="showModal({{ $purchasereturn->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-eye"></i>
@@ -102,7 +102,7 @@
                                         </x-dropdown-link>
                                     @endcan
 
-                                    @can('edit_purchases')
+                                    @can('purchase_return_update')
                                         <x-dropdown-link href="{{ route('purchases.edit', $purchasereturn->id) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
@@ -110,7 +110,7 @@
                                         </x-dropdown-link>
                                     @endcan
 
-                                    @can('delete_purchases')
+                                    @can('purchase_return_delete')
                                         <x-dropdown-link wire:click="confirm('delete', {{ $purchasereturn->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-trash"></i>

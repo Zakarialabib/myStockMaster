@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\RedirectResponse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use App\Enums\PaymentStatus;
@@ -27,8 +26,6 @@ class Create extends Component
     public $listeners = ['productSelected', 'refreshIndex'];
 
     public $cart_instance;
-
-    public $refreshIndex;
 
     public $suppliers;
 
@@ -95,7 +92,6 @@ class Create extends Component
         $this->shipping_amount = 0;
         $this->paid_amount = 0;
         $this->payment_method = 'cash';
-        $this->status = 0;
         $this->date = Carbon::today()->format('Y-m-d');
 
         $this->initListsForFields();
@@ -140,7 +136,7 @@ class Create extends Component
             'paid_amount'         => $this->paid_amount * 100,
             'total_amount'        => $this->total_amount * 100,
             'due_amount'          => $due_amount * 100,
-            'status'              => $this->status,
+            'status'              => 2,
             'payment_status'      => $payment_status,
             'payment_method'      => $this->payment_method,
             'note'                => $this->note,

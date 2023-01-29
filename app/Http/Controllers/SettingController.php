@@ -9,8 +9,7 @@ use App\Models\Setting;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Exception;
+use Throwable;
 
 class SettingController extends Controller
 {
@@ -47,18 +46,15 @@ class SettingController extends Controller
             'MAIL_ENCRYPTION="'.$request->mail_encryption.'"', ];
 
         try {
-
             file_put_contents(base_path('.env'), str_replace($toReplace, $replaceWith, file_get_contents(base_path('.env'))));
 
             Artisan::call('cache:clear');
 
             toast('Mail Settings Updated!', 'info');
-
-        } catch (\Throwable $th) {
-
+        } catch (Throwable $th) {
             session()->flash('settings_smtp_message', 'Something Went Wrong!');
         }
-     
+
         return redirect()->route('settings.index');
     }
 }

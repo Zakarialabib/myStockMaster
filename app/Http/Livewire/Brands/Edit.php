@@ -35,7 +35,6 @@ class Edit extends Component
 
     public function render(): View|Factory
     {
-
         return view('livewire.brands.edit');
     }
 
@@ -54,7 +53,6 @@ class Edit extends Component
 
     public function update(): void
     {
-
         $this->validate();
 
         if ($this->image) {

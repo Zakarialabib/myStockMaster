@@ -32,7 +32,7 @@ class Index extends Component
     public $listeners = [
         'importModal', 'showModal', 'editModal',
         'refreshIndex' => '$refresh',
-        'downloadAll','exportAll','delete'
+        'downloadAll', 'exportAll', 'delete',
     ];
 
     /** @var bool */
@@ -95,7 +95,7 @@ class Index extends Component
     public function showModal($id)
     {
         $this->supplier = Supplier::find($id);
-        
+
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -169,6 +169,7 @@ class Index extends Component
 
         $this->importModal = false;
     }
+
     public function downloadSelected()
     {
         abort_if(Gate::denies('supplier_access'), 403);
@@ -198,13 +199,11 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        return $this->callExport()->forModels($supplier)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+        return $this->callExport()->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     private function callExport(): SupplierExport
     {
         return (new SupplierExport());
     }
-
-   
 }

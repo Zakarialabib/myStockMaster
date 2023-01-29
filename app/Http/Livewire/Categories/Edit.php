@@ -31,7 +31,6 @@ class Edit extends Component
 
     public function render(): View|Factory
     {
-
         return view('livewire.categories.edit');
     }
 
@@ -50,7 +49,6 @@ class Edit extends Component
 
     public function update(): void
     {
-
         $this->validate();
 
         $this->category->save();

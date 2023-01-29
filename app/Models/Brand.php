@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Brand
@@ -53,9 +54,9 @@ class Brand extends Model
         'name', 'description', 'image',
     ];
 
-      /** @return HasMany<Product> */
-      public function products(): HasMany
-      {
-          return $this->hasMany(Product::class, 'brand_id', 'id');
-      }
+    /** @return HasMany<Product> */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
 }

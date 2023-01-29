@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Purchase\Payment;
 
 use App\Http\Livewire\WithSorting;
-use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -66,7 +65,7 @@ class Index extends Component
 
     public function render(): View|Factory
     {
-           abort_if(Gate::denies('purchase_payment_access'), 403);
+        abort_if(Gate::denies('purchase_payment_access'), 403);
 
         $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
             's'               => $this->search ?: null,

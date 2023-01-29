@@ -10,13 +10,15 @@
 
     <style>
         @font-face {
-        font-family: 'Cairo';
-        src: url('./fonts/cairo.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
+            font-family: 'Cairo';
+            src: url('./fonts/cairo.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
-        
-        *{ font-family: 'Cairo'!important;}
+
+        * {
+            font-family: 'Cairo' !important;
+        }
 
         body {
             margin: 0;
@@ -46,7 +48,18 @@
             font-size: 11px;
             line-height: 13px;
         }
-  
+
+        .row {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -64,10 +77,12 @@
             padding: 8px;
             text-align: left;
         }
+
         tr {
             border-bottom: 1px dashed #ddd;
             border-top: 1px dashed #ddd;
         }
+
         /* Style the footer */
         .footer {
             background-color: #f5f5f5;
@@ -75,29 +90,46 @@
             text-align: center;
         }
 
-        .col-12 {
-            width: 100%;
-            padding: 5px 0;
+        .col {
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            max-width: 100%;
         }
 
-        .row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .col-12 {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .col-6 {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 50%;
+            flex: 0 0 50%;
+            max-width: 50%;
         }
 
         .text-center {
             text-align: center;
             align-content: center;
         }
+
+        .text-right {
+            text-align: right;
+            align-content: right;
+        }
     </style>
 
 </head>
 
 <body>
-    <main>
+    <div>
         @yield('content')
-    </main>
+    </div>
 </body>
 
 </html>
