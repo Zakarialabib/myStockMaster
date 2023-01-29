@@ -39,6 +39,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
+        'downloadAll' ,'exportAll',
+        'delete'
     ];
 
     public $importModal = false;
@@ -165,16 +167,27 @@ class Index extends Component
         $this->importModal = false;
     }
 
-    public function exportExcel(): BinaryFileResponse
+    public function downloadAll(): BinaryFileResponse
     {
         abort_if(Gate::denies('product_access'), 403);
 
         return $this->callExport()->download('products.xlsx');
     }
 
-    public function exportPdf()
+    public function exportSelected(): BinaryFileResponse
     {
-        return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        abort_if(Gate::denies('product_access'), 403);
+
+        $customers = Product::whereIn('id', $this->selected)->get();
+
+        return $this->callExport()->forModels($this->selected)->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): BinaryFileResponse
+    {
+        abort_if(Gate::denies('product_access'), 403);
+
+        return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     private function callExport(): ProductExport

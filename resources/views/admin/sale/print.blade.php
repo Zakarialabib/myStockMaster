@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="text-center">
-                    <h2><img width="100" src="{{ public_path('images/logo.png') }}" alt="Logo"></h2>
+                    {{-- <h2><img width="100" src="{{ $image }}" alt="Logo"></h2> --}}
                 </div>
                 <hr>
                 <div class="col-lg-6">
@@ -73,10 +73,10 @@
 
         <div class="row">
 
-            <div class="table-responsive-sm" style="margin-top: 30px;">
-                <table class="table table-striped">
+            <div id="table" class="table-responsive-sm" style="margin-top: 30px;">
+                <table>
                     <thead>
-                        <tr>
+                        <tr class="title">
                             <th class="align-middle">{{ __('Product') }}</th>
                             <th class="align-middle">{{ __('Net Unit Price') }}</th>
                             <th class="align-middle">{{ __('Quantity') }}</th>

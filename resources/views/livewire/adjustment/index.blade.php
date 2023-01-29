@@ -89,10 +89,10 @@
         </div>
     </div>
 
-    @if ($showModal)
+
         <x-modal wire:model="showModal">
             <x-slot name="title">
-                {{ __('Show Adjustment') }} - {{ $adjustment->date }}
+                {{ __('Show Adjustment') }} - {{ $adjustment?->date }}
             </x-slot>
 
             <x-slot name="content">
@@ -102,14 +102,14 @@
                             <x-table.tr>
                                 <x-table.th>{{ __('Date') }}</x-table.th>
                                 <x-table.td>
-                                    {{ $adjustment->date }}
+                                    {{ $adjustment?->date }}
                                 </x-table.td>
                             </x-table.tr>
 
                             <x-table.tr>
                                 <x-table.th>{{ __('Reference') }}</x-table.th>
                                 <x-table.td>
-                                    {{ $adjustment->reference }}
+                                    {{ $adjustment?->reference }}
                                 </x-table.td>
                             </x-table.tr>
 
@@ -121,7 +121,8 @@
                                     <x-table.th>{{ __('Type') }}</x-table.th>
                                 </x-table.tr>
                                 <x-table.tbody>
-                                    @foreach ($adjustment->adjustedProducts as $adjustedProduct)
+                                    @if($adjustment != null)
+                                    @forelse ($adjustment->adjustedProducts as $adjustedProduct)
                                         <x-table.tr>
                                             <x-table.td>{{ $adjustedProduct->product->name }}</x-table.td>
                                             <x-table.td>{{ $adjustedProduct->product->code }}</x-table.td>
@@ -135,13 +136,13 @@
                                             </x-table.td>
                                         </x-table.tr>
                                     @endforeach
+                                    @endif
                                 </x-table.tbody>
                         </x-table-responsive>
                     </div>
                 </div>
             </x-slot>
         </x-modal>
-    @endif
 
 </div>
 

@@ -6,11 +6,10 @@ namespace App\Exports;
 
 use App\Models\Supplier;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class SupplierExport implements FromQuery, WithMapping, WithHeadings
+class SupplierExport implements FromView    
 {
     use Exportable;
     use ForModelsTrait;
@@ -18,43 +17,20 @@ class SupplierExport implements FromQuery, WithMapping, WithHeadings
     /** @var mixed */
     protected $models;
 
-    
     public function query()
     {
         if ($this->models) {
-            return Supplier::query()->whereIn('id', $this->models);
+            return  Supplier::query()->whereIn('id', $this->models);
         }
 
         return Supplier::query();
     }
 
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            __('Name'),
-            __('Email'),
-            __('Phone'),
-            __('City'),
-            __('Country'),
-            __('Address'),
-            __('Tax number'),
-        ];
-    }
+        return view('pdf.suppliers', [
+            'data' => $this->query()->get(),
+        ]);
+    }   
 
-    /**
-     * @param  Supplier  $row
-     * @return array
-     */
-    public function map($row): array
-    {
-        return[
-            $row->name,
-            $row->email,
-            $row->phone,
-            $row->city,
-            $row->country,
-            $row->address,
-            $row->tax_number,
-        ];
-    }
 }

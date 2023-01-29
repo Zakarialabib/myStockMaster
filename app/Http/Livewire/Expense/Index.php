@@ -31,6 +31,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
+        'exportAll','downloadAll',
+        'delete'
     ];
 
     public $showModal = false;
@@ -162,11 +164,11 @@ class Index extends Component
         return $this->callExport()->forModels($this->selected)->download('expenses.pdf');
     }
 
-    public function exportAll(Expense $expense): BinaryFileResponse
+    public function exportAll(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
 
-        return $this->callExport()->forModels($expense)->download('expenses.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->download('expenses.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     private function callExport(): ExpenseExport

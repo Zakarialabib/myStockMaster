@@ -181,189 +181,185 @@
     </div>
 
     {{-- Show Sale --}}
+    <x-modal wire:model="showModal">
+        <x-slot name="title">
+            {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale?->reference }}</strong>
+        </x-slot>
 
+        <x-slot name="content">
+            <div class="px-4 mx-auto">
+                <div class="flex flex-row">
+                    <div class="w-full">
+                        <div class="p-2 flex flex-wrap items-center">
+                            @if($sale != null)
+                            <x-button secondary class="d-print-none" target="_blank" wire:loading.attr="disabled"
+                                href="{{ route('sales.pdf', $sale->id) }}" class="ml-auto">
+                                <i class="fas fa-print"></i> {{ __('Print') }}
+                            </x-button>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <div class="flex flex-row mb-4">
+                                <div class="md:w-1/3 mb-3 md:mb-0">
+                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
+                                    <div><strong>{{ settings()->company_name }}</strong></div>
+                                    <div>{{ settings()->company_address }}</div>
 
-        <x-modal wire:model="showModal">
-            <x-slot name="title">
-                {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale->reference }}</strong>
-            </x-slot>
+                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                    <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
+                                </div>
 
-            <x-slot name="content">
-                <div class="px-4 mx-auto">
-                    <div class="flex flex-row">
-                        <div class="w-full">
-                            <div class="p-2 d-flex flex-wrap items-center">
-                                <x-button secondary class="d-print-none" target="_blank"
-                                    wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
-                                    class="ml-auto">
-                                    <i class="fas fa-print"></i> {{ __('Print') }}
-                                </x-button>
+                                <div class="md:w-1/3 mb-3 md:mb-0">
+                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
+                                    <div><strong>{{ $sale?->customer->name }}</strong></div>
+                                    <div>{{ $sale?->customer->address }}</div>
+                                    <div>{{ __('Email') }}: {{ $sale?->customer->email }}</div>
+                                    <div>{{ __('Phone') }}: {{ $sale?->customer->phone }}</div>
+                                </div>
+
+                                <div class="md:w-1/3 mb-3 md:mb-0">
+                                    <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
+                                    <div>{{ __('Invoice') }}:
+                                        <strong>{{ settings()->sale_prefix }}/{{ $sale?->reference }}</strong>
+                                    </div>
+                                    <div>{{ __('Date') }}:
+                                        {{ \Carbon\Carbon::parse($sale?->date)->format('d/m/Y') }}</div>
+                                    <div>
+                                        {{ __('Status') }} :
+                                        @if ($sale?->status == \App\Enums\SaleStatus::Pending)
+                                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                                        @elseif ($sale?->status == \App\Enums\SaleStatus::Ordered)
+                                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                                        @elseif($sale?->status == \App\Enums\SaleStatus::Completed)
+                                            <x-badge success>{{ __('Completed') }}</x-badge>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        {{ __('Payment Status') }} :
+                                        @if ($sale?->payment_status == \App\Enums\PaymentStatus::Paid)
+                                            <x-badge success>{{ __('Paid') }}</x-badge>
+                                        @elseif ($sale?->payment_status == \App\Enums\PaymentStatus::Partial)
+                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                        @elseif($sale?->payment_status == \App\Enums\PaymentStatus::Due)
+                                            <x-badge danger>{{ __('Due') }}</x-badge>
+                                        @endif
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="p-4">
-                                <div class="flex flex-row mb-4">
-                                    <div class="md:w-1/3 mb-3 md:mb-0">
-                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                        <div><strong>{{ settings()->company_name }}</strong></div>
-                                        <div>{{ settings()->company_address }}</div>
 
-                                        <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
-                                        <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
-                                    </div>
+                            <div class="">
+                                <x-table>
+                                    <x-slot name="thead">
+                                        <x-table.th>{{ __('Product') }}</x-table.th>
+                                        <x-table.th>{{ __('Quantity') }}</x-table.th>
+                                        <x-table.th>{{ __('Unit Price') }}</x-table.th>
+                                        <x-table.th>{{ __('Subtotal') }}</x-table.th>
+                                    </x-slot>
 
-                                    <div class="md:w-1/3 mb-3 md:mb-0">
-                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
-                                        <div><strong>{{ $sale->customer->name }}</strong></div>
-                                        <div>{{ $sale->customer->address }}</div>
-                                        <div>{{ __('Email') }}: {{ $sale->customer->email }}</div>
-                                        <div>{{ __('Phone') }}: {{ $sale->customer->phone }}</div>
-                                    </div>
+                                    <x-table.tbody>
+                                        @if($sale != null)
+                                        @foreach ($sale->saleDetails as $item)
+                                            <x-table.tr>
+                                                <x-table.td>
+                                                    {{ $item->name }} <br>
+                                                    <x-badge success>
+                                                        {{ $item->code }}
+                                                    </x-badge>
+                                                </x-table.td>
+                                                <x-table.td>
+                                                    {{ format_currency($item->unit_price) }}
+                                                </x-table.td>
 
-                                    <div class="md:w-1/3 mb-3 md:mb-0">
-                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
-                                        <div>{{ __('Invoice') }}:
-                                            <strong>{{ settings()->sale_prefix }}/{{ $sale->reference }}</strong>
-                                        </div>
-                                        <div>{{ __('Date') }}:
-                                            {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</div>
-                                        <div>
-                                            {{ __('Status') }} :
-                                            @if ($sale->status == \App\Enums\SaleStatus::Pending)
-                                                <x-badge warning>{{ __('Pending') }}</x-badge>
-                                            @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
-                                                <x-badge info>{{ __('Ordered') }}</x-badge>
-                                            @elseif($sale->status == \App\Enums\SaleStatus::Completed)
-                                                <x-badge success>{{ __('Completed') }}</x-badge>
-                                            @endif
-                                        </div>
-                                        <div>
-                                            {{ __('Payment Status') }} :
-                                            @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
-                                                <x-badge success>{{ __('Paid') }}</x-badge>
-                                            @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
-                                                <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                            @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
-                                                <x-badge danger>{{ __('Due') }}</x-badge>
-                                            @endif
-                                        </div>
-                                    </div>
+                                                <x-table.td>
+                                                    {{ $item->quantity }}
+                                                </x-table.td>
 
-                                </div>
-
-                                <div class="">
-                                    <x-table>
-                                        <x-slot name="thead">
-                                            <x-table.th>{{ __('Product') }}</x-table.th>
-                                            <x-table.th>{{ __('Quantity') }}</x-table.th>
-                                            <x-table.th>{{ __('Unit Price') }}</x-table.th>
-                                            <x-table.th>{{ __('Subtotal') }}</x-table.th>
-                                        </x-slot>
-
-                                        <x-table.tbody>
-                                            @foreach ($sale->saleDetails as $item)
-                                            {{-- @dd($item) --}}
-                                                <x-table.tr>
-                                                    <x-table.td>
-                                                        {{ $item->name }} <br>
-                                                        <x-badge success>
-                                                            {{ $item->code }}
-                                                        </x-badge>
-                                                    </x-table.td>
-                                                    <x-table.td>
-                                                        {{ format_currency($item->unit_price) }}
-                                                    </x-table.td>
-
-                                                    <x-table.td>
-                                                        {{ $item->quantity }}
-                                                    </x-table.td>
-
-                                                    <x-table.td>
-                                                        {{ format_currency($item->sub_total) }}
-                                                    </x-table.td>
-                                                </x-table.tr>
-                                            @endforeach
-                                        </x-table.tbody>
-                                    </x-table>
-                                </div>
-                                <div class="flex flex-row">
-                                    <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                        <table class="table">
-                                            <tbody>
-                                                @if ($sale->discount_percentage)
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Discount') }}
-                                                                ({{ $sale->discount_percentage }}%)</strong></td>
-                                                        <td class="right">
-                                                            {{ format_currency($sale->discount_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                                @if ($sale->tax_percentage)
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Tax') }}
-                                                                ({{ $sale->tax_percentage }}%)</strong></td>
-                                                        <td class="right">
-                                                            {{ format_currency($sale->tax_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                                @if (settings()->show_shipping == true)
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Shipping') }}</strong>
-                                                        </td>
-                                                        <td class="right">
-                                                            {{ format_currency($sale->shipping_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                @endif
+                                                <x-table.td>
+                                                    {{ format_currency($item->sub_total) }}
+                                                </x-table.td>
+                                            </x-table.tr>
+                                        @endforeach
+                                        @endif
+                                    </x-table.tbody>
+                                </x-table>
+                            </div>
+                            <div class="flex flex-row">
+                                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                                    <table class="table">
+                                        <tbody>
+                                            @if ($sale?->discount_percentage)
                                                 <tr>
-                                                    <td class="left"><strong>{{ __('Grand Total') }}</strong>
-                                                    </td>
+                                                    <td class="left"><strong>{{ __('Discount') }}
+                                                            ({{ $sale?->discount_percentage }}%)</strong></td>
                                                     <td class="right">
-                                                        <strong>{{ format_currency($sale->total_amount) }}</strong>
+                                                        {{ format_currency($sale?->discount_amount) }}
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @endif
+                                            @if ($sale?->tax_percentage)
+                                                <tr>
+                                                    <td class="left"><strong>{{ __('Tax') }}
+                                                            ({{ $sale?->tax_percentage }}%)</strong></td>
+                                                    <td class="right">
+                                                        {{ format_currency($sale?->tax_amount) }}
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            @if (settings()->show_shipping == true)
+                                                <tr>
+                                                    <td class="left"><strong>{{ __('Shipping') }}</strong>
+                                                    </td>
+                                                    <td class="right">
+                                                        {{ format_currency($sale?->shipping_amount) }}
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            <tr>
+                                                <td class="left"><strong>{{ __('Grand Total') }}</strong>
+                                                </td>
+                                                <td class="right">
+                                                    <strong>{{ format_currency($sale?->total_amount) }}</strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </x-slot>
-        </x-modal>
-
-
+            </div>
+        </x-slot>
+    </x-modal>
     {{-- End Show Sale --}}
 
     {{-- Import modal --}}
-    <div>
-        <x-modal wire:model="importModal">
-            <x-slot name="title">
-                {{ __('Import Excel') }}
-            </x-slot>
+    <x-modal wire:model="importModal">
+        <x-slot name="title">
+            {{ __('Import Excel') }}
+        </x-slot>
 
-            <x-slot name="content">
-                <form wire:submit.prevent="import">
-                    <div class="mb-4">
+        <x-slot name="content">
+            <form wire:submit.prevent="import">
+                <div class="mb-4">
 
-                        <div class="w-full px-3">
-                            <x-label for="import" :value="__('Import')" />
-                            <x-input id="import" class="block mt-1 w-full" type="file" name="import"
-                                wire:model.defer="import_file" />
-                            <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
-                        </div>
-
-                        <div class="w-full px-3">
-                            <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                                {{ __('Import') }}
-                            </x-button>
-                        </div>
+                    <div class="w-full px-3">
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import_file" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
-                </form>
-            </x-slot>
-        </x-modal>
-    </div>
+
+                    <div class="w-full px-3">
+                        <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                            {{ __('Import') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
 
     {{-- End Import modal --}}
 

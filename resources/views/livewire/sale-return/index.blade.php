@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    
+
     <x-table>
         <x-slot name="thead">
             <x-table.th>
@@ -82,8 +82,10 @@
                             <x-badge warning>{{ __('Pending') }}</x-badge>
                         @elseif ($salereturn->status == \App\Enums\SaleReturnStatus::Completed)
                             <x-badge success>{{ __('Completed') }}</x-badge>
-                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Canceld)
-                            <x-badge danger>{{ __('Canceled') }}</x-badge>
+                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Shipped)
+                            <x-badge danger>{{ __('Shipped') }}</x-badge>
+                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Returned)
+                            <x-badge danger>{{ __('Returned') }}</x-badge>
                         @endif
                     </x-table.td>
                     <x-table.td>
@@ -159,179 +161,176 @@
     </div>
 
     {{-- Show SaleReturn --}}
-    @if ($showModal)
-        <div>
-            <x-modal wire:model="showModal">
-                <x-slot name="title">
-                    {{ __('Show SaleReturn') }} - {{ __('Reference') }}:
-                    <strong>{{ $salereturn->reference }}</strong>
-                </x-slot>
+    <x-modal wire:model="showModal">
+        <x-slot name="title">
+            {{ __('Show SaleReturn') }} - {{ __('Reference') }}:
+            <strong>{{ $salereturn?->reference }}</strong>
+        </x-slot>
 
-                <x-slot name="content">
-                    <div class="px-4 mx-auto">
-                        <div class="flex flex-row">
-                            <div class="w-full px-4">
-                                <div class="card">
-                                    <div class="card-header d-flex flex-wrap align-items-center">
-                                        <div>
-                                            {{ __('Reference') }}: <strong>{{ $this->salereturn->reference }}</strong>
-                                        </div>
-                                        <a target="_blank" class="btn-secondary mfs-auto mfe-1 d-print-none"
-                                            href="{{ route('sale-returns.pdf', $this->salereturn->id) }}">
-                                            <i class="bi bi-printer"></i> {{ __('Print') }}
-                                        </a>
-                                        <a target="_blank" class="btn-info mfe-1 d-print-none"
-                                            href="{{ route('sale-returns.pdf', $this->salereturn->id) }}">
-                                            <i class="bi bi-save"></i> {{ __('Save') }}
-                                        </a>
+        <x-slot name="content">
+            <div class="px-4 mx-auto">
+                <div class="flex flex-row">
+                    <div class="w-full px-4">
+                        <div class="card">
+                            <div class="card-header flex flex-wrap items-center">
+                                @if ($this->salereturn != null)
+                                    <a target="_blank" class="btn-secondary mfs-auto mfe-1 d-print-none"
+                                        href="{{ route('sale-returns.pdf', $this->salereturn->id) }}">
+                                        <i class="bi bi-printer"></i> {{ __('Print') }}
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="p-4">
+                                <div class="flex flex-row mb-4">
+                                    <div class="w-1/4 mb-3">
+                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
+                                        <div><strong>{{ settings()->company_name }}</strong></div>
+                                        <div>{{ settings()->company_address }}</div>
+                                        @if (settings()->show_email == true)
+                                            <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                        @endif
+                                        <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
                                     </div>
-                                    <div class="p-4">
-                                        <div class="flex flex-row mb-4">
-                                            <div class="w-1/4 mb-3">
-                                                <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                                <div><strong>{{ settings()->company_name }}</strong></div>
-                                                <div>{{ settings()->company_address }}</div>
-                                                @if ( settings()->show_email == true )
-                                                <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
-                                                @endif
-                                                <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
-                                            </div>
 
-                                            <div class="w-1/4 mb-3">
-                                                <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
-                                                <div><strong>{{ $this->salereturn->customer->name }}</strong></div>
-                                                @if ( settings()->show_address == true )
-                                                <div>{{ $this->salereturn->customer->address }}</div>
-                                                @endif
-                                                @if ( settings()->show_email == true )
-                                                <div>{{ $this->salereturn->customer->email }}</div>
-                                                @endif
-                                                <div>{{ __('Phone') }}: {{ $this->salereturn->customer->phone }}
-                                                </div>
-                                            </div>
-
-                                            <div class="w-1/4 mb-3">
-                                                <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
-                                                <div>{{ __('Invoice') }}:
-                                                    <strong>INV/{{ $this->salereturn->reference }}</strong></div>
-                                                <div>{{ __('Date') }}:
-                                                    {{ \Carbon\Carbon::parse($this->salereturn->date)->format('d M, Y') }}
-                                                </div>
-                                                <div>
-                                                    {{ __('Status') }}: <strong>
-                                                        @if ($this->salereturn == \App\Enums\SaleReturnStatus::Pending)
-                                                            <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                        @elseif ($this->salereturn == \App\Enums\SaleReturnStatus::Completed)
-                                                            <x-badge success>{{ __('Completed') }}</x-badge>
-                                                        @elseif($this->salereturn == \App\Enums\SaleReturnStatus::Canceld)
-                                                            <x-badge danger>{{ __('Canceled') }}</x-badge>
-                                                        @endif
-                                                    </strong>
-                                                </div>
-                                                <div>
-                                                    {{ __('Payment Status') }}:
-                                                    <strong>{{ $this->salereturn->payment_status }}</strong>
-                                                </div>
-                                            </div>
-
+                                    <div class="w-1/4 mb-3">
+                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
+                                        <div><strong>{{ $salereturn?->customer->name }}</strong></div>
+                                        @if (settings()->show_address == true)
+                                            <div>{{ $salereturn?->customer->address }}</div>
+                                        @endif
+                                        @if (settings()->show_email == true)
+                                            <div>{{ $salereturn?->customer->email }}</div>
+                                        @endif
+                                        <div>{{ __('Phone') }}: {{ $salereturn?->customer->phone }}
                                         </div>
+                                    </div>
 
-                                        <div class="table-responsive-sm">
-                                            <table class="table table-striped">
-                                                <thead>
+                                    <div class="w-1/4 mb-3">
+                                        <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
+                                        <div>{{ __('Invoice') }}:
+                                            <strong>INV/{{ $salereturn?->reference }}</strong>
+                                        </div>
+                                        <div>{{ __('Date') }}:
+                                            {{ \Carbon\Carbon::parse($salereturn?->date)->format('d M, Y') }}
+                                        </div>
+                                        <div>
+                                            {{ __('Status') }}: <strong>
+                                                @if ($salereturn?->status == \App\Enums\SaleReturnStatus::Pending)
+                                                    <x-badge warning>{{ __('Pending') }}</x-badge>
+                                                @elseif ($salereturn?->status == \App\Enums\SaleReturnStatus::Completed)
+                                                    <x-badge success>{{ __('Completed') }}</x-badge>
+                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::Shipped)
+                                                    <x-badge danger>{{ __('Shipped') }}</x-badge>
+                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::Returned)
+                                                    <x-badge danger>{{ __('Returned') }}</x-badge>
+                                                @endif
+                                            </strong>
+                                        </div>
+                                        <div>
+                                            {{ __('Payment Status') }}:
+                                            <strong>{{ $salereturn?->payment_status }}</strong>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="table-responsive-sm">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class="align-middle">{{ __('Product') }}</th>
+                                                <th class="align-middle">{{ __('Net Unit Price') }}</th>
+                                                <th class="align-middle">{{ __('Quantity') }}</th>
+                                                <th class="align-middle">{{ __('Discount') }}</th>
+                                                <th class="align-middle">{{ __('Tax') }}</th>
+                                                <th class="align-middle">{{ __('Sub Total') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if ($this->salereturn != null)
+                                                @foreach ($this->salereturn->saleReturnDetails as $item)
                                                     <tr>
-                                                        <th class="align-middle">{{ __('Product') }}</th>
-                                                        <th class="align-middle">{{ __('Net Unit Price') }}</th>
-                                                        <th class="align-middle">{{ __('Quantity') }}</th>
-                                                        <th class="align-middle">{{ __('Discount') }}</th>
-                                                        <th class="align-middle">{{ __('Tax') }}</th>
-                                                        <th class="align-middle">{{ __('Sub Total') }}</th>
+                                                        <td class="align-middle">
+                                                            {{ $item->name }} <br>
+                                                            <span class="badge badge-success">
+                                                                {{ $item->code }}
+                                                            </span>
+                                                        </td>
+
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->unit_price) }}</td>
+
+                                                        <td class="align-middle">
+                                                            {{ $item->quantity }}
+                                                        </td>
+
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->product_discount_amount) }}
+                                                        </td>
+
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->product_tax_amount) }}
+                                                        </td>
+
+                                                        <td class="align-middle">
+                                                            {{ format_currency($item->sub_total) }}
+                                                        </td>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($this->salereturn->saleReturnDetails as $item)
-                                                        <tr>
-                                                            <td class="align-middle">
-                                                                {{ $item->name }} <br>
-                                                                <span class="badge badge-success">
-                                                                    {{ $item->code }}
-                                                                </span>
-                                                            </td>
-
-                                                            <td class="align-middle">
-                                                                {{ format_currency($item->unit_price) }}</td>
-
-                                                            <td class="align-middle">
-                                                                {{ $item->quantity }}
-                                                            </td>
-
-                                                            <td class="align-middle">
-                                                                {{ format_currency($item->product_discount_amount) }}
-                                                            </td>
-
-                                                            <td class="align-middle">
-                                                                {{ format_currency($item->product_tax_amount) }}
-                                                            </td>
-
-                                                            <td class="align-middle">
-                                                                {{ format_currency($item->sub_total) }}
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="flex flex-row">
-                                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="left"><strong>{{ __('Discount') }}
-                                                                    ({{ $this->salereturn->discount_percentage }}%)</strong>
-                                                            </td>
-                                                            <td class="right">
-                                                                {{ format_currency($this->salereturn->discount_amount) }}
-                                                            </td>
-                                                        </tr>
-                                                        @if( settings()->show_tax == true )
-                                                        <tr>
-                                                            <td class="left"><strong>{{ __('Tax') }}
-                                                                    ({{ $this->salereturn->tax_percentage }}%)</strong>
-                                                            </td>
-                                                            <td class="right">
-                                                                {{ format_currency($this->salereturn->tax_amount) }}
-                                                            </td>
-                                                        </tr>
-                                                        @endif
-                                                        @if ( settings()->show_shipping == true )
-                                                        <tr>
-                                                            <td class="left"><strong>{{ __('Shipping') }}</strong>
-                                                            </td>
-                                                            <td class="right">
-                                                                {{ format_currency($this->salereturn->shipping_amount) }}
-                                                            </td>
-                                                        </tr>
-                                                        @endif
-                                                        <tr>
-                                                            <td class="left">
-                                                                <strong>{{ __('Grand Total') }}</strong></td>
-                                                            <td class="right">
-                                                                <strong>{{ format_currency($this->salereturn->total_amount) }}</strong>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="flex flex-row">
+                                    <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="left"><strong>{{ __('Discount') }}
+                                                            ({{ $salereturn?->discount_percentage }}%)</strong>
+                                                    </td>
+                                                    <td class="right">
+                                                        {{ format_currency($salereturn?->discount_amount) }}
+                                                    </td>
+                                                </tr>
+                                                @if ($salereturn?->tax_percentage)
+                                                    <tr>
+                                                        <td class="left"><strong>{{ __('Tax') }}
+                                                                ({{ $salereturn?->tax_percentage }}%)</strong>
+                                                        </td>
+                                                        <td class="right">
+                                                            {{ format_currency($salereturn?->tax_amount) }}
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                                @if ($salereturn?->shipping_amount)
+                                                    <tr>
+                                                        <td class="left"><strong>{{ __('Shipping') }}</strong>
+                                                        </td>
+                                                        <td class="right">
+                                                            {{ format_currency($salereturn?->shipping_amount) }}
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                                <tr>
+                                                    <td class="left">
+                                                        <strong>{{ __('Grand Total') }}</strong>
+                                                    </td>
+                                                    <td class="right">
+                                                        <strong>{{ format_currency($salereturn?->total_amount) }}</strong>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </x-slot>
-            </x-modal>
-        </div>
-    @endif
+                </div>
+            </div>
+        </x-slot>
+    </x-modal>
     {{-- End Show SaleReturn --}}
 
     {{-- Import modal --}}
@@ -353,8 +352,7 @@
                         </div>
 
                         <div class="w-full px-3">
-                            <x-button primary type="submit" class="w-full text-center" 
-                                      wire:loading.attr="disabled">
+                            <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                                 {{ __('Import') }}
                             </x-button>
                         </div>

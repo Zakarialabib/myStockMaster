@@ -110,7 +110,10 @@ class Index extends Component
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
         $this->paid_amount = 0;
+
+        $this->customer_id = settings()->default_client_id;
     }
+
 
     public function hydrate(): void
     {

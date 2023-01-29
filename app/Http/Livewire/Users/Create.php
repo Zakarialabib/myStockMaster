@@ -29,10 +29,6 @@ class Create extends Component
         'user.email'      => 'required|email|unique:users,email',
         'user.password'   => 'required|string|min:8',
         'user.phone'      => 'required|numeric',
-        'user.city'       => 'nullable',
-        'user.country'    => 'nullable',
-        'user.address'    => 'nullable',
-        'user.tax_number' => 'nullable',
     ];
 
     public function mount(User $user): void

@@ -6,12 +6,10 @@ namespace App\Exports;
 
 use App\Models\Expense;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ExpenseExport implements FromQuery, WithMapping, WithHeadings
+class ExpenseExport implements FromView    
 {
     use Exportable;
     use ForModelsTrait;
@@ -29,27 +27,11 @@ class ExpenseExport implements FromQuery, WithMapping, WithHeadings
         return Expense::query();
     }
 
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            __('#'),
-            __('Reference'),
-            __('Amount'),
-            __('Created At'),
-        ];
-    }
-
-    /**
-     * @param  Expense  $row
-     * @return array
-     */
-    public function map($row): array
-    {
-        return [
-            $row->id,
-            $row->reference,
-            $row->amount,
-            $row->created_at->format('d-m-Y'),
-        ];
-    }
+        return view('pdf.expenses', [
+            'data' => $this->query()->get(),
+        ]);
+    }   
+   
 }

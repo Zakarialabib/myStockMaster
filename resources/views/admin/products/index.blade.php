@@ -49,11 +49,11 @@
                             wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('exportPdf')" 
+                        <x-dropdown-link onclick="Livewire.emit('exportAll')" 
                             wire:loading.attr="disabled">
                             {{ __('PDF') }}
                         </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('exportExcel')" 
+                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
                             wire:loading.attr="disabled">
                             {{ __('Excel') }}
                         </x-dropdown-link>

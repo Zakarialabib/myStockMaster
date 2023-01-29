@@ -132,27 +132,21 @@
             </div>
 
             {{-- Show Sale --}}
-            @if ($sale)
                 <div>
                     <x-modal wire:model="showModal">
                         <x-slot name="title">
-                            {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale->reference }}</strong>
+                            {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale?->reference }}</strong>
                         </x-slot>
 
                         <x-slot name="content">
                             <div class="px-4 mx-auto">
                                 <div class="flex flex-row">
                                     <div class="w-full">
-                                        <div class="p-2 d-flex flex-wrap items-center">
+                                        <div class="p-2 flex flex-wrap items-center">
                                             <x-button secondary class="d-print-none" target="_blank"
                                                 wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
                                                 class="ml-auto">
                                                 <i class="fas fa-print"></i> {{ __('Print') }}
-                                            </x-button>
-                                            <x-button secondary class="d-print-none" target="_blank"
-                                                wire:loading.attr="disabled" href="{{ route('sales.pdf', $sale->id) }}"
-                                                class="ml-2">
-                                                <i class="fas fa-download"></i> {{ __('Download') }}
                                             </x-button>
                                         </div>
                                         <div class="p-4">
@@ -167,37 +161,37 @@
 
                                                 <div class="md:w-1/3 mb-3 md:mb-0">
                                                     <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
-                                                    <div><strong>{{ $sale->customer->name }}</strong></div>
-                                                    <div>{{ $sale->customer->address }}</div>
-                                                    <div>{{ __('Email') }}: {{ $sale->customer->email }}</div>
-                                                    <div>{{ __('Phone') }}: {{ $sale->customer->phone }}</div>
+                                                    <div><strong>{{ $sale?->customer->name }}</strong></div>
+                                                    <div>{{ $sale?->customer->address }}</div>
+                                                    <div>{{ __('Email') }}: {{ $sale?->customer->email }}</div>
+                                                    <div>{{ __('Phone') }}: {{ $sale?->customer->phone }}</div>
                                                 </div>
 
                                                 <div class="md:w-1/3 mb-3 md:mb-0">
                                                     <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                                     <div>{{ __('Invoice') }}:
-                                                        <strong>{{ settings()->sale_prefix }} - {{ $sale->reference }}</strong>
+                                                        <strong>{{ settings()->sale_prefix }} - {{ $sale?->reference }}</strong>
                                                     </div>
                                                     <div>{{ __('Date') }}:
-                                                        {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}
+                                                        {{ \Carbon\Carbon::parse($sale?->date)->format('d/m/Y') }}
                                                     </div>
                                                     <div>
                                                         {{ __('Status') }} :
-                                                        @if ($sale->status == \App\Enums\SaleStatus::Pending)
+                                                        @if ($sale?->status == \App\Enums\SaleStatus::Pending)
                                                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                        @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
+                                                        @elseif ($sale?->status == \App\Enums\SaleStatus::Ordered)
                                                             <x-badge info>{{ __('Ordered') }}</x-badge>
-                                                        @elseif($sale->status == \App\Enums\SaleStatus::Completed)
+                                                        @elseif($sale?->status == \App\Enums\SaleStatus::Completed)
                                                             <x-badge success>{{ __('Completed') }}</x-badge>
                                                         @endif
                                                     </div>
                                                     <div>
                                                         {{ __('Payment Status') }} :
-                                                        @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
+                                                        @if ($sale?->payment_status == \App\Enums\PaymentStatus::Paid)
                                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
+                                                        @elseif ($sale?->payment_status == \App\Enums\PaymentStatus::Partial)
                                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
+                                                        @elseif($sale?->payment_status == \App\Enums\PaymentStatus::Due)
                                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                                         @endif
                                                     </div>
@@ -215,7 +209,7 @@
                                                     </x-slot>
 
                                                     <x-table.tbody>
-                                                        @foreach ($this->sale->saleDetails as $item)
+                                                        @foreach ($sale?->saleDetails as $item)
                                                             <x-table.tr>
                                                                 <x-table.td>
                                                                     {{ $item->name }} <br>
@@ -245,17 +239,17 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="left"><strong>{{ __('Discount') }}
-                                                                        ({{ $sale->discount_percentage }}%)</strong>
+                                                                        ({{ $sale?->discount_percentage }}%)</strong>
                                                                 </td>
                                                                 <td class="right">
-                                                                    {{ format_currency($sale->discount_amount) }}
+                                                                    {{ format_currency($sale?->discount_amount) }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="left"><strong>{{ __('Tax') }}
-                                                                        ({{ $sale->tax_percentage }}%)</strong></td>
+                                                                        ({{ $sale?->tax_percentage }}%)</strong></td>
                                                                 <td class="right">
-                                                                    {{ format_currency($sale->tax_amount) }}
+                                                                    {{ format_currency($sale?->tax_amount) }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -263,7 +257,7 @@
                                                                     <strong>{{ __('Shipping') }}</strong>
                                                                 </td>
                                                                 <td class="right">
-                                                                    {{ format_currency($sale->shipping_amount) }}
+                                                                    {{ format_currency($sale?->shipping_amount) }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -271,7 +265,7 @@
                                                                     <strong>{{ __('Grand Total') }}</strong>
                                                                 </td>
                                                                 <td class="right">
-                                                                    <strong>{{ format_currency($sale->total_amount) }}</strong>
+                                                                    <strong>{{ format_currency($sale?->total_amount) }}</strong>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -285,7 +279,6 @@
                         </x-slot>
                     </x-modal>
                 </div>
-            @endif
             {{-- End Show Sale --}}
         </x-slot>
     </x-modal>

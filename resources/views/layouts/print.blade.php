@@ -2,28 +2,93 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@yield('title') || {{ config('app.name') }}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('images/favicon.png') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css"
-        integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <style>
         @font-face {
-            font-family: 'Cairo';
-            src: url('./fonts/cairo.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+        font-family: 'Cairo';
+        src: url('./fonts/cairo.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        }
+        
+        *{ font-family: 'Cairo'!important;}
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 15px;
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
         }
 
-        * {
-            font-family: 'Cairo' !important;
+        div,
+        p,
+        a,
+        li,
+        td {
+            -webkit-text-size-adjust: none;
+        }
+
+
+        p {
+            padding: 0 !important;
+            margin-top: 0 !important;
+            margin-right: 0 !important;
+            margin-bottom: 0 !important;
+            margin- left: 0 !important;
+            font-size: 11px;
+            line-height: 13px;
+        }
+  
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            padding-top: 4px;
+        }
+
+        tfoot tr th:first-child {
+            text-align: left;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        tr {
+            border-bottom: 1px dashed #ddd;
+            border-top: 1px dashed #ddd;
+        }
+        /* Style the footer */
+        .footer {
+            background-color: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .col-12 {
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text-center {
+            text-align: center;
+            align-content: center;
         }
     </style>
 
@@ -32,9 +97,6 @@
 <body>
     <main>
         @yield('content')
-        @isset($slot)
-            {{ $slot }}
-        @endisset
     </main>
 </body>
 

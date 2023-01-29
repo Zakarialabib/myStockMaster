@@ -17,6 +17,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
 {
@@ -33,6 +34,8 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
+        'exportAll','downloadAll',
+        'delete'
     ];
 
     public $showModal = false;
@@ -155,20 +158,25 @@ class Index extends Component
         return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function exportSelected()
+    public function exportSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('customer_access'), 403);
 
         $customers = Customer::whereIn('id', $this->selected)->get();
 
-        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->forModels($this->selected)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    public function exportAll(Customer $customers)
+    public function exportAll(): BinaryFileResponse
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->forModels($customer)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): CustomerExport
+    {
+        return (new CustomerExport());
     }
 
     public function import()

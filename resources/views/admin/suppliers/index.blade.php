@@ -46,6 +46,12 @@
                         <x-dropdown-link onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-dropdown-link>
+                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
+                            {{ __('Excel') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
+                            {{ __('Pdf') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
                 

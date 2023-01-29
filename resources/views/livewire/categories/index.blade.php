@@ -137,7 +137,6 @@
     @livewire('categories.edit', ['category' => $category])
 
     <!-- Show Modal -->
-    @if ($showModal)
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Category') }}
@@ -156,7 +155,6 @@
             </div>
         </x-slot>
     </x-modal>
-    @endif
     <!-- End Show Modal -->
 
     {{-- Import modal --}}

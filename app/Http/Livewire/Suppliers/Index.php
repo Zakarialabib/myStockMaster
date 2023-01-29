@@ -32,6 +32,7 @@ class Index extends Component
     public $listeners = [
         'importModal', 'showModal', 'editModal',
         'refreshIndex' => '$refresh',
+        'downloadAll','exportAll','delete'
     ];
 
     /** @var bool */
@@ -168,11 +169,42 @@ class Index extends Component
 
         $this->importModal = false;
     }
-
-    public function export()
+    public function downloadSelected()
     {
-        abort_if(Gate::denies('supplier_export'), 403);
+        abort_if(Gate::denies('supplier_access'), 403);
 
-        return (new SupplierExport())->download('supplier.xlsx');
+        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+
+        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
+
+    public function downloadAll(Supplier $suppliers)
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): BinaryFileResponse
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+
+        return $this->callExport()->forModels($this->selected)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): BinaryFileResponse
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return $this->callExport()->forModels($supplier)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SupplierExport
+    {
+        return (new SupplierExport());
+    }
+
+   
 }

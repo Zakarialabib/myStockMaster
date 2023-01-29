@@ -28,7 +28,7 @@ class Index extends Component
 
     /** @var string[] */
     public $listeners = [
-        'showModal',
+        'showModal','delete'
     ];
 
     /** @var bool */

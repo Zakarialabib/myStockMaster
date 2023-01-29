@@ -159,20 +159,21 @@
     </div>
 
 
-    {{-- Show Purchase --}}
-    @if ($showModal)
+    {{-- ShowModal Purchase --}}
         <x-modal wire:model="showModal">
             <x-slot name="title">
                 <div class="w-full flex">
-                {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase->reference }}</strong>
+                {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase?->reference }}</strong>
                 
                 <div class="float-right">
+                    @if($purchase != null)
                     <x-button secondary href="{{ route('purchases.pdf', $purchase->id) }}"
                         target="_blank"
                         wire:loading.attr="disabled">
                         <i class="fas fa-file-pdf"></i>
                         {{ __('PDF') }}
                     </x-button>
+                    @endif
                 </div>
             </div>
             </x-slot>
@@ -192,32 +193,32 @@
 
                                 <div class="md:w-1/3 mb-3 md:mb-0">
                                     <h5 class="mb-2 border-bottom pb-2">{{ __('Supplier Info') }}:</h5>
-                                    <div><strong>{{ $purchase->supplier->name }}</strong></div>
-                                    <div>{{ $purchase->supplier->address }}</div>
-                                    <div>{{ __('Email') }}: {{ $purchase->supplier->email }}</div>
-                                    <div>{{ __('Phone') }}: {{ $purchase->supplier->phone }}</div>
+                                    <div><strong>{{ $purchase?->supplier->name }}</strong></div>
+                                    <div>{{ $purchase?->supplier->address }}</div>
+                                    <div>{{ __('Email') }}: {{ $purchase?->supplier->email }}</div>
+                                    <div>{{ __('Phone') }}: {{ $purchase?->supplier->phone }}</div>
                                 </div>
 
                                 <div class="md:w-1/3 mb-3 md:mb-0">
                                     <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
-                                    <div>{{ __('Invoice') }}: <strong>INV/{{ $purchase->reference }}</strong></div>
+                                    <div>{{ __('Invoice') }}: {{ settings()->purchase_prefix }}/{{ $purchase?->reference }}</strong></div>
                                     <div>{{ __('Date') }}:
-                                        {{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}</div>
+                                        {{ \Carbon\Carbon::parse($purchase?->date)->format('d M, Y') }}</div>
                                     <div>
                                         {{ __('Status') }}:
-                                        @if ($purchase->status == \App\Enums\PurchaseStatus::Pending)
+                                        @if ($purchase?->status == \App\Enums\PurchaseStatus::Pending)
                                             <x-badge warning class="text-xs">
                                                 {{ __('Pending') }}
                                             </x-badge>
-                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::Ordered)
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Ordered)
                                             <x-badge success class="text-xs">
                                                 {{ __('Ordered') }}
                                             </x-badge>
-                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::Completed)
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Completed)
                                             <x-badge success class="text-xs">
                                                 {{ __('Completed') }}
                                             </x-badge>
-                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::Returned)
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Returned)
                                             <x-badge success class="text-xs">
                                                 {{ __('Returned') }}
                                             </x-badge>
@@ -225,11 +226,11 @@
                                     </div>
                                     <div>
                                         {{ __('Payment Status') }} :
-                                        @if ($purchase->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        @if ($purchase?->payment_status == \App\Enums\PaymentStatus::Paid)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($purchase?->payment_status == \App\Enums\PaymentStatus::Partial)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($purchase->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($purchase?->payment_status == \App\Enums\PaymentStatus::Due)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </div>
@@ -245,6 +246,7 @@
                                         <x-table.th>{{ __('Subtotal') }}</x-table.th>
                                     </x-slot>
                                     <x-table.tbody>
+                                        @if($purchase != null)
                                         @foreach ($purchase->purchaseDetails as $item)
                                             <x-table.tr>
                                                 <x-table.td class="align-middle">
@@ -267,30 +269,31 @@
                                                 </x-table.td>
                                             </x-table.tr>
                                         @endforeach
+                                        @endif
                                     </x-table.tbody>
                                 </x-table>
                             </div>
                             <div class="flex flex-row">
                                 <div class="w-full px-4 mb-4">
                                     <x-table-responsive>
-                                        @if ( $purchase->discount_percentage )
+                                        @if ( $purchase?->discount_percentage )
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Discount') }}
-                                                    ({{ $purchase->discount_percentage }}%)</strong>
+                                                    ({{ $purchase?->discount_percentage }}%)</strong>
                                             </x-table.heading>
                                             <x-table.td class="right">
-                                                {{ format_currency($purchase->discount_amount) }}</x-table.td>
+                                                {{ format_currency($purchase?->discount_amount) }}</x-table.td>
                                         </x-table.tr>
                                         @endif
-                                        @if ( $purchase->tax_percentage )
+                                        @if ( $purchase?->tax_percentage )
                                         <x-table.tr>
                                             <x-table.heading class="left">
                                                 <strong>{{ __('Tax') }}
-                                                    ({{ $purchase->tax_percentage }}%)</strong>
+                                                    ({{ $purchase?->tax_percentage }}%)</strong>
                                             </x-table.heading>
                                             <x-table.td class="right">
-                                                {{ format_currency($purchase->tax_amount) }}
+                                                {{ format_currency($purchase?->tax_amount) }}
                                             </x-table.td>
                                         </x-table.tr>
                                         @endif
@@ -300,7 +303,7 @@
                                                 <strong>{{ __('Shipping') }}</strong>
                                             </x-table.heading>
                                             <x-table.td class="right">
-                                                {{ format_currency($purchase->shipping_amount) }}</x-table.td>
+                                                {{ format_currency($purchase?->shipping_amount) }}</x-table.td>
                                         </x-table.tr>
                                         @endif
                                         <x-table.tr>
@@ -308,7 +311,7 @@
                                                 <strong>{{ __('Grand Total') }}</strong>
                                             </x-table.heading>
                                             <x-table.td class="right">
-                                                <strong>{{ format_currency($purchase->total_amount) }}</strong>
+                                                <strong>{{ format_currency($purchase?->total_amount) }}</strong>
                                             </x-table.td>
                                         </x-table.tr>
                                     </x-table-responsive>
@@ -319,15 +322,13 @@
                 </div>
             </x-slot>
         </x-modal>
-    @endif
+    {{-- End ShowModal --}}
+
 
     {{-- Purchase Payment payment component   --}}
-    <div>
-        {{-- if showPayments livewire proprety empty don't show --}}
         @if (empty($showPayments))
         <livewire:purchase.payment.index :purchase="$purchase" />
         @endif
-    </div>
     {{-- End Purchase Payment payment component   --}}
 
     @if (!empty($paymentModal))

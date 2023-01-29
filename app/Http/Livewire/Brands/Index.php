@@ -34,6 +34,7 @@ class Index extends Component
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'importModal',
+        'delete'
     ];
 
     public $image;

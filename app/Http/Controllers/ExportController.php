@@ -15,6 +15,8 @@ use PDF;
 
 class ExportController extends Controller
 {
+
+    
     public function salePos($id)
     {
         $sale = Sale::where('id', $id)->firstOrFail();
@@ -40,7 +42,7 @@ class ExportController extends Controller
             'sale'     => $sale,
             'customer' => $customer
         ];
-
+        
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
             'format' => 'a4',
         ]);
@@ -110,5 +112,10 @@ class ExportController extends Controller
         $pdf = PDF::loadView('admin.salesreturn.print', $data);
 
         return $pdf->stream(__('Sale Return').$saleReturn->reference.'.pdf');
+    }
+
+    private function getCompanyLogo()
+    {
+        return 'data:image/jpg;base64,'.base64_encode(file_get_contents(public_path('images/logo.png')));
     }
 }

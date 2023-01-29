@@ -71,7 +71,7 @@
                   <tr>
                      <th>{{__('Date')}}</th>
                      <th>REF</th>
-                     <th>PAYE</th>
+                     <th>{{__('Payment amount')}}</th>
                      <th>DÛ</th>
                      <th>ETAT DE PAIEMENT</th>
                   </tr>

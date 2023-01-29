@@ -11,6 +11,12 @@
                 <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
                     <i class="fas fa-trash"></i>
                 </x-button>
+                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
+                    {{ __('EXCEL') }}
+                </x-button>
+                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
+                    {{ __('PDF') }}
+                </x-button>
             @endif
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
@@ -124,40 +130,41 @@
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="name" :value="__('Name')" />
-                    <p>{{ $supplier->name }}</p>
+                    <p>{{ $supplier?->name }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="phone" :value="__('Phone')" />
-                    <p>{{ $supplier->phone }}</p>
+                    <p>{{ $supplier?->phone }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="email" :value="__('Email')" />
-                    <p>{{ $supplier->email }}</p>
+                    <p>{{ $supplier?->email }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="address" :value="__('Address')" />
-                    <p>{{ $supplier->address }}</p>
+                    <p>{{ $supplier?->address }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="city" :value="__('City')" />
-                    <p>{{ $supplier->city }}</p>
+                    <p>{{ $supplier?->city }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="tax_number" :value="__('Tax Number')" />
-                    <p>{{ $supplier->tax_number }}</p>
+                    <p>{{ $supplier?->tax_number }}</p>
                 </div>
             </div>
         </x-slot>
     </x-modal>
 
+
     <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Edit Supplier') }}
+            {{ __('Edit') }} - {{{ $supplier?->name}}}
         </x-slot>
 
         <x-slot name="content">
@@ -221,7 +228,6 @@
     <livewire:suppliers.create />
 
     {{-- Import modal --}}
-
     <x-modal wire:model="importModal">
         <x-slot name="title">
             {{ __('Import Excel') }}
@@ -246,7 +252,6 @@
             </form>
         </x-slot>
     </x-modal>
-
     {{-- End Import modal --}}
 </div>
 

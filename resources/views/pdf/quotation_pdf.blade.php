@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Quotation')}} _{{$quote['reference']}}</title>
+      <title>{{__('Quotation')}} _{{$quotation->reference }}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -14,11 +14,11 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$quote['date']}}</div>
-            <div><strong> Numéro: </strong> {{$quote['reference']}}</div>
+            <div><strong> Date: </strong>{{$quotation->date }}</div>
+            <div><strong> Numéro: </strong> {{$quotation->reference }}</div>
          </div>
          <div id="Title-heading">
-            Devis  : {{$quote['reference']}}
+            {{__('Quotation')}}  : {{$quotation->reference}}
          </div>
          </div>
       </header>
@@ -34,11 +34,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom :</strong> {{$quote['client_name']}}</div>
-                           <div><strong>ICE :</strong> {{$quote['client_ice']}}</div>
-                           <div><strong>Téle :</strong> {{$quote['client_phone']}}</div>
-                           <div><strong>Adresse</strong>   {{$quote['client_adr']}}</div>
-                           <div><strong>Email :</strong>  {{$quote['client_email']}}</div>
+                           <div><strong>Nom :</strong> {{$quotation->client_name }}</div>
+                           <div><strong>ICE :</strong> {{$quotation->client_ice }}</div>
+                           <div><strong>Téle :</strong> {{$quotation->client_phone }}</div>
+                           <div><strong>Adresse</strong>   {{$quotation->client_adr }}</div>
+                           <div><strong>Email :</strong>  {{$quotation->client_email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -83,13 +83,13 @@
                      <td>
                         <span>{{$detail->code}} ({{$detail->name}})</span>
                            @if($detail['is_imei'] && $detail['imei_number'] !==null)
-                              <p>IMEI/SN : {{$detail['imei_number']}}</p>
+                              <p>IMEI/SN : {{$detail['imei_number }}</p>
                            @endif
                      </td>
                      <td>{{$detail->unit_price}} </td>
-                     <td>{{$detail->quantity}}/{{$detail['unitSale']}}</td>
-                     <td>{{$detail['DiscountNet']}} </td>
-                     <td>{{$detail['taxe']}} </td>
+                     <td>{{$detail->quantity}}/{{$detail['unitSale }}</td>
+                     <td>{{$detail['DiscountNet }} </td>
+                     <td>{{$detail['taxe }} </td>
                      <td>{{$detail->total_amount}} </td>
                   </tr>
                   @endforeach
@@ -100,19 +100,19 @@
             <table>
                <tr>
                   <td>Taxe de commande</td>
-                  <td>{{$quote['TaxNet']}} </td>
+                  <td>{{$quotation->TaxNet }} </td>
                </tr>
                <tr>
                   <td>Remise</td>
-                  <td>{{$quote['discount']}} </td>
+                  <td>{{$quotation->discount }} </td>
                </tr>
                <tr>
                   <td>Livraison</td>
-                  <td>{{$quote['shipping']}} </td>
+                  <td>{{$quotation->shipping }} </td>
                </tr>
                <tr>
                   <td>{{__('Total')}}</td>
-                  <td>{{$symbol}} {{$quote['GrandTotal']}} </td>
+                  <td>{{$symbol}} {{$quotation->GrandTotal }} </td>
                </tr>
             </table>
          </div>

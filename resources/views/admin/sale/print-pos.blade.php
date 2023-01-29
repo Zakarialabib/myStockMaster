@@ -47,10 +47,6 @@
             line-height: 13px;
         }
 
-        .receipt {
-            max-width: 500px;
-        }
-
         .title {
             background: #EEE;
         }

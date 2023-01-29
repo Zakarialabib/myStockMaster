@@ -1,5 +1,4 @@
 <div>
-
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
         <x-slot name="title">

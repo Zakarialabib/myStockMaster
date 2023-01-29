@@ -6,11 +6,10 @@ namespace App\Exports;
 
 use App\Models\Product;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ProductExport implements FromQuery, WithMapping, WithHeadings
+class ProductExport implements FromView
 {
     use Exportable;
     use ForModelsTrait;
@@ -25,36 +24,14 @@ class ProductExport implements FromQuery, WithMapping, WithHeadings
             return Product::query()->whereIn('id', $this->models);
         }
 
-        return Product::query();
+        return Product::query()->with('category');
     }
 
-    /**
-     * @param  Product  $row
-     * @return array
-     */
-    public function map($row): array
+    public function view(): View
     {
-        return [
-            $row->code,
-            $row->name,
-            $row->category?->name,
-            $row->quantity,
-            $row->cost,
-            $row->price,
-            $row->created_at->format('d-m-Y'),
-        ];
-    }
+        return view('pdf.products', [
+            'data' => $this->query()->get(),
+        ]);
+    }   
 
-    public function headings(): array
-    {
-        return [
-            __('Code'),
-            __('Name'),
-            __('Category'),
-            __('Quantity'),
-            __('Cost'),
-            __('Price'),
-            __('Created At'),
-        ];
-    }
 }

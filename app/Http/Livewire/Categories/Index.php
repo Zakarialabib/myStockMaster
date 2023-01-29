@@ -35,6 +35,7 @@ class Index extends Component
     public $listeners = [
         'importModal', 'showModal',
         'refreshIndex' => '$refresh',
+        'delete'
     ];
 
     /** @var bool */
