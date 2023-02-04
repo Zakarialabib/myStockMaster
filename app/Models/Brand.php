@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Brand
@@ -34,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Brand extends Model
 {
     use HasAdvancedFilter;
-
+    use HasFactory;
     /** @var string[] */
     public $orderable = [
         'id', 'name', 'description', 'image',

@@ -2,7 +2,7 @@
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Product') }} - {{ $product->code }}
+            {{ __('Show Product') }} - {{ $product?->code }}
         </x-slot>
 
         <x-slot name="content">
@@ -61,10 +61,10 @@
                             <x-table.tr>
                                 <x-table.th>{{ __('Stock Worth') }}</x-table.th>
                                 <x-table.td>
-                                    {{ __('COST') }}::
+                                    {{ __('COST') }}:
                                     {{ format_currency($product->cost * $product->quantity) }}
                                     /
-                                    {{ __('PRICE') }}::
+                                    {{ __('PRICE') }}:
                                     {{ format_currency($product->price * $product->quantity) }}
                                 </x-table.td>
                             </x-table.tr>
