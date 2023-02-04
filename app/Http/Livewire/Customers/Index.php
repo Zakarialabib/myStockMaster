@@ -1,51 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Customers;
 
-use Livewire\Component;
-use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
-use App\Models\Customer;
 use App\Exports\CustomerExport;
-use App\Support\HasAdvancedFilter;
+use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
-use App\Models\Wallet;
+use App\Models\Customer;
+use App\Traits\Datatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert,
-        HasAdvancedFilter, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use WithFileUploads;
+    use Datatable;
 
     public $customer;
 
     public $file;
 
-    public int $perPage;
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+        'showModal', 'editModal',
+        'exportAll', 'downloadAll',
+        'delete',
+    ];
 
-    public int $selectPage;
+    public $showModal = false;
 
-    public $listeners = ['resetSelected','confirmDelete','exportAll','downloadAll','delete', 'export', 'import', 'importExcel','refreshIndex','showModal','editModal'];
-
-    public $showModal;
-
-    public $refreshIndex;
-
-    public $editModal; 
+    public $editModal = false;
 
     public $import;
 
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -58,47 +57,26 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'customer.name' => 'required|string|max:255',
-        'customer.email' => 'nullable|max:255',
-        'customer.phone' => 'required|numeric',
-        'customer.city' => 'nullable',
-        'customer.country' => 'nullable',
-        'customer.address' => 'nullable',
+        'customer.name'       => 'required|string|max:255',
+        'customer.email'      => 'nullable|max:255',
+        'customer.phone'      => 'required|numeric',
+        'customer.city'       => 'nullable',
+        'customer.country'    => 'nullable',
+        'customer.address'    => 'nullable',
         'customer.tax_number' => 'nullable',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Customer())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('customer_access'), 403);
 
@@ -130,57 +108,30 @@ class Index extends Component
 
         $this->alert('warning', __('Customer deleted successfully'));
     }
-    
-    public function createModal()
+
+    public function showModal($id)
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('customer_access'), 403);
 
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->customer = new Customer();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        $this->validate();
-
-        $this->customer->save();
-
-        $this->alert('success', __('Customer created successfully'));
-        
-        $this->emit('refreshIndex');
-        
-        $this->createModal = false;
-    }
-
-    public function showModal(Customer $customer)
-    {
-        abort_if(Gate::denies('customer_show'), 403);
-
-        $this->customer = $customer;
+        $this->customer = Customer::find($id);
 
         $this->showModal = true;
     }
 
     public function editModal(Customer $customer)
     {
-        abort_if(Gate::denies('customer_edit'), 403);
+        abort_if(Gate::denies('customer_update'), 403);
 
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->customer = $customer;
+        $this->customer = Customer::find($customer->id);
 
         $this->editModal = true;
-
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -190,7 +141,7 @@ class Index extends Component
 
         $this->alert('success', __('Customer updated successfully.'));
     }
-    
+
     public function downloadSelected()
     {
         abort_if(Gate::denies('customer_access'), 403);
@@ -207,42 +158,48 @@ class Index extends Component
         return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function exportSelected()
+    public function exportSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('customer_access'), 403);
 
         $customers = Customer::whereIn('id', $this->selected)->get();
 
-        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->forModels($this->selected)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    public function exportAll(Customer $customers)
+    public function exportAll(): BinaryFileResponse
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        return (new CustomerExport($customers))->download('customers.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        return $this->callExport()->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): CustomerExport
+    {
+        return (new CustomerExport());
     }
 
     public function import()
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-       $this->import = true;
+        $this->import = true;
     }
 
     public function importExcel()
     {
         abort_if(Gate::denies('customer_access'), 403);
-        
+
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        Excel::import(new CustomerImport, $this->file('file'));
+        $file = $this->file('file');
+
+        Excel::import(new CustomerImport(), $this->file('file'));
 
         $this->import = false;
 
         $this->alert('success', __('Customer imported successfully.'));
     }
-
 }

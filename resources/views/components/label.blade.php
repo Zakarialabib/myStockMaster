@@ -5,7 +5,7 @@
     $requiredLabel = '*';
 @endphp
 
-<label for="{{ $for }}" {{ $attributes->merge(['class' => 'block font-medium text-sm text-gray-700']) }}>
+<label for="{{ $for }}" {{ $attributes->merge(['class' => 'block font-bold text-sm text-gray-700 mt-2']) }}>
     {{ $value ?? $slot }}
 
     @if ($required)

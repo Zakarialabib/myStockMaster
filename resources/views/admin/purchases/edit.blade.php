@@ -1,17 +1,15 @@
-@extends('layouts.app')
-
 @section('title', __('Edit Purchase'))
 
 @section('breadcrumb')
     <section class="py-3 px-4">
-        <div class="flex flex-wrap items-center justify-between">
+        <div class="flex flex-wrap items-center rtl:justify-start justify-between ">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">
                     {{ __('Edit Purchase') }}
                 </h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -28,7 +26,7 @@
                                 fill="currentColor"></path>
                         </svg></span>
                     <a class="flex items-center text-sm" href="{{ route('purchases.index') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -43,15 +41,15 @@
     </section>
 @endsection
 
-@section('content')
+<x-app-layout>
     <x-card>
-        <div class="flex flex-row">
+        <div class="flex flex-wrap">
 
-            <div class="w-3/12 sm:w-full h-full">
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>
 
-            <div class="w-9/12 sm:w-full h-full">
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <div>
                     @include('utils.alerts')
                     <form id="purchase-form" action="{{ route('purchases.update', $purchase) }}" method="POST">
@@ -115,42 +113,20 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="note">{{ __('Descriprion') }}</label>
+                        <div class="w-full px-3 mb-4">
+                            <label for="note">{{ __('Note') }}</label>
                             <textarea name="note" id="note" rows="5"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $purchase->note }}</textarea>
                         </div>
 
-                        <div class="mt-3">
-                            <button type="submit"
-                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                {{ __('Update Purchase') }} <i class="bi bi-check"></i>
-                            </button>
+                        <div class="w-full px-3">
+                            <x-button type="submit" primary class="w-full text-center"> 
+                                {{ __('Update Purchase') }} 
+                            </x-button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </x-card>
-@endsection
-
-@push('scripts')
-    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#paid_amount').maskMoney({
-                prefix: '{{ settings()->currency->symbol }}',
-                thousands: '{{ settings()->currency->thousand_separator }}',
-                decimal: '{{ settings()->currency->decimal_separator }}',
-                allowZero: true,
-            });
-
-            $('#paid_amount').maskMoney('mask');
-
-            $('#purchase-form').submit(function() {
-                var paid_amount = $('#paid_amount').maskMoney('unmasked')[0];
-                $('#paid_amount').val(paid_amount);
-            });
-        });
-    </script>
-@endpush
+</x-app-layout>

@@ -1,47 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
 use App\Models\Sale;
-use App\Models\SalePayment;
-use App\Models\Customer;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Imports\SaleImport;
 
 class Recent extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
+    use Datatable;
 
     public $sale;
 
+    /** @var string[] */
     public $listeners = [
-    'recentSales', 'showModal',
-    'importModal', 'refreshIndex'
+        'recentSales', 'showModal',
+        'importModal', 'refreshIndex' => '$refresh',
     ];
 
-    public $refreshIndex;
+    public $showModal = false;
 
-    public $showModal;
-    
-    public $recentSales;    
+    public $recentSales;
 
-    public int $perPage;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-    
     public array $listsForFields = [];
 
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -54,69 +48,43 @@ class Recent extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function mount(): void
     {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
-    public function mount()
-    {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 10;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 10;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Sale())->orderable;
+        $this->orderable = (new Sale())->orderable;
     }
 
     public function render()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
-        $query = Sale::with('customer','saleDetails')->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+        $query = Sale::with('customer', 'saleDetails')->advancedFilter([
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $sales = $query->paginate($this->perPage);
 
         return view('livewire.sales.recent', compact('sales'));
     }
 
-    public function showModal(Sale $sale)
+    public function showModal($id)
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
-        $this->sale = $sale;
+        $this->sale = Sale::with('saleDetails')->findOrFail($id);
 
         $this->showModal = true;
     }
 
     public function recentSales()
     {
-        abort_if(Gate::denies('access_sales'), 403);
+        abort_if(Gate::denies('sale_access'), 403);
 
         $this->recentSales = true;
     }
-  
 }

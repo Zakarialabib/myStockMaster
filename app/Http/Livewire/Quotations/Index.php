@@ -1,42 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Quotations;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
-use App\Models\Quotation;
 use App\Models\Customer;
+use App\Models\Quotation;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
+    use Datatable;
 
     public $quotation;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    /** @var string[] */
+    public $listeners = [
+        'showModal', 'delete',
+    ];
 
-    public $showModal;
+    /** @var bool */
+    public $showModal = false;
 
-    public $createModal;
-
-    public $editModal;
-
-    public int $perPage;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-    
     public array $listsForFields = [];
 
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -49,58 +49,25 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function mount(): void
     {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public array $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'payment_method' => 'required|string|max:255',
-        'note' => 'nullable|string|max:1000'
-    ];
-
-    public function mount()
-    {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Quotation())->orderable;
+        $this->orderable = (new Quotation())->orderable;
         $this->initListsForFields();
     }
 
-    public function render()
+    public function render(): View|Factory
     {
-        abort_if(Gate::denies('access_quotations'), 403);
+        abort_if(Gate::denies('quotation_access'), 403);
 
         $query = Quotation::advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $quotations = $query->paginate($this->perPage);
 
@@ -109,64 +76,16 @@ class Index extends Component
 
     public function showModal(Quotation $quotation)
     {
-        abort_if(Gate::denies('access_quotations'), 403);
+        abort_if(Gate::denies('quotation_access'), 403);
 
-        $this->quotation = $quotation;
+        $this->quotation = Customer::findOrFail($quotation->customer_id);
 
         $this->showModal = true;
     }
 
-    public function createModal()
-    {
-        abort_if(Gate::denies('create_quotations'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->createModal = true;
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('create_quotations'), 403);
-
-        $this->validate();
-
-        Quotation::create($this->quotation);
-
-        $this->createModal = false;
-
-        $this->alert('success', 'Quotation created successfully.');
-    }
-
-    public function editModal(Quotation $quotation)
-    {
-        abort_if(Gate::denies('edit_quotations'), 403);
-
-        $this->resetSelected();
-
-        $this->resetValidation();
-
-        $this->quotation = $quotation;
-
-        $this->editModal = true;
-    }
-
-    public function update()
-    {
-        $this->validate();
-
-        $this->quotation->save();
-
-        $this->editModal   = false;
-
-        $this->alert('success', 'Quotation updated successfully.');
-    }
-
     public function deleteSelected()
     {
-        abort_if(Gate::denies('delete_quotations'), 403);
+        abort_if(Gate::denies('quotation_delete'), 403);
 
         Quotation::whereIn('id', $this->selected)->delete();
 
@@ -175,17 +94,15 @@ class Index extends Component
 
     public function delete(Quotation $product)
     {
-        abort_if(Gate::denies('delete_quotations'), 403);
+        abort_if(Gate::denies('quotation_delete'), 403);
 
         $product->delete();
 
-        $this->alert('success', 'Quotation deleted successfully.');
+        $this->alert('success', __('Quotation deleted successfully.'));
     }
 
     protected function initListsForFields(): void
     {
         $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
-
-  
 }

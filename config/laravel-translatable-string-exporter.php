@@ -1,21 +1,22 @@
 <?php
+
 return [
     // Directories to search in.
-    'directories'=> [
+    'directories' => [
         'app',
         'resources',
     ],
 
     // Directories to exclude from search.
-    // 
+    //
     // Please note, these directories should be relative to the ones listed in 'directories'.
-    // For example, if you have 'resources' in 'directories', then to ignore the 'resources/ignored' directory, 
+    // For example, if you have 'resources' in 'directories', then to ignore the 'resources/ignored' directory,
     // you need to add 'ignored' to the 'excluded-directories' list.
-    'excluded-directories'=> [
+    'excluded-directories' => [
     ],
 
     // File Patterns to search for.
-    'patterns'=> [
+    'patterns' => [
         '*.php',
         '*.js',
     ],
@@ -25,13 +26,13 @@ return [
 
     // Translation function names.
     // If your function name contains $ escape it using \$ .
-    'functions'=> [
+    'functions' => [
         '__',
         '_t',
         '@lang',
     ],
 
-    // Indicates whether you need to sort the translations alphabetically 
+    // Indicates whether you need to sort the translations alphabetically
     // by original strings (keys).
     // It helps navigate a translation file and detect possible duplicates.
     'sort-keys' => true,

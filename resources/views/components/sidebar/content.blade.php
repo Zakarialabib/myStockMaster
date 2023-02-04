@@ -1,8 +1,8 @@
-<x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3">
+<x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-3 px-3">
 
     <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('home')">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <x-icons.dashboard class="w-5 h-5" aria-hidden="true" />
             </span>
         </x-slot>
@@ -15,12 +15,12 @@
         'Products',
     )">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <i class="fas fa-boxes w-5 h-5"></i>
             </span>
         </x-slot>
       
-        @can('access_product_categories')
+        @can('category_access')
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />
         @endcan
@@ -28,7 +28,7 @@
         @can('print_barcodes')
             <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
         @endcan
-        @can('access_product_brands')
+        @can('brand_access')
             <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('product-brands.index')" />
         @endcan
         @can('access_warehouse')
@@ -38,7 +38,7 @@
        
     </x-sidebar.dropdown>
 
-    @can('access_adjustments')
+    @can('adjustment_access')
         <x-sidebar.dropdown title="{{ __('Adjustments') }}" :active="Str::startsWith(
             request()
                 ->route()
@@ -46,7 +46,7 @@
             'Adjustments',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-adjust w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -64,7 +64,7 @@
         )">
 
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-file-invoice-dollar w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -81,7 +81,7 @@
             'Purchases',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-shopping-cart w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -101,7 +101,7 @@
             'Sales',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-shopping-bag w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -123,7 +123,7 @@
             'Expenses',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-money-bill-alt w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -144,7 +144,7 @@
             'Reports',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-chart-line w-5 h-5"></i>
                 </span>
             </x-slot>
@@ -165,7 +165,7 @@
         </x-sidebar.dropdown>
     @endcan
 
-    @can('access_user_management')
+    @can('user_access')
         <x-sidebar.dropdown title="{{ __('People') }}" :active="Str::startsWith(
             request()
                 ->route()
@@ -173,17 +173,17 @@
             'people',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-users w-5 h-5"></i>
                 </span>
             </x-slot>
-            @can('access_customers')
+            @can('customer_access')
                 <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
             @endcan
-            @can('access_suppliers')
+            @can('suppliers_access')
                 <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />
             @endcan
-            @can('access_users')
+            @can('user_access')
                 <x-sidebar.sublink title="{{ __('Users') }}" href="{{ route('users.index') }}" :active="request()->routeIs('users.index')" />
             @endcan
             @can('access_roles')
@@ -203,16 +203,23 @@
             'Settings',
         )">
             <x-slot name="icon">
-                <span class="inline-block mr-3">
+                <span class="inline-block mx-4">
                     <i class="fas fa-cog w-5 h-5"></i>
                 </span>
             </x-slot>
+            @can('setting_access')
+                <x-sidebar.sublink title="{{ __('Settings') }}" href="{{ route('settings.index') }}" :active="request()->routeIs('settings.index')" />
+            @endcan
             @can('access_currencies')
                 <x-sidebar.sublink title="{{ __('Currencies') }}" href="{{ route('currencies.index') }}" :active="request()->routeIs('currencies.index')" />
             @endcan
-            @can('access_settings')
-                <x-sidebar.sublink title="{{ __('Settings') }}" href="{{ route('settings.index') }}" :active="request()->routeIs('settings.index')" />
+            @can('access_languages')
+                <x-sidebar.sublink title="{{ __('Languages') }}" href="{{ route('languages.index') }}" :active="request()->routeIs('languages.index')" />
             @endcan
+            @can('access_backup')
+                <x-sidebar.sublink title="{{ __('Backup') }}" href="{{ route('backup.index') }}" :active="request()->routeIs('backup.index')" />
+            @endcan
+
         </x-sidebar.dropdown>
     @endcan
 
@@ -221,7 +228,7 @@
                         document.getElementById('logoutform').submit();"
         href="#">
         <x-slot name="icon">
-            <span class="inline-block mr-3">
+            <span class="inline-block mx-4">
                 <i class="fas fa-sign-out-alt w-5 h-5" aria-hidden="true"></i>
             </span>
         </x-slot>

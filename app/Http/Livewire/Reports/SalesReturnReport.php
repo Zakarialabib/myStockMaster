@@ -1,23 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Reports;
 
+use App\Models\SaleReturn;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\SaleReturn;
 
 class SalesReturnReport extends Component
 {
-
     use WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
-
     public $customers;
+
     public $start_date;
+
     public $end_date;
+
     public $customer_id;
+
     public $sale_return_status;
+
     public $payment_status;
 
     protected $rules = [
@@ -25,7 +29,8 @@ class SalesReturnReport extends Component
         'end_date'   => 'required|date|after:start_date',
     ];
 
-    public function mount($customers) {
+    public function mount($customers)
+    {
         $this->customers = $customers;
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
@@ -34,7 +39,8 @@ class SalesReturnReport extends Component
         $this->payment_status = '';
     }
 
-    public function render() {
+    public function render()
+    {
         $sale_returns = SaleReturn::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, function ($query) {
@@ -49,11 +55,12 @@ class SalesReturnReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.sales-return-report', [
-            'sale_returns' => $sale_returns
+            'sale_returns' => $sale_returns,
         ]);
     }
 
-    public function generateReport() {
+    public function generateReport()
+    {
         $this->validate();
         $this->render();
     }

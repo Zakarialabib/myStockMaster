@@ -29,13 +29,13 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>{{__('Name')}}:</strong> {{$provider['provider_name']}}</div>
-                           <div><strong>{{__('Tax_number')}}:</strong> {{$provider['provider_ice']}}</div>
-                           <div><strong>{{__('Phone')}}:</strong> {{$provider['phone']}}</div>
-                           <div><strong>{{__('Purchase Total')}}:</strong> {{$provider['total_purchase']}}</div>
-                           <div><strong>{{__('Total Amount')}}:</strong> {{$symbol}} {{$provider['total_amount']}}</div>
-                           <div><strong>{{__('Total Paid')}}:</strong> {{$symbol}} {{$provider['total_paid']}}</div>
-                           <div><strong>{{__('Due')}}:</strong> {{$symbol}} {{$provider['due']}}</div>
+                           <div><strong>{{__('Name')}}:</strong> {{ $supplier->name }}</div>
+                           <div><strong>{{__('Tax_number')}}:</strong> {{ $supplier->tax_number }}</div>
+                           <div><strong>{{__('Phone')}}:</strong> {{ $supplier->phone }}</div>
+                           <div><strong>{{__('Purchase Total')}}:</strong> {{ $supplier->total_purchase }}</div>
+                           <div><strong>{{__('Total Amount')}}:</strong> {{ format_currency($supplier->total_amount) }}</div>
+                           <div><strong>{{__('Total Paid')}}:</strong> {{ format_currency($supplier->total_paid) }}</div>
+                           <div><strong>{{__('Due')}}:</strong> {{ format_currency($supplier->due) }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -51,11 +51,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{$setting['CompanyName']}}</div>
-                           <div><strong>ICE:</strong>  {{$setting['CompanyTaxNumber']}}</div>
-                           <div><strong>Adresse:</strong>  {{$setting['CompanyAdress']}}</div>
-                           <div><strong>Téle:</strong>  {{$setting['CompanyPhone']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$setting['email']}}</div>
+                           <div id="comp">{{settings()->company_name}}</div>
+                           <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
+                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
+                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -71,7 +71,7 @@
                   <tr>
                      <th>{{__('Date')}}</th>
                      <th>REF</th>
-                     <th>PAYE</th>
+                     <th>{{__('Payment amount')}}</th>
                      <th>DÛ</th>
                      <th>ETAT DE PAIEMENT</th>
                   </tr>
@@ -79,8 +79,8 @@
                <tbody>
                   @foreach ($purchases as $purchase)
                   <tr>
-                     <td>{{$purchase['date']}} </td>
-                     <td>{{$purchase['Ref']}}</td>
+                     <td>{{$purchase->date}} </td>
+                     <td>{{$purchase->reference}}</td>
                      <td>{{$symbol}} {{$purchase['paid_amount']}} </td>
                      <td>{{$symbol}} {{$purchase['due']}} </td>
                      <td>{{$purchase['payment_status']}} </td>

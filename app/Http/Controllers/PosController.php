@@ -1,22 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use App\Models\Customer;
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\Sale;
-use App\Models\SaleDetails;
-use App\Models\SalePayment;
+use App\Models\Customer;
+use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Routing\Controller;
 
 class PosController extends Controller
 {
-
-    public function index() {
+    public function index()
+    {
         Cart::instance('sale')->destroy();
 
         $customers = Customer::all();
@@ -24,7 +20,4 @@ class PosController extends Controller
 
         return view('admin.sale.pos.index', compact('product_categories', 'customers'));
     }
-
-
-
 }

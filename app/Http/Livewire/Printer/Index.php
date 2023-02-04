@@ -1,40 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Printer;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\Printer;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
+use App\Traits\Datatable;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use Datatable;
 
     public $printer;
 
-    public int $perPage;
+    /** @var string[] */
+    public $listeners = ['showModal', 'editModal', 'refreshIndex'];
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
+    public $showModal = false;
 
-    public $showModal;
+    public $editModal = false;
 
-    public $refreshIndex;
-
-    public $editModal;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
-    public $selectPage;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -47,54 +43,29 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'printer.name' => 'required|string|max:255',
-        'printer.connection_type' => 'required|string|max:255',
+        'printer.name'               => 'required|string|max:255',
+        'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line' => 'required',
-        'printer.ip_address' => 'required|string|max:255',
-        'printer.port' => 'required|string|max:255',
-        'printer.path' => 'required|string|max:255',
+        'printer.char_per_line'      => 'required',
+        'printer.ip_address'         => 'required|string|max:255',
+        'printer.port'               => 'required|string|max:255',
+        'printer.path'               => 'required|string|max:255',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Printer())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('printer_access'), 403);
-        
+
         $query = Printer::advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
@@ -106,7 +77,7 @@ class Index extends Component
         return view('livewire.printer.index', compact('printers'));
     }
 
-    public function showModal(Printer $printer)
+    public function showModal(Printer $printer): void
     {
         abort_if(Gate::denies('printer_show'), 403);
 
@@ -115,7 +86,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function editModal(Printer $printer)
+    public function editModal(Printer $printer): void
     {
         abort_if(Gate::denies('printer_edit'), 403);
 
@@ -126,10 +97,9 @@ class Index extends Component
         $this->printer = $printer;
 
         $this->editModal = true;
-
     }
 
-    public function update(Printer $printer)
+    public function update(Printer $printer): void
     {
         abort_if(Gate::denies('printer_edit'), 403);
 
@@ -137,18 +107,17 @@ class Index extends Component
 
         $this->printer->save();
 
-        $this->showModal = false;
+        $this->editModal = false;
 
-        $this->alert('success', 'Printer updated successfully!');
+        $this->alert('success', __('Printer updated successfully!'));
     }
 
-    public function delete(Printer $printer)
+    public function delete(Printer $printer): void
     {
         abort_if(Gate::denies('printer_delete'), 403);
 
         $printer->delete();
 
-        $this->alert('success', 'Printer deleted successfully!');
+        $this->alert('success', __('Printer deleted successfully!'));
     }
-    
 }

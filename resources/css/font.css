@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap"');
+
+@layer body {
+    body {
+    font-family: 'Noto Sans Arabic', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    }
+    input {
+    font-family: Arial, Helvetica, sans-serif !important;
+    }
+}

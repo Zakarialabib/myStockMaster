@@ -1,57 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Customer;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class CustomerExport implements FromQuery, WithMapping, WithHeadings
+class CustomerExport implements FromView
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    /** @var mixed */
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Customer::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Customer::query()->whereIn('id', $this->models);
         }
 
         return Customer::query();
     }
 
-    /**
-     * @var Customer $row
-     */
-    public function map($row): array
+    public function view(): View
     {
-        return [
-            $row->id,
-            $row->name,
-            $row->email,
-            $row->phone,
-            $row->city,
-            $row->country,
-        ];
-    }
-
-    public function headings(): array
-    {
-        return [
-            '#',
-            __('Name'),
-            __('Email'),
-            __('Phone'),
-            __('City'),
-            __('Country'),
-        ];
+        return view('pdf.customers', [
+            'data' => $this->query()->get(),
+        ]);
     }
 }

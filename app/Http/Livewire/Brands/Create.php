@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -11,56 +15,70 @@ use Illuminate\Support\Str;
 
 class Create extends Component
 {
-    use LivewireAlert , WithFileUploads;
+    use LivewireAlert;
+    use WithFileUploads;
 
-    public $createBrand;
-    
+    public $createBrand = false;
+
+    /** @var mixed */
+    public $brand;
+
     public $image;
 
+    public $name;
+
+    public $description;
+
+    /** @var string[] */
     public $listeners = ['createBrand'];
 
-    public function mount(Brand $brand)
+    public function updated($propertyName): void
     {
-        $this->brand = $brand;
+        $this->validateOnly($propertyName);
     }
 
-    public array $rules = [
-        'brand.name' => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
+    protected array $rules = [
+        'name'        => 'required|min:3|max:255',
+        'description' => 'nullable',
+        'image'       => 'nullable|image|max:1024',
     ];
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('brand_create'), 403);
 
         return view('livewire.brands.create');
     }
 
-    public function createBrand()
+    public function hydrate()
     {
-        $this->resetErrorBag();
+        // $this->image = $imageName;
+    }
 
-        $this->resetValidation();
+    public function createBrand(): void
+    {
+        $this->reset();
 
         $this->createBrand = true;
     }
 
-    public function create()
+    public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        if($this->image){
-            $imageName = Str::slug($this->brand->name).'.'.$this->image->extension();
-            $this->image->storeAs('brands',$imageName);
-            $this->brand->image = $imageName;
+        // image not working with realtime validation
+        if ($this->image) {
+            $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
+            $this->image->storeAs('brands', $imageName);
+            $this->image = $imageName;
         }
 
-        $this->brand->save();
+        Brand::create($validatedData);
 
         $this->emit('refreshIndex');
-        
-        $this->alert('success', 'Brand created successfully.');
-        
+
+        $this->alert('success', __('Brand created successfully.'));
+
         $this->createBrand = false;
     }
 }

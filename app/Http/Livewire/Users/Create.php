@@ -1,69 +1,73 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    public $listeners = ['createUser'];
+    /** @var string[] */
+    public $listeners = ['createModal'];
 
-    public $createUser;
+    /** @var bool */
+    public $createModal = false;
+
+    /** @var mixed */
+    public $user;
 
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
+        'user.name'     => 'required|string|max:255',
+        'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
-        'user.tax_number' => 'nullable',
+        'user.phone'    => 'required|numeric',
     ];
 
-    public function mount(User $user)
+    public function mount(User $user): void
     {
         $this->user = $user;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         return view('livewire.users.create');
     }
 
-    public function createUser()
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createUser = true;
+        $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
         $this->user->save();
 
-        if($this->user) {
+        if ($this->user) {
             $wallet = Wallet::create([
                 'user_id' => $this->user->id,
                 'balance' => 0,
             ]);
-            $this->alert('success', 'User created successfully!');
+            $this->alert('success', __('User created successfully!'));
         } else {
-
-            $this->alert('warning', 'User was not created !');
+            $this->alert('warning', __('User was not created !'));
         }
 
         $this->emit('userCreated');
 
-        $this->createUser = false;
+        $this->createModal = false;
     }
 }

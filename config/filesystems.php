@@ -36,7 +36,7 @@ return [
             'throw' => false,
         ],
 
-        'local_files' =>[
+        'local_files' => [
             'driver' => 'local',
             'root' => public_path('images'),
             'url' => env('APP_URL').'/uploads',

@@ -1,63 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Create extends Component
 {
     use LivewireAlert;
-    
-    public $listeners = ['createCategory'];
-    
-    public $code , $name;
 
-    public $createCategory;
-    
-    protected $rules = [
-        'code' => 'nullable|string|max:255',
-        'name' => 'required|string|max:255',
+    /** @var string[] */
+    public $listeners = ['createCategory'];
+
+    /** @var bool */
+    public $createCategory = false;
+
+    /** @var mixed */
+    public $category;
+
+    /** @var string */
+    public $name;
+
+    protected array $rules = [
+        'name' => 'required|min:3|max:255',
     ];
 
-    public function updated($propertyName)
+    public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Category $category)
+    public function render(): View|Factory
     {
-        $this->category = $category;
-    }
-
-    public function render()
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
         return view('livewire.categories.create');
     }
 
-    public function createCategory()
+    public function createCategory(): void
     {
-        $this->resetErrorBag();
-
-        $this->resetValidation();
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->createCategory = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $validatedData = $this->validate();
 
         Category::create($validatedData);
 
-        $this->alert('success', 'Category created successfully.');
-        
         $this->emit('refreshIndex');
-        
+
+        $this->alert('success', __('Category created successfully.'));
+
         $this->createCategory = false;
     }
 }

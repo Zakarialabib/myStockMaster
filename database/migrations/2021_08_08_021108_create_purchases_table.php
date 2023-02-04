@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
+use App\Models\Supplier;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePurchasesTable extends Migration
 {
@@ -15,9 +18,12 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+
             $table->date('date');
             $table->string('reference');
-            $table->unsignedBigInteger('supplier_id')->nullable();
+
+            $table->foreignIdFor(Supplier::class)->nullable()->constrained()->cascadeOnDelete();
+
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);
@@ -30,7 +36,6 @@ class CreatePurchasesTable extends Migration
             $table->string('payment_status');
             $table->string('payment_method');
             $table->text('note')->nullable();
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -23,27 +23,28 @@
                     <x-table.th>{{ __('Actions') }}</x-table.th>
                 </x-slot>
                 <x-table.tbody>
-                    {{-- @dd($purchasepayments) --}}
+
                     @forelse ($purchasepayments as $purchasepayment)
                         <x-table.tr>
                             <x-table.td>{{ $purchasepayment->created_at }}</x-table.td>
-                            <x-table.td>{{ $purchasepayment->amount }}</x-table.td>
-                            <x-table.td>{{ $purchasepayment->purchase->due_amount }}</x-table.td>
+                            <x-table.td>
+                                {{ format_currency($purchasepayment->amount) }}
+                            </x-table.td>
+                            <x-table.td>
+                                {{ format_currency($purchasepayment->purchase->due_amount) }}
+                            </x-table.td>
                             <x-table.td>{{ $purchasepayment->payment_method }}</x-table.td>
                             <x-table.td>
                                 @can('access_purchase_payments')
                                 <x-button wire:click="$emit('paymentModal', {{$purchasepayment->id}} )"
                                     type="button" primary>
-                                    {{ __('Edit') }}
-                                </x-button>
-                                <a href="{{ route('purchase-payments.edit', [$purchasepayment->purchase->id, $purchasepayment->id]) }}" class="btn btn-info btn-sm">
                                     <i class="bi bi-pencil"></i>
-                                </a>
+                                </x-button>
                                 @endcan
-                                {{-- <x-button wire:click="delete({{ $purchasepayment->id }})"
+                                <x-button wire:click="delete({{ $purchasepayment->id }})"
                                     class="bg-red-500 hover:bg-red-700">
-                                    {{ __('Delete') }}
-                                </x-button> --}}
+                                    <i class="fa fa-trash"></i>
+                                </x-button>
                             </x-table.td>
                         </x-table.tr>
                     @empty

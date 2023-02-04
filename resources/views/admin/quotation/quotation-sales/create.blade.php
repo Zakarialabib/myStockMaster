@@ -13,7 +13,7 @@
 @section('content')
     <div class="px-4 mx-auto mb-4">
         <div class="row">
-            <div class="col-12">
+            <div class="w-full px-4">
                 <livewire:search-product />
             </div>
         </div>
@@ -22,7 +22,7 @@
             <div class="w-full px-4">
                 <div class="card">
                     <div class="p-4">
-                        @include('utils.alerts')
+                        
                         <form id="sale-form" action="{{ route('sales.store') }}" method="POST">
                             @csrf
 

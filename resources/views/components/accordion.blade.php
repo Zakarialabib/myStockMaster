@@ -1,7 +1,7 @@
 @props(['title','id'])
 
-<div x-data="{ open: false }" class="w-full py-2">
-    <div class="flex justify-between items-center cursor-pointer bg-indigo-500 text-white font-extralight text-center py-2 px-4 " @click="open = !open">
+<div x-data="{ open: false }" class="w-full p-3">
+    <div class="flex justify-between items-center cursor-pointer border border-indigo-500 text-indigo-500 font-extralight text-center py-2 px-4 " @click="open = !open">
         <div class="text-lg font-bold">
             {{ $title }}
         </div>

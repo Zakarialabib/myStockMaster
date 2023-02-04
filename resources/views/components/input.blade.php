@@ -30,4 +30,4 @@
     ]);
 @endphp
 
-<input {{ $attributes }} />
+<input {{ $attributes }} dir="ltr" />

@@ -8,9 +8,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                                    <input wire:model.defer="start_date" type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="start_date">
+                                    <x-input wire:model.defer="start_date" type="date" name="start_date" />
                                     @error('start_date')
                                         <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -19,9 +17,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                                    <input wire:model.defer="end_date" type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="end_date">
+                                    <x-input wire:model.defer="end_date" type="date" name="end_date" />
                                     @error('end_date')
                                         <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -102,7 +98,7 @@
                         <x-table.tbody>
                             @forelse($sales as $sale)
                                 <x-table.tr>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($sale->date)->format('d M, Y') }}</x-table.td>
+                                    <x-table.td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</x-table.td>
                                     <x-table.td>{{ $sale->reference }}</x-table.td>
                                     <x-table.td>{{ $sale->customer->name }}</x-table.td>
                                     <x-table.td>

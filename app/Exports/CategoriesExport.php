@@ -1,33 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Category;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDrawings;
 
-class CategoriesExport implements FromQuery, WithMapping, WithHeadings
+class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDrawings
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
+    /** @var mixed */
+    protected $models;
 
-    public function __construct($selected)
+    /** @return string */
+    public function title(): string
     {
-        $this->selected = $selected;
+        return __('Categories');
     }
 
     public function query()
     {
-        if ($this->selected) {
-            return Category::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Category::query()->whereIn('id', $this->models);
         }
 
         return Category::query();
     }
 
+    /**
+     * @param mixed $row
+     * @return array
+     */
     public function map($row): array
     {
         return [
@@ -40,9 +50,23 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
-            'Name',
-            'Code',
-            'Created At',
+            __('Name'),
+            __('Code'),
+            __('Created At'),
         ];
+    }
+
+        /** @return array */
+    public function drawings(): array
+    {
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('Logo');
+        $drawing->setPath(public_path('images/logo.png'));
+        $drawing->setCoordinates('A4');
+        $drawing->setHeight(90);
+        $drawing->setCoordinates('B3');
+
+        return [$drawing];
     }
 }

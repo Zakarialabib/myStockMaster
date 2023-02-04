@@ -1,43 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sales\Payment;
 
-use Livewire\Component;
-use App\Models\Sale;
-use App\Models\SalePayment;
 use App\Http\Livewire\WithSorting;
+use App\Models\SalePayment;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
-    
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use Datatable;
+
     public $sale;
 
+    /** @var string[] */
     public $listeners = [
-        'delete', 'showPayments', 'refreshIndex'
+        'showPayments',
+        'refreshIndex' => '$refresh',
     ];
-
-    public $refreshIndex;
 
     public $showPayments;
 
-    public int $perPage;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-    
     public array $listsForFields = [];
 
     public $sale_id;
 
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -50,51 +46,26 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
+    public function mount($sale)
     {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
-    public function mount($sale){
         $this->sale = $sale;
-        
-        if($sale){
+
+        if ($sale) {
             $this->sale_id = $sale->id;
         }
 
         $this->perPage = 10;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new SalePayment())->orderable;
-        $this->paymentModal = false;
+        $this->orderable = (new SalePayment())->orderable;
     }
 
     public function render()
     {
-        //    abort_if(Gate::denies('access_sale_payments'), 403);
+        abort_if(Gate::denies('sale_payment_access'), 403);
 
-       $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
+        $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
@@ -107,12 +78,10 @@ class Index extends Component
 
     public function showPayments($sale_id)
     {
-        abort_if(Gate::denies('access_sales'), 403);
-        
+        abort_if(Gate::denies('sale_access'), 403);
+
         $this->sale_id = $sale_id;
 
         $this->showPayments = true;
     }
-
-
 }

@@ -7,7 +7,7 @@
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
                 <div class="flex items-center">
                     <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -24,7 +24,7 @@
                                 fill="currentColor"></path>
                         </svg></span>
                     <a class="flex items-center text-sm" href="#">
-                        <span class="inline-block mr-2">
+                        <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-indigo-500" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -40,101 +40,7 @@
 @endsection
 
 <x-app-layout>
-    <div class="px-4 mx-auto">
-        <div class="row">
-            <div class="col-12">
-                @include('utils.alerts')
-                <h3>{{ __('Hello') }}, <span class="text-primary">{{ auth()->user()->name }}</span></h3>
-                <p class="font-italic">{{ __('Change your profile information & password from here...') }}</p>
-            </div>
-            <div class="lg:w-1/2 sm:w-full px-4">
-                <x-card>
-                    <div class="p-4">
-                        <form action="{{ route('profile.update') }}" method="POST">
-                            @csrf
-                            @method('patch')
-
-                            <div class="mb-4">
-                                <label for="image">{{ __('Profile Image') }} <span
-                                        class="text-danger">*</span></label>
-                                <img style="width: 100px;height: 100px;"
-                                    class="d-block mx-auto img-thumbnail img-fluid rounded-circle mb-2"
-                                    src="{{ auth()->user()->getFirstMediaUrl('avatars') }}" alt="Profile Image">
-                                <input id="image" type="file" name="image" data-max-file-size="500KB">
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="name">{{ __('Name') }} <span class="text-red-500">*</span></label>
-                                <input
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    type="text" name="name" required value="{{ auth()->user()->name }}">
-                                @error('name')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="email">{{ __('Email') }} <span class="text-red-500">*</span></label>
-                                <input
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    type="email" name="email" required value="{{ auth()->user()->email }}">
-                                @error('email')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <button type="submit"
-                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update
-                                    {{ __('Profile') }} <i class="bi bi-check"></i></button>
-                            </div>
-                        </form>
-                    </div>
-                </x-card>
-            </div>
-            <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                <x-card>
-                    <div class="p-4">
-                        <form action="{{ route('profile.update.password') }}" method="POST">
-                            @csrf
-                            @method('patch')
-                            <div class="mb-4">
-                                <label for="current_password">{{ __('Current Password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input type="password"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    name="current_password" required>
-                                @error('current_password')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="password">{{ __('New Password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    type="password" name="password" required>
-                                @error('password')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="password_confirmation">{{ __('Confirm Password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    type="password" name="password_confirmation" required>
-                                @error('password_confirmation')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <button type="submit"
-                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update
-                                    {{ __('Password') }} <i class="bi bi-check"></i></button>
-                            </div>
-                        </form>
-                    </div>
-                </x-card>
-            </div>
-        </div>
+    <div class="container mx-auto">
+        <livewire:users.profile />
     </div>
 </x-app-layout>

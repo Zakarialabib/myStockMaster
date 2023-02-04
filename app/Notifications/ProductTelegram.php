@@ -1,38 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramMessage;
-use App\Models\Product;
 
 class ProductTelegram extends Notification
 {
     use Queueable;
 
     /**
-     * Create a new notification instance.
-     *
+     * @param mixed $telegramChannel
+     * @param mixed $productName
+     * @param mixed $productPrice
      * @return void
      */
-    public function __construct($Product)
+    public function __construct($telegramChannel, $productName, $productPrice)
     {
-
+        $this->telegramChannel = $telegramChannel;
+        $this->productName = $productName;
+        $this->productPrice = $productPrice;
     }
 
+    /**
+     * @param mixed $notifiable
+     * @return string[]
+     */
     public function via($notifiable)
     {
-        return ["telegram"];
+        return ['telegram'];
     }
 
+    /**
+     * @param mixed $notifiable
+     * @return \NotificationChannels\Telegram\TelegramMessage
+     */
     public function toTelegram($notifiable)
     {
-        $content .= '*Nom:* '.$this->Product['name'].PHP_EOL;
-        $content .= '*Prix:* '.$this->Product['price'];
-
-        return TelegramMessage::create()->content($content);
+        return TelegramMessage::create()
+            ->to($this->telegramChannel)
+            ->content("Check out our new product: $this->productName for $this->productPrice");
     }
 
     /**
@@ -44,7 +54,8 @@ class ProductTelegram extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'product_name'  => $this->productName,
+            'product_price' => $this->productPrice,
         ];
     }
 }

@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
+use App\Models\ExpenseCategory;
+use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateExpensesTable extends Migration
 {
@@ -15,17 +20,16 @@ class CreateExpensesTable extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('warehouse_id')->nullable();
+
+            $table->foreignIdFor(ExpenseCategory::class, 'category_id')->constrained()->restrictOnDelete();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
+
             $table->date('date');
             $table->string('reference', 192);
-            $table->foreign('category_id')->references('id')->on('expense_categories')->restrictOnDelete();
-            $table->foreign('user_id')->references('id')->on('users')->restrictOnDelete();
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->restrictOnDelete();
-			$table->string('details', 192);
-			$table->float('amount', 10, 0);
-			$table->softDeletes();
+            $table->string('details', 192)->nullable();
+            $table->float('amount', 10, 0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

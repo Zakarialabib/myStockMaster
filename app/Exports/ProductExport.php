@@ -1,59 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Product;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ProductExport implements FromQuery, WithMapping, WithHeadings
+class ProductExport implements FromView
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    /** @var mixed */
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Product::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return Product::query()->whereIn('id', $this->models);
         }
 
-        return Product::query();
+        return Product::query()->with('category');
     }
 
-    /**
-     * @var Product $row
-     */
-    public function map($row): array
+    public function view(): View
     {
-        return [
-            $row->code,
-            $row->name,
-            $row->category->name,
-            $row->quantity,
-            $row->cost,
-            $row->price,
-            $row->created_at,
-        ];
-    }
-
-    public function headings(): array
-    {
-        return [
-            __('Code'),
-            __('Name'),
-            __('Category'),
-            __('Quantity'),
-            __('Cost'),
-            __('Price'),
-            __('Created At'),
-        ];
+        return view('pdf.products', [
+            'data' => $this->query()->get(),
+        ]);
     }
 }

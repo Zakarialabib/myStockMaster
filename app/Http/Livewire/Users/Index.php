@@ -1,36 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
+use App\Http\Livewire\WithSorting;
 use App\Models\User;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithSorting;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use Datatable;
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','refreshIndex','showModal','editModal'];
+    /** @var mixed */
+    public $user;
 
-    public $showModal;
+    /** @var string[] */
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+        'showModal', 'editModal', 'delete',
+    ];
 
-    public $editModal;
+    /** @var bool */
+    public $showModal = false;
 
-    public int $perPage;
+    /** @var bool */
+    public $editModal = false;
 
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
-    public $refreshIndex;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -43,52 +49,23 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'user.name' => 'required|string|max:255',
-        'user.email' => 'required|email|unique:users,email',
+        'user.name'     => 'required|string|max:255',
+        'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
-        'user.city' => 'nullable',
-        'user.country' => 'nullable',
-        'user.address' => 'nullable',
-        'user.tax_number' => 'nullable',
+        'user.phone'    => 'required|numeric',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new User())->orderable;
+        $this->orderable = (new User())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('user_access'), 403);
 
@@ -118,13 +95,12 @@ class Index extends Component
 
         $user->delete();
 
-        $this->alert('warning', __('User deleted successfully!') );
-
+        $this->alert('warning', __('User deleted successfully!'));
     }
 
     public function showModal(User $user)
     {
-        $this->user = $user;
+        $this->user = User::find($user->id);
 
         $this->showModal = true;
     }
@@ -136,13 +112,13 @@ class Index extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
-        $this->user = $user;
+
+        $this->user = User::find($user->id);
 
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -151,6 +127,5 @@ class Index extends Component
         $this->alert('success', __('User Updated Successfully'));
 
         $this->editModal = false;
-
     }
 }

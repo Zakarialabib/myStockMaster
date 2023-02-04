@@ -1,39 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Permission;
 
-use Livewire\Component;
-use App\Models\Permission;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Http\Livewire\WithSorting;
+use App\Models\Permission;
+use App\Traits\Datatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Support\HasAdvancedFilter;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert , HasAdvancedFilter;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use Datatable;
 
+    /** @var mixed */
     public $permission;
 
-    public $listeners = ['show','confirmDelete', 'delete', 'createModal', 'editModal'];
+    /** @var string[] */
+    public $listeners = [
+        'createModal', 'editModal',
+        'refreshIndex' => '$refresh',
+    ];
 
-    public $show;
-    
-    public $createModal;
+    public $createModal = false;
 
-    public $editModal;
+    public $editModal = false;
 
-    public int $perPage;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -45,26 +46,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
 
     protected function rules(): array
     {
@@ -84,16 +65,16 @@ class Index extends Component
         ];
     }
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Permission())->orderable;
+        $this->orderable = (new Permission())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         $query = Permission::advancedFilter([
             's'               => $this->search ?: null,
@@ -106,10 +87,10 @@ class Index extends Component
         return view('livewire.permission.index', compact('permissions'));
     }
 
-    public function createModal()
+    public function createModal(): void
     {
         abort_if(Gate::denies('permission_create'), 403);
-        
+
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -117,7 +98,7 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
         $this->validate();
 
@@ -125,10 +106,10 @@ class Index extends Component
 
         $this->createModal = false;
 
-        $this->alert('success', 'Permission created successfully.');
+        $this->alert('success', __('Permission created successfully.'));
     }
 
-    public function editModal(Permission $permission)
+    public function editModal(Permission $permission): void
     {
         abort_if(Gate::denies('permission_edit'), 403);
 
@@ -136,12 +117,12 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->permission = $permission;
+        $this->permission = Permission::find($permission->id);
 
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
@@ -149,10 +130,10 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Permission updated successfully.');
+        $this->alert('success', __('Permission updated successfully.'));
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('permission_delete'), 403);
 
@@ -161,12 +142,12 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Permission $permission)
+    public function delete(Permission $permission): void
     {
         abort_if(Gate::denies('permission_delete'), 403);
 
         $permission->delete();
 
-        $this->alert('success', 'Permission deleted successfully.');
+        $this->alert('success', __('Permission deleted successfully.'));
     }
 }

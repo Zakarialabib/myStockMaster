@@ -5,18 +5,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('Customer') }} : {{ $client['name'] }}</title>
+    <title>{{ __('Customer') }} : {{ $customer->name }}</title>
     <link rel="stylesheet" href="{{ asset('/print/pdfStyle.css') }}" media="all" />
 </head>
 
 <body>
     <header class="clearfix">
         <div id="logo">
-            <img src="{{ asset('/images/' . $setting['logo']) }}">
+            <img src="{{ asset('images/logo.png') }}">
         </div>
 
         <div id="Title-heading">
-            {{ __('Customer') }} : {{ $client['name'] }}
+            {{ __('Customer') }} : {{ $customer->name }}
         </div>
         </div>
     </header>
@@ -32,15 +32,13 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div><strong>{{ __('Name') }}:</strong> {{ $client['name'] }}</div>
-                                <div><strong>{{ __('Tax_number') }}:</strong> {{ $client['tax_number'] }}</div>
-                                <div><strong>{{ __('Phone') }}:</strong> {{ $client['phone'] }}</div>
-                                <div><strong>{{ __('Total Sales') }}:</strong> {{ $client['total_sales'] }}</div>
-                                <div><strong>{{ __('Total Amount') }}:</strong> {{ $symbol }}
-                                    {{ $client['total_amount'] }}</div>
-                                <div><strong>{{ __('Total Paid') }}:</strong> {{ $symbol }}
-                                    {{ $client['total_paid'] }}</div>
-                                <div><strong>{{ __('Due') }}:</strong> {{ $symbol }} {{ $client['due'] }}
+                                <div><strong>{{ __('Name') }}:</strong> {{ $customer->name }}</div>
+                                <div><strong>{{ __('Tax_number') }}:</strong> {{ $customer->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $customer->phone }}</div>
+                                <div><strong>{{ __('Total Sales') }}:</strong> {{ $customer->total_sales }}</div>
+                                <div><strong>{{ __('Total Amount') }}:</strong> {{ format_currency($customer->total_amount) }}</div>
+                                <div><strong>{{ __('Total Paid') }}:</strong> {{ format_currency($customer->total_paid) }}</div>
+                                <div><strong>{{ __('Due') }}:</strong> {{ format_currency($customer->due) }}
                                 </div>
                             </td>
                         </tr>
@@ -57,10 +55,10 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div id="comp">{{ $setting['CompanyName'] }}</div>
-                                <div><strong>{{ __('Tax Number') }}:</strong> {{ $setting['CompanyTaxNumber'] }}</div>
-                                <div><strong>{{ __('Address') }}:</strong> {{ $setting['CompanyAdress'] }}</div>
-                                <div><strong>{{ __('Phone') }}:</strong> {{ $setting['CompanyPhone'] }}</div>
+                                <div id="comp">{{ settings()->company_name }}</div>
+                                <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -83,10 +81,10 @@
                 <tbody>
                     @foreach ($sales as $sale)
                         <tr>
-                            <td>{{ $sale['date'] }} </td>
-                            <td>{{ $$sale['reference'] }}</td>
-                            <td>{{ $symbol }} {{ $sale['paid_amount'] }} </td>
-                            <td>{{ $sale['payment_status'] }} </td>
+                            <td>{{ $sale->date }} </td>
+                            <td>{{ $sale->reference }}</td>
+                            <td>{{ format_currency($sale->paid_amount) }} </td>
+                            <td>{{ $sale->payment_status }} </td>
                         </tr>
                     @endforeach
                 </tbody>

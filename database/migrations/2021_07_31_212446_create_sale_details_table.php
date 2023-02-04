@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
+use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSaleDetailsTable extends Migration
 {
@@ -15,8 +19,10 @@ class CreateSaleDetailsTable extends Migration
     {
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
-            $table->unsignedBigInteger('product_id')->nullable();
+
+            $table->foreignIdFor(Sale::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+
             $table->string('name');
             $table->string('code');
             $table->integer('quantity');
@@ -26,10 +32,7 @@ class CreateSaleDetailsTable extends Migration
             $table->integer('product_discount_amount');
             $table->string('product_discount_type')->default('fixed');
             $table->integer('product_tax_amount');
-            $table->foreign('sale_id')->references('id')
-                ->on('sales')->cascadeOnDelete();
-            $table->foreign('product_id')->references('id')
-                ->on('products')->nullOnDelete();
+
             $table->timestamps();
         });
     }

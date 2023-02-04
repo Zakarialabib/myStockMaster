@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Language;
+use App\Models\Setting;
+use App\Observers\SettingsObserver;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,22 +39,23 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('languages', $this->getLanguages());
 
-        Model::shouldBeStrict(! $this->app->isProduction());
+        Setting::observe(SettingsObserver::class);
+
+        Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
-    /**
-     * @return \App\Models\Language|\Illuminate\Database\Eloquent\Model|array|null
-     */
     private function getLanguages()
     {
-        if (! Schema::hasTable('languages')) {
-            return null;
-        }
+        if ( ! app()->runningInConsole()) {
+            if ( ! Schema::hasTable('languages')) {
+                return;
+            }
 
-        return cache()->rememberForever('languages', function () {
-            return Session::has('language')
-                ? Language::pluck('name', 'code')->toArray()
-                : Language::where('is_default', 1)->first();
-        });
+            return cache()->rememberForever('languages', function () {
+                return Session::has('language')
+                    ? Language::pluck('name', 'code')->toArray()
+                    : Language::where('is_default', 1)->first();
+            });
+        }
     }
 }

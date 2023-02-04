@@ -1,39 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
+use App\Models\Adjustment;
+use App\Traits\Datatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Adjustment;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
+    use Datatable;
 
+    /** @var mixed */
     public $adjustment;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'createModal'];
+    /** @var string[] */
+    public $listeners = [
+        'showModal', 'editModal', 'createModal',
+        'refreshIndex' => '$refresh', 'delete',
+    ];
 
-    public $showModal;
+    public $showModal = false;
 
     public $createModal;
 
-    public $editModal;
+    public $editModal = false;
 
-    public int $perPage;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -46,42 +51,22 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
     public array $rules = [
-        'adjustment.date' => ['date', 'required'],
-        'adjustment.note' => ['string', 'max:255', 'nullable'],
+        'adjustment.date'      => ['date', 'required'],
+        'adjustment.note'      => ['string', 'max:255', 'nullable'],
         'adjustment.reference' => ['string', 'max:255', 'nullable'],
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Adjustment())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 
@@ -96,9 +81,9 @@ class Index extends Component
         return view('livewire.adjustment.index', compact('adjustments'));
     }
 
-    public function createModal()
+    public function createModal(): void
     {
-        abort_if(Gate::denies('adjustment_create'), 403);
+        // abort_if(Gate::denies('adjustment_create'), 403);
 
         $this->resetErrorBag();
 
@@ -109,9 +94,9 @@ class Index extends Component
         $this->createModal = true;
     }
 
-    public function create()
+    public function create(): void
     {
-        abort_if(Gate::denies('adjustment_create'), 403);
+        // abort_if(Gate::denies('adjustment_create'), 403);
 
         $this->validate();
 
@@ -119,12 +104,12 @@ class Index extends Component
 
         $this->reset('createModal');
 
-        $this->alert('success', 'Adjustment created successfully.');
+        $this->alert('success', __('Adjustment created successfully.'));
     }
 
-    public function editModal(Adjustment $adjustment)
+    public function editModal(Adjustment $adjustment): void
     {
-        abort_if(Gate::denies('adjustment_edit'), 403);
+        // abort_if(Gate::denies('adjustment_edit'), 403);
 
         $this->resetErrorBag();
 
@@ -135,9 +120,9 @@ class Index extends Component
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
-        abort_if(Gate::denies('adjustment_edit'), 403);
+        // abort_if(Gate::denies('adjustment_edit'), 403);
 
         $this->validate();
 
@@ -145,36 +130,35 @@ class Index extends Component
 
         $this->editModal = false;
 
-        $this->alert('success', 'Adjustment updated successfully.');
+        $this->alert('success', __('Adjustment updated successfully.'));
     }
 
-    public function showModal(Adjustment $adjustment)
+    public function showModal(Adjustment $adjustment): void
     {
-        abort_if(Gate::denies('adjustment_show'), 403);
+        // abort_if(Gate::denies('adjustment_show'), 403);
 
-        $this->adjustment = $adjustment;
+        $this->adjustment = Adjustment::find($adjustment->id);
 
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
-        abort_if(Gate::denies('adjustment_delete'), 403);
+        // abort_if(Gate::denies('adjustment_delete'), 403);
 
         Adjustment::whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
 
-        $this->alert('success', 'Adjustment deleted successfully.');
+        $this->alert('success', __('Adjustment deleted successfully.'));
     }
 
-    public function delete(Adjustment $adjustment)
+    public function delete(Adjustment $adjustment): void
     {
         abort_if(Gate::denies('adjustment_delete'), 403);
 
         $adjustment->delete();
 
-        $this->alert('success', 'Adjustment deleted successfully.');
+        $this->alert('success', __('Adjustment deleted successfully.'));
     }
-
 }

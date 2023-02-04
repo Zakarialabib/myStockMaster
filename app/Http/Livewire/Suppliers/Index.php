@@ -1,46 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Suppliers;
 
-use Livewire\Component;
+use App\Exports\SupplierExport;
 use App\Http\Livewire\WithSorting;
+use App\Imports\SupplierImport;
+use App\Models\Supplier;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Supplier;
-use App\Exports\SupplierExport;
-use App\Imports\SupplierImport;
-use App\Models\Wallet;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, WithFileUploads, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use WithFileUploads;
+    use LivewireAlert;
+    use Datatable;
 
+    /** @var mixed */
     public $supplier;
 
-    public int $perPage;
+    /** @var string[] */
+    public $listeners = [
+        'importModal', 'showModal', 'editModal',
+        'refreshIndex' => '$refresh',
+        'downloadAll', 'exportAll', 'delete',
+    ];
 
-    public $listeners = ['confirmDelete', 'delete', 'export', 'import','importModal','refreshIndex','showModal','editModal'];
+    /** @var bool */
+    public $showModal = false;
 
-    public $showModal;
+    /** @var bool */
+    public $importModal = false;
 
-    public $editModal;
-    
-    public $importModal;
+    /** @var bool */
+    public $editModal = false;
 
-    public array $orderable;
-
-    public $selectPage;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
-    public $refreshIndex;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -53,43 +57,28 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'supplier.name' => ['required', 'string', 'max:255'],
-        'supplier.email' => ['nullable', 'string', 'max:255'],
-        'supplier.phone' => ['required'],
-        'supplier.address' => ['nullable', 'string', 'max:255'],
-        'supplier.city' => ['nullable', 'string', 'max:255'],
-        'supplier.country' => ['nullable', 'string', 'max:255'],
+        'supplier.name'       => ['required', 'string', 'max:255'],
+        'supplier.email'      => ['nullable', 'string', 'max:255'],
+        'supplier.phone'      => ['required'],
+        'supplier.address'    => ['nullable', 'string', 'max:255'],
+        'supplier.city'       => ['nullable', 'string', 'max:255'],
+        'supplier.country'    => ['nullable', 'string', 'max:255'],
         'supplier.tax_number' => ['nullable', 'string', 'max:255'],
     ];
 
-    public function mount()
+    public function mount(): void
     {
         $this->selectPage = false;
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
-        $this->paginationOptions = config('project.pagination.options');        
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Supplier())->orderable;
     }
 
-    public function render()
-    {   
+    public function render(): View|Factory
+    {
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
@@ -103,35 +92,39 @@ class Index extends Component
         return view('livewire.suppliers.index', compact('suppliers'));
     }
 
-    public function showModal(Supplier $supplier)
+    public function showModal($id)
     {
-        $this->supplier = $supplier;
-        $this->showModal = true;
-    }
-
-    public function editModal(Supplier $supplier)
-    {
-        abort_if(Gate::denies('supplier_edit'), 403);
+        $this->supplier = Supplier::find($id);
 
         $this->resetErrorBag();
 
         $this->resetValidation();
-        
-        $this->supplier = $supplier;
+
+        $this->showModal = true;
+    }
+
+    public function editModal($id)
+    {
+        abort_if(Gate::denies('supplier_update'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->supplier = Supplier::find($id);
 
         $this->editModal = true;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate();
 
         $this->supplier->save();
 
-        $this->alert('success', 'Supplier Updated Successfully');
+        $this->alert('success', __('Supplier Updated Successfully'));
 
         $this->editModal = false;
-
     }
 
     public function delete(Supplier $supplier)
@@ -140,7 +133,7 @@ class Index extends Component
 
         $supplier->delete();
 
-        $this->alert('warning', 'Supplier Deleted Successfully');
+        $this->alert('warning', __('Supplier Deleted Successfully'));
     }
 
     public function deleteSelected()
@@ -170,19 +163,47 @@ class Index extends Component
             ],
         ]);
 
-        Supplier::import(new SupplierImport, $this->file('import_file'));
+        Supplier::import(new SupplierImport(), $this->file('import_file'));
 
-        $this->alert('success', 'Supplier Imported Successfully');
+        $this->alert('success', __('Supplier Imported Successfully'));
 
         $this->importModal = false;
     }
 
-    public function export()
+    public function downloadSelected()
     {
-        abort_if(Gate::denies('supplier_export'), 403);
+        abort_if(Gate::denies('supplier_access'), 403);
 
-        return (new SupplierExport)->download('supplier.xlsx');
+        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+
+        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    
+    public function downloadAll(Supplier $suppliers)
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): BinaryFileResponse
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+
+        return $this->callExport()->forModels($this->selected)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): BinaryFileResponse
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return $this->callExport()->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SupplierExport
+    {
+        return (new SupplierExport());
+    }
 }

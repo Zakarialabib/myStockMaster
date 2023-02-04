@@ -8,9 +8,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                                    <input wire:model.defer="start_date" type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="start_date">
+                                    <x-input wire:model.defer="start_date" type="date" name="start_date" />
                                     @error('start_date')
                                         <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -19,9 +17,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                                    <input wire:model.defer="end_date" type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="end_date">
+                                    <x-input wire:model.defer="end_date" type="date" name="end_date" />
                                     @error('end_date')
                                         <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -84,8 +80,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
+    <div class="flex flex-row">
+        <div class="w-full px-4">
             <div class="card border-0 shadow-sm">
                 <div class="p-4">
                     <x-table>

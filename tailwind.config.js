@@ -181,7 +181,7 @@ module.exports = {
         },
         backgroundColor: theme => ({
             ...theme('colors'),
-            body: '#F1F5FB',
+            body: 'bg-blue-100',
         }),
         backgroundImage: {
             none: 'none',
@@ -271,9 +271,9 @@ module.exports = {
             DEFAULT: '1',
         },
         fontFamily: {
-            body: '"DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-            heading: '"DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-            sans: '"DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            body: '"DM Sans","Noto Sans Arabic", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            heading: '"DM Sans", "Noto Sans Arabic", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+            sans: '"DM Sans", "Noto Sans Arabic", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
             serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
             mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
         },
@@ -603,8 +603,15 @@ module.exports = {
     },
 
     plugins: [
-        require('@tailwindcss/forms',
+        require('@tailwindcss/forms'),
         require('tailwindcss-rtl'),
+        require('tailwindcss-plugins/pagination')({
+        color: 'purple-dark',
+        linkFirst: 'mr-6 border rounded',
+        linkSecond: 'rounded-l border-l',
+        linkBeforeLast: 'rounded-r border-r',
+        linkLast: 'ml-6 border rounded',
+        }),
         require('tailwindcss-tables')({
           cellPadding: '.75rem',  // default: .75rem
           tableBorderColor: '#dee2e6',  // default: #dee2e6
@@ -613,5 +620,5 @@ module.exports = {
           tableBodyBorder: true, // default: true. If set to false, borders for the table body will be removed. Only works for normal tables (i.e. does not apply to .table-bordered)
           verticalAlign: 'top', // default: 'top'
         }),
-      )]
+      ]
 };

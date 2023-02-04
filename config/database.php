@@ -52,7 +52,6 @@ return [
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('UNIX_SOCKET', ''),
-            // 'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
@@ -62,6 +61,11 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'dump' => [
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH'),
+                'use_single_transaction',
+                'timeout' => 60 * 5, // 5 minute timeout
+            ],
         ],
 
         'pgsql' => [

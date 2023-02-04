@@ -1,53 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Expense;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ExpenseExport implements FromQuery, WithMapping, WithHeadings
+class ExpenseExport implements FromView
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    /** @var mixed */
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Expense::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Expense::query()->whereIn('id', $this->models);
         }
 
         return Expense::query();
     }
 
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            '#',
-            'Name',
-            'Amount',
-            'Created At'
-        ];
-    }
-
-    /**
-     * @var Expense $row
-     */
-    public function map($row): array
-    {
-        return[
-            $row->id,
-            $row->name,
-            $row->amount,
-            $row->created_at,
-        ];
+        return view('pdf.expenses', [
+            'data' => $this->query()->get(),
+        ]);
     }
 }

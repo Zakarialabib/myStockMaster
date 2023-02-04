@@ -1,51 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Categories;
 
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Http\Livewire\WithSorting;
+use App\Imports\CategoriesImport;
+use App\Models\Category;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Models\Category;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\CategoriesImport;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert, WithFileUploads;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use WithFileUploads;
+    use Datatable;
 
+    /** @var mixed */
     public $category;
-    public $code;
+
+    /** @var bool */
     public $name;
 
+    public $file;
+
+    /** @var string[] */
     public $listeners = [
-        'show', 'confirmDelete', 'delete',
-        'refreshIndex','showModal','editModal',
-        'importModal'
+        'importModal', 'showModal',
+        'refreshIndex' => '$refresh',
+        'delete',
     ];
 
-    public int $perPage;
+    /** @var bool */
+    public $showModal = false;
 
-    public $show;
-    
-    public $showModal;
-    
-    public $refreshIndex;
+    /** @var bool */
+    public $importModal = false;
 
-    public $importModal;
-    
-    public $editModal; 
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-    
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -58,145 +57,85 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'category.code' => '',
-        'category.name' => 'required',
-    ];
-
-    public function getSelectedCountProperty()
+    public function mount(): void
     {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
-    public function mount()
-    {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
-        $this->orderable         = (new Category())->orderable;
+        $this->orderable = (new Category())->orderable;
     }
 
-    public function render()
+    public function render(): mixed
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $query = Category::with('products')->advancedFilter([
-                            's'               => $this->search ?: null,
-                            'order_column'    => $this->sortBy,
-                            'order_direction' => $this->sortDirection,
-                        ]);
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
 
         $categories = $query->paginate($this->perPage);
 
-        return view('livewire.categories.index', compact('categories'))->extends('layouts.app');
+        return view('livewire.categories.index', compact('categories'));
     }
 
-    public function editModal(Category $category)
+    public function showModal(Category $category): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->category = $category;
-
-        $this->editModal = true;
-    }
-
-    public function update()
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->validate();
-
-        $this->category->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', 'Category updated successfully.');
-    }
-    
-    public function showModal(Category $category)
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->category = $category;
+        $this->category = Category::find($category->id);
 
         $this->showModal = true;
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_delete'), 403);
 
         Category::whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
-    
-    public function delete(Category $category)
-    {
-        abort_if(Gate::denies('access_product_categories'), 403);
 
-        if ($category->products()->isNotEmpty()) {
-            return back()->withErrors('Can\'t delete beacuse there are products associated with this category.');
+    public function delete(Category $category): void
+    {
+        abort_if(Gate::denies('category_delete'), 403);
+
+        if ($category->products->count() > 0) {
+            $this->alert('error', __('Category has products.'));
         } else {
             $category->delete();
-
-            $this->alert('success', 'Category deleted successfully.');
+            $this->alert('success', __('Category deleted successfully.'));
         }
     }
 
-    public function importExcel ()
+    public function importModal(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->importModal = true;
     }
 
-    public function import()
+    public function import(): void
     {
-        abort_if(Gate::denies('access_product_categories'), 403);
+        abort_if(Gate::denies('category_access'), 403);
 
         $this->validate([
-            'file' => 'required|mimes:xlsx,xls,csv,txt'
+            'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
         $file = $this->file('file');
 
-        Excel::import(new CategoriesImport, $file);
+        Excel::import(new CategoriesImport(), $file);
 
-        $this->alert('success', 'Categories imported successfully.');
+        $this->alert('success', __('Categories imported successfully.'));
 
         $this->importModal = false;
     }
-
-
 }
-

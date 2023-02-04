@@ -7,11 +7,9 @@
         </x-slot>
         <x-slot name="content">
             <form wire:submit.prevent="save">
-                {{-- @dd($sale->id) --}}
-                <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                <x-validation-errors class="mb-4" :errors="$errors" />
 
                 <div class="flex flex-wrap -mx-2 mb-3">
-                    {{-- <input type="hidden" wire:model="sale_id" name="sale_id"> --}}
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="reference" :value="__('Reference')" required />
                         <x-input type="text" wire:model="reference" id="reference" class="block w-full mt-1" required />
@@ -27,6 +25,12 @@
                         <x-label for="amount" :value="__('Amount')" required />
                         <x-input type="text" wire:model="amount" id="amount" class="block w-full mt-1" required />
                         <x-input-error :messages="$errors->first('amount')" />
+                    </div>
+                    
+                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <x-label for="amount_due" :value="__('Amount due')" required />
+                        <x-input type="text" wire:model="amount_due" id="amount_due" class="block w-full mt-1" required />
+                        <x-input-error :messages="$errors->first('amount_due')" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">

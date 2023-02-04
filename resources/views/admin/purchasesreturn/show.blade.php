@@ -27,32 +27,38 @@
                         </a>
                     </div>
                     <div class="p-4">
-                        <div class="row mb-4">
-                            <div class="col-sm-4 mb-3 mb-md-0">
+                        <div class="flex flex-row mb-4">
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
                                 <h5 class="mb-2 border-bottom pb-2">Company Info:</h5>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
-                                <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                                @if (settings()->show_email == true)
+                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                @endif
                                 <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                             </div>
 
-                            <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Supplier Info:</h5>
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Supplier Info')}}:</h5>
                                 <div><strong>{{ $supplier->name }}</strong></div>
+                                @if (settings()->show_address == true)
                                 <div>{{ $supplier->address }}</div>
+                                @endif
+                                @if (settings()->show_email == true)
                                 <div>{{__('Email')}}: {{ $supplier->email }}</div>
+                                @endif
                                 <div>{{__('Phone')}}: {{ $supplier->phone }}</div>
                             </div>
 
-                            <div class="col-sm-4 mb-3 mb-md-0">
-                                <h5 class="mb-2 border-bottom pb-2">Invoice Info:</h5>
+                            <div class="md-w-1/4 sm:w-full px-2 mb-2">
+                                <h5 class="mb-2 border-bottom pb-2">{{__('Invoice Info')}}:</h5>
                                 <div>{{__('Invoice')}}: <strong>INV/{{ $purchase_return->reference }}</strong></div>
                                 <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
                                 <div>
-                                    Status: <strong>{{ $purchase_return->status }}</strong>
+                                    {{__('Status')}}: <strong>{{ $purchase_return->status }}</strong>
                                 </div>
                                 <div>
-                                    Payment Status: <strong>{{ $purchase_return->payment_status }}</strong>
+                                    {{__('Payment Status')}}: <strong>{{ $purchase_return->payment_status }}</strong>
                                 </div>
                             </div>
 
@@ -62,7 +68,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="align-middle">Product</th>
+                                    <th class="align-middle">{{__('Product')}}</th>
                                     <th class="align-middle">{{__('Net Unit Price')}}</th>
                                     <th class="align-middle">{{__('Quantity')}}</th>
                                     <th class="align-middle">{{__('Discount')}}</th>

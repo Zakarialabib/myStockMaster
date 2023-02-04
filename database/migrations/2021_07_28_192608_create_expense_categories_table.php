@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateExpenseCategoriesTable extends Migration
 {
@@ -15,6 +17,7 @@ class CreateExpenseCategoriesTable extends Migration
     {
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
+
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();

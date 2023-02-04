@@ -1,42 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Currency;
 
-use Livewire\Component;
 use App\Http\Livewire\WithSorting;
-use Illuminate\Support\Facades\Gate;
-use Livewire\WithPagination;
 use App\Models\Currency;
+use App\Traits\Datatable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithSorting, LivewireAlert;
+    use WithPagination;
+    use WithSorting;
+    use LivewireAlert;
+    use Datatable;
 
+    /** @var mixed */
     public $currency;
 
-    public int $perPage;
+    /** @var string[] */
+    public $listeners = [
+        'showModal', 'editModal',
+        'refreshIndex' => '$refresh',
+    ];
 
-    
+    public $showModal = false;
 
-    public $listeners = ['confirmDelete', 'delete', 'showModal', 'editModal', 'refreshIndex'];
+    public $editModal = false;
 
-    public $showModal;
-
-    public $refreshIndex;
-
-    public $editModal;
-
-    public array $orderable;
-
-    public string $search = '';
-
-    public array $selected = [];
-
-    public array $paginationOptions;
-
-    public $selectPage;
-
+    /** @var string[][] */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -49,51 +47,26 @@ class Index extends Component
         ],
     ];
 
-    public function getSelectedCountProperty()
-    {
-        return count($this->selected);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function resetSelected()
-    {
-        $this->selected = [];
-    }
-
-    public function refreshIndex()
-    {
-        $this->resetPage();
-    }
-
     public array $rules = [
-        'currency.name' => 'required|string|max:255',
-        'currency.code' => 'required|string|max:255',
-        'currency.symbol' => 'required|string|max:255',
+        'currency.name'          => 'required|string|max:255',
+        'currency.code'          => 'required|string|max:255',
+        'currency.symbol'        => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
     ];
 
-    public function mount()
+    public function mount(): void
     {
-        $this->sortBy            = 'id';
-        $this->sortDirection     = 'desc';
-        $this->perPage           = 100;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Currency())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('currency_access'), 403);
-        
+
         $query = Currency::advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
@@ -105,16 +78,16 @@ class Index extends Component
         return view('livewire.currency.index', compact('currencies'));
     }
 
-    public function showModal(Currency $currency)
+    public function showModal(Currency $currency): void
     {
         abort_if(Gate::denies('currency_show'), 403);
 
-        $this->currency = $currency;
+        $this->currency = Currency::find($currency->id);
 
         $this->showModal = true;
     }
 
-    public function editModal(Currency $currency)
+    public function editModal(Currency $currency): void
     {
         abort_if(Gate::denies('currency_edit'), 403);
 
@@ -122,13 +95,12 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->currency = $currency;
+        $this->currency = Currency::find($currency->id);
 
         $this->editModal = true;
-
     }
 
-    public function update(Currency $currency)
+    public function update(Currency $currency): void
     {
         abort_if(Gate::denies('currency_edit'), 403);
 
@@ -136,18 +108,17 @@ class Index extends Component
 
         $this->currency->save();
 
-        $this->showModal = false;
+        $this->editModal = false;
 
-        $this->alert('success', 'Currency updated successfully!');
+        $this->alert('success', __('Currency updated successfully!'));
     }
 
-    public function delete(Currency $currency)
+    public function delete(Currency $currency): void
     {
         abort_if(Gate::denies('currency_delete'), 403);
 
         $currency->delete();
 
-        $this->alert('success', 'Currency deleted successfully!');
+        $this->alert('success', __('Currency deleted successfully!'));
     }
-    
 }

@@ -29,42 +29,6 @@
   @apply py-3 pt-0;
 }
 
-.btn {
-  @apply font-bold border-transparent uppercase justify-center text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 mr-1 ease-linear transition-all duration-150 cursor-pointer;
-}
-
-.btn-sm {
-  @apply py-1 px-2;
-}
-
-.btn.btn-primary {
-  @apply bg-blue-500 text-white active:bg-blue-600 focus:ring-blue-500;
-}
-
-.btn.btn-indigo {
-  @apply bg-indigo-500 text-white active:bg-indigo-600 focus:ring-indigo-500;
-}
-
-.btn.btn-secondary {
-  @apply text-gray-500 bg-white hover:bg-gray-50 active:bg-gray-100 focus:ring-indigo-500;
-}
-
-.btn.btn-success {
-  @apply bg-green-500 text-white active:bg-green-600 focus:ring-green-500;
-}
-
-.btn.btn-warning {
-  @apply bg-orange-500 text-white active:bg-orange-600 focus:ring-orange-500;
-}
-
-.btn.btn-danger {
-  @apply bg-red-500 text-white active:bg-red-600 focus:ring-red-500;
-}
-
-.btn.btn-info {
-  @apply bg-blue-500 text-white active:bg-blue-600 focus:ring-blue-500;
-}
-
 .sidebar-nav-active {
   @apply text-xs uppercase py-3 font-bold block text-blue-500;
 }
@@ -242,11 +206,17 @@ textarea.form-control.is-invalid {
   box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
 }
 
-.hero img {
-  height: 65vh;
-}
-
 .dark .ps__rail-y,
 .dark .ps__rail-x {
     background-color: transparent !important;
+}
+
+.toggle-checkbox:checked {
+    @apply right-0 border-green-400;
+    right: 0;
+    border-color: #68D391;
+}
+.toggle-checkbox:checked + .toggle-label {
+    @apply bg-green-400;
+    background-color: #68D391;
 }

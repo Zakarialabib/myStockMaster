@@ -1,42 +1,48 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selectedCount)
+            @if ($selected)
             <x-button danger wire:click="deleteSelected" class="ml-3">
                 <i class="fas fa-trash"></i>
             </x-button>
             @endif
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="my-2 my-md-0">
-                <input type="text" wire:model.debounce.300ms="search"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    placeholder="{{ __('Search') }}" />
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
+                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
    
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
-                <x-input type="checkbox" class="rounded-tl rounded-bl" wire:model="selectPage" />
+            <x-table.th >
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('code')" :direction="$sorts['code'] ?? null">
+            <x-table.th sortable wire:click="sortBy('code')" :direction="$sorts['code'] ?? null">
                 {{ __('Code') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('symbol')" :direction="$sorts['symbol'] ?? null">
+            <x-table.th sortable wire:click="sortBy('symbol')" :direction="$sorts['symbol'] ?? null">
                 {{ __('Symbol') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('rate')" :direction="$sorts['rate'] ?? null">
+            <x-table.th sortable wire:click="sortBy('rate')" :direction="$sorts['rate'] ?? null">
                 {{ __('Rate') }}
             </x-table.th>
             <x-table.th>
@@ -47,8 +53,7 @@
             @forelse ($currencies as $currency)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $currency->id }}">
                     <x-table.td class="pr-0">
-                        <x-input type="checkbox" class="rounded-tl rounded-bl" value="{{ $currency->id }}"
-                            wire:model="selected" />
+                        <input type="checkbox" value="{{ $currency->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $currency->name }}
@@ -64,16 +69,18 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button alert wire:click="showModal({{ $currency->id }})" wire:loading.attr="disabled">
+                            <x-button alert wire:click="showModal({{ $currency->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button primary wire:click="editModal({{ $currency->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $currency->id }})" 
+                                type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
                             <x-button danger wire:click="confirm('delete', {{ $currency->id }})"
-                                wire:loading.attr="disabled">
+                                type="button"  wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -104,7 +111,7 @@
             {{ $currencies->links() }}
         </div>
     </div>
-
+    
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Currency') }}
@@ -133,11 +140,6 @@
                         wire:model.defer="currency.rate" />
                 </div>
             </div>
-            <div class="w-full flex justify-start px-3">
-                <x-button secondary wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                    {{ __('Close') }}
-                </x-button>
-            </div>
         </x-slot>
     </x-modal>
 
@@ -148,7 +150,7 @@
 
         <x-slot name="content">
             <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="flex flex-col">
                     <div class="flex flex-col">
@@ -173,11 +175,9 @@
                     </div>
                 </div>
 
-                <div class="w-full flex justify-start px-3">
-                    <x-button sencondary wire:click="$set('editModal', false)" wire:loading.attr="disabled">
-                        {{ __('Close') }}
-                    </x-button>
-                    <x-button primary wire:click="update" wire:loading.attr="disabled">
+                <div class="w-full px-3">
+                    <x-button primary type="submit" class="w-full text-center" 
+                            wire:click="update" wire:loading.attr="disabled">
                         {{ __('Update') }}
                     </x-button>
                 </div>

@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sale Return Details</title>
-    <link rel="stylesheet" href="{{ public_path('b3/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ public_path('print/bootstrap.min.css') }}">
 </head>
 <body>
 <div class="px-4 mx-auto">
@@ -25,15 +25,21 @@
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Company Info:</h4>
                             <div><strong>{{ settings()->company_name }}</strong></div>
                             <div>{{ settings()->company_address }}</div>
-                            <div>{{__('Email')}}: {{ settings()->company_email }}</div>
+                            @if (settings()->show_email == true)
+                                    <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
+                                @endif
                             <div>{{__('Phone')}}: {{ settings()->company_phone }}</div>
                         </div>
 
                         <div class="col-xs-4 mb-3 mb-md-0">
                             <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">Customer Info:</h4>
                             <div><strong>{{ $customer->name }}</strong></div>
+                            @if (settings()->show_address == true)
                             <div>{{ $customer->address }}</div>
+                            @endif
+                            @if (settings()->show_email == true)
                             <div>{{__('Email')}}: {{ $customer->email }}</div>
+                            @endif
                             <div>{{__('Phone')}}: {{ $customer->phone }}</div>
                         </div>
 
@@ -42,10 +48,10 @@
                             <div>{{__('Invoice')}}: <strong>INV/{{ $sale_return->reference }}</strong></div>
                             <div>{{__('Date')}}: {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
                             <div>
-                                Status: <strong>{{ $sale_return->status }}</strong>
+                                {{__('Status')}}: <strong>{{ $sale_return->status }}</strong>
                             </div>
                             <div>
-                                Payment Status: <strong>{{ $sale_return->payment_status }}</strong>
+                                {{__('Payment Status')}}: <strong>{{ $sale_return->payment_status }}</strong>
                             </div>
                         </div>
 
@@ -55,7 +61,7 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th class="align-middle">Product</th>
+                                <th class="align-middle">{{__('Product')}}</th>
                                 <th class="align-middle">{{__('Net Unit Price')}}</th>
                                 <th class="align-middle">{{__('Quantity')}}</th>
                                 <th class="align-middle">{{__('Discount')}}</th>
@@ -99,18 +105,24 @@
                         <div class="col-xs-4 col-xs-offset-8">
                             <table class="table">
                                 <tbody>
+                                @if ($sale_return->discount_percentage)
                                 <tr>
                                     <td class="left"><strong>{{__('Discount')}} ({{ $sale_return->discount_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($sale_return->discount_amount) }}</td>
                                 </tr>
+                                @endif
+                                @if ($sale_return->tax_percentage)
                                 <tr>
                                     <td class="left"><strong>{{__('Tax')}} ({{ $sale_return->tax_percentage }}%)</strong></td>
                                     <td class="right">{{ format_currency($sale_return->tax_amount) }}</td>
                                 </tr>
+                                @endif
+                                @if (settings()->show_shipping == true)
                                 <tr>
                                     <td class="left"><strong>{{__('Shipping')}}</strong></td>
                                     <td class="right">{{ format_currency($sale_return->shipping_amount) }}</td>
                                 </tr>
+                                @endif
                                 <tr>
                                     <td class="left"><strong>{{__('Grand Total')}}</strong></td>
                                     <td class="right"><strong>{{ format_currency($sale_return->total_amount) }}</strong></td>

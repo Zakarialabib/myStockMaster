@@ -1,36 +1,39 @@
 <div>
     <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-md-0 my-2">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model="perPage"
                 class="w-20 border border-gray-300 rounded-md shadow-sm py-2 px-4 bg-white text-sm leading-5 font-medium text-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selected)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
+            @if ($this->selected)
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
             @endif
+            @if ($this->selectedCount)
+            <p class="text-sm leading-5">
+                <span class="font-medium">
+                    {{ $this->selectedCount }}
+                </span>
+                {{ __('Entries selected') }}
+            </p>
+        @endif
         </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2 my-md-0">
-            <div class="flex items-center mr-3 pl-4">
-                <input wire:model="search" type="text"
-                    class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white dark:bg-dark-eval-2 rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full pr-10"
-                    placeholder="{{__('Search...')}}" />
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
+                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th class="pr-0 w-8">
+            <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th>
-                {{ __('Code') }}
-            </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
@@ -54,44 +57,57 @@
                         <input type="checkbox" value="{{ $category->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        {{ $category->code }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $category->name }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-badge type="info">
-                        {{ $category->products->count() }}
-                        </x-badge>
+                        <button type="button" wire:click="showModal({{ $category->id }})">
+                            {{ $category->name }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         <x-badge type="info">
-                        {{ $category->products->sum('quantity') }}
+                            {{ $category->products->count() }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        @php($stockValue = $category->products->sum(function($product) {
-                            return $product->quantity * $product->cost;
-                        }))
-                        <x-badge type="info">
-                        {{ number_format($stockValue, 2) }}
+                        <x-badge info>
+                            {{ $category->products->sum('quantity') }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="$emit('showModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
-                            <x-button primary wire:click="$emit('editModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $category->id }})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
-                        </div>
+                        @php
+                            $stockValue = $category->products->sum(function ($product) {
+                                return $product->quantity * $product->cost;
+                            });
+                        @endphp
+                        <x-badge info>
+                            {{ format_currency($stockValue) }}
+                        </x-badge>
+                    </x-table.td>
+                    <x-table.td>
+                        <x-dropdown
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <x-slot name="trigger">
+                                <button type="button"
+                                    class="px-4 text-base font-semibold text-gray-500 hover:text-sky-800 dark:text-slate-400 dark:hover:text-sky-400">
+                                    <i class="fas fa-angle-double-down"></i>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                <x-dropdown-link wire:click="showModal({{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-eye"></i>
+                                    {{ __('Show') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('editModal', {{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $category->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                    {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
                     </x-table.td>
                 </x-table.tr>
             @empty
@@ -118,42 +134,7 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit Category') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
-            <form wire:submit.prevent="update">
-                <div class="mb-6">>
-
-                    <div class="mt-4 w-full">
-                        <x-label for="code" :value="__('Code')" />
-                        <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
-                            wire:model.defer="category.code" />
-                        <x-input-error :messages="$errors->get('category.code')" for="category.code" class="mt-2" />
-                    </div>
-
-                    <div class="mt-4 p w-full">
-                        <x-label for="name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.defer="category.name" />
-                        <x-input-error :messages="$errors->get('category.name')" for="category.name" class="mt-2" />
-                    </div>
-
-                    <div class="w-full flex justify-start">
-                        <x-button primary wire:click="update" wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
-    <!-- End Edit Modal -->
+    @livewire('categories.edit', ['category' => $category])
 
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
@@ -163,22 +144,13 @@
 
         <x-slot name="content">
             <div class="flex flex-wrap -mx-2 mb-3">
-
-                <div class="mb-4">
+                <div class="w-full mb-4">
                     <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="code" wire:model.defer="category.code" disabled />
+                    <x-input type="text" name="code" wire:model="category.code" disabled />
                 </div>
-                <div class="mb-4">
+                <div class="w-full mb-4">
                     <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
-                    <input class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        type="text" name="name" wire:model.defer="category.name" disabled />
-                </div>
-
-                <div class="w-full flex justify-start ">
-                    <x-button primary type="button" wire:loading.attr="disabled"  wire:click="$set('showModal', false)">
-                        {{ __('Close') }}
-                    </x-button>
+                    <x-input type="text" name="name" wire:model="category.name" disabled />
                 </div>
             </div>
         </x-slot>
@@ -186,7 +158,6 @@
     <!-- End Show Modal -->
 
     {{-- Import modal --}}
-
     <x-modal wire:model="importModal">
         <x-slot name="title">
             {{ __('Import Categories') }}
@@ -195,7 +166,7 @@
         <x-slot name="content">
             <form wire:submit.prevent="import">
                 <div class="mb-4">
-                    <div class="mt-4">
+                    <div class="my-4">
                         <x-label for="import" :value="__('Import')" />
                         <x-input id="import" class="block mt-1 w-full" type="file" name="import"
                             wire:model.defer="import" />
@@ -203,7 +174,7 @@
                     </div>
 
                     <div class="w-full flex justify-start">
-                        <x-button primary wire:click="import" type="button" wire:loading.attr="disabled">
+                        <x-button primary wire:click="import" type="submit" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-button>
                     </div>
@@ -211,10 +182,11 @@
             </form>
         </x-slot>
     </x-modal>
-
     {{-- End Import modal --}}
 
     <livewire:categories.create />
+
+
 </div>
 
 @push('scripts')

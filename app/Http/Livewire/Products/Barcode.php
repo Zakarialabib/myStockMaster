@@ -1,74 +1,80 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Products;
 
-use Livewire\Component;
-use Milon\Barcode\Facades\DNS1DFacade;
 use App\Models\Product;
+use PDF;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\Component;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Milon\Barcode\Facades\DNS1DFacade;
 
 class Barcode extends Component
 {
     use LivewireAlert;
 
     public $product;
+
+    public $products;
+
     public $quantity;
+
     public $barcodes;
 
     protected $listeners = ['productSelected', 'getPdf'];
 
-    public function mount() {
+    public function mount(): void
+    {
+        $this->products = [];
         $this->product = '';
         $this->quantity = 0;
         $this->barcodes = [];
     }
 
-    public function render() {
-        return view('livewire.products.barcode');
-    }
+     public function render(): View|Factory
+     {
+         return view('livewire.products.barcode');
+     }
 
-    // selecte multiple products without barcode
-    public function productSelected(Product $product) {
-        $this->product = $product;
+    public function productSelected($product): void
+    {
+        $this->products = Product::find($product);
         $this->quantity = 1;
         $this->barcodes = [];
-        // $this->emit('productSelected', $this->product, $this->quantity, $this->barcodes);
+        $this->generateBarcodes($product, $this->quantity);
     }
 
-    // generate barcodes for selected products
-    public function generateBarcodes(Product $product, $quantity){
+    public function generateBarcodes($product, $quantity): void
+    {
         if ($quantity > 100) {
             $this->alert('error', __('Max quantity is 100 per barcode generation!'));
         }
 
         $this->barcodes = [];
 
-        for ($i=0; $i < $this->quantity; $i++) { 
-            $barcode = DNS1DFacade::getBarCodeSVG($product->code, $product->barcode_symbology,2 , 60, 'black', false);
+        for ($i = 0; $i < $this->quantity; $i++) {
+            $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], 2, 60, 'black', false);
             array_push($this->barcodes, $barcode);
         }
-
     }
 
-    public function getPdf() {
-
-        // dd($this->barcodes);
-        
-        $pdf = PDF::loadView('admin.barcode.print', [
+    public function getPdf()
+    {
+        $data = [
             'barcodes' => $this->barcodes,
-            'price' => $this->product->price,
-            'name' => $this->product->name,
-        ])->output();
+            'products' => $this->products,
+        ];
 
-        return response()->streamDownload(
-            fn () => print($pdf),
-            'barcodes-'. $this->product->name .'.pdf'
-       );
-        // return $pdf->streamDownload('barcodes-'. $this->product->code .'.pdf');
+        $pdf = PDF::loadView('admin.barcode.print', $data);
+
+        return $pdf->stream('barcodes-'.date('Y-m-d').'.pdf');
     }
 
-    public function updatedQuantity() {
+    public function updatedQuantity(): void
+    {
         $this->barcodes = [];
     }
 }

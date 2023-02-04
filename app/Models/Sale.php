@@ -1,16 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
-use Carbon\Carbon; 
-use Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 
+/**
+ * App\Models\Sale
+ *
+ * @property int $id
+ * @property string $date
+ * @property string $reference
+ * @property int|null $customer_id
+ * @property int $tax_percentage
+ * @property int $tax_amount
+ * @property int $discount_percentage
+ * @property int $discount_amount
+ * @property int $shipping_amount
+ * @property int $total_amount
+ * @property int $paid_amount
+ * @property int $due_amount
+ * @property string $status
+ * @property string $payment_status
+ * @property string $payment_method
+ * @property string|null $shipping_status
+ * @property string|null $note
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Customer|null $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SaleDetails[] $saleDetails
+ * @property-read int|null $sale_details_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SalePayment[] $salePayments
+ * @property-read int|null $sale_payments_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale completed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale salesTotal(\Illuminate\Support\Carbon $date, int $dividedNumber = 100)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDueAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaidAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereShippingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereShippingStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTaxPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Sale extends Model
 {
     use HasAdvancedFilter;
+    use SaleScope;
 
+    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -33,6 +95,7 @@ class Sale extends Model
         'updated_at',
     ];
 
+    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -55,6 +118,11 @@ class Sale extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'id',
         'date',
@@ -77,62 +145,108 @@ class Sale extends Model
         'updated_at',
     ];
 
-    const PaymentPending =  '0' ;
-    const PaymentPaid =  '1' ;
-    const PaymentPartial =  '2' ;
-    const PaymentDue =  '3' ;
+    /** @return response() */
+    protected $casts = [
+        'status'         => SaleStatus::class,
+        'payment_status' => PaymentStatus::class,
+    ];
 
-    const SalePending =  '0' ;
-    const SaleOrdered =  '1' ;
-    const SaleCompleted =  '2' ;
-    const SaleShipped =  '3' ;
-
-    public function saleDetails() {
-        return $this->hasMany(SaleDetails::class, 'sale_id', 'id');
+    /** @return HasMany<SaleDetails> */
+    public function saleDetails(): HasMany
+    {
+        return $this->hasMany(SaleDetails::class);
     }
 
-    public function salePayments() {
+    /** @return HasMany<SalePayment> */
+    public function salePayments(): HasMany
+    {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
-    public function __construct(array $attributes = array())
+    /** @return BelongsTo<Customer> */
+    public function customer(): BelongsTo
     {
-        $this->setRawAttributes(array(
-            'reference' => 'SL-' . Carbon::now()->format('Ymd') . '-' . Str::random(4)
-        ), true);
-        parent::__construct($attributes);
-    }
-
-    public function scopeCompleted($query) {
-        return $query->where('status', 'Completed');
-    }
-
-    public function getShippingAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getPaidAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getTotalAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getDueAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getTaxAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function getDiscountAmountAttribute($value) {
-        return $value / 100;
-    }
-
-    public function customer() {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereStatus(2);
+    }
+
+    /**
+     * get shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function shippingAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+    /**
+     * get paid amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function paidAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+    /**
+     * get total amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function totalAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+    /**
+     * get due amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function dueAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+    /**
+     * get tax amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function taxAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
+
+    /**
+     * get discount amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function discountAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
+    }
 }

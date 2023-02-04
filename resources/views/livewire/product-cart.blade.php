@@ -1,5 +1,5 @@
 <div >
-    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <x-validation-errors class="mb-4" :errors="$errors" />
 
     <div>
         <div wire:loading.flex class="absolute top-0 left-0 w-full h-full bg-white bg-opacity-75 z-50">
@@ -29,7 +29,6 @@
                             </x-table.td>
 
                             <x-table.td>
-                            {{-- <input wire:model="price.{{ $cart_item->id }}" type="number" class="px-4 py-3 mb-2 text-sm placeholder-gray-500 bg-white border rounded" value="{{ $cart_item->price }}" min="1"> --}}
                                 {{ format_currency($cart_item->options->unit_price) }}
                             </x-table.td>
 
@@ -79,7 +78,6 @@
                     </x-table.tr>
                     <x-table.tr>
                         <x-table.th>{{ __('Shipping') }}</x-table.th>
-                        <input type="hidden" value="{{ $shipping }}" name="shipping_amount">
                         <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
                     </x-table.tr>
                     <x-table.tr>
@@ -103,25 +101,19 @@
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
-                    <input wire:model.lazy="global_tax" type="number"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        name="tax_percentage" min="0" max="100" value="{{ $global_tax }}" required>
+                    <x-input wire:model.lazy="global_tax" value="{{ $global_tax }}" />
                 </div>
             </div>
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="discount_percentage">{{ __('Discount (%)') }}</label>
-                    <input wire:model.lazy="global_discount" type="number"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        name="discount_percentage" min="0" max="100" value="{{ $global_discount }}" required>
+                    <x-input wire:model.lazy="global_discount" value="{{ $global_discount }}" />
                 </div>
             </div>
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label for="shipping_amount">{{ __('Shipping') }}</label>
-                    <input wire:model.lazy="shipping" type="number"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        name="shipping_amount" min="0" value="0" required step="0.01">
+                    <x-input wire:model.lazy="shipping" />
                 </div>
             </div>
         </div>

@@ -1,60 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class SupplierExport implements FromQuery, WithMapping, WithHeadings
+class SupplierExport implements FromView
 {
     use Exportable;
+    use ForModelsTrait;
 
-    protected $selected;
-
-    public function __construct($selected)
-    {
-        $this->selected = $selected;
-    }
+    /** @var mixed */
+    protected $models;
 
     public function query()
     {
-        if ($this->selected) {
-            return Supplier::query()->whereIn('id', $this->selected);
+        if ($this->models) {
+            return  Supplier::query()->whereIn('id', $this->models);
         }
+
         return Supplier::query();
     }
 
-    public function headings(): array
+    public function view(): View
     {
-        return [
-            '#',
-            __('Name'),
-            __('Email'),
-            __('Phone'),
-            __('City'),
-            __('Country'),
-            __('Address'),
-            __('Tax number'),
-        ];
-    }
-
-    /**
-     * @var Supplier $row
-     */
-    public function map($row): array
-    {
-        return[
-        $row->id,
-        $row->name,
-        $row->email,
-        $row->phone,
-        $row->city,
-        $row->country,
-        $row->address,
-        $row->tax_number,
-        ];
+        return view('pdf.suppliers', [
+            'data' => $this->query()->get(),
+        ]);
     }
 }
