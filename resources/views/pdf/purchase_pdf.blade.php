@@ -16,8 +16,8 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$purchase->date}}</div>
-            <div><strong> Numéro: </strong> {{$purchase->reference}}</div>
+            <div><strong> {{__('Date')}}:  </strong>{{$purchase->date}}</div>
+            <div><strong> {{__('Number')}}:  </strong> {{$purchase->reference}}</div>
          </div>
          <div id="Title-heading">
              Achat  : {{$purchase->reference}}
