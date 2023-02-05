@@ -36,7 +36,8 @@
                         <span>{{ __('Settings') }}</span>
                     </a>
                 </div>
-            </div>
+            </div> 
+            @livewire('settings.update')
         </div>
     </section>
 @endsection
@@ -134,4 +135,5 @@
             </div>
         </x-card>
     </div>
+
 </x-app-layout>
