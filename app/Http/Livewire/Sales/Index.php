@@ -16,8 +16,6 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use App\Enums\PaymentStatus;
 use App\Traits\Datatable;
 
@@ -46,7 +44,7 @@ class Index extends Component
 
     // public $salepayments;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     /** @var string[][] */
     protected $queryString = [
@@ -61,7 +59,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'customer_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
         'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -84,7 +83,7 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('sale_access'), 403);
 

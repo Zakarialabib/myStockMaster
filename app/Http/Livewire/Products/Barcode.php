@@ -8,8 +8,6 @@ use App\Models\Product;
 use PDF;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Milon\Barcode\Facades\DNS1DFacade;
 
 class Barcode extends Component
@@ -34,7 +32,7 @@ class Barcode extends Component
         $this->barcodes = [];
     }
 
-     public function render(): View|Factory
+     public function render()
      {
          return view('livewire.products.barcode');
      }

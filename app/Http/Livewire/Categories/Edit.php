@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -23,13 +21,16 @@ class Edit extends Component
 
     /** @var mixed */
     public $category;
+    public $name;
+    public $code;
 
-    protected array $rules = [
-        'category.name' => 'required|min:3|max:255',
-        'category.code' => 'required',
+    /** @var array */
+    public $rules = [
+        'name' => 'required|min:3|max:255',
+        'code' => 'required',
     ];
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.categories.edit');
     }

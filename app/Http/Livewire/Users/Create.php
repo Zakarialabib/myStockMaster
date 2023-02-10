@@ -8,8 +8,6 @@ use App\Models\User;
 use App\Models\Wallet;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
@@ -24,7 +22,8 @@ class Create extends Component
     /** @var mixed */
     public $user;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'user.name'     => 'required|string|max:255',
         'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
@@ -36,7 +35,7 @@ class Create extends Component
         $this->user = $user;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.users.create');
     }

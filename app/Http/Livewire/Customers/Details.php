@@ -9,8 +9,6 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleReturn;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -139,7 +137,7 @@ class Details extends Component
         return Sale::whereBelongsTo($this->customer)->sum($field) / 100;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.customers.details');
     }

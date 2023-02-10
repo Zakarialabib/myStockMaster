@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Expense;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Warehouse;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -39,7 +37,7 @@ class Create extends Component
 
     public $warehouse_id;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public function updated($propertyName)
     {
@@ -62,7 +60,7 @@ class Create extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('expense_create'), 403);
 

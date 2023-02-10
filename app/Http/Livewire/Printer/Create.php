@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Printer;
 
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -22,7 +20,8 @@ class Create extends Component
 
     public $printer;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'printer.name'               => 'required|string|max:255',
         'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
@@ -37,7 +36,7 @@ class Create extends Component
         $this->printer = $printer;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('printer_create'), 403);
 

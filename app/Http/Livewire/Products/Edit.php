@@ -13,8 +13,6 @@ use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 
 class Edit extends Component
 {
@@ -41,9 +39,10 @@ class Edit extends Component
         'editModal',
     ];
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'product.name'              => ['required', 'string', 'max:255'],
         'product.code'              => ['required', 'string', 'max:255'],
         'product.barcode_symbology' => ['required', 'string', 'max:255'],
@@ -118,7 +117,7 @@ class Edit extends Component
         return Warehouse::select('name', 'id')->get();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.products.edit');
     }

@@ -6,8 +6,6 @@ namespace App\Http\Livewire\ExpenseCategories;
 
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -23,7 +21,8 @@ class Create extends Component
     /** @var mixed */
     public $expenseCategory;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'expenseCategory.name'        => 'required',
         'expenseCategory.description' => '',
     ];
@@ -33,7 +32,7 @@ class Create extends Component
         $this->expenseCategory = $expenseCategory;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('expense_category_create'), 403);
 

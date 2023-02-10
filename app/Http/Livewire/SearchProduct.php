@@ -23,7 +23,7 @@ class SearchProduct extends Component
         'showCount'         => 'showCountChanged',
     ];
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public $categories;
 

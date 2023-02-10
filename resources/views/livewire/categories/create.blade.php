@@ -11,8 +11,6 @@
 
             <form wire:submit.prevent="create">
                 <div>
-                    <x-input id="code" type="hidden" name="code"
-                        wire:model="code" />
 
                     <div class="my-4">
                         <x-label for="name" :value="__('Name')" />

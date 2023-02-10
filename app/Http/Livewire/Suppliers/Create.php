@@ -8,8 +8,6 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
@@ -24,7 +22,8 @@ class Create extends Component
     /** @var mixed */
     public $supplier;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'supplier.name'       => ['required', 'string', 'max:255'],
         'supplier.email'      => ['nullable', 'string', 'max:255'],
         'supplier.phone'      => ['required'],
@@ -39,7 +38,7 @@ class Create extends Component
         $this->supplier = $supplier;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('supplier_create'), 403);
 
