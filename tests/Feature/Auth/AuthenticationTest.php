@@ -45,14 +45,12 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    /** @test */
-    public function is_redirected_if_already_logged_in()
-    {
-        auth()->login(
-            User::factory()->create()
-        );
+   /** @test */
+   public function is_redirected_if_already_logged_in()
+   {
+       auth()->login(User::factory()->create());
 
-        $this->get(route('login'))
-            ->assertRedirect('/dashboard');
-    }
+       $this->get(route('login'))
+           ->assertRedirect('/dashboard');
+   }
 }

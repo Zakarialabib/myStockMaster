@@ -2,22 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Customer;
-
 use App\Http\Livewire\Customers\Index;
-use Livewire\Livewire;
-use Tests\TestCase;
 
-class IndexTest extends TestCase
-{
-    /** @test */
-    public function index_customers_component_can_render()
-    {
-        $this->withoutExceptionHandling();
-        $this->loginAsAdmin();
+test('the livewire customers component can be viewed', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-        Livewire::test(Index::class)
-            ->assertStatus(200)
-            ->assertViewIs('livewire.customers.index');
-    }
-}
+    $this->get(route('customers.index'))
+        ->assertStatus(200);
+
+    $this->livewire(Index::class)
+        ->assertStatus(200)
+        ->assertViewIs('livewire.customers.index');
+});

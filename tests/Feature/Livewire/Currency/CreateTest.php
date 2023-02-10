@@ -2,37 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Currency;
-
-use App\Http\Livewire\Customers\Create;
+use App\Http\Livewire\Currency\Create;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class CreateTest extends TestCase
-{
-    /** @test */
-    public function create_currency_component_can_render()
-    {
-        $this->withoutExceptionHandling();
+use function Pest\Laravel\assertDatabaseHas;
 
-        $this->loginAsAdmin();
+it('test the currency create if working', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-        Livewire::test(Create::class)
-            ->assertOk()
-            ->assertViewIs('livewire.currency.create');
-    }
+    Livewire::test(Create::class)
+        ->assertOk()
+        ->assertViewIs('livewire.currency.create');
+});
 
-      /** @test */
-      public function can_create_currency()
-      {
-          $this->loginAsAdmin();
+it('tests the create currency validation rules', function () {
+    $this->loginAsAdmin();
 
-          Livewire::test(Create::class)
-              ->set('name', 'apple')
-              ->call('create');
+    Livewire::test(Create::class)
+        ->set('currency.name', 'Us Dollar')
+        ->set('currency.code', 'USD')
+        ->set('currency.symbol', '$')
+        ->set('currency.exchange_rate', '1')
+        ->call('create');
 
-          $this->assertDatabaseHas('currencies', [
-              'name' => 'apple',
-          ]);
-      }
-}
+    assertDatabaseHas('currencies', [
+        'name'          => 'Us Dollar',
+        'code'          => 'USD',
+        'symbol'        => '$',
+        'exchange_rate' => '1',
+    ]);
+});

@@ -2,36 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Category;
-
 use App\Http\Livewire\Categories\Create;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class CreateTest extends TestCase
-{
-    /** @test */
-    public function create_brand_component_can_render()
-    {
-        $this->withoutExceptionHandling();
-        $this->loginAsAdmin();
+use function Pest\Laravel\assertDatabaseHas;
 
-        Livewire::test(Create::class)
-            ->assertOk()
-            ->assertViewIs('livewire.categories.create');
-    }
+it('test the category create if working', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-      /** @test */
-      public function can_create_brand()
-      {
-          $this->loginAsAdmin();
+    Livewire::test(Create::class)
+        ->assertOk()
+        ->assertViewIs('livewire.categories.create');
+});
 
-          Livewire::test(Create::class)
-              ->set('name', 'apple')
-              ->call('create');
+it('tests the create category validation rules', function () {
+    $this->loginAsAdmin();
 
-          $this->assertDatabaseHas('categories', [
-              'name' => 'apple',
-          ]);
-      }
-}
+    Livewire::test(Create::class)
+        ->set('name', 'apple')
+        ->call('create');
+
+    assertDatabaseHas('categories', [
+        'name' => 'apple',
+    ]);
+});

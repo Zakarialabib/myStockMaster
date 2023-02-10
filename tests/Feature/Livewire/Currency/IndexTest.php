@@ -2,21 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Currency;
+use App\Http\Livewire\Currency\Index;
 
-use Livewire\Livewire;
-use Tests\TestCase;
+test('the livewire currency component can be viewed', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-class IndexTest extends TestCase
-{
-    /** @test */
-    public function index_currency_component_can_render()
-    {
-        $this->withoutExceptionHandling();
-        $this->loginAsAdmin();
+    $this->get(route('currencies.index'))
+        ->assertStatus(200);
 
-        Livewire::test(Index::class)
-            ->assertStatus(200)
-            ->assertViewIs('livewire.currency.index');
-    }
-}
+    Livewire::test(Index::class)
+        ->assertStatus(200)
+        ->assertViewIs('livewire.currency.index');
+});

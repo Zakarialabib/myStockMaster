@@ -2,37 +2,60 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Expense;
-
 use App\Http\Livewire\Expense\Create;
-use Livewire\Livewire;
-use Tests\TestCase;
+use App\Models\ExpenseCategory;
 
-class CreateTest extends TestCase
-{
-    /** @test */
-    public function create_expense_component_can_render()
-    {
-        $this->withoutExceptionHandling();
+use function Pest\Laravel\assertDatabaseHas;
 
-        $this->loginAsAdmin();
+it('test the expenses create if working', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-        Livewire::test(Create::class)
-            ->assertOk()
-            ->assertViewIs('livewire.expense.create');
-    }
+    Livewire::test(Create::class)
+        ->assertOk()
+        ->assertViewIs('livewire.expense.create');
+});
 
-      /** @test */
-      public function can_create_expense()
-      {
-          $this->loginAsAdmin();
+it('tests the create expense can create', function () {
+    $this->loginAsAdmin();
 
-          Livewire::test(Create::class)
-              ->set('name', 'apple')
-              ->call('create');
+    $category = ExpenseCategory::factory()->create();
 
-          $this->assertDatabaseHas('expenses', [
-              'name' => 'apple',
-          ]);
-      }
-}
+    $category_id = $category->id;
+
+    Livewire::test(Create::class)
+        ->set('reference', '12345')
+        ->set('date', '01-01-2023')
+        ->set('category_id', $category_id)
+        ->set('amount', '500,00')
+        ->call('create')
+        ->assertHasNoErrors();
+
+    assertDatabaseHas('expenses', [
+        'reference'   => '12345',
+        'date'        => '01-01-2023',
+        'category_id' => 1,
+        'amount'      => '500',
+    ]);
+});
+
+it('tests the create expense component validation', function () {
+    $this->loginAsAdmin();
+
+    $category = ExpenseCategory::factory()->create();
+
+    $category_id = $category->id;
+
+    Livewire::test(Create::class)
+        ->set('reference', '12345')
+        ->set('date', '01-01-2023')
+        ->set('category_id', $category_id)
+        ->set('amount', 500)
+        ->call('create')
+        ->assertHasErrors(
+            ['reference' => 'required'],
+            ['date'        => 'required'],
+            ['category_id' => 'required'],
+            ['amount'      => 'required'],
+        );
+});

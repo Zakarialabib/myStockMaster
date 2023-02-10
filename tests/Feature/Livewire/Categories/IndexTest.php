@@ -2,22 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Categories;
-
 use App\Http\Livewire\Categories\Index;
-use Livewire\Livewire;
-use Tests\TestCase;
 
-class IndexTest extends TestCase
-{
-    /** @test */
-    public function index_categories_component_can_render()
-    {
-        $this->withoutExceptionHandling();
-        $this->loginAsAdmin();
+test('the livewire category component can be viewed', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-        Livewire::test(Index::class)
-            ->assertStatus(200)
-            ->assertViewIs('livewire.categories.create');
-    }
-}
+    $this->get(route('product-categories.index'))
+        ->assertStatus(200);
+
+    Livewire::test(Index::class)
+        ->assertStatus(200)
+        ->assertViewIs('livewire.categories.index');
+});

@@ -2,37 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Livewire\Customer;
-
 use App\Http\Livewire\Customers\Create;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class CreateTest extends TestCase
-{
-    /** @test */
-    public function create_customer_component_can_render()
-    {
-        $this->withoutExceptionHandling();
+use function Pest\Laravel\assertDatabaseHas;
 
-        $this->loginAsAdmin();
+it('test the customers create if working', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
 
-        Livewire::test(Create::class)
-            ->assertOk()
-            ->assertViewIs('livewire.customers.create');
-    }
+    Livewire::test(Create::class)
+        ->assertOk()
+        ->assertViewIs('livewire.customers.create');
+});
 
-      /** @test */
-      public function can_create_customer()
-      {
-          $this->loginAsAdmin();
+it('tests the create customer validation rules', function () {
+    $this->loginAsAdmin();
 
-          Livewire::test(Create::class)
-              ->set('name', 'apple')
-              ->call('create');
+    Livewire::test(Create::class)
+        ->set('name', 'John doe')
+        ->set('phone', '00000000000')
+        ->call('create');
 
-          $this->assertDatabaseHas('customers', [
-              'name' => 'apple',
-          ]);
-      }
-}
+    assertDatabaseHas('customers', [
+        'name'  => 'John doe',
+        'phone' => '00000000000',
+    ]);
+});
