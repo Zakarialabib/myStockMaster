@@ -74,7 +74,7 @@ class Index extends Component
         if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) == count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
-            $this->selected = $brandIds;
+            $this->selected = $this->brandIds;
         }
     }
 

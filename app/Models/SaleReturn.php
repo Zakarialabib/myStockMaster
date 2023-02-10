@@ -151,7 +151,6 @@ class SaleReturn extends Model
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

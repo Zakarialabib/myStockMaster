@@ -88,19 +88,16 @@ class Expense extends Model
         'amount',
     ];
 
-    /** @return BelongsTo<ExpenseCategory> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');

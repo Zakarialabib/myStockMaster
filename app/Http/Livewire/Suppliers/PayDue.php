@@ -9,6 +9,7 @@ use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Enums\PaymentStatus;
+use Carbon\Carbon;
 
 class PayDue extends Component
 {
@@ -32,7 +33,7 @@ class PayDue extends Component
                 if ($paid_amount_total == 0) {
                     break;
                 }
-                $due = $supplier_purchase->GrandTotal - $supplier_purchase->paid_amount;
+                $due = $supplier_purchase->amount - $supplier_purchase->paid_amount;
 
                 if ($paid_amount_total >= $due) {
                     $amount = $due;
@@ -44,11 +45,11 @@ class PayDue extends Component
 
                 $payment_purchase = new PurchasePayment();
                 $payment_purchase->purchase_id = $supplier_purchase->id;
-                $payment_purchase->Ref = app('App\Http\Controllers\PaymentPurchasesController')->getNumberOrder();
+                $payment_purchase->reference = app('App\Http\Controllers\PaymentPurchasesController')->getNumberOrder();
                 $payment_purchase->date = Carbon::now();
-                $payment_purchase->montant = $amount;
+                $payment_purchase->amount = $amount;
                 $payment_purchase->change = 0;
-                $payment_purchase->notes = $this['notes'];
+                $payment_purchase->note = $this['note'];
                 $payment_purchase->user_id = Auth::user()->id;
                 $payment_purchase->save();
 

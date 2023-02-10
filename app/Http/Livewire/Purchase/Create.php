@@ -37,6 +37,12 @@ class Create extends Component
 
     public $quantity;
 
+    public $reference;
+
+    public $total_amount;
+    
+    public $check_quantity;
+
     public $price;
 
     public $tax_percentage;

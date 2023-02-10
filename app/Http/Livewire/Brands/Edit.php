@@ -66,7 +66,7 @@ class Edit extends Component
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update()
     {
         $validatedData = $this->validate();
 
@@ -76,7 +76,7 @@ class Edit extends Component
             $this->brand->image = $imageName;
         }
 
-        $this->update($validatedData);
+        $this->brand->update($validatedData);
 
         $this->emit('refreshIndex');
 

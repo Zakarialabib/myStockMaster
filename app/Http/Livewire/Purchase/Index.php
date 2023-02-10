@@ -39,6 +39,10 @@ class Index extends Component
     public $paymentModal = false;
 
     public $purchase_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
 
     /** @var string[][] */
     protected $queryString = [

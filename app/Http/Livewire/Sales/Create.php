@@ -53,6 +53,8 @@ class Create extends Component
 
     public $paid_amount;
 
+    public $shipping_amount;
+
     public $note;
 
     public $payment_method = 'cash';
@@ -97,7 +99,6 @@ class Create extends Component
     public function hydrate()
     {
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
     }
 
     public function render()

@@ -43,6 +43,12 @@ class Index extends Component
 
     public $paymentModal = false;
 
+    public $salereturn_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
+
     public $listsForFields = [];
 
     /** @var string[][] */
