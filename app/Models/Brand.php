@@ -31,11 +31,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Database\Factories\BrandFactory factory(...$parameters)
  */
 class Brand extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
+
     /** @var string[] */
     public $orderable = [
         'id', 'name', 'description', 'image',

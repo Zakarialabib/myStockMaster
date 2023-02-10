@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\ExpenseCategory
@@ -28,10 +29,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\ExpenseCategoryFactory factory(...$parameters)
  */
 class ExpenseCategory extends Model
 {
     use HasAdvancedFilter;
+    use HasFactory;
 
     /** @var string[] */
     public $orderable = [
