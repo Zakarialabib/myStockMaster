@@ -28,8 +28,7 @@ class DashboardTest extends TestCase
 
         $response = $this->get('/dashboard');
 
-        $response->assertRedirect('/')
-                 ->assertOk();
+        $response->assertStatus(200);
     }
 
     /** @test */

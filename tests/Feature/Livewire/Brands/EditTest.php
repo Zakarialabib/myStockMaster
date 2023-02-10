@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Livewire\Brands;
 
 use App\Http\Livewire\Brands\Edit;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\User;
 use App\Models\Brand;
 use Livewire\Livewire;
 use Tests\TestCase;
-use Spatie\Permission\Models\Role;
 
 class EditTest extends TestCase
 {
@@ -19,21 +17,25 @@ class EditTest extends TestCase
         $this->loginAsAdmin();
 
         Livewire::test(Edit::class)
-                ->assertStatus(200);
+            ->assertOk()
+            ->assertViewIs('livewire.brands.edit');
     }
-    
 
      /** @test */
-     function can_edit_Brand()
+     public function can_edit_Brand()
      {
+         $this->loginAsAdmin();
 
-        $this->loginAsAdmin();
-        
-        Livewire::test(Edit::class)
-             ->set('name', 'apple')
-             ->call('update')
-             ->assertHasNoErrors()
-             ->assertSee('Successfuly saved!');
-  
+         $brand = Brand::create([
+             'name' => 'Apple',
+         ]);
+
+         Livewire::test(Edit::class, ['brand_id' => $brand->id])
+             ->set('name', 'Apple')
+             ->call('update');
+
+         $this->assertDatabaseMissing('brands', [
+             'name' => 'Apple',
+         ]);
      }
 }

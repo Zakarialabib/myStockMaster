@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Livewire\Categories;
 
 use App\Http\Livewire\Categories\Index;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
 
 class IndexTest extends TestCase
 {
@@ -19,7 +17,7 @@ class IndexTest extends TestCase
         $this->loginAsAdmin();
 
         Livewire::test(Index::class)
-                ->assertStatus(200);
-
+            ->assertStatus(200)
+            ->assertViewIs('livewire.categories.create');
     }
 }
