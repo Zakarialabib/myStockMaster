@@ -13,7 +13,13 @@
    
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
-    
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{{ settings()->company_name }}">
+
     @vite('resources/css/app.css')
     
     @include('includes.main-css')
@@ -56,9 +62,22 @@
             </div>
         </div>
     </div>
+
     <!-- Scripts -->
     @include('includes.main-js')
     @vite('resources/js/app.js')
-</body>
 
+    <script>
+        if('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+  </script>
+
+</body>
 </html>
