@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Gate;
 
 class AdjustmentController extends Controller
 {
-    
     public function index()
     {
         abort_if(Gate::denies('adjustment_access'), 403);

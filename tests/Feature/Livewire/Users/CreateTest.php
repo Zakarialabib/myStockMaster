@@ -30,4 +30,3 @@ it('tests the create user validation rules', function () {
         'phone' => '00000000000',
     ]);
 });
-
