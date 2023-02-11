@@ -1,13 +1,12 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 
-const CACHE_NAME = 'inventory-app-cache-v1';
+const CACHE_NAME = 'myStockMaster-cache-v1';
 const OFFLINE_PAGE = '/offline';
-const QUEUE_NAME = 'inventory-app-queue';
+const QUEUE_NAME = 'myStockMaster-queue';
 
 const PRECACHE_ASSETS = [
   '/public/'
 ]
-
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -28,10 +27,15 @@ function saveBeforeInstallPromptEvent(evt) {
   deferredInstallPrompt = evt;
 }
 
+const bgSyncPlugin = new workbox.backgroundSync.Queue(QUEUE_NAME, {
+  maxRetentionTime: 24 * 60
+});
+
 workbox.routing.registerRoute(
-  new RegExp('/api/.*'),
-  new workbox.strategies.NetworkFirst({
+  /.*/,
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: CACHE_NAME,
+    plugins: [bgSyncPlugin]
   })
 );
 
@@ -81,6 +85,20 @@ async function shareLink(shareTitle, shareText, link) {
     console.error(e);
   }
 }
+
+// Serve assets from cache, falling back to the network
+workbox.routing.registerRoute(
+  new RegExp('/(.*)'),
+  new workbox.strategies.CacheFirst({
+    cacheName: CACHE_NAME,
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 30 * 24 * 60 * 60
+      })
+    ]
+  })
+);
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
