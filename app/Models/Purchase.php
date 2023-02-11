@@ -143,19 +143,16 @@ class Purchase extends Model
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** @return HasMany<PurchaseDetail> */
     public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
-    /** @return HasMany<PurchasePayment> */
     public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
-     /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');

@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Purchase\Payment;
 
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class PaymentForm extends Component
 {
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.puchase.payment.payment-form');
     }

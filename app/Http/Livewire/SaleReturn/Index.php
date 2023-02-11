@@ -43,7 +43,13 @@ class Index extends Component
 
     public $paymentModal = false;
 
-    public array $listsForFields = [];
+    public $salereturn_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
+
+    public $listsForFields = [];
 
     /** @var string[][] */
     protected $queryString = [
@@ -58,7 +64,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'customer_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
         'tax_percentage'      => 'required|integer|min:0|max:100',

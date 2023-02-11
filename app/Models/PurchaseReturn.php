@@ -144,13 +144,11 @@ class PurchaseReturn extends Model
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
     }
 
-    /** @return HasMany<PurchaseReturnPayment> */
     public function purchaseReturnPayments(): HasMany
     {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
     }
 
-    /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');

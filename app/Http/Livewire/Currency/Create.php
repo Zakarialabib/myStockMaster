@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Currency;
 
 use App\Models\Currency;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -23,7 +21,8 @@ class Create extends Component
     /** @var mixed */
     public $currency;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'currency.name'          => 'required|string|max:255',
         'currency.code'          => 'required|string|max:255',
         'currency.symbol'        => 'required|string|max:255',
@@ -35,7 +34,7 @@ class Create extends Component
         $this->currency = $currency;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('currency_create'), 403);
 

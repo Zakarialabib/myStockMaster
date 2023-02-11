@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -25,15 +23,29 @@ class Edit extends Component
 
     public $image;
 
+    public $name;
+
+    public $description;
+
     /** @var string[] */
     public $listeners = ['editModal'];
 
-    public array $rules = [
-        'brand.name'        => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
+    /** @var array */
+    protected $rules = [
+        'name'        => 'required|string||min:3|max:255',
+        'description' => 'nullable|string',
     ];
 
-    public function render(): View|Factory
+    protected $messages = [
+        'name.required' => 'The name field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function render()
     {
         return view('livewire.brands.edit');
     }
@@ -46,22 +58,25 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->brand = Brand::findOrFail($id);
+        $this->brand = Brand::where('id', $id)->firstOrFail();
+
+        $this->name = $this->brand->name;
+        $this->description = $this->brand->description;
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update()
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
         if ($this->image) {
-            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
             $this->image->storeAs('brands', $imageName);
             $this->brand->image = $imageName;
         }
 
-        $this->brand->save();
+        $this->brand->update($validatedData);
 
         $this->emit('refreshIndex');
 

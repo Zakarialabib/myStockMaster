@@ -29,7 +29,7 @@ class Index extends Component
 
     public $showPayments;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public $sale_id;
 

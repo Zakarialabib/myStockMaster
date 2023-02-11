@@ -41,13 +41,11 @@ class Shipment extends Model
         'sale_id' => 'integer',
     ];
 
-    /** @return BelongsTo<Sale> */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
     }
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

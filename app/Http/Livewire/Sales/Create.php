@@ -14,8 +14,6 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 
 class Create extends Component
@@ -55,6 +53,8 @@ class Create extends Component
 
     public $paid_amount;
 
+    public $shipping_amount;
+
     public $note;
 
     public $payment_method = 'cash';
@@ -72,7 +72,7 @@ class Create extends Component
         ];
     }
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     protected function initListsForFields(): void
     {
@@ -99,10 +99,9 @@ class Create extends Component
     public function hydrate()
     {
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 

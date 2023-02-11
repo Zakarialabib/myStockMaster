@@ -14,9 +14,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class Index extends Component
 {
     use WithPagination;
@@ -57,7 +55,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'supplier.name'       => ['required', 'string', 'max:255'],
         'supplier.email'      => ['nullable', 'string', 'max:255'],
         'supplier.phone'      => ['required'],
@@ -77,7 +76,7 @@ class Index extends Component
         $this->orderable = (new Supplier())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('supplier_access'), 403);
 

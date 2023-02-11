@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Brand
@@ -30,10 +31,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
+ * @property-read int|null $products_count
+ * @method static \Database\Factories\BrandFactory factory(...$parameters)
  */
 class Brand extends Model
 {
     use HasAdvancedFilter;
+    use HasFactory;
 
     /** @var string[] */
     public $orderable = [
@@ -54,7 +59,6 @@ class Brand extends Model
         'name', 'description', 'image',
     ];
 
-    /** @return HasMany<Product> */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'brand_id', 'id');

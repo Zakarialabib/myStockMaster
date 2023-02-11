@@ -114,13 +114,11 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    /** @return HasMany<QuotationDetails> */
     public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

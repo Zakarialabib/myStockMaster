@@ -12,8 +12,6 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Exception;
 
 class Index extends Component
@@ -120,7 +118,7 @@ class Index extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 

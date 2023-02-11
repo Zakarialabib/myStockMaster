@@ -90,13 +90,11 @@ class QuotationDetails extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<Quotation> */
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');

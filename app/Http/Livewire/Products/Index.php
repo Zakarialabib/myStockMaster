@@ -14,8 +14,6 @@ use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -87,7 +85,7 @@ class Index extends Component
         $product->delete();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('product_access'), 403);
 

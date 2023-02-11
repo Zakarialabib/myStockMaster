@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Pos;
 use App\Models\Customer;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Checkout extends Component
@@ -49,7 +47,7 @@ class Checkout extends Component
 
     public $refreshCustomers;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public function mount($cartInstance, $customers): void
     {
@@ -71,7 +69,7 @@ class Checkout extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 

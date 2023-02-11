@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -37,13 +35,14 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    protected array $rules = [
+    /** @var array */
+    public $rules = [
         'name'        => 'required|min:3|max:255',
         'description' => 'nullable',
         'image'       => 'nullable|image|max:1024',
     ];
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('brand_create'), 403);
 
