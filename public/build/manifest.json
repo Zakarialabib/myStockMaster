@@ -5,7 +5,7 @@
     "isEntry": true,
     "css": [
       "assets/app.d0db6fd2.css",
-      "assets/app.318fcd42.css"
+      "assets/app.3c8d4a87.css"
     ]
   },
   "resources/js/app.css": {
@@ -13,7 +13,7 @@
     "src": "resources/js/app.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app.318fcd42.css",
+    "file": "assets/app.3c8d4a87.css",
     "src": "resources/css/app.css",
     "isEntry": true
   }
