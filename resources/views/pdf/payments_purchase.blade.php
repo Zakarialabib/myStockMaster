@@ -14,8 +14,8 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$payment['date']}}</div>
-            <div><strong> Number: </strong> {{$payment['reference']}}</div>
+            <div><strong> {{__('Date')}}:  </strong>{{$payment['date']}}</div>
+            <div><strong> {{__('Number')}}:  </strong> {{$payment['reference']}}</div>
          </div>
          <div id="Title-heading">
            Paiement  : {{$payment['reference']}}

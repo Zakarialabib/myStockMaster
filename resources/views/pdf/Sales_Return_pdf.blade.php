@@ -14,9 +14,9 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$return_sale['date']}}</div>
-            <div><strong> Numéro: </strong> {{$return_$sale->reference}}</div>
-            <div><strong> Réf vente: </strong> {{$return_sale['sale_ref']}}</div>
+            <div><strong> {{__('Date')}}: </strong>{{$return_sale->date}}</div>
+            <div><strong> {{__('Number')}}: </strong> {{$return_$sale->reference}}</div>
+            <div><strong> {{__('Réf vente')}}: </strong> {{$return_sale->sale_ref}}</div>
 
          </div>
          <div id="Title-heading">

@@ -123,7 +123,7 @@
 
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Supplier') }}
+            {{ __('Show Supplier') }} {{ $supplier?->name }}
         </x-slot>
 
         <x-slot name="content">
@@ -136,11 +136,6 @@
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="phone" :value="__('Phone')" />
                     <p>{{ $supplier?->phone }}</p>
-                </div>
-
-                <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                    <x-label for="email" :value="__('Email')" />
-                    <p>{{ $supplier?->email }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">

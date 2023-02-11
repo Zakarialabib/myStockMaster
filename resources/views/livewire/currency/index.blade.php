@@ -8,9 +8,9 @@
                 @endforeach
             </select>
             @if ($selected)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
+                <x-button danger wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
             @endif
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
@@ -27,10 +27,10 @@
             </div>
         </div>
     </div>
-   
+
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -69,18 +69,18 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button alert wire:click="showModal({{ $currency->id }})" 
-                                type="button" wire:loading.attr="disabled">
+                            <x-button alert wire:click="showModal({{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button primary wire:click="editModal({{ $currency->id }})" 
-                                type="button" wire:loading.attr="disabled">
+                            <x-button primary wire:click="editModal({{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
-                            <x-button danger wire:click="confirm('delete', {{ $currency->id }})"
-                                type="button"  wire:loading.attr="disabled">
+                            <x-button danger wire:click="confirm('delete', {{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         </div>
@@ -114,7 +114,7 @@
     
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Currency') }}
+            {{ __('Show Currency') }} {{ $currency?->name}}
         </x-slot>
 
         <x-slot name="content">
@@ -176,8 +176,8 @@
                 </div>
 
                 <div class="w-full px-3">
-                    <x-button primary type="submit" class="w-full text-center" 
-                            wire:click="update" wire:loading.attr="disabled">
+                    <x-button primary type="submit" class="w-full text-center" wire:click="update"
+                        wire:loading.attr="disabled">
                         {{ __('Update') }}
                     </x-button>
                 </div>

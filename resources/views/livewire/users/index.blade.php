@@ -157,6 +157,26 @@
                         {{ $user?->email }}
                     </p>
                 </div>
+                <div class="md:w-1/2 sm:w-full px-3">
+                    <x-label for="address" :value="__('Address')" />
+                    <p class="block mt-1 w-full">
+                        {{ $user?->address }}
+                    </p>
+                </div>
+
+                <div class="md:w-1/2 sm:w-full px-3">
+                    <x-label for="city" :value="__('City')" />
+                    <p class="block mt-1 w-full">
+                        {{ $user?->city }}
+                    </p>
+                </div>
+
+                <div class="md:w-1/2 sm:w-full px-3">
+                    <x-label for="tax_number" :value="__('Tax Number')" />
+                    <p class="block mt-1 w-full">
+                        {{ $user?->tax_number }}
+                    </p>
+                </div>
             </div>
         </x-slot>
     </x-modal>
@@ -207,15 +227,41 @@
                         <x-input-error :messages="$errors->get('user.password_confirmation')" class="mt-2" />
                     </div>
 
+                    <x-accordion>
+                        <x-slot name="title">
+                            {{ __('Details') }}
+                        </x-slot>
 
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="email" :value="__('Email')" />
-                        <x-input id="email" class="block mt-1 w-full" type="email"
-                            wire:model.defer="user.email" />
-                        <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
-                    </div>
+                        <x-slot name="content">
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="email" :value="__('Email')" />
+                                <x-input id="email" class="block mt-1 w-full" type="email"
+                                    wire:model.defer="user.email" />
+                                <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
+                            </div>
 
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="address" :value="__('Address')" />
+                                <x-input id="address" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.address" />
+                                <x-input-error :messages="$errors->get('user.address')" class="mt-2" />
+                            </div>
 
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="city" :value="__('City')" />
+                                <x-input id="city" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.city" />
+                                <x-input-error :messages="$errors->get('user.city')" class="mt-2" />
+                            </div>
+
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="tax_number" :value="__('Tax Number')" />
+                                <x-input id="tax_number" class="block mt-1 w-full" type="text"
+                                    wire:model.defer="user.tax_number" />
+                                <x-input-error :messages="$errors->get('user.tax_number')" for="" class="mt-2" />
+                            </div>
+                        </x-slot>
+                    </x-accordion>
                     <div class="w-full px-3">
                         <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Update') }}
@@ -225,7 +271,8 @@
             </form>
         </x-slot>
     </x-modal>
-    ·
+
+    <livewire:users.create />
 
 </div>
 
