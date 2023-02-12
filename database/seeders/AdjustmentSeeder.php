@@ -7,7 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
-class AdjustmentDatabaseSeeder extends Seeder
+class AdjustmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
