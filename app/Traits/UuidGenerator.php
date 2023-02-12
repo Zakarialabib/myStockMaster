@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
-trait GenerateUuid
+trait UuidGenerator
 {
-    public static function bootGenerateUuid(): void
+    public static function bootUuidGenerator(): void
     {
         static::creating(function (Model $model) {
             if (Schema::hasColumn($model->getTable(), 'uuid')) {

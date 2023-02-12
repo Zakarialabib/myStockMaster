@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\Purchase
@@ -66,6 +68,8 @@ use App\Enums\PurchaseStatus;
 class Purchase extends Model
 {
     use HasAdvancedFilter;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [

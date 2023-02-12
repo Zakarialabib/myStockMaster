@@ -36,6 +36,7 @@ class CreatePurchaseReturnsTable extends Migration
             $table->string('payment_method');
             $table->text('note')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -35,6 +35,7 @@ class CreateSaleReturnsTable extends Migration
             $table->string('payment_status');
             $table->string('payment_method');
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

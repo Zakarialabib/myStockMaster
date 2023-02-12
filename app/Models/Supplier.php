@@ -7,6 +7,8 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\Supplier
@@ -42,6 +44,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Supplier extends Model
 {
     use HasAdvancedFilter;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [

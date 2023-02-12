@@ -20,6 +20,7 @@ class CreateAdjustmentsTable extends Migration
             $table->date('date');
             $table->string('reference');
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
