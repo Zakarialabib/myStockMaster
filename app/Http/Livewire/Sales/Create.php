@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Jobs\PaymentNotification;
 use App\Mail\SaleMail;
 use App\Models\Category;
 use App\Models\Customer;
@@ -186,6 +187,9 @@ class Create extends Component
         }
 
         $this->alert('success', __('Sale created successfully!'));
+
+        // dispatch the Send Payment Notification job
+        PaymentNotification::dispatch($sale);
 
         // if ($sale->customer->email) {
         //     Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));

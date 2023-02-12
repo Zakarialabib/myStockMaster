@@ -18,7 +18,7 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-
+            $table->uuid();
             $table->date('date');
             $table->string('reference');
 
@@ -32,11 +32,13 @@ class CreateSalesTable extends Migration
             $table->integer('total_amount');
             $table->integer('paid_amount');
             $table->integer('due_amount');
+            $table->date('payment_date')->nullable();
             $table->string('status');
             $table->string('payment_status');
             $table->string('payment_method');
             $table->string('shipping_status')->nullable();
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
