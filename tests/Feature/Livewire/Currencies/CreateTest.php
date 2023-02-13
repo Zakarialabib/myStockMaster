@@ -16,7 +16,7 @@ it('test the currency create if working', function () {
         ->assertViewIs('livewire.currency.create');
 });
 
-it('tests the create currency validation rules', function () {
+it('tests the create currency can create', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
@@ -24,7 +24,8 @@ it('tests the create currency validation rules', function () {
         ->set('currency.code', 'USD')
         ->set('currency.symbol', '$')
         ->set('currency.exchange_rate', '1')
-        ->call('create');
+        ->call('create')
+        ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
         'name'          => 'Us Dollar',
@@ -32,4 +33,23 @@ it('tests the create currency validation rules', function () {
         'symbol'        => '$',
         'exchange_rate' => '1',
     ]);
+});
+
+
+it('tests the create user component validation', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
+
+    Livewire::test(Create::class)
+    ->set('currency.name', '')
+    ->set('currency.code', '')
+    ->set('currency.symbol', '')
+    ->set('currency.exchange_rate', '')
+        ->call('create')
+        ->assertHasErrors(
+            ['currency.name' => 'required'],
+            ['currency.code' => 'required'],
+            ['currency.symbol' => 'required'],
+            ['currency.exchange_rate' => 'required'],
+        );
 });
