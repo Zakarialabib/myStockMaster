@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 /**
  * App\Models\Customer
  *
@@ -42,6 +43,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereWalletId($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUuid($value)
  */
 class Customer extends Model
 {
@@ -82,6 +87,7 @@ class Customer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'uuid',
         'city',
         'tax_number',
         'name',

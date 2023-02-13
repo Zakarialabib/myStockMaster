@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 trait Trashed
@@ -12,11 +14,11 @@ trait Trashed
      */
     public function scopeTrashed($query)
     {
-        if (!empty(request()->get('trashed')) && request()->get('trashed') == 'with') {
+        if ( ! empty(request()->get('trashed')) && request()->get('trashed') == 'with') {
             return $query->withTrashed();
         }
 
-        if (!empty(request()->get('trashed')) && request()->get('trashed') == 'only') {
+        if ( ! empty(request()->get('trashed')) && request()->get('trashed') == 'only') {
             return $query->onlyTrashed();
         }
 

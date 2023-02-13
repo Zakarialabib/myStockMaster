@@ -42,7 +42,7 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'printer.name'               => 'required|string|max:255',
         'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',

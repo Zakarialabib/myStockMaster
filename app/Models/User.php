@@ -72,6 +72,8 @@ use App\Traits\UuidGenerator;
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @method static Builder|User whereUuid($value)
  */
 class User extends Authenticatable
 {
@@ -103,7 +105,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'avatar',
+        'uuid','id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];

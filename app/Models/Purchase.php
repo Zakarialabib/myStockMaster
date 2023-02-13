@@ -64,6 +64,8 @@ use App\Traits\UuidGenerator;
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUuid($value)
  */
 class Purchase extends Model
 {
@@ -122,6 +124,7 @@ class Purchase extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'supplier_id',

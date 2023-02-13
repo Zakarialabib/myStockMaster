@@ -61,6 +61,8 @@ use App\Enums\PurchaseReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
  */
 class PurchaseReturn extends Model
 {

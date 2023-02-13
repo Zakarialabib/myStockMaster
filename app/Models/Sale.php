@@ -129,6 +129,7 @@ class Sale extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'customer_id',
