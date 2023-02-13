@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Customer;
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class CustomerFactory extends Factory
+class SupplierFactory extends Factory
 {
          /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Customer::class;
+    protected $model = Supplier::class;
 
     /**
      * Define the model's default state.
@@ -27,8 +27,8 @@ class CustomerFactory extends Factory
     public function definition()
     {
         return [
-            'uuid'    => fake()->uuid(),
             'name'    => fake()->name(),
+            'uuid'    => fake()->uuid(),
             'email'   => fake()->unique()->safeEmail(),
             'phone'   => fake()->phoneNumber(),
             'city'    => fake()->city(),

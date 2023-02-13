@@ -6,9 +6,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+ 
 class DatabaseSeeder extends Seeder
 {
+    use WithoutModelEvents;
     /**
      * Seed the application's database.
      *
@@ -26,7 +28,8 @@ class DatabaseSeeder extends Seeder
             // PermissionRoleSeeder::class,
             ExpenseSeeder::class,
             CategoriesSeeder::class,
-            
+            BrandSeeder::class,
+
             ProductsSeeder::class,
             CustomersSeeder::class,
 
