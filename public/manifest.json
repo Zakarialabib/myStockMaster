@@ -1,0 +1,67 @@
+{
+    "name": "MystockMaster",
+    "short_name": "MystockMaster",
+    "id": "/?source=pwa",
+    "start_url": "http://127.0.0.1:8000/",
+    "background_color": "#3367D6",
+    "display_override": [
+      "window-control-overlay",
+      "standalone",
+      "browser"
+    ],
+    "display": "standalone",
+    "orientation" : "landscape" ,
+    "screenshots" : [
+        {
+          "src": "screenshot.jpg",
+          "sizes": "1280x720",
+          "type": "image/jpg",
+          "platform": "wide"
+        }
+    ],
+    "shortcuts": [
+        {
+          "name": "Dashboard",
+          "url": "/dashboard"
+        },
+        {
+          "name": "Pos",
+          "url": "/pos",
+          "description": "use point of sell to make operation with few clicks."
+        }
+      ],
+      "protocol_handlers": [
+        {
+          "protocol": "web+music",
+          "url": "/play?track=%s"
+        }
+      ],
+    "theme_color": "#3367D6",  
+    "description":"This is a PWA tutorial.",
+    "icons": [
+        {
+        "src": "/images/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+        },
+        {
+        "src": "/images/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+        } 
+    ],
+    "splash_pages": null,
+    "related_applications": [
+        {
+          "platform": "windows",
+          "url": "https://www.github.com/zakarialabib",
+          "id": "example.ExampleApp"
+        },
+        {
+          "platform": "play",
+          "url": "https://www.github.com/"
+        }
+      ]
+}
+  
