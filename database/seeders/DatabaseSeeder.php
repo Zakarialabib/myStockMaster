@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             // PermissionRoleSeeder::class,
             CategoriesSeeder::class,
             CustomersSeeder::class,
+            ProductsSeeder::class,
 
             CurrencySeeder::class,
             SettingsSeeder::class,
