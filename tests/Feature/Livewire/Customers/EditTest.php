@@ -34,11 +34,10 @@ it('tests the update customer component', function () {
     ]);
 });
 
-
 it('tests the edit customer component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
-    
+
     $customer = Customer::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $customer->id])
@@ -50,4 +49,3 @@ it('tests the edit customer component validation', function () {
             ['customer.phone' => 'required'],
         );
 });
-

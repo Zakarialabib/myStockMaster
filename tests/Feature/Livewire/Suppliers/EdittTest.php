@@ -38,7 +38,6 @@ it('tests the Update supplier component', function () {
     ]);
 });
 
-
 it('tests the create supplier component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
@@ -54,8 +53,7 @@ it('tests the create supplier component validation', function () {
         ->assertHasErrors(
             ['supplier.name' => 'required'],
             ['supplier.phonne' => 'required'],
-            ['supplier.email' => 'nullable'],
-            ['supplier.city' => 'nullable'],
+            ['supplier.email'  => 'nullable'],
+            ['supplier.city'   => 'nullable'],
         );
 });
-

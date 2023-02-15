@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,7 +16,10 @@ use App\Models\User;
 
 class PaymentNotification implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $sale;
 
@@ -36,16 +40,14 @@ class PaymentNotification implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->sale->due_amount || !$this->sale->payment_date) {
+        if ( ! $this->sale->due_amount || ! $this->sale->payment_date) {
             // $payment_date = Carbon::parse($this->sale->date)->addDays(15);
-           
-            // if (now()->gt($payment_date)) {
-                $user = User::find(1);
-                
-                $user->notify(new PaymentDue($this->sale));
-            // } 
-        
-        } 
 
+            // if (now()->gt($payment_date)) {
+            $user = User::find(1);
+
+            $user->notify(new PaymentDue($this->sale));
+            // }
+        }
     }
 }

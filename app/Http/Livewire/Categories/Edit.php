@@ -43,7 +43,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->category = Category::where('id',$id)->firstOrFail();;
+        $this->category = Category::where('id', $id)->firstOrFail();
 
         $this->editModal = true;
     }
