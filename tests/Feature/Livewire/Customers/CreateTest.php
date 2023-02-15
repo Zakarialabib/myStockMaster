@@ -32,7 +32,6 @@ it('tests the create customer validation rules', function () {
     ]);
 });
 
-
 it('tests the create user component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();

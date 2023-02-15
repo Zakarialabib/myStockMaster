@@ -89,8 +89,6 @@ class Index extends Component
         $this->showModal = true;
     }
 
-   
-
     public function delete(Supplier $supplier)
     {
         abort_if(Gate::denies('supplier_delete'), 403);

@@ -34,7 +34,6 @@ it('tests the update category component', function () {
     ]);
 });
 
-
 it('tests the category update component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
@@ -47,6 +46,6 @@ it('tests the category update component validation', function () {
         ->call('update')
         ->assertHasErrors(
             ['name' => 'required'],
-            ['code'    => 'required']
+            ['code' => 'required']
         );
 });
