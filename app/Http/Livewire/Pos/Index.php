@@ -13,6 +13,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Exception;
+use App\Jobs\PaymentNotification;
 
 class Index extends Component
 {
@@ -195,6 +196,9 @@ class Index extends Component
             }
 
             $this->alert('success', __('Sale created successfully!'));
+
+            // dispatch the Send Payment Notification job
+            PaymentNotification::dispatch($sale);
 
             $this->checkoutModal = false;
         } catch (Exception $e) {
