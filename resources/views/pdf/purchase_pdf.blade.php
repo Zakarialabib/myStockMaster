@@ -4,7 +4,9 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+
       <title>{{__('Purchase')}} _{{$purchase->reference}}</title>
+
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -14,8 +16,8 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$purchase->date}}</div>
-            <div><strong> Numéro: </strong> {{$purchase->reference}}</div>
+            <div><strong> {{__('Date')}}:  </strong>{{$purchase->date}}</div>
+            <div><strong> {{__('Number')}}:  </strong> {{$purchase->reference}}</div>
          </div>
          <div id="Title-heading">
              Achat  : {{$purchase->reference}}

@@ -9,8 +9,6 @@ use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -57,7 +55,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'customer.name'       => 'required|string|max:255',
         'customer.email'      => 'nullable|max:255',
         'customer.phone'      => 'required|numeric',
@@ -76,7 +75,7 @@ class Index extends Component
         $this->orderable = (new Customer())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('customer_access'), 403);
 

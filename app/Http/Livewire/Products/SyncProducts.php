@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Products;
 
 use Livewire\Component;
 use App\Models\Product;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
 
@@ -68,7 +66,7 @@ class SyncProducts extends Component
         }
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.products.sync-products');
     }

@@ -10,8 +10,6 @@ use App\Models\Product;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -29,12 +27,13 @@ class Create extends Component
 
     public $image;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     /** @var mixed */
     public $product;
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'product.name'              => ['required', 'string', 'max:255'],
         'product.code'              => ['required', 'string', 'max:255'],
         'product.barcode_symbology' => ['required', 'string', 'max:255'],
@@ -65,7 +64,7 @@ class Create extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('product_create'), 403);
 

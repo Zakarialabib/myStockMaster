@@ -10,8 +10,6 @@ use App\Models\PurchasePayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -41,6 +39,10 @@ class Index extends Component
     public $paymentModal = false;
 
     public $purchase_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
 
     /** @var string[][] */
     protected $queryString = [
@@ -55,7 +57,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    public $rules = [
         'supplier_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
         'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -78,7 +81,7 @@ class Index extends Component
         $this->orderable = (new Purchase())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
             ->advancedFilter([

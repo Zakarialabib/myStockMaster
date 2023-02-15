@@ -66,7 +66,6 @@ class PurchasePayment extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Purchase> */
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');

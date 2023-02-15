@@ -63,7 +63,6 @@ class Category extends Model
         parent::__construct($attributes);
     }
 
-    /** @return HasMany<Product> */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');

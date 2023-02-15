@@ -2,7 +2,7 @@
      <!-- Edit Modal -->
      <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Edit Product') }} - {{ $product->name }}
+            {{ __('Edit Product') }} - {{ $product?->name }}
         </x-slot>
 
         <x-slot name="content">

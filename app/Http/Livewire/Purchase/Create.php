@@ -10,8 +10,6 @@ use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
 use App\Models\Supplier;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -39,6 +37,12 @@ class Create extends Component
 
     public $quantity;
 
+    public $reference;
+
+    public $total_amount;
+    
+    public $check_quantity;
+
     public $price;
 
     public $tax_percentage;
@@ -59,7 +63,7 @@ class Create extends Component
 
     public $date;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public function rules(): array
     {
@@ -97,7 +101,7 @@ class Create extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 

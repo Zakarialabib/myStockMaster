@@ -151,19 +151,16 @@ class Sale extends Model
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** @return HasMany<SaleDetails> */
     public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class);
     }
 
-    /** @return HasMany<SalePayment> */
     public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

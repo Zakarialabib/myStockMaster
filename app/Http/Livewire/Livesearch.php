@@ -10,8 +10,6 @@ use App\Models\Purchase;
 use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Product;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Livesearch extends Component
 {
@@ -44,7 +42,7 @@ class Livesearch extends Component
         $this->purchase = Purchase::query()->where('reference', 'like', '%'.$this->searchQuery.'%')->get();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.livesearch');
     }

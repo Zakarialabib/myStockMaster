@@ -66,6 +66,7 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
  * @mixin \Eloquent
+ * @method static \Database\Factories\ProductFactory factory(...$parameters)
  */
 class Product extends Model
 {
@@ -140,13 +141,11 @@ class Product extends Model
         parent::__construct($attributes);
     }
 
-    /** @return BelongsTo<Category> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    /** @return BelongsTo<Brand> */
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');

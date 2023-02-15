@@ -35,13 +35,11 @@ class CashRegister extends Model
 {
     protected $fillable = ['cash_in_hand', 'user_id', 'warehouse_id', 'status'];
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);

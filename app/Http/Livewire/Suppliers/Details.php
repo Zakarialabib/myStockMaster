@@ -8,8 +8,6 @@ use App\Models\Purchase;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Livewire\WithPagination;
 use App\Http\Livewire\WithSorting;
 use App\Traits\Datatable;
@@ -139,7 +137,7 @@ class Details extends Component
         return $query->paginate($this->perPage);
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.suppliers.details');
     }

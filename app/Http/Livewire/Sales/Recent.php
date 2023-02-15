@@ -33,7 +33,7 @@ class Recent extends Component
 
     public $recentSales;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     /** @var string[][] */
     protected $queryString = [
