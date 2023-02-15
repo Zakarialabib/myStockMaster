@@ -58,7 +58,7 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'supplier_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
         'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -66,8 +66,8 @@ class Index extends Component
         'shipping_amount'     => 'required|numeric',
         'total_amount'        => 'required|numeric',
         'paid_amount'         => 'required|numeric',
-        'status'              => 'required|string|max:255',
-        'payment_method'      => 'required|string|max:255',
+        'status'              => 'required|integer|max:255',
+        'payment_method'      => 'required|integer|max:255',
         'note'                => 'nullable|string|max:1000',
     ];
 

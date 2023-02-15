@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\Product
@@ -66,7 +68,10 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
  * @mixin \Eloquent
- * @method static \Database\Factories\ProductFactory factory(...$parameters)
+ * @property string $uuid
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  */
 class Product extends Model
 {
@@ -74,6 +79,8 @@ class Product extends Model
     use Notifiable;
     use ProductScope;
     use HasFactory;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [
@@ -120,6 +127,7 @@ class Product extends Model
      */
     protected $fillable = [
         'category_id',
+        'uuid',
         'name',
         'code',
         'barcode_symbology',

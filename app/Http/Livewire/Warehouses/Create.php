@@ -23,12 +23,12 @@ class Create extends Component
     public $warehouse;
 
     /** @var array */
-    public $rules = [
-        'warehouse.name'    => ['string', 'required'],
-        'warehouse.phone'   => ['string', 'nullable'],
-        'warehouse.country' => ['string', 'nullable'],
-        'warehouse.city'    => ['string', 'nullable'],
-        'warehouse.email'   => ['string', 'nullable'],
+    protected $rules = [
+        'warehouse.name'    => 'string|required|max:255',
+        'warehouse.phone'   => 'numeric|nullable|max:255',
+        'warehouse.country' => 'nullable|max:255',
+        'warehouse.city'    => 'nullable|max:255',
+        'warehouse.email'   => 'nullable|max:255',
     ];
 
     public function mount(Warehouse $warehouse): void

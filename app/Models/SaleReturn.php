@@ -62,6 +62,8 @@ use App\Enums\SaleReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereDeletedAt($value)
  */
 class SaleReturn extends Model
 {

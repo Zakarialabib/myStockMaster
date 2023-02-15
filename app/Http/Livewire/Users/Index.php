@@ -48,7 +48,7 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'user.name'     => 'required|string|max:255',
         'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',

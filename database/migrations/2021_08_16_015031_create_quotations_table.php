@@ -31,6 +31,7 @@ class CreateQuotationsTable extends Migration
             $table->integer('total_amount');
             $table->string('status');
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

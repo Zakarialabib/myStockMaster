@@ -14,6 +14,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\User
@@ -70,6 +72,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @method static Builder|User whereUuid($value)
  */
 class User extends Authenticatable
 {
@@ -78,6 +82,8 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
     use HasFactory;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [
@@ -99,7 +105,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'avatar',
+        'uuid','id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];
