@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Http\Livewire\Products;
+namespace App\Http\Livewire\Sync;
 
 use Livewire\Component;
-use App\Models\Product;
+use App\Models\Sale;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\WithFileUploads;
 
-class SyncProducts extends Component
+class Orders extends Component
 {
     use LivewireAlert;
     use WithFileUploads;
@@ -34,8 +32,8 @@ class SyncProducts extends Component
         }
     }
 
-    public function sync(): void
-    {
+    public function sync()
+    {  
         // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {
             $client = new \Automattic\WooCommerce\Client(
@@ -51,31 +49,31 @@ class SyncProducts extends Component
                 'api_secret'  => settings()->shopify_api_secret,
             ]);
         } elseif ($type === 'custom') {
-            $client = Client([
-                'shop_domain' => settings()->shopify_store_url,
-                'api_key'     => settings()->shopify_api_key,
-                'api_secret'  => settings()->shopify_api_secret,
-            ]);
+            $client = Http::withHeaders([
+                'Authorization' => 'Bearer ' . settings()->custom_api_key,
+            ])->get(settings()->custom_store_url . '/api');
         }
 
-        // Retrieve the products from the user's e-commerce store
-        $products = $client->get('products');
+        // Get the orders from the e-commerce store
+        $ecomOrders = $client->get('/orders');
 
-        // Compare the products in the user's e-commerce store with the products in your app
-        $missing_products = array_diff($products, $app_products);
-
-        // Insert any missing products into your app
-        foreach ($missing_products as $product) {
-            $app_product = new Product();
-            $app_product->name = $product->name;
-            $app_product->price = $product->price;
-            // Map other fields as needed
-            $app_product->save();
+        // Iterate over each e-commerce order and sync it to the inventory system
+        foreach ($ecomOrders as $order) {
+            // Check if the order already exists in the inventory system
+            $existingOrder = Sale::where('reference', $order['reference'])->first();
+            if (empty($existingOrder)) {
+                // Create a new order in the inventory system
+                $newOrder = new Sale();
+                $newOrder->order_number = $order['reference'];
+                $newOrder->total = $order['total'];
+                // Map other fields as needed
+                $newOrder->save();
+            }
         }
     }
 
     public function render()
     {
-        return view('livewire.products.sync-products');
+        return view('livewire.sync.orders');
     }
 }
