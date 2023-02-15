@@ -25,7 +25,7 @@ class Edit extends Component
     public $code;
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'name' => 'required|min:3|max:255',
         'code' => 'required',
     ];
@@ -43,7 +43,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->category = Category::findOrFail($id);
+        $this->category = Category::where('id',$id)->firstOrFail();;
 
         $this->editModal = true;
     }

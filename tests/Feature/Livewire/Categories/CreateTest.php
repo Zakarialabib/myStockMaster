@@ -17,13 +17,28 @@ it('test the category create if working', function () {
 });
 
 it('tests the create category validation rules', function () {
+    $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
         ->set('name', 'apple')
-        ->call('create');
+        ->call('create')
+        ->assertHasNoErrors();
 
     assertDatabaseHas('categories', [
         'name' => 'apple',
     ]);
+});
+
+
+it('tests the create user component validation', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
+
+    Livewire::test(Create::class)
+        ->set('name', '')
+        ->call('create')
+        ->assertHasErrors(
+            ['name' => 'required'],
+        );
 });

@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\Sale
@@ -71,6 +73,8 @@ class Sale extends Model
 {
     use HasAdvancedFilter;
     use SaleScope;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [
@@ -125,6 +129,7 @@ class Sale extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'customer_id',

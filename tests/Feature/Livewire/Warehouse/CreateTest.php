@@ -20,10 +20,12 @@ it('tests the create warehouse validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', 'apple')
+        ->set('warehouse.name', 'apple')
+        ->set('warehouse.phone', '00000000000')
         ->call('create');
 
     assertDatabaseHas('warehouses', [
-        'name' => 'apple',
+        'name'  => 'apple',
+        'phone' => '00000000000',
     ]);
 });

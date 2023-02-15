@@ -17,6 +17,7 @@ class CreateSuppliersTable extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
 
             $table->string('name', 192);
             $table->string('email', 192)->nullable();
@@ -25,6 +26,8 @@ class CreateSuppliersTable extends Migration
             $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->string('tax_number', 192)->nullable();
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

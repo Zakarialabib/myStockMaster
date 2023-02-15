@@ -40,7 +40,7 @@ class Create extends Component
     public $reference;
 
     public $total_amount;
-    
+
     public $check_quantity;
 
     public $price;

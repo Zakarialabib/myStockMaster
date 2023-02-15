@@ -18,6 +18,7 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
 
             $table->date('date');
             $table->string('reference');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -12,6 +13,13 @@ use Illuminate\Support\Str;
  */
 class ProductFactory extends Factory
 {
+        /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Product::class;
+
     /**
      * Define the model's default state.
      *
@@ -21,6 +29,7 @@ class ProductFactory extends Factory
     {
         return [
             'name'              => 'iPhone 12',
+            'uuid'              => fake()->uuid(),
             'code'              => Str::random(5),
             'category_id'       => 1,
             'cost'              => 1000,
@@ -33,7 +42,6 @@ class ProductFactory extends Factory
             'stock_alert'       => 10,
             'order_tax'         => 0,
             'tax_type'          => 0,
-
         ];
     }
 }

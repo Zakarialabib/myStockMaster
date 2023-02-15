@@ -23,8 +23,8 @@ class CreateWarehousesTable extends Migration
             $table->string('phone', 192)->nullable();
             $table->string('email', 192)->nullable();
             $table->string('country', 192)->nullable();
-            $table->timestamps(6);
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
