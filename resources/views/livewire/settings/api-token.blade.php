@@ -39,7 +39,7 @@
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     {{ __('Count missing products') }}
                 </button>
-                <button wire:click="authenticate"
+                <button wire:click="$emit('loginModal')" 
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
                     {{ __('Generate Ecommerce Token') }}
                 </button>
@@ -61,14 +61,6 @@
                 </div>
                 @endif 
                 
-                @if ($authenticated)
-                    <div class="mt-4">
-                        <p class="text-green-500">
-                            {{ __('Your inventory is ready to be synced with your ecommerce platform.') }}</p>
-                    </div>
-                @endif
-
-                
                 <button wire:click="createToken" type="button"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     {{ __('Create Token') }}
@@ -81,4 +73,5 @@
         </div>
     </div>
     @livewire('sync.products')
+    @livewire('sync.login')
 </div>
