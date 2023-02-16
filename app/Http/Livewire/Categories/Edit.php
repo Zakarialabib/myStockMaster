@@ -27,7 +27,7 @@ class Edit extends Component
     /** @var array */
     protected $rules = [
         'name' => 'required|min:3|max:255',
-        'code' => 'required',
+        'code' => 'required|max:255',
     ];
 
     public function render()

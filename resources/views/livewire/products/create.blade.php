@@ -25,20 +25,20 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="quantity" :value="__('Quantity')" required />
-                            <x-input id="quantity" class="block mt-1 w-full" type="number" name="quantity"
+                            <x-input id="quantity" class="block mt-1 w-full" type="text" name="quantity"
                                 wire:model.lazy="product.quantity" placeholder="{{ __('Enter Product Quantity') }}"
                                 required />
                             <x-input-error :messages="$errors->get('quantity')" for="quantity" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="price" :value="__('Price')" required />
-                            <x-input id="price" class="block mt-1 w-full" type="number" name="price"
+                            <x-input id="price" class="block mt-1 w-full" type="text" name="price"
                                 wire:model.lazy="product.price" placeholder="{{ __('Enter Product Price') }}" required />
                             <x-input-error :messages="$errors->get('price')" for="price" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="cost" :value="__('Cost')" required />
-                            <x-input type="number" wire:model.lazy="product.cost" id="cost" name="cost"
+                            <x-input type="text" wire:model.lazy="product.cost" id="cost" name="cost"
                                 class="block mt-1 w-full" placeholder="{{ __('Enter Product Cost') }}" required />
                             <x-input-error :messages="$errors->get('cost')" for="cost" class="mt-2" />
                         </div>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="stock_alert" :value="__('Stock Alert')" />
-                            <x-input id="stock_alert" class="block mt-1 w-full" type="number" name="stock_alert"
+                            <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
                                 wire:model.lazy="product.stock_alert" />
                             <x-input-error :messages="$errors->get('stock_alert')" for="stock_alert" class="mt-2" />
                         </div>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="order_tax" :value="__('Tax')" />
-                                <x-input id="order_tax" class="block mt-1 w-full" type="number" name="order_tax"
+                                <x-input id="order_tax" class="block mt-1 w-full" type="text" name="order_tax"
                                     wire:model.lazy="product.order_tax" placeholder="{{ __('Enter Tax') }}" />
                                 <x-input-error :messages="$errors->get('order_tax')" for="order_tax" class="mt-2" />
                             </div>

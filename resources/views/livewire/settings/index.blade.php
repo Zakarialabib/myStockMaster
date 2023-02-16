@@ -11,28 +11,33 @@
                         <x-input type="text" wire:model.defer="settings.company_name" id="company_name"
                             name="company_name"
                             required />
+                        <x-input-error :messages="$errors->get('settings.company_name')" class="mt-2" />
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_email" :value="__('Company Email')" required />
-                        <x-input type="text" wire:model.defer="settings.company_email" id="company_email"
+                        <x-input type="email" wire:model.defer="settings.company_email" id="company_email"
                             name="company_email" required />
+                        <x-input-error :messages="$errors->get('settings.company_email')" class="mt-2" />
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_phone" :value="__('Company Phone')" required />
-                        <input type="text" wire:model.defer="settings.company_phone" id="company_phone"
+                        <x-input type="text" wire:model.defer="settings.company_phone" id="company_phone"
                             name="company_phone" required />
+                        <x-input-error :messages="$errors->get('settings.company_phone')" class="mt-2" />
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="company_address" :value="__('Company Address')" required />
-                        <input type="text" wire:model.defer="settings.company_address" id="company_address"
+                        <x-input type="text" wire:model.defer="settings.company_address" id="company_address"
                             name="company_address" />
+                        <x-input-error :messages="$errors->get('settings.company_address')" class="mt-2" />
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="company_tax" :value="__('Company Tax')" />
-                        <input type="text" wire:model.defer="settings.company_tax" id="company_tax"
+                        <x-input type="text" wire:model.defer="settings.company_tax" id="company_tax"
                             name="company_tax" />
+                        <x-input-error :messages="$errors->get('settings.company_tax')" class="mt-2" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4">

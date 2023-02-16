@@ -25,8 +25,8 @@ class Create extends Component
     public $createLanguage = false;
 
     protected $rules = [
-        'name' => 'required|max:191',
-        'code' => 'required',
+        'name' => 'required|max:255',
+        'code' => 'required|max:255',
     ];
 
     public function createLanguage()

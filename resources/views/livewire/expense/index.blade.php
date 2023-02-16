@@ -171,7 +171,7 @@
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.amount" :value="__('Amount')" required />
                         <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
-                            type="number" />
+                            type="text" />
                     </div>
                     <div class="w-full px-4 mb-4">
                         <x-label for="expense.details" :value="__('Description')" />

@@ -32,7 +32,7 @@
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="amount" :value="__('Amount')" required />
                         <x-input wire:model="amount" id="amount" class="block mt-1 w-full"
-                            type="number" />
+                            type="text" />
                         <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">

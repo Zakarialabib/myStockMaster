@@ -52,10 +52,10 @@ class Edit extends Component
         'product.price'             => 'required|numeric',
         'product.stock_alert'       => 'required|integer|min:0',
         'product.order_tax'         => 'nullable|integer|min:0|max:100',
-        'product.tax_type'          => 'nullable|integer',
+        'product.tax_type'          => 'nullable|integer|min:0|max:100',
         'product.note'              => 'nullable|string|max:1000',
-        'product.category_id'       => 'required|integer',
-        'product.brand_id'          => 'nullable|integer',
+        'product.category_id'       => 'required|integer|min:0|max:100',
+        'product.brand_id'          => 'nullable|integer|min:0|max:100',
     ];
 
     public function mount()

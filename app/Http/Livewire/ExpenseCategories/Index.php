@@ -48,8 +48,8 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'expenseCategory.name'        => 'required|max:255',
-        'expenseCategory.description' => 'nullable',
+        'expenseCategory.name'        => 'required|string|max:255',
+        'expenseCategory.description' => 'nullable|string',
     ];
 
     public function mount(): void

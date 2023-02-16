@@ -27,7 +27,7 @@ class Edit extends Component
 
     protected $rules = [
         'language.name' => 'required|max:191',
-        'language.code' => 'required',
+        'language.code' => 'required|max:255',
     ];
 
     public function editLanguage($id)

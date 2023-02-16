@@ -30,8 +30,8 @@ class Edit extends Component
         'customer.phone'      => 'required|numeric',
         'customer.city'       => 'nullable|max:255',
         'customer.country'    => 'nullable|max:255',
-        'customer.address'    => 'nullable',
-        'customer.tax_number' => 'nullable|numeric',
+        'customer.address'    => 'nullable|max:255',
+        'customer.tax_number' => 'nullable|max:255',
     ];
 
     public function render()

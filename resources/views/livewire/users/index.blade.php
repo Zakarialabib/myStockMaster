@@ -187,6 +187,7 @@
         </x-slot>
 
         <x-slot name="content">
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="md:w-1/2 sm:w-full px-3">

@@ -43,12 +43,12 @@ class Create extends Component
 
     protected $rules = [
         'name'       => 'required|string|max:255',
-        'email'      => 'nullable|max:255',
+        'email'      => 'nullable|email|max:255',
         'phone'      => 'required|numeric',
-        'city'       => 'nullable',
-        'country'    => 'nullable',
-        'address'    => 'nullable',
-        'tax_number' => 'nullable',
+        'city'       => 'nullable|max:255',
+        'country'    => 'nullable|max:255',
+        'address'    => 'nullable|max:255',
+        'tax_number' => 'nullable|max:255',
     ];
 
     public function render()

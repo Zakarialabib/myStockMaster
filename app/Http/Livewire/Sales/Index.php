@@ -67,14 +67,14 @@ class Index extends Component
     protected $rules = [
         'customer_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
+        'tax_percentage'      => 'required|string|min:0|max:100',
+        'discount_percentage' => 'required|string|min:0|max:100',
         'shipping_amount'     => 'required|numeric',
         'total_amount'        => 'required|numeric',
         'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|max:255',
-        'payment_method'      => 'required|integer|max:255',
-        'note'                => 'string|max:1000',
+        'status'              => 'required|integer|min:0|max:100',
+        'payment_method'      => 'required|integer|min:0|max:100',
+        'note'                => 'string|nullable|max:1000',
     ];
 
     public function mount(): void

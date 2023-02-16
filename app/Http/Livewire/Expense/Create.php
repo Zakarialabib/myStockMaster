@@ -47,9 +47,9 @@ class Create extends Component
     protected $rules = [
         'reference'    => 'required|string|max:255',
         'category_id'  => 'required|integer|exists:expense_categories,id',
-        'date'         => 'required',
+        'date'         => 'required|date',
         'amount'       => 'required|numeric',
-        'details'      => 'nullable|string|max:255',
+        'details'      => 'nullable|string|min:3',
         'user_id'      => 'nullable',
         'warehouse_id' => 'nullable',
     ];
