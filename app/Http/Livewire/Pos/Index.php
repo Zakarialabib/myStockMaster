@@ -406,6 +406,6 @@ class Index extends Component
 
     public function getCustomersProperty()
     {
-        return Customer::select('name', 'id')->get();
+        return Customer::select(['name', 'id'])->get();
     }
 }

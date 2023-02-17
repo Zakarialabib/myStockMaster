@@ -150,7 +150,6 @@ class Sale extends Model
         'updated_at',
     ];
 
-    /** @return response() */
     protected $casts = [
         'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,

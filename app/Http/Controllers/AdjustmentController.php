@@ -28,7 +28,6 @@ class AdjustmentController extends Controller
         return view('admin.adjustment.create');
     }
 
-    // use livewire --------->
     public function store(Request $request)
     {
         abort_if(Gate::denies('adjustment_create'), 403);
@@ -69,8 +68,6 @@ class AdjustmentController extends Controller
                 }
             }
         });
-
-        toast('Adjustment Created!', 'success');
 
         return redirect()->route('adjustments.index');
     }
@@ -139,8 +136,6 @@ class AdjustmentController extends Controller
                 }
             }
         });
-
-        toast('Adjustment Updated!', 'info');
 
         return redirect()->route('adjustments.index');
     }

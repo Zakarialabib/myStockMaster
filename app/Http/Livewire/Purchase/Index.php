@@ -8,7 +8,6 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -145,7 +144,8 @@ class Index extends Component
 
     public function paymentSave(): void
     {
-        DB::transaction(function () {
+        try {
+      
             $this->validate(
                 [
                     'date'           => 'required|date',
@@ -189,6 +189,8 @@ class Index extends Component
             $this->alert('success', __('Payment created successfully.'));
 
             $this->paymentModal = false;
-        });
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

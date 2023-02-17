@@ -52,11 +52,9 @@ class SearchProduct extends Component
         return view('livewire.search-product', [
             'products' => Product::where('name', 'like', '%'.$this->query.'%')
                 ->orWhere('code', 'like', '%'.$this->query.'%')
-                ->when($this->category_id, function ($query) {
-                    return $query->where('category_id', $this->category_id);
-                })->when($this->warehouse_id, function ($query) {
-                    return $query->where('warehouse_id', $this->warehouse_id);
-                })->paginate($this->how_many),
+                ->when($this->category_id, fn($q) => $q->where('category_id', $this->category_id))
+                ->when($this->warehouse_id, fn($q) => $q->where('warehouse_id', $this->warehouse_id))
+                ->paginate($this->how_many),
         ]);
     }
 

@@ -35,77 +35,7 @@ class PurchaseController extends Controller
         return view('admin.purchases.create');
     }
 
-    // use livewire instead --------->
-    public function store(StorePurchaseRequest $request)
-    {
-        DB::transaction(function () use ($request) {
-            $due_amount = $request->total_amount - $request->paid_amount;
-
-            if ($due_amount == $request->total_amount) {
-                $payment_status = PaymentStatus::Pending;
-            } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
-            } else {
-                $payment_status = PaymentStatus::Paid;
-            }
-
-            $purchase = Purchase::create([
-                'date'                => $request->date,
-                'supplier_id'         => $request->supplier_id,
-                'tax_percentage'      => $request->tax_percentage,
-                'discount_percentage' => $request->discount_percentage,
-                'shipping_amount'     => $request->shipping_amount * 100,
-                'paid_amount'         => $request->paid_amount * 100,
-                'total_amount'        => $request->total_amount * 100,
-                'due_amount'          => $due_amount * 100,
-                'status'              => $request->status,
-                'payment_status'      => $payment_status,
-                'payment_method'      => $request->payment_method,
-                'note'                => $request->note,
-                'tax_amount'          => Cart::instance('purchase')->tax() * 100,
-                'discount_amount'     => Cart::instance('purchase')->discount() * 100,
-            ]);
-
-            foreach (Cart::instance('purchase')->content() as $cart_item) {
-                PurchaseDetail::create([
-                    'purchase_id'             => $purchase->id,
-                    'product_id'              => $cart_item->id,
-                    'name'                    => $cart_item->name,
-                    'code'                    => $cart_item->options->code,
-                    'quantity'                => $cart_item->qty,
-                    'price'                   => $cart_item->price * 100,
-                    'unit_price'              => $cart_item->options->unit_price * 100,
-                    'sub_total'               => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type'   => $cart_item->options->product_discount_type,
-                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
-                ]);
-
-                if ($request->status == PurchaseStatus::Pending) {
-                    $product = Product::findOrFail($cart_item->id);
-                    $product->update([
-                        'quantity' => $product->quantity + $cart_item->qty,
-                    ]);
-                }
-            }
-
-            Cart::instance('purchase')->destroy();
-
-            if ($purchase->paid_amount > 0) {
-                PurchasePayment::create([
-                    'date'           => $request->date,
-                    'reference'      => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
-                    'amount'         => $purchase->paid_amount,
-                    'purchase_id'    => $purchase->id,
-                    'payment_method' => $request->payment_method,
-                ]);
-            }
-        });
-
-        toast('Purchase Created!', 'success');
-
-        return redirect()->route('purchases.index');
-    }
+ 
 
     public function edit(Purchase $purchase)
     {
@@ -206,18 +136,7 @@ class PurchaseController extends Controller
             Cart::instance('purchase')->destroy();
         });
 
-        toast('Purchase Updated!', 'info');
-
-        return redirect()->route('purchases.index');
-    }
-
-    public function destroy(Purchase $purchase)
-    {
-        abort_if(Gate::denies('purchase_delete'), 403);
-
-        $purchase->delete();
-
-        toast('Purchase Deleted!', 'warning');
+        // toast('Purchase Updated!', 'info');
 
         return redirect()->route('purchases.index');
     }

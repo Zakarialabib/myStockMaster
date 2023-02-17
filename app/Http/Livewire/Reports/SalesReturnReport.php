@@ -43,15 +43,9 @@ class SalesReturnReport extends Component
     {
         $sale_returns = SaleReturn::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
-            ->when($this->customer_id, function ($query) {
-                return $query->where('customer_id', $this->customer_id);
-            })
-            ->when($this->sale_return_status, function ($query) {
-                return $query->where('status', $this->sale_return_status);
-            })
-            ->when($this->payment_status, function ($query) {
-                return $query->where('payment_status', $this->payment_status);
-            })
+            ->when($this->customer_id, fn($q) => $q->where('customer_id', $this->customer_id))
+            ->when($this->sale_return_status, fn($q) => $q->where('sale_return_status', $this->sale_return_status))
+            ->when($this->payment_status, fn($q) => $q->where('payment_status', $this->payment_status))
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.sales-return-report', [

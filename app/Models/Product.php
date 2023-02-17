@@ -67,11 +67,12 @@ use App\Traits\UuidGenerator;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
- * @mixin \Eloquent
  * @property string $uuid
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @mixin \Eloquent
  */
 class Product extends Model
 {

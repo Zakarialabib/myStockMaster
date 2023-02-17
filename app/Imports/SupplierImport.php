@@ -23,4 +23,9 @@ class SupplierImport implements ToModel
             'tax_number' => $row['tax_number'] ?? null,
         ]);
     }
+     /**
+     */
+    public function __construct() {
+        //
+    }
 }

@@ -73,7 +73,7 @@ class PurchaseReturnPaymentsController extends Controller
             ]);
         });
 
-        toast('Purchase Return Payment Created!', 'success');
+        // toast('Purchase Return Payment Created!', 'success');
 
         return redirect()->route('purchase-returns.index');
     }
@@ -129,7 +129,7 @@ class PurchaseReturnPaymentsController extends Controller
             ]);
         });
 
-        toast('Purchase Return Payment Updated!', 'info');
+        // toast('Purchase Return Payment Updated!', 'info');
 
         return redirect()->route('purchase-returns.index');
     }
@@ -140,7 +140,7 @@ class PurchaseReturnPaymentsController extends Controller
 
         $purchaseReturnPayment->delete();
 
-        toast('Purchase Return Payment Deleted!', 'warning');
+        // toast('Purchase Return Payment Deleted!', 'warning');
 
         return redirect()->route('purchase-returns.index');
     }

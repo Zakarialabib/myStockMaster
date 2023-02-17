@@ -24,14 +24,24 @@ class Smtp extends Component
 
     public function mount()
     {
+        $this->mail_mailer = env('MAIL_MAILER');
+        $this->mail_host = env('MAIL_HOST');
+        $this->mail_port = env('MAIL_PORT');
+        $this->mail_from_address = env('MAIL_FROM_ADDRESS');
+        $this->mail_from_name = env('MAIL_FROM_ADDRESS');
+        $this->mail_username = env('MAIL_USERNAME');
+        $this->mail_password = env('MAIL_PASSWORD');
+        $this->mail_encryption = env('MAIL_ENCRYPTION');
+        
     }
 
     public function render()
     {
         return view('livewire.admin.smtp');
     }
+    
 
-    public function onUpdateSMTP()
+    public function update()
     {
         $toReplace = [
             'MAIL_MAILER='.env('MAIL_HOST'),

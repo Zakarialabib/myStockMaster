@@ -120,7 +120,7 @@ class Index extends Component
         if (count(array_intersect($this->selected, Product::paginate($this->perPage)->pluck('id')->toArray())) == count(Product::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
-            $this->selected = $productIds;
+            $this->selected = $this->productIds;
         }
     }
 
@@ -195,16 +195,16 @@ class Index extends Component
 
     public function getCategoriesProperty()
     {
-        return Category::select('name', 'id')->get();
+        return Category::select(['name', 'id'])->get();
     }
 
     public function getBrandsProperty()
     {
-        return Brand::select('name', 'id')->get();
+        return Brand::select(['name', 'id'])->get();
     }
 
     public function getWarehousesProperty()
     {
-        return Warehouse::select('name', 'id')->get();
+        return Warehouse::select(['name', 'id'])->get();
     }
 }

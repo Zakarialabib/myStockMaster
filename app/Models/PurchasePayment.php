@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchasePayment
@@ -36,9 +37,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment wherePurchaseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class PurchasePayment extends Model
 {
@@ -73,11 +74,6 @@ class PurchasePayment extends Model
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 
-    /**
-     * Interact with the expenses amount
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
     protected function amount(): Attribute
     {
         return Attribute::make(

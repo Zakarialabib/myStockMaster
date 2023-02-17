@@ -61,9 +61,9 @@ use App\Enums\SaleReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class SaleReturn extends Model
 {
@@ -135,7 +135,6 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    /** @return response() */
     protected $casts = [
         'status'         => SaleReturnStatus::class,
         'payment_status' => PaymentStatus::class,

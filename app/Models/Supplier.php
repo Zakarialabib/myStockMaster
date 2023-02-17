@@ -40,11 +40,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string $uuid
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereUuid($value)
+ * @method static \Database\Factories\SupplierFactory factory($count = null, $state = [])
+ * @mixin \Eloquent
  */
 class Supplier extends Model
 {

@@ -78,11 +78,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Customers
     Route::get('customers', CustomersController::class)->name('customers.index');
-    Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
+    Route::get('customer/details/{customer}', [CustomersController::class, 'show'])->name('customer.details');
 
     //Suppliers
     Route::get('suppliers', SuppliersController::class)->name('suppliers.index');
-    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
+    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'show'])->name('supplier.details');
 
     //Warehouses
     Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
@@ -91,7 +91,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('brands', BrandsController::class)->name('brands.index');
 
     //Print Barcode
-    Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
+    Route::get('/products/print-barcode', [BarcodeController::class, 'index'])->name('barcode.print');
 
     //Product Category
     Route::get('product-categories', CategoriesController::class)->name('product-categories.index');

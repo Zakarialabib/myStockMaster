@@ -26,4 +26,9 @@ class PurchaseImport implements Tomodel
             'user_id'     => $row[6],
         ]);
     }
+     /**
+     */
+    public function __construct() {
+        //
+    }
 }

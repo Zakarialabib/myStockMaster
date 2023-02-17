@@ -9,6 +9,7 @@ use PDF;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
+use Symfony\Component\HttpFoundation\Response;
 
 class Barcode extends Component
 {
@@ -59,7 +60,7 @@ class Barcode extends Component
         }
     }
 
-    public function getPdf()
+    public function getPdf(): Response
     {
         $data = [
             'barcodes' => $this->barcodes,

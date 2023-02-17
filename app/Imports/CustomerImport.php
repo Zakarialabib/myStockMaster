@@ -21,4 +21,10 @@ class CustomerImport implements ToModel
             'phone' => $row['phone'],
         ]);
     }
+
+     /**
+     */
+    public function __construct() {
+        //
+    }
 }

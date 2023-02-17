@@ -24,4 +24,10 @@ class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
             'name' => $row['name'],
         ]);
     }
+
+    /**
+     */
+    public function __construct() {
+        //
+    }
 }

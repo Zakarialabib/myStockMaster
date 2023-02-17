@@ -12,6 +12,7 @@ class EditTranslation extends Component
 {
     public $key;
     public $value;
+    public $lang;
 
     public $editWord = false;
 
@@ -43,9 +44,11 @@ class EditTranslation extends Component
         return compact('json', 'list_lang', 'la', 'json');
     }
 
-    public function editWord()
+    public function editWord($id)
     {
         $this->editWord = true;
+        $this->lang = Language::find($id);
+
     }
 
     public function updateTranslation()
@@ -54,15 +57,14 @@ class EditTranslation extends Component
 
         $reqkey = trim($this->key);
         $reqValue = $this->value;
-        $lang = Language::find($id);
 
-        $data = file_get_contents(App::langPath().$lang->code.'.json');
+        $data = file_get_contents(App::langPath().$this->lang->code.'.json');
 
         $json_arr = json_decode($data, true);
 
         $json_arr[$reqkey] = $reqValue;
 
-        file_put_contents(App::langPath().$lang->code.'.json', json_encode($json_arr));
+        file_put_contents(App::langPath().$this->lang->code.'.json', json_encode($json_arr));
     }
 
     public function render()

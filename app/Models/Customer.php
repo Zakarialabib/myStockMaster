@@ -42,11 +42,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereWalletId($value)
- * @mixin \Eloquent
  * @property string $uuid
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUuid($value)
+ * @method static \Database\Factories\CustomerFactory factory($count = null, $state = [])
+ * @mixin \Eloquent
  */
 class Customer extends Model
 {

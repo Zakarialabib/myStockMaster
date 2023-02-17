@@ -82,15 +82,12 @@
                   <tr>
                      <td>
                         <span>{{$detail->code}} ({{$detail->name}})</span>
-                           @if($detail['is_imei'] && $detail['imei_number'] !==null)
-                              <p>IMEI/SN : {{$detail['imei_number }}</p>
-                           @endif
                      </td>
-                     <td>{{$detail->unit_price}} </td>
-                     <td>{{$detail->quantity}}/{{$detail['unitSale }}</td>
-                     <td>{{$detail['DiscountNet }} </td>
-                     <td>{{$detail['taxe }} </td>
-                     <td>{{$detail->total_amount}} </td>
+                     <td>{{$detail->unit_price }} </td>
+                     <td>{{$detail->quantity }}</td>
+                     <td>{{$detail->discount }} </td>
+                     <td>{{$detail->tax }} </td>
+                     <td>{{$detail->total_amount }} </td>
                   </tr>
                   @endforeach
                </tbody>

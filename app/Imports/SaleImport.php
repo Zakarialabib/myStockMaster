@@ -11,7 +11,7 @@ class SaleImport implements ToModel
 {
     /**
      * @param  array $row
-     * @return \App\Models\SaleImport
+     * @return \App\Models\Sale
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
@@ -24,5 +24,10 @@ class SaleImport implements ToModel
             'customer_id' => $row[4],
             'user_id'     => $row[5],
         ]);
+    }
+     /**
+     */
+    public function __construct() {
+        //
     }
 }

@@ -31,6 +31,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Category extends Model

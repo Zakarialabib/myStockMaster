@@ -12,7 +12,7 @@ use App\Models\Sale;
 use App\Models\SaleReturn;
 use App\Models\Supplier;
 use PDF;
-
+use Symfony\Component\HttpFoundation\Response;
 class ExportController extends Controller
 {
     /**
@@ -21,7 +21,7 @@ class ExportController extends Controller
      * @param mixed $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function salePos($id)
+    public function salePos($id): Response
     {
         $sale = Sale::where('id', $id)->firstOrFail();
 
@@ -36,7 +36,7 @@ class ExportController extends Controller
         return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
-    public function sale($id)
+    public function sale($id): Response
     {
         $sale = Sale::where('id', $id)->firstOrFail();
 
@@ -55,7 +55,7 @@ class ExportController extends Controller
         return $pdf->stream(__('Sale').$sale->reference.'.pdf');
     }
 
-    public function purchaseReturns($id)
+    public function purchaseReturns($id): Response
     {
         $purchaseReturn = PurchaseReturn::where('id', $id)->firstOrFail();
         $supplier = Supplier::where('id', $purchaseReturn->supplier->id)->firstOrFail();
@@ -70,7 +70,7 @@ class ExportController extends Controller
         return $pdf->stream(__('Purchase Return').$purchaseReturn->reference.'.pdf');
     }
 
-    public function quotation($id)
+    public function quotation($id): Response
     {
         $quotation = Quotation::where('id', $id)->firstOrFail();
         $customer = Customer::where('id', $quotation->customer->id)->firstOrFail();
@@ -85,7 +85,7 @@ class ExportController extends Controller
         return $pdf->stream(__('Quotation').$quotation->reference.'.pdf');
     }
 
-    public function purchase($id)
+    public function purchase($id): Response
     {
         $purchase = Purchase::with('supplier', 'purchaseDetails')->where('id', $id)->firstOrFail();
         $supplier = Supplier::where('id', $purchase->supplier->id)->firstOrFail();
@@ -102,7 +102,7 @@ class ExportController extends Controller
         return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
     }
 
-    public function saleReturns($id)
+    public function saleReturns($id): Response
     {
         $saleReturn = SaleReturn::where('id', $id)->firstOrFail();
         $customer = Customer::where('id', $saleReturn->customer->id)->firstOrFail();

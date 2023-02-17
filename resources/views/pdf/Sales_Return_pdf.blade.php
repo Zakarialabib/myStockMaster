@@ -4,23 +4,23 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Return')}} _{{$return_$sale->reference}}</title>
+      <title>{{__('Return')}} _{{$return_sale->reference}}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
    <body>
       <header class="clearfix">
          <div id="logo">
-         <img src="{{asset('/images/'.$setting['logo'])}}">
+         <img src="{{asset('/images/'.$setting->logo )}}">
          </div>
          <div id="company">
             <div><strong> {{__('Date')}}: </strong>{{$return_sale->date}}</div>
-            <div><strong> {{__('Number')}}: </strong> {{$return_$sale->reference}}</div>
+            <div><strong> {{__('Number')}}: </strong> {{$return_sale->reference}}</div>
             <div><strong> {{__('Réf vente')}}: </strong> {{$return_sale->sale_ref}}</div>
 
          </div>
          <div id="Title-heading">
-            Retour  : {{$return_$sale->reference}}
+            Retour  : {{$return_sale->reference}}
          </div>
          </div>
       </header>
@@ -36,11 +36,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$return_sale['client_name']}}</div>
-                           <div><strong>ICE:</strong> {{$return_sale['client_ice']}}</div>
-                           <div><strong>Téle:</strong> {{$return_sale['client_phone']}}</div>
-                           <div><strong>Adresse:</strong>   {{$return_sale['client_adr']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$return_sale['client_email']}}</div>
+                           <div><strong>Nom:</strong> {{$return_sale->client_name }}</div>
+                           <div><strong>ICE:</strong> {{$return_sale->client_ice }}</div>
+                           <div><strong>Téle:</strong> {{$return_sale->client_phone }}</div>
+                           <div><strong>Adresse:</strong>   {{$return_sale->client_adr }}</div>
+                           <div><strong>{{__('Email')}}:</strong>  {{$return_sale->client_email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -84,14 +84,11 @@
                   <tr>
                      <td>
                         <span>{{$detail->code}} ({{$detail->name}})</span>
-                           @if($detail['is_imei'] && $detail['imei_number'] !==null)
-                              <p>IMEI/SN : {{$detail['imei_number']}}</p>
-                           @endif
                      </td>
                      <td>{{$detail->unit_price}} </td>
-                     <td>{{$detail->quantity}}/{{$detail['unitSale']}}</td>
-                     <td>{{$detail['DiscountNet']}} </td>
-                     <td>{{$detail['taxe']}} </td>
+                     <td>{{$detail->quantity}}/{{$detail->unit }}</td>
+                     <td>{{$detail->discount }} </td>
+                     <td>{{$detail->ta }} </td>
                      <td>{{$detail->total_amount}} </td>
                   </tr>
                   @endforeach
@@ -102,29 +99,29 @@
             <table>
                <tr>
                   <td>{{__('Order Tax')}}</td>
-                  <td>{{$return_sale['TaxNet']}} </td>
+                  <td>{{$return_sale->TaxNet }} </td>
                </tr>
                <tr>
                   <td>{{__('Discount')}}</td>
-                  <td>{{$return_sale['discount']}} </td>
+                  <td>{{$return_sale->discount }} </td>
                </tr>
                <tr>
                   <td>{{__('Shipping')}}</td>
-                  <td>{{$return_sale['shipping']}} </td>
+                  <td>{{$return_sale->shipping }} </td>
                </tr>
                <tr>
                   <td>{{__('Total')}}</td>
-                  <td>{{$symbol}} {{$return_sale['GrandTotal']}} </td>
+                  <td>{{$symbol}} {{$return_sale->GrandTotal }} </td>
                </tr>
 
                <tr>
                   <td>{{__('Paid Amount')}}</td>
-                  <td>{{$symbol}} {{$return_sale['paid_amount']}} </td>
+                  <td>{{$symbol}} {{$return_sale->paid_amount }} </td>
                </tr>
 
                <tr>
                   <td>{{__('Due')}}</td>
-                  <td>{{$symbol}} {{$return_sale['due']}} </td>
+                  <td>{{$symbol}} {{$return_sale->due }} </td>
                </tr>
             </table>
          </div>

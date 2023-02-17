@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchaseReturnPayment
@@ -88,10 +89,6 @@ class PurchaseReturnPayment extends Model
         );
     }
 
-   /**
-    * Get ajustement date.
-    * @return \Illuminate\Database\Eloquent\Casts\Attribute
-    */
     public function date(): Attribute
     {
         return Attribute::make(

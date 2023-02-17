@@ -66,7 +66,7 @@ class QuotationController extends Controller
             Cart::instance('quotation')->destroy();
         });
 
-        toast('Quotation Created!', 'success');
+        // toast('Quotation Created!', 'success');
 
         return redirect()->route('quotations.index');
     }
@@ -143,7 +143,7 @@ class QuotationController extends Controller
             Cart::instance('quotation')->destroy();
         });
 
-        toast('Quotation Updated!', 'info');
+        // toast('Quotation Updated!', 'info');
 
         return redirect()->route('quotations.index');
     }

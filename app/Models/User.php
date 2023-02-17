@@ -71,9 +71,9 @@ use App\Traits\UuidGenerator;
  * @method static Builder|User whereStatus($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
- * @mixin \Eloquent
  * @property string $uuid
  * @method static Builder|User whereUuid($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

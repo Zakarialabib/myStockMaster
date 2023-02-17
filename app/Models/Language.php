@@ -29,13 +29,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereRtl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Category[] $categories
  * @property-read int|null $categories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
  * @property-read int|null $products_count
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Language extends Model
 {

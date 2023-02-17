@@ -7,13 +7,14 @@ namespace App\Http\Livewire\Sales\Payment;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use App\Enums\PaymentStatus;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class PaymentForm extends Component
 {
+    use LivewireAlert;
     /** @var string[] */
     public $listeners = [
         'paymentModal',
@@ -72,7 +73,8 @@ class PaymentForm extends Component
 
     public function save()
     {
-        DB::transaction(function () {
+        try {
+      
             $this->validate();
 
             $this->sale = $this->salepayment->sale->id;
@@ -104,10 +106,15 @@ class PaymentForm extends Component
                 'payment_status' => $payment_status,
             ]);
 
+            $this->alert('success', __('Sale Payment created successfully.'));
+
             $this->emit('refreshIndex');
 
             $this->paymentModal = false;
-        });
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function render()

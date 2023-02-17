@@ -104,17 +104,17 @@ class Edit extends Component
 
     public function getCategoriesProperty()
     {
-        return Category::select('name', 'id')->get();
+        return Category::select(['name','id'])->get();
     }
 
     public function getBrandsProperty()
     {
-        return Brand::select('name', 'id')->get();
+        return Brand::select(['name','id'])->get();
     }
 
     public function getWarehousesProperty()
     {
-        return Warehouse::select('name', 'id')->get();
+        return Warehouse::select(['name','id'])->get();
     }
 
     public function render()

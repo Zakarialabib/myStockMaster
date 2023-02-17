@@ -60,9 +60,6 @@ class Edit extends Component
 
         $this->brand = Brand::where('id', $id)->firstOrFail();
 
-        $this->name = $this->brand->name;
-        $this->description = $this->brand->description;
-
         $this->editModal = true;
     }
 
@@ -73,7 +70,7 @@ class Edit extends Component
         if ($this->image) {
             $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
             $this->image->storeAs('brands', $imageName);
-            $this->brand->image = $imageName;
+            $this->image = $imageName;
         }
 
         $this->brand->update($validatedData);

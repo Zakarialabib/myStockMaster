@@ -10,7 +10,6 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -181,7 +180,8 @@ class Index extends Component
 
     public function paymentSave()
     {
-        DB::transaction(function () {
+        try {
+        
             $this->validate(
                 [
                     'date'           => 'required|date',
@@ -219,11 +219,16 @@ class Index extends Component
                 'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
+            
+            $this->alert('success', __('Sale Payment created successfully.'));
 
             $this->emit('refreshIndex');
 
             $this->paymentModal = false;
-        });
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     protected function initListsForFields(): void

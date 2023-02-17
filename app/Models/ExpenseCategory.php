@@ -28,12 +28,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereUpdatedAt($value)
- * @mixin \Eloquent
  * @method static \Database\Factories\ExpenseCategoryFactory factory(...$parameters)
  * @property string|null $type
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereType($value)
+ * @mixin \Eloquent
  */
 class ExpenseCategory extends Model
 {

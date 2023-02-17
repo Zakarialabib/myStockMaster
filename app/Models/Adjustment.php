@@ -31,9 +31,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Adjustment extends Model
 {

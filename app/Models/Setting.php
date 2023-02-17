@@ -76,7 +76,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShowShipping($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSiteLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $woocommerce_store_url
  * @property string|null $woocommerce_api_key
  * @property string|null $woocommerce_api_secret
@@ -89,6 +88,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceStoreUrl($value)
+ * @property string|null $custom_store_url
+ * @property string|null $custom_api_key
+ * @property string|null $custom_api_secret
+ * @property string|null $custom_last_sync
+ * @property string|null $custom_products
+ * @property string|null $custom_orders
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomLastSync($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomOrders($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomProducts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomStoreUrl($value)
+ * @mixin \Eloquent
  */
 class Setting extends Model
 {

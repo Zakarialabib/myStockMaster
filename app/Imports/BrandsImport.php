@@ -10,6 +10,12 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class BrandsImport implements ToModel, SkipsEmptyRows
 {
+       /**
+     */
+    public function __construct() {
+        //
+    }
+    
     /**
      * @param array $row
      * @return \App\Models\Brand
@@ -23,4 +29,6 @@ class BrandsImport implements ToModel, SkipsEmptyRows
             'description' => $row['description'] ?? null,
         ]);
     }
+
+  
 }

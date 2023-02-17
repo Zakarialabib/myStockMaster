@@ -51,9 +51,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class Quotation extends Model
 {

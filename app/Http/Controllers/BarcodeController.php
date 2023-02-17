@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Gate;
 
 class BarcodeController extends Controller
 {
-    public function printBarcode()
+    public function index()
     {
         abort_if(Gate::denies('print_barcodes'), 403);
 

@@ -32,4 +32,10 @@ class CustomerExport implements FromView
             'data' => $this->query()->get(),
         ]);
     }
+
+    /**
+     */
+    public function __construct() {
+        //
+    }
 }

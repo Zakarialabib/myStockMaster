@@ -37,9 +37,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class SalePayment extends Model
 {

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseReturnStatus;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
 /**
  * App\Models\PurchaseReturn
  *
@@ -60,9 +60,9 @@ use App\Enums\PurchaseReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class PurchaseReturn extends Model
 {
@@ -134,7 +134,6 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-    /** @return response() */
     protected $casts = [
         'status'         => PurchaseReturnStatus::class,
         'payment_status' => PaymentStatus::class,
@@ -213,11 +212,6 @@ class PurchaseReturn extends Model
         );
     }
 
-    /**
-     * get tax amount
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
     protected function taxAmount(): Attribute
     {
         return Attribute::make(

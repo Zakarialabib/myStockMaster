@@ -198,7 +198,8 @@ class Index extends Component
 
     public function paymentSave()
     {
-        DB::transaction(function () {
+        try {
+    
             $this->validate(
                 [
                     'date'           => 'required|date',
@@ -242,6 +243,8 @@ class Index extends Component
             $this->alert('success', 'Payment created successfully.');
 
             $this->paymentModal = false;
-        });
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

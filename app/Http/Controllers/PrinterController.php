@@ -95,7 +95,7 @@ class PrinterController extends Controller
             // this->alert
         }
 
-        return redirect('printers')->with('status', $output);
+        return redirect('printers');
     }
 
     public function destroy($id)

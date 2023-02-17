@@ -27,7 +27,7 @@ class SyncProducts extends Component
     {
         if ($this->type === 'woocommerce') {
             $this->store_url = settings()->woocommerce_store_url;
-        } elseif ($type === 'shopify') {
+        } elseif ($this->type === 'shopify') {
             $this->store_url = settings()->shopify_store_url;
         }
     }
@@ -42,7 +42,7 @@ class SyncProducts extends Component
                 settings()->woocommerce_api_secret,
                 ['wp_api' => true, 'version' => 'wc/v3']
             );
-        } elseif ($type === 'shopify') {
+        } elseif ($this->type === 'shopify') {
             $client = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
                 'api_key'     => settings()->shopify_api_key,

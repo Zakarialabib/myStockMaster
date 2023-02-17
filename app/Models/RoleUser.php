@@ -27,9 +27,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUserId($value)
- * @mixin \Eloquent
  * @property string|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereDeletedAt($value)
+ * @mixin \Eloquent
  */
 class RoleUser extends Model
 {
@@ -65,7 +65,6 @@ class RoleUser extends Model
         'role_id',
     ];
 
-    /** @return response() */
     protected $casts = [
         'user_id' => 'integer',
         'role_id' => 'integer',
