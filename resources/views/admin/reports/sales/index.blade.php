@@ -43,6 +43,6 @@
 
 <x-app-layout>
     <x-card>
-        <livewire:reports.sales-report :customers="\App\Models\Customer::all()" />
+        <livewire:reports.sales-report :customers="$customers" />
     </x-card>
 </x-app-layout>

@@ -49,10 +49,6 @@ class Create extends Component
         return view('livewire.brands.create');
     }
 
-    public function hydrate()
-    {
-        // $this->image = $imageName;
-    }
 
     public function createBrand(): void
     {

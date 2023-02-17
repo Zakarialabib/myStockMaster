@@ -34,7 +34,7 @@
 
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="password" :value="__('Password')" />
-                        <x-input id="password" class="block mt-1 w-full" type="password"
+                        <x-input id="password" name="password" class="block mt-1 w-full" type="password"
                             wire:model.defer="user.password" />
                         <x-input-error :messages="$errors->get('user.password')" class="mt-2" />
                     </div>

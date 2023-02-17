@@ -47,7 +47,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->customer = Customer::where('id', $id)->firstOrFail();
+        $this->customer = Customer::findOrFail($id);
 
         $this->editModal = true;
     }

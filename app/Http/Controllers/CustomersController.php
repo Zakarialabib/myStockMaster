@@ -17,7 +17,7 @@ class CustomersController extends Controller
         return view('admin.customers.index');
     }
 
-    public function details(Customer $customer)
+    public function show(Customer $customer)
     {
         abort_if(Gate::denies('customer_access'), 403);
 

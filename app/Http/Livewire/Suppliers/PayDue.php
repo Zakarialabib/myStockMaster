@@ -6,6 +6,8 @@ namespace App\Http\Livewire\Suppliers;
 
 use App\Models\PurchasePayment;
 use App\Models\Purchase;
+use App\Models\Sale;
+use App\Models\SalePayment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Enums\PaymentStatus;
@@ -18,49 +20,50 @@ class PayDue extends Component
 
     public $amount;
     public $supplier_id;
-
-    public function pay()
+    public $payment_method;
+    
+    
+    public function getPurchasesSupplierDueProperty()
     {
-        if ($this->amount > 0) {
-            $supplier_purchases_due = Purchase::where([
-                ['payment_statut', '!=', 'paid'],
-                ['supplier_id', $this->supplier_id],
-            ])->get();
+        return Purchase::where('supplier_id', $this->supplier_id)
+                   ->where('due_amount', '>', 0)
+                   ->get();
+    }
 
-            $paid_amount_total = $this->amount;
+    public function makePayment()
+    {
+        $this->validate([
+            'selectedSales' => 'required|array',
+            'amount'        => 'required|numeric|min:0',
+        ]);
 
-            foreach ($supplier_purchases_due as $key => $supplier_purchase) {
-                if ($paid_amount_total == 0) {
-                    break;
-                }
-                $due = $supplier_purchase->amount - $supplier_purchase->paid_amount;
+        foreach ($this->selectedSales as $saleId) {
+            $sale = Sale::findOrFail($saleId);
+            $dueAmount = $sale->due_amount;
+            $paidAmount = min($this->amount, $dueAmount);
 
-                if ($paid_amount_total >= $due) {
-                    $amount = $due;
-                    $payment_status = PaymentStatus::Paid;
-                } else {
-                    $amount = $paid_amount_total;
-                    $payment_status = PaymentStatus::Partial;
-                }
+            SalePayment::create([
+                'date'           => now()->format('Y-m-d'),
+                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $paidAmount,
+                'sale_id'        => $sale->id,
+                'payment_method' => $this->payment_method,
+            ]);
 
-                $payment_purchase = new PurchasePayment();
-                $payment_purchase->purchase_id = $supplier_purchase->id;
-                $payment_purchase->reference = app('App\Http\Controllers\PaymentPurchasesController')->getNumberOrder();
-                $payment_purchase->date = Carbon::now();
-                $payment_purchase->amount = $amount;
-                $payment_purchase->change = 0;
-                $payment_purchase->note = $this['note'];
-                $payment_purchase->user_id = Auth::user()->id;
-                $payment_purchase->save();
+            $sale->update([
+                'paid_amount'    => ($sale->paid_amount + $paidAmount) * 100,
+                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
+                'payment_status' => max(0, $dueAmount - $paidAmount) == 0 ? PaymentStatus::Paid : PaymentStatus::Partial,
+            ]);
 
-                $supplier_purchase->paid_amount += $amount;
-                $supplier_purchase->payment_statut = $payment_status;
-                $supplier_purchase->save();
+            $this->amount -= $paidAmount;
 
-                $paid_amount_total -= $amount;
+            if ($this->amount == 0) {
+                break;
             }
         }
     }
+
 
     public function render()
     {

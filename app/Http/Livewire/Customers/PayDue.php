@@ -10,52 +10,67 @@ use Auth;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Enums\PaymentStatus;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class PayDue extends Component
 {
-    // get customer id
-    // pay due amount
+    
+    use LivewireAlert;
 
-    public function pay()
+    public $amount;
+    public $selectedSales;
+    public $customer_id;
+    public $payModal = false;
+
+    public $listeners = ['editModal'];
+
+    protected $rules = [
+        'selectedSales' => 'required|array',
+        'amount'        => 'required|numeric|min:0',
+    ];
+    public function getSalesCustomerDueProperty()
     {
-        if ($this['amount'] > 0) {
-            $customer_sales_due = Sale::where([
-                ['payment_statut', '!=', 'paid'],
-                ['customer_id', $this->customer_id],
-            ])->get();
+        return Sale::where('customer_id', $this->customer_id)
+                ->where('due_amount', '>', 0)
+                ->get();
+    }
+    public function payModal($customer)
+    {
+        $this->payModal = true;
+        $this->customer_id = $customer;
 
-            $paid_amount_total = $this->amount;
+    }
+    public function makePayment()
+    {
+        $this->validate();
 
-            foreach ($customer_sales_due as $key => $customer_sale) {
-                if ($paid_amount_total == 0) {
-                    break;
-                }
-                $due_amount = $customer_sale->GrandTotal - $customer_sale->paid_amount;
+        foreach ($this->selectedSales as $saleId) {
+            $sale = Sale::findOrFail($saleId);
+            $dueAmount = $sale->due_amount;
+            $paidAmount = min($this->amount, $dueAmount);
 
-                if ($paid_amount_total >= $due_amount) {
-                    $amount = $due_amount;
-                    $payment_status = PaymentStatus::Paid;
-                } else {
-                    $amount = $paid_amount_total;
-                    $payment_status = PaymentStatus::Partial;
-                }
+            SalePayment::create([
+                'date'           => now()->format('Y-m-d'),
+                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $paidAmount,
+                'sale_id'        => $sale->id,
+                'payment_method' => $this->payment_method,
+            ]);
 
-                $payment_sale = new SalePayment();
-                $payment_sale->sale_id = $customer_sale->id;
-                $payment_sale->reference = app('App\Http\Controllers\PaymentSalesController')->getNumberOrder();
-                $payment_sale->date = Carbon::now();
-                $payment_sale->amount = $amount;
-                $payment_sale->change = 0;
-                $payment_sale->notes = $this['notes'];
-                $payment_sale->user_id = Auth::user()->id;
-                $payment_sale->save();
+            $sale->update([
+                'paid_amount'    => ($sale->paid_amount + $paidAmount) * 100,
+                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
+                'payment_status' => max(0, $dueAmount - $paidAmount) == 0 ? PaymentStatus::Paid : PaymentStatus::Partial,
+            ]);
 
-                $customer_sale->paid_amount += $amount;
-                $customer_sale->payment_statut = $payment_status;
-                $customer_sale->save();
+            $this->amount -= $paidAmount;
 
-                $paid_amount_total -= $amount;
+            if ($this->amount == 0) {
+                break;
             }
+
+            $this->alert('succes', '');
+            $this->payModal = false;
         }
     }
 

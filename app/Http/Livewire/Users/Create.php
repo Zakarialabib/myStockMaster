@@ -65,7 +65,7 @@ class Create extends Component
             $this->alert('warning', __('User was not created !'));
         }
 
-        $this->emit('userCreated');
+        $this->emit('refreshIndex');
 
         $this->createModal = false;
     }

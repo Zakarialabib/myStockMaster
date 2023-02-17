@@ -12,6 +12,10 @@ class ProductTelegram extends Notification
 {
     use Queueable;
 
+    public $telegramChannel;
+    public $productName;
+    public $productPrice;
+    
     /**
      * @param mixed $telegramChannel
      * @param mixed $productName

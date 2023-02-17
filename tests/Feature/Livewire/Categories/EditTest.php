@@ -45,7 +45,7 @@ it('tests the category update component validation', function () {
         ->set('code', '')
         ->call('update')
         ->assertHasErrors(
-            ['name' => 'required'],
+             ['name' => 'required'],
             ['code' => 'required']
-        );
+            );
 });

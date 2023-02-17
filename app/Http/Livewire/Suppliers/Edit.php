@@ -19,21 +19,29 @@ class Edit extends Component
 
     /** @var mixed */
     public $supplier;
+    public $name;
+    public $email;
+    public $phone;
+    public $city;
+    public $country;
+    public $address;
+    public $tax_number;
 
     /** @var string[] */
     public $listeners = ['editModal'];
 
     /** @var array */
     protected $rules = [
-        'supplier.name'       => 'required|string|max:255',
-        'supplier.email'      => 'nullable|max:255',
-        'supplier.phone'      => 'required|numeric',
-        'supplier.city'       => 'nullable|max:255',
-        'supplier.country'    => 'nullable|max:255',
-        'supplier.address'    => 'nullable|max:255',
-        'supplier.tax_number' => 'nullable||max:255',
+        'name'       => 'required|string|max:255',
+        'email'      => 'nullable|max:255',
+        'phone'      => 'required|numeric',
+        'city'       => 'nullable|max:255',
+        'country'    => 'nullable|max:255',
+        'address'    => 'nullable|max:255',
+        'tax_number' => 'nullable||max:255',
     ];
 
+   
     public function render()
     {
         return view('livewire.suppliers.edit');
@@ -47,8 +55,8 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->supplier = Supplier::where('id', $id)->firstOrFail();
-
+        $this->supplier = Supplier::findOrFail($id);
+      
         $this->editModal = true;
     }
 
@@ -56,10 +64,12 @@ class Edit extends Component
     {
         $this->validate();
 
+        if($this->supplier){
         $this->supplier->save();
 
         $this->editModal = false;
 
         $this->alert('success', __('Supplier updated successfully.'));
+        }
     }
 }

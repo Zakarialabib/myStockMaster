@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="p-4">
-            @livewire('permission.edit', [$permission])
+            <livewire.permission.edit :permission="$permission" />
         </div>
     </div>
 @endsection

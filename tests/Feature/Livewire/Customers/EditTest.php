@@ -43,9 +43,9 @@ it('tests the edit customer component validation', function () {
     Livewire::test(Edit::class, ['id' => $customer->id])
         ->set('customer.name', 'John doe')
         ->set('customer.phone', '00000000000')
-        ->call('create')
-        ->assertHasErrors(
+        ->call('update')
+        ->assertHasErrors([
             ['customer.name' => 'required'],
             ['customer.phone' => 'required'],
-        );
+        ]);
 });

@@ -17,7 +17,7 @@ class SuppliersController extends Controller
         return view('admin.suppliers.index');
     }
 
-    public function details(Supplier $supplier)
+    public function show(Supplier $supplier)
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
