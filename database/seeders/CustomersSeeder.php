@@ -16,13 +16,6 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        Customer::create([
-            'name'    => 'John Doe',
-            'email'   => 'customer@email.com ',
-            'phone'   => '212600000000',
-            'city'    => 'Casablanca',
-            'country' => 'Morocco',
-            'address' => 'Casablanca, Morocco',
-        ]);
+        Customer::factory(50)->create();
     }
 }

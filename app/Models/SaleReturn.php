@@ -62,6 +62,8 @@ use App\Enums\SaleReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereDeletedAt($value)
  */
 class SaleReturn extends Model
 {
@@ -151,7 +153,6 @@ class SaleReturn extends Model
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');

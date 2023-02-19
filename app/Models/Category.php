@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 /**
@@ -35,6 +36,7 @@ use Illuminate\Support\Str;
 class Category extends Model
 {
     use HasAdvancedFilter;
+    use HasFactory;
 
     /** @var string[] */
     public $orderable = [
@@ -63,7 +65,6 @@ class Category extends Model
         parent::__construct($attributes);
     }
 
-    /** @return HasMany<Product> */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');

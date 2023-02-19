@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Brands;
 
 use App\Imports\BrandsImport;
 use App\Models\Brand;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -76,7 +74,7 @@ class Index extends Component
         if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) == count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
-            $this->selected = $brandIds;
+            $this->selected = $this->brandIds;
         }
     }
 
@@ -89,7 +87,7 @@ class Index extends Component
         $this->orderable = (new Brand())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('brand_access'), 403);
 

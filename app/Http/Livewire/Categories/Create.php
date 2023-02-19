@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -27,7 +25,8 @@ class Create extends Component
     /** @var string */
     public $name;
 
-    protected array $rules = [
+    /** @var array */
+    protected $rules = [
         'name' => 'required|min:3|max:255',
     ];
 
@@ -36,7 +35,7 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.categories.create');
     }

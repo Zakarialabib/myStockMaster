@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Printer;
 use App\Http\Livewire\WithSorting;
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -43,7 +41,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    protected $rules = [
         'printer.name'               => 'required|string|max:255',
         'printer.connection_type'    => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
@@ -62,7 +61,7 @@ class Index extends Component
         $this->orderable = (new Printer())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('printer_access'), 403);
 

@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Permission;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -74,7 +72,7 @@ class Index extends Component
         $this->orderable = (new Permission())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $query = Permission::advancedFilter([
             's'               => $this->search ?: null,

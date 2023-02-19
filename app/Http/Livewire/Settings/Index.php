@@ -22,13 +22,14 @@ class Index extends Component
     /** @var string[] */
     public $listeners = ['update'];
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public $site_logo;
 
     public $image;
 
-    public array $rules = [
+    /** @var array */
+    protected $rules = [
         'settings.company_name'              => 'required|string|min:1|max:255',
         'settings.company_email'             => 'required|string|min:1|max:255',
         'settings.company_phone'             => 'required|string|min:1|max:255',

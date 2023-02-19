@@ -61,6 +61,8 @@ use App\Enums\PurchaseReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
  */
 class PurchaseReturn extends Model
 {
@@ -144,13 +146,11 @@ class PurchaseReturn extends Model
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
     }
 
-    /** @return HasMany<PurchaseReturnPayment> */
     public function purchaseReturnPayments(): HasMany
     {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
     }
 
-    /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');

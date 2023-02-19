@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Adjustment;
 
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -31,7 +29,7 @@ class ProductTable extends Component
         }
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.adjustment.product-table');
     }

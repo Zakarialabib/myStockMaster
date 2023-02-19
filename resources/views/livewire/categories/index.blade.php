@@ -139,18 +139,18 @@
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Category') }}
+            {{ __('Show Category') }} {{ $category?->name}}
         </x-slot>
 
         <x-slot name="content">
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full mb-4">
-                    <label for="code">{{ __('Category Code') }} <span class="text-red-500">*</span></label>
-                    <x-input type="text" name="code" wire:model="category.code" disabled />
+                    <label for="code">{{ __('Category Code') }}</label>
+                    {{ $category?->code}}
                 </div>
                 <div class="w-full mb-4">
-                    <label for="name">{{ __('Category Name') }} <span class="text-red-500">*</span></label>
-                    <x-input type="text" name="name" wire:model="category.name" disabled />
+                    <label for="name">{{ __('Category Name') }}</label>
+                    {{ $category?->name}}
                 </div>
             </div>
         </x-slot>

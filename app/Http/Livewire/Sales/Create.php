@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Jobs\PaymentNotification;
 use App\Mail\SaleMail;
 use App\Models\Category;
 use App\Models\Customer;
@@ -14,8 +15,6 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
 
 class Create extends Component
@@ -55,6 +54,8 @@ class Create extends Component
 
     public $paid_amount;
 
+    public $shipping_amount;
+
     public $note;
 
     public $payment_method = 'cash';
@@ -72,7 +73,7 @@ class Create extends Component
         ];
     }
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     protected function initListsForFields(): void
     {
@@ -99,10 +100,9 @@ class Create extends Component
     public function hydrate()
     {
         $this->total_amount = $this->calculateTotal();
-        $this->updatedCustomerId();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 
@@ -187,6 +187,9 @@ class Create extends Component
         }
 
         $this->alert('success', __('Sale created successfully!'));
+
+        // dispatch the Send Payment Notification job
+        PaymentNotification::dispatch($sale);
 
         // if ($sale->customer->email) {
         //     Mail::to($sale->customer->email)->send(new SaleMail($sale, $this->salePdf($sale)));

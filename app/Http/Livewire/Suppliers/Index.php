@@ -14,8 +14,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
 {
@@ -30,7 +29,7 @@ class Index extends Component
 
     /** @var string[] */
     public $listeners = [
-        'importModal', 'showModal', 'editModal',
+        'importModal', 'showModal',
         'refreshIndex' => '$refresh',
         'downloadAll', 'exportAll', 'delete',
     ];
@@ -40,9 +39,6 @@ class Index extends Component
 
     /** @var bool */
     public $importModal = false;
-
-    /** @var bool */
-    public $editModal = false;
 
     /** @var string[][] */
     protected $queryString = [
@@ -57,16 +53,6 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'supplier.name'       => ['required', 'string', 'max:255'],
-        'supplier.email'      => ['nullable', 'string', 'max:255'],
-        'supplier.phone'      => ['required'],
-        'supplier.address'    => ['nullable', 'string', 'max:255'],
-        'supplier.city'       => ['nullable', 'string', 'max:255'],
-        'supplier.country'    => ['nullable', 'string', 'max:255'],
-        'supplier.tax_number' => ['nullable', 'string', 'max:255'],
-    ];
-
     public function mount(): void
     {
         $this->selectPage = false;
@@ -77,7 +63,7 @@ class Index extends Component
         $this->orderable = (new Supplier())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
@@ -103,29 +89,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function editModal($id)
-    {
-        abort_if(Gate::denies('supplier_update'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->supplier = Supplier::find($id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->supplier->save();
-
-        $this->alert('success', __('Supplier Updated Successfully'));
-
-        $this->editModal = false;
-    }
+   
 
     public function delete(Supplier $supplier)
     {

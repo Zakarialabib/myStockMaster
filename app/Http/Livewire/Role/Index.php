@@ -32,7 +32,7 @@ class Index extends Component
 
     public $editModal = false;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     /** @var string[][] */
     protected $queryString = [

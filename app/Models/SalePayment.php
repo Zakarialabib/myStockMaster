@@ -38,6 +38,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereDeletedAt($value)
  */
 class SalePayment extends Model
 {
@@ -79,7 +81,6 @@ class SalePayment extends Model
         'payment_method',
     ];
 
-    /** @return BelongsTo<Sale> */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');

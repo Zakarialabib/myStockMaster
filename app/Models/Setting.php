@@ -77,12 +77,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSiteLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $woocommerce_store_url
+ * @property string|null $woocommerce_api_key
+ * @property string|null $woocommerce_api_secret
+ * @property string|null $shopify_store_url
+ * @property string|null $shopify_api_key
+ * @property string|null $shopify_api_secret
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyStoreUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceStoreUrl($value)
  */
 class Setting extends Model
 {
     protected $guarded = [];
 
-    /** @return BelongsTo<Currency> */
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');

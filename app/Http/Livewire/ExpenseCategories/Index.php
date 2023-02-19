@@ -7,8 +7,6 @@ namespace App\Http\Livewire\ExpenseCategories;
 use App\Http\Livewire\WithSorting;
 use App\Models\ExpenseCategory;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -48,9 +46,10 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'expenseCategory.name'        => 'required',
-        'expenseCategory.description' => '',
+    /** @var array */
+    protected $rules = [
+        'expenseCategory.name'        => 'required|max:255',
+        'expenseCategory.description' => 'nullable',
     ];
 
     public function mount(): void
@@ -63,7 +62,7 @@ class Index extends Component
         $this->orderable = (new ExpenseCategory())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('expense_category_access'), 403);
 

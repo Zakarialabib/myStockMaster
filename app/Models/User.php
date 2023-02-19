@@ -14,6 +14,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\User
@@ -23,7 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $password
  * @property string|null $avatar
- * @property string $phone
+ * @property string|null $phone
  * @property int $role_id
  * @property int $status
  * @property int $is_all_warehouses
@@ -40,12 +42,13 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\Wallet|null $wallet
  * @method static Builder|User advancedFilter($data)
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static Builder|User isActive()
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
@@ -65,10 +68,12 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User wherePhone($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereRoleId($value)
- * @method static Builder|User whereStatut($value)
+ * @method static Builder|User whereStatus($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @method static Builder|User whereUuid($value)
  */
 class User extends Authenticatable
 {
@@ -77,6 +82,8 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
     use HasFactory;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [
@@ -98,7 +105,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'avatar',
+        'uuid','id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];

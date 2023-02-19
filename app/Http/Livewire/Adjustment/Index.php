@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Adjustment;
 use App\Http\Livewire\WithSorting;
 use App\Models\Adjustment;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -51,10 +49,11 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'adjustment.date'      => ['date', 'required'],
-        'adjustment.note'      => ['string', 'max:255', 'nullable'],
-        'adjustment.reference' => ['string', 'max:255', 'nullable'],
+    /** @var array */
+    protected $rules = [
+        'adjustment.date'      => ['date|required'],
+        'adjustment.note'      => ['string|max:255|nullable'],
+        'adjustment.reference' => ['string|max:255|nullable'],
     ];
 
     public function mount(): void
@@ -66,7 +65,7 @@ class Index extends Component
         $this->orderable = (new Adjustment())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 

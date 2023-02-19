@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereDeletedAt($value)
  */
 class RoleUser extends Model
 {
@@ -75,7 +77,6 @@ class RoleUser extends Model
         return $this->belongsTo(Role::class);
     }
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

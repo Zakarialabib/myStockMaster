@@ -8,8 +8,6 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Create extends Component
 {
@@ -24,14 +22,15 @@ class Create extends Component
     /** @var mixed */
     public $supplier;
 
-    public array $rules = [
-        'supplier.name'       => ['required', 'string', 'max:255'],
-        'supplier.email'      => ['nullable', 'string', 'max:255'],
-        'supplier.phone'      => ['required'],
-        'supplier.address'    => ['nullable', 'string', 'max:255'],
-        'supplier.city'       => ['nullable', 'string', 'max:255'],
-        'supplier.country'    => ['nullable', 'string', 'max:255'],
-        'supplier.tax_number' => ['nullable', 'string', 'max:255'],
+    /** @var array */
+    protected $rules = [
+        'supplier.name'       => 'required|string|max:255',
+        'supplier.phone'      => 'required|numeric',
+        'supplier.email'      => 'nullable|email|max:255',
+        'supplier.address'    => 'nullable|string|max:255',
+        'supplier.city'       => 'nullable|string|max:255',
+        'supplier.country'    => 'nullable|string|max:255',
+        'supplier.tax_number' => 'nullable|numeric|max:255',
     ];
 
     public function mount(Supplier $supplier): void
@@ -39,7 +38,7 @@ class Create extends Component
         $this->supplier = $supplier;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('supplier_create'), 403);
 

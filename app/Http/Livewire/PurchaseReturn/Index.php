@@ -41,6 +41,11 @@ class Index extends Component
     public $editModal = false;
 
     public $purchase_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
+    public $paymentModal = false;
 
     /** @var string[][] */
     protected $queryString = [
@@ -55,7 +60,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    protected $rules = [
         'supplier_id'         => 'required|numeric',
         'reference'           => 'required|string|max:255',
         'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -63,8 +69,8 @@ class Index extends Component
         'shipping_amount'     => 'required|numeric',
         'total_amount'        => 'required|numeric',
         'paid_amount'         => 'required|numeric',
-        'status'              => 'required|string|max:255',
-        'payment_method'      => 'required|string|max:255',
+        'status'              => 'required|integer|max:255',
+        'payment_method'      => 'required|integer|max:255',
         'note'                => 'nullable|string|max:1000',
     ];
 
@@ -126,7 +132,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->purchase = $purchasereturn;
+        $this->purchasereturn = $purchasereturn;
 
         $this->editModal = true;
     }
@@ -135,7 +141,7 @@ class Index extends Component
     {
         $this->validate();
 
-        $this->purchase->save();
+        $this->purchasereturn->save();
 
         $this->editModal = false;
 
@@ -150,7 +156,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->purchase = $purchasereturn;
+        $this->purchasereturn = $purchasereturn;
 
         $this->showModal = true;
     }
@@ -181,7 +187,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->purchase = $purchasereturn;
+        $this->purchasereturn = $purchasereturn;
         $this->date = Carbon::now()->format('Y-m-d');
         $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
         $this->amount = $purchasereturn->due_amount;

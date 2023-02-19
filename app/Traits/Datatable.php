@@ -8,13 +8,13 @@ trait Datatable
 {
     public int $perPage;
 
-    public $orderable = [];
+    public array  $orderable = [];
 
     public string $search = '';
 
-    public $selected = [];
+    public array $selected = [];
 
-    public $paginationOptions = [];
+    public array $paginationOptions = [];
 
     public bool $refreshIndex;
 

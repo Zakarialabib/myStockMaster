@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Currency;
 use App\Http\Livewire\WithSorting;
 use App\Models\Currency;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -47,7 +45,8 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
+    /** @var array */
+    protected $rules = [
         'currency.name'          => 'required|string|max:255',
         'currency.code'          => 'required|string|max:255',
         'currency.symbol'        => 'required|string|max:255',
@@ -63,7 +62,7 @@ class Index extends Component
         $this->orderable = (new Currency())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('currency_access'), 403);
 

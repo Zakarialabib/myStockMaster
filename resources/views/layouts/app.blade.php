@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ dark: isDarkMode, rtl : isRtl }" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html x-data="mainState" :class="{ dark: isDarkMode, rtl: isRtl }" class="scroll-smooth"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -7,17 +8,23 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="nofollow">
-    
+
     <title>@yield('title') || {{ settings()->company_name }}</title>
     <!-- Styles -->
-   
+
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
-    
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="/images/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{{ settings()->company_name }}">
+
     @vite('resources/css/app.css')
-    
+
     @include('includes.main-css')
-    
+
 </head>
 
 <body class="antialiased bg-body text-body font-body" dir="ltr">
@@ -38,27 +45,54 @@
                 <x-navbar />
 
                 <main class="flex-1">
-                    
+
                     @yield('breadcrumb')
-                    
+
                     @yield('content')
 
                     @isset($slot)
-                    {{ $slot }}
+                        {{ $slot }}
                     @endisset
                     <x-settings-bar />
-                    
+
                 </main>
-                
+
                 <!-- Footer -->
                 <x-footer />
 
             </div>
         </div>
     </div>
+
     <!-- Scripts -->
     @include('includes.main-js')
     @vite('resources/js/app.js')
-</body>
 
+     @production
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        </script>
+    @endproduction
+
+    <script>
+        if('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+  </script>
+
+</body>
 </html>

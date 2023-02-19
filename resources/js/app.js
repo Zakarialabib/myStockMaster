@@ -3,6 +3,9 @@ import '../css/app.css';
 import "../css/theme.css";
 import "../css/font.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
+import {livewire_hot_reload} from 'virtual:livewire-hot-reload'
+
+livewire_hot_reload();
 
 import swal from 'sweetalert2';
 

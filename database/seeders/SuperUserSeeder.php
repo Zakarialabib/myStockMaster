@@ -19,6 +19,7 @@ class SuperUserSeeder extends Seeder
     {
         $user = User::create([
             'id'                => 1,
+            'uuid'              => fake()->Uuid(),
             'name'              => 'Admin',
             'email'             => 'admin@gmail.com',
             'password'          => bcrypt('password'),

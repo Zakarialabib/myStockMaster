@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\Wallet;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -53,7 +51,7 @@ class Create extends Component
         'tax_number' => 'nullable',
     ];
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('customer_create'), 403);
 

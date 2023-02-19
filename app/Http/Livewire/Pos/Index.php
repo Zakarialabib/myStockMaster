@@ -12,9 +12,8 @@ use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Exception;
+use App\Jobs\PaymentNotification;
 
 class Index extends Component
 {
@@ -120,7 +119,7 @@ class Index extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         $cart_items = Cart::instance($this->cart_instance)->content();
 
@@ -197,6 +196,9 @@ class Index extends Component
             }
 
             $this->alert('success', __('Sale created successfully!'));
+
+            // dispatch the Send Payment Notification job
+            PaymentNotification::dispatch($sale);
 
             $this->checkoutModal = false;
         } catch (Exception $e) {
