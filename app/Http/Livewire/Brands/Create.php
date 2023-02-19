@@ -36,7 +36,7 @@ class Create extends Component
     }
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'name'        => 'required|min:3|max:255',
         'description' => 'nullable',
         'image'       => 'nullable|image|max:1024',

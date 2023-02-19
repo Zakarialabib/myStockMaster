@@ -34,6 +34,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $categories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
  * @property-read int|null $products_count
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Language whereDeletedAt($value)
  */
 class Language extends Model
 {

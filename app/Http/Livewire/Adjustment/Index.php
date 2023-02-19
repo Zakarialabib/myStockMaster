@@ -50,10 +50,10 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
-        'adjustment.date'      => ['date', 'required'],
-        'adjustment.note'      => ['string', 'max:255', 'nullable'],
-        'adjustment.reference' => ['string', 'max:255', 'nullable'],
+    protected $rules = [
+        'adjustment.date'      => ['date|required'],
+        'adjustment.note'      => ['string|max:255|nullable'],
+        'adjustment.reference' => ['string|max:255|nullable'],
     ];
 
     public function mount(): void

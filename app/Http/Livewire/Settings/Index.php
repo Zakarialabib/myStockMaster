@@ -29,7 +29,7 @@ class Index extends Component
     public $image;
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'settings.company_name'              => 'required|string|min:1|max:255',
         'settings.company_email'             => 'required|string|min:1|max:255',
         'settings.company_phone'             => 'required|string|min:1|max:255',

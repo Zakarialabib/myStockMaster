@@ -26,7 +26,7 @@ class Create extends Component
     public $name;
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'name' => 'required|min:3|max:255',
     ];
 

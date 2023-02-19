@@ -23,14 +23,14 @@ class Create extends Component
     public $supplier;
 
     /** @var array */
-    public $rules = [
-        'supplier.name'       => ['required', 'string', 'max:255'],
-        'supplier.email'      => ['nullable', 'string', 'max:255'],
-        'supplier.phone'      => ['required'],
-        'supplier.address'    => ['nullable', 'string', 'max:255'],
-        'supplier.city'       => ['nullable', 'string', 'max:255'],
-        'supplier.country'    => ['nullable', 'string', 'max:255'],
-        'supplier.tax_number' => ['nullable', 'string', 'max:255'],
+    protected $rules = [
+        'supplier.name'       => 'required|string|max:255',
+        'supplier.phone'      => 'required|numeric',
+        'supplier.email'      => 'nullable|email|max:255',
+        'supplier.address'    => 'nullable|string|max:255',
+        'supplier.city'       => 'nullable|string|max:255',
+        'supplier.country'    => 'nullable|string|max:255',
+        'supplier.tax_number' => 'nullable|numeric|max:255',
     ];
 
     public function mount(Supplier $supplier): void

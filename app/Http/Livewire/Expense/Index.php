@@ -55,14 +55,13 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'expense.reference'    => 'required|string|max:255',
         'expense.category_id'  => 'required|integer|exists:expense_categories,id',
         'expense.date'         => 'required|date',
         'expense.amount'       => 'required|numeric',
         'expense.details'      => 'nullable|string|max:255',
-        'expense.user_id'      => '',
-        'expense.warehouse_id' => '',
+        'expense.warehouse_id' => 'nullable',
     ];
 
     public function mount(): void
