@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
             ProductsSeeder::class,
             CustomersSeeder::class,
+            ProductsSeeder::class,
 
             CurrencySeeder::class,
             SettingsSeeder::class,
