@@ -21,8 +21,8 @@ it('tests the create customer validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', 'John doe')
-        ->set('phone', '00000000000')
+        ->set('customer.name', 'John doe')
+        ->set('customer.phone', '00000000000')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -32,16 +32,16 @@ it('tests the create customer validation rules', function () {
     ]);
 });
 
-it('tests the create user component validation', function () {
+it('tests the create customer component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', '')
-        ->set('phone', '')
+        ->set('customer.name', '')
+        ->set('customer.phone', '')
         ->call('create')
         ->assertHasErrors(
-            ['name' => 'required'],
-            ['phone' => 'required'],
+            ['customer.name' => 'required'],
+            ['customer.phone' => 'required'],
         );
 });

@@ -20,23 +20,26 @@ it('tests the brand create component', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', 'apple')
+        ->set('brand.name', 'apple')
+        ->set('brand.description', faker()->realText(120))
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('brands', [
         'name' => 'apple',
+        'description' => 'some description',
     ]);
 });
 
-it('tests the create user component validation', function () {
+it('tests the create brand component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', '')
+        ->set('brand.name', '')
+        ->set('brand.description', '')
         ->call('create')
         ->assertHasErrors(
-            ['name' => 'required'],
+            ['brand.name' => 'required'],
         );
 });

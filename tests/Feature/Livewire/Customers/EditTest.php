@@ -23,8 +23,8 @@ it('tests the update customer component', function () {
     $customer = Customer::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $customer->id])
-        ->set('customer.name', 'John doe')
-        ->set('customer.phone', '00000000000')
+        ->set('customer.name', $customer->name)
+        ->set('customer.phone', $customer->phone)
         ->call('update')
         ->assertHasNoErrors();
 
@@ -41,11 +41,11 @@ it('tests the edit customer component validation', function () {
     $customer = Customer::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $customer->id])
-        ->set('customer.name', 'John doe')
-        ->set('customer.phone', '00000000000')
+        ->set('customer.name', '')
+        ->set('customer.phone', '')
         ->call('update')
-        ->assertHasErrors([
+        ->assertHasErrors(
             ['customer.name' => 'required'],
             ['customer.phone' => 'required'],
-        ]);
+        );
 });

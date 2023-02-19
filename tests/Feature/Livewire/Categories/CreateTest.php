@@ -21,7 +21,7 @@ it('tests the create category validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', 'apple')
+        ->set('category.name', 'apple')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -30,14 +30,14 @@ it('tests the create category validation rules', function () {
     ]);
 });
 
-it('tests the create user component validation', function () {
+it('tests the create category component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', '')
+        ->set('category.name', '')
         ->call('create')
         ->assertHasErrors(
-            ['name' => 'required'],
+            ['category.name' => 'required'],
         );
 });

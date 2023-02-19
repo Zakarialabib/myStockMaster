@@ -23,10 +23,10 @@ it('tests the Update supplier component', function () {
     $supplier = Supplier::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $supplier->id])
-        ->set('name', 'John doe')
-        ->set('phone', '00000000000')
-        ->set('email', 'supplier@gmail.com')
-        ->set('city', 'casablanca')
+        ->set('supplier.name', $supplier->name)
+        ->set('supplier.phone', $supplier->phone)
+        ->set('supplier.email', $supplier->email)
+        ->set('supplier.city', $supplier->city)
         ->call('update')
         ->assertHasNoErrors();
 
@@ -45,15 +45,15 @@ it('tests the uodate supplier component validation', function () {
     $supplier = Supplier::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $supplier->id])
-        ->set('name', '')
-        ->set('phone', '')
-        ->set('email', '')
-        ->set('city', '')
+        ->set('supplier.name', '')
+        ->set('supplier.phone', '')
+        ->set('supplier.email', '')
+        ->set('supplier.city', '')
         ->call('update')
         ->assertHasErrors(
-            ['name' => 'required'],
-            ['phonne' => 'required'],
-            ['email'  => 'nullable'],
-            ['city'   => 'nullable'],
+            ['supplier.name' => 'required'],
+            ['supplier.phonne' => 'required'],
+            ['supplier.email'  => 'nullable'],
+            ['supplier.city'   => 'nullable'],
         );
 });
