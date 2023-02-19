@@ -6,22 +6,23 @@
                     <i class="fas fa-camera"></i>
                 </a>
             </span>
-            <x-input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" autofocus />
+            <x-input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" 
+            class="pl-4" placeholder="{{__('Search for products with code, reference or name')}}" autofocus />
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
-            <div class="lg:w-1/3 md:w-1/4 sm:w-1/2 px-2">
+            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="category" :value="__('Category')" />
                 <x-select-list
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     required id="categories" name="categories" wire:model="category_id" :options="$this->listsForFields['categories']" />
             </div>
-            <div class="lg:w-1/3 md:w-1/4 sm:w-1/2 px-2">
+            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="warehouse" :value="__('Warehouse')" />
                 <x-select-list
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                     required id="warehouses" name="warehouses" wire:model="warehouse_id" :options="$this->listsForFields['warehouses']" />
             </div>
-            <div class="lg:w-1/3 md:w-1/4 sm:w-1/2 px-2">
+            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="showCount" :value="__('Product per page')" />
                 <select wire:model="showCount"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">

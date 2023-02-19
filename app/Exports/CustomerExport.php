@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Customer;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class CustomerExport implements FromView
@@ -17,10 +17,15 @@ class CustomerExport implements FromView
     /** @var mixed */
     protected $models;
 
+    /**  */
+    public function __construct()
+    {
+    }
+
     public function query()
     {
         if ($this->models) {
-            return  Customer::query()->whereIn('id', $this->models);
+            return Customer::query()->whereIn('id', $this->models);
         }
 
         return Customer::query();

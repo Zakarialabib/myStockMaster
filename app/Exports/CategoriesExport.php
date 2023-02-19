@@ -7,9 +7,9 @@ namespace App\Exports;
 use App\Models\Category;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithDrawings;
 
 class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDrawings
 {
@@ -28,7 +28,7 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
     public function query()
     {
         if ($this->models) {
-            return  Category::query()->whereIn('id', $this->models);
+            return Category::query()->whereIn('id', $this->models);
         }
 
         return Category::query();
@@ -36,6 +36,7 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
 
     /**
      * @param mixed $row
+     *
      * @return array
      */
     public function map($row): array
@@ -56,7 +57,7 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
         ];
     }
 
-        /** @return array */
+    /** @return array */
     public function drawings(): array
     {
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();

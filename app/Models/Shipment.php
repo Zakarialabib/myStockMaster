@@ -12,18 +12,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property-read \App\Models\Sale $sale
  * @property-read \App\Models\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Shipment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Shipment query()
+ *
  * @mixin \Eloquent
  */
 class Shipment extends Model
 {
-    /** @var string[] */
     public $orderable = [
         'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
     ];
-    /** @var string[] */
     public $filterable = [
         'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
     ];

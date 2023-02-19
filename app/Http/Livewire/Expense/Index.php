@@ -25,7 +25,7 @@ class Index extends Component
     /** @var mixed */
     public $expense;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
@@ -41,7 +41,7 @@ class Index extends Component
 
     public $listsForFields = [];
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -56,11 +56,11 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'expense.reference'    => 'required|string|max:255',
-        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
-        'expense.date'         => 'required|date',
-        'expense.amount'       => 'required|numeric',
-        'expense.details'      => 'nullable|string|max:255',
+        'expense.reference' => 'required|string|max:255',
+        'expense.category_id' => 'required|integer|exists:expense_categories,id',
+        'expense.date' => 'required|date',
+        'expense.amount' => 'required|numeric',
+        'expense.details' => 'nullable|string|max:255',
         'expense.warehouse_id' => 'nullable',
     ];
 
@@ -80,8 +80,8 @@ class Index extends Component
 
         $query = Expense::with(['category', 'user', 'warehouse'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -169,13 +169,13 @@ class Index extends Component
         return $this->callExport()->download('expenses.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    private function callExport(): ExpenseExport
-    {
-        return (new ExpenseExport());
-    }
-
     protected function initListsForFields()
     {
         $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
+    }
+
+    private function callExport(): ExpenseExport
+    {
+        return new ExpenseExport();
     }
 }

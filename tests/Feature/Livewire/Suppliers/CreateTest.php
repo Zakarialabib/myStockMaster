@@ -31,9 +31,10 @@ it('tests the create supplier component', function () {
     assertDatabaseHas('suppliers', [
         'name'  => 'John doe',
         'phone' => '00000000000',
+        'email' => 'supplier@gmail.com',
+        'city' => 'casablanca',
     ]);
 });
-
 
 it('tests the create supplier component validation', function () {
     $this->withoutExceptionHandling();
@@ -47,9 +48,6 @@ it('tests the create supplier component validation', function () {
         ->call('create')
         ->assertHasErrors(
             ['supplier.name' => 'required'],
-            ['supplier.phonne' => 'required'],
-            ['supplier.email' => 'nullable'],
-            ['supplier.city' => 'nullable'],
+            ['supplier.phonne' => 'required']
         );
 });
-

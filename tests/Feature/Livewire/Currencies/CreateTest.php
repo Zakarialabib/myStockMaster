@@ -35,21 +35,20 @@ it('tests the create currency can create', function () {
     ]);
 });
 
-
 it('tests the create user component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-    ->set('currency.name', '')
-    ->set('currency.code', '')
-    ->set('currency.symbol', '')
-    ->set('currency.exchange_rate', '')
+        ->set('currency.name', '')
+        ->set('currency.code', '')
+        ->set('currency.symbol', '')
+        ->set('currency.exchange_rate', '')
         ->call('create')
         ->assertHasErrors(
             ['currency.name' => 'required'],
-            ['currency.code' => 'required'],
-            ['currency.symbol' => 'required'],
+            ['currency.code'          => 'required'],
+            ['currency.symbol'        => 'required'],
             ['currency.exchange_rate' => 'required'],
         );
 });

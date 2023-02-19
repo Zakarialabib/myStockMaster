@@ -8,12 +8,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentPurchase extends Mailable
+class ReturnSaleMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
 
-    public $invoice;
+    public $returnSaleMail;
 
     public $pdf;
 
@@ -22,9 +22,9 @@ class PaymentPurchase extends Mailable
      *
      * @return void
      */
-    public function __construct($invoice, $pdf)
+    public function __construct($returnSaleMail, $pdf)
     {
-        $this->invoice = $invoice;
+        $this->returnSaleMail = $returnSaleMail;
         $this->pdf = $pdf;
     }
 
@@ -35,11 +35,11 @@ class PaymentPurchase extends Mailable
      */
     public function build()
     {
-        return $this->subject('PAYMENT RECEIPT')
-            ->markdown('emails.paymentPurchaseMail')
-            ->attachData($this->pdf, 'PaymentPurchase_'.$this->invoice['reference'].'.pdf', [
+        return $this->subject('Return Sale Details - '.settings()->company_name)
+            ->markdown('emails.returnSaleMail')
+            ->attachData($this->pdf, 'Return_'.$this->returnSaleMail['reference'].'.pdf', [
                 'mime' => 'application/pdf',
             ])
-            ->with('data', $this->invoice);
+            ->with('data', $this->returnSaleMail);
     }
 }

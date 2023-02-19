@@ -13,6 +13,8 @@
                             </p>
                             <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
                                 {{ format_currency($this->totalSales) }}
+                                {{ format_currency($customer->totalSales) }}
+
                             </p>
                         </div>
                     </div>
@@ -23,6 +25,7 @@
                             </p>
                             <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
                                 {{ format_currency($this->totalPayments) }}
+                                {{ format_currency($customer->totalPayments) }}
                             </p>
                         </div>
                     </div>
@@ -44,6 +47,7 @@
                             </p>
                             <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
                                 {{ format_currency($this->totalDue) }}
+                                {{ format_currency($customer->debit) }}
                             </p>
                         </div>
                     </div>
@@ -54,6 +58,7 @@
                             </p>
                             <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
                                 {{ format_currency($this->profit) }}
+                                
                             </p>
                         </div>
                     </div>

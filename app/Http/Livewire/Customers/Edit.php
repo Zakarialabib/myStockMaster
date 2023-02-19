@@ -6,8 +6,8 @@ namespace App\Http\Livewire\Customers;
 
 use App\Models\Customer;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Edit extends Component
@@ -20,25 +20,35 @@ class Edit extends Component
     /** @var mixed */
     public $customer;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editModal'];
 
     /** @var array */
     protected $rules = [
-        'customer.name'       => 'required|string|max:255',
-        'customer.email'      => 'nullable|email|max:255',
-        'customer.phone'      => 'required|numeric',
-        'customer.city'       => 'nullable|max:255',
-        'customer.country'    => 'nullable|max:255',
-        'customer.address'    => 'nullable',
-        'customer.tax_number' => 'nullable|numeric',
+        'customer.name' => 'required|string|min:3|max:255',
+        'customer.email' => 'nullable|email|max:255',
+        'customer.phone' => 'required|numeric',
+        'customer.city' => 'nullable|max:255',
+        'customer.country' => 'nullable|max:255',
+        'customer.address' => 'nullable|max:255',
+        'customer.tax_number' => 'nullable|max:255',
     ];
+
+    protected $messages = [
+        'customer.name.required' => 'The name field cannot be empty.',
+        'customer.phone.required' => 'The code field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function render()
     {
         return view('livewire.customers.edit');
     }
-  
+
     public function editModal($id)
     {
         abort_if(Gate::denies('customer_update'), 403);
@@ -47,19 +57,26 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->customer = Customer::where('id', $id)->firstOrFail();
+        $this->customer = Customer::findOrFail($id);
 
         $this->editModal = true;
     }
 
     public function update(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->customer->save();
+        try{
 
-        $this->editModal = false;
+            $this->customer->save($validatedData);
 
-        $this->alert('success', __('Customer updated successfully.'));
+            $this->alert('success', __('Customer updated successfully.'));
+
+            $this->editModal = false;
+
+            $this->emit('refreshIndex');
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
+        }
     }
 }

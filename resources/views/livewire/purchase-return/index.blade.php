@@ -57,8 +57,8 @@
                     <x-table.td>
                         @if ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Pending)
                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Canceled)
-                            <x-badge info>{{ __('Canceled') }}</x-badge>
+                        @elseif ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Returned)
+                            <x-badge info>{{ __('Returned') }}</x-badge>
                         @elseif($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Completed)
                             <x-badge success>{{ __('Completed') }}</x-badge>
                         @endif

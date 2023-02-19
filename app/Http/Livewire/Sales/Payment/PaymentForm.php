@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales\Payment;
 
+use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use App\Enums\PaymentStatus;
+use Throwable;
 
 class PaymentForm extends Component
 {
-    /** @var string[] */
+    use LivewireAlert;
+    /** @var array<string> */
     public $listeners = [
         'paymentModal',
         'refreshIndex' => '$refresh',
@@ -39,27 +40,21 @@ class PaymentForm extends Component
     public $note;
 
     protected $rules = [
-        'date'      => 'required|date',
+        'date' => 'required|date',
         'reference' => 'required|string|max:255',
-        'amount'    => 'required|numeric',
-        'note'      => 'nullable|string|max:1000',
+        'amount' => 'required|numeric',
+        'note' => 'nullable|string|max:1000',
         // 'sale_id' => 'nullable|integer',
         'payment_method' => 'required|string|max:255',
     ];
 
-    // todo : show amount due in amount field
-    // make new refrence number
-    // make today date
-
     public function mount(Sale $sale)
     {
         $this->sale = $sale;
-        $this->date = Carbon::now()->format('Y-m-d');
-        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->date = date('Y-m-d');
+        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $sale->due_amount;
     }
-
-    // show sale Payments modal
 
     public function paymentModal($sale)
     {
@@ -72,25 +67,26 @@ class PaymentForm extends Component
 
     public function save()
     {
-        DB::transaction(function () {
+        try {
             $this->validate();
 
             $this->sale = $this->salepayment->sale->id;
 
             SalePayment::create([
-                'date'           => $this->date,
-                'reference'      => $this->reference,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'sale_id'        => $this->sale_id,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'sale_id' => $this->sale_id,
                 'payment_method' => $this->payment_method,
+                'user_id' => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
 
             $due_amount = $sale->due_amount - $this->amount;
 
-            if ($due_amount == $sale->total_amount) {
+            if ($due_amount === $sale->total_amount) {
                 $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::Partial;
@@ -99,15 +95,19 @@ class PaymentForm extends Component
             }
 
             $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
-            $this->emit('refreshIndex');
+            $this->alert('success', __('Sale Payment created successfully.'));
 
             $this->paymentModal = false;
-        });
+
+            $this->emit('refreshIndex');
+        } catch (Throwable $th) {
+            $this->alert('error', 'Error'.$th->getMessage());
+        }
     }
 
     public function render()

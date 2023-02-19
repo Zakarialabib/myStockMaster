@@ -19,7 +19,7 @@
                         <x-label for="phone" :value="__('Phone')" required />
                         <input
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            type="number" name="phone" wire:model="phone" required>
+                            type="text" name="phone" wire:model="phone" required>
                     </div>
                     <div class="w-full px-2">
                         <x-label for="Role" :value="__('Role')" required />

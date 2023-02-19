@@ -18,6 +18,7 @@ class FilterQueryBuilder
     /**
      * @param mixed $query
      * @param mixed $data
+     *
      * @return mixed
      */
     public function apply($query, $data)
@@ -40,6 +41,7 @@ class FilterQueryBuilder
     /**
      * @param mixed $filter
      * @param mixed $query
+     *
      * @return mixed
      */
     public function contains($filter, $query)
@@ -52,6 +54,7 @@ class FilterQueryBuilder
     /**
      * @param mixed $query
      * @param mixed $data
+     *
      * @return mixed
      */
     protected function makeOrder($query, $data)
@@ -65,7 +68,7 @@ class FilterQueryBuilder
             $relatedTable = $relatedModel->getTable();
             $as = "prefix_{$relatedTable}";
 
-            if ( ! $belongs instanceof BelongsTo) {
+            if (! $belongs instanceof BelongsTo) {
                 return;
             }
 
@@ -87,6 +90,7 @@ class FilterQueryBuilder
     /**
      * @param mixed $filter
      * @param mixed $query
+     *
      * @return mixed
      */
     protected function makeFilter($query, $filter)
@@ -112,10 +116,11 @@ class FilterQueryBuilder
         }
     }
 
-      /**
-       * @param mixed $column
-       * @return bool
-       */
+    /**
+     * @param mixed $column
+     *
+     * @return bool
+     */
     protected function isNestedColumn($column)
     {
         return strpos($column, '.') !== false;

@@ -13,7 +13,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createExpenseCategory'];
 
     public $createExpenseCategory = false;
@@ -23,8 +23,8 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'expenseCategory.name'        => 'required',
-        'expenseCategory.description' => 'nullable',
+        'expenseCategory.name' => 'required|string|min:3|max:255',
+        'expenseCategory.description' => 'nullable|string',
     ];
 
     public function mount(ExpenseCategory $expenseCategory): void

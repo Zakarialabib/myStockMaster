@@ -40,7 +40,7 @@ class Index extends Component
 
     public $import;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -67,8 +67,8 @@ class Index extends Component
         abort_if(Gate::denies('customer_access'), 403);
 
         $query = Customer::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -124,7 +124,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $customers = Customer::whereIn('id', $this->selected)->get();
+        // $customers = Customer::whereIn('id', $this->selected)->get();
 
         return $this->callExport()->forModels($this->selected)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
@@ -134,11 +134,6 @@ class Index extends Component
         abort_if(Gate::denies('customer_access'), 403);
 
         return $this->callExport()->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    private function callExport(): CustomerExport
-    {
-        return (new CustomerExport());
     }
 
     public function import()
@@ -158,10 +153,15 @@ class Index extends Component
 
         $file = $this->file('file');
 
-        Excel::import(new CustomerImport(), $this->file('file'));
+        Excel::import(new CustomerImport(), $file);
 
         $this->import = false;
 
         $this->alert('success', __('Customer imported successfully.'));
+    }
+
+    private function callExport(): CustomerExport
+    {
+        return new CustomerExport();
     }
 }

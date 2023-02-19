@@ -14,15 +14,15 @@
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="name" :value="__('Name')" />
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            wire:model.defer="name" />
-                        <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
+                            wire:model.lazy="brand.name" />
+                        <x-input-error :messages="$errors->get('brand.name')" for="name" class="mt-2" />
                     </div>
 
                     <div class="xl:w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                         <x-label for="description" :value="__('Description')" />
                         <x-input id="description" class="block mt-1 w-full" type="text" name="description"
-                            wire:model.defer="description" />
-                        <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
+                            wire:model.lazy="brand.description" />
+                        <x-input-error :messages="$errors->get('brand.description')" for="description" class="mt-2" />
 
                     </div>
 

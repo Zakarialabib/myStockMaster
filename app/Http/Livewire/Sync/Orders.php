@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sync;
 
-use Livewire\Component;
 use App\Models\Sale;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Orders extends Component
@@ -12,7 +14,7 @@ class Orders extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['syncModal'];
 
     public $type;
@@ -25,7 +27,7 @@ class Orders extends Component
     {
         if ($this->type === 'woocommerce') {
             $this->store_url = settings()->woocommerce_store_url;
-        } elseif ($type === 'shopify') {
+        } elseif ($this->type === 'shopify') {
             $this->store_url = settings()->shopify_store_url;
         } elseif ($type === 'custom') {
             $this->store_url = settings()->custom_store_url;
@@ -42,11 +44,11 @@ class Orders extends Component
                 settings()->woocommerce_api_secret,
                 ['wp_api' => true, 'version' => 'wc/v3']
             );
-        } elseif ($type === 'shopify') {
+        } elseif ($this->type === 'shopify') {
             $client = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
-                'api_key'     => settings()->shopify_api_key,
-                'api_secret'  => settings()->shopify_api_secret,
+                'api_key' => settings()->shopify_api_key,
+                'api_secret' => settings()->shopify_api_secret,
             ]);
         } elseif ($type === 'custom') {
             $client = Http::withHeaders([

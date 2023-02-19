@@ -2,7 +2,7 @@
 <html lang="en">
    <head>
       <meta charset="utf-8">
-      <title>Supplier  : {{$provider['provider_name']}}</title>
+      <title>{{__('Supplier')}}  : {{ supplier->name }}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
@@ -13,7 +13,7 @@
          </div>
         
          <div id="Title-heading">
-               Supplier  : {{$provider['provider_name']}}
+               {{__('Supplier')}}  : {{ $supplier->name }}
          </div>
          </div>
       </header>
@@ -23,7 +23,7 @@
                <table class="table-sm">
                   <thead>
                      <tr>
-                        <th class="desc">Info fournisseur</th>
+                        <th class="desc">{{__('Supplier Info')}}</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -45,7 +45,7 @@
                <table class="table-sm">
                   <thead>
                      <tr>
-                        <th class="desc">Infos société</th>
+                        <th class="desc">{{__('Company Info')}}</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -53,8 +53,8 @@
                         <td>
                            <div id="comp">{{settings()->company_name}}</div>
                            <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
-                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
-                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
+                           <div><strong>{{__('Address')}}:</strong>  {{settings()->company_address}}</div>
+                           <div><strong>{{__('Phone')}}:</strong>  {{settings()->company_phone}}</div>
                            <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
                         </td>
                      </tr>
@@ -64,16 +64,16 @@
          </div>
          <div id="details_inv">
             <h3 style="margin-bottom:10px">
-                  Tous les achats ( Non payé/Partiel )
+                  {{__('All purchases ( Not Paid/Partial )')}}
             </h3>
             <table  class="table-sm">
                <thead>
                   <tr>
                      <th>{{__('Date')}}</th>
-                     <th>REF</th>
+                     <th>{{__('Reference')}}</th>
                      <th>{{__('Payment amount')}}</th>
-                     <th>DÛ</th>
-                     <th>ETAT DE PAIEMENT</th>
+                     <th>{{__('Due amount')}}</th>
+                     <th>{{__('Payment status')}}</th>
                   </tr>
                </thead>
                <tbody>
@@ -81,9 +81,9 @@
                   <tr>
                      <td>{{$purchase->date}} </td>
                      <td>{{$purchase->reference}}</td>
-                     <td>{{$symbol}} {{$purchase['paid_amount']}} </td>
-                     <td>{{$symbol}} {{$purchase['due']}} </td>
-                     <td>{{$purchase['payment_status']}} </td>
+                     <td>{{$purchase->paid_amount }} </td>
+                     <td>{{$purchase->due_amount }} </td>
+                     <td>{{$purchase->payment_status }} </td>
                   </tr>
                   @endforeach
                </tbody>

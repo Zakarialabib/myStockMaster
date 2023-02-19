@@ -21,10 +21,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $assignedUsers
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\User> $assignedUsers
  * @property-read int|null $assigned_users_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Product> $products
  * @property-read int|null $products_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newQuery()
@@ -39,13 +41,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Warehouse extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
+    /** @var array<string> $orderable */
     public $orderable = [
         'id',
         'name',
@@ -57,7 +60,7 @@ class Warehouse extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
+    /** @var array<string> $filterable */
     public $filterable = [
         'id',
         'name',

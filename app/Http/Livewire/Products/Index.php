@@ -33,7 +33,7 @@ class Index extends Component
 
     public $productIds;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
@@ -47,7 +47,7 @@ class Index extends Component
 
     public $selectAll;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -92,12 +92,12 @@ class Index extends Component
         $query = Product::query()
             ->with([
                 'category' => fn ($query) => $query->select('id', 'name'),
-                'brand'    => fn ($query) => $query->select('id', 'name'),
+                'brand' => fn ($query) => $query->select('id', 'name'),
             ])
             ->select('products.*')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -108,7 +108,7 @@ class Index extends Component
 
     public function selectAll()
     {
-        if (count(array_intersect($this->selected, Product::pluck('id')->toArray())) == count(Product::pluck('id')->toArray())) {
+        if (count(array_intersect($this->selected, Product::pluck('id')->toArray())) === count(Product::pluck('id')->toArray())) {
             $this->selected = [];
         } else {
             $this->selected = Product::pluck('id')->toArray();
@@ -117,10 +117,10 @@ class Index extends Component
 
     public function selectPage()
     {
-        if (count(array_intersect($this->selected, Product::paginate($this->perPage)->pluck('id')->toArray())) == count(Product::paginate($this->perPage)->pluck('id')->toArray())) {
+        if (count(array_intersect($this->selected, Product::paginate($this->perPage)->pluck('id')->toArray())) === count(Product::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
-            $this->selected = $productIds;
+            $this->selected = $this->productIds;
         }
     }
 
@@ -176,7 +176,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_access'), 403);
 
-        $customers = Product::whereIn('id', $this->selected)->get();
+        // $customers = Product::whereIn('id', $this->selected)->get();
 
         return $this->callExport()->forModels($this->selected)->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
@@ -188,23 +188,23 @@ class Index extends Component
         return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    private function callExport(): ProductExport
-    {
-        return (new ProductExport());
-    }
-
     public function getCategoriesProperty()
     {
-        return Category::select('name', 'id')->get();
+        return Category::select(['name', 'id'])->get();
     }
 
     public function getBrandsProperty()
     {
-        return Brand::select('name', 'id')->get();
+        return Brand::select(['name', 'id'])->get();
     }
 
     public function getWarehousesProperty()
     {
-        return Warehouse::select('name', 'id')->get();
+        return Warehouse::select(['name', 'id'])->get();
+    }
+
+    private function callExport(): ProductExport
+    {
+        return new ProductExport();
     }
 }

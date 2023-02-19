@@ -15,7 +15,7 @@
         </h5>
     </x-slot>
     <x-slot name="description">
-        <form wire:submit.prevent="setProductDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
+        <form wire:submit.prevent="productDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
             method="POST">
             <div class="modal-body">
                 @if (session()->has('discount_message' . $cart_item->id))
@@ -40,12 +40,12 @@
                 <div class="mb-4">
                     @if ($discount_type[$cart_item->id] == 'percentage')
                         <label>{{__('Discount(%)')}} <span class="text-red-500">*</span></label>
-                        <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number"
+                        <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="text"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             value="{{ $item_discount[$cart_item->id] }}" min="0" max="100">
                     @elseif($discount_type[$cart_item->id] == 'fixed')
                         <label>{{ __('Discount') }} <span class="text-red-500">*</span></label>
-                        <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="number"
+                        <input wire:model.defer="item_discount.{{ $cart_item->id }}" type="text"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             value="{{ $item_discount[$cart_item->id] }}">
                     @endif

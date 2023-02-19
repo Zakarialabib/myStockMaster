@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Warehouse;
-use App\Models\Category;
-use Livewire\Component;
 use Illuminate\Support\Collection;
+use Livewire\Component;
 use Livewire\WithPagination;
 
 class SearchProduct extends Component
@@ -16,12 +16,6 @@ class SearchProduct extends Component
     use WithPagination;
 
     public $product;
-
-    protected $listeners = [
-        'selectedCategory'  => 'categoryChanged',
-        'selectedWarehouse' => 'warehouseChanged',
-        'showCount'         => 'showCountChanged',
-    ];
 
     public $listsForFields = [];
 
@@ -36,6 +30,12 @@ class SearchProduct extends Component
     public $search_results;
 
     public $how_many;
+
+    protected $listeners = [
+        'selectedCategory' => 'categoryChanged',
+        'selectedWarehouse' => 'warehouseChanged',
+        'showCount' => 'showCountChanged',
+    ];
 
     public function mount(): void
     {
@@ -52,11 +52,9 @@ class SearchProduct extends Component
         return view('livewire.search-product', [
             'products' => Product::where('name', 'like', '%'.$this->query.'%')
                 ->orWhere('code', 'like', '%'.$this->query.'%')
-                ->when($this->category_id, function ($query) {
-                    return $query->where('category_id', $this->category_id);
-                })->when($this->warehouse_id, function ($query) {
-                    return $query->where('warehouse_id', $this->warehouse_id);
-                })->paginate($this->how_many),
+                ->when($this->category_id, fn ($q) => $q->where('category_id', $this->category_id))
+                ->when($this->warehouse_id, fn ($q) => $q->where('warehouse_id', $this->warehouse_id))
+                ->paginate($this->how_many),
         ]);
     }
 

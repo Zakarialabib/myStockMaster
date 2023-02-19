@@ -56,8 +56,8 @@
         <livewire:livesearch />
 
         {{-- <livewire:calculator /> --}}
-        <div class="bg-white ">
-            <div class="sm:flex sm:flex-wrap md:inline-flex lg:text-lg sm:text-sm float-right gap-4 py-2">
+        <div class="bg-white">
+            <div class="flex flex-wrap justify-center lg:text-lg sm:text-sm gap-4 py-4 space-y-2">
                 <x-button type="button" primary data-date="today" class="js-date mr-2 active:bg-indigo-800">
                     {{ __('Today') }}
                 </x-button>
