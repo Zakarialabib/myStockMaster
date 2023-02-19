@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
@@ -26,14 +28,14 @@ class Register extends Component
     public function register()
     {
         $this->validate([
-            'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
+            'name'     => ['required'],
+            'email'    => ['required', 'email', 'unique:users'],
             'password' => ['required', 'min:8', 'same:passwordConfirmation'],
         ]);
 
         $user = User::create([
-            'email' => $this->email,
-            'name' => $this->name,
+            'email'    => $this->email,
+            'name'     => $this->name,
             'password' => Hash::make($this->password),
         ]);
 

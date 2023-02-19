@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sync;
 
 use Livewire\Component;
@@ -33,7 +35,7 @@ class Orders extends Component
     }
 
     public function sync()
-    {  
+    {
         // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {
             $client = new \Automattic\WooCommerce\Client(
@@ -50,8 +52,8 @@ class Orders extends Component
             ]);
         } elseif ($type === 'custom') {
             $client = Http::withHeaders([
-                'Authorization' => 'Bearer ' . settings()->custom_api_key,
-            ])->get(settings()->custom_store_url . '/api');
+                'Authorization' => 'Bearer '.settings()->custom_api_key,
+            ])->get(settings()->custom_store_url.'/api');
         }
 
         // Get the orders from the e-commerce store
@@ -61,6 +63,7 @@ class Orders extends Component
         foreach ($ecomOrders as $order) {
             // Check if the order already exists in the inventory system
             $existingOrder = Sale::where('reference', $order['reference'])->first();
+
             if (empty($existingOrder)) {
                 // Create a new order in the inventory system
                 $newOrder = new Sale();

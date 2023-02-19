@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // some config somewhere 
-        
+        // some config somewhere
+
         if (config('backup.schedule') == 1) {
             $schedule->command(BackupDatabase::class)->dailyAt('17:00');
             $schedule->command(BackupFiles::class)->dailyAt('17:00');
@@ -33,13 +33,10 @@ class Kernel extends ConsoleKernel
             $schedule->command(BackupDatabase::class)->weeklyOn(6, '17:00');
             $schedule->command(BackupFiles::class)
                 ->weeklyOn(6, '17:00');
-
         } elseif (config('backup.schedule') == 3) {
             $schedule->command(BackupDatabase::class)->monthly();
             $schedule->command(BackupFiles::class)->monthly();
-
         }
-
     }
 
     /**

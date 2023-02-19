@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 use Livewire\Component;
@@ -18,10 +20,10 @@ class Notifications extends Component
     {
         $this->user = auth()->user();
 
-        $this->low_quantity_products = Product::select('id','name', 'quantity', 'stock_alert', 'code')
-                                    ->whereColumn('quantity', '<=', 'stock_alert')
-                                    ->take($this->how_many)
-                                    ->get();
+        $this->low_quantity_products = Product::select('id', 'name', 'quantity', 'stock_alert', 'code')
+            ->whereColumn('quantity', '<=', 'stock_alert')
+            ->take($this->how_many)
+            ->get();
     }
 
     public function loadMore()
@@ -35,7 +37,6 @@ class Notifications extends Component
         $notification = $this->user->unreadNotifications[$key];
         $notification->markAsRead();
     }
-    
 
     public function readAll()
     {
@@ -43,7 +44,7 @@ class Notifications extends Component
         $user = auth()->user();
         $user->unreadNotifications->markAsRead();
     }
-    
+
     public function clear()
     {
         // clear all notifications

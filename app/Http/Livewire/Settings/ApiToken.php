@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Settings;
 
 use App\Models\Product;
@@ -27,11 +29,11 @@ class ApiToken extends Component
     public function createToken()
     {
         $this->resetErrorBag();
-        
+
         $abilities = ['read', 'write'];
 
         $token = auth()->user()->createToken('inventory', $abilities)->plainTextToken;
-    
+
         $this->token = $token;
     }
 
@@ -44,16 +46,16 @@ class ApiToken extends Component
     public function countNotExistingProducts()
     {
         $inventoryProducts = Product::pluck('code')->toArray();
-        
+
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . settings()->custom_api_key,
-        ])->get(settings()->custom_store_url . '/api/products');
+            'Authorization' => 'Bearer '.settings()->custom_api_key,
+        ])->get(settings()->custom_store_url.'/api/products');
 
         // dd(settings()->custom_api_key);
         $ecomProducts = $response->json()['data'];
-    
+
         $missingProducts = array_diff($inventoryProducts, array_column($ecomProducts, 'code'));
-    
+
         $this->missingProducts = count($missingProducts);
 
         settings()->update([
@@ -62,8 +64,6 @@ class ApiToken extends Component
 
         return $this->missingProducts;
     }
-
- 
 
     public function render()
     {

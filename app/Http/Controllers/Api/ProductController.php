@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -29,12 +31,12 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $product = Product::create([
-            'id' => $request->id,
-            'name' => $request->name,
+            'id'    => $request->id,
+            'name'  => $request->name,
             'price' => $request->price,
-          ]);
-    
-          return new ProductResource($product);
+        ]);
+
+        return new ProductResource($product);
     }
 
     /**
@@ -45,7 +47,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-          return new ProductResource($product);
+        return new ProductResource($product);
     }
 
     /**
@@ -57,7 +59,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
@@ -68,6 +70,6 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+
     }
 }

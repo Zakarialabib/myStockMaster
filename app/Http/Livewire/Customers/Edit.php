@@ -38,7 +38,7 @@ class Edit extends Component
     {
         return view('livewire.customers.edit');
     }
-  
+
     public function editModal($id)
     {
         abort_if(Gate::denies('customer_update'), 403);

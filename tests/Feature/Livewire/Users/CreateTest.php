@@ -28,9 +28,9 @@ it('tests the create user component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('users', [
-        'name'     => 'John Doe',
-        'phone'    => '00000000000',
-        'email'    => 'admin@admin.com',
+        'name'  => 'John Doe',
+        'phone' => '00000000000',
+        'email' => 'admin@admin.com',
     ]);
 });
 

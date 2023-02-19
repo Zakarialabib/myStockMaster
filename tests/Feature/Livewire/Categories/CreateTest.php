@@ -30,7 +30,6 @@ it('tests the create category validation rules', function () {
     ]);
 });
 
-
 it('tests the create user component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();

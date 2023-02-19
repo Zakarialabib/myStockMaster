@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CustomerFactory extends Factory
 {
-         /**
+    /**
      * The name of the factory's corresponding model.
      *
      * @var string

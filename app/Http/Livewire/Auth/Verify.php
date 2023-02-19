@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +11,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class Verify extends Component
 {
     use LivewireAlert;
-    
+
     public function resend()
     {
         if (Auth::user()->hasVerifiedEmail()) {

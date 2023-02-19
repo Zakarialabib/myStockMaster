@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Auth;
 
 use App\Providers\RouteServiceProvider;
@@ -20,11 +22,11 @@ class Login extends Component
     public $remember = false;
 
     protected array $rules = [
-        'email'        => 'required|email',
-        'password'        => 'required',
+        'email'    => 'required|email',
+        'password' => 'required',
     ];
 
-     /**
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @return void
