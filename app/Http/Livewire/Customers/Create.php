@@ -79,7 +79,7 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createCustomer = false;
-        } catch (Throwable $th) {
+            } catch (\Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

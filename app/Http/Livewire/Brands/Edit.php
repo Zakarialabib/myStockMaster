@@ -64,7 +64,6 @@ class Edit extends Component
     public function update()
     {
         $validatedData = $this->validate();
-
         try {
             if ($this->image) {
                 $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();

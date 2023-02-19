@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
-use App\Enums\PaymentStatus;
+use App\Jobs\PaymentNotification;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
+use App\Enums\PaymentStatus;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
