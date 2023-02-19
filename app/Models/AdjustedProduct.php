@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereDeletedAt($value)
  */
 
 class AdjustedProduct extends Model

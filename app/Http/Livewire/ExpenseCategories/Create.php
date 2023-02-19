@@ -22,9 +22,9 @@ class Create extends Component
     public $expenseCategory;
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'expenseCategory.name'        => 'required',
-        'expenseCategory.description' => '',
+        'expenseCategory.description' => 'nullable',
     ];
 
     public function mount(ExpenseCategory $expenseCategory): void

@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
 
             $table->foreignIdFor(Category::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
@@ -39,6 +40,7 @@ class CreateProductsTable extends Migration
             $table->tinyInteger('tax_type')->nullable();
             $table->text('image')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

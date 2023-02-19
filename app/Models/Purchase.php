@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 /**
  * App\Models\Purchase
@@ -62,10 +64,14 @@ use App\Enums\PurchaseStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $uuid
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUuid($value)
  */
 class Purchase extends Model
 {
     use HasAdvancedFilter;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     /** @var string[] */
     public $orderable = [
@@ -118,6 +124,7 @@ class Purchase extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'supplier_id',

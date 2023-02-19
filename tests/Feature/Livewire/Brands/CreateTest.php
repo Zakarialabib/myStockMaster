@@ -7,7 +7,7 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-it('test the brand create if working', function () {
+it('test the brand create component if working', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
@@ -15,14 +15,28 @@ it('test the brand create if working', function () {
         ->assertViewIs('livewire.brands.create');
 });
 
-it('tests the Create brand validation rules', function () {
+it('tests the brand create component', function () {
+    $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
         ->set('name', 'apple')
-        ->call('create');
+        ->call('create')
+        ->assertHasNoErrors();
 
     assertDatabaseHas('brands', [
         'name' => 'apple',
     ]);
+});
+
+it('tests the create user component validation', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
+
+    Livewire::test(Create::class)
+        ->set('name', '')
+        ->call('create')
+        ->assertHasErrors(
+            ['name' => 'required'],
+        );
 });

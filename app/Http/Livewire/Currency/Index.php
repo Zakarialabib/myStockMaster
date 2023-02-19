@@ -46,7 +46,7 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'currency.name'          => 'required|string|max:255',
         'currency.code'          => 'required|string|max:255',
         'currency.symbol'        => 'required|string|max:255',

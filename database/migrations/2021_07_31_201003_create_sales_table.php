@@ -18,12 +18,10 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-
+            $table->uuid();
             $table->date('date');
             $table->string('reference');
-
             $table->foreignIdFor(Customer::class)->nullable()->constrained()->nullOnDelete();
-
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);
@@ -32,11 +30,13 @@ class CreateSalesTable extends Migration
             $table->integer('total_amount');
             $table->integer('paid_amount');
             $table->integer('due_amount');
+            $table->date('payment_date')->nullable();
             $table->string('status');
             $table->string('payment_status');
             $table->string('payment_method');
             $table->string('shipping_status')->nullable();
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

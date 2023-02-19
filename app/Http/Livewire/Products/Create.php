@@ -33,20 +33,20 @@ class Create extends Component
     public $product;
 
     /** @var array */
-    public $rules = [
-        'product.name'              => ['required', 'string', 'max:255'],
-        'product.code'              => ['required', 'string', 'max:255'],
-        'product.barcode_symbology' => ['required', 'string', 'max:255'],
-        'product.unit'              => ['required', 'string', 'max:255'],
-        'product.quantity'          => ['required', 'integer', 'min:1'],
-        'product.cost'              => ['required', 'numeric', 'max:2147483647'],
-        'product.price'             => ['required', 'numeric', 'max:2147483647'],
-        'product.stock_alert'       => ['required', 'integer', 'min:0'],
-        'product.order_tax'         => ['nullable', 'integer', 'min:0', 'max:100'],
-        'product.tax_type'          => ['nullable', 'integer'],
-        'product.note'              => ['nullable', 'string', 'max:1000'],
-        'product.category_id'       => ['required', 'integer'],
-        'product.brand_id'          => ['nullable', 'integer'],
+    protected $rules = [
+       'product.name'              => 'required|string|max:255',
+        'product.code'              => 'required|string|max:255',
+        'product.barcode_symbology' => 'required|string|max:255',
+        'product.unit'              => 'required|string|max:255',
+        'product.quantity'          => 'required|integer|min:1',
+        'product.cost'              => 'required|numeric',
+        'product.price'             => 'required|numeric',
+        'product.stock_alert'       => 'required|integer|min:0',
+        'product.order_tax'         => 'nullable|integer|min:0|max:100',
+        'product.tax_type'          => 'nullable|integer',
+        'product.note'              => 'nullable|string|max:1000',
+        'product.category_id'       => 'required|integer',
+        'product.brand_id'          => 'nullable|integer',
     ];
 
     public function updated($propertyName): void

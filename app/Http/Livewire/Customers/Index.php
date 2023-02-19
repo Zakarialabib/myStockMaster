@@ -31,14 +31,12 @@ class Index extends Component
 
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal',
+        'showModal',
         'exportAll', 'downloadAll',
         'delete',
     ];
 
     public $showModal = false;
-
-    public $editModal = false;
 
     public $import;
 
@@ -53,17 +51,6 @@ class Index extends Component
         'sortDirection' => [
             'except' => 'desc',
         ],
-    ];
-
-    /** @var array */
-    public $rules = [
-        'customer.name'       => 'required|string|max:255',
-        'customer.email'      => 'nullable|max:255',
-        'customer.phone'      => 'required|numeric',
-        'customer.city'       => 'nullable',
-        'customer.country'    => 'nullable',
-        'customer.address'    => 'nullable',
-        'customer.tax_number' => 'nullable',
     ];
 
     public function mount(): void
@@ -115,30 +102,6 @@ class Index extends Component
         $this->customer = Customer::find($id);
 
         $this->showModal = true;
-    }
-
-    public function editModal(Customer $customer)
-    {
-        abort_if(Gate::denies('customer_update'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->customer = Customer::find($customer->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->customer->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Customer updated successfully.'));
     }
 
     public function downloadSelected()

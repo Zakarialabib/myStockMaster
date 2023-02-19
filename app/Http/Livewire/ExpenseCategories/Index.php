@@ -47,9 +47,9 @@ class Index extends Component
     ];
 
     /** @var array */
-    public $rules = [
-        'expenseCategory.name'        => 'required',
-        'expenseCategory.description' => '',
+    protected $rules = [
+        'expenseCategory.name'        => 'required|max:255',
+        'expenseCategory.description' => 'nullable',
     ];
 
     public function mount(): void

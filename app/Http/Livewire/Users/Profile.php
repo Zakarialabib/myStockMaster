@@ -24,7 +24,7 @@ class Profile extends Component
     public $password;
 
     /** @var array */
-    public $rules = [
+    protected $rules = [
         'name'     => 'required|string|max:255',
         'email'    => 'required|email|unique:users,email',
         'password' => 'required|string|min:8',

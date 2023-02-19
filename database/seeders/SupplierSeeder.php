@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Supplier;
 use Illuminate\Database\Seeder;
 
-class ExpenseDatabaseSeeder extends Seeder
+class SupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,8 +16,6 @@ class ExpenseDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        // $this->call("OthersTableSeeder");
+        Supplier::factory(50)->create();
     }
 }
