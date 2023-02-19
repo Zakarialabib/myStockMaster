@@ -13,7 +13,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createModal'];
 
     /** @var bool */
@@ -24,10 +24,10 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'user.name'     => 'required|string|max:255',
-        'user.email'    => 'required|email|unique:users,email',
+        'user.name' => 'required|string|min:3|max:255',
+        'user.email' => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
-        'user.phone'    => 'required|numeric',
+        'user.phone' => 'required|numeric',
     ];
 
     public function mount(User $user): void
@@ -56,7 +56,7 @@ class Create extends Component
         $this->user->save();
 
         if ($this->user) {
-            $wallet = Wallet::create([
+            Wallet::create([
                 'user_id' => $this->user->id,
                 'balance' => 0,
             ]);

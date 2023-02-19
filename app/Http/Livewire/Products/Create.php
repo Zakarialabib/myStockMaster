@@ -19,7 +19,7 @@ class Create extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createProduct'];
 
     /** @var bool */
@@ -34,19 +34,19 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-       'product.name'              => 'required|string|max:255',
-        'product.code'              => 'required|string|max:255',
+        'product.name' => 'required|string|min:3|max:255',
+        'product.code' => 'required|string|max:255',
         'product.barcode_symbology' => 'required|string|max:255',
-        'product.unit'              => 'required|string|max:255',
-        'product.quantity'          => 'required|integer|min:1',
-        'product.cost'              => 'required|numeric',
-        'product.price'             => 'required|numeric',
-        'product.stock_alert'       => 'required|integer|min:0|max:192',
-        'product.order_tax'         => 'nullable|integer|min:0|max:1192',
-        'product.tax_type'          => 'nullable|integer|min:0|max:100',
-        'product.note'              => 'nullable|string|max:1000',
-        'product.category_id'       => 'required|integer|min:0|max:100',
-        'product.brand_id'          => 'nullable|integer|min:0|max:100',
+        'product.unit' => 'required|string|max:255',
+        'product.quantity' => 'required|integer|min:1',
+        'product.cost' => 'required|numeric',
+        'product.price' => 'required|numeric',
+        'product.stock_alert' => 'required|integer|min:0|max:192',
+        'product.order_tax' => 'nullable|integer|min:0|max:1192',
+        'product.tax_type' => 'nullable|integer|min:0|max:100',
+        'product.note' => 'nullable|string|max:1000',
+        'product.category_id' => 'required|integer|min:0|max:100',
+        'product.brand_id' => 'nullable|integer|min:0|max:100',
     ];
 
     public function updated($propertyName): void

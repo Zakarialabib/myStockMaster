@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Expense;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class ExpenseExport implements FromView
@@ -20,7 +20,7 @@ class ExpenseExport implements FromView
     public function query()
     {
         if ($this->models) {
-            return  Expense::query()->whereIn('id', $this->models);
+            return Expense::query()->whereIn('id', $this->models);
         }
 
         return Expense::query();

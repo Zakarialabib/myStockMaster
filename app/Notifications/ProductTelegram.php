@@ -15,11 +15,12 @@ class ProductTelegram extends Notification
     public $telegramChannel;
     public $productName;
     public $productPrice;
-    
+
     /**
      * @param mixed $telegramChannel
      * @param mixed $productName
      * @param mixed $productPrice
+     *
      * @return void
      */
     public function __construct($telegramChannel, $productName, $productPrice)
@@ -31,7 +32,8 @@ class ProductTelegram extends Notification
 
     /**
      * @param mixed $notifiable
-     * @return string[]
+     *
+     * @return array<string>
      */
     public function via($notifiable)
     {
@@ -40,25 +42,27 @@ class ProductTelegram extends Notification
 
     /**
      * @param mixed $notifiable
+     *
      * @return \NotificationChannels\Telegram\TelegramMessage
      */
     public function toTelegram($notifiable)
     {
         return TelegramMessage::create()
             ->to($this->telegramChannel)
-            ->content("Check out our new product: $this->productName for $this->productPrice");
+            ->content("Check out our new product: {$this->productName} for {$this->productPrice}");
     }
 
     /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            'product_name'  => $this->productName,
+            'product_name' => $this->productName,
             'product_price' => $this->productPrice,
         ];
     }

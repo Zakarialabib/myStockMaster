@@ -13,7 +13,7 @@ class Edit extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editModal'];
 
     /** @var bool */
@@ -21,14 +21,21 @@ class Edit extends Component
 
     /** @var mixed */
     public $category;
-    public $name;
-    public $code;
 
     /** @var array */
     protected $rules = [
-        'name' => 'required|min:3|max:255',
-        'code' => 'required|max:255',
+        'category.name' => 'required|min:3|max:255',
+        'category.code' => 'required|max:255',
     ];
+
+    protected $messages = [
+        'category.name.required' => 'The name field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function render()
     {
@@ -50,9 +57,9 @@ class Edit extends Component
 
     public function update(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->category->save();
+        $this->category->save($validatedData);
 
         $this->emit('refreshIndex');
 

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchaseReturnPayment
@@ -22,7 +22,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read \App\Models\PurchaseReturn $purchaseReturn
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment byPurchaseReturn()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment newModelQuery()
@@ -37,13 +39,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment wherePurchaseReturnId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereUpdatedAt($value)
+ *
+ * @property int $user_id
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class PurchaseReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -56,7 +62,6 @@ class PurchaseReturnPayment extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -65,6 +70,7 @@ class PurchaseReturnPayment extends Model
         'note',
         'purchase_return_id',
         'payment_method',
+        'user_id',
         'created_at',
         'updated_at',
     ];
@@ -74,6 +80,23 @@ class PurchaseReturnPayment extends Model
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
+    }
+
+    public function date(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
+    }
+
+    /**
+     * @param mixed $query
+     *
+     * @return mixed
+     */
+    public function scopeByPurchaseReturn($query)
+    {
+        return $query->wherePurchaseReturnId(request()->route('purchase_return_id'));
     }
 
     /**
@@ -87,21 +110,5 @@ class PurchaseReturnPayment extends Model
             get: fn ($value) => $value / 100,
             set: fn ($value) => $value * 100,
         );
-    }
-
-    public function date(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
-        );
-    }
-
-    /**
-     * @param mixed $query
-     * @return mixed
-     */
-    public function scopeByPurchaseReturn($query)
-    {
-        return $query->wherePurchaseReturnId(request()->route('purchase_return_id'));
     }
 }

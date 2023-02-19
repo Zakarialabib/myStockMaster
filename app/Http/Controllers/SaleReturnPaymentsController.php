@@ -36,20 +36,20 @@ class SaleReturnPaymentsController extends Controller
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $request->validate([
-            'date'           => 'required|date',
-            'reference'      => 'required|string|max:255',
-            'amount'         => 'required|numeric',
-            'note'           => 'nullable|string|max:1000',
+            'date' => 'required|date',
+            'reference' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'note' => 'nullable|string|max:1000',
             'sale_return_id' => 'required',
             'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
             SaleReturnPayment::create([
-                'date'           => $request->date,
-                'reference'      => $request->reference,
-                'amount'         => $request->amount,
-                'note'           => $request->note,
+                'date' => $request->date,
+                'reference' => $request->reference,
+                'amount' => $request->amount,
+                'note' => $request->note,
                 'sale_return_id' => $request->sale_return_id,
                 'payment_method' => $request->payment_method,
             ]);
@@ -58,7 +58,7 @@ class SaleReturnPaymentsController extends Controller
 
             $due_amount = $sale_return->due_amount - $request->amount;
 
-            if ($due_amount == $sale_return->total_amount) {
+            if ($due_amount === $sale_return->total_amount) {
                 $payment_status = 'Unpaid';
             } elseif ($due_amount > 0) {
                 $payment_status = 'Partial';
@@ -67,8 +67,8 @@ class SaleReturnPaymentsController extends Controller
             }
 
             $sale_return->update([
-                'paid_amount'    => ($sale_return->paid_amount + $request->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($sale_return->paid_amount + $request->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
         });
@@ -92,10 +92,10 @@ class SaleReturnPaymentsController extends Controller
         abort_if(Gate::denies('access_sale_return_payments'), 403);
 
         $request->validate([
-            'date'           => 'required|date',
-            'reference'      => 'required|string|max:255',
-            'amount'         => 'required|numeric',
-            'note'           => 'nullable|string|max:1000',
+            'date' => 'required|date',
+            'reference' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+            'note' => 'nullable|string|max:1000',
             'sale_return_id' => 'required',
             'payment_method' => 'required|string|max:255',
         ]);
@@ -103,9 +103,9 @@ class SaleReturnPaymentsController extends Controller
         DB::transaction(function () use ($request, $saleReturnPayment) {
             $sale_return = $saleReturnPayment->saleReturn;
 
-            $due_amount = ($sale_return->due_amount + $saleReturnPayment->amount) - $request->amount;
+            $due_amount = $sale_return->due_amount + $saleReturnPayment->amount - $request->amount;
 
-            if ($due_amount == $sale_return->total_amount) {
+            if ($due_amount === $sale_return->total_amount) {
                 $payment_status = 'Unpaid';
             } elseif ($due_amount > 0) {
                 $payment_status = 'Partial';
@@ -114,16 +114,16 @@ class SaleReturnPaymentsController extends Controller
             }
 
             $sale_return->update([
-                'paid_amount'    => (($sale_return->paid_amount - $saleReturnPayment->amount) + $request->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($sale_return->paid_amount - $saleReturnPayment->amount + $request->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
             $saleReturnPayment->update([
-                'date'           => $request->date,
-                'reference'      => $request->reference,
-                'amount'         => $request->amount,
-                'note'           => $request->note,
+                'date' => $request->date,
+                'reference' => $request->reference,
+                'amount' => $request->amount,
+                'note' => $request->note,
                 'sale_return_id' => $request->sale_return_id,
                 'payment_method' => $request->payment_method,
             ]);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Products;
 
-use Livewire\Component;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class SyncProducts extends Component
@@ -14,7 +14,7 @@ class SyncProducts extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['syncModal'];
 
     public $type;
@@ -45,8 +45,8 @@ class SyncProducts extends Component
         } elseif ($this->type === 'shopify') {
             $client = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
-                'api_key'     => settings()->shopify_api_key,
-                'api_secret'  => settings()->shopify_api_secret,
+                'api_key' => settings()->shopify_api_key,
+                'api_secret' => settings()->shopify_api_secret,
             ]);
         }
 

@@ -6,10 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\QuotationMail;
 use App\Models\Quotation;
+use Exception;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Exception;
 
 class SendQuotationEmailController extends Controller
 {

@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchasePaymentsController;
+use App\Http\Controllers\PurchaseReturnPaymentsController;
 use App\Http\Controllers\PurchasesReturnController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\QuotationSalesController;
@@ -28,8 +30,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SalesReturnController;
-use App\Http\Controllers\PurchasePaymentsController;
-use App\Http\Controllers\PurchaseReturnPaymentsController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
@@ -77,11 +77,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('expenses', ExpenseController::class)->name('expenses.index');
 
     //Customers
-    Route::get('customers', CustomersController::class)->name('customers.index');
+    Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('customer/details/{customer}', [CustomersController::class, 'show'])->name('customer.details');
 
     //Suppliers
-    Route::get('suppliers', SuppliersController::class)->name('suppliers.index');
+    Route::get('suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
     Route::get('supplier/details/{supplier}', [SuppliersController::class, 'show'])->name('supplier.details');
 
     //Warehouses
@@ -133,15 +133,15 @@ Route::group(['middleware' => 'auth'], function () {
     //Purchase Returns Payments
     Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
 
-    Route::get('/purchase-return-payments/{purchase_return_id}/create',  [PurchaseReturnPaymentsController::class, 'create'])
+    Route::get('/purchase-return-payments/{purchase_return_id}/create', [PurchaseReturnPaymentsController::class, 'create'])
         ->name('purchase-return-payments.create');
-    Route::post('/purchase-return-payments/store',  [PurchaseReturnPaymentsController::class, 'store'])
+    Route::post('/purchase-return-payments/store', [PurchaseReturnPaymentsController::class, 'store'])
         ->name('purchase-return-payments.store');
-    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'edit'])
+    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'edit'])
         ->name('purchase-return-payments.edit');
-    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'update'])
+    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'update'])
         ->name('purchase-return-payments.update');
-    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'destroy'])
+    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'destroy'])
         ->name('purchase-return-payments.destroy');
 
     //Profit Loss Report

@@ -6,10 +6,10 @@ namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
@@ -21,26 +21,26 @@ class Create extends Component
     /** @var mixed */
     public $brand;
 
+    /** @var string|null */
     public $image;
 
-    public $name;
-
-    public $description;
-
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createBrand'];
+
+    /** @var array */
+    protected $rules = [
+        'brand.name' => 'required|min:3|max:255',
+        'brand.description' => 'nullable|min:3',
+    ];
+
+    protected $messages = [
+        'brand.name.required' => 'The name field cannot be empty.',
+    ];
 
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
-
-    /** @var array */
-    protected $rules = [
-        'name'        => 'required|min:3|max:255',
-        'description' => 'nullable|min:3',
-        'image'       => 'nullable|image|max:1024',
-    ];
 
     public function render()
     {
@@ -49,10 +49,15 @@ class Create extends Component
         return view('livewire.brands.create');
     }
 
-
     public function createBrand(): void
     {
-        $this->reset();
+        abort_if(Gate::denies('brand_create'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->brand = new Brand();
 
         $this->createBrand = true;
     }
@@ -61,19 +66,22 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        // image not working with realtime validation
-        if ($this->image) {
-            $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
-            $this->image->storeAs('brands', $imageName);
-            $this->image = $imageName;
+        try{
+            if ($this->image) {
+                $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
+                $this->image->storeAs('brands', $imageName);
+                $this->image = $imageName;
+            }
+
+            $this->brand->save($validatedData);
+
+            $this->emit('refreshIndex');
+
+            $this->alert('success', __('Brand created successfully.'));
+
+            $this->createBrand = false;
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
         }
-
-        Brand::create($validatedData);
-
-        $this->emit('refreshIndex');
-
-        $this->alert('success', __('Brand created successfully.'));
-
-        $this->createBrand = false;
     }
 }

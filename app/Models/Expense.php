@@ -6,9 +6,9 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Str;
 
 /**
@@ -25,9 +25,11 @@ use Illuminate\Support\Str;
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\ExpenseCategory $category
  * @property-read \App\Models\User|null $user
  * @property-read \App\Models\Warehouse|null $warehouse
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Expense advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newQuery()
@@ -43,13 +45,13 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereWarehouseId($value)
+ *
  * @mixin \Eloquent
  */
 class Expense extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'category_id',
@@ -61,7 +63,6 @@ class Expense extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'category_id',
@@ -88,6 +89,14 @@ class Expense extends Model
         'amount',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $this->setRawAttributes([
+            'reference' => 'EXP-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+        ], true);
+        parent::__construct($attributes);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class, 'category_id');
@@ -103,19 +112,11 @@ class Expense extends Model
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 
-    public function __construct(array $attributes = [])
-    {
-        $this->setRawAttributes([
-            'reference' => 'EXP-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
-        ], true);
-        parent::__construct($attributes);
-    }
-
-     /**
-      * Get Expense date attribute
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * Get Expense date attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     public function date(): Attribute
     {
         return Attribute::make(

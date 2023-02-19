@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,7 +22,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read \App\Models\Sale $sale
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment bySale()
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment newModelQuery()
@@ -37,15 +39,21 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUpdatedAt($value)
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereDeletedAt($value)
+ *
+ * @property int $user_id
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class SalePayment extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'sale_id',
@@ -56,7 +64,6 @@ class SalePayment extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'sale_id',
@@ -79,11 +86,34 @@ class SalePayment extends Model
         'note',
         'sale_id',
         'payment_method',
+        'user_id',
     ];
 
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
+    }
+
+    /**
+     * Get ajustement date.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function date(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
+    }
+
+    /**
+     * @param mixed $query
+     *
+     * @return mixed
+     */
+    public function scopeBySale($query)
+    {
+        return $query->whereSaleId(request()->route('sale_id'));
     }
 
     /**
@@ -97,25 +127,5 @@ class SalePayment extends Model
             get: fn ($value) => $value / 100,
             set: fn ($value) => $value * 100,
         );
-    }
-
-    /**
-     * Get ajustement date.
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    public function date(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
-        );
-    }
-
-    /**
-     * @param mixed $query
-     * @return mixed
-     */
-    public function scopeBySale($query)
-    {
-        return $query->whereSaleId(request()->route('sale_id'));
     }
 }

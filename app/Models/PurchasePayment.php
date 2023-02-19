@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchasePayment
@@ -22,7 +22,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read \App\Models\Purchase $purchase
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment byPurchase()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment newModelQuery()
@@ -37,15 +39,21 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment wherePurchaseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereUpdatedAt($value)
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereDeletedAt($value)
+ *
+ * @property int $user_id
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class PurchasePayment extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'purchase_id',
@@ -56,13 +64,13 @@ class PurchasePayment extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'purchase_id',
         'payment_method',
         'amount',
         'payment_date',
+        'user_id',
         'created_at',
         'updated_at',
     ];
@@ -74,18 +82,11 @@ class PurchasePayment extends Model
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
-        );
-    }
-
-   /**
-    * Get ajustement date.
-    * @return \Illuminate\Database\Eloquent\Casts\Attribute
-    */
+    /**
+     * Get ajustement date.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     public function date(): Attribute
     {
         return Attribute::make(
@@ -95,10 +96,19 @@ class PurchasePayment extends Model
 
     /**
      * @param mixed $query
+     *
      * @return mixed
      */
     public function scopeByPurchase($query)
     {
         return $query->wherePurchaseId(request()->route('purchase_id'));
+    }
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
+        );
     }
 }

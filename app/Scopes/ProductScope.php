@@ -13,6 +13,7 @@ trait ProductScope
     /**
      * @param \Illuminate\Database\Eloquent\Builder $builder
      * @param \Illuminate\Support\Carbon $date
+     *
      * @return mixed
      */
     public function scopeStockValue(Builder $builder, Carbon $date)

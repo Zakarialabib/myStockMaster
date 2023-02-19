@@ -29,8 +29,6 @@
                             @if (count($langs) > 1)
                             <i class="bi bi-globe2 h-5 w-5 cursor-pointer pr-2" aria-hidden="true"></i>
                             @endif
-                            <img src="{{ flagImageUrl(\Illuminate\Support\Facades\App::getLocale()) }}"
-                                class="h-5 cursor-pointer" lazy>
                         </button>
                     </x-slot>
                     <x-slot name="content">

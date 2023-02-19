@@ -18,7 +18,7 @@
                 </div>
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                     <x-label for="date" :value="__('Date')" required />
-                    <x-input type="date" wire:model="date" name="date" required value="{{ now()->format('Y-m-d') }}" />
+                    <x-input type="date" wire:model="date" name="date" required value="{{ date('Y-m-d') }}" />
                     <x-input-error :messages="$errors->get('date')" class="mt-2" />
                 </div>
             </div>

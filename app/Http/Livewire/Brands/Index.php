@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Brands;
 
+use App\Http\Livewire\WithSorting;
 use App\Imports\BrandsImport;
 use App\Models\Brand;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Livewire\WithSorting;
-use App\Traits\Datatable;
 
 class Index extends Component
 {
@@ -28,7 +28,7 @@ class Index extends Component
 
     public $brandIds;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'importModal',
@@ -47,7 +47,7 @@ class Index extends Component
 
     public $selectAll;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -62,7 +62,7 @@ class Index extends Component
 
     public function selectAll()
     {
-        if (count(array_intersect($this->selected, Brand::pluck('id')->toArray())) == count(Brand::pluck('id')->toArray())) {
+        if (count(array_intersect($this->selected, Brand::pluck('id')->toArray())) === count(Brand::pluck('id')->toArray())) {
             $this->selected = [];
         } else {
             $this->selected = Brand::pluck('id')->toArray();
@@ -71,7 +71,7 @@ class Index extends Component
 
     public function selectPage()
     {
-        if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) == count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
+        if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) === count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
             $this->selected = $this->brandIds;
@@ -92,8 +92,8 @@ class Index extends Component
         abort_if(Gate::denies('brand_access'), 403);
 
         $query = Brand::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

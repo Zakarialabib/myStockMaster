@@ -14,6 +14,7 @@ trait WithSorting
 
     /**
      * @param mixed $field
+     *
      * @return void
      */
     public function sortBy($field)

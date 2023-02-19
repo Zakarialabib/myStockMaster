@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseReturnStatus;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\PaymentStatus;
-use App\Enums\PurchaseReturnStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+
 /**
  * App\Models\PurchaseReturn
  *
@@ -32,11 +33,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchaseReturnDetail[] $purchaseReturnDetails
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnDetail> $purchaseReturnDetails
  * @property-read int|null $purchase_return_details_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchaseReturnPayment[] $purchaseReturnPayments
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnPayment> $purchaseReturnPayments
  * @property-read int|null $purchase_return_payments_count
  * @property-read \App\Models\Supplier|null $supplier
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn completed()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn newModelQuery()
@@ -60,15 +63,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
+ *
  * @mixin \Eloquent
  */
 class PurchaseReturn extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -89,7 +94,6 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -135,7 +139,7 @@ class PurchaseReturn extends Model
     ];
 
     protected $casts = [
-        'status'         => PurchaseReturnStatus::class,
+        'status' => PurchaseReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -157,11 +161,32 @@ class PurchaseReturn extends Model
 
     /**
      * @param mixed $query
+     *
      * @return mixed
      */
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return int|float
+     */
+    public function getDiscountAmountAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $number = PurchaseReturn::max('id') + 1;
+            $model->reference = make_reference_id('PRRN', $number);
+        });
     }
 
     /**
@@ -217,24 +242,5 @@ class PurchaseReturn extends Model
         return Attribute::make(
             get: fn ($value) => $value / 100,
         );
-    }
-
-    /**
-     * @param mixed $value
-     * @return int|float
-     */
-    public function getDiscountAmountAttribute($value)
-    {
-        return $value / 100;
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = PurchaseReturn::max('id') + 1;
-            $model->reference = make_reference_id('PRRN', $number);
-        });
     }
 }

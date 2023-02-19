@@ -8,7 +8,6 @@ use App\Models\Language;
 use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Session;
 
 class Locale
 {
@@ -17,15 +16,12 @@ class Locale
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  Closure  $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         if (Schema::hasTable('languages')) {
-            $languages = Language::query()
-                ->whereStatus(Language::STATUS_ACTIVE)
-                ->get()->toArray();
-
             $language_default = Language::query()
                 ->whereIsDefault(Language::IS_DEFAULT)
                 ->first('code');

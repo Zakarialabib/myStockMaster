@@ -2,10 +2,10 @@
      <iv class="relative mb-4">
         <div class="w-full rounded-lg">
             <x-input wire:model.lazy="searchQuery" autofocus
-            placehoder="{{ __('Search with names and codes, or reference') }}" />
+            placeholder="{{ __('Search with names and codes, or reference') }}" />
         </div>
         @if (!empty($searchQuery))
-            <divclass="absolute top-0 left-0 w-full mt-12 bg-white rounded-md shadow-xl overflow-y-auto max-h-52 z-50">
+            <div class="absolute top-0 left-0 w-full mt-12 bg-white rounded-md shadow-xl overflow-y-auto max-h-52 z-50">
                 <ul>
                     @if ($this->product->count())
                        <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
@@ -45,11 +45,18 @@
                                         {{ __('Phone') }} <br>
                                         {{ $item->phone }}
                                    </p>
-                                    {{-- Adding a button link to details --}}
-                                    {{-- Sales total --}}
-                                   {{-- Paid amount total --}}
-                                    {{-- Due amount total --}}
-                                    {{-- <p class="font-semibold text-gray-700">{{ $item->sales }}</p> --}}
+                                    <p class="font-semibold text-gray-700">
+                                        {{ __('Purchases amount') }} <br>
+                                   {{ format_currency($item->totalPurchases) }}
+                                </p>
+                                   <p class="font-semibold text-gray-700">
+                                        {{ __('Total Paid amount') }} <br>
+                                    {{ format_currency($item->totalPayments) }}
+                                </p>
+                                    <p class="font-semibold text-gray-700">
+                                        {{ __('Total Due amount') }} <br>
+                                    {{ format_currency($item->debit) }}
+                                </p>
                                </div>
                             @endforeach
                         </li>
@@ -68,13 +75,22 @@
                                        {{ $item->phone }}
                                     </p>
                                     {{-- Adding a button link to details --}}
-                                   {{-- Purchase total --}}
-                                    {{-- Paid amount total --}}
-                                    {{-- Due amount total --}}
+                                    <p class="font-semibold text-gray-700">
+                                        {{ __('Purchases amount') }} <br>
+                                   {{ format_currency($item->totalPurchases) }}
+                                </p>
+                                   <p class="font-semibold text-gray-700">
+                                        {{ __('Total Paid amount') }} <br>
+                                    {{ format_currency($item->totalPayments) }}
+                                </p>
+                                    <p class="font-semibold text-gray-700">
+                                        {{ __('Total Due amount') }} <br>
+                                    {{ format_currency($item->debit) }}
+                                </p>
                                </div>
                             @endforeach
                         </li>
-                    @ndif
+                    @endif
                     @if ($this->sale->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Sale') }}</h3>
@@ -122,7 +138,7 @@
                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Due amount') }}
                                         <br>
-                                        {{format_currency($item->due_amount) }}
+                                        {{ format_currency($item->due_amount) }}
                                     </p>
                                 </div>
                            @endforeach

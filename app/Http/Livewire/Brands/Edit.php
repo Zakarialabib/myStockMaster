@@ -6,10 +6,10 @@ namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
@@ -21,23 +21,20 @@ class Edit extends Component
     /** @var mixed */
     public $brand;
 
+    /** @var string|null */
     public $image;
 
-    public $name;
-
-    public $description;
-
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editModal'];
 
     /** @var array */
     protected $rules = [
-        'name'        => 'required|string||min:3|max:255',
-        'description' => 'nullable|string',
+        'brand.name' => 'required|string||min:3|max:255',
+        'brand.description' => 'nullable|string',
     ];
 
     protected $messages = [
-        'name.required' => 'The name field cannot be empty.',
+        'brand.name.required' => 'The name field cannot be empty.',
     ];
 
     public function updated($propertyName): void
@@ -66,19 +63,22 @@ class Edit extends Component
     public function update()
     {
         $validatedData = $this->validate();
+        try{ 
+            if ($this->image) {
+                $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+                $this->image->storeAs('brands', $imageName);
+                $this->image = $imageName;
+            }
 
-        if ($this->image) {
-            $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
-            $this->image->storeAs('brands', $imageName);
-            $this->image = $imageName;
+            $this->brand->save($validatedData);
+
+            $this->emit('refreshIndex');
+
+            $this->alert('success', __('Brand updated successfully.'));
+
+            $this->editModal = false;
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
         }
-
-        $this->brand->update($validatedData);
-
-        $this->emit('refreshIndex');
-
-        $this->alert('success', __('Brand updated successfully.'));
-
-        $this->editModal = false;
     }
 }

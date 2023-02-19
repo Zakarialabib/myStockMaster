@@ -15,7 +15,7 @@
         </h5>
     </x-slot>
     <x-slot name="description">
-        <form wire:submit.prevent="setProductDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
+        <form wire:submit.prevent="productDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
             method="POST">
             <div class="modal-body">
                 @if (session()->has('discount_message' . $cart_item->id))

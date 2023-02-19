@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\PurchaseDetail
@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $product_tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\Purchase $purchase
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newQuery()
@@ -46,13 +48,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class PurchaseDetail extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'purchase_id',
@@ -64,7 +66,6 @@ class PurchaseDetail extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'purchase_id',
@@ -124,11 +125,11 @@ class PurchaseDetail extends Model
         );
     }
 
-     /**
-      * Interact with shipping amount
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * Interact with shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function productTaxAmountAttribute(): Attribute
     {
         return Attribute::make(

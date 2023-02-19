@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 
 class CustomersController extends Controller
 {
-    public function __invoke()
+    public function index()
     {
         abort_if(Gate::denies('customer_access'), 403);
 

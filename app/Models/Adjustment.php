@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\Adjustment
@@ -19,8 +19,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AdjustedProduct[] $adjustedProducts
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\AdjustedProduct> $adjustedProducts
  * @property-read int|null $adjusted_products_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment newQuery()
@@ -31,15 +33,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereUpdatedAt($value)
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereDeletedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Adjustment extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'reference_no',
@@ -49,7 +53,6 @@ class Adjustment extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'reference_no',

@@ -13,12 +13,14 @@ use App\Models\SaleReturn;
 use App\Models\Supplier;
 use PDF;
 use Symfony\Component\HttpFoundation\Response;
+
 class ExportController extends Controller
 {
     /**
      * Return a response with the PDF to show in the browser
      *
      * @param mixed $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function salePos($id): Response
@@ -43,12 +45,12 @@ class ExportController extends Controller
         $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
 
         $data = [
-            'sale'     => $sale,
+            'sale' => $sale,
             'customer' => $customer,
         ];
 
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
-            'format'    => 'a4',
+            'format' => 'a4',
             'watermark' => $this->setWaterMark($sale),
         ]);
 
@@ -62,7 +64,7 @@ class ExportController extends Controller
 
         $data = [
             'purchase_return' => $purchaseReturn,
-            'supplier'        => $supplier,
+            'supplier' => $supplier,
         ];
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
@@ -77,7 +79,7 @@ class ExportController extends Controller
 
         $data = [
             'quotation' => $quotation,
-            'customer'  => $customer,
+            'customer' => $customer,
         ];
 
         $pdf = PDF::loadView('admin.quotation.print', $data);
@@ -109,7 +111,7 @@ class ExportController extends Controller
 
         $data = [
             'sale_return' => $saleReturn,
-            'customer'    => $customer,
+            'customer' => $customer,
         ];
 
         $pdf = PDF::loadView('admin.salesreturn.print', $data);

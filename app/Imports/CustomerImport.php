@@ -9,22 +9,21 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class CustomerImport implements ToModel
 {
+    /**  */
+    public function __construct()
+    {
+    }
     /**
      * @param  array $row
+     *
      * @return \App\Models\Customer
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
     {
         return new Customer([
-            'name'  => $row['name'],
+            'name' => $row['name'],
             'phone' => $row['phone'],
         ]);
-    }
-
-     /**
-     */
-    public function __construct() {
-        //
     }
 }

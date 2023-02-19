@@ -37,6 +37,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "nunomaduro/larastan": "^2.0",
+        "nunomaduro/phpinsights": "^2.7",
         "pestphp/pest": "^1.22",
         "pestphp/pest-plugin-laravel": "^1.4",
         "pestphp/pest-plugin-livewire": "^1.0",
@@ -69,8 +70,6 @@
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan ide-helper:generate",
-            "@php artisan ide-helper:meta",
             "@php artisan ide-helper:models --nowrite",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
@@ -91,7 +90,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "minimum-stability": "dev",

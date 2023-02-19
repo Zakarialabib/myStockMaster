@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
-use Livewire\Component;
 use App\Models\Sale;
+use Livewire\Component;
 
 class SyncOrders extends Component
 {
@@ -25,7 +25,7 @@ class SyncOrders extends Component
         // map the data to the Laravel Sale model
         $sale = new Sale();
         $sale->fill([
-            'id'   => $order['id'],
+            'id' => $order['id'],
             'date' => $order['date'],
             // map the remaining fields
         ]);

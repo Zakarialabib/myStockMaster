@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
@@ -11,16 +13,15 @@ use App\Models\PurchasePayment;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use App\Enums\PaymentStatus;
-use App\Enums\PurchaseStatus;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['productSelected', 'refreshIndex'];
 
     public $cart_instance;
@@ -81,16 +82,11 @@ class Create extends Component
         ];
     }
 
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['suppliers'] = Supplier::pluck('name', 'id')->toArray();
-    }
-
     public function mount($cartInstance): void
     {
         $this->cart_instance = $cartInstance;
 
-        $this->reference = settings()->purchase_prefix . '-' . date('Y-m-d-h');
+        $this->reference = settings()->purchase_prefix.'-'.date('Y-m-d-h');
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->shipping_amount = 0;
@@ -122,7 +118,7 @@ class Create extends Component
 
         $due_amount = $this->total_amount - $this->paid_amount;
 
-        if ($due_amount == $this->total_amount) {
+        if ($due_amount === $this->total_amount) {
             $payment_status = PaymentStatus::Pending;
         } elseif ($due_amount > 0) {
             $payment_status = PaymentStatus::Partial;
@@ -131,9 +127,10 @@ class Create extends Component
         }
 
         $purchase = Purchase::create([
-            'reference' => settings()->purchase_prefix . '-' . date('Y-m-d-h'),
+            'reference' => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
             'date' => $this->date,
             'supplier_id' => $this->supplier_id,
+            'user_id' => Auth::user()->id,
             'tax_percentage' => $this->tax_percentage,
             'discount_percentage' => $this->discount_percentage,
             'shipping_amount' => $this->shipping_amount * 100,
@@ -163,7 +160,7 @@ class Create extends Component
                 'product_tax_amount' => $cart_item->options->product_tax * 100,
             ]);
 
-            if ($this->status == PurchaseStatus::Pending) {
+            if ($this->status === PurchaseStatus::Pending) {
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
                     'quantity' => $product->quantity + $cart_item->qty,
@@ -176,7 +173,7 @@ class Create extends Component
         if ($purchase->paid_amount > 0) {
             PurchasePayment::create([
                 'date' => $this->date,
-                'reference' => settings()->purchase_prefix . '-' . date('Y-m-d-h'),
+                'reference' => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
                 'amount' => $purchase->paid_amount,
                 'purchase_id' => $purchase->id,
                 'payment_method' => $this->payment_method,
@@ -203,7 +200,7 @@ class Create extends Component
         $cart = Cart::instance($this->cart_instance);
 
         $exists = $cart->search(function ($cartItem, $rowId) use ($product) {
-            return $cartItem->id == $product['id'];
+            return $cartItem->id === $product['id'];
         });
 
         if ($exists->isNotEmpty()) {
@@ -275,15 +272,15 @@ class Create extends Component
         $product_tax = 0;
         $sub_total = 0;
 
-        if ($product['tax_type'] == 1) {
-            $price = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
+        if ($product['tax_type'] === 1) {
+            $price = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
             $unit_price = $product['price'];
-            $product_tax = $product['price'] * ($product['order_tax'] / 100);
-            $sub_total = $product['price'] + ($product['price'] * ($product['order_tax'] / 100));
-        } elseif ($product['tax_type'] == 2) {
+            $product_tax = $product['price'] * $product['order_tax'] / 100;
+            $sub_total = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
+        } elseif ($product['tax_type'] === 2) {
             $price = $product['price'];
-            $unit_price = $product['price'] - ($product['price'] * ($product['order_tax'] / 100));
-            $product_tax = $product['price'] * ($product['order_tax'] / 100);
+            $unit_price = $product['price'] - ($product['price'] * $product['order_tax'] / 100);
+            $product_tax = $product['price'] * $product['order_tax'] / 100;
             $sub_total = $product['price'];
         } else {
             $price = $product['price'];
@@ -307,7 +304,12 @@ class Create extends Component
                 'unit_price' => $cart_item->options->unit_price,
                 'product_discount' => $discount_amount,
                 'product_discount_type' => $this->discount_type[$product_id],
-            ]
+            ],
         ]);
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['suppliers'] = Supplier::pluck('name', 'id')->toArray();
     }
 }

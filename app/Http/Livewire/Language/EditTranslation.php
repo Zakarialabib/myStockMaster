@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Language;
 
-use Livewire\Component;
-use App\Models\Language;
 use App;
+use App\Models\Language;
+use Livewire\Component;
 
 class EditTranslation extends Component
 {
@@ -21,7 +21,7 @@ class EditTranslation extends Component
     ];
 
     protected $rules = [
-        'key'   => 'required',
+        'key' => 'required',
         'value' => 'required',
     ];
 
@@ -48,7 +48,6 @@ class EditTranslation extends Component
     {
         $this->editWord = true;
         $this->lang = Language::find($id);
-
     }
 
     public function updateTranslation()

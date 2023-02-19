@@ -16,8 +16,10 @@ use  Spatie\Permission\Models\Permission as SpatiePermission;
  * @property string $guard_name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Role> $roles
  * @property-read int|null $roles_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Permission advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newQuery()
@@ -27,19 +29,21 @@ use  Spatie\Permission\Models\Permission as SpatiePermission;
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|SpatiePermission[] $permissions
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<SpatiePermission> $permissions
  * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\User> $users
  * @property-read int|null $users_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Permission permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|Permission role($roles, $guard = null)
+ *
  * @mixin \Eloquent
  */
 class Permission extends SpatiePermission
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -48,7 +52,6 @@ class Permission extends SpatiePermission
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -74,6 +77,7 @@ class Permission extends SpatiePermission
      * Determine if the permission belongs to the role.
      *
      * @param  mixed  $role
+     *
      * @return bool
      */
     public function inRole($role)

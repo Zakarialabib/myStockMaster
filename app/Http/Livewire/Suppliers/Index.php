@@ -27,7 +27,7 @@ class Index extends Component
     /** @var mixed */
     public $supplier;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'importModal', 'showModal',
         'refreshIndex' => '$refresh',
@@ -40,7 +40,7 @@ class Index extends Component
     /** @var bool */
     public $importModal = false;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -68,8 +68,8 @@ class Index extends Component
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -152,7 +152,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+        // $suppliers = Supplier::whereIn('id', $this->selected)->get();
 
         return $this->callExport()->forModels($this->selected)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
@@ -166,6 +166,6 @@ class Index extends Component
 
     private function callExport(): SupplierExport
     {
-        return (new SupplierExport());
+        return new SupplierExport();
     }
 }

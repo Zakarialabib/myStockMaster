@@ -22,7 +22,7 @@ class Index extends Component
     /** @var mixed */
     public $expenseCategory;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'showModal', 'editModal',
         'refreshIndex' => '$refresh',
@@ -33,7 +33,7 @@ class Index extends Component
 
     public $editModal = false;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -48,7 +48,7 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'expenseCategory.name'        => 'required|string|max:255',
+        'expenseCategory.name' => 'required|string|min:3|max:255',
         'expenseCategory.description' => 'nullable|string',
     ];
 
@@ -67,8 +67,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_category_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

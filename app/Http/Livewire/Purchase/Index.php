@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
-use Carbon\Carbon;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Enums\PaymentStatus;
-use App\Traits\Datatable;
+use Throwable;
 
 class Index extends Component
 {
@@ -26,7 +26,7 @@ class Index extends Component
 
     public $purchase;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'showModal', 'paymentModal',
         'refreshIndex' => '$refresh',
@@ -43,7 +43,7 @@ class Index extends Component
     public $amount;
     public $payment_method;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -58,16 +58,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
+        'supplier_id' => 'required|numeric',
+        'reference' => 'required|string|max:255',
+        'tax_percentage' => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|max:255',
-        'payment_method'      => 'required|integer|max:255',
-        'note'                => 'nullable|string|max:1000',
+        'shipping_amount' => 'required|numeric',
+        'total_amount' => 'required|numeric',
+        'paid_amount' => 'required|numeric',
+        'status' => 'required|integer|max:255',
+        'payment_method' => 'required|integer|max:255',
+        'note' => 'nullable|string|max:1000',
     ];
 
     public function mount(): void
@@ -84,8 +84,8 @@ class Index extends Component
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -134,8 +134,8 @@ class Index extends Component
         $this->resetValidation();
 
         $this->purchase = $purchase;
-        $this->date = Carbon::now()->format('Y-m-d');
-        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->date = date('Y-m-d');
+        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchase->id;
@@ -145,12 +145,11 @@ class Index extends Component
     public function paymentSave(): void
     {
         try {
-      
             $this->validate(
                 [
-                    'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
-                    'amount'         => 'required|numeric',
+                    'date' => 'required|date',
+                    'reference' => 'required|string|max:255',
+                    'amount' => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -158,11 +157,11 @@ class Index extends Component
             $purchase = Purchase::find($this->purchase_id);
 
             PurchasePayment::create([
-                'date'           => $this->date,
-                'reference'      => $this->reference,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'purchase_id'    => $this->purchase_id,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'purchase_id' => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -170,7 +169,7 @@ class Index extends Component
 
             $due_amount = $purchase->due_amount - $this->amount;
 
-            if ($due_amount == $purchase->total_amount) {
+            if ($due_amount === $purchase->total_amount) {
                 $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::Partial;
@@ -179,18 +178,18 @@ class Index extends Component
             }
 
             $purchase->update([
-                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($purchase->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
-
-            $this->emit('refreshIndex');
 
             $this->alert('success', __('Payment created successfully.'));
 
             $this->paymentModal = false;
-        } catch (\Throwable $th) {
-            //throw $th;
+
+            $this->emit('refreshIndex');
+        } catch (Throwable $th) {
+            $this->alert('error', 'Error'.$th->getMessage());
         }
     }
 }

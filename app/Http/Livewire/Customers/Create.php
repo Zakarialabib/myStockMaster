@@ -14,7 +14,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createCustomer'];
 
     public $createCustomer = false;
@@ -22,34 +22,25 @@ class Create extends Component
     /** @var mixed */
     public $customer;
 
-    public $name;
+    protected $rules = [
+        'customer.name' => 'required|string|min:3|max:255',
+        'customer.email' => 'nullable|email|max:255',
+        'customer.phone' => 'required|numeric',
+        'customer.city' => 'nullable|min:3|max:255',
+        'customer.country' => 'nullable|min:3|max:255',
+        'customer.address' => 'nullable|max:255',
+        'customer.tax_number' => 'nullable|max:255',
+    ];
 
-    public $email;
-
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $tax_number;
+    protected $messages = [
+        'customer.name.required' => 'The name field cannot be empty.',
+        'customer.phone.required' => 'The code field cannot be empty.',
+    ];
 
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
-
-    protected $rules = [
-        'name'       => 'required|string|max:255',
-        'email'      => 'nullable|email|max:255',
-        'phone'      => 'required|numeric',
-        'city'       => 'nullable|max:255',
-        'country'    => 'nullable|max:255',
-        'address'    => 'nullable|max:255',
-        'tax_number' => 'nullable|max:255',
-    ];
 
     public function render()
     {
@@ -60,7 +51,11 @@ class Create extends Component
 
     public function createCustomer(): void
     {
-        $this->reset();
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->customer = new Customer();
 
         $this->createCustomer = true;
     }
@@ -69,18 +64,23 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        Customer::create($validatedData);
+        try{ 
+            $this->customer->save($validatedData);
 
-        if ($this->customer) {
-            $wallet = Wallet::create([
-                'customer_id' => $this->customer->id,
-                'balance'     => 0,
-            ]);
+            if ($this->customer) {
+                Wallet::create([
+                    'customer_id' => $this->customer->id,
+                    'balance' => 0,
+                ]);
+            }
+            $this->alert('success', __('Customer created successfully'));
+
+            $this->emit('refreshIndex');
+
+            $this->createCustomer = false;
+            
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
         }
-        $this->alert('success', __('Customer created successfully'));
-
-        $this->emit('refreshIndex');
-
-        $this->createCustomer = false;
     }
 }

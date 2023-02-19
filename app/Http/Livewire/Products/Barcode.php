@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
-use PDF;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
+use PDF;
 use Symfony\Component\HttpFoundation\Response;
 
 class Barcode extends Component

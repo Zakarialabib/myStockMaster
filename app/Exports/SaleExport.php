@@ -29,6 +29,7 @@ class SaleExport implements FromQuery, WithMapping, WithHeadings
 
     /**
      * @param  Sale  $row
+     *
      * @return array
      */
     public function map($row): array

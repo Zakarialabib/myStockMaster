@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Suppliers;
 
+use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
+use App\Traits\Datatable;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\WithSorting;
-use App\Traits\Datatable;
 
 class Details extends Component
 {
@@ -23,7 +23,7 @@ class Details extends Component
     /** @var mixed */
     public $supplier;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -106,9 +106,8 @@ class Details extends Component
         }
 
         $debt = ($purchases - $purchase_returns) / 100;
-        $debit = $debt - $product_costs;
 
-        return $debit;
+        return $debt - $product_costs;
     }
 
     public function getPurchasesProperty(): mixed
@@ -116,8 +115,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('supplier')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -129,8 +128,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('purchasepayments.purchase')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

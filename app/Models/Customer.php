@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Customer
@@ -25,8 +25,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int|null $wallet_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Sale|null $sales
  * @property-read \App\Models\Wallet|null $wallet
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
@@ -42,11 +44,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereWalletId($value)
+ *
  * @property string $uuid
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUuid($value)
  * @method static \Database\Factories\CustomerFactory factory($count = null, $state = [])
+ *
+ * @property-read int|float $profit
+ * @property-read int|float $total_due
+ * @property-read int|float $total_payments
+ * @property-read int|float $total_sale_returns
+ * @property-read int|float $total_sales
+ *
  * @mixin \Eloquent
  */
 class Customer extends Model
@@ -56,7 +67,6 @@ class Customer extends Model
     use UuidGenerator;
     use HasFactory;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -69,7 +79,6 @@ class Customer extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -108,5 +117,51 @@ class Customer extends Model
     public function sales(): HasOne
     {
         return $this->HasOne(Sale::class);
+    }
+
+    public function getTotalSalesAttribute(): int|float
+    {
+        return $this->customerSum('total_amount', Sale::class);
+    }
+
+    public function getTotalSaleReturnsAttribute(): int|float
+    {
+        return $this->customerSum('total_amount', SaleReturn::class);
+    }
+
+    public function getTotalPaymentsAttribute(): int|float
+    {
+        return $this->customerSum('paid_amount', Sale::class);
+    }
+
+    public function getTotalDueAttribute(): int|float
+    {
+        return $this->customerSum('due_amount', Sale::class);
+    }
+
+    public function getProfitAttribute(): int|float
+    {
+        $sales = Sale::where('customer_id', $this->id)
+            ->completed()->sum('total_amount');
+
+        $sale_returns = SaleReturn::where('customer_id', $this->id)
+            ->completed()->sum('total_amount');
+
+        $product_costs = 0;
+
+        foreach (Sale::where('customer_id', $this->id)->with('saleDetails.product')->get() as $sale) {
+            foreach ($sale->saleDetails as $saleDetail) {
+                $product_costs += $saleDetail->product->cost;
+            }
+        }
+
+        $revenue = ($sales - $sale_returns) / 100;
+
+        return $revenue - $product_costs;
+    }
+
+    private function customerSum($column, $model)
+    {
+        return $model::where('customer_id', $this->id)->sum($column);
     }
 }

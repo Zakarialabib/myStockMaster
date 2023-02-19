@@ -152,32 +152,36 @@
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.reference" :value="__('Reference')" />
-                        <x-input wire:model="expense.reference" id="expense.reference" class="block mt-1 w-full"
-                            type="text" />
+                        <x-input wire:model.lazy="expense.reference" id="expense.reference" 
+                            type="text" required />
+                        <x-input-error :messages="$errors->get('expense.reference')" class="mt-2" />
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.date" :value="__('Date')" />
-                        <x-input-date wire:model="expense.date" id="expense.date" name="expense.date"
-                            class="block mt-1 w-full" />
+                        <x-input-date wire:model.lazy="expense.date" id="expense.date" name="expense.date"
+                            required />
+                        <x-input-error :messages="$errors->get('expense.date')" class="mt-2" />
                     </div>
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.category_id" :value="__('Expense Category')" />
                         <x-select-list
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="category_id" name="category_id" wire:model="expense.category_id"
+                            required id="category_id" name="category_id" wire:model.lazy="expense.category_id"
                             :options="$this->listsForFields['expensecategories']" />
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.amount" :value="__('Amount')" required />
-                        <x-input wire:model="expense.amount" id="expense.amount" class="block mt-1 w-full"
-                            type="text" />
+                        <x-input wire:model.lazy="expense.amount" id="expense.amount" 
+                            type="text" required />
+                        <x-input-error :messages="$errors->get('expense.amount')" class="mt-2" />
                     </div>
                     <div class="w-full px-4 mb-4">
                         <x-label for="expense.details" :value="__('Description')" />
                         <textarea
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            rows="6" wire:model="expense.details" id="expense.details"></textarea>
+                            rows="6" wire:model.lazy="expense.details" id="expense.details"></textarea>
+                        <x-input-error :messages="$errors->get('expense.details')" class="mt-2" />
                     </div>
                 </div>
             </form>
@@ -194,27 +198,27 @@
                 <div class="flex flex-wrap">
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="category_id" :value="__('Expense Category')" />
-                        <x-input wire:model="expense.category_id" id="category_id" class="block mt-1 w-full"
+                        <x-input wire:model="expense.category_id" id="category_id" 
                             type="text" disabled />
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="date" :value="__('Entry Date')" />
-                        <x-input wire:model="expense.date" id="date" class="block mt-1 w-full" type="text"
+                        <x-input wire:model="expense.date" id="date"  type="text"
                             disabled />
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="reference" :value="__('Reference')" />
-                        <x-input wire:model="expense.reference" id="reference" class="block mt-1 w-full"
+                        <x-input wire:model="expense.reference" id="reference" 
                             type="text" disabled />
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="amount" :value="__('Amount')" />
-                        <x-input wire:model="expense.amount" id="amount" class="block mt-1 w-full" type="text"
+                        <x-input wire:model="expense.amount" id="amount"  type="text"
                             disabled />
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="details" :value="__('Description')" />
-                        <x-input wire:model="expense.details" id="details" class="block mt-1 w-full"
+                        <x-input wire:model="expense.details" id="details" 
                             type="text" disabled />
                     </div>
                 </div>

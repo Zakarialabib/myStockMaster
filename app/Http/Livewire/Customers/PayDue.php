@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Customers;
 
-use App\Models\SalePayment;
-use App\Models\Sale;
-use Auth;
-use Carbon\Carbon;
-use Livewire\Component;
 use App\Enums\PaymentStatus;
+use App\Models\Sale;
+use App\Models\SalePayment;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class PayDue extends Component
 {
-    
     use LivewireAlert;
 
     public $amount;
@@ -26,20 +24,22 @@ class PayDue extends Component
 
     protected $rules = [
         'selectedSales' => 'required|array',
-        'amount'        => 'required|numeric|min:0',
+        'amount' => 'required|numeric|min:0',
     ];
+
     public function getSalesCustomerDueProperty()
     {
         return Sale::where('customer_id', $this->customer_id)
-                ->where('due_amount', '>', 0)
-                ->get();
+            ->where('due_amount', '>', 0)
+            ->get();
     }
+
     public function payModal($customer)
     {
         $this->payModal = true;
         $this->customer_id = $customer;
-
     }
+
     public function makePayment()
     {
         $this->validate();
@@ -50,22 +50,23 @@ class PayDue extends Component
             $paidAmount = min($this->amount, $dueAmount);
 
             SalePayment::create([
-                'date'           => now()->format('Y-m-d'),
-                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
-                'amount'         => $paidAmount,
-                'sale_id'        => $sale->id,
+                'date' => date('Y-m-d'),
+                'reference' => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount' => $paidAmount,
+                'sale_id' => $sale->id,
                 'payment_method' => $this->payment_method,
+                'user_id' => Auth::user()->id,
             ]);
 
             $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $paidAmount) * 100,
-                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
-                'payment_status' => max(0, $dueAmount - $paidAmount) == 0 ? PaymentStatus::Paid : PaymentStatus::Partial,
+                'paid_amount' => ($sale->paid_amount + $paidAmount) * 100,
+                'due_amount' => max(0, $dueAmount - $paidAmount) * 100,
+                'payment_status' => max(0, $dueAmount - $paidAmount) === 0 ? PaymentStatus::Paid : PaymentStatus::Partial,
             ]);
 
             $this->amount -= $paidAmount;
 
-            if ($this->amount == 0) {
+            if ($this->amount === 0) {
                 break;
             }
 

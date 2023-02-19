@@ -43,6 +43,6 @@
 
 <x-app-layout>
     <x-card>
-        <livewire:reports.purchases-return-report :suppliers="\App\Models\Supplier::all()"/>
+        <livewire:reports.purchases-return-report />
     </x-card>
 </x-app-layout>

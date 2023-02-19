@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Customer;
 
 class ReportsController extends Controller
 {
@@ -28,7 +28,7 @@ class ReportsController extends Controller
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $customers = Customer::all();
+        $customers = Customer::select('id', 'name')->get();
 
         return view('admin.reports.sales.index', compact('customers'));
     }

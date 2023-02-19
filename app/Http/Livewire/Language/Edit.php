@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Language;
 
-use Livewire\Component;
-use File;
 use App;
 use App\Models\Language;
+use File;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Edit extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editLanguage'];
 
     public array $languages = [];
@@ -43,7 +43,7 @@ class Edit extends Component
 
         $this->language->save();
 
-        File::copy(App::langPath().('/en.json'), App::langPath().('/'.$this->code.'.json'));
+        File::copy(App::langPath().'/en.json', App::langPath().('/'.$this->code.'.json'));
 
         $this->alert('success', __('Data created successfully!'));
 
