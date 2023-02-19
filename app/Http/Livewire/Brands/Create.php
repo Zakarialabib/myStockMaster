@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Throwable;
 
 class Create extends Component
 {
@@ -29,7 +30,7 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'brand.name' => 'required|min:3|max:255',
+        'brand.name'        => 'required|min:3|max:255',
         'brand.description' => 'nullable|min:3',
     ];
 
@@ -66,7 +67,7 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try{
+        try {
             if ($this->image) {
                 $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
                 $this->image->storeAs('brands', $imageName);
@@ -80,7 +81,7 @@ class Create extends Component
             $this->alert('success', __('Brand created successfully.'));
 
             $this->createBrand = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

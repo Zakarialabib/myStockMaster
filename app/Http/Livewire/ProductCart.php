@@ -97,20 +97,20 @@ class ProductCart extends Component
         }
 
         $cart->add([
-            'id' => $product['id'],
-            'name' => $product['name'],
-            'qty' => 1,
-            'price' => $this->calculate($product)['price'],
-            'weight' => 1,
+            'id'      => $product['id'],
+            'name'    => $product['name'],
+            'qty'     => 1,
+            'price'   => $this->calculate($product)['price'],
+            'weight'  => 1,
             'options' => [
-                'product_discount' => 0.00,
+                'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total' => $this->calculate($product)['sub_total'],
-                'code' => $product['code'],
-                'stock' => $product['quantity'],
-                'unit' => $product['unit'],
-                'product_tax' => $this->calculate($product)['product_tax'],
-                'unit_price' => $this->calculate($product)['unit_price'],
+                'sub_total'             => $this->calculate($product)['sub_total'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
+                'product_tax'           => $this->calculate($product)['product_tax'],
+                'unit_price'            => $this->calculate($product)['unit_price'],
             ],
         ]);
 
@@ -152,13 +152,13 @@ class ProductCart extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $cart_item->options->product_discount,
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ],
         ]);
@@ -230,13 +230,13 @@ class ProductCart extends Component
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
     {
         Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $cart_item->price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $cart_item->options->unit_price,
-            'product_discount' => $discount_amount,
+            'sub_total'             => $cart_item->price * $cart_item->qty,
+            'code'                  => $cart_item->options->code,
+            'stock'                 => $cart_item->options->stock,
+            'unit'                  => $cart_item->options->unit,
+            'product_tax'           => $cart_item->options->product_tax,
+            'unit_price'            => $cart_item->options->unit_price,
+            'product_discount'      => $discount_amount,
             'product_discount_type' => $this->discount_type[$product_id],
         ],
         ]);

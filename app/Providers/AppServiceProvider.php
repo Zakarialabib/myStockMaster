@@ -41,13 +41,13 @@ class AppServiceProvider extends ServiceProvider
 
         Setting::observe(SettingsObserver::class);
 
-        Model::shouldBeStrict(! $this->app->isProduction());
+        Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
     private function getLanguages()
     {
-        if (! app()->runningInConsole()) {
-            if (! Schema::hasTable('languages')) {
+        if ( ! app()->runningInConsole()) {
+            if ( ! Schema::hasTable('languages')) {
                 return;
             }
 

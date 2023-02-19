@@ -16,6 +16,7 @@ class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     public function __construct()
     {
     }
+
     /**
      * @param array $row
      *

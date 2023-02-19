@@ -65,16 +65,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|min:0|max:100',
-        'payment_method' => 'required|integer|min:0|max:100',
-        'note' => 'string|nullable|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|min:0|max:100',
+        'payment_method'      => 'required|integer|min:0|max:100',
+        'note'                => 'string|nullable|max:1000',
     ];
 
     public function mount(): void
@@ -93,8 +93,8 @@ class Index extends Component
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -184,9 +184,9 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -194,11 +194,11 @@ class Index extends Component
             $salereturn = SaleReturn::find($this->salereturn_id);
 
             SaleReturnPayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->salereturn_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->salereturn_id,
                 'payment_method' => $this->payment_method,
                 // 'user_id'        => Auth::user()->id,
             ]);
@@ -216,8 +216,8 @@ class Index extends Component
             }
 
             $salereturn->update([
-                'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($salereturn->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

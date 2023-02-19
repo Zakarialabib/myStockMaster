@@ -68,8 +68,8 @@ class Index extends Component
         abort_if(Gate::denies('category_access'), 403);
 
         $query = Category::with('products')->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

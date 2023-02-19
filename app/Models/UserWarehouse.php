@@ -38,7 +38,7 @@ class UserWarehouse extends Model
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
+        'user_id'      => 'integer',
         'warehouse_id' => 'integer',
     ];
 

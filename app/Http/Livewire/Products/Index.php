@@ -92,12 +92,12 @@ class Index extends Component
         $query = Product::query()
             ->with([
                 'category' => fn ($query) => $query->select('id', 'name'),
-                'brand' => fn ($query) => $query->select('id', 'name'),
+                'brand'    => fn ($query) => $query->select('id', 'name'),
             ])
             ->select('products.*')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

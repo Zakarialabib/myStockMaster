@@ -157,7 +157,7 @@ class Sale extends Model
     ];
 
     protected $casts = [
-        'status' => SaleStatus::class,
+        'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 

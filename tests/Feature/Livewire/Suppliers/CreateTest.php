@@ -32,7 +32,7 @@ it('tests the create supplier component', function () {
         'name'  => 'John doe',
         'phone' => '00000000000',
         'email' => 'supplier@gmail.com',
-        'city' => 'casablanca',
+        'city'  => 'casablanca',
     ]);
 });
 

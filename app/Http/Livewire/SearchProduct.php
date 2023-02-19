@@ -32,9 +32,9 @@ class SearchProduct extends Component
     public $how_many;
 
     protected $listeners = [
-        'selectedCategory' => 'categoryChanged',
+        'selectedCategory'  => 'categoryChanged',
         'selectedWarehouse' => 'warehouseChanged',
-        'showCount' => 'showCountChanged',
+        'showCount'         => 'showCountChanged',
     ];
 
     public function mount(): void

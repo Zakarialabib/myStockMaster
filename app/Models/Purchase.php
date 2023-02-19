@@ -149,7 +149,7 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'status' => PurchaseStatus::class,
+        'status'         => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 

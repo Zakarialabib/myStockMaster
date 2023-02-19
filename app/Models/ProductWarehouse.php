@@ -46,9 +46,9 @@ class ProductWarehouse extends Model
     ];
 
     protected $casts = [
-        'product_id' => 'integer',
+        'product_id'   => 'integer',
         'warehouse_id' => 'integer',
-        'qte' => 'double',
+        'qte'          => 'double',
     ];
 
     public function warehouse(): BelongsTo

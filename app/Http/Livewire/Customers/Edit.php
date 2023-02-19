@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Throwable;
 
 class Edit extends Component
 {
@@ -25,17 +26,17 @@ class Edit extends Component
 
     /** @var array */
     protected $rules = [
-        'customer.name' => 'required|string|min:3|max:255',
-        'customer.email' => 'nullable|email|max:255',
-        'customer.phone' => 'required|numeric',
-        'customer.city' => 'nullable|max:255',
-        'customer.country' => 'nullable|max:255',
-        'customer.address' => 'nullable|max:255',
+        'customer.name'       => 'required|string|min:3|max:255',
+        'customer.email'      => 'nullable|email|max:255',
+        'customer.phone'      => 'required|numeric',
+        'customer.city'       => 'nullable|max:255',
+        'customer.country'    => 'nullable|max:255',
+        'customer.address'    => 'nullable|max:255',
         'customer.tax_number' => 'nullable|max:255',
     ];
 
     protected $messages = [
-        'customer.name.required' => 'The name field cannot be empty.',
+        'customer.name.required'  => 'The name field cannot be empty.',
         'customer.phone.required' => 'The code field cannot be empty.',
     ];
 
@@ -66,8 +67,7 @@ class Edit extends Component
     {
         $validatedData = $this->validate();
 
-        try{
-
+        try {
             $this->customer->save($validatedData);
 
             $this->alert('success', __('Customer updated successfully.'));
@@ -75,7 +75,7 @@ class Edit extends Component
             $this->editModal = false;
 
             $this->emit('refreshIndex');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

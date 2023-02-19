@@ -9,6 +9,7 @@ use App\Models\Wallet;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -23,17 +24,17 @@ class Create extends Component
     public $customer;
 
     protected $rules = [
-        'customer.name' => 'required|string|min:3|max:255',
-        'customer.email' => 'nullable|email|max:255',
-        'customer.phone' => 'required|numeric',
-        'customer.city' => 'nullable|min:3|max:255',
-        'customer.country' => 'nullable|min:3|max:255',
-        'customer.address' => 'nullable|max:255',
+        'customer.name'       => 'required|string|min:3|max:255',
+        'customer.email'      => 'nullable|email|max:255',
+        'customer.phone'      => 'required|numeric',
+        'customer.city'       => 'nullable|min:3|max:255',
+        'customer.country'    => 'nullable|min:3|max:255',
+        'customer.address'    => 'nullable|max:255',
         'customer.tax_number' => 'nullable|max:255',
     ];
 
     protected $messages = [
-        'customer.name.required' => 'The name field cannot be empty.',
+        'customer.name.required'  => 'The name field cannot be empty.',
         'customer.phone.required' => 'The code field cannot be empty.',
     ];
 
@@ -64,13 +65,13 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try{ 
+        try {
             $this->customer->save($validatedData);
 
             if ($this->customer) {
                 Wallet::create([
                     'customer_id' => $this->customer->id,
-                    'balance' => 0,
+                    'balance'     => 0,
                 ]);
             }
             $this->alert('success', __('Customer created successfully'));
@@ -78,8 +79,7 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createCustomer = false;
-            
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

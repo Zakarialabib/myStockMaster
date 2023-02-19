@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Exception;
 
 class Index extends Component
 {
@@ -61,8 +62,8 @@ class Index extends Component
     public function render()
     {
         $query = Permission::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -121,7 +122,7 @@ class Index extends Component
             $this->emit('refreshIndex');
 
             $this->editModal = false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->alert('error', 'Something goes wrong while updating permission!!', $e->getMessage());
         }
     }

@@ -25,7 +25,7 @@ class Livesearch extends Component
     protected $queryString = [
         'searchQuery' => [
             'except' => '',
-            'as' => 'q',
+            'as'     => 'q',
         ],
     ];
 

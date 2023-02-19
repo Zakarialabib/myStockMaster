@@ -48,7 +48,7 @@ class Warehouse extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var array<string> $orderable */
+    /** @var array<string> */
     public $orderable = [
         'id',
         'name',
@@ -60,7 +60,7 @@ class Warehouse extends Model
         'updated_at',
     ];
 
-    /** @var array<string> $filterable */
+    /** @var array<string> */
     public $filterable = [
         'id',
         'name',

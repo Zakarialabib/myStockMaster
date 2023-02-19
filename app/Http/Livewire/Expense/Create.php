@@ -10,6 +10,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -26,12 +27,12 @@ class Create extends Component
     public $listsForFields = [];
 
     protected $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|min:3',
-        'expense.user_id' => 'nullable',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|min:3',
+        'expense.user_id'      => 'nullable',
         'expense.warehouse_id' => 'nullable',
     ];
 
@@ -69,8 +70,7 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try{
-                
+        try {
             $this->expense->save($validatedData);
 
             $expense->user()->associate(auth()->user());
@@ -80,9 +80,9 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createExpense = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
-        } 
+        }
     }
 
     protected function initListsForFields()

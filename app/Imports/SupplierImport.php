@@ -13,6 +13,7 @@ class SupplierImport implements ToModel
     public function __construct()
     {
     }
+
     /**
      * @param  array $row
      *
@@ -22,9 +23,9 @@ class SupplierImport implements ToModel
     public function model(array $row)
     {
         return new Supplier([
-            'name' => $row['name'],
-            'phone' => $row['phone'],
-            'address' => $row['address'] ?? null,
+            'name'       => $row['name'],
+            'phone'      => $row['phone'],
+            'address'    => $row['address'] ?? null,
             'tax_number' => $row['tax_number'] ?? null,
         ]);
     }
