@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Throwable;
 
 class Edit extends Component
 {
@@ -63,7 +64,7 @@ class Edit extends Component
     public function update()
     {
         $validatedData = $this->validate();
-        try{ 
+        try {
             if ($this->image) {
                 $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
                 $this->image->storeAs('brands', $imageName);
@@ -77,7 +78,7 @@ class Edit extends Component
             $this->alert('success', __('Brand updated successfully.'));
 
             $this->editModal = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

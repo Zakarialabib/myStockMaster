@@ -35,7 +35,7 @@ class Orders extends Component
     }
 
     public function sync()
-    {  
+    {
         // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {
             $client = new \Automattic\WooCommerce\Client(

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Throwable;
 
 class Edit extends Component
 {
@@ -66,8 +67,7 @@ class Edit extends Component
     {
         $validatedData = $this->validate();
 
-        try{
-
+        try {
             $this->customer->save($validatedData);
 
             $this->alert('success', __('Customer updated successfully.'));
@@ -75,7 +75,7 @@ class Edit extends Component
             $this->editModal = false;
 
             $this->emit('refreshIndex');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

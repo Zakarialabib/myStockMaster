@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Permission;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Traits\Datatable;
+use Exception;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -121,7 +122,7 @@ class Index extends Component
             $this->emit('refreshIndex');
 
             $this->editModal = false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->alert('error', 'Something goes wrong while updating permission!!', $e->getMessage());
         }
     }

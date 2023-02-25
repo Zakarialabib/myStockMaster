@@ -42,10 +42,11 @@
                             <select wire:model.defer="purchase_status"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="purchase_status">
-                                <option value="">{{ __('Select Status') }}</option>
-                                <option value="Pending">{{ __('Pending') }}</option>
-                                <option value="Ordered">{{ __('Ordered') }}</option>
-                                <option value="Completed">{{ __('Completed') }}</option>
+                                @foreach (\App\Enums\PurchaseStatus::cases() as $status)
+                                    <option value="{{ $status->value }}">
+                                        {{ __($status->name) }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -56,9 +57,11 @@
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="payment_status">
                                 <option value="">{{ __('Select Payment Status') }}</option>
-                                <option value="Paid">{{ __('Paid') }}</option>
-                                <option value="Unpaid">{{ __('Unpaid') }}</option>
-                                <option value="Partial">{{ __('Partial') }}</option>
+                                @foreach (\App\Enums\PaymentStatus::cases() as $status)
+                                    <option value="{{ $status->value }}">
+                                        {{ __($status->name) }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -97,44 +100,31 @@
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
                             <x-table.td>{{ $purchase->name }}</x-table.td>
                             <x-table.td>
-                                @if ($purchase->status == 'Pending')
-                                    <span class="badge badge-info">
-                                        {{ $purchase->status }}
-                                    </span>
-                                @elseif ($purchase->status == 'Ordered')
-                                    <span class="badge badge-primary">
-                                        {{ $purchase->status }}
-                                    </span>
-                                @else
-                                    <span class="badge badge-success">
-                                        {{ $purchase->status }}
-                                    </span>
+                                @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
+                                    <x-badge warning>{{ __('Pending') }}</x-badge>
+                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
+                                    <x-badge info>{{ __('Ordered') }}</x-badge>
+                                @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
+                                    <x-badge success>{{ __('Completed') }}</x-badge>
                                 @endif
                             </x-table.td>
                             <x-table.td>{{ format_currency($purchase->total_amount) }}</x-table.td>
                             <x-table.td>{{ format_currency($purchase->paid_amount) }}</x-table.td>
                             <x-table.td>{{ format_currency($purchase->due_amount) }}</x-table.td>
                             <x-table.td>
-                                @if ($purchase->payment_status == 'Partial')
-                                    <span class="badge badge-warning">
-                                        {{ $purchase->payment_status }}
-                                    </span>
-                                @elseif ($purchase->payment_status == 'Paid')
-                                    <span class="badge badge-success">
-                                        {{ $purchase->payment_status }}
-                                    </span>
-                                @else
-                                    <span class="badge badge-danger">
-                                        {{ $purchase->payment_status }}
-                                    </span>
+                                @if ($purchase->payment_status == \App\Enums\PaymentStatus::Paid)
+                                    <x-badge success>{{ __('Paid') }}</x-badge>
+                                @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::Partial)
+                                    <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                @elseif($purchase->payment_status == \App\Enums\PaymentStatus::Due)
+                                    <x-badge danger>{{ __('Due') }}</x-badge>
                                 @endif
-
                             </x-table.td>
                         </x-table.tr>
                     @empty
                         <x-table.tr>
                             <x-table.td colspan="8">
-                                <span class="text-red-500">No Purchases Data Available!</span>
+                                <span class="text-red-500">{{ __('No Purchases Data Available') }}!</span>
                             </x-table.td>
                         </x-table.tr>
                     @endforelse

@@ -28,7 +28,7 @@ it('tests the brand edit component', function () {
         ->call('update');
 
     assertDatabaseHas('brands', [
-        'name' => 'apple',
+        'name'        => 'apple',
         'description' => 'some description',
     ]);
 });
@@ -36,7 +36,7 @@ it('tests the brand edit component', function () {
 it('tests the update brand component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
-    
+
     $brand = Brand::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $brand->id])

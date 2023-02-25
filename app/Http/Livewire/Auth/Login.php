@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Auth;
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
+use Livewire\Component;
 
 class Login extends Component
 {
@@ -20,11 +20,11 @@ class Login extends Component
     public $remember = false;
 
     protected array $rules = [
-        'email'        => 'required|email',
-        'password'        => 'required',
+        'email' => 'required|email',
+        'password' => 'required',
     ];
 
-     /**
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @return void
@@ -37,7 +37,9 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        if ( ! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -59,3 +61,4 @@ class Login extends Component
         return view('livewire.auth.login');
     }
 }
+

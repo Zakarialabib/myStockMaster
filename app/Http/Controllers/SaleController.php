@@ -73,15 +73,15 @@ class SaleController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = PaymentStatus::Pending;
+                $payment_status = PaymentStatus::PENDING;
             } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = PaymentStatus::Paid;
+                $payment_status = PaymentStatus::PAID;
             }
 
             foreach ($sale->saleDetails as $sale_detail) {
-                if ($sale->status === SaleStatus::Shipped || $sale->status === SaleStatus::Completed) {
+                if ($sale->status === SaleStatus::SHIPPED || $sale->status === SaleStatus::COMPLETED) {
                     $product = Product::findOrFail($sale_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity + $sale_detail->quantity,

@@ -55,11 +55,11 @@
                         {{ $purchasereturn->supplier->name }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Pending)
+                        @if ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::PENDING)
                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Returned)
+                        @elseif ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::RETURNED)
                             <x-badge info>{{ __('Returned') }}</x-badge>
-                        @elseif($purchasereturn->status == \App\Enums\PurchaseReturnStatus::Completed)
+                        @elseif($purchasereturn->status == \App\Enums\PurchaseReturnStatus::COMPLETED)
                             <x-badge success>{{ __('Completed') }}</x-badge>
                         @endif
                     </x-table.td>

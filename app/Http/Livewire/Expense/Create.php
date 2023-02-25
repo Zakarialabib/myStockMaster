@@ -10,6 +10,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -69,8 +70,7 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try{
-                
+        try {
             $this->expense->save($validatedData);
 
             $expense->user()->associate(auth()->user());
@@ -80,9 +80,9 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createExpense = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
-        } 
+        }
     }
 
     protected function initListsForFields()

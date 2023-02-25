@@ -169,33 +169,11 @@ Route::group(['middleware' => 'auth'], function () {
     //Sales
     Route::resource('sales', SaleController::class);
 
-    //Payments
-    Route::get('/sale-payments/{sale_id}', [SalePaymentsController::class, 'index'])->name('sale-payments.index');
-    Route::get('/sale-payments/{sale_id}/create', [SalePaymentsController::class, 'create'])->name('sale-payments.create');
-    Route::post('/sale-payments/store', [SalePaymentsController::class, 'store'])->name('sale-payments.store');
-    Route::get('/sale-payments/{sale_id}/edit/{salePayment}', [SalePaymentsController::class, 'edit'])->name('sale-payments.edit');
-    Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
-    Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
-
     //Generate Sale Returns PDF
     Route::get('/sale-returns/pdf/{id}', [ExportController::class, 'saleReturns'])->name('sale-returns.pdf');
 
     //Sale Returns
     Route::resource('sale-returns', SalesReturnController::class);
-
-    //Payments
-    Route::get('/sale-return-payments/{sale_return_id}', 'SaleReturnPaymentsController@index')
-        ->name('sale-return-payments.index');
-    Route::get('/sale-return-payments/{sale_return_id}/create', 'SaleReturnPaymentsController@create')
-        ->name('sale-return-payments.create');
-    Route::post('/sale-return-payments/store', 'SaleReturnPaymentsController@store')
-        ->name('sale-return-payments.store');
-    Route::get('/sale-return-payments/{sale_return_id}/edit/{saleReturnPayment}', 'SaleReturnPaymentsController@edit')
-        ->name('sale-return-payments.edit');
-    Route::patch('/sale-return-payments/update/{saleReturnPayment}', 'SaleReturnPaymentsController@update')
-        ->name('sale-return-payments.update');
-    Route::delete('/sale-return-payments/destroy/{saleReturnPayment}', 'SaleReturnPaymentsController@destroy')
-        ->name('sale-return-payments.destroy');
 
     //User Profile
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');

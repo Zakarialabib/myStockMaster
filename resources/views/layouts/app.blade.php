@@ -27,14 +27,14 @@
 
 </head>
 
-<body class="antialiased bg-body text-body font-body" dir="ltr">
+<body class="antialiased bg-gray-50 text-body font-body" dir="ltr">
     <x-loading-mask />
     <div @resize.window="handleWindowResize">
         <div class="min-h-screen">
             <!-- Sidebar -->
             <x-sidebar.sidebar />
             <!-- Page Wrapper -->
-            <div class="flex flex-col min-h-screen pl-2"
+            <div class="flex flex-col min-h-screen"
                 :class="{
                     'lg:ml-64': isSidebarOpen,
                     'lg:ml-16': !isSidebarOpen,

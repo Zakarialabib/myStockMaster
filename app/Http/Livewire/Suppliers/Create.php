@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -73,9 +74,8 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createSupplier = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
-        
     }
 }

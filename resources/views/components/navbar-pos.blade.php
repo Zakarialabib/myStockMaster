@@ -1,4 +1,4 @@
-<section class="py-5 px-6 bg-white shadow">
+<section class="py-5 px-6 bg-gray-50 shadow">
     <nav class="flex items-center justify-between flex-shrink-0 px-3">
         <!-- Logo -->
         <a href="{{ route('home') }}" class="text-xl font-semibold">

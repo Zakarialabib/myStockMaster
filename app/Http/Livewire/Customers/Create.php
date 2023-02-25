@@ -64,7 +64,7 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try{ 
+        try {
             $this->customer->save($validatedData);
 
             if ($this->customer) {
@@ -78,7 +78,6 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createCustomer = false;
-            
         } catch (\Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }

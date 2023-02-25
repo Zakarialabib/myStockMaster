@@ -8,6 +8,7 @@ use App\Models\Currency;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Edit extends Component
 {
@@ -65,7 +66,7 @@ class Edit extends Component
     {
         $validatedData = $this->validate();
 
-        try{ 
+        try {
             $this->currency->save($validatedData);
 
             $this->alert('success', __('Currency updated successfully.'));
@@ -73,7 +74,7 @@ class Edit extends Component
             $this->emit('refreshIndex');
 
             $this->editModal = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

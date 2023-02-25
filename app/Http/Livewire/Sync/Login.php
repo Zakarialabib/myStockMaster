@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Sync;
 
-use Livewire\Component;
-use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Client;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class Login extends Component
 {
@@ -19,8 +19,8 @@ class Login extends Component
     public $url;
 
     protected $rules = [
-        'email' =>'required|email',
-        'password' =>'required'
+        'email' => 'required|email',
+        'password' => 'required',
     ];
 
     public function mount()
@@ -38,7 +38,7 @@ class Login extends Component
         $this->validate();
 
         $client = new Client();
-        
+
         $response = $client->request('POST', $this->url.'/api/login', [
             'headers' => [
                 'Accept' => 'application/json',
@@ -50,7 +50,6 @@ class Login extends Component
             ],
         ]);
 
-        
         if ($response->getStatusCode() === Response::HTTP_OK) {
 
             $data = json_decode($response->getBody(), true);
@@ -61,12 +60,12 @@ class Login extends Component
                 'custom_api_key' => $ecommerceToken,
                 'custom_api_secret' => 'your-secret-value', // replace with your own secret value
                 'custom_last_sync' => null, // set to null initially
-                'custom_products' => null // set to null initially
+
+                'custom_products' => null, // set to null initially
             ]);
-            
+
             $this->alert('success', __('Authentication successful !'));
             $this->loginModal = false;
-
         } else {
             $this->alert('error', __('Authentication failed !'));
         }

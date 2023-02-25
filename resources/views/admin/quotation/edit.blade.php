@@ -92,10 +92,11 @@
                                     <select
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="status" id="status" required>
-                                        <option {{ $quotation->status == 'Pending' ? 'selected' : '' }}
-                                            value="Pending">{{ __('Pending') }}</option>
-                                        <option {{ $quotation->status == 'Sent' ? 'selected' : '' }} value="Sent">
-                                            {{ __('Sent') }}</option>
+                                        @foreach (\App\Enums\QuotationStatus::cases() as $status)
+                                            <option {{ $quotation->status == $status->value ? 'selected' : '' }} value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

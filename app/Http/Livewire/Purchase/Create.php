@@ -119,11 +119,11 @@ class Create extends Component
         $due_amount = $this->total_amount - $this->paid_amount;
 
         if ($due_amount === $this->total_amount) {
-            $payment_status = PaymentStatus::Pending;
+            $payment_status = PaymentStatus::PENDING;
         } elseif ($due_amount > 0) {
-            $payment_status = PaymentStatus::Partial;
+            $payment_status = PaymentStatus::PARTIAL;
         } else {
-            $payment_status = PaymentStatus::Paid;
+            $payment_status = PaymentStatus::PAID;
         }
 
         $purchase = Purchase::create([
@@ -160,7 +160,7 @@ class Create extends Component
                 'product_tax_amount' => $cart_item->options->product_tax * 100,
             ]);
 
-            if ($this->status === PurchaseStatus::Pending) {
+            if ($this->status === PurchaseStatus::PENDING) {
                 $product = Product::findOrFail($cart_item->id);
                 $product->update([
                     'quantity' => $product->quantity + $cart_item->qty,

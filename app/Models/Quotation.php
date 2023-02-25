@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\QuotationStatus;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -69,14 +70,11 @@ class Quotation extends Model
         'date',
         'reference',
         'customer_id',
-        'tax_percentage',
         'tax_amount',
-        'discount_percentage',
         'discount_amount',
         'shipping_amount',
         'total_amount',
         'status',
-        'note',
         'created_at',
         'updated_at',
     ];
@@ -86,14 +84,11 @@ class Quotation extends Model
         'date',
         'reference',
         'customer_id',
-        'tax_percentage',
         'tax_amount',
-        'discount_percentage',
         'discount_amount',
         'shipping_amount',
         'total_amount',
         'status',
-        'note',
         'created_at',
         'updated_at',
     ];
@@ -107,6 +102,8 @@ class Quotation extends Model
         'date',
         'reference',
         'customer_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -117,6 +114,10 @@ class Quotation extends Model
         'note',
         'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        'status' => QuotationStatus::class,
     ];
 
     public function quotationDetails(): HasMany

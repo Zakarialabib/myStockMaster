@@ -132,6 +132,7 @@ class Purchase extends Model
         'reference',
         'supplier_id',
         'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',

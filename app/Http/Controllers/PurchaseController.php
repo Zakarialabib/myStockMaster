@@ -71,15 +71,15 @@ class PurchaseController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = PaymentStatus::Pending;
+                $payment_status = PaymentStatus::PENDING;
             } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = PaymentStatus::Paid;
+                $payment_status = PaymentStatus::PAID;
             }
 
             foreach ($purchase->purchaseDetails as $purchase_detail) {
-                if ($purchase->status === PurchaseStatus::Completed) {
+                if ($purchase->status === PurchaseStatus::COMPLETED) {
                     $product = Product::findOrFail($purchase_detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity - $purchase_detail->quantity,
@@ -121,7 +121,7 @@ class PurchaseController extends Controller
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status === PurchaseStatus::Completed) {
+                if ($request->status === PurchaseStatus::COMPLETED) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity + $cart_item->qty,

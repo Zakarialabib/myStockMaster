@@ -13,6 +13,7 @@ class PurchaseImport implements Tomodel
     public function __construct()
     {
     }
+
     /**
      * @param  array $row
      *

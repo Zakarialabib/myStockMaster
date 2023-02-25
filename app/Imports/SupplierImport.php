@@ -13,6 +13,7 @@ class SupplierImport implements ToModel
     public function __construct()
     {
     }
+
     /**
      * @param  array $row
      *

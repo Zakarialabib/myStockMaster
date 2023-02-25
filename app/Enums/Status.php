@@ -6,6 +6,11 @@ namespace App\Enums;
 
 enum Status: string
 {
-    case Inactive = '0';
-    case Active = '1';
+    case INACTIVE = '0';
+    case ACTIVE = '1';
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'name', 'value');
+    }
 }

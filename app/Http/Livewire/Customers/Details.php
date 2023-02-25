@@ -127,6 +127,7 @@ class Details extends Component
         }
 
         $revenue = ($sales - $sale_returns) / 100;
+
         return $revenue - $product_costs;
     }
 
