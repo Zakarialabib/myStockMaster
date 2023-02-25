@@ -48,4 +48,5 @@ class Register extends Component
     {
         return view('livewire.auth.register');
     }
+
 }

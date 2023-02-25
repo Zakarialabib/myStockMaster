@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+
 
 class ProductController extends Controller
 {
@@ -25,6 +27,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      *
+
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -33,9 +36,11 @@ class ProductController extends Controller
             'id' => $request->id,
             'name' => $request->name,
             'price' => $request->price,
+
         ]);
 
         return new ProductResource($product);
+
     }
 
     /**
@@ -43,11 +48,13 @@ class ProductController extends Controller
      *
      * @param  int  $id
      *
+
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
     {
         return new ProductResource($product);
+
     }
 
     /**

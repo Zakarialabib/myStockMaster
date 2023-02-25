@@ -200,6 +200,9 @@ class Index extends Component
 
             $this->alert('success', __('Sale created successfully!'));
 
+            // dispatch the Send Payment Notification job
+            PaymentNotification::dispatch($sale);
+
             $this->checkoutModal = false;
         } catch (Exception $e) {
             $this->alert('error', $e->getMessage());

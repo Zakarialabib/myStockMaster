@@ -14,6 +14,7 @@ use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PosController;
@@ -188,6 +189,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Mail Settings
     Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
+
+    //Logs
+    Route::get('logs', LogController::class)->name('logs.index');
 
     //Language Settings
     Route::get('languages', LanguageController::class)->name('languages.index');

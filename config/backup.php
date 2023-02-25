@@ -8,8 +8,9 @@ return [
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => env('APP_NAME', 'laravel-backup'),
-
+        'name' => env('APP_NAME', 'myStockMaster'),
+        'status' => env('BACKUP_STATUS',0),
+        'schedule' => 1, // make 2 or 3 
         'source' => [
 
             'files' => [

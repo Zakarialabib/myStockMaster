@@ -21,7 +21,6 @@
         "milon/barcode": "^9.0",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^2.0",
-        "realrashid/sweet-alert": "^5.1",
         "shopify/shopify-api": "^4.1",
         "spatie/laravel-backup": "^8.1",
         "spatie/laravel-medialibrary": "^10.7",

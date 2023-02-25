@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
+
 class ApiToken extends Component
 {
     public $token;
@@ -53,7 +54,7 @@ class ApiToken extends Component
         $ecomProducts = $response->json()['data'];
 
         $missingProducts = array_diff($inventoryProducts, array_column($ecomProducts, 'code'));
-
+        
         $this->missingProducts = count($missingProducts);
 
         settings()->update([

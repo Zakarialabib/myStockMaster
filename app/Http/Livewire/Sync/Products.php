@@ -45,6 +45,7 @@ class Products extends Component
 
     public function sync()
     {
+
         $inventoryProducts = Product::with('category')->get();
 
         $client = Http::withHeaders([
@@ -101,6 +102,7 @@ class Products extends Component
                 return response()->json(['message' => 'Failed to create new products in e-commerce store.'], 500);
             }
         
+
         }
     }
 

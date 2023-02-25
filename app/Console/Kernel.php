@@ -7,6 +7,8 @@ namespace App\Console;
 use App\Console\Commands\Backup\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Console\Commands\Backup\BackupDatabase;
+use App\Console\Commands\Backup\BackupFiles;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,6 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
+
         if (config('backup.schedule') === 1) {
             $schedule->command(BackupCommand::class)->daily();
         } elseif (config('backup.schedule') === 2) {
@@ -31,6 +34,7 @@ class Kernel extends ConsoleKernel
         } elseif (config('backup.schedule') === 3) {
             $schedule->command(BackupCommand::class)->monthly();
         }
+
     }
 
     /**

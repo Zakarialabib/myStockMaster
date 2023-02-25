@@ -22,6 +22,7 @@ class Notifications extends Component
             ->whereColumn('quantity', '<=', 'stock_alert')
             ->take($this->how_many)
             ->get();
+
     }
 
     public function loadMore()
@@ -35,6 +36,7 @@ class Notifications extends Component
         $notification = $this->user->unreadNotifications[$key];
         $notification->markAsRead();
     }
+
 
     public function readAll()
     {

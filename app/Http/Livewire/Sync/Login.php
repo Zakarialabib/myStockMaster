@@ -51,6 +51,7 @@ class Login extends Component
         ]);
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
+
             $data = json_decode($response->getBody(), true);
             $ecommerceToken = $data['api_token'];
 
@@ -59,6 +60,7 @@ class Login extends Component
                 'custom_api_key' => $ecommerceToken,
                 'custom_api_secret' => 'your-secret-value', // replace with your own secret value
                 'custom_last_sync' => null, // set to null initially
+
                 'custom_products' => null, // set to null initially
             ]);
 
@@ -67,6 +69,7 @@ class Login extends Component
         } else {
             $this->alert('error', __('Authentication failed !'));
         }
+
     }
 
     public function render()
