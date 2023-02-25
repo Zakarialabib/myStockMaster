@@ -21,7 +21,7 @@ class EditTranslation extends Component
     ];
 
     protected $rules = [
-        'key'   => 'required',
+        'key' => 'required',
         'value' => 'required',
     ];
 

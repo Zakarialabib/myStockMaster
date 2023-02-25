@@ -73,7 +73,7 @@
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                         <div class="from-group">
                                             <div class="mb-4">
-                                                <label for="supplier_id">Supplier <span
+                                                <label for="supplier_id">{{__('Supplier')}} <span
                                                         class="text-red-500">*</span></label>
                                                 <select
                                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -110,12 +110,13 @@
                                             <select
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                                 name="status" id="status" required>
-                                                <option {{ $purchase_return->status == '0' ? 'selected' : '' }}
-                                                    value="0">{{ __('Pending') }}</option>
-                                                <option {{ $purchase_return->status == '1' ? 'selected' : '' }}
-                                                    value="1">{{__('Canceled')}}</option>
-                                                <option {{ $purchase_return->status == '2' ? 'selected' : '' }}
-                                                    value="2">{{ __('Completed') }}</option>
+                                                @foreach (\App\Enums\PurchaseReturnStatus::cases() as $status)
+                                                    <option
+                                                        {{ $purchase_return->status == $status->value ? 'selected' : '' }}
+                                                        value="{{ $status->value }}">
+                                                        {{ __($status->name) }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -133,7 +134,7 @@
                                     </div>
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                         <div class="mb-4">
-                                            <label for="paid_amount">Amount Paid <span
+                                            <label for="paid_amount">{{__('Amount Paid')}} <span
                                                     class="text-red-500">*</span></label>
                                             <input id="paid_amount" type="text"
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -144,7 +145,7 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="note">Note (If Needed)</label>
+                                    <label for="note">{{__('Note (If Needed)')}}</label>
                                     <textarea name="note" id="note" rows="5"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $purchase_return->note }}</textarea>
                                 </div>
@@ -152,7 +153,7 @@
                                 <div class="mt-3">
                                     <button type="submit"
                                         class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                                        Update Purchase Return <i class="bi bi-check"></i>
+                                        {{__('Update Purchase Return')}} <i class="bi bi-check"></i>
                                     </button>
                                 </div>
                             </form>

@@ -6,13 +6,13 @@ namespace App\Enums;
 
 enum PaymentStatus: string
 {
-    case Pending = '0';
+    case PENDING = '0';
 
-    case Paid = '1';
+    case PAID = '1';
 
-    case Partial = '2';
+    case PARTIAL = '2';
 
-    case Due = '3';
+    case DUE = '3';
 
     public static function values(): array
     {

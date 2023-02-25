@@ -132,6 +132,7 @@ class Purchase extends Model
         'reference',
         'supplier_id',
         'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -149,7 +150,7 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'status'         => PurchaseStatus::class,
+        'status' => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 

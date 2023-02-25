@@ -62,7 +62,7 @@ class ProductTelegram extends Notification
     public function toArray($notifiable)
     {
         return [
-            'product_name'  => $this->productName,
+            'product_name' => $this->productName,
             'product_price' => $this->productPrice,
         ];
     }

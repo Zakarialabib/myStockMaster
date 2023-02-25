@@ -27,12 +27,12 @@ class Create extends Component
     public $listsForFields = [];
 
     protected $rules = [
-        'expense.reference'    => 'required|string|max:255',
-        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
-        'expense.date'         => 'required|date',
-        'expense.amount'       => 'required|numeric',
-        'expense.details'      => 'nullable|string|min:3',
-        'expense.user_id'      => 'nullable',
+        'expense.reference' => 'required|string|max:255',
+        'expense.category_id' => 'required|integer|exists:expense_categories,id',
+        'expense.date' => 'required|date',
+        'expense.amount' => 'required|numeric',
+        'expense.details' => 'nullable|string|min:3',
+        'expense.user_id' => 'nullable',
         'expense.warehouse_id' => 'nullable',
     ];
 

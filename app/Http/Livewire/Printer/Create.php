@@ -24,13 +24,13 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'printer.name'               => 'required|string|min:3|max:255',
-        'printer.connection_type'    => 'required|string|max:255',
+        'printer.name' => 'required|string|min:3|max:255',
+        'printer.connection_type' => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line'      => 'required',
-        'printer.ip_address'         => 'required|string|max:255',
-        'printer.port'               => 'required|string|max:255',
-        'printer.path'               => 'required|string|max:255',
+        'printer.char_per_line' => 'required',
+        'printer.ip_address' => 'required|string|max:255',
+        'printer.port' => 'required|string|max:255',
+        'printer.path' => 'required|string|max:255',
     ];
 
     public function mount(Printer $printer): void

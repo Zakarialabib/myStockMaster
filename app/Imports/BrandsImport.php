@@ -24,8 +24,8 @@ class BrandsImport implements ToModel, SkipsEmptyRows
     public function model(array $row)
     {
         return new Brand([
-            'name'        => $row['name'],
-            'image'       => $row['image'] ?? null, // or download with url
+            'name' => $row['name'],
+            'image' => $row['image'] ?? null, // or download with url
             'description' => $row['description'] ?? null,
         ]);
     }

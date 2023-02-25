@@ -111,12 +111,13 @@
                                             <select
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                                 name="status" id="status" required>
-                                                <option {{ $sale_return->status == '0' ? 'selected' : '' }}
-                                                    value="0">{{ __('Pending') }}</option>
-                                                <option {{ $sale_return->status == '1' ? 'selected' : '' }}
-                                                    value="1">{{__('Canceled')}}</option>
-                                                <option {{ $sale_return->status == '2' ? 'selected' : '' }}
-                                                    value="2">{{ __('Completed') }}</option>
+                                                @foreach (\App\Enums\SaleReturnStatus::cases() as $status)
+                                                    <option
+                                                        {{ $sale_return->status == $status->value ? 'selected' : '' }}
+                                                        value="{{ $status->value }}">
+                                                        {{ __($status->name) }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

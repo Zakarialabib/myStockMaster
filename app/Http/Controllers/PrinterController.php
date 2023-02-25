@@ -100,7 +100,7 @@ class PrinterController extends Controller
 
     public function destroy($id)
     {
-        if ( ! auth()->user()->can('access_printers')) {
+        if (! auth()->user()->can('access_printers')) {
             abort(403, 'Unauthorized action.');
         }
 

@@ -30,7 +30,7 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'brand.name'        => 'required|min:3|max:255',
+        'brand.name' => 'required|min:3|max:255',
         'brand.description' => 'nullable|min:3',
     ];
 

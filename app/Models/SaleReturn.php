@@ -78,7 +78,6 @@ class SaleReturn extends Model
         'id',
         'date',
         'reference',
-        'supplier_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -98,7 +97,6 @@ class SaleReturn extends Model
         'id',
         'date',
         'reference',
-        'supplier_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -122,7 +120,9 @@ class SaleReturn extends Model
     protected $fillable = [
         'date',
         'reference',
-        'supplier_id',
+        'customer_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -139,7 +139,7 @@ class SaleReturn extends Model
     ];
 
     protected $casts = [
-        'status'         => SaleReturnStatus::class,
+        'status' => SaleReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 

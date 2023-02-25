@@ -45,8 +45,8 @@ class SyncProducts extends Component
         } elseif ($this->type === 'shopify') {
             $client = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
-                'api_key'     => settings()->shopify_api_key,
-                'api_secret'  => settings()->shopify_api_secret,
+                'api_key' => settings()->shopify_api_key,
+                'api_secret' => settings()->shopify_api_secret,
             ]);
         }
 

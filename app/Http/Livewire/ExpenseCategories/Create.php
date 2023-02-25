@@ -23,7 +23,7 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'expenseCategory.name'        => 'required|string|min:3|max:255',
+        'expenseCategory.name' => 'required|string|min:3|max:255',
         'expenseCategory.description' => 'nullable|string',
     ];
 

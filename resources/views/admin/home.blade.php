@@ -30,7 +30,7 @@
 @section('title', __('Dashboard'))
 
 @section('breadcrumb')
-    <section class="py-3 px-4">
+    <div class="py-3 px-4">
         <div class="flex flex-wrap items-center">
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
@@ -48,16 +48,18 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 @endsection
 <x-app-layout>
     <div class="px-2 mx-auto">
 
+        <div class="bg-gray-50 py-5 px-4">
         <livewire:livesearch />
+        </div>
 
         {{-- <livewire:calculator /> --}}
-        <div class="bg-white">
-            <div class="flex flex-wrap justify-center lg:text-lg sm:text-sm gap-4 py-4 space-y-2">
+        <div class="bg-gray-50 py-5 px-4 rounded">
+            <div class="flex flex-wrap justify-center lg:text-lg sm:text-sm gap-4 py-4">
                 <x-button type="button" primary data-date="today" class="js-date mr-2 active:bg-indigo-800">
                     {{ __('Today') }}
                 </x-button>
@@ -164,7 +166,7 @@
             @endforeach
         </div>
         @can('show_total_stats')
-            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full mb-4 py-4">
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full py-4 px-4 bg-gray-50">
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                     <div>
                         <div class="flex mb-2">
@@ -225,9 +227,9 @@
         @endcan
 
         @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="bg-white flex flex-wrap py-4">
+            <div class="bg-white flex flex-wrap py-4 px-4 m-4 bg-gray-50">
                 @can('show_weekly_sales_purchases')
-                    <div class="lg:w-3/5 sm:w-full px-2 mb-4">
+                    <div class="lg:w-3/5 sm:w-full p-2 mb-4 bg-white rounded">
                         <div>
                             <div class="text-xl mb-2">
                                 {{ __('Sales & Purchases of Last 7 Days') }}
@@ -239,7 +241,7 @@
                     </div>
                 @endcan
                 @can('show_month_overview')
-                    <div class="lg:w-2/5 sm:w-full px-2 mb-4">
+                    <div class="lg:w-2/5 sm:w-full p-2 mb-4 bg-white rounded">
                         <div>
                             <div class="text-xl mb-2">
                                 {{ __('Overview of') }} {{ now()->format('F, Y') }}
@@ -256,8 +258,8 @@
         @endcan
 
         @can('show_monthly_cashflow')
-            <div class="bg-white flex flex-wrap mb-4 py-4">
-                <div class="w-full px-2">
+            <div class="bg-gray-50 px-4 flex flex-wrap py-4">
+                <div class="w-full p-2 bg-white rounded">
                     <div>
                         <div class="text-xl mb-2">
                             {{ __('Monthly Cash Flow (Payment Sent & Received)') }}

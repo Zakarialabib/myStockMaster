@@ -15,11 +15,11 @@ trait Trashed
      */
     public function scopeTrashed($query)
     {
-        if ( ! empty(request()->get('trashed')) && request()->get('trashed') === 'with') {
+        if (! empty(request()->get('trashed')) && request()->get('trashed') === 'with') {
             return $query->withTrashed();
         }
 
-        if ( ! empty(request()->get('trashed')) && request()->get('trashed') === 'only') {
+        if (! empty(request()->get('trashed')) && request()->get('trashed') === 'only') {
             return $query->onlyTrashed();
         }
 

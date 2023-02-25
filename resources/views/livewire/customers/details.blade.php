@@ -158,11 +158,11 @@
                                     </x-table.td>
 
                                     <x-table.td>
-                                        @if ($sale->status == \App\Enums\SaleStatus::Pending)
+                                        @if ($sale->status == \App\Enums\SaleStatus::PENDING)
                                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                                        @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
+                                        @elseif ($sale->status == \App\Enums\SaleStatus::ORDERED)
                                             <x-badge info>{{ __('Ordered') }}</x-badge>
-                                        @elseif($sale->status == \App\Enums\SaleStatus::Completed)
+                                        @elseif($sale->status == \App\Enums\SaleStatus::COMPLETED)
                                             <x-badge success>{{ __('Completed') }}</x-badge>
                                         @endif
                                     </x-table.td>

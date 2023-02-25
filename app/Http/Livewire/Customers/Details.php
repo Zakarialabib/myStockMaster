@@ -67,8 +67,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('customer')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -80,8 +80,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('salepayments.sale')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

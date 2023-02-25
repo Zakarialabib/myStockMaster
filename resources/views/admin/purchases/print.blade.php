@@ -46,13 +46,13 @@
                 <div class="col text-right">
                     <div>
                         <strong>{{ __('Status') }}:</strong><br>
-                        @if ($purchase->status == \App\Enums\PurchaseStatus::Pending)
+                        @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
                             <span clacc="badge badge-warning">{{ __('Pending') }}</span>
-                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::Ordered)
+                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
                             <span clacc="badge badge-info">{{ __('Ordered') }}</span>
-                        @elseif($purchase->status == \App\Enums\PurchaseStatus::Completed)
+                        @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                             <span clacc="badge badge-success">{{ __('Completed') }}</span>
-                        @elseif($purchase->status == \App\Enums\PurchaseStatus::Returned)
+                        @elseif($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
                             <span clacc="badge badge-success">{{ __('Returned') }}</span>
                         @endif
                     </div>

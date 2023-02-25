@@ -115,8 +115,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('supplier')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -128,8 +128,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('purchasepayments.purchase')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

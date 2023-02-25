@@ -68,7 +68,7 @@ class FilterQueryBuilder
             $relatedTable = $relatedModel->getTable();
             $as = "prefix_{$relatedTable}";
 
-            if ( ! $belongs instanceof BelongsTo) {
+            if (! $belongs instanceof BelongsTo) {
                 return;
             }
 

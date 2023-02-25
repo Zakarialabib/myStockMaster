@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Sync;
 
 use App\Models\Product;
+use App\Jobs\SyncCustomProducts;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -86,19 +87,20 @@ class Products extends Component
                     ];
                 }
             }
-            if (! empty($data)) {
-                try {
-                    $client->post(settings()->custom_store_url . '/api/products/bulk', ['data' => $data]);
-                    Log::info(count($data) . ' new products created in e-commerce store.');
-                    return response()->json(['message' => count($data) . ' new products created in e-commerce store.']);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to create new products in e-commerce store: ' . $e->getMessage());
-                    return response()->json(['message' => 'Failed to create new products in e-commerce store.'], 500);
-                }
-            } else {
-                Log::info('No new products to create in e-commerce store.');
-                return response()->json(['message' => 'No new products to create in e-commerce store.']);
+
+            ProductImportJob::dispatch($data);
+
+            try {
+            
+                $client->post(settings()->custom_store_url . '/api/products/bulk', ['data' => $data]);
+            
+                Log::info(count($data) . ' new products created in e-commerce store.');
+                return response()->json(['message' => count($data) . ' new products created in e-commerce store.']);
+            } catch (\Exception $e) {
+                Log::warning('Failed to create new products in e-commerce store: ' . $e->getMessage());
+                return response()->json(['message' => 'Failed to create new products in e-commerce store.'], 500);
             }
+        
         }
     }
 

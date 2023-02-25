@@ -44,10 +44,11 @@
                                     <select wire:model.defer="sale_return_status"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="sale_return_status">
-                                        <option value="">{{ __('Select Status') }}</option>
-                                        <option value="Pending">{{ __('Pending') }}</option>
-                                        <option value="Shipped">{{ __('Shipped') }}</option>
-                                        <option value="Completed">{{ __('Completed') }}</option>
+                                        @foreach (\App\Enums\SaleReturnStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -58,9 +59,11 @@
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="payment_status">
                                         <option value="">{{ __('Select Payment Status') }}</option>
-                                        <option value="Paid">{{ __('Paid') }}</option>
-                                        <option value="Unpaid">{{ __('Unpaid') }}</option>
-                                        <option value="Partial">{{ __('Partial') }}</option>
+                                        @foreach (\App\Enums\PaymentStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -103,36 +106,24 @@
                                     <x-table.td>{{ $sale_return->reference }}</x-table.td>
                                     <x-table.td>{{ $sale_return->customer->name }}</x-table.td>
                                     <x-table.td>
-                                        @if ($sale_return->status == 'Pending')
-                                            <x-badge info>
-                                                {{ $sale_return->status }}
-                                            </x-badge>
-                                        @elseif ($sale_return->status == 'Shipped')
-                                            <x-badge primary>
-                                                {{ $sale_return->status }}
-                                            </x-badge>
-                                        @else
-                                            <x-badge success>
-                                                {{ $sale_return->status }}
-                                            </x-badge>
+                                        @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
+                                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                                        @elseif ($sale_return->status == \App\Enums\SaleReturnStatus::ORDERED)
+                                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                                        @elseif($sale_return->status == \App\Enums\SaleReturnStatus::COMPLETED)
+                                            <x-badge success>{{ __('Completed') }}</x-badge>
                                         @endif
                                     </x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->total_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->paid_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->due_amount) }}</x-table.td>
                                     <x-table.td>
-                                        @if ($sale_return->payment_status == 'Partial')
-                                            <x-badge info>
-                                                {{ $sale_return->payment_status }}
-                                            </x-badge>
-                                        @elseif ($sale_return->payment_status == 'Paid')
-                                            <x-badge primary>
-                                                {{ $sale_return->payment_status }}
-                                            </x-badge>
-                                        @else
-                                            <x-badge success>
-                                                {{ $sale_return->payment_status }}
-                                            </x-badge>
+                                        @if ($sale_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                            <x-badge success>{{ __('Paid') }}</x-badge>
+                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                            <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </x-table.td>
                                 </x-table.tr>

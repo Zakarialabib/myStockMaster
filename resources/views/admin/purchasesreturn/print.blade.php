@@ -24,7 +24,7 @@
                         <div class="row mb-4">
                             <div class="col-xs-4 mb-3 mb-md-0">
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
-                                    {{__('Company Info')}}:</h4>
+                                    {{ __('Company Info') }}:</h4>
                                 <div><strong>{{ settings()->company_name }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 @if (settings()->show_email == true)
@@ -35,32 +35,44 @@
 
                             <div class="col-xs-4 mb-3 mb-md-0">
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
-                                    {{__('Supplier Info')}}:</h4>
+                                    {{ __('Supplier Info') }}:</h4>
                                 <div><strong>{{ $supplier->name }}</strong></div>
                                 @if (settings()->address == true)
-                                <div>{{ $supplier->address }}</div>
+                                    <div>{{ $supplier->address }}</div>
                                 @endif
                                 @if (settings()->show_email == true)
-                                <div>{{ __('Email') }}: {{ $supplier->email }}</div>
+                                    <div>{{ __('Email') }}: {{ $supplier->email }}</div>
                                 @endif
                                 <div>{{ __('Phone') }}: {{ $supplier->phone }}</div>
                             </div>
 
                             <div class="col-xs-4 mb-3 mb-md-0">
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
-                                    {{__('Invoice Info')}}:</h4>
-                                <div>{{ __('Invoice') }}: <strong>INV/{{ $purchase_return->reference }}</strong></div>
+                                    {{ __('Invoice Info') }}:</h4>
+                                <div>{{ __('Reference') }}: <strong>{{ $purchase_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
                                     {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
                                 <div>
-                                    {{ __('Status') }}: <strong>{{ $purchase_return->status }}</strong>
+                                    {{ __('Status') }}:
+                                    @if ($purchase_return->status == \App\Enums\PurchaseReturnStatus::PENDING)
+                                        <x-badge warning>{{ __('Pending') }}</x-badge>
+                                    @elseif ($purchase_return->status == \App\Enums\PurchaseReturnStatus::SHIPPED)
+                                        <x-badge info>{{ __('Shipped') }}</x-badge>
+                                    @elseif($purchase_return->status == \App\Enums\PurchaseReturnStatus::COMPLETED)
+                                        <x-badge success>{{ __('Completed') }}</x-badge>
+                                    @endif
                                 </div>
                                 <div>
                                     {{ __('Payment Status') }}:
-                                    <strong>{{ $purchase_return->payment_status }}</strong>
+                                    @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        <x-badge success>{{ __('Paid') }}</x-badge>
+                                    @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                    @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                        <x-badge danger>{{ __('Due') }}</x-badge>
+                                    @endif
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="table-responsive-sm" style="margin-top: 30px;">
@@ -112,26 +124,29 @@
                                 <table class="table">
                                     <tbody>
                                         @if ($purchase_return->discount_percentage)
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Discount') }}
-                                                    ({{ $purchase_return->discount_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->discount_amount) }}
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @if ($purchase_return->tax_percentage)
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Tax') }}
-                                                ({{ $purchase_return->tax_percentage }}%)</strong></td>
-                                                <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
+                                            <tr>
+                                                <td class="left"><strong>{{ __('Discount') }}
+                                                        ({{ $purchase_return->discount_percentage }}%)</strong></td>
+                                                <td class="right">
+                                                    {{ format_currency($purchase_return->discount_amount) }}
+                                                </td>
                                             </tr>
                                         @endif
-                                        @if ( settings()->show_shipping == true )
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Shipping') }}</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->shipping_amount) }}
-                                            </td>
-                                        </tr>
+                                        @if ($purchase_return->tax_percentage)
+                                            <tr>
+                                                <td class="left"><strong>{{ __('Tax') }}
+                                                        ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                                <td class="right">{{ format_currency($purchase_return->tax_amount) }}
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        @if (settings()->show_shipping == true)
+                                            <tr>
+                                                <td class="left"><strong>{{ __('Shipping') }}</strong></td>
+                                                <td class="right">
+                                                    {{ format_currency($purchase_return->shipping_amount) }}
+                                                </td>
+                                            </tr>
                                         @endif
                                         <tr>
                                             <td class="left"><strong>{{ __('Grand Total') }}</strong></td>

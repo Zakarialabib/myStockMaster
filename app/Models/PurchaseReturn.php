@@ -123,6 +123,8 @@ class PurchaseReturn extends Model
         'date',
         'reference',
         'supplier_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -139,7 +141,7 @@ class PurchaseReturn extends Model
     ];
 
     protected $casts = [
-        'status'         => PurchaseReturnStatus::class,
+        'status' => PurchaseReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 

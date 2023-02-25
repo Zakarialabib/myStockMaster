@@ -107,8 +107,11 @@
                                     <select
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="status" id="status" required>
-                                        <option value="Pending">{{ __('Pending') }}</option>
-                                        <option value="Sent">{{ __('Sent') }}</option>
+                                        @foreach (\App\Enums\QuotationStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -130,7 +133,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label for="discount_percentage">{{ __('Discount (%)') }}</label>
-                                    <x-input name="discount_percentage" id="discount_percentage"  value="0" />
+                                    <x-input name="discount_percentage" id="discount_percentage" value="0" />
                                 </div>
                             </div>
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">

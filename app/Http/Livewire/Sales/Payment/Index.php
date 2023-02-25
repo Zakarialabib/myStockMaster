@@ -66,8 +66,8 @@ class Index extends Component
         abort_if(Gate::denies('sale_payment_access'), 403);
 
         $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

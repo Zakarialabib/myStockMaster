@@ -24,16 +24,16 @@ class Edit extends Component
 
     /** @var array */
     protected $rules = [
-        'currency.name'          => 'required|string|min:3|max:255',
-        'currency.code'          => 'required|string|max:255',
-        'currency.symbol'        => 'required|string|max:255',
+        'currency.name' => 'required|string|min:3|max:255',
+        'currency.code' => 'required|string|max:255',
+        'currency.symbol' => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
     ];
 
     protected $messages = [
-        'currency.name.required'          => 'The name field cannot be empty.',
-        'currency.code.required'          => 'The code field cannot be empty.',
-        'currency.symbol.required'        => 'The symbol field cannot be empty.',
+        'currency.name.required' => 'The name field cannot be empty.',
+        'currency.code.required' => 'The code field cannot be empty.',
+        'currency.symbol.required' => 'The symbol field cannot be empty.',
         'currency.exchange_rate.required' => 'The exchange rate field cannot be empty.',
     ];
 
