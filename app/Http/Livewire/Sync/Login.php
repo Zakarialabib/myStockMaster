@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sync;
 
 use GuzzleHttp\Client;
@@ -21,13 +23,13 @@ class Login extends Component
 
     public $store_url;
 
+    public $type;
+
     protected $rules = [
         'email' => 'required|email',
         'password' => 'required',
         'store_url' => 'required',
     ];
-
-    public $type;
 
     public function updatedType(): void
     {
@@ -63,7 +65,6 @@ class Login extends Component
         ]);
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
-
             $data = json_decode($response->getBody(), true);
             $ecommerceToken = $data['api_token'];
 
@@ -80,7 +81,6 @@ class Login extends Component
         } else {
             $this->alert('error', __('Authentication failed !'));
         }
-
     }
 
     public function render()

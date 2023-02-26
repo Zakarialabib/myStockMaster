@@ -7,8 +7,6 @@ namespace App\Console;
 use App\Console\Commands\Backup\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\Backup\BackupDatabase;
-use App\Console\Commands\Backup\BackupFiles;
 
 class Kernel extends ConsoleKernel
 {

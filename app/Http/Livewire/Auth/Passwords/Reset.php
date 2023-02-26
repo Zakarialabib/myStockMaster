@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Auth\Passwords;
 
 use Illuminate\Auth\Events\PasswordReset;
@@ -32,15 +34,15 @@ class Reset extends Component
     public function resetPassword()
     {
         $this->validate([
-            'token' => 'required',
-            'email' => 'required|email',
+            'token'    => 'required',
+            'email'    => 'required|email',
             'password' => 'required|min:8|same:passwordConfirmation',
         ]);
 
         $response = $this->broker()->reset(
             [
-                'token' => $this->token,
-                'email' => $this->email,
+                'token'    => $this->token,
+                'email'    => $this->email,
                 'password' => $this->password,
             ],
             function ($user, $password) {
@@ -91,4 +93,4 @@ class Reset extends Component
     {
         return Auth::guard();
     }
-  }
+ }   

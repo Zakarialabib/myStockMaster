@@ -12,6 +12,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class Products extends Component
 {
@@ -37,7 +38,7 @@ class Products extends Component
     public function recieveData(){ 
         
         $client = Http::withHeaders([
-            'Authorization' => 'Bearer ' . settings()->custom_api_key,
+            'Authorization' => 'Bearer '.settings()->custom_api_key,
         ]);
 
         if ($this->type === 'woocommerce') {
@@ -109,10 +110,10 @@ class Products extends Component
             foreach ($inventoryProducts as $product) {
                 if (! in_array($product->code, array_column($ecomProducts, 'code'))) {
                     $data[] = [
-                        'name' => $product['name'],
-                        'code' => $product['code'],
-                        'price' => $product['price'],
-                        'quantity' => $product['quantity'],
+                        'name'       => $product['name'],
+                        'code'       => $product['code'],
+                        'price'      => $product['price'],
+                        'quantity'   => $product['quantity'],
                         'categoryId' => $product['category']->name,
                     ];
                 }

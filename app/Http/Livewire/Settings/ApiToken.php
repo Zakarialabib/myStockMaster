@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Settings;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
-
 class ApiToken extends Component
 {
     public $token;
-    
+
     public $custom_store_url;
     public $custom_api_key;
 
@@ -26,17 +27,16 @@ class ApiToken extends Component
 
     public function mount()
     {
-
         $this->woocommerce_api_key = settings()->woocommerce_api_key;
         $this->woocommerce_store_url = settings()->woocommerce_store_url;
 
         $this->shopify_api_key = settings()->shopify_api_key;
         $this->shopify_store_url = settings()->shopify_store_url;
-      
+
         $this->custom_store_url = settings()->custom_store_url;
         $this->custom_api_key = settings()->custom_api_key;
 
-        $this->missingProducts = settings()->custom_products ;
+        $this->missingProducts = settings()->custom_products;
 
         $this->inventoryProducts = Product::count();
     }
@@ -63,14 +63,14 @@ class ApiToken extends Component
         $inventoryProducts = Product::pluck('code')->toArray();
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . settings()->custom_api_key,
-        ])->get(settings()->custom_store_url . '/api/products');
+            'Authorization' => 'Bearer '.settings()->custom_api_key,
+        ])->get(settings()->custom_store_url.'/api/products');
 
         // dd(settings()->custom_api_key);
         $ecomProducts = $response->json()['data'];
 
         $missingProducts = array_diff($inventoryProducts, array_column($ecomProducts, 'code'));
-        
+
         $this->missingProducts = count($missingProducts);
 
         settings()->update([

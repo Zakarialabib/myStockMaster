@@ -40,10 +40,10 @@ return new class () extends Migration {
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn([
                 'woocommerce_store_url', 'woocommerce_api_key', 'woocommerce_api_secret',
-                 'shopify_store_url', 'shopify_api_key', 'shopify_api_secret',
-                 'custom_store_url', 'custom_api_key', 'custom_api_secret', 
-                 'custom_last_sync', 'custom_products', 'custom_orders',
-                ]);
+                'shopify_store_url', 'shopify_api_key', 'shopify_api_secret',
+                'custom_store_url', 'custom_api_key', 'custom_api_secret',
+                'custom_last_sync', 'custom_products', 'custom_orders',
+            ]);
         });
     }
 };

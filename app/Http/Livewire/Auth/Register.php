@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Auth;
 
 use App\Models\User;
@@ -48,5 +50,4 @@ class Register extends Component
     {
         return view('livewire.auth.register');
     }
-
 }
