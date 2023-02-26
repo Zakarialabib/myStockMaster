@@ -132,6 +132,7 @@ class Product extends Model
         'price',
         'unit',
         'stock_alert',
+        'status',
         'order_tax',
         'tax_type',
         'note',

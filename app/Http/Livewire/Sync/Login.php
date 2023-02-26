@@ -13,19 +13,31 @@ class Login extends Component
 
     public $loginModal = false;
 
+    /** @var array<string> */
+    public $listeners = ['loginModal'];
+
     public $email;
     public $password;
 
-    public $url;
+    public $store_url;
 
     protected $rules = [
         'email' => 'required|email',
         'password' => 'required',
+        'store_url' => 'required',
     ];
 
-    public function mount()
+    public $type;
+
+    public function updatedType(): void
     {
-        $this->url = settings()->custom_store_url;
+        if ($this->type === 'woocommerce') {
+            $this->store_url = settings()->woocommerce_store_url;
+        } elseif ($this->type === 'shopify') {
+            $this->store_url = settings()->shopify_store_url;
+        } elseif ($this->type === 'custom') {
+            $this->store_url = settings()->custom_store_url;
+        }
     }
 
     public function loginModal()
@@ -39,7 +51,7 @@ class Login extends Component
 
         $client = new Client();
 
-        $response = $client->request('POST', $this->url.'/api/login', [
+        $response = $client->request('POST', $this->store_url.'/api/login', [
             'headers' => [
                 'Accept' => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
@@ -56,15 +68,14 @@ class Login extends Component
             $ecommerceToken = $data['api_token'];
 
             settings()->update([
-                'custom_store_url' => $this->url,
+                'custom_store_url' => $this->store_url,
                 'custom_api_key' => $ecommerceToken,
-                'custom_api_secret' => 'your-secret-value', // replace with your own secret value
+                'custom_api_secret' => null, // replace with your own secret value
                 'custom_last_sync' => null, // set to null initially
-
                 'custom_products' => null, // set to null initially
             ]);
-
             $this->alert('success', __('Authentication successful !'));
+            $this->emit('refreshIndex');
             $this->loginModal = false;
         } else {
             $this->alert('error', __('Authentication failed !'));

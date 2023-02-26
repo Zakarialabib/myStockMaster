@@ -23,59 +23,88 @@ class Products extends Component
 
     public $type;
 
-    public $store_url;
-
     public $syncModal = false;
-
-    public function updatedType(): void
-    {
-        if ($this->type === 'woocommerce') {
-            $this->store_url = settings()->woocommerce_store_url;
-        } elseif ($this->type === 'shopify') {
-            $this->store_url = settings()->shopify_store_url;
-        } elseif ($this->type === 'custom') {
-            $this->store_url = settings()->custom_store_url;
-        }
-    }
 
     public function syncModal(): void
     {
         $this->syncModal = true;
     }
 
-    public function sync()
-    {
-
-        $inventoryProducts = Product::with('category')->get();
-
+    protected $rules = [
+        'type' => 'required',
+    ];
+   
+    public function recieveData(){ 
+        
         $client = Http::withHeaders([
             'Authorization' => 'Bearer ' . settings()->custom_api_key,
         ]);
 
-        // Connect to the user's e-commerce store
         if ($this->type === 'woocommerce') {
+
             $response = new \Automattic\WooCommerce\Client(
                 settings()->woocommerce_store_url,
                 settings()->woocommerce_api_key,
                 settings()->woocommerce_api_secret,
                 ['wp_api' => true, 'version' => 'wc/v3']
             );
+
         } elseif ($this->type === 'shopify') {
             $response = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
                 'api_key' => settings()->shopify_api_key,
                 'api_secret' => settings()->shopify_api_secret,
             ]);
+
         } elseif ($this->type === 'custom') {
+
             $response = $client->get(settings()->custom_store_url . '/api/products');
         }
 
         if ($response->getStatusCode() === Response::HTTP_OK) {
-            // Retrieve the products from the user's e-commerce store
+
+            $data = $response->json()['data'];
+
+            SyncCustomProducts::dispatch($data);
+            
+            $this->alert('success', 'Sync from ecommerce to inventory completed');
+
+            $this->syncModal = false;
+        }
+    }
+
+    public function sendData()
+    {
+        $client = Http::withHeaders([
+            'Authorization' => 'Bearer ' . settings()->custom_api_key,
+        ]);
+
+        if ($this->type === 'woocommerce') {
+
+            $response = new \Automattic\WooCommerce\Client(
+                settings()->woocommerce_store_url,
+                settings()->woocommerce_api_key,
+                settings()->woocommerce_api_secret,
+                ['wp_api' => true, 'version' => 'wc/v3']
+            );
+
+        } elseif ($this->type === 'shopify') {
+            $response = new \Shopify\Client([
+                'shop_domain' => settings()->shopify_store_url,
+                'api_key' => settings()->shopify_api_key,
+                'api_secret' => settings()->shopify_api_secret,
+            ]);
+
+        } elseif ($this->type === 'custom') {
+
+            $response = $client->get(settings()->custom_store_url . '/api/products');
+        }
+
+            $inventoryProducts = Product::with('category')->get();
+            
             $ecomProducts = $response->json()['data'];
 
             $data = [];
-
             // Check which products need to be created
             foreach ($inventoryProducts as $product) {
                 if (! in_array($product->code, array_column($ecomProducts, 'code'))) {
@@ -89,21 +118,11 @@ class Products extends Component
                 }
             }
 
-            ProductImportJob::dispatch($data);
-
-            try {
-            
-                $client->post(settings()->custom_store_url . '/api/products/bulk', ['data' => $data]);
-            
-                Log::info(count($data) . ' new products created in e-commerce store.');
-                return response()->json(['message' => count($data) . ' new products created in e-commerce store.']);
-            } catch (\Exception $e) {
-                Log::warning('Failed to create new products in e-commerce store: ' . $e->getMessage());
-                return response()->json(['message' => 'Failed to create new products in e-commerce store.'], 500);
-            }
+            $client->post(settings()->custom_store_url . '/api/products/bulk', ['data' => $data]);
         
+            Log::info(count($data) . ' new products created in e-commerce store.');
+            return response()->json(['message' => count($data) . ' new products created in e-commerce store.']);
 
-        }
     }
 
     public function render()

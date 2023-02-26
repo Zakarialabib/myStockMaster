@@ -24,7 +24,7 @@ class CreatePurchaseReturnsTable extends Migration
             $table->date('date');
             $table->string('reference');
 
-            $table->foreignIdFor(Supplier::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
 

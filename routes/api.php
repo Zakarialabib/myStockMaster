@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductController as ProductApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('products', ProductController::class);
+Route::apiResource('products', ProductApi::class);
 
 // Route::get('/products', function() {
 //     return new ProductCollection(Product::with('category')->get());

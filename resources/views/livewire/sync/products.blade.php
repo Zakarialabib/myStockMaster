@@ -6,30 +6,26 @@
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit.prevent="sync">
+            <form wire:submit.prevent="recieveData">
                 <div class="space-y-4">
                     <div class="mt-4">
                         <x-label for="type" :value="__('Type')" />
-                        <select wire:model="type" id="type" name="type"
+                        <select wire:model.lazy="type" id="type" name="type"
                             class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500">
+                            <option value="">{{ 'Select way to sync' }}</option>
+                            <option value="custom">{{ 'Custom' }}</option>
                             <option value="shopify">{{ 'Shopify' }}</option>
                             <option value="woocommerce">{{ 'Woocommerce' }}</option>
-                            <option value="custom">{{ 'Custom' }}</option>
                         </select>
                         <x-input-error :messages="$errors->get('type')" for="type" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
-                        <x-label for="store_url" :value="__('Store URL')" />
-                        <x-input id="store_url" class="block mt-1 w-full" type="text" name="store_url" disabled
-                            wire:model="store_url" required />
-                        <x-input-error :messages="$errors->get('store_url')" for="store_url" class="mt-2" />
-                    </div>
-
-
                     <div class="w-full flex justify-start px-3">
                         <x-button primary type="submit" wire:loading.attr="disabled">
-                            {{ __('Sync') }}
+                            {{ __('Recieve data') }}
+                        </x-button>
+                        <x-button primary wire:click="sendData" wire:loading.attr="disabled">
+                            {{ __('Send Data') }}
                         </x-button>
                     </div>
 

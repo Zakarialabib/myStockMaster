@@ -20,7 +20,7 @@ return new class () extends Migration {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Customer::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
             $table->date('date');

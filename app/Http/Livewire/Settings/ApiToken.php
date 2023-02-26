@@ -10,19 +10,35 @@ use Livewire\Component;
 class ApiToken extends Component
 {
     public $token;
-    public $ecomToken;
-
+    
     public $custom_store_url;
+    public $custom_api_key;
 
     public $missingProducts;
+    public $inventoryProducts;
+    public $woocommerce_api_key;
+    public $woocommerce_store_url;
+    public $shopify_api_key;
+    public $shopify_store_url;
+
+    /** @var array<string> */
+    public $listeners = ['refreshIndex' => '$refresh'];
 
     public function mount()
     {
+
+        $this->woocommerce_api_key = settings()->woocommerce_api_key;
+        $this->woocommerce_store_url = settings()->woocommerce_store_url;
+
+        $this->shopify_api_key = settings()->shopify_api_key;
+        $this->shopify_store_url = settings()->shopify_store_url;
+      
         $this->custom_store_url = settings()->custom_store_url;
+        $this->custom_api_key = settings()->custom_api_key;
 
-        $this->ecomToken = settings()->custom_api_key;
+        $this->missingProducts = settings()->custom_products ;
 
-        $this->product_count = settings()->custom_products;
+        $this->inventoryProducts = Product::count();
     }
 
     public function createToken()
