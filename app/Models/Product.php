@@ -6,14 +6,14 @@ namespace App\Models;
 
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
-use Carbon\Carbon;
 use App\Traits\GetModelByUuid;
 use App\Traits\UuidGenerator;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Models\Product
@@ -37,12 +37,16 @@ use App\Traits\UuidGenerator;
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Brand|null $brand
  * @property-read \App\Models\Category $category
+ *
  * @property mixed $product_cost
  * @property mixed $product_price
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ *
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|array<\Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
@@ -67,11 +71,15 @@ use App\Traits\UuidGenerator;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
- * @mixin \Eloquent
+ *
  * @property string $uuid
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ *
+ * @mixin \Eloquent
  */
 class Product extends Model
 {
@@ -82,40 +90,28 @@ class Product extends Model
     use GetModelByUuid;
     use UuidGenerator;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'category_id',
         'name',
         'code',
-        'barcode_symbology',
         'quantity',
         'cost',
         'price',
-        'unit',
         'stock_alert',
-        'order_tax',
-        'tax_type',
-        'note',
         'created_at',
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'category_id',
         'name',
         'code',
-        'barcode_symbology',
         'quantity',
         'cost',
         'price',
-        'unit',
         'stock_alert',
-        'order_tax',
-        'tax_type',
-        'note',
         'created_at',
         'updated_at',
     ];

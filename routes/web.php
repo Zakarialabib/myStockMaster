@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\LogController;
-use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchasePaymentsController;
+use App\Http\Controllers\PurchaseReturnPaymentsController;
 use App\Http\Controllers\PurchasesReturnController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\QuotationSalesController;
@@ -29,8 +31,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SalesReturnController;
-use App\Http\Controllers\PurchasePaymentsController;
-use App\Http\Controllers\PurchaseReturnPaymentsController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
@@ -78,12 +78,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('expenses', ExpenseController::class)->name('expenses.index');
 
     //Customers
-    Route::get('customers', CustomersController::class)->name('customers.index');
-    Route::get('customer/details/{customer}', [CustomersController::class, 'details'])->name('customer.details');
+    Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
+    Route::get('customer/details/{customer}', [CustomersController::class, 'show'])->name('customer.details');
 
     //Suppliers
-    Route::get('suppliers', SuppliersController::class)->name('suppliers.index');
-    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'details'])->name('supplier.details');
+    Route::get('suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
+    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'show'])->name('supplier.details');
 
     //Warehouses
     Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('brands', BrandsController::class)->name('brands.index');
 
     //Print Barcode
-    Route::get('/products/print-barcode', [BarcodeController::class, 'printBarcode'])->name('barcode.print');
+    Route::get('/products/print-barcode', [BarcodeController::class, 'index'])->name('barcode.print');
 
     //Product Category
     Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
@@ -134,15 +134,15 @@ Route::group(['middleware' => 'auth'], function () {
     //Purchase Returns Payments
     Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
 
-    Route::get('/purchase-return-payments/{purchase_return_id}/create',  [PurchaseReturnPaymentsController::class, 'create'])
+    Route::get('/purchase-return-payments/{purchase_return_id}/create', [PurchaseReturnPaymentsController::class, 'create'])
         ->name('purchase-return-payments.create');
-    Route::post('/purchase-return-payments/store',  [PurchaseReturnPaymentsController::class, 'store'])
+    Route::post('/purchase-return-payments/store', [PurchaseReturnPaymentsController::class, 'store'])
         ->name('purchase-return-payments.store');
-    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'edit'])
+    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'edit'])
         ->name('purchase-return-payments.edit');
-    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'update'])
+    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'update'])
         ->name('purchase-return-payments.update');
-    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}',  [PurchaseReturnPaymentsController::class, 'destroy'])
+    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'destroy'])
         ->name('purchase-return-payments.destroy');
 
     //Profit Loss Report
@@ -169,33 +169,11 @@ Route::group(['middleware' => 'auth'], function () {
     //Sales
     Route::resource('sales', SaleController::class);
 
-    //Payments
-    Route::get('/sale-payments/{sale_id}', [SalePaymentsController::class, 'index'])->name('sale-payments.index');
-    Route::get('/sale-payments/{sale_id}/create', [SalePaymentsController::class, 'create'])->name('sale-payments.create');
-    Route::post('/sale-payments/store', [SalePaymentsController::class, 'store'])->name('sale-payments.store');
-    Route::get('/sale-payments/{sale_id}/edit/{salePayment}', [SalePaymentsController::class, 'edit'])->name('sale-payments.edit');
-    Route::patch('/sale-payments/update/{salePayment}', [SalePaymentsController::class, 'update'])->name('sale-payments.update');
-    Route::delete('/sale-payments/destroy/{salePayment}', [SalePaymentsController::class, 'destroy'])->name('sale-payments.destroy');
-
     //Generate Sale Returns PDF
     Route::get('/sale-returns/pdf/{id}', [ExportController::class, 'saleReturns'])->name('sale-returns.pdf');
 
     //Sale Returns
     Route::resource('sale-returns', SalesReturnController::class);
-
-    //Payments
-    Route::get('/sale-return-payments/{sale_return_id}', 'SaleReturnPaymentsController@index')
-        ->name('sale-return-payments.index');
-    Route::get('/sale-return-payments/{sale_return_id}/create', 'SaleReturnPaymentsController@create')
-        ->name('sale-return-payments.create');
-    Route::post('/sale-return-payments/store', 'SaleReturnPaymentsController@store')
-        ->name('sale-return-payments.store');
-    Route::get('/sale-return-payments/{sale_return_id}/edit/{saleReturnPayment}', 'SaleReturnPaymentsController@edit')
-        ->name('sale-return-payments.edit');
-    Route::patch('/sale-return-payments/update/{saleReturnPayment}', 'SaleReturnPaymentsController@update')
-        ->name('sale-return-payments.update');
-    Route::delete('/sale-return-payments/destroy/{saleReturnPayment}', 'SaleReturnPaymentsController@destroy')
-        ->name('sale-return-payments.destroy');
 
     //User Profile
     Route::get('/user/profile', [ProfileController::class, 'index'])->name('profile.index');

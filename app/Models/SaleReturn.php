@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
+use App\Enums\SaleReturnStatus;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Enums\PaymentStatus;
-use App\Enums\SaleReturnStatus;
 
 /**
  * App\Models\SaleReturn
@@ -33,11 +33,13 @@ use App\Enums\SaleReturnStatus;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Customer|null $customer
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SaleReturnDetail[] $saleReturnDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleReturnDetail> $saleReturnDetails
  * @property-read int|null $sale_return_details_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SaleReturnPayment[] $saleReturnPayments
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleReturnPayment> $saleReturnPayments
  * @property-read int|null $sale_return_payments_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn completed()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn newModelQuery()
@@ -61,20 +63,21 @@ use App\Enums\SaleReturnStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUpdatedAt($value)
- * @mixin \Eloquent
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereDeletedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class SaleReturn extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
         'reference',
-        'supplier_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -90,12 +93,10 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
         'reference',
-        'supplier_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -119,7 +120,9 @@ class SaleReturn extends Model
     protected $fillable = [
         'date',
         'reference',
-        'supplier_id',
+        'customer_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -135,9 +138,8 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    /** @return response() */
     protected $casts = [
-        'status'         => SaleReturnStatus::class,
+        'status' => SaleReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -160,11 +162,22 @@ class SaleReturn extends Model
 
     /**
      * @param mixed $query
+     *
      * @return mixed
      */
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $number = SaleReturn::max('id') + 1;
+            $model->reference = make_reference_id('SLRN', $number);
+        });
     }
 
     /**
@@ -237,15 +250,5 @@ class SaleReturn extends Model
         return Attribute::make(
             get: fn ($value) => $value / 100,
         );
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = SaleReturn::max('id') + 1;
-            $model->reference = make_reference_id('SLRN', $number);
-        });
     }
 }

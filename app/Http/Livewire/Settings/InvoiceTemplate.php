@@ -16,13 +16,13 @@ class InvoiceTemplate extends Component
     {
         $this->invoiceTemplate = config('invoices.default_template');
         $this->invoiceData = config('invoices.templates.'.$this->invoiceTemplate);
-        $this->templatePreview = view("invoice_templates.$this->invoiceTemplate", $this->invoiceData)->render();
+        $this->templatePreview = view("invoice_templates.{$this->invoiceTemplate}", $this->invoiceData)->render();
     }
 
     public function updatedInvoiceTemplate()
     {
         $this->invoiceData = config('invoices.templates.'.$this->invoiceTemplate);
-        $this->templatePreview = view("invoice_templates.$this->invoiceTemplate", $this->invoiceData)->render();
+        $this->templatePreview = view("invoice_templates.{$this->invoiceTemplate}", $this->invoiceData)->render();
     }
 
     public function updateInvoiceData($key, $value)

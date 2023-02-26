@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="text-center">
                     <h2>
-                        {{ $customer->name }} - {{__('Sale Details')}}
+                        {{ $customer->name }} - {{ __('Sale Details') }}
                     </h2>
                 </div>
                 <hr>
@@ -41,20 +41,20 @@
                 <div class="col">
 
                     <strong>{{ __('Status') }}:</strong><br>
-                    @if ($sale->status == \App\Enums\SaleStatus::Pending)
+                    @if ($sale->status == \App\Enums\SaleStatus::PENDING)
                         <span clacc="badge badge-warning">{{ __('Pending') }}</span>
-                    @elseif ($sale->status == \App\Enums\SaleStatus::Ordered)
+                    @elseif ($sale->status == \App\Enums\SaleStatus::ORDERED)
                         <span clacc="badge badge-info">{{ __('Ordered') }}</span>
-                    @elseif($sale->status == \App\Enums\SaleStatus::Completed)
+                    @elseif($sale->status == \App\Enums\SaleStatus::COMPLETED)
                         <span clacc="badge badge-success">{{ __('Completed') }}</span>
                     @endif
                     <br>
                     <strong>{{ __('Payment Status') }}:</strong><br>
-                    @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
+                    @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
                         <span clacc="badge badge-success">{{ __('Paid') }}</span>
-                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
+                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                         <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
-                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
+                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
                         <span clacc="badge badge-danger">{{ __('Due') }}</span>
                     @endif
 

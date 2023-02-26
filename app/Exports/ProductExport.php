@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Product;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class ProductExport implements FromView

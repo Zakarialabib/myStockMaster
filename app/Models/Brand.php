@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Brand
@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Brand advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Brand newQuery()
@@ -30,22 +31,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Product> $products
  * @property-read int|null $products_count
+ *
  * @method static \Database\Factories\BrandFactory factory(...$parameters)
+ *
+ * @mixin \Eloquent
  */
 class Brand extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
 
-    /** @var string[] */
     public $orderable = [
         'id', 'name', 'description', 'image',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id', 'name', 'description', 'image',
     ];

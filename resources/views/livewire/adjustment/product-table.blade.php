@@ -27,7 +27,7 @@
                         <input type="hidden" name="product_ids[]"
                             value="{{ $product['product']['id'] ?? $product['id'] }}">
                         <x-table.td>
-                            <input type="number" name="quantities[]" min="1"
+                            <input type="text" name="quantities[]" min="1"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 value="{{ $product['quantity'] ?? 1 }}">
                         </x-table.td>

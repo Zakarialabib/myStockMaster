@@ -63,7 +63,8 @@
                                     name="reference" required value="{{ $purchase->reference }}" readonly>
                             </div>
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <label for="supplier_id">{{ __('Supplier') }} <span class="text-red-500">*</span></label>
+                                <label for="supplier_id">{{ __('Supplier') }} <span
+                                        class="text-red-500">*</span></label>
                                 <select
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="supplier_id" id="supplier_id" required>
@@ -89,12 +90,12 @@
                                 <select
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="status" id="status" required>
-                                    <option {{ $purchase->status == 'Pending' ? 'selected' : '' }} value="Pending">
-                                        {{ __('Pending') }}</option>
-                                    <option {{ $purchase->status == 'Ordered' ? 'selected' : '' }} value="Ordered">
-                                        {{ __('Ordered') }}</option>
-                                    <option {{ $purchase->status == 'Completed' ? 'selected' : '' }} value="Completed">
-                                        {{ __('Completed') }}</option>
+                                    @foreach (\App\Enums\PurchaseStatus::cases() as $status)
+                                        <option {{ $purchase->status == $status->value ? 'selected' : '' }}
+                                            value="{{ $status->value }}">
+                                            {{ __($status->name) }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
@@ -120,8 +121,8 @@
                         </div>
 
                         <div class="w-full px-3">
-                            <x-button type="submit" primary class="w-full text-center"> 
-                                {{ __('Update Purchase') }} 
+                            <x-button type="submit" primary class="w-full text-center">
+                                {{ __('Update Purchase') }}
                             </x-button>
                         </div>
                     </form>

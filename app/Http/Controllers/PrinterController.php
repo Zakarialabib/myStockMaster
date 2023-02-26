@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Printer;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 use Log;
 
 class PrinterController extends Controller
@@ -38,7 +38,7 @@ class PrinterController extends Controller
 
             $input['created_by'] = $request->session()->get('user.id');
 
-            if ($input['connection_type'] == 'network') {
+            if ($input['connection_type'] === 'network') {
                 $input['path'] = '';
             } elseif (in_array($input['connection_type'], ['windows', 'linux'])) {
                 $input['ip_address'] = '';
@@ -79,7 +79,7 @@ class PrinterController extends Controller
 
             $printer = Printer::findOrFail($id);
 
-            if ($input['connection_type'] == 'network') {
+            if ($input['connection_type'] === 'network') {
                 $input['path'] = '';
             } elseif (in_array($input['connection_type'], ['windows', 'linux'])) {
                 $input['ip_address'] = '';
@@ -95,12 +95,12 @@ class PrinterController extends Controller
             // this->alert
         }
 
-        return redirect('printers')->with('status', $output);
+        return redirect('printers');
     }
 
     public function destroy($id)
     {
-        if ( ! auth()->user()->can('access_printers')) {
+        if (! auth()->user()->can('access_printers')) {
             abort(403, 'Unauthorized action.');
         }
 

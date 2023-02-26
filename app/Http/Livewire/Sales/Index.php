@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Imports\SaleImport;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SalePayment;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Traits\Datatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Enums\PaymentStatus;
-use App\Traits\Datatable;
+use Throwable;
 
 class Index extends Component
 {
@@ -30,7 +30,7 @@ class Index extends Component
     /** @var mixed */
     public $sale;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'importModal', 'refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave', 'showModal',
@@ -50,7 +50,7 @@ class Index extends Component
 
     public $listsForFields = [];
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -65,16 +65,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'customer_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|max:255',
-        'payment_method'      => 'required|integer|max:255',
-        'note'                => 'string|max:1000',
+        'customer_id' => 'required|numeric',
+        'reference' => 'required|string|max:255',
+        'tax_percentage' => 'required|string|min:0|max:100',
+        'discount_percentage' => 'required|string|min:0|max:100',
+        'shipping_amount' => 'required|numeric',
+        'total_amount' => 'required|numeric',
+        'paid_amount' => 'required|numeric',
+        'status' => 'required|integer|min:0|max:100',
+        'payment_method' => 'required|integer|min:0|max:100',
+        'note' => 'string|nullable|max:1000',
     ];
 
     public function mount(): void
@@ -93,8 +93,8 @@ class Index extends Component
 
         $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -170,8 +170,8 @@ class Index extends Component
         abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale = $sale;
-        $this->date = Carbon::now()->format('Y-m-d');
-        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->date = date('Y-m-d');
+        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $sale->due_amount;
         $this->payment_method = 'Cash';
         // $this->note = '';
@@ -181,12 +181,12 @@ class Index extends Component
 
     public function paymentSave()
     {
-        DB::transaction(function () {
+        try {
             $this->validate(
                 [
-                    'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
-                    'amount'         => 'required|numeric',
+                    'date' => 'required|date',
+                    'reference' => 'required|string|max:255',
+                    'amount' => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -194,19 +194,20 @@ class Index extends Component
             $sale = Sale::find($this->sale_id);
 
             SalePayment::create([
-                'date'           => $this->date,
-                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'sale_id'        => $this->sale_id,
+                'date' => $this->date,
+                'reference' => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'sale_id' => $this->sale_id,
                 'payment_method' => $this->payment_method,
+                'user_id' => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
 
             $due_amount = $sale->due_amount - $this->amount;
 
-            if ($due_amount == $sale->total_amount) {
+            if ($due_amount === $sale->total_amount) {
                 $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::Partial;
@@ -215,20 +216,19 @@ class Index extends Component
             }
 
             $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
-            $this->emit('refreshIndex');
+            $this->alert('success', __('Sale Payment created successfully.'));
 
             $this->paymentModal = false;
-        });
-    }
 
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
+            $this->emit('refreshIndex');
+        } catch (Throwable $th) {
+            $this->alert('error', __('Error.').$th->getMessage());
+        }
     }
 
     public function refreshCustomers()
@@ -259,13 +259,13 @@ class Index extends Component
         $message = __('You have a due amount of');
 
         // Construct the message text.
-        $message = "$greeting $name $message $dueAmount.";
+        $message = "{$greeting} {$name} {$message} {$dueAmount}.";
 
         // Encode the message text for use in the URL.
         $message = urlencode($message);
 
         // Construct the WhatsApp API endpoint URL.
-        $url = "https://api.whatsapp.com/send?phone=$phone&text=$message";
+        $url = "https://api.whatsapp.com/send?phone={$phone}&text={$message}";
 
         return redirect()->away($url);
     }
@@ -273,5 +273,10 @@ class Index extends Component
     public function openWhatapp($url)
     {
         // open whatsapp url in another tab
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
 }

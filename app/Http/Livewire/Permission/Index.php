@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Permission;
 use App\Http\Livewire\WithSorting;
 use App\Models\Permission;
 use App\Traits\Datatable;
+use Exception;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -22,7 +23,7 @@ class Index extends Component
     /** @var mixed */
     public $permission;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'createModal', 'editModal',
         'refreshIndex' => '$refresh',
@@ -32,7 +33,11 @@ class Index extends Component
 
     public $editModal = false;
 
-    /** @var string[][] */
+    protected $rules = [
+        'name' => 'required|max:255|unique:permissions,name',
+    ];
+
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -44,24 +49,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    protected function rules(): array
-    {
-        return [
-            'permission.name' => [
-                'string',
-                'required',
-            ],
-            'permission.label' => [
-                'string',
-                'required',
-            ],
-            'permission.description' => [
-                'string',
-                'required',
-            ],
-        ];
-    }
 
     public function mount(): void
     {
@@ -75,8 +62,8 @@ class Index extends Component
     public function render()
     {
         $query = Permission::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -124,11 +111,20 @@ class Index extends Component
     {
         $this->validate();
 
-        $this->permission->save();
+        try {
+            // Update category
+            $this->permission->update([
+                'name' => $this->name,
+            ]);
 
-        $this->editModal = false;
+            $this->alert('success', __('Permission updated successfully.'));
 
-        $this->alert('success', __('Permission updated successfully.'));
+            $this->emit('refreshIndex');
+
+            $this->editModal = false;
+        } catch (Exception $e) {
+            $this->alert('error', 'Something goes wrong while updating permission!!', $e->getMessage());
+        }
     }
 
     public function deleteSelected(): void

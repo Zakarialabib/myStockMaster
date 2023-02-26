@@ -46,7 +46,7 @@
         <div class="w-full py-5">
             <livewire:livesearch />
         </div>
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap px-4 mx-auto">
             <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>

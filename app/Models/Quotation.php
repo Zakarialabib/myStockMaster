@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\QuotationStatus;
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 
 /**
@@ -28,11 +29,13 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read \App\Models\Customer|null $customer
  * @property-read mixed $due_amount
  * @property-read mixed $paid_amount
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuotationDetails[] $quotationDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\QuotationDetails> $quotationDetails
  * @property-read int|null $quotation_details_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation newQuery()
@@ -51,46 +54,41 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereUpdatedAt($value)
- * @mixin \Eloquent
+ *
  * @property string|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereDeletedAt($value)
+ *
+ * @mixin \Eloquent
  */
 class Quotation extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
         'reference',
         'customer_id',
-        'tax_percentage',
         'tax_amount',
-        'discount_percentage',
         'discount_amount',
         'shipping_amount',
         'total_amount',
         'status',
-        'note',
         'created_at',
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
         'reference',
         'customer_id',
-        'tax_percentage',
         'tax_amount',
-        'discount_percentage',
         'discount_amount',
         'shipping_amount',
         'total_amount',
         'status',
-        'note',
         'created_at',
         'updated_at',
     ];
@@ -104,6 +102,8 @@ class Quotation extends Model
         'date',
         'reference',
         'customer_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -116,6 +116,10 @@ class Quotation extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'status' => QuotationStatus::class,
+    ];
+
     public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
@@ -126,15 +130,26 @@ class Quotation extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
-   /**
-    * Get ajustement date.
-    * @return \Illuminate\Database\Eloquent\Casts\Attribute
-    */
+    /**
+     * Get ajustement date.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     public function date(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
         );
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $number = Quotation::max('id') + 1;
+            $model->reference = make_reference_id('QT', $number);
+        });
     }
 
     /**
@@ -207,15 +222,5 @@ class Quotation extends Model
         return Attribute::make(
             get: fn ($value) => $value / 100,
         );
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = Quotation::max('id') + 1;
-            $model->reference = make_reference_id('QT', $number);
-        });
     }
 }

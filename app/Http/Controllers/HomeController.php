@@ -17,7 +17,6 @@ use App\Models\SaleReturnPayment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -58,17 +57,17 @@ class HomeController extends Controller
         ];
 
         return view('admin.home', [
-            'revenue'          => $revenue,
-            'sale_returns'     => $sale_returns / 100,
+            'revenue' => $revenue,
+            'sale_returns' => $sale_returns / 100,
             'purchase_returns' => $purchase_returns / 100,
-            'profit'           => $profit,
-            'data'             => $data,
+            'profit' => $profit,
+            'data' => $data,
         ]);
     }
 
     public function currentMonthChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $currentMonthSales = Sale::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
@@ -81,15 +80,15 @@ class HomeController extends Controller
             ->sum('amount') / 100;
 
         return response()->json([
-            'sales'     => $currentMonthSales,
+            'sales' => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
-            'expenses'  => $currentMonthExpenses,
+            'expenses' => $currentMonthExpenses,
         ]);
     }
 
     public function salesPurchasesChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $sales = $this->salesChartData();
         $purchases = $this->purchasesChartData();
@@ -99,7 +98,7 @@ class HomeController extends Controller
 
     public function paymentChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $dates = collect();
 
@@ -170,9 +169,9 @@ class HomeController extends Controller
         }
 
         return response()->json([
-            'payment_sent'     => $sent_payments,
+            'payment_sent' => $sent_payments,
             'payment_received' => $received_payments,
-            'months'           => $months,
+            'months' => $months,
         ]);
     }
 

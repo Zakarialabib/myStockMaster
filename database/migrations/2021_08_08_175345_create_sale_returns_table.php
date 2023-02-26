@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\Customer;
+use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,8 +21,9 @@ class CreateSaleReturnsTable extends Migration
         Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(Customer::class)->nullable()->constrained()->nullOnDelete();
-
+            $table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->string('reference');
             $table->integer('tax_percentage')->default(0);

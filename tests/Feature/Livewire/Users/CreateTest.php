@@ -24,6 +24,7 @@ it('tests the create user component', function () {
         ->set('user.name', 'John Doe')
         ->set('user.phone', '00000000000')
         ->set('user.email', 'admin@admin.com')
+        ->set('user.password', 'password')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -31,6 +32,7 @@ it('tests the create user component', function () {
         'name'     => 'John Doe',
         'phone'    => '00000000000',
         'email'    => 'admin@admin.com',
+        'password' => 'password',
     ]);
 });
 

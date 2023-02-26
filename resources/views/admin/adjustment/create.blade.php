@@ -81,7 +81,7 @@
                                     <label for="date">{{ __('Date') }} <span class="text-danger">*</span></label>
                                     <input type="date"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="date" required value="{{ now()->format('Y-m-d') }}">
+                                        name="date" required value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
 

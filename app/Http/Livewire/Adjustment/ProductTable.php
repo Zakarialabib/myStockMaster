@@ -11,11 +11,11 @@ class ProductTable extends Component
 {
     use LivewireAlert;
 
-    protected $listeners = ['productSelected'];
-
     public $products;
 
     public $hasAdjustments;
+
+    protected $listeners = ['productSelected'];
 
     public function mount($adjustedProducts = null)
     {

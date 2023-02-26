@@ -56,14 +56,26 @@
                         {{ format_currency($quotation->total_amount) }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($quotation->status == 'Pending')
+                        @if ($quotation->status == \App\Enums\QuotationStatus::PENDING)
                             <x-badge info>
-                                {{ $quotation->status }}
+                                {{__('Pending')}}
                             </x-badge>
-                        @else
-                            <x-badge success>
-                                {{ $quotation->status }}
+                        @elseif($quotation->status == \App\Enums\QuotationStatus::SENT)
+                        <x-badge info>
+                                {{__('Sent')}}
                             </x-badge>
+                        @elseif($quotation->status == \App\Enums\QuotationStatus::ACCEPTED)
+                        <x-badge info>
+                            {{__('Accepted')}}
+                        </x-badge>
+                        @elseif($quotation->status == \App\Enums\QuotationStatus::EXPIRED)
+                        <x-badge warning>
+                            {{__('Expired')}}
+                        </x-badge>
+                        @elseif($quotation->status == \App\Enums\QuotationStatus::REJECTED)
+                        <x-badge danger>
+                            {{__('Rejected')}}
+                        </x-badge>
                         @endif
                     </x-table.td>
                     <x-table.td class="whitespace-no-wrap row-action--icon">

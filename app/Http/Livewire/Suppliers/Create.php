@@ -8,12 +8,13 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createSupplier'];
 
     /** @var bool */
@@ -24,18 +25,23 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier.name'       => 'required|string|max:255',
-        'supplier.phone'      => 'required|numeric',
-        'supplier.email'      => 'nullable|email|max:255',
-        'supplier.address'    => 'nullable|string|max:255',
-        'supplier.city'       => 'nullable|string|max:255',
-        'supplier.country'    => 'nullable|string|max:255',
+        'supplier.name' => 'required|string|min:3|max:255',
+        'supplier.phone' => 'required|numeric',
+        'supplier.email' => 'nullable|email|max:255',
+        'supplier.address' => 'nullable|string|max:255',
+        'supplier.city' => 'nullable|string|max:255',
+        'supplier.country' => 'nullable|string|max:255',
         'supplier.tax_number' => 'nullable|numeric|max:255',
     ];
 
-    public function mount(Supplier $supplier): void
+    protected $messages = [
+        'supplier.name.required' => 'The name field cannot be empty.',
+        'supplier.phone.required' => 'The phone field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
     {
-        $this->supplier = $supplier;
+        $this->validateOnly($propertyName);
     }
 
     public function render()
@@ -51,19 +57,25 @@ class Create extends Component
 
         $this->resetValidation();
 
+        $this->supplier = new Supplier();
+
         $this->createSupplier = true;
     }
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->supplier->save();
+        try {
+            $this->supplier->save($validatedData);
 
-        $this->alert('success', __('Supplier created successfully.'));
+            $this->alert('success', __('Supplier created successfully.'));
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->createSupplier = false;
+            $this->createSupplier = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
+        }
     }
 }

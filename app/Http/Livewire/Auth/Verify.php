@@ -3,13 +3,13 @@
 namespace App\Http\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Verify extends Component
 {
     use LivewireAlert;
-    
+
     public function resend()
     {
         if (Auth::user()->hasVerifiedEmail()) {

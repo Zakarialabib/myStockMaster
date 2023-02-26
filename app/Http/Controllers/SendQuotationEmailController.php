@@ -6,10 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\QuotationMail;
 use App\Models\Quotation;
+use Exception;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Exception;
 
 class SendQuotationEmailController extends Controller
 {
@@ -22,10 +22,10 @@ class SendQuotationEmailController extends Controller
                 'status' => 'Sent',
             ]);
 
-            toast('Sent On "'.$quotation->customer->email.'"!', 'success');
+            // toast('Sent On "'.$quotation->customer->email.'"!', 'success');
         } catch (Exception $exception) {
             Log::error($exception);
-            toast('Something Went Wrong!', 'error');
+            // toast('Something Went Wrong!', 'error');
         }
 
         return back();
