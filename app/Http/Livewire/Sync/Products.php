@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sync;
 
-use App\Models\Product;
+use App\Enums\IntegrationType;
 use App\Jobs\SyncCustomProducts;
+use App\Models\Product;
+use App\Models\Integration;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\Response;
-use Exception;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
 
 class Products extends Component
 {
@@ -26,83 +30,92 @@ class Products extends Component
 
     public $syncModal = false;
 
+    protected $rules = [
+        'type' => 'required',
+    ];
+
     public function syncModal(): void
     {
         $this->syncModal = true;
     }
 
-    protected $rules = [
-        'type' => 'required',
-    ];
-   
-    public function recieveData(){ 
-        
+    public function recieveData()
+    {
+        $integration = Integration::where('type', $this->type)->first();
         $client = Http::withHeaders([
-            'Authorization' => 'Bearer '.settings()->custom_api_key,
+            'Authorization' => 'Bearer '.$integration->api_key,
         ]);
 
-        if ($this->type === 'woocommerce') {
-
+        if ($this->type === IntegrationType::WOOCOMMERCE) {
             $response = new \Automattic\WooCommerce\Client(
-                settings()->woocommerce_store_url,
-                settings()->woocommerce_api_key,
-                settings()->woocommerce_api_secret,
+                $integration->store_url,
+                $integration->api_key,
+                $integration->api_secret,
                 ['wp_api' => true, 'version' => 'wc/v3']
             );
-
-        } elseif ($this->type === 'shopify') {
+        } elseif ($this->type === IntegrationType::SHOPIFY) {
             $response = new \Shopify\Client([
-                'shop_domain' => settings()->shopify_store_url,
-                'api_key' => settings()->shopify_api_key,
-                'api_secret' => settings()->shopify_api_secret,
+                'shop_domain' => $integration->store_url,
+                'api_key' => $integration->api_key,
+                'api_secret' => $integration->api_secret,
             ]);
+        } elseif ($this->type === IntegrationType::YOUCAN) {
+            $response = $client->get($integration->store_url.'/products');
 
-        } elseif ($this->type === 'custom') {
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $data = $response->json()['data'];
+                SyncYoucanProducts::dispatch($data);
+                $this->alert('success', 'Sync from youcan to inventory completed');
+                $this->syncModal = false;
+            }
+        } elseif ($this->type === IntegrationType::CUSTOM) {
+            $response = $client->get($integration->store_url.'/api/products');
 
-            $response = $client->get(settings()->custom_store_url . '/api/products');
-        }
-
-        if ($response->getStatusCode() === Response::HTTP_OK) {
-
-            $data = $response->json()['data'];
-
-            SyncCustomProducts::dispatch($data);
-            
-            $this->alert('success', 'Sync from ecommerce to inventory completed');
-
-            $this->syncModal = false;
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $data = $response->json()['data'];
+                $batch = Bus::batch([
+                    new SyncCustomProducts($data),
+                ])->then(function (Batch $batch) {
+                    $this->alert('success', 'Sync from ecommerce to inventory completed'.$batch->finished());
+                })->catch(function (Batch $batch, Throwable $e) {
+                    $this->alert('success', 'Sync Failed'.$e->getMessage());
+                })->name('sync Custom Products')->dispatch();
+                
+                $this->syncModal = false;
+            }
         }
     }
 
     public function sendData()
     {
-        $client = Http::withHeaders([
-            'Authorization' => 'Bearer ' . settings()->custom_api_key,
-        ]);
+        $integration = Integration::where('type', $this->type)->first();
 
-        if ($this->type === 'woocommerce') {
-
+        if ($this->type === IntegrationType::WOOCOMMERCE) {
             $response = new \Automattic\WooCommerce\Client(
-                settings()->woocommerce_store_url,
-                settings()->woocommerce_api_key,
-                settings()->woocommerce_api_secret,
+                $integration->store_url,
+                $integration->api_key,
+                $integration->api_secret,
                 ['wp_api' => true, 'version' => 'wc/v3']
             );
-
-        } elseif ($this->type === 'shopify') {
+        } elseif ($this->type === IntegrationType::SHOPIFY) {
             $response = new \Shopify\Client([
-                'shop_domain' => settings()->shopify_store_url,
-                'api_key' => settings()->shopify_api_key,
-                'api_secret' => settings()->shopify_api_secret,
+                'shop_domain' => $integration->store_url,
+                'api_key' => $integration->api_key,
+                'api_secret' => $integration->api_secret,
+            ]);
+        } elseif ($this->type === IntegrationType::YOUCAN) {
+            $client = Http::withHeaders([
+                'Authorization' => 'Bearer '.$integration->api_key,
+            ]);
+            $response = $client->get($integration->store_url.'/api/products');
+        } elseif ($this->type === IntegrationType::CUSTOM) {
+            $client = Http::withHeaders([
+                'Authorization' => 'Bearer '.$integration->api_key,
             ]);
 
-        } elseif ($this->type === 'custom') {
-
-            $response = $client->get(settings()->custom_store_url . '/api/products');
-        }
-
+            $response = $client->get($integration->store_url.'/api/products');
             $inventoryProducts = Product::with('category')->get();
-            
+
             $ecomProducts = $response->json()['data'];
 
             $data = [];
@@ -110,20 +123,21 @@ class Products extends Component
             foreach ($inventoryProducts as $product) {
                 if (! in_array($product->code, array_column($ecomProducts, 'code'))) {
                     $data[] = [
-                        'name'       => $product['name'],
-                        'code'       => $product['code'],
-                        'price'      => $product['price'],
-                        'quantity'   => $product['quantity'],
+                        'name' => $product['name'],
+                        'code' => $product['code'],
+                        'price' => $product['price'],
+                        'quantity' => $product['quantity'],
                         'categoryId' => $product['category']->name,
                     ];
                 }
             }
 
-            $client->post(settings()->custom_store_url . '/api/products/bulk', ['data' => $data]);
-        
-            Log::info(count($data) . ' new products created in e-commerce store.');
-            return response()->json(['message' => count($data) . ' new products created in e-commerce store.']);
+            $client->post($integration->store_url.'/api/products/bulk', ['data' => $data]);
 
+            Log::info(count($data).' new products created in e-commerce store.');
+
+            return response()->json(['message' => count($data).' new products created in e-commerce store.']);
+        }
     }
 
     public function render()

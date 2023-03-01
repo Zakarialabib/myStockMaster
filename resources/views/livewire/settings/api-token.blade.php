@@ -17,25 +17,16 @@
 
                 <div class="mb-4">
                     <div class="flex items-center">
-                        @if (settings()->custom_store_url)
-                            <p class="font-medium">{{ __('Ecommerce Platform') }}:</p>
-                            <p class="ml-2">{{ __('Custom') }}</p>
-                            <p class="ml-2">{{ settings()->custom_store_url }}</p>
-                            <p class="ml-2">{{ settings()->custom_api_key }}</p>
-                        @endif
-                        @if (settings()->woocommerce_store_url)
-                            <p class="font-medium">{{ __('Ecommerce Platform') }}:</p>
-                            <p class="ml-2">{{ __('WooCommerce') }}</p>
-                            <p class="ml-2">{{ settings()->woocommerce_api_key }}</p>
-                            <p class="ml-2">{{ settings()->woocommerce_store_url }}</p>
-                        @endif
-                        @if (settings()->shopify_store_url)
-                            <p class="font-medium">{{ __('Ecommerce Platform') }}:</p>
-                            <p class="ml-2">{{ __('Shopify') }}</p>
-                            <p class="ml-2">{{ settings()->shopify_api_key }}</p>
-                            <p class="ml-2">{{ settings()->shopify_store_url }}</p>
-                        @endif
-
+                        @foreach ($integrations as $item)
+                            <div class="flex flex-wrap">
+                                <p class="font-medium">{{ __('Ecommerce Platform') }}:</p>
+                                <p class="ml-2">{{ $integration->type }}</p>
+                                <p class="ml-2">{{ $integration->store_url }}</p>
+                                <p class="ml-2">{{ $integration->api_key }}</p>
+                                <p class="ml-2">{{ $integration->last_sync }}</p>
+                                <p class="ml-2">{{ $integration->status }}</p>
+                            </div>
+                        @endforeach
                     </div>
                     <div class="flex items-center mt-2">
                         <p class="font-medium">{{ __('Missing Products') }} :</p>
