@@ -6,12 +6,36 @@ namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\HasAdvancedFilter;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 
 class {{ class }} extends Model
 {
     use HasFactory;
+    use HasAdvancedFilter;
+    use UuidGenerator;
+    use GetModelByUuid;
 
-        /**
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    public $orderable = [
+        'id',
+        'status',
+    ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    public $filterable = [
+        'id',
+        'status',
+    ];
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
