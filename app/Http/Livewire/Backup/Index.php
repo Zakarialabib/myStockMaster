@@ -16,11 +16,53 @@ class Index extends Component
 
     public $data = [];
 
+    public $backup_status;
+    public $backup_schedule;
+    public $backup_include;
+
+    public $settingsModal = false;
+
     protected $listeners = [
         'deleteModel', 'generate',
         'refreshTable' => '$refresh',
         'delete',
     ];
+    
+    public function cleanBackups()
+    {
+        Artisan::call('backup:clean');
+
+        $this->alert('success', __('Old backup cleaned.'));
+    }
+
+    public function settingsModal()
+    {
+        $this->backup_status = settings()->backup_status;
+        $this->backup_schedule = settings()->backup_schedule;
+        $this->settingsModal = true;
+    }
+    
+    public function updateSettigns()
+    {
+        try {
+            $this->validate([
+            'backup_status' => 'required',
+            'backup_schedule' => 'nullable',
+            ]);
+
+            settings()->update([
+                'backup_status' => $this->backup_status,
+                'backup_schedule' => $this->backup_schedule,
+            ]);
+
+            $this->alert('success', __('Settings backuped saved.'));
+
+            $this->settingsModal = false;
+
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Failed.'.$th->getMessage()));
+        }
+    }
 
     public function render()
     {

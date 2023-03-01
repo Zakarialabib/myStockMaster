@@ -103,7 +103,7 @@ return [
              */
             'disks' => [
                 'local',
-                'google',
+                // 'google',
             ],
         ],
 
@@ -138,7 +138,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'zakarialabib@gmail.com',
+            'to' => 'zakarialabib@gmail.com ',
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
