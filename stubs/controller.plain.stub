@@ -9,5 +9,9 @@ use Illuminate\Http\Request;
 
 class {{ class }} extends Controller
 {
-    //
+
+  public function __invoke()
+    {
+       //
+    }
 }

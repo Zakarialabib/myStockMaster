@@ -17,24 +17,25 @@ class {{ class }} extends Model
     use UuidGenerator;
     use GetModelByUuid;
 
+    const ATTRIBUTES = [
+        'id',
+        'status',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    public $orderable = [
-        'id',
-        'status',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    public $filterable = [
-        'id',
-        'status',
-    ];
+    public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *
