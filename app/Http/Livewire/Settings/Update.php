@@ -16,32 +16,23 @@ class Update extends Component
 
     public function updateProject()
     {
-      
         $gitHandler = new GitHandler();
         $updated = $gitHandler->fetchAndPull();
-        // $updatedPush = $gitHandler->pushChanges();
     
         if ($updated) {
-            return "Project featched";
+            return __('Project fetched');
         } elseif ($updatedPush){
-            return "updating project";
-    } else {
-            return "Error updating project";
-        }
-
+            return __('updating project');
+        } 
+        
+        return __('Error updating project');
     }
 
     public function mount()
     {
-        $this->message = 'Update your  system with the latest version';
+        $this->message = __('Upgrade to latest version');
     }
 
-    public function optimize()
-    {
-        //  Artisan::call('optimize:clear');
-        // Artisan::call('optimize');
-        // exec("composer dump");
-    }
 
     public function render()
     {
