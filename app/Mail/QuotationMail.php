@@ -33,7 +33,7 @@ class QuotationMail extends Mailable
     public function build()
     {
         return $this->subject('Quotation - '.settings()->company_name)
-            ->view('emails.quotationMail', [
+            ->view('emails.quotation-mail', [
                 'settings' => settings(),
                 'customer' => $this->quotation->customer,
             ]);

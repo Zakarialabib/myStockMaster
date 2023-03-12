@@ -16,8 +16,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $qty
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\Warehouse $warehouse
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse query()
@@ -27,6 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereWarehouseId($value)
+ *
  * @mixin \Eloquent
  */
 class ProductWarehouse extends Model
@@ -43,18 +46,16 @@ class ProductWarehouse extends Model
     ];
 
     protected $casts = [
-        'product_id'   => 'integer',
+        'product_id' => 'integer',
         'warehouse_id' => 'integer',
-        'qte'          => 'double',
+        'qte' => 'double',
     ];
 
-    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
     }
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

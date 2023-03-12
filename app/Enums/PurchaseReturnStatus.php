@@ -6,11 +6,11 @@ namespace App\Enums;
 
 enum PurchaseReturnStatus: string
 {
-    case Pending = '0';
+    case PENDING = '0';
 
-    case Ordered = '1';
+    case ORDRED = '1';
 
-    case Completed = '2';
+    case COMPLETED = '2';
 
-    case Returned = '3';
+    case RETURNED = '3';
 }

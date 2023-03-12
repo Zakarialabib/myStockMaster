@@ -7,17 +7,16 @@ namespace App\Http\Livewire\Expense;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Warehouse;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createExpense'];
 
     public $createExpense = false;
@@ -25,44 +24,31 @@ class Create extends Component
     /** @var mixed */
     public $expense;
 
-    public $reference;
+    public $listsForFields = [];
 
-    public $category_id;
-
-    public $date;
-
-    public $amount;
-
-    public $details;
-
-    public $user_id;
-
-    public $warehouse_id;
-
-    public array $listsForFields = [];
+    protected $rules = [
+        'expense.reference' => 'required|string|max:255',
+        'expense.category_id' => 'required|integer|exists:expense_categories,id',
+        'expense.date' => 'required|date',
+        'expense.amount' => 'required|numeric',
+        'expense.details' => 'nullable|string|min:3',
+        'expense.user_id' => 'nullable',
+        'expense.warehouse_id' => 'nullable',
+    ];
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
 
-    protected $rules = [
-        'reference'    => 'required|string|max:255',
-        'category_id'  => 'required|integer|exists:expense_categories,id',
-        'date'         => 'required',
-        'amount'       => 'required|numeric',
-        'details'      => 'nullable|string|max:255',
-        'user_id'      => 'nullable',
-        'warehouse_id' => 'nullable',
-    ];
-
     public function mount(): void
     {
         $this->date = date('Y-m-d');
+
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('expense_create'), 403);
 
@@ -71,26 +57,32 @@ class Create extends Component
 
     public function createExpense(): void
     {
-        $this->reset();
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->expense = new Expense();
 
         $this->createExpense = true;
-
-        $this->initListsForFields();
     }
 
     public function create(): void
     {
         $validatedData = $this->validate();
 
-        $expense = Expense::create($validatedData);
+        try {
+            $this->expense->save($validatedData);
 
-        $expense->user()->associate(auth()->user());
+            $expense->user()->associate(auth()->user());
 
-        $this->alert('success', __('Expense created successfully.'));
+            $this->alert('success', __('Expense created successfully.'));
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->createExpense = false;
+            $this->createExpense = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
+        }
     }
 
     protected function initListsForFields()

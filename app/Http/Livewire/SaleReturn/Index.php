@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\SaleReturn;
 
+use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Imports\SaleImport;
 use App\Models\Customer;
-use App\Models\SalePayment;
 use App\Models\SaleReturn;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Models\SaleReturnPayment;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use App\Enums\PaymentStatus;
-use App\Traits\Datatable;
+use Throwable;
 
 class Index extends Component
 {
@@ -29,7 +28,7 @@ class Index extends Component
 
     public $salereturn;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'showModal',
         'importModal', 'import',
@@ -43,9 +42,15 @@ class Index extends Component
 
     public $paymentModal = false;
 
-    public array $listsForFields = [];
+    public $salereturn_id;
+    public $date;
+    public $reference;
+    public $amount;
+    public $payment_method;
 
-    /** @var string[][] */
+    public $listsForFields = [];
+
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -58,17 +63,18 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'customer_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
+    /** @var array */
+    protected $rules = [
+        'customer_id' => 'required|numeric',
+        'reference' => 'required|string|max:255',
+        'tax_percentage' => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|string|max:255',
-        'payment_method'      => 'required|string|max:255',
-        'note'                => 'string|max:1000',
+        'shipping_amount' => 'required|numeric',
+        'total_amount' => 'required|numeric',
+        'paid_amount' => 'required|numeric',
+        'status' => 'required|integer|min:0|max:100',
+        'payment_method' => 'required|integer|min:0|max:100',
+        'note' => 'string|nullable|max:1000',
     ];
 
     public function mount(): void
@@ -87,8 +93,8 @@ class Index extends Component
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -164,8 +170,8 @@ class Index extends Component
         abort_if(Gate::denies('sale_access'), 403);
 
         $this->salereturn = $salereturn;
-        $this->date = Carbon::now()->format('Y-m-d');
-        $this->reference = 'ref-'.Carbon::now()->format('YmdHis');
+        $this->date = date('Y-m-d');
+        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $salereturn->due_amount;
         $this->payment_method = 'Cash';
         // $this->note = '';
@@ -175,32 +181,33 @@ class Index extends Component
 
     public function paymentSave()
     {
-        DB::transaction(function () {
+        try {
             $this->validate(
                 [
-                    'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
-                    'amount'         => 'required|numeric',
+                    'date' => 'required|date',
+                    'reference' => 'required|string|max:255',
+                    'amount' => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
 
             $salereturn = SaleReturn::find($this->salereturn_id);
 
-            SalePayment::create([
-                'date'           => $this->date,
-                'reference'      => $this->reference,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'sale_id'        => $this->salereturn_id,
+            SaleReturnPayment::create([
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'sale_id' => $this->salereturn_id,
                 'payment_method' => $this->payment_method,
+                // 'user_id'        => Auth::user()->id,
             ]);
 
             $salereturn = SaleReturn::findOrFail($this->salereturn_id);
 
             $due_amount = $salereturn->due_amount - $this->amount;
 
-            if ($due_amount == $salereturn->total_amount) {
+            if ($due_amount === $salereturn->total_amount) {
                 $payment_status = PaymentStatus::Due;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::Partial;
@@ -209,24 +216,28 @@ class Index extends Component
             }
 
             $salereturn->update([
-                'paid_amount'    => ($salereturn->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
+
+            $this->alert('success', __('Sale Return Payment created successfully.'));
 
             $this->emit('refreshIndex');
 
             $this->paymentModal = false;
-        });
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
+        } catch (Throwable $th) {
+            $this->alert('error', __('Error.').$th->getMessage());
+        }
     }
 
     public function refreshCustomers()
     {
         $this->initListsForFields();
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
     }
 }

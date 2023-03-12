@@ -43,6 +43,6 @@
 
 <x-app-layout>     
     <div>
-        @livewire('customers.details', ['customer' => $customer])
+        <!-- @livewire('customers.details', ['customer' => $customer]) -->
     </div>
 </x-app-layout>

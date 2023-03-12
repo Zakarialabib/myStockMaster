@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Enums\PaymentStatus;
-use App\Enums\PurchaseStatus;
 
 /**
  * App\Models\Purchase
@@ -33,11 +35,13 @@ use App\Enums\PurchaseStatus;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchaseDetail[] $purchaseDetails
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseDetail> $purchaseDetails
  * @property-read int|null $purchase_details_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PurchasePayment[] $purchasePayments
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchasePayment> $purchasePayments
  * @property-read int|null $purchase_payments_count
  * @property-read \App\Models\Supplier|null $supplier
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase newModelQuery()
@@ -61,13 +65,19 @@ use App\Enums\PurchaseStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUpdatedAt($value)
+ *
+ * @property string $uuid
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUuid($value)
+ *
  * @mixin \Eloquent
  */
 class Purchase extends Model
 {
     use HasAdvancedFilter;
+    use GetModelByUuid;
+    use UuidGenerator;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -89,7 +99,6 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -118,9 +127,12 @@ class Purchase extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'supplier_id',
+        'user_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -137,25 +149,21 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    /** @return response() */
     protected $casts = [
-        'status'         => PurchaseStatus::class,
+        'status' => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** @return HasMany<PurchaseDetail> */
     public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
-    /** @return HasMany<PurchasePayment> */
     public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
-     /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
@@ -203,11 +211,11 @@ class Purchase extends Model
         );
     }
 
-     /**
-      * get due amount
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get due amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
@@ -215,11 +223,11 @@ class Purchase extends Model
         );
     }
 
-     /**
-      * get tax amount
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get tax amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
@@ -227,11 +235,11 @@ class Purchase extends Model
         );
     }
 
-     /**
-      * get discount amount
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get discount amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function discountAmount(): Attribute
     {
         return Attribute::make(

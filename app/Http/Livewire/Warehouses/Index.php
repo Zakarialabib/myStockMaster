@@ -12,8 +12,6 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
@@ -26,7 +24,7 @@ class Index extends Component
     /** @var mixed */
     public $warehouse;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
@@ -42,7 +40,7 @@ class Index extends Component
     /** @var bool */
     public $editModal = false;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -55,11 +53,13 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'warehouse.name'  => ['string', 'required'],
-        'warehouse.phone' => ['string', 'nullable'],
-        'warehouse.city'  => ['string', 'nullable'],
-        'warehouse.email' => ['string', 'nullable'],
+    /** @var array */
+    protected $rules = [
+        'warehouse.name' => 'string|required|max:255',
+        'warehouse.phone' => 'numeric|nullable|max:255',
+        'warehouse.country' => 'nullable|max:255',
+        'warehouse.city' => 'nullable|max:255',
+        'warehouse.email' => 'nullable|max:255',
     ];
 
     public function mount(): void
@@ -71,13 +71,13 @@ class Index extends Component
         $this->orderable = (new Warehouse())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('warehouse_access'), 403);
 
         $query = Warehouse::with('products')->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

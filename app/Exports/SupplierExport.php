@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Supplier;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class SupplierExport implements FromView
@@ -20,7 +20,7 @@ class SupplierExport implements FromView
     public function query()
     {
         if ($this->models) {
-            return  Supplier::query()->whereIn('id', $this->models);
+            return Supplier::query()->whereIn('id', $this->models);
         }
 
         return Supplier::query();

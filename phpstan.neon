@@ -8,9 +8,14 @@ parameters:
         - database/factories
         - database/seeders
         - routes
-
+        - tests
+        
     # Level 9 is the highest level
-    level: 5
+    level: 6
+
+    checkMissingIterableValueType: false
+
+    checkGenericClassInNonGenericObjectType: false
 
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
@@ -18,4 +23,3 @@ parameters:
 #    excludePaths:
 #        - ./*/*/FileToBeExcluded.php
 #
-#    checkMissingIterableValueType: false

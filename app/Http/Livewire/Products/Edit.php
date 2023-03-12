@@ -13,8 +13,6 @@ use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 
 class Edit extends Component
 {
@@ -41,32 +39,28 @@ class Edit extends Component
         'editModal',
     ];
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
-    public array $rules = [
-        'product.name'              => ['required', 'string', 'max:255'],
-        'product.code'              => ['required', 'string', 'max:255'],
-        'product.barcode_symbology' => ['required', 'string', 'max:255'],
-        'product.unit'              => ['required', 'string', 'max:255'],
-        'product.quantity'          => ['required', 'integer', 'min:1'],
-        'product.cost'              => ['required', 'numeric', 'max:2147483647'],
-        'product.price'             => ['required', 'numeric', 'max:2147483647'],
-        'product.stock_alert'       => ['required', 'integer', 'min:0'],
-        'product.order_tax'         => ['nullable', 'integer', 'min:0', 'max:100'],
-        'product.tax_type'          => ['nullable', 'integer'],
-        'product.note'              => ['nullable', 'string', 'max:1000'],
-        'product.category_id'       => ['required', 'integer'],
-        'product.brand_id'          => ['nullable', 'integer'],
+    /** @var array */
+    protected $rules = [
+        'product.name' => 'required|string|min:3|max:255',
+        'product.code' => 'required|string|max:255',
+        'product.barcode_symbology' => 'required|string|max:255',
+        'product.unit' => 'required|string|max:255',
+        'product.quantity' => 'required|integer|min:1',
+        'product.cost' => 'required|numeric',
+        'product.price' => 'required|numeric',
+        'product.stock_alert' => 'required|integer|min:0',
+        'product.order_tax' => 'nullable|integer|min:0|max:100',
+        'product.tax_type' => 'nullable|integer|min:0|max:100',
+        'product.note' => 'nullable|string|max:1000',
+        'product.category_id' => 'required|integer|min:0|max:100',
+        'product.brand_id' => 'nullable|integer|min:0|max:100',
     ];
 
     public function mount()
     {
         $this->initListsForFields();
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
     }
 
     public function editModal($id)
@@ -105,21 +99,26 @@ class Edit extends Component
 
     public function getCategoriesProperty()
     {
-        return Category::select('name', 'id')->get();
+        return Category::select(['name', 'id'])->get();
     }
 
     public function getBrandsProperty()
     {
-        return Brand::select('name', 'id')->get();
+        return Brand::select(['name', 'id'])->get();
     }
 
     public function getWarehousesProperty()
     {
-        return Warehouse::select('name', 'id')->get();
+        return Warehouse::select(['name', 'id'])->get();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.products.edit');
+    }
+
+    protected function initListsForFields(): void
+    {
+        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
     }
 }

@@ -8,13 +8,17 @@ trait Datatable
 {
     public int $perPage;
 
+    /** @var array<mixed> */
     public $orderable = [];
 
+    /** @var array<string> */
     public string $search = '';
 
-    public $selected = [];
+    /** @var array<mixed> */
+    public array $selected = [];
 
-    public $paginationOptions = [];
+    /** @var array<mixed> */
+    public array $paginationOptions = [];
 
     public bool $refreshIndex;
 

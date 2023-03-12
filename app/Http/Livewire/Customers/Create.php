@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\Wallet;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -16,7 +14,7 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createCustomer'];
 
     public $createCustomer = false;
@@ -24,36 +22,27 @@ class Create extends Component
     /** @var mixed */
     public $customer;
 
-    public $name;
+    protected $rules = [
+        'customer.name' => 'required|string|min:3|max:255',
+        'customer.email' => 'nullable|email|max:255',
+        'customer.phone' => 'required|numeric',
+        'customer.city' => 'nullable|min:3|max:255',
+        'customer.country' => 'nullable|min:3|max:255',
+        'customer.address' => 'nullable|max:255',
+        'customer.tax_number' => 'nullable|max:255',
+    ];
 
-    public $email;
-
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $tax_number;
+    protected $messages = [
+        'customer.name.required' => 'The name field cannot be empty.',
+        'customer.phone.required' => 'The code field cannot be empty.',
+    ];
 
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
 
-    protected $rules = [
-        'name'       => 'required|string|max:255',
-        'email'      => 'nullable|max:255',
-        'phone'      => 'required|numeric',
-        'city'       => 'nullable',
-        'country'    => 'nullable',
-        'address'    => 'nullable',
-        'tax_number' => 'nullable',
-    ];
-
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('customer_create'), 403);
 
@@ -62,7 +51,11 @@ class Create extends Component
 
     public function createCustomer(): void
     {
-        $this->reset();
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->customer = new Customer();
 
         $this->createCustomer = true;
     }
@@ -71,18 +64,22 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        Customer::create($validatedData);
+        try {
+            $this->customer->save($validatedData);
 
-        if ($this->customer) {
-            $wallet = Wallet::create([
-                'customer_id' => $this->customer->id,
-                'balance'     => 0,
-            ]);
+            if ($this->customer) {
+                Wallet::create([
+                    'customer_id' => $this->customer->id,
+                    'balance' => 0,
+                ]);
+            }
+            $this->alert('success', __('Customer created successfully'));
+
+            $this->emit('refreshIndex');
+
+            $this->createCustomer = false;
+        } catch (\Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
         }
-        $this->alert('success', __('Customer created successfully'));
-
-        $this->emit('refreshIndex');
-
-        $this->createCustomer = false;
     }
 }

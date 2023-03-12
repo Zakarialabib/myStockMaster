@@ -17,8 +17,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\User|null $user
  * @property-read \App\Models\Warehouse|null $warehouse
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister query()
@@ -29,19 +31,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CashRegister whereWarehouseId($value)
+ *
  * @mixin \Eloquent
  */
 class CashRegister extends Model
 {
     protected $fillable = ['cash_in_hand', 'user_id', 'warehouse_id', 'status'];
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** @return BelongsTo<Warehouse> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);

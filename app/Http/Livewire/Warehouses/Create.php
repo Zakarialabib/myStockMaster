@@ -6,16 +6,14 @@ namespace App\Http\Livewire\Warehouses;
 
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createWarehouse'];
 
     /** @var bool */
@@ -24,12 +22,13 @@ class Create extends Component
     /** @var mixed */
     public $warehouse;
 
-    public array $rules = [
-        'warehouse.name'    => ['string', 'required'],
-        'warehouse.phone'   => ['string', 'nullable'],
-        'warehouse.country' => ['string', 'nullable'],
-        'warehouse.city'    => ['string', 'nullable'],
-        'warehouse.email'   => ['string', 'nullable'],
+    /** @var array */
+    protected $rules = [
+        'warehouse.name' => 'string|required|max:255',
+        'warehouse.phone' => 'numeric|nullable|max:255',
+        'warehouse.country' => 'nullable|max:255',
+        'warehouse.city' => 'nullable|max:255',
+        'warehouse.email' => 'nullable|max:255',
     ];
 
     public function mount(Warehouse $warehouse): void
@@ -37,7 +36,7 @@ class Create extends Component
         $this->warehouse = $warehouse;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.warehouses.create');
     }

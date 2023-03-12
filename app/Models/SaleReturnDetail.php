@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\SaleReturnDetail
@@ -26,10 +26,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read mixed $product_discount_amount
  * @property-read mixed $product_tax_amount
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\SaleReturnPayment $saleReturn
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail newQuery()
@@ -48,13 +50,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail whereTaxAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnDetail whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class SaleReturnDetail extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'sale_return_id',
@@ -66,7 +68,6 @@ class SaleReturnDetail extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'sale_return_id',
@@ -80,23 +81,21 @@ class SaleReturnDetail extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<SaleReturnPayment> */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
-     /**
-      * get price attribute
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get price attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function price(): Attribute
     {
         return Attribute::make(
@@ -116,11 +115,11 @@ class SaleReturnDetail extends Model
         );
     }
 
-      /**
-       * get subtotal attribute
-       *
-       * @return \Illuminate\Database\Eloquent\Casts\Attribute
-       */
+    /**
+     * get subtotal attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function subTotal(): Attribute
     {
         return Attribute::make(
@@ -128,11 +127,11 @@ class SaleReturnDetail extends Model
         );
     }
 
-     /**
-      * Interact with shipping amount
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * Interact with shipping amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function productDiscountAmount(): Attribute
     {
         return Attribute::make(

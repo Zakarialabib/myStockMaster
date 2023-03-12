@@ -14,8 +14,8 @@
          <img src="{{asset('/images/'.$setting['logo'])}}">
          </div>
          <div id="company">
-            <div><strong> Date: </strong>{{$return_purchase['date']}}</div>
-            <div><strong> Numéro: </strong> {{$return_purchase['reference']}}</div>
+            <div><strong> {{__('Date')}}:  </strong>{{$return_purchase['date']}}</div>
+            <div><strong> {{__('Number')}}:  </strong> {{$return_purchase['reference']}}</div>
             <div><strong> Réf d'achat: </strong> {{$return_purchase['purchase_ref']}}</div>
          </div>
          <div id="Title-heading">

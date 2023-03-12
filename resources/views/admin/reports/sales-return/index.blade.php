@@ -44,6 +44,6 @@
 
 <x-app-layout>
     <x-card>
-        <livewire:reports.sales-return-report :customers="\App\Models\Customer::all()"/>
+        <livewire:reports.sales-return-report />
     </x-card>
 </x-app-layout>

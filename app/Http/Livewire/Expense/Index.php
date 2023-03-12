@@ -9,8 +9,6 @@ use App\Http\Livewire\WithSorting;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -27,7 +25,7 @@ class Index extends Component
     /** @var mixed */
     public $expense;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
         'showModal', 'editModal',
@@ -39,11 +37,11 @@ class Index extends Component
 
     public $editModal = false;
 
-    public bool $showFilters = false;
+    public $showFilters = false;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -56,14 +54,14 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'expense.reference'    => 'required|string|max:255',
-        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
-        'expense.date'         => 'required|date',
-        'expense.amount'       => 'required|numeric',
-        'expense.details'      => 'nullable|string|max:255',
-        'expense.user_id'      => '',
-        'expense.warehouse_id' => '',
+    /** @var array */
+    protected $rules = [
+        'expense.reference' => 'required|string|max:255',
+        'expense.category_id' => 'required|integer|exists:expense_categories,id',
+        'expense.date' => 'required|date',
+        'expense.amount' => 'required|numeric',
+        'expense.details' => 'nullable|string|max:255',
+        'expense.warehouse_id' => 'nullable',
     ];
 
     public function mount(): void
@@ -76,14 +74,14 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('expense_access'), 403);
 
         $query = Expense::with(['category', 'user', 'warehouse'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -171,13 +169,13 @@ class Index extends Component
         return $this->callExport()->download('expenses.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    private function callExport(): ExpenseExport
-    {
-        return (new ExpenseExport());
-    }
-
     protected function initListsForFields()
     {
         $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
+    }
+
+    private function callExport(): ExpenseExport
+    {
+        return new ExpenseExport();
     }
 }

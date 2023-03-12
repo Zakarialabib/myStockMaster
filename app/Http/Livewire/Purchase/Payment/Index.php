@@ -8,8 +8,6 @@ use App\Http\Livewire\WithSorting;
 use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,7 +21,7 @@ class Index extends Component
 
     public $purchase;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'showPayments',
         'refreshIndex' => '$refresh',
@@ -31,11 +29,11 @@ class Index extends Component
 
     public $showPayments;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
     public $purchase_id;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -63,13 +61,13 @@ class Index extends Component
         $this->orderable = (new PurchasePayment())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('purchase_payment_access'), 403);
 
         $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

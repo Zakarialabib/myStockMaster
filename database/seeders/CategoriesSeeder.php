@@ -6,7 +6,6 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class CategoriesSeeder extends Seeder
 {
@@ -17,9 +16,6 @@ class CategoriesSeeder extends Seeder
      */
     public function run()
     {
-        Category::create([
-            'name' => 'Electronics',
-            'code' => Str::random(5),
-        ]);
+        Category::factory()->count(30)->create();
     }
 }

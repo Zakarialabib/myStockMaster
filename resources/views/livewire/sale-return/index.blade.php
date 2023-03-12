@@ -78,13 +78,13 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @if ($salereturn->status == \App\Enums\SaleReturnStatus::Pending)
+                        @if ($salereturn->status == \App\Enums\SaleReturnStatus::PENDING)
                             <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($salereturn->status == \App\Enums\SaleReturnStatus::Completed)
+                        @elseif ($salereturn->status == \App\Enums\SaleReturnStatus::COMPLETED)
                             <x-badge success>{{ __('Completed') }}</x-badge>
-                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Shipped)
+                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::SHIPPED)
                             <x-badge danger>{{ __('Shipped') }}</x-badge>
-                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::Returned)
+                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::RETURNED)
                             <x-badge danger>{{ __('Returned') }}</x-badge>
                         @endif
                     </x-table.td>
@@ -208,20 +208,20 @@
                                     <div class="w-1/4 mb-3">
                                         <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                         <div>{{ __('Invoice') }}:
-                                            <strong>INV/{{ $salereturn?->reference }}</strong>
+                                            <strong>{{ $salereturn?->reference }}</strong>
                                         </div>
                                         <div>{{ __('Date') }}:
                                             {{ \Carbon\Carbon::parse($salereturn?->date)->format('d M, Y') }}
                                         </div>
                                         <div>
                                             {{ __('Status') }}: <strong>
-                                                @if ($salereturn?->status == \App\Enums\SaleReturnStatus::Pending)
+                                                @if ($salereturn?->status == \App\Enums\SaleReturnStatus::PENDING)
                                                     <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                @elseif ($salereturn?->status == \App\Enums\SaleReturnStatus::Completed)
+                                                @elseif ($salereturn?->status == \App\Enums\SaleReturnStatus::COMPLETED)
                                                     <x-badge success>{{ __('Completed') }}</x-badge>
-                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::Shipped)
+                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::SHIPPED)
                                                     <x-badge danger>{{ __('Shipped') }}</x-badge>
-                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::Returned)
+                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::RETURNED)
                                                     <x-badge danger>{{ __('Returned') }}</x-badge>
                                                 @endif
                                             </strong>

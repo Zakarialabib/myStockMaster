@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $is_default
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Language newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Language newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Language query()
@@ -29,6 +30,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereRtl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Language whereUpdatedAt($value)
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Category> $categories
+ * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Product> $products
+ * @property-read int|null $products_count
+ *
+ * @property string|null $deleted_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Language whereDeletedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Language extends Model
@@ -38,6 +49,8 @@ class Language extends Model
 
     public const IS_DEFAULT = 1;
     public const IS_NOT_DEFAULT = 0;
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -50,8 +63,6 @@ class Language extends Model
         'status',
         'is_default',
     ];
-
-    public $timestamps = false;
 
     public function categories(): HasMany
     {

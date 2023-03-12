@@ -25,8 +25,8 @@ class PaymentsReport extends Component
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date'   => 'required|date|after:start_date',
-        'payments'   => 'required|string',
+        'end_date' => 'required|date|after:start_date',
+        'payments' => 'required|string',
     ];
 
     protected $query;
@@ -71,13 +71,13 @@ class PaymentsReport extends Component
 
     public function getQuery()
     {
-        if ($this->payments == 'sale') {
+        if ($this->payments === 'sale') {
             $this->query = SalePayment::query()->with('sale');
-        } elseif ($this->payments == 'sale_return') {
+        } elseif ($this->payments === 'sale_return') {
             $this->query = SaleReturnPayment::query()->with('saleReturn');
-        } elseif ($this->payments == 'purchase') {
+        } elseif ($this->payments === 'purchase') {
             $this->query = PurchasePayment::query()->with('purchase');
-        } elseif ($this->payments == 'purchase_return') {
+        } elseif ($this->payments === 'purchase_return') {
             $this->query = PurchaseReturnPayment::query()->with('purchaseReturn');
         } else {
             $this->query = null;

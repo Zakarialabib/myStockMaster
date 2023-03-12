@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoleUserTable extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -19,7 +18,8 @@ class CreateRoleUserTable extends Migration
             $table->id();
             $table->integer('user_id')->index('role_user_user_id');
             $table->integer('role_id')->index('role_user_role_id');
-            $table->timestamps(6);
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -32,4 +32,4 @@ class CreateRoleUserTable extends Migration
     {
         Schema::drop('role_user');
     }
-}
+};

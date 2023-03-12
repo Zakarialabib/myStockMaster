@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Settings;
 
-use Livewire\Component;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Exception;
+use Livewire\Component;
 
 class Smtp extends Component
 {
@@ -24,14 +24,22 @@ class Smtp extends Component
 
     public function mount()
     {
+        $this->mail_mailer = env('MAIL_MAILER');
+        $this->mail_host = env('MAIL_HOST');
+        $this->mail_port = env('MAIL_PORT');
+        $this->mail_from_address = env('MAIL_FROM_ADDRESS');
+        $this->mail_from_name = env('MAIL_FROM_ADDRESS');
+        $this->mail_username = env('MAIL_USERNAME');
+        $this->mail_password = env('MAIL_PASSWORD');
+        $this->mail_encryption = env('MAIL_ENCRYPTION');
     }
 
     public function render()
     {
-        return view('livewire.admin.smtp');
+        return view('livewire.settings.smtp');
     }
 
-    public function onUpdateSMTP()
+    public function update()
     {
         $toReplace = [
             'MAIL_MAILER='.env('MAIL_HOST'),
@@ -52,7 +60,8 @@ class Smtp extends Component
             'MAIL_FROM_NAME="'.$this->mail_from_name.'"',
             'MAIL_USERNAME="'.$this->mail_username.'"',
             'MAIL_PASSWORD="'.$this->mail_password.'"',
-            'MAIL_ENCRYPTION="'.$this->mail_encryption.'"', ];
+            'MAIL_ENCRYPTION="'.$this->mail_encryption.'"',
+        ];
 
         try {
             file_put_contents(base_path('.env'), str_replace($toReplace, $replaceWith, file_get_contents(base_path('.env'))));

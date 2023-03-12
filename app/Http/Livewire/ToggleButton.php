@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Livewire;
 
 use Illuminate\Database\Eloquent\Model;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
 class ToggleButton extends Component
 {
@@ -22,7 +20,7 @@ class ToggleButton extends Component
 
     public $uniqueId;
 
-    /** @var string[] */
+    /** @var array<string> */
     protected $listeners = ['updating'];
 
     public function mount(): void
@@ -34,6 +32,7 @@ class ToggleButton extends Component
     /**
      * @param mixed $field
      * @param mixed $value
+     *
      * @return void
      */
     public function updating($field, $value)
@@ -43,7 +42,7 @@ class ToggleButton extends Component
         $this->alert('success', __('Status Changed successfully!'));
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.toggle-button');
     }

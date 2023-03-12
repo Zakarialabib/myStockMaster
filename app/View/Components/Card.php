@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\View\Components;
 
-use Illuminate\View\Component;
 use Closure;
+use Illuminate\View\Component;
 
 class Card extends Component
 {

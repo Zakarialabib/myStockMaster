@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Brands;
 
 use App\Models\Brand;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Throwable;
 
 class Edit extends Component
 {
@@ -23,17 +22,28 @@ class Edit extends Component
     /** @var mixed */
     public $brand;
 
+    /** @var string|null */
     public $image;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editModal'];
 
-    public array $rules = [
-        'brand.name'        => ['required', 'string', 'max:255'],
-        'brand.description' => ['nullable', 'string'],
+    /** @var array */
+    protected $rules = [
+        'brand.name' => 'required|string||min:3|max:255',
+        'brand.description' => 'nullable|string',
     ];
 
-    public function render(): View|Factory
+    protected $messages = [
+        'brand.name.required' => 'The name field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function render()
     {
         return view('livewire.brands.edit');
     }
@@ -46,27 +56,30 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->brand = Brand::findOrFail($id);
+        $this->brand = Brand::where('id', $id)->firstOrFail();
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update()
     {
-        $this->validate();
+        $validatedData = $this->validate();
+        try {
+            if ($this->image) {
+                $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+                $this->image->storeAs('brands', $imageName);
+                $this->image = $imageName;
+            }
 
-        if ($this->image) {
-            $imageName = Str::slug($this->brand->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
-            $this->image->storeAs('brands', $imageName);
-            $this->brand->image = $imageName;
+            $this->brand->save($validatedData);
+
+            $this->emit('refreshIndex');
+
+            $this->alert('success', __('Brand updated successfully.'));
+
+            $this->editModal = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
         }
-
-        $this->brand->save();
-
-        $this->emit('refreshIndex');
-
-        $this->alert('success', __('Brand updated successfully.'));
-
-        $this->editModal = false;
     }
 }

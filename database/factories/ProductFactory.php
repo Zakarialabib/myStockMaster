@@ -21,6 +21,7 @@ class ProductFactory extends Factory
     {
         return [
             'name'              => 'iPhone 12',
+            'uuid'              => fake()->uuid(),
             'code'              => Str::random(5),
             'category_id'       => 1,
             'cost'              => 1000,
@@ -33,7 +34,6 @@ class ProductFactory extends Factory
             'stock_alert'       => 10,
             'order_tax'         => 0,
             'tax_type'          => 0,
-
         ];
     }
 }

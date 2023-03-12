@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Currency;
 
 use App\Models\Currency;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['createCurrency'];
 
     public $createCurrency = false;
@@ -23,19 +22,27 @@ class Create extends Component
     /** @var mixed */
     public $currency;
 
-    public array $rules = [
-        'currency.name'          => 'required|string|max:255',
-        'currency.code'          => 'required|string|max:255',
-        'currency.symbol'        => 'required|string|max:255',
+    /** @var array */
+    protected $rules = [
+        'currency.name' => 'required|string|min:3|max:255',
+        'currency.code' => 'required|string|max:255',
+        'currency.symbol' => 'required|string|max:255',
         'currency.exchange_rate' => 'required|numeric',
     ];
 
-    public function mount(Currency $currency): void
+    protected $messages = [
+        'currency.name.required' => 'The name field cannot be empty.',
+        'currency.code.required' => 'The code field cannot be empty.',
+        'currency.symbol.required' => 'The symbol field cannot be empty.',
+        'currency.exchange_rate.required' => 'The exchange rate field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
     {
-        $this->currency = $currency;
+        $this->validateOnly($propertyName);
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('currency_create'), 403);
 
@@ -44,23 +51,31 @@ class Create extends Component
 
     public function createCurrency(): void
     {
+        abort_if(Gate::denies('currency_create'), 403);
+
         $this->resetErrorBag();
 
         $this->resetValidation();
+
+        $this->currency = new Currency();
 
         $this->createCurrency = true;
     }
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->currency->save();
+        try {
+            $this->currency->save($validatedData);
 
-        $this->alert('success', __('Currency created successfully.'));
+            $this->alert('success', __('Currency created successfully.'));
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->createCurrency = false;
+            $this->createCurrency = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Error.').$th->getMessage());
+        }
     }
 }

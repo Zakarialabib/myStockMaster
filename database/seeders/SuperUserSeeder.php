@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class SuperUserSeeder extends Seeder
@@ -19,6 +20,7 @@ class SuperUserSeeder extends Seeder
     {
         $user = User::create([
             'id'                => 1,
+            'uuid'              => Str::uuid()->toString(),
             'name'              => 'Admin',
             'email'             => 'admin@gmail.com',
             'password'          => bcrypt('password'),

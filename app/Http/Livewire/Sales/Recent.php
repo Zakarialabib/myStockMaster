@@ -23,7 +23,7 @@ class Recent extends Component
 
     public $sale;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'recentSales', 'showModal',
         'importModal', 'refreshIndex' => '$refresh',
@@ -33,9 +33,9 @@ class Recent extends Component
 
     public $recentSales;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -62,8 +62,8 @@ class Recent extends Component
         abort_if(Gate::denies('sale_access'), 403);
 
         $query = Sale::with('customer', 'saleDetails')->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

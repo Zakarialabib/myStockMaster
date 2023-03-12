@@ -6,9 +6,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Support\HasAdvancedFilter;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,7 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $password
  * @property string|null $avatar
- * @property string $phone
+ * @property string|null $phone
  * @property int $role_id
  * @property int $status
  * @property int $is_all_warehouses
@@ -34,18 +36,21 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Warehouse[] $assignedWarehouses
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Warehouse> $assignedWarehouses
  * @property-read int|null $assigned_warehouses_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|array<\Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\Wallet|null $wallet
+ *
  * @method static Builder|User advancedFilter($data)
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static Builder|User isActive()
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
@@ -65,9 +70,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User wherePhone($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereRoleId($value)
- * @method static Builder|User whereStatut($value)
+ * @method static Builder|User whereStatus($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
+ *
+ * @property string $uuid
+ *
+ * @method static Builder|User whereUuid($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -77,15 +87,15 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasAdvancedFilter;
     use HasFactory;
+    use GetModelByUuid;
+    use UuidGenerator;
 
-    /** @var string[] */
     public $orderable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
@@ -98,7 +108,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'avatar',
+        'uuid', 'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at', 'wallet_id',
     ];
@@ -124,6 +134,7 @@ class User extends Authenticatable
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder $builder
+     *
      * @return mixed
      */
     public function scopeIsActive(Builder $builder)
@@ -137,14 +148,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Warehouse::class);
     }
 
-    // User hasRole method
-    public function hasRole($roles): bool
-    {
-        return (bool) ($this->roles()->whereName($roles)->first());
-    }
-
     /**
      * @param mixed $permission
+     *
      * @return mixed
      */
     public function hasPermission($permission)

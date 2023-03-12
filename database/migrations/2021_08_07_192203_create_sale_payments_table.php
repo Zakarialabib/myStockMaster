@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,11 +21,13 @@ class CreateSalePaymentsTable extends Migration
             $table->id();
 
             $table->foreignIdFor(Sale::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('date');
             $table->string('reference');
             $table->string('payment_method');
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -88,7 +88,7 @@
                                         {{ __('Details') }}
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link wire:click="editModal({{ $supplier->id }})"
+                                    <x-dropdown-link wire:click="$emit('editModal', {{ $supplier->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
@@ -123,7 +123,7 @@
 
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Supplier') }}
+            {{ __('Show Supplier') }} {{ $supplier?->name }}
         </x-slot>
 
         <x-slot name="content">
@@ -136,11 +136,6 @@
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
                     <x-label for="phone" :value="__('Phone')" />
                     <p>{{ $supplier?->phone }}</p>
-                </div>
-
-                <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                    <x-label for="email" :value="__('Email')" />
-                    <p>{{ $supplier?->email }}</p>
                 </div>
 
                 <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
@@ -162,68 +157,7 @@
     </x-modal>
 
 
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit') }} - {{{ $supplier?->name}}}
-        </x-slot>
-
-        <x-slot name="content">
-            <form wire:submit.prevent="update">
-                <div class="flex flex-wrap -mx-2 mb-3">
-                    <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                        <x-label for="name" :value="__('Name')" required />
-                        <x-input id="name" class="block mt-1 w-full" type="text"
-                            wire:model.defer="supplier.name" required />
-                        <x-input-error :messages="$errors->get('supplier.name')" class="mt-2" />
-                    </div>
-
-                    <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                        <x-label for="phone" :value="__('Phone')" required />
-                        <x-input id="phone" class="block mt-1 w-full" required type="text"
-                            wire:model.defer="supplier.phone" />
-                        <x-input-error :messages="$errors->get('supplier.phone')" class="mt-2" />
-                    </div>
-                    <x-accordion title="{{ __('Details') }}">
-                        <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                                <x-label for="email" :value="__('Email')" />
-                                <x-input id="email" class="block mt-1 w-full" type="email"
-                                    wire:model.defer="supplier.email" />
-                                <x-input-error :messages="$errors->get('supplier.email')" class="mt-2" />
-                            </div>
-
-                            <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                                <x-label for="address" :value="__('Address')" />
-                                <x-input id="address" class="block mt-1 w-full" type="text"
-                                    wire:model.defer="supplier.address" />
-                                <x-input-error :messages="$errors->get('supplier.address')" class="mt-2" />
-                            </div>
-
-                            <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                                <x-label for="city" :value="__('City')" />
-                                <x-input id="city" class="block mt-1 w-full" type="text"
-                                    wire:model.defer="supplier.city" />
-                                <x-input-error :messages="$errors->get('supplier.city')" class="mt-2" />
-                            </div>
-
-                            <div class="md:w-1/2 sm:w-full px-3 mb-4 lg:mb-0">
-                                <x-label for="tax_number" :value="__('Tax Number')" />
-                                <x-input id="tax_number" class="block mt-1 w-full" type="text"
-                                    wire:model.defer="supplier.tax_number" />
-                                <x-input-error :messages="$errors->get('supplier.tax_number')" for="" class="mt-2" />
-                            </div>
-                        </div>
-                    </x-accordion>
-
-                    <div class="w-full px-3">
-                        <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                            {{ __('Update') }}
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
+    @livewire('suppliers.edit', ['supplier' => $supplier])
 
     <livewire:suppliers.create />
 

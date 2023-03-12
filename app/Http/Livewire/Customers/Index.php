@@ -9,8 +9,6 @@ use App\Http\Livewire\WithSorting;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
 use App\Traits\Datatable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -33,18 +31,16 @@ class Index extends Component
 
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal',
+        'showModal',
         'exportAll', 'downloadAll',
         'delete',
     ];
 
     public $showModal = false;
 
-    public $editModal = false;
-
     public $import;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -57,16 +53,6 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'customer.name'       => 'required|string|max:255',
-        'customer.email'      => 'nullable|max:255',
-        'customer.phone'      => 'required|numeric',
-        'customer.city'       => 'nullable',
-        'customer.country'    => 'nullable',
-        'customer.address'    => 'nullable',
-        'customer.tax_number' => 'nullable',
-    ];
-
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -76,13 +62,13 @@ class Index extends Component
         $this->orderable = (new Customer())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('customer_access'), 403);
 
         $query = Customer::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -118,30 +104,6 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function editModal(Customer $customer)
-    {
-        abort_if(Gate::denies('customer_update'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->customer = Customer::find($customer->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->customer->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Customer updated successfully.'));
-    }
-
     public function downloadSelected()
     {
         abort_if(Gate::denies('customer_access'), 403);
@@ -162,7 +124,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $customers = Customer::whereIn('id', $this->selected)->get();
+        // $customers = Customer::whereIn('id', $this->selected)->get();
 
         return $this->callExport()->forModels($this->selected)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
@@ -172,11 +134,6 @@ class Index extends Component
         abort_if(Gate::denies('customer_access'), 403);
 
         return $this->callExport()->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    private function callExport(): CustomerExport
-    {
-        return (new CustomerExport());
     }
 
     public function import()
@@ -196,10 +153,15 @@ class Index extends Component
 
         $file = $this->file('file');
 
-        Excel::import(new CustomerImport(), $this->file('file'));
+        Excel::import(new CustomerImport(), $file);
 
         $this->import = false;
 
         $this->alert('success', __('Customer imported successfully.'));
+    }
+
+    private function callExport(): CustomerExport
+    {
+        return new CustomerExport();
     }
 }

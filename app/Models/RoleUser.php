@@ -16,8 +16,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $role_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Role|null $role
  * @property-read \App\Models\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser newQuery()
@@ -27,15 +29,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUserId($value)
+ *
+ * @property string|null $deleted_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereDeletedAt($value)
+ *
  * @mixin \Eloquent
  */
 class RoleUser extends Model
 {
     use HasAdvancedFilter;
 
-    protected $table = 'role_user';
-
-    /** @var string[] */
     public $orderable = [
         'id',
         'user_id',
@@ -44,7 +48,6 @@ class RoleUser extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'user_id',
@@ -52,6 +55,8 @@ class RoleUser extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $table = 'role_user';
 
     /**
      * The attributes that are mass assignable.
@@ -63,7 +68,6 @@ class RoleUser extends Model
         'role_id',
     ];
 
-    /** @return response() */
     protected $casts = [
         'user_id' => 'integer',
         'role_id' => 'integer',
@@ -75,7 +79,6 @@ class RoleUser extends Model
         return $this->belongsTo(Role::class);
     }
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

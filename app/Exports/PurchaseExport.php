@@ -29,6 +29,7 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
 
     /**
      * @param  Purchase  $row
+     *
      * @return array
      */
     public function map($row): array

@@ -13,8 +13,6 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
@@ -26,7 +24,7 @@ class Index extends Component
 
     public $quotation;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = [
         'showModal', 'delete',
     ];
@@ -34,9 +32,9 @@ class Index extends Component
     /** @var bool */
     public $showModal = false;
 
-    public array $listsForFields = [];
+    public $listsForFields = [];
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -59,13 +57,13 @@ class Index extends Component
         $this->initListsForFields();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
         $query = Quotation::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

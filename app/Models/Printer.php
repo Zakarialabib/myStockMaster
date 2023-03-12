@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Printer advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Printer newQuery()
@@ -34,13 +35,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Printer extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -52,7 +53,6 @@ class Printer extends Model
         'path',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -74,41 +74,37 @@ class Printer extends Model
         'path',
     ];
 
-    public static function capability_profiles()
+    public static function capabilityProfiles()
     {
-        $profiles = [
-            'default'  => 'Default',
-            'simple'   => 'Simple',
-            'SP2000'   => 'Star Branded',
+        return [
+            'default' => 'Default',
+            'simple' => 'Simple',
+            'SP2000' => 'Star Branded',
             'TEP-200M' => 'Espon Tep',
-            'P822D'    => 'P822D',
+            'P822D' => 'P822D',
         ];
-
-        return $profiles;
     }
 
-    public static function capability_profile_srt($profile)
+    public static function capabilityProfileSrt($profile)
     {
-        $profiles = Printer::capability_profiles();
+        $profiles = Printer::capabilityProfiles();
 
-        return isset($profiles[$profile]) ? $profiles[$profile] : '';
+        return $profiles[$profile] ?? '';
     }
 
-    public static function connection_types()
+    public static function connectionTypes()
     {
-        $types = [
+        return [
             'network' => 'Network',
             'windows' => 'Windows',
-            'linux'   => 'Linux',
+            'linux' => 'Linux',
         ];
-
-        return $types;
     }
 
-    public static function connection_type_str($type)
+    public static function connectionTypeStr($type)
     {
-        $types = Printer::connection_types();
+        $types = Printer::connectionTypes();
 
-        return isset($types[$type]) ? $types[$type] : '';
+        return $types[$type] ?? '';
     }
 }

@@ -31,9 +31,8 @@
 
                                     <x-table.td>
                                         {{ format_currency($cart_item->price) }}
-                                        <x-input style="min-width: 40px;max-width: 90px;" type="text" 
-                                               type="number" value="{{ $cart_item->price }}"
-                                               min="1" wire:model.lazy="price">
+                                        <x-input style="min-width: 40px;max-width: 90px;" type="text" type="text"
+                                            value="{{ $cart_item->price }}" min="1" wire:model.lazy="price">
                                     </x-table.td>
 
                                     <x-table.td>
@@ -41,7 +40,8 @@
                                     </x-table.td>
 
                                     <x-table.td>
-                                        <button type="button" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
+                                        <button type="button"
+                                            wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
                                             <i class="bi bi-x-circle font-2xl text-danger"></i>
                                         </button>
                                     </x-table.td>
@@ -94,14 +94,15 @@
         <div class="flex flex-row">
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="total_amount">{{ __('Total Amount') }} <span class="text-red-500">*</span></label>
-                <x-input id="total_amount" type="text" wire:model="total_amount"
-                    name="total_amount" value="{{ $total_amount }}" readonly required />
+                <x-input id="total_amount" type="text" wire:model="total_amount" name="total_amount"
+                    value="{{ $total_amount }}" readonly required />
             </div>
 
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="paid_amount">{{ __('Received Amount') }} <span class="text-red-500">*</span></label>
-                <x-input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}" 
-                name="paid_amount" required />
+                <x-input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}"
+                    name="paid_amount" required />
+            
             </div>
 
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
@@ -120,28 +121,28 @@
         <x-accordion title="{{ __('Details') }}">
             <div class="flex flex-wrap -mx-2 mb-3">
                 @if (settings()->show_order_tax == true)
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
-                        <x-input wire:model.lazy="tax_percentage" type="text" required />
+                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="mb-4">
+                            <label for="tax_percentage">{{ __('Order Tax') }} (%)</label>
+                            <x-input wire:model.lazy="tax_percentage" type="text" required />
+                        </div>
                     </div>
-                </div>
                 @endif
                 @if (settings()->show_discount == true)
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="discount_percentage">{{ __('Discount') }} (%)</label>
-                        <x-input wire:model.lazy="discount_percentage" type="text" required />
+                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="mb-4">
+                            <label for="discount_percentage">{{ __('Discount') }} (%)</label>
+                            <x-input wire:model.lazy="discount_percentage" type="text" required />
+                        </div>
                     </div>
-                </div>
                 @endif
                 @if (settings()->show_shipping == true)
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                    <div class="mb-4">
-                        <label for="shipping_amount">{{ __('Shipping') }}</label>
-                        <x-input wire:model.lazy="shipping_amount" type="number" required />
+                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="mb-4">
+                            <label for="shipping_amount">{{ __('Shipping') }}</label>
+                            <x-input wire:model.lazy="shipping_amount" type="text" required />
+                        </div>
                     </div>
-                </div>
                 @endif
                 <div class="mb-4 w-full px-4">
                     <label for="note">{{ __('Note (If Needed)') }}</label>
@@ -158,7 +159,7 @@
             {{ __('Reset') }}
         </x-button>
         <button
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
             type="submit" wire:click="proceed" wire:loading.attr="disabled"
             {{ $total_amount == 0 ? 'disabled' : '' }}>
             {{ __('Proceed') }}

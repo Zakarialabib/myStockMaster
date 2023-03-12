@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Enums\PaymentStatus;
-use App\Enums\SaleStatus;
 
 /**
  * App\Models\Sale
@@ -35,11 +37,13 @@ use App\Enums\SaleStatus;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Customer|null $customer
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SaleDetails[] $saleDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleDetails> $saleDetails
  * @property-read int|null $sale_details_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SalePayment[] $salePayments
+ * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SalePayment> $salePayments
  * @property-read int|null $sale_payments_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Sale advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Sale newModelQuery()
@@ -65,14 +69,20 @@ use App\Enums\SaleStatus;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUpdatedAt($value)
+ *
+ * @property string $uuid
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUuid($value)
+ *
  * @mixin \Eloquent
  */
 class Sale extends Model
 {
     use HasAdvancedFilter;
     use SaleScope;
+    use UuidGenerator;
+    use GetModelByUuid;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'date',
@@ -95,7 +105,6 @@ class Sale extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'date',
@@ -125,9 +134,13 @@ class Sale extends Model
      */
     protected $fillable = [
         'id',
+        'uuid',
         'date',
         'reference',
         'customer_id',
+        'user_id',
+        'warehouse_id',
+        'user_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -145,25 +158,21 @@ class Sale extends Model
         'updated_at',
     ];
 
-    /** @return response() */
     protected $casts = [
-        'status'         => SaleStatus::class,
+        'status' => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
-    /** @return HasMany<SaleDetails> */
     public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class);
     }
 
-    /** @return HasMany<SalePayment> */
     public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
@@ -171,6 +180,7 @@ class Sale extends Model
 
     /**
      * @param mixed $query
+     *
      * @return mixed
      */
     public function scopeCompleted($query)

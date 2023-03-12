@@ -71,11 +71,11 @@
                             {{ $purchase->supplier->name }}
                         </x-table.td>
                         <x-table.td>
-                            @if ($purchase->status == \App\Enums\PurchaseStatus::Pending)
+                            @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
                                 <x-badge warning>{{ __('Pending') }}</x-badge>
-                            @elseif ($purchase->status == \App\Enums\PurchaseStatus::Ordered)
+                            @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
                                 <x-badge info>{{ __('Ordered') }}</x-badge>
-                            @elseif($purchase->status == \App\Enums\PurchaseStatus::Completed)
+                            @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                 <x-badge success>{{ __('Completed') }}</x-badge>
                             @endif
                         </x-table.td>
@@ -212,15 +212,15 @@
                                         {{ \Carbon\Carbon::parse($purchase?->date)->format('d M, Y') }}</div>
                                     <div>
                                         {{ __('Status') }}:
-                                        @if ($purchase?->status == \App\Enums\PurchaseStatus::Pending)
+                                        @if ($purchase?->status == \App\Enums\PurchaseStatus::PENDING)
                                             <x-badge warning class="text-xs">
                                                 {{ __('Pending') }}
                                             </x-badge>
-                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Ordered)
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::ORDERED)
                                             <x-badge success class="text-xs">
                                                 {{ __('Ordered') }}
                                             </x-badge>
-                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Completed)
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::COMPLETED)
                                             <x-badge success class="text-xs">
                                                 {{ __('Completed') }}
                                             </x-badge>

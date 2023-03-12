@@ -6,13 +6,11 @@ namespace App\Http\Livewire\Printer;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\Printer;
+use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Traits\Datatable;
 
 class Index extends Component
 {
@@ -23,14 +21,14 @@ class Index extends Component
 
     public $printer;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['showModal', 'editModal', 'refreshIndex'];
 
     public $showModal = false;
 
     public $editModal = false;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
             'except' => '',
@@ -43,14 +41,15 @@ class Index extends Component
         ],
     ];
 
-    public array $rules = [
-        'printer.name'               => 'required|string|max:255',
-        'printer.connection_type'    => 'required|string|max:255',
+    /** @var array */
+    protected $rules = [
+        'printer.name' => 'required|string|min:3|max:255',
+        'printer.connection_type' => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line'      => 'required',
-        'printer.ip_address'         => 'required|string|max:255',
-        'printer.port'               => 'required|string|max:255',
-        'printer.path'               => 'required|string|max:255',
+        'printer.char_per_line' => 'required',
+        'printer.ip_address' => 'required|string|max:255',
+        'printer.port' => 'required|string|max:255',
+        'printer.path' => 'required|string|max:255',
     ];
 
     public function mount(): void
@@ -62,13 +61,13 @@ class Index extends Component
         $this->orderable = (new Printer())->orderable;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         abort_if(Gate::denies('printer_access'), 403);
 
         $query = Printer::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

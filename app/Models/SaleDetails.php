@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\SaleDetails
@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $product_tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\Sale $sale
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails newQuery()
@@ -46,13 +48,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class SaleDetails extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'sale_id',
@@ -68,7 +70,6 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'sale_id',
@@ -103,13 +104,11 @@ class SaleDetails extends Model
         'product_tax_amount',
     ];
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<Sale> */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
@@ -139,11 +138,11 @@ class SaleDetails extends Model
         );
     }
 
-     /**
-      * get subtotal attribute
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get subtotal attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function subTotal(): Attribute
     {
         return Attribute::make(

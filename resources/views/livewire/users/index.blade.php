@@ -157,6 +157,7 @@
                         {{ $user?->email }}
                     </p>
                 </div>
+
             </div>
         </x-slot>
     </x-modal>
@@ -167,6 +168,7 @@
         </x-slot>
 
         <x-slot name="content">
+            <x-validation-errors class="mb-4" :errors="$errors" />
             <form wire:submit.prevent="update">
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="md:w-1/2 sm:w-full px-3">
@@ -207,15 +209,21 @@
                         <x-input-error :messages="$errors->get('user.password_confirmation')" class="mt-2" />
                     </div>
 
+                    <x-accordion>
+                        <x-slot name="title">
+                            {{ __('Details') }}
+                        </x-slot>
 
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="email" :value="__('Email')" />
-                        <x-input id="email" class="block mt-1 w-full" type="email"
-                            wire:model.defer="user.email" />
-                        <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
-                    </div>
+                        <x-slot name="content">
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="email" :value="__('Email')" />
+                                <x-input id="email" class="block mt-1 w-full" type="email"
+                                    wire:model.defer="user.email" />
+                                <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
+                            </div>
 
-
+                        </x-slot>
+                    </x-accordion>
                     <div class="w-full px-3">
                         <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Update') }}
@@ -225,7 +233,8 @@
             </form>
         </x-slot>
     </x-modal>
-    ·
+
+    <livewire:users.create />
 
 </div>
 

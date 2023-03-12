@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Products;
 use App\Models\Product;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory;
 
 class Show extends Component
 {
@@ -29,7 +27,7 @@ class Show extends Component
         $this->showModal = true;
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.products.show');
     }

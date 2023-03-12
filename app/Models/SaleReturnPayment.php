@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\SaleReturnPayment
@@ -22,7 +22,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read \App\Models\SaleReturn $saleReturn
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment bySaleReturn()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment newModelQuery()
@@ -37,13 +39,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereSaleReturnId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereUpdatedAt($value)
+ *
+ * @property int $user_id
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class SaleReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'sale_return_id',
@@ -54,13 +60,13 @@ class SaleReturnPayment extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'sale_return_id',
         'amount',
         'payment_method',
         'payment_note',
+        'user_id',
         'created_at',
         'updated_at',
     ];
@@ -74,6 +80,28 @@ class SaleReturnPayment extends Model
     }
 
     /**
+     * Get ajustement date.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function date(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+        );
+    }
+
+    /**
+     * @param mixed $query
+     *
+     * @return mixed
+     */
+    public function scopeBySaleReturn($query)
+    {
+        return $query->whereSaleReturnId(request()->route('sale_return_id'));
+    }
+
+    /**
      * Interact with the expenses amount
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute
@@ -84,25 +112,5 @@ class SaleReturnPayment extends Model
             get: fn ($value) => $value / 100,
             set: fn ($value) => $value * 100,
         );
-    }
-
-   /**
-    * Get ajustement date.
-    * @return \Illuminate\Database\Eloquent\Casts\Attribute
-    */
-    public function date(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
-        );
-    }
-
-    /**
-     * @param mixed $query
-     * @return mixed
-     */
-    public function scopeBySaleReturn($query)
-    {
-        return $query->whereSaleReturnId(request()->route('sale_return_id'));
     }
 }

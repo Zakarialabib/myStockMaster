@@ -2,7 +2,7 @@
      <!-- Edit Modal -->
      <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Edit Product') }} - {{ $product->name }}
+            {{ __('Edit Product') }} - {{ $product?->name }}
         </x-slot>
 
         <x-slot name="content">
@@ -39,14 +39,14 @@
 
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="cost" :value="__('Cost')" required />
-                            <x-input id="cost" class="block mt-1 w-full" type="number" name="cost"
+                            <x-input id="cost" class="block mt-1 w-full" type="text" name="cost"
                                 wire:model="product.cost" required />
                             <x-input-error :messages="$errors->get('product.cost')" for="product.cost" class="mt-2" />
 
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="price" :value="__('Price')" required />
-                            <x-input id="price" class="block mt-1 w-full" type="number" name="price"
+                            <x-input id="price" class="block mt-1 w-full" type="text" name="price"
                                 wire:model="product.price" required />
                             <x-input-error :messages="$errors->get('product.price')" for="product.price" class="mt-2" />
 
@@ -59,7 +59,7 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="stock_alert" :value="__('Stock Alert')" required />
-                            <x-input id="stock_alert" class="block mt-1 w-full" type="number" name="stock_alert"
+                            <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
                                 wire:model="product.stock_alert" required />
                             <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
                         </div>
@@ -91,7 +91,7 @@
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="order_tax" :value="__('Tax')" />
-                                <x-input id="order_tax" class="block mt-1 w-full" type="number" name="order_tax"
+                                <x-input id="order_tax" class="block mt-1 w-full" type="text" name="order_tax"
                                     wire:model="product.order_tax" />
                                 <x-input-error :messages="$errors->get('product.order_tax')" for="product.order_tax" class="mt-2" />
 

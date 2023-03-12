@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
-use App\Models\Sale;
-use App\Models\Purchase;
 use App\Models\Customer;
-use App\Models\Supplier;
 use App\Models\Product;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use App\Models\Purchase;
+use App\Models\Sale;
+use App\Models\Supplier;
+use Livewire\Component;
 
 class Livesearch extends Component
 {
@@ -23,11 +21,11 @@ class Livesearch extends Component
     public $sale;
     public $purchase;
 
-    /** @var string[][] */
+    /** @var array<array<string>> */
     protected $queryString = [
         'searchQuery' => [
             'except' => '',
-            'as'     => 'q',
+            'as' => 'q',
         ],
     ];
 
@@ -44,7 +42,7 @@ class Livesearch extends Component
         $this->purchase = Purchase::query()->where('reference', 'like', '%'.$this->searchQuery.'%')->get();
     }
 
-    public function render(): View|Factory
+    public function render()
     {
         return view('livewire.livesearch');
     }

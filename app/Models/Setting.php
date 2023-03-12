@@ -41,7 +41,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Currency|null $currency
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Setting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Setting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Setting query()
@@ -76,13 +78,41 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShowShipping($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSiteLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
+ *
+ * @property string|null $woocommerce_store_url
+ * @property string|null $woocommerce_api_key
+ * @property string|null $woocommerce_api_secret
+ * @property string|null $shopify_store_url
+ * @property string|null $shopify_api_key
+ * @property string|null $shopify_api_secret
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyStoreUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceStoreUrl($value)
+ *
+ * @property string|null $custom_store_url
+ * @property string|null $custom_api_key
+ * @property string|null $custom_api_secret
+ * @property string|null $custom_last_sync
+ * @property string|null $custom_products
+ * @property string|null $custom_orders
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomLastSync($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomOrders($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomProducts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomStoreUrl($value)
+ *
  * @mixin \Eloquent
  */
 class Setting extends Model
 {
     protected $guarded = [];
 
-    /** @return BelongsTo<Currency> */
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');

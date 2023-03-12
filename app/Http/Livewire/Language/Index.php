@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Language;
 
-use Livewire\Component;
 use App\Models\Language;
 use Artisan;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Index extends Component
 {
@@ -23,7 +23,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->languages = Language::all()->toArray();
+        $this->languages = Language::select('id', 'name')->toArray();
     }
 
     public function render()

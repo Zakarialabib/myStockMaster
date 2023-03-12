@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -15,7 +13,7 @@ class Edit extends Component
 {
     use LivewireAlert;
 
-    /** @var string[] */
+    /** @var array<string> */
     public $listeners = ['editModal'];
 
     /** @var bool */
@@ -24,12 +22,22 @@ class Edit extends Component
     /** @var mixed */
     public $category;
 
-    protected array $rules = [
+    /** @var array */
+    protected $rules = [
         'category.name' => 'required|min:3|max:255',
-        'category.code' => 'required',
+        'category.code' => 'required|max:255',
     ];
 
-    public function render(): View|Factory
+    protected $messages = [
+        'category.name.required' => 'The name field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
+
+    public function render()
     {
         return view('livewire.categories.edit');
     }
@@ -42,16 +50,16 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->category = Category::findOrFail($id);
+        $this->category = Category::where('id', $id)->firstOrFail();
 
         $this->editModal = true;
     }
 
     public function update(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->category->save();
+        $this->category->save($validatedData);
 
         $this->emit('refreshIndex');
 

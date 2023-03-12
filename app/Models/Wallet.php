@@ -20,9 +20,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $supplier_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Customer|null $customer
  * @property-read \App\Models\Supplier|null $supplier
  * @property-read \App\Models\User|null $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
@@ -36,13 +38,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereSupplierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Wallet extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'name',
@@ -56,7 +58,6 @@ class Wallet extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'name',
@@ -98,19 +99,16 @@ class Wallet extends Model
         'balance' => 'decimal:2',
     ];
 
-    /** @return BelongsTo<Customer> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    /** @return BelongsTo<Supplier> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    /** @return BelongsTo<User> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * App\Models\QuotationDetails
@@ -26,8 +26,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property int $product_tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\Quotation $quotation
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails newQuery()
@@ -46,13 +48,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class QuotationDetails extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var string[] */
     public $orderable = [
         'id',
         'quotation_id',
@@ -70,7 +72,6 @@ class QuotationDetails extends Model
         'updated_at',
     ];
 
-    /** @var string[] */
     public $filterable = [
         'id',
         'quotation_id',
@@ -90,13 +91,11 @@ class QuotationDetails extends Model
 
     protected $guarded = [];
 
-    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /** @return BelongsTo<Quotation> */
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
@@ -126,11 +125,11 @@ class QuotationDetails extends Model
         );
     }
 
-     /**
-      * get subtotal attribute
-      *
-      * @return \Illuminate\Database\Eloquent\Casts\Attribute
-      */
+    /**
+     * get subtotal attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function subTotal(): Attribute
     {
         return Attribute::make(
