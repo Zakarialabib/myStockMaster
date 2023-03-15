@@ -1,9 +1,6 @@
 <div>
-    <div class="container mx-auto">
+    <div class="container px-4 mx-auto">
         <div class="w-full">
-            <h2 class="my-5 text-2xl font-bold">
-                {{ $customer->name }}{{ __('Details') }}
-            </h2>
             <div class="w-full flex flex-wrap align-center mb-4">
                 <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 w-full">
                     <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
@@ -11,7 +8,7 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Sales Total') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalSales) }}
                                 {{ format_currency($customer->totalSales) }}
 
@@ -23,7 +20,7 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Payments') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalPayments) }}
                                 {{ format_currency($customer->totalPayments) }}
                             </p>
@@ -34,7 +31,7 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Sale Returns') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalSaleReturns) }}
                             </p>
                         </div>
@@ -45,9 +42,9 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Due') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalDue) }}
-                                {{ format_currency($customer->debit) }}
+                                {{-- {{ format_currency($this->debit) }} --}}
                             </p>
                         </div>
                     </div>
@@ -56,7 +53,7 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Profit') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->profit) }}
                                 
                             </p>

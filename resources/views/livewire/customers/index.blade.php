@@ -69,7 +69,7 @@
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link href="{{ route('customer.details', $customer->id) }}">
+                                    <x-dropdown-link href="{{ route('customer.details', $customer->uuid) }}">
                                         <i class="fas fa-book"></i>
                                         {{ __('Details') }}
                                     </x-dropdown-link>

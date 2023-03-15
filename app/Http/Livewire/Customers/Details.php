@@ -52,7 +52,8 @@ class Details extends Component
 
     public function mount($customer): void
     {
-        $this->customer = Customer::findOrFail($customer->id);
+        // dd($customer);
+        $this->customer = $customer;
         $this->customer_id = $this->customer->id;
         $this->selectPage = false;
         $this->sortBy = 'id';
