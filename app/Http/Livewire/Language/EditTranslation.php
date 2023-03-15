@@ -9,9 +9,11 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class EditTranslation extends Component
 {
-    use LivewireAlert;
+    public $key;
+    public $value;
+    public $lang;
     public $language;
-    public $translations;
+    public $langList;
 
     public $rules = [
         'translations.*.value' => 'required',
@@ -19,15 +21,21 @@ class EditTranslation extends Component
 
     public function mount($language)
     {
-        $this->language = Language::where('id', $language)->firstOrFail();
-        // dd($this->all());
-        $this->translations = $this->getTranslations();
-        $this->translations = collect($this->translations)->map(function ($item, $key) {
-            return [
-                'key' => $key,
-                'value' => $item,
-            ];
-        })->toArray();
+        $this->language = Language::find($id);
+
+        $this->langList = Language::all();
+        $this->key = $this->la->key;
+        $this->value = $this->la->value;
+
+        if (empty($json)) {
+            $this->editWord = false;
+        }
+
+        $json = json_decode($json);
+
+        $this->editWord = false;
+
+        return compact('json', 'list_lang', 'la', 'json');
     }
 
     private function getTranslations()

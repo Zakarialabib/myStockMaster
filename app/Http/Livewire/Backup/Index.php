@@ -20,6 +20,10 @@ class Index extends Component
     public $backup_schedule;
     public $backup_include;
 
+    protected array $rules = [
+        'backup_status' => 'required',
+        'backup_schedule' => 'nullable',
+    ];
     public $settingsModal = false;
 
     protected $listeners = [
@@ -45,10 +49,7 @@ class Index extends Component
     public function updateSettigns()
     {
         try {
-            $this->validate([
-            'backup_status' => 'required',
-            'backup_schedule' => 'nullable',
-            ]);
+            $this->validate();
 
             settings()->update([
                 'backup_status' => $this->backup_status,

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Http\Requests\UpdateSaleRequest;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
@@ -30,7 +31,7 @@ class SaleController extends Controller
 
         Cart::instance('sale')->destroy();
 
-        $product_categories = select('id', 'name')->get();
+        $product_categories = Category::select(['id', 'name'])->get();
 
         return view('admin.sale.create', compact('product_categories'));
     }

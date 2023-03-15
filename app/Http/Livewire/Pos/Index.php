@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Pos;
 
 use App\Enums\PaymentStatus;
+use App\Jobs\PaymentNotification;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
