@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -17,7 +19,7 @@ class ProductCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => ProductResource::collection($this->collection),
+            'data'  => ProductResource::collection($this->collection),
             'links' => [
                 'meta' => ['product_count' => $this->collection->count()],
             ],

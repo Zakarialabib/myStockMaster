@@ -53,9 +53,9 @@
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required>
                             <option {{ $settings->default_currency_position == 'prefix' ? 'selected' : '' }}
-                                value="prefix">{{ __('Prefix') }}</option>
+                                value="prefix">{{ __('Left') }}</option>
                             <option {{ $settings->default_currency_position == 'suffix' ? 'selected' : '' }}
-                                value="suffix">{{ __('Suffix') }}</option>
+                                value="suffix">{{ __('Right') }}</option>
                         </select>
                     </div>
 
@@ -107,18 +107,6 @@
                         <input wire:model.defer="settings.purchasepayment_prefix" type="text" id="purchasepayment_prefix"
                             name="purchasepayment_prefix"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
-                    </div>
-                    <div class="w-full flex justify-center md:w-1/3 px-4 mb-4">
-                        <div class="px-2">
-                            <x-label for="notification_email" :value="__('Activate Notification Email')" required />
-                            <input type="checkbox" name="notification_email" id="notification_email"
-                                {{ $settings->notification_email ? 'checked' : '' }}>
-                        </div>
-                        <div class="px-2">
-                            <x-label for="is_rtl" :value="__('Activate RTL')" required />
-                            <input type="checkbox" name="is_rtl" id="is_rtl"
-                                {{ $settings->is_rtl ? 'checked' : '' }}>
-                        </div>
                     </div>
 
                     <div class="w-full flex justify-center p-4 space-x-4">

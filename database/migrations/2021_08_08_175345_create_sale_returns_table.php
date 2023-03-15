@@ -20,10 +20,9 @@ class CreateSaleReturnsTable extends Migration
     {
         Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Customer::class)->nullOnDelete();
+            $table->foreignIdFor(User::class)->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();
             $table->date('date');
             $table->string('reference');
             $table->integer('tax_percentage')->default(0);

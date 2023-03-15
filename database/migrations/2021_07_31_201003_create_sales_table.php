@@ -23,10 +23,9 @@ class CreateSalesTable extends Migration
             $table->uuid();
             $table->date('date');
             $table->string('reference');
-
-            $table->foreignIdFor(Customer::class)->constrained()->nullOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Customer::class)->nullOnDelete();
+            $table->foreignIdFor(User::class)->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();
             $table->integer('tax_percentage')->default(0);
             $table->integer('tax_amount')->default(0);
             $table->integer('discount_percentage')->default(0);

@@ -14,11 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $company_name
  * @property string $company_email
  * @property string $company_phone
- * @property string|null $site_logo
+ * @property string|null $company_logo
  * @property int $default_currency_id
  * @property string $default_currency_position
- * @property string $notification_email
- * @property string $footer_text
  * @property string $company_address
  * @property int|null $default_client_id
  * @property int|null $default_warehouse_id
@@ -78,34 +76,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShowShipping($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSiteLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
- *
- * @property string|null $woocommerce_store_url
- * @property string|null $woocommerce_api_key
- * @property string|null $woocommerce_api_secret
- * @property string|null $shopify_store_url
- * @property string|null $shopify_api_key
- * @property string|null $shopify_api_secret
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyApiSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShopifyStoreUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceApiSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereWoocommerceStoreUrl($value)
- *
- * @property string|null $custom_store_url
- * @property string|null $custom_api_key
- * @property string|null $custom_api_secret
- * @property string|null $custom_last_sync
- * @property string|null $custom_products
- * @property string|null $custom_orders
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomApiSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomLastSync($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomOrders($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomProducts($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCustomStoreUrl($value)
  *
  * @mixin \Eloquent
  */
