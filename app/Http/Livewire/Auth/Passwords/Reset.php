@@ -34,15 +34,15 @@ class Reset extends Component
     public function resetPassword()
     {
         $this->validate([
-            'token'    => 'required',
-            'email'    => 'required|email',
+            'token' => 'required',
+            'email' => 'required|email',
             'password' => 'required|min:8|same:passwordConfirmation',
         ]);
 
         $response = $this->broker()->reset(
             [
-                'token'    => $this->token,
-                'email'    => $this->email,
+                'token' => $this->token,
+                'email' => $this->email,
                 'password' => $this->password,
             ],
             function ($user, $password) {
@@ -59,7 +59,6 @@ class Reset extends Component
         );
 
         if ($response === Password::PASSWORD_RESET) {
-        
             session()->flash(trans($response));
 
             return redirect(route('home'));
@@ -83,7 +82,6 @@ class Reset extends Component
         return view('livewire.auth.passwords.reset');
     }
 
-
     /**
      * Get the guard to be used during password reset.
      *
@@ -93,4 +91,4 @@ class Reset extends Component
     {
         return Auth::guard();
     }
- }   
+}

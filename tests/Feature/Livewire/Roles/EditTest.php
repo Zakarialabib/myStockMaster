@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
-use function Pest\Laravel\assertDatabaseHas;
 
+use function Pest\Laravel\assertDatabaseHas;
 
 test('a new role can be update', function () {
     $this->actingAs($this->user);

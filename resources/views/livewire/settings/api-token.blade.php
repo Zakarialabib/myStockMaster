@@ -20,7 +20,9 @@
                         @foreach ($integrations as $item)
                             <div class="flex flex-wrap">
                                 <p class="font-medium">{{ __('Ecommerce Platform') }}:</p>
-                                <p class="ml-2">{{ $integration->type }}</p>
+                                <p class="ml-2">
+                                    {{ $integration->getTypeName() }}
+                                </p>
                                 <p class="ml-2">{{ $integration->store_url }}</p>
                                 <p class="ml-2">{{ $integration->api_key }}</p>
                                 <p class="ml-2">{{ $integration->last_sync }}</p>

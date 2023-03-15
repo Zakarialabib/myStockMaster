@@ -175,7 +175,10 @@ class Sale extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'id');
+        return $this->belongsTo(
+            related: Customer::class,
+            foreignKey: 'customer_id',
+        );
     }
 
     /**
