@@ -56,7 +56,7 @@
                                     {{ __('Status') }}:
                                     @if ($purchase_return->status == \App\Enums\PurchaseReturnStatus::PENDING)
                                         <x-badge warning>{{ __('Pending') }}</x-badge>
-                                    @elseif ($purchase_return->status == \App\Enums\PurchaseReturnStatus::SHIPPED)
+                                    @elseif ($purchase_return->status == \App\Enums\PurchaseReturnStatus::RETURNED)
                                         <x-badge info>{{ __('Shipped') }}</x-badge>
                                     @elseif($purchase_return->status == \App\Enums\PurchaseReturnStatus::COMPLETED)
                                         <x-badge success>{{ __('Completed') }}</x-badge>
