@@ -29,7 +29,7 @@ class Orders extends Component
             $this->store_url = settings()->woocommerce_store_url;
         } elseif ($this->type === 'shopify') {
             $this->store_url = settings()->shopify_store_url;
-        } elseif ($type === 'custom') {
+        } elseif ($this->type === 'custom') {
             $this->store_url = settings()->custom_store_url;
         }
     }
@@ -50,7 +50,7 @@ class Orders extends Component
                 'api_key' => settings()->shopify_api_key,
                 'api_secret' => settings()->shopify_api_secret,
             ]);
-        } elseif ($type === 'custom') {
+        } elseif ($this->type === 'custom') {
             $client = Http::withHeaders([
                 'Authorization' => 'Bearer '.settings()->custom_api_key,
             ])->get(settings()->custom_store_url.'/api');
