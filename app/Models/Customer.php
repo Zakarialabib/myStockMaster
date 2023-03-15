@@ -92,6 +92,7 @@ class Customer extends Model
      */
     protected $fillable = [
         'uuid',
+        'id',
         'city',
         'tax_number',
         'name',

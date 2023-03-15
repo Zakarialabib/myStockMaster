@@ -78,11 +78,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
-    Route::get('customer/details/{customer}', [CustomersController::class, 'show'])->name('customer.details');
+    Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
 
     //Suppliers
     Route::get('suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
-    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'show'])->name('supplier.details');
+    Route::get('supplier/details/{id}', [SuppliersController::class, 'show'])->name('supplier.details');
 
     //Warehouses
     Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
