@@ -39,7 +39,9 @@ class CreatePurchasesTable extends Migration
             $table->string('status');
             $table->string('payment_status');
             $table->string('payment_method');
+            $table->string('document')->nullable();
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

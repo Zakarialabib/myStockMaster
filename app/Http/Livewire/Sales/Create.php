@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Sales;
 
 use App\Jobs\PaymentNotification;
-use App\Mail\SaleMail;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;

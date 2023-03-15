@@ -28,6 +28,7 @@ return new class () extends Migration {
             $table->string('reference', 192);
             $table->string('details', 192)->nullable();
             $table->float('amount', 10, 0);
+            $table->string('document')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

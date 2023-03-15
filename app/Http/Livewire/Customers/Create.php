@@ -9,6 +9,7 @@ use App\Models\Wallet;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -78,7 +79,7 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createCustomer = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
     }

@@ -19,7 +19,7 @@ class Integration extends Model
     use UuidGenerator;
     use HasFactory;
 
-    public $orderable = [
+    const ATTRIBUTES = [
         'id',
         'type',
         'store_url',
@@ -31,17 +31,9 @@ class Integration extends Model
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'type',
-        'store_url',
-        'last_sync',
-        'products',
-        'orders',
-        'status',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -65,4 +57,16 @@ class Integration extends Model
         'status' => Status::class,
         'type' => IntegrationType::class,
     ];
+
+    public function getTypeName(): string
+    {
+        return match ($this->type) {
+            IntegrationType::CUSTOM => 'Custom',
+            IntegrationType::YOUCAN => 'Youcan',
+            IntegrationType::WOOCOMMERCE => 'WooCommerce',
+            IntegrationType::SHOPIFY => 'Shopify',
+            default => 'Unknown'
+        };
+    }
+    
 }
