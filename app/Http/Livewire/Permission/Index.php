@@ -123,7 +123,7 @@ class Index extends Component
 
             $this->editModal = false;
         } catch (Exception $e) {
-            $this->alert('error', 'Something goes wrong while updating permission!!', $e->getMessage());
+            $this->alert('error', 'Something goes wrong while updating permission!!'.$e->getMessage() );
         }
     }
 
