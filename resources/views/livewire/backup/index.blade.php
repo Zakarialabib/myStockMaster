@@ -1,7 +1,11 @@
 <div>
-    <div class="w-full px-4 block">
+    <div class="grid gap-4 grid-cols-3 px-4">
         <x-button primary type="button" wire:click="generate" class="w-full">
             {{ __('Create Backup') }}
+        </x-button>
+        <x-button primary type="button" wire:click="cleanBackups">{{ __('clean Backups') }}</x-button>
+        <x-button primary type="button" wire:click="settingsModal" class="w-full">
+            {{ __('Settings') }}
         </x-button>
     </div>
     <div>
@@ -48,7 +52,7 @@
                                 <div class="flex justify-start space-x-2">
                                     <x-button primary wire:click="downloadBackup('{{ $backup }}')"
                                         title="Download">
-                                        {{__('Download')}}
+                                        {{ __('Download') }}
                                     </x-button>
                                     <x-button danger wire:click="delete('{{ $backup }}')" type="button"
                                         wire:loading.attr="disabled">
@@ -68,7 +72,39 @@
             </x-table.tbody>
         </x-table>
     </div>
+    <x-modal wire:model="settingsModal">
+        <x-slot name="title">
+            {{ __('Backup settings') }}
+        </x-slot>
+        <x-slot name="content">
+            {{-- error message --}}
+            <form wire:submit.prevent="updateSettigns">
+                <div class="w-full flex flex-wrap px-2">
+                    <div class="w-full px-2 my-4">
+                        <label for="backup_status">{{ __('Backup status') }}</label>
+                        <x-input type="text" type="checkbox" wire:model="backup_status" />
+                        {{-- error handle --}}
+                    </div>
+
+                    <div class="w-full px-2 ">
+                        <label for="backup_status">{{ __('Backup status') }}</label>
+                        <select wire:model="backup_schedule" name="backup_schedule">
+                             @foreach(\App\Enums\BackupSchedule::values() as $key=>$value)
+                                 <option value="{{ $key }}">{{ $value }}</option>
+                             @endforeach
+                        </select>
+                        {{-- error handle --}}
+                    </div>
+                    <div class="w-full justify-center my-4 space-x-2">
+                        <x-button primary type="submit">{{ __('save') }}</x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
 </div>
+
+
 @push('scripts')
     <script>
         document.addEventListener('livewire:load', function() {

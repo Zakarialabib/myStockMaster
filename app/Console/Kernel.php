@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Console\Commands\Backup\BackupCommand;
+use App\Enums\BackupSchedule;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\Backup\BackupDatabase;
-use App\Console\Commands\Backup\BackupFiles;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,16 +24,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
-
-        if (config('backup.schedule') === 1) {
-            $schedule->command(BackupCommand::class)->daily();
-        } elseif (config('backup.schedule') === 2) {
-            $schedule->command(BackupCommand::class)->weekly();
-        } elseif (config('backup.schedule') === 3) {
-            $schedule->command(BackupCommand::class)->monthly();
+        if (settings()->backup_schedule === BackupSchedule::DAILY) {
+            $schedule->command('backup:monitor')->daily()->at('17:00');
+            $schedule->command(BackupCommand::class)->daily()->at('17:00');
+        } elseif (settings()->backup_schedule === BackupSchedule::WEEKLY) {
+            $schedule->command('backup:monitor')->weekly()->at('17:00');
+            $schedule->command(BackupCommand::class)->weekly()->at('17:00');
+        } elseif (settings()->backup_schedule === BackupSchedule::MONTHLY) {
+            $schedule->command('backup:monitor')->monthly()->at('17:00');
+            $schedule->command(BackupCommand::class)->monthly()->at('17:00');
         }
-
     }
 
     /**

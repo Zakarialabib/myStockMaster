@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\Sale;
@@ -29,6 +31,7 @@ class PaymentDue extends Notification
     {
         $this->sale = $sale;
     }
+
     /**
      * Get the notification's delivery channels.
      *
@@ -58,14 +61,14 @@ class PaymentDue extends Notification
 
             if (now()->gt($payment_date)) {
                 return [
-                    'message' => 'Payment for sale with reference ' . $sale->reference . ' is due',
+                    'message' => 'Payment for sale with reference '.$sale->reference.' is due',
                     'sale_id' => $sale->id,
                 ];
             }
         }
 
         return [
-            'message' => 'Payment for sale with reference ' . $sale->reference . ' is due on ' . $sale->date,
+            'message' => 'Payment for sale with reference '.$sale->reference.' is due on '.$sale->date,
             'sale_id' => $sale->id,
         ];
     }

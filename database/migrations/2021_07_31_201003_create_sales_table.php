@@ -23,7 +23,6 @@ class CreateSalesTable extends Migration
             $table->uuid();
             $table->date('date');
             $table->string('reference');
-
             $table->foreignIdFor(Customer::class)->nullOnDelete();
             $table->foreignIdFor(User::class)->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();

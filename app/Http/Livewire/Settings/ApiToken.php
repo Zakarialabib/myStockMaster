@@ -1,28 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Settings;
 
+use App\Enums\IntegrationType;
 use App\Models\Product;
+use App\Models\Integration;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
-
 
 class ApiToken extends Component
 {
     public $token;
-    public $ecomToken;
 
-    public $custom_store_url;
-
+    public $integration;
+    public $integrations;
+        
+    public $inventoryProducts;
     public $missingProducts;
+
+    public $type;
+    public $store_url;
+    public $api_key;
+
+    /** @var array<string> */
+    public $listeners = ['refreshIndex' => '$refresh'];
 
     public function mount()
     {
-        $this->custom_store_url = settings()->custom_store_url;
+       $this->integrations = Integration::select('store_url','last_sync','type' ,'products','status' )->get();
+       $this->integration = Integration::where('type', IntegrationType::CUSTOM)->first();
+       $this->missingProducts = $this->integration?->products;
 
-        $this->ecomToken = settings()->custom_api_key;
-
-        $this->product_count = settings()->custom_products;
+    $this->inventoryProducts = Product::count();
     }
 
     public function createToken()
@@ -44,21 +55,21 @@ class ApiToken extends Component
 
     public function countNotExistingProducts()
     {
+
         $inventoryProducts = Product::pluck('code')->toArray();
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . settings()->custom_api_key,
-        ])->get(settings()->custom_store_url . '/api/products');
+            'Authorization' => 'Bearer '.$this->integration->api_key,
+        ])->get($this->integration->store_url.'/api/products');
 
-        // dd(settings()->custom_api_key);
         $ecomProducts = $response->json()['data'];
 
         $missingProducts = array_diff($inventoryProducts, array_column($ecomProducts, 'code'));
-        
+
         $this->missingProducts = count($missingProducts);
 
-        settings()->update([
-            'custom_products' => $this->missingProducts,
+        $this->integration->update([
+            'products' => $this->missingProducts,
         ]);
 
         return $this->missingProducts;

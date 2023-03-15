@@ -20,7 +20,6 @@ class CreateSaleReturnsTable extends Migration
     {
         Schema::create('sale_returns', function (Blueprint $table) {
             $table->id();
-
             $table->foreignIdFor(Customer::class)->nullOnDelete();
             $table->foreignIdFor(User::class)->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();

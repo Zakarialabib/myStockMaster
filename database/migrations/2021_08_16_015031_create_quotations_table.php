@@ -19,7 +19,6 @@ return new class () extends Migration {
     {
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
-
             $table->foreignIdFor(Customer::class)->nullOnDelete();
             $table->foreignIdFor(User::class)->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();

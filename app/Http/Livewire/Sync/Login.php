@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Sync;
 
+use App\Enums\IntegrationType;
+use App\Models\Integration;
 use GuzzleHttp\Client;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class Login extends Component
 {
@@ -13,20 +18,20 @@ class Login extends Component
 
     public $loginModal = false;
 
+    /** @var array<string> */
+    public $listeners = ['loginModal'];
+
     public $email;
     public $password;
 
-    public $url;
+    public $store_url;
+    public $type;
 
     protected $rules = [
         'email' => 'required|email',
         'password' => 'required',
+        'store_url' => 'required',
     ];
-
-    public function mount()
-    {
-        $this->url = settings()->custom_store_url;
-    }
 
     public function loginModal()
     {
@@ -37,39 +42,78 @@ class Login extends Component
     {
         $this->validate();
 
-        $client = new Client();
+        try {
+            $client = new Client();
 
-        $response = $client->request('POST', $this->url.'/api/login', [
-            'headers' => [
-                'Accept' => 'application/json',
-                'X-Requested-With' => 'XMLHttpRequest',
-            ],
-            'json' => [
-                'email' => $this->email,
-                'password' => $this->password,
-            ],
-        ]);
+            if ($this->type === IntegrationType::CUSTOM) {
+                $response = $client->request('POST', $this->store_url.'/api/login', [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'X-Requested-With' => 'XMLHttpRequest',
+                    ],
+                    'json' => [
+                        'email' => $this->email,
+                        'password' => $this->password,
+                    ],
+                ]);
 
-        if ($response->getStatusCode() === Response::HTTP_OK) {
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $data = json_decode($response->getBody(), true);
+                    $ecommerceToken = $data['api_token'];
+                }
+            } elseif ($this->type === IntegrationType::YOUCAN) {
+                $response = $client->post(
+                    'https://seller-area.youcan.shop/admin/oauth/token',
+                    [
+                        'form_params' => [
+                            'grant_type' => 'authorization_code',
+                            'client_id' => 1,
+                            'client_secret' => '<CLIENT SECRET>',
+                            'redirect_uri' => 'https://myapp.com/callback',
+                            'code' => $this->get('code'),
+                        ],
+                        'http_errors' => false,
+                    ]
+                );
 
-            $data = json_decode($response->getBody(), true);
-            $ecommerceToken = $data['api_token'];
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $data = json_decode($response->getBody(), true);
+                    $ecommerceToken = $data['access_token'];
+                }
+            }
 
-            settings()->update([
-                'custom_store_url' => $this->url,
-                'custom_api_key' => $ecommerceToken,
-                'custom_api_secret' => 'your-secret-value', // replace with your own secret value
-                'custom_last_sync' => null, // set to null initially
+            $integration = Integration::where('type', $this->type)->first();
 
-                'custom_products' => null, // set to null initially
-            ]);
+            if ($integration) {
+                // If integration exists, update its attributes
+                $integration->update([
+                    'store_url' => $this->store_url,
+                    'api_key' => $ecommerceToken,
+                    'api_secret' => null, // replace with your own secret value
+                    'last_sync' => null, // set to null initially
+                    'products' => null, // set to null initially
+                ]);
+            } else {
+                // Otherwise, create a new integration with the given attributes
+                Integration::create([
+                    'type' => $this->type,
+                    'store_url' => $this->store_url,
+                    'api_key' => $ecommerceToken,
+                    'api_secret' => null, // replace with your own secret value
+                    'last_sync' => null, // set to null initially
+                    'products' => null, // set to null initially
+                    'status' => true, // or any other default status
+                ]);
+            }
 
             $this->alert('success', __('Authentication successful !'));
-            $this->loginModal = false;
-        } else {
-            $this->alert('error', __('Authentication failed !'));
-        }
 
+            $this->emit('refreshIndex');
+
+            $this->loginModal = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Authentication failed !'.$th->getMessage()));
+        }
     }
 
     public function render()
