@@ -24,7 +24,11 @@
     @vite('resources/css/app.css')
 
     @include('includes.main-css')
-
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="antialiased bg-gray-50 text-body font-body" dir="ltr">
