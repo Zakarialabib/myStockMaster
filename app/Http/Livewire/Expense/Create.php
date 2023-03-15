@@ -73,7 +73,7 @@ class Create extends Component
         try {
             $this->expense->save($validatedData);
 
-            $expense->user()->associate(auth()->user());
+            $this->expense->user()->associate(auth()->user());
 
             $this->alert('success', __('Expense created successfully.'));
 
