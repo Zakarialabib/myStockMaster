@@ -27,7 +27,7 @@ class ProductImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 'code' => $row['code'] ?? Str::random(10),
                 'category_id' => Category::where('name', $row['category'])->first()->id ?? Category::create(['name' => $row['category']])->id ?? null,
                 'brand_id' => Brand::where('name', $row['brand'])->first()->id ?? Brand::create(['name' => $row['brand']])->id ?? null,
-                'image' => Helpers::uploadImage($row['image']) ?? 'default.jpg', // upload fromm url
+                // 'image' => Helpers::uploadImage($row['image']) ?? 'default.jpg', // upload fromm url
                 'status' => 0,
                 'barcode_symbology' => 'c128',
                 'quantity' => $row['quantity'] ?? 1,

@@ -46,7 +46,7 @@ class SyncCustomProducts implements ShouldQueue
                 'old_price' => $this->data['cost'] ?? null,
                 'category_id' => Category::where('name', $this->data['category'])->first()->id ?? Category::create(['name' => $this->data['category']])->id,
                 'brand_id' => $this->data['brand'] ? (Brand::where('name', $this->data['brand'])->first()->id ?? Brand::create(['name' => $this->data['brand']])->id) : null,
-                'image' => Helpers::uploadImage($this->data['image']) ?? 'default.jpg', // upload from url
+                // 'image' => Helpers::uploadImage($this->data['image']) ?? 'default.jpg', // upload from url
                 'status' => 0,
                 'barcode_symbology' => 'c128',
                 'quantity' => $this->data['quantity'] ?? 1,
@@ -65,7 +65,7 @@ class SyncCustomProducts implements ShouldQueue
                 'code' => $this->data['code'] ?? Str::random(10),
                 'category_id' => Category::where('name', $this->data['category'])->first()->id ?? Category::create(['name' => $this->data['category']])->id ?? null,
                 'brand_id' => $this->data['brand'] ? (Brand::where('name', $this->data['brand'])->first()->id ?? Brand::create(['name' => $this->data['brand']])->id) : null,
-                'image' => Helpers::uploadImage($this->data['image']) ?? 'default.jpg', // upload from url
+                // 'image' => Helpers::uploadImage($this->data['image']) ?? 'default.jpg', // upload from url
                 'status' => 0,
                 'barcode_symbology' => 'c128',
                 'quantity' => $this->data['quantity'] ?? 1,
