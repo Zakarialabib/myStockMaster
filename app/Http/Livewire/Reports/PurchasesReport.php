@@ -32,7 +32,7 @@ class PurchasesReport extends Component
 
     public function mount()
     {
-        $this->suppliers = Supplier::select('id', 'name')->get();
+        $this->suppliers = Supplier::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->supplier_id = '';
@@ -42,8 +42,8 @@ class PurchasesReport extends Component
 
     public function render()
     {
-        $purchases = Purchase::whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
+        $purchases = Purchase::whereDate('>=', $this->start_date)
+            ->whereDate('<=', $this->end_date)
             ->when($this->supplier_id, function ($query) {
                 return $query->where('supplier_id', $this->supplier_id);
             })
