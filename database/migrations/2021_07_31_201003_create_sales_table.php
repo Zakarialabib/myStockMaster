@@ -40,6 +40,7 @@ class CreateSalesTable extends Migration
             $table->string('payment_status');
             $table->string('payment_method');
             $table->string('shipping_status')->nullable();
+            $table->string('document')->nullable();
             $table->text('note')->nullable();
             $table->softDeletes();
             $table->timestamps();
