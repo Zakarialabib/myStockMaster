@@ -23,6 +23,7 @@ class Create extends Component
 
     /** @var mixed */
     public $expense;
+    public $date;
 
     public $listsForFields = [];
 
