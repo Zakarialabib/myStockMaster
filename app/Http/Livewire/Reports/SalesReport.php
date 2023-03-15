@@ -32,7 +32,7 @@ class SalesReport extends Component
 
     public function mount()
     {
-        $this->customers = Customer::select('id', 'name')->get();
+        $this->customers = Customer::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->customer_id = '';
@@ -42,8 +42,8 @@ class SalesReport extends Component
 
     public function render()
     {
-        $sales = Sale::whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
+        $sales = Sale::whereDate( '>=', $this->start_date)
+            ->whereDate( '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_status, fn ($q) => $q->where('sale_status', $this->sale_status))
             ->when($this->payment_status, fn ($q) => $q->where('payment_status', $this->payment_status))

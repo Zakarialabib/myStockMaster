@@ -22,6 +22,7 @@ class CustomersReport extends Component
     public $payment_status;
     public $sales;
     public $saleReturns;
+    public $purchase_status;
     public $quotations;
 
     protected $rules = [
@@ -31,7 +32,7 @@ class CustomersReport extends Component
 
     public function mount()
     {
-        $this->customers = Customer::select('id', 'name')->get();
+        $this->customers = Customer::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->customer_id = '';
@@ -41,8 +42,8 @@ class CustomersReport extends Component
 
     public function getSalesProperty()
     {
-        return Sale::whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
+        return Sale::whereDate('>=', $this->start_date)
+            ->whereDate('<=', $this->end_date)
             ->when($this->customer_id, function ($query) {
                 return $query->where('customer_id', $this->customer_id);
             })
