@@ -102,7 +102,7 @@
                             <x-table.td>
                                 @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
                                     <x-badge warning>{{ __('Pending') }}</x-badge>
-                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
+                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
                                     <x-badge info>{{ __('Ordered') }}</x-badge>
                                 @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                     <x-badge success>{{ __('Completed') }}</x-badge>
