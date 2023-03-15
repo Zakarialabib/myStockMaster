@@ -20,11 +20,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $supplier_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Customer|null $customer
  * @property-read \App\Models\Supplier|null $supplier
  * @property-read \App\Models\User|null $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
@@ -38,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereSupplierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class Wallet extends Model

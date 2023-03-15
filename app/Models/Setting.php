@@ -39,9 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Currency|null $currency
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Setting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Setting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Setting query()
@@ -76,7 +74,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereShowShipping($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSiteLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereUpdatedAt($value)
- *
+ * @property string|null $invoice_header
+ * @property int $backup_status
+ * @property string|null $backup_schedule
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereBackupSchedule($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereBackupStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCompanyLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereInvoiceHeader($value)
  * @mixin \Eloquent
  */
 class Setting extends Model

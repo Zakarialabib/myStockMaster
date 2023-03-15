@@ -17,10 +17,8 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @property string $guard_name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Role advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Role newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Role newQuery()
@@ -30,12 +28,9 @@ use Spatie\Permission\Models\Role as SpatieRole;
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\User> $users
  * @property-read int|null $users_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Role permission($permissions)
- *
  * @mixin \Eloquent
  */
 class Role extends SpatieRole

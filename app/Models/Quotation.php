@@ -29,13 +29,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\Customer|null $customer
  * @property-read mixed $due_amount
  * @property-read mixed $paid_amount
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\QuotationDetails> $quotationDetails
  * @property-read int|null $quotation_details_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation newQuery()
@@ -54,11 +52,16 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereDeletedAt($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @property string|null $sent_on
+ * @property string|null $expires_on
+ * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereExpiresOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereSentOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Quotation whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class Quotation extends Model

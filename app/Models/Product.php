@@ -37,16 +37,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Brand|null $brand
  * @property-read \App\Models\Category $category
- *
  * @property mixed $product_cost
  * @property mixed $product_price
- *
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|array<\Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Product advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
@@ -71,14 +67,11 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
- *
  * @property string $uuid
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
- *
  * @mixin \Eloquent
  */
 class Product extends Model

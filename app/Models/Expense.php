@@ -25,11 +25,9 @@ use Illuminate\Support\Str;
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\ExpenseCategory $category
  * @property-read \App\Models\User|null $user
  * @property-read \App\Models\Warehouse|null $warehouse
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Expense advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newQuery()
@@ -45,7 +43,6 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereWarehouseId($value)
- *
  * @mixin \Eloquent
  */
 class Expense extends Model

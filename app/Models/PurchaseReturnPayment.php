@@ -22,9 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\PurchaseReturn $purchaseReturn
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment byPurchaseReturn()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment newModelQuery()
@@ -39,11 +37,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment wherePurchaseReturnId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereUpdatedAt($value)
- *
  * @property int $user_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnPayment whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class PurchaseReturnPayment extends Model

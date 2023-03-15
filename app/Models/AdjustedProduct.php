@@ -18,10 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Adjustment $adjustment
  * @property-read \App\Models\Product|null $product
- *
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct newQuery()
@@ -33,11 +31,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereDeletedAt($value)
- *
  * @mixin \Eloquent
  */
 

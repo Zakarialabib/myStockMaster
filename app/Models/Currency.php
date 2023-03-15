@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $exchange_rate
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Currency advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
@@ -33,11 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereSymbol($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereThousandSeparator($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereDeletedAt($value)
- *
  * @mixin \Eloquent
  */
 class Currency extends Model
