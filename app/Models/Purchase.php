@@ -35,13 +35,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseDetail> $purchaseDetails
  * @property-read int|null $purchase_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchasePayment> $purchasePayments
  * @property-read int|null $purchase_payments_count
  * @property-read \App\Models\Supplier|null $supplier
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase newModelQuery()
@@ -65,11 +63,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUpdatedAt($value)
- *
  * @property string $uuid
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUuid($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class Purchase extends Model

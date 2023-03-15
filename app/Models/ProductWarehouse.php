@@ -17,10 +17,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property float $qty
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\Warehouse $warehouse
- *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse query()
@@ -30,7 +28,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductWarehouse whereWarehouseId($value)
- *
  * @mixin \Eloquent
  */
 class ProductWarehouse extends Pivot

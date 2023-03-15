@@ -22,9 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\Sale $sale
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment bySale()
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment newModelQuery()
@@ -39,15 +37,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereDeletedAt($value)
- *
  * @property int $user_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class SalePayment extends Model

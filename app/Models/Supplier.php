@@ -24,10 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $tax_number
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Purchase|null $purchases
  * @property-read \App\Models\Wallet|null $wallet
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier newQuery()
@@ -42,14 +40,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereUpdatedAt($value)
- *
  * @property string $uuid
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier whereUuid($value)
  * @method static \Database\Factories\SupplierFactory factory($count = null, $state = [])
- *
+ * @property-read mixed $debit
+ * @property-read mixed $total_due
+ * @property-read mixed $total_payments
+ * @property-read mixed $total_purchase_returns
+ * @property-read mixed $total_purchases
  * @mixin \Eloquent
  */
 class Supplier extends Model

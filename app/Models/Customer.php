@@ -25,10 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $wallet_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Sale|null $sales
  * @property-read \App\Models\Wallet|null $wallet
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
@@ -44,20 +42,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereWalletId($value)
- *
  * @property string $uuid
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUuid($value)
  * @method static \Database\Factories\CustomerFactory factory($count = null, $state = [])
- *
  * @property-read int|float $profit
  * @property-read int|float $total_due
  * @property-read int|float $total_payments
  * @property-read int|float $total_sale_returns
  * @property-read int|float $total_sales
- *
  * @mixin \Eloquent
  */
 class Customer extends Model

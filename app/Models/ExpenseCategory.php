@@ -17,10 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Expense> $expenses
  * @property-read int|null $expenses_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory newQuery()
@@ -31,13 +29,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereUpdatedAt($value)
  * @method static \Database\Factories\ExpenseCategoryFactory factory(...$parameters)
- *
  * @property string|null $type
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ExpenseCategory whereType($value)
- *
  * @mixin \Eloquent
  */
 class ExpenseCategory extends Model

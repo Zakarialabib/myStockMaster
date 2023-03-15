@@ -22,9 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\SaleReturn $saleReturn
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment bySaleReturn()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment newModelQuery()
@@ -39,11 +37,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereSaleReturnId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereUpdatedAt($value)
- *
  * @property int $user_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturnPayment whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class SaleReturnPayment extends Model

@@ -19,10 +19,8 @@ use Illuminate\Support\Str;
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Product> $products
  * @property-read int|null $products_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Category advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
@@ -34,7 +32,6 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Database\Factories\CategoryFactory factory($count = null, $state = [])
- *
  * @mixin \Eloquent
  */
 class Category extends Model

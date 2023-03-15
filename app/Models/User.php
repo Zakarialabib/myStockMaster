@@ -36,7 +36,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Warehouse> $assignedWarehouses
  * @property-read int|null $assigned_warehouses_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|array<\Illuminate\Notifications\DatabaseNotification> $notifications
@@ -48,7 +47,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\Wallet|null $wallet
- *
  * @method static Builder|User advancedFilter($data)
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static Builder|User isActive()
@@ -73,11 +71,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|User whereStatus($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @method static Builder|User whereWalletId($value)
- *
  * @property string $uuid
- *
  * @method static Builder|User whereUuid($value)
- *
  * @mixin \Eloquent
  */
 class User extends Authenticatable

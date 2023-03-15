@@ -37,13 +37,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Customer|null $customer
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleDetails> $saleDetails
  * @property-read int|null $sale_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SalePayment> $salePayments
  * @property-read int|null $sale_payments_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sale advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Sale newModelQuery()
@@ -69,11 +67,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUpdatedAt($value)
- *
  * @property string $uuid
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUuid($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @property string|null $payment_date
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class Sale extends Model
@@ -94,6 +97,7 @@ class Sale extends Model
         'discount_amount',
         'shipping_amount',
         'total_amount',
+        'payment_date',
         'paid_amount',
         'due_amount',
         'status',
@@ -116,6 +120,7 @@ class Sale extends Model
         'discount_amount',
         'shipping_amount',
         'total_amount',
+        'payment_date',
         'paid_amount',
         'due_amount',
         'status',
@@ -143,6 +148,7 @@ class Sale extends Model
         'user_id',
         'tax_percentage',
         'tax_amount',
+        'payment_date',
         'discount_percentage',
         'discount_amount',
         'shipping_amount',

@@ -26,10 +26,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $product_tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\Quotation $quotation
- *
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails newQuery()
@@ -48,7 +46,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuotationDetails whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class QuotationDetails extends Model

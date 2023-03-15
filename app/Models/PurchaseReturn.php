@@ -33,13 +33,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnDetail> $purchaseReturnDetails
  * @property-read int|null $purchase_return_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnPayment> $purchaseReturnPayments
  * @property-read int|null $purchase_return_payments_count
  * @property-read \App\Models\Supplier|null $supplier
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn completed()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn newModelQuery()
@@ -63,11 +61,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class PurchaseReturn extends Model
