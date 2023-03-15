@@ -53,7 +53,7 @@ class Details extends Component
 
     public function mount($supplier): void
     {
-        $this->supplier = Supplier::find($supplier->id);
+        $this->supplier = $supplier;
         $this->supplier_id = $this->supplier->id;
         $this->selectPage = false;
         $this->sortBy = 'id';

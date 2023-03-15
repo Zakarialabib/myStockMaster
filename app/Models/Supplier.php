@@ -90,6 +90,7 @@ class Supplier extends Model
      */
     protected $fillable = [
         'uuid',
+        'id',
         'name',
         'email',
         'phone',
