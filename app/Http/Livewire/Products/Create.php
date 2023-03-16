@@ -47,6 +47,8 @@ class Create extends Component
         'product.note' => 'nullable|string|max:1000',
         'product.category_id' => 'required|integer|min:0|max:100',
         'product.brand_id' => 'nullable|integer|min:0|max:100',
+        'product.warehouse_id' => 'nullable|integer|min:0|max:100',
+        'product.featured' => 'nullable',
     ];
 
     public function updated($propertyName): void
