@@ -33,9 +33,6 @@
             <x-table.th>
                 <input wire:model="selected" type="checkbox" />
             </x-table.th>
-            <x-table.th>
-                {{ __('Image') }}
-            </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
@@ -62,14 +59,6 @@
                         <input type="checkbox" value="{{ $product->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        @if ($product->image)
-                            <img src="{{ asset('images/products/' . $product->image) }}" alt="{{ $product->name }}"
-                                class="w-10 h-10 rounded-full">
-                        @else
-                            {{ __('No image') }}
-                        @endif
-                    </x-table.td>
-                    <x-table.td>
                         <div class=" whitespace-nowrap">
                             {{ $product->name }} <br>
                             <x-badge success>
@@ -87,7 +76,9 @@
                         {{ format_currency($product->cost) }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->category->name }}
+                        <x-badge warning>
+                        <small>{{ $product->category->name }}</small>
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
