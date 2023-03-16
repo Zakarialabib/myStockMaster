@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Http\Requests\StorePurchaseReturnRequest;
 use App\Http\Requests\UpdatePurchaseReturnRequest;
 use App\Models\Product;
@@ -28,10 +29,12 @@ class PurchasesReturnController extends Controller
     public function create()
     {
         abort_if(Gate::denies('purchase_return_create'), 403);
+        
+        $supplier = Supplier::select(['id','name'])->get();
 
         Cart::instance('purchase_return')->destroy();
 
-        return view('admin.purchasesreturn.create');
+        return view('admin.purchasesreturn.create', compact('supplier'));
     }
 
     public function store(StorePurchaseReturnRequest $request)
@@ -40,11 +43,11 @@ class PurchasesReturnController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase_return = PurchaseReturn::create([
@@ -118,8 +121,9 @@ class PurchasesReturnController extends Controller
     {
         abort_if(Gate::denies('purchase_return_update'), 403);
 
-        $purchase_return_details = $purchase_return->purchaseReturnDetails;
+        $supplier = Supplier::select(['id','name'])->get();
 
+        $purchase_return_details = $purchase_return->purchaseReturnDetails;
         Cart::instance('purchase_return')->destroy();
 
         $cart = Cart::instance('purchase_return');
@@ -143,7 +147,7 @@ class PurchasesReturnController extends Controller
             ]);
         }
 
-        return view('admin.purchasesreturn.edit', compact('purchase_return'));
+        return view('admin.purchasesreturn.edit', compact('purchase_return', 'supplier'));
     }
 
     public function update(UpdatePurchaseReturnRequest $request, PurchaseReturn $purchase_return)
@@ -152,11 +156,11 @@ class PurchasesReturnController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             foreach ($purchase_return->purchaseReturnDetails as $purchase_return_detail) {
