@@ -190,21 +190,6 @@ class Index extends Component
         return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    public function getCategoriesProperty()
-    {
-        return Category::select(['name', 'id'])->get();
-    }
-
-    public function getBrandsProperty()
-    {
-        return Brand::select(['name', 'id'])->get();
-    }
-
-    public function getWarehousesProperty()
-    {
-        return Warehouse::select(['name', 'id'])->get();
-    }
-
     private function callExport(): ProductExport
     {
         return new ProductExport();
