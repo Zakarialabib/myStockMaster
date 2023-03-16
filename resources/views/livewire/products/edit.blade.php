@@ -63,19 +63,28 @@
                                 wire:model="product.stock_alert" required />
                             <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
                         </div>
+                        <div class="md:w-1/2 sm:w-full px-3">
+                            <x-label for="featured" :value="__('Featured in Pos')" />
+                            <x-input id="featured" class="block mt-1 w-full" type="checkbox" name="featured"
+                                wire:model.lazy="product.featured" />
+                            <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
+                        </div>
                     </div>
 
                     <x-accordion title="{{ 'More Details' }}">
                         <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="warehouse" :value="__('Warehouse')" />
-                                <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
+                                {{-- <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                                 id="warehouse_id" name="warehouse_id" wire:model="product.warehouse_id">
                                     <option value="">{{__('Select Warehouse')}}</option>
                                     @foreach ($this->warehouses as $warehouse)
                                     <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                     @endforeach
-                                </select>
+                                </select> --}}
+                                <x-select2 :options="$this->warehouses" 
+                                    id="warehouse_id" name="warehouse_id" 
+                                    wire:model="product.warehouse_id" />
                                 <x-input-error :messages="$errors->get('warehouse_id')" for="warehouse_id" class="mt-2" />
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">

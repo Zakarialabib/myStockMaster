@@ -56,6 +56,12 @@
                                 wire:model.lazy="product.stock_alert" />
                             <x-input-error :messages="$errors->get('stock_alert')" for="stock_alert" class="mt-2" />
                         </div>
+                        <div class="md:w-1/2 sm:w-full px-3">
+                            <x-label for="featured" :value="__('Featured in Pos')" />
+                            <x-input id="featured" class="block mt-1 w-full" type="text" name="featured"
+                                wire:model.lazy="product.featured" />
+                            <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
+                        </div>
                     </div>
 
                     <x-accordion title="{{ __('Details') }}">
