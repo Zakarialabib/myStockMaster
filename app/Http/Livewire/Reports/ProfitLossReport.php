@@ -85,81 +85,81 @@ class ProfitLossReport extends Component
     {
         $this->total_sales = Sale::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=', $this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->count();
 
         $this->sales_amount = Sale::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('total_amount') / 100;
 
         $this->total_purchases = Purchase::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->count();
 
         $this->purchases_amount = Purchase::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('total_amount') / 100;
 
         $this->total_sale_returns = SaleReturn::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->count();
 
         $this->sale_returns_amount = SaleReturn::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('total_amount') / 100;
 
         $this->total_purchase_returns = PurchaseReturn::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->count();
 
         $this->purchase_returns_amount = PurchaseReturn::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('total_amount') / 100;
 
         $this->expenses_amount = Expense::when($this->start_date, function ($query) {
-            return $query->whereDate('>=', $this->start_date);
+            return $query->whereDate('date', '>=',$this->start_date);
         })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('amount') / 100;
 
@@ -178,10 +178,10 @@ class ProfitLossReport extends Component
         $revenue = $this->sales_amount - $this->sale_returns_amount;
         $sales = Sale::completed()
             ->when($this->start_date, function ($query) {
-                return $query->whereDate('>=', $this->start_date);
+                return $query->whereDate('date', '>=',$this->start_date);
             })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->with('saleDetails')->get();
 
@@ -197,18 +197,18 @@ class ProfitLossReport extends Component
     public function calculatePaymentsReceived()
     {
         $sale_payments = SalePayment::when($this->start_date, function ($query) {
-            return $query->whereDate('>=', $this->start_date);
+            return $query->whereDate('date', '>=',$this->start_date);
         })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('amount') / 100;
 
         $purchase_return_payments = PurchaseReturnPayment::when($this->start_date, function ($query) {
-            return $query->whereDate('>=', $this->start_date);
+            return $query->whereDate('date', '>=',$this->start_date);
         })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('amount') / 100;
 
@@ -218,18 +218,18 @@ class ProfitLossReport extends Component
     public function calculatePaymentsSent()
     {
         $purchase_payments = PurchasePayment::when($this->start_date, function ($query) {
-            return $query->whereDate('>=', $this->start_date);
+            return $query->whereDate('date', '>=',$this->start_date);
         })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('amount') / 100;
 
         $sale_return_payments = SaleReturnPayment::when($this->start_date, function ($query) {
-            return $query->whereDate('>=', $this->start_date);
+            return $query->whereDate('date', '>=',$this->start_date);
         })
             ->when($this->end_date, function ($query) {
-                return $query->whereDate('<=', $this->end_date);
+                return $query->whereDate('date', '<=', $this->end_date);
             })
             ->sum('amount') / 100;
 

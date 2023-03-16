@@ -42,8 +42,8 @@ class CustomersReport extends Component
 
     public function getSalesProperty()
     {
-        return Sale::whereDate('>=', $this->start_date)
-            ->whereDate('<=', $this->end_date)
+        return Sale::whereDate('date', '>=', $this->start_date)
+            ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, function ($query) {
                 return $query->where('customer_id', $this->customer_id);
             })
