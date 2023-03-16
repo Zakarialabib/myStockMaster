@@ -138,11 +138,11 @@ class Index extends Component
             $due_amount = $this->total_amount - $this->paid_amount;
 
             if ($due_amount === $this->total_amount) {
-                $payment_status = PaymentStatus::Due;
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = PaymentStatus::Paid;
+                $payment_status = PaymentStatus::PAID;
             }
 
             $sale = Sale::create([
