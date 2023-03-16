@@ -10,6 +10,7 @@ use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
+use App\Models\Supplier;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,8 @@ class PurchaseController extends Controller
     {
         abort_if(Gate::denies('purchase_update'), 403);
 
+        $supplier = Supplier::select(['id','name'])->get();
+
         $purchase_details = $purchase->purchaseDetails;
 
         Cart::instance('purchase')->destroy();
@@ -62,7 +65,7 @@ class PurchaseController extends Controller
             ]);
         }
 
-        return view('admin.purchases.edit', compact('purchase'));
+        return view('admin.purchases.edit', compact('purchase','supplier'));
     }
 
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
