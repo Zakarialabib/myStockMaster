@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnPayment;
 use Illuminate\Http\Request;
@@ -59,11 +60,11 @@ class PurchaseReturnPaymentsController extends Controller
             $due_amount = $purchase_return->due_amount - $request->amount;
 
             if ($due_amount === $purchase_return->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase_return->update([
@@ -106,11 +107,11 @@ class PurchaseReturnPaymentsController extends Controller
             $due_amount = $purchase_return->due_amount + $purchaseReturnPayment->amount - $request->amount;
 
             if ($due_amount === $purchase_return->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase_return->update([

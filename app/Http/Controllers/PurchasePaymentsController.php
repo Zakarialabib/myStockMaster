@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Http\Request;
@@ -55,11 +56,11 @@ class PurchasePaymentsController extends Controller
             $due_amount = $purchase->due_amount - $request->amount;
 
             if ($due_amount === $purchase->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase->update([
@@ -100,11 +101,11 @@ class PurchasePaymentsController extends Controller
             $due_amount = $purchase->due_amount + $purchasePayment->amount - $request->amount;
 
             if ($due_amount === $purchase->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase->update([
