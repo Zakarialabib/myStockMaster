@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Http\Requests\StoreSaleReturnRequest;
 use App\Http\Requests\UpdateSaleReturnRequest;
 use App\Models\Customer;
@@ -41,11 +42,11 @@ class SalesReturnController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $sale_return = SaleReturn::create([
@@ -153,11 +154,11 @@ class SalesReturnController extends Controller
             $due_amount = $request->total_amount - $request->paid_amount;
 
             if ($due_amount === $request->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             foreach ($sale_return->saleReturnDetails as $sale_return_detail) {
