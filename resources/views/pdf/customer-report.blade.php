@@ -84,7 +84,15 @@
                             <td>{{ $sale->date }} </td>
                             <td>{{ $sale->reference }}</td>
                             <td>{{ format_currency($sale->paid_amount) }} </td>
-                            <td>{{ $sale->payment_status }} </td>
+                            <td>
+                                @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
+                                {{ __('Paid') }}
+                            @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
+                                {{ __('Partially Paid') }}
+                            @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
+                                {{ __('Due') }}
+                            @endif    
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

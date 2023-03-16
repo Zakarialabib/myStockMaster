@@ -232,11 +232,11 @@
                                     </div>
                                     <div>
                                         {{ __('Payment Status') }} :
-                                        @if ($purchase?->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        @if ($purchase?->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($purchase?->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($purchase?->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($purchase?->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($purchase?->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </div>

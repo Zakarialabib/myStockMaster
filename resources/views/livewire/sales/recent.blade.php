@@ -61,11 +61,11 @@
                                     {{ $sale->customer->name }}
                                 </x-table.td>
                                 <x-table.td>
-                                    @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
+                                    @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
                                         <x-badge success>{{ __('Paid') }}</x-badge>
-                                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
+                                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                         <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
+                                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
                                         <x-badge danger>{{ __('Due') }}</x-badge>
                                     @endif
                                 </x-table.td>

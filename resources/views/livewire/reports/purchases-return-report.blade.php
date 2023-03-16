@@ -119,11 +119,11 @@
                                     <x-table.td>{{ format_currency($purchase_return->paid_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($purchase_return->due_amount) }}</x-table.td>
                                     <x-table.td>
-                                        @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </x-table.td>
