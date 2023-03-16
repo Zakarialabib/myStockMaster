@@ -33,7 +33,8 @@
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="price" :value="__('Price')" required />
                             <x-input id="price" class="block mt-1 w-full" type="text" name="price"
-                                wire:model.lazy="product.price" placeholder="{{ __('Enter Product Price') }}" required />
+                                wire:model.lazy="product.price" placeholder="{{ __('Enter Product Price') }}"
+                                required />
                             <x-input-error :messages="$errors->get('price')" for="price" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
@@ -44,10 +45,8 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="category" :value="__('Category')" required />
-                            <x-select-list
-                                class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                id="category_id" name="category_id" wire:model.lazy="product.category_id"
-                                :options="$this->listsForFields['categories']" />
+                            <x-select2 :options="$this->categories" id="category_create" name="category_create"
+                                wire:model="product.category_id" />
                             <x-input-error :messages="$errors->get('category_id')" for="category_id" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
@@ -68,16 +67,14 @@
                         <div class="flex flex-wrap mb-3">
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="warehouse" :value="__('Warehouse')" />
-                                <x-select-list
-                                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                    id="warehouse_id" name="warehouse_id" wire:model.lazy="product.warehouse_id" :options="$this->listsForFields['warehouses']" />
+                                <x-select2 :options="$this->warehouses" id="warehouse_create" name="warehouse_create"
+                                    wire:model="product.warehouse_id" />
                                 <x-input-error :messages="$errors->get('warehouse_id')" for="warehouse_id" class="mt-2" />
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="brand" :value="__('Brand')" />
-                                <x-select-list
-                                    class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                    id="brand_id" name="brand_id" wire:model.lazy="product.brand_id" :options="$this->listsForFields['brands']" />
+                                <x-select2 :options="$this->brands" id="brand_id" name="brand_id"
+                                    wire:model="product.brand_id" />
                                 <x-input-error :messages="$errors->get('brand_id')" for="brand_id" class="mt-2" />
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
@@ -122,7 +119,8 @@
                             <div class="w-full px-2">
                                 <x-label for="note" :value="__('Description')" />
                                 <textarea wire:model.lazy="product.note" name="note"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="3"></textarea>
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                    rows="3"></textarea>
                             </div>
                         </div>
                     </x-accordion>

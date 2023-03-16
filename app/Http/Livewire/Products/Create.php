@@ -27,8 +27,6 @@ class Create extends Component
 
     public $image;
 
-    public $listsForFields = [];
-
     /** @var mixed */
     public $product;
 
@@ -63,7 +61,6 @@ class Create extends Component
         $this->product->order_tax = 0;
         $this->product->unit = 'pcs';
         $this->product->barcode_symbology = 'C128';
-        $this->initListsForFields();
     }
 
     public function render()
@@ -101,10 +98,18 @@ class Create extends Component
         $this->createProduct = false;
     }
 
-    protected function initListsForFields(): void
+    public function getCategoriesProperty()
     {
-        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
-        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
+        return Category::select(['name', 'id'])->get();
+    }
+
+    public function getBrandsProperty()
+    {
+        return Brand::select(['name', 'id'])->get();
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::select(['name', 'id'])->get();
     }
 }
