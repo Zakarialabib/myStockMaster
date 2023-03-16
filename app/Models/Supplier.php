@@ -140,7 +140,7 @@ class Supplier extends Model
 
         $product_costs = 0;
 
-        foreach (Purchase::completed()->with('purchaseDetails')->get() as $purchase) {
+        foreach (Purchase::completed()->purchaseDetails()->get() as $purchase) {
             foreach ($purchase->purchaseDetails as $purchaseDetail) {
                 $product_costs += $purchaseDetail->product->cost;
             }
