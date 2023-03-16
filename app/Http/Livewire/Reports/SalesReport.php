@@ -42,8 +42,8 @@ class SalesReport extends Component
 
     public function render()
     {
-        $sales = Sale::whereDate( '>=', $this->start_date)
-            ->whereDate( '<=', $this->end_date)
+        $sales = Sale::whereDate('date', '>=', $this->start_date)
+            ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_status, fn ($q) => $q->where('sale_status', $this->sale_status))
             ->when($this->payment_status, fn ($q) => $q->where('payment_status', $this->payment_status))

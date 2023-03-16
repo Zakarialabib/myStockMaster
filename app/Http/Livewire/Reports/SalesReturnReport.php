@@ -42,8 +42,8 @@ class SalesReturnReport extends Component
 
     public function render()
     {
-        $sale_returns = SaleReturn::whereDate( '>=', $this->start_date)
-            ->whereDate( '<=', $this->end_date)
+        $sale_returns = SaleReturn::whereDate('date', '>=', $this->start_date)
+            ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_return_status, fn ($q) => $q->where('sale_return_status', $this->sale_return_status))
             ->when($this->payment_status, fn ($q) => $q->where('payment_status', $this->payment_status))
