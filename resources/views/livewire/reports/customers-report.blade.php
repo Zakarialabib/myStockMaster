@@ -26,14 +26,8 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <select wire:model.defer="customer_id"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="customer_id">
-                                        <option value="">{{ __('Select Customer') }}</option>
-                                        @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-select2 :options="$customers" name="customer_id" id="customer_id"
+                                        wire:model="customer_id" />
                                 </div>
                             </div>
                         </div>
@@ -43,11 +37,13 @@
                                     <label>{{ __('Payment Status') }}</label>
                                     <select wire:model.defer="payment_status"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="payment_status">
-                                        <option value="">{{ __('Select Payment Status') }}</option>
-                                        <option value="Paid">{{ __('Paid') }}</option>
-                                        <option value="Unpaid">{{ __('Unpaid') }}</option>
-                                        <option value="Partial">{{ __('Partial') }}</option>
+                                        name="payment_status" id="payment_status" required>
+                                        @foreach (\App\Enums\Paymenttatus::cases() as $status)
+                                            <option {{ $sale->status == $status->value ? 'selected' : '' }}
+                                                value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
