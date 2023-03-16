@@ -33,9 +33,6 @@
             <x-table.th>
                 <input wire:model="selected" type="checkbox" />
             </x-table.th>
-            <x-table.th>
-                {{ __('Image') }}
-            </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
@@ -71,7 +68,7 @@
                             <x-badge success>
                                 {{ $product->code }}
                             </x-badge>
-                        </div>
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $product->quantity }}
@@ -83,7 +80,9 @@
                         {{ format_currency($product->cost) }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->category->name }}
+                        <x-badge warning>
+                        <small>{{ $product->category->name }}</small>
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex flex-wrap">
