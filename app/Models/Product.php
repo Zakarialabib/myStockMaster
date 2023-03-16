@@ -99,22 +99,15 @@ class Product extends Model
         'quantity',
         'cost',
         'price',
-        'stock_alert',
         'created_at',
-        'updated_at',
     ];
 
     public $filterable = [
         'id',
-        'category_id',
         'name',
         'code',
-        'quantity',
         'cost',
         'price',
-        'stock_alert',
-        'created_at',
-        'updated_at',
     ];
 
     /**
@@ -124,6 +117,7 @@ class Product extends Model
      */
     protected $fillable = [
         'category_id',
+        'featured',
         'uuid',
         'name',
         'code',
