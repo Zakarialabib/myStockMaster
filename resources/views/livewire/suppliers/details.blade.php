@@ -145,6 +145,10 @@
                                             <x-badge info>{{ __('Ordered') }}</x-badge>
                                         @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                             <x-badge success>{{ __('Completed') }}</x-badge>
+                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Returned') }}
+                                            </x-badge>
                                         @endif
                                     </x-table.td>
                                     <x-table.td>
