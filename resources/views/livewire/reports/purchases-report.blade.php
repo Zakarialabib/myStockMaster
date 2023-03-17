@@ -102,10 +102,14 @@
                             <x-table.td>
                                 @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
                                     <x-badge warning>{{ __('Pending') }}</x-badge>
-                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
+                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
                                     <x-badge info>{{ __('Ordered') }}</x-badge>
                                 @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                     <x-badge success>{{ __('Completed') }}</x-badge>
+                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
+                                    <x-badge success class="text-xs">
+                                        {{ __('Returned') }}
+                                    </x-badge>
                                 @endif
                             </x-table.td>
                             <x-table.td>{{ format_currency($purchase->total_amount) }}</x-table.td>
