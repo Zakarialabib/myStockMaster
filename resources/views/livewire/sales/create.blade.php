@@ -4,9 +4,7 @@
             <x-validation-errors class="mb-4" :errors="$errors" />
 
             <div class="mb-4">
-                <x-select-list
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->listsForFields['customers']" />
+                <x-select2 :options="$this->listsForFields['customers']" name="customer_id" id="customer_id" required wire:model="customer_id" />
             </div>
 
             <div>
@@ -32,7 +30,7 @@
                                     <x-table.td>
                                         {{ format_currency($cart_item->price) }}
                                         <x-input style="min-width: 40px;max-width: 90px;" type="text" type="text"
-                                            value="{{ $cart_item->price }}" min="1" wire:model.lazy="price">
+                                            value="{{ $cart_item->price }}" min="1" wire:model.lazy="price" />
                                     </x-table.td>
 
                                     <x-table.td>
@@ -102,7 +100,7 @@
                 <label for="paid_amount">{{ __('Received Amount') }} <span class="text-red-500">*</span></label>
                 <x-input id="paid_amount" type="text" wire:model="paid_amount" value="{{ $total_amount }}"
                     name="paid_amount" required />
-            
+
             </div>
 
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
@@ -151,7 +149,6 @@
                 </div>
             </div>
         </x-accordion>
-
     </div>
 
     <div class="flex flex-wrap px-3 space-x-2">
@@ -165,5 +162,4 @@
             {{ __('Proceed') }}
         </button>
     </div>
-
 </div>

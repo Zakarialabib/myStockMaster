@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Imports;
 
 use App\Models\Customer;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CustomerImport implements ToModel
+class CustomerImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**  */
     public function __construct()

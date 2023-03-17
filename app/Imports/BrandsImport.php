@@ -7,8 +7,8 @@ namespace App\Imports;
 use App\Models\Brand;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
-
-class BrandsImport implements ToModel, SkipsEmptyRows
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+class BrandsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**  */
     public function __construct()

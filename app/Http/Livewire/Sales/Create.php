@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Enums\PaymentStatus;
 use App\Jobs\PaymentNotification;
 use App\Models\Category;
 use App\Models\Customer;
@@ -352,7 +353,7 @@ class Create extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['customers'] = Customer::pluck('name', 'id')->toArray();
+        $this->listsForFields['customers'] = Customer::select(['name', 'id'])->get();
         $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
     }
 }
