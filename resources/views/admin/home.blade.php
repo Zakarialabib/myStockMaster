@@ -1,8 +1,4 @@
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
-        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{ asset('js/chart-config.js') }}"></script>
     <script>
         document.querySelectorAll('.js-date').forEach(el => {
             el.addEventListener('click', event => {
@@ -30,35 +26,61 @@
 @section('title', __('Dashboard'))
 
 @section('breadcrumb')
-    <div class="py-3 px-4">
-        <div class="flex flex-wrap items-center">
-            <div class="mb-5 lg:mb-0">
-                <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
-                <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
-                        <span class="inline-block mx-2">
-                            <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M14.6666 5.66667L9.66662 1.28333C9.20827 0.873372 8.6149 0.646725 7.99996 0.646725C7.38501 0.646725 6.79164 0.873372 6.33329 1.28333L1.33329 5.66667C1.0686 5.9034 0.857374 6.1938 0.713683 6.51854C0.569993 6.84328 0.497134 7.1949 0.499957 7.55V14.8333C0.499957 15.4964 0.763349 16.1323 1.23219 16.6011C1.70103 17.0699 2.33692 17.3333 2.99996 17.3333H13C13.663 17.3333 14.2989 17.0699 14.7677 16.6011C15.2366 16.1323 15.5 15.4964 15.5 14.8333V7.54167C15.5016 7.18797 15.4282 6.83795 15.2845 6.51474C15.1409 6.19152 14.9303 5.90246 14.6666 5.66667V5.66667ZM9.66662 15.6667H6.33329V11.5C6.33329 11.279 6.42109 11.067 6.57737 10.9107C6.73365 10.7545 6.94561 10.6667 7.16662 10.6667H8.83329C9.0543 10.6667 9.26626 10.7545 9.42255 10.9107C9.57883 11.067 9.66662 11.279 9.66662 11.5V15.6667ZM13.8333 14.8333C13.8333 15.0543 13.7455 15.2663 13.5892 15.4226C13.4329 15.5789 13.221 15.6667 13 15.6667H11.3333V11.5C11.3333 10.837 11.0699 10.2011 10.6011 9.73223C10.1322 9.26339 9.49633 9 8.83329 9H7.16662C6.50358 9 5.8677 9.26339 5.39886 9.73223C4.93002 10.2011 4.66662 10.837 4.66662 11.5V15.6667H2.99996C2.77894 15.6667 2.56698 15.5789 2.4107 15.4226C2.25442 15.2663 2.16662 15.0543 2.16662 14.8333V7.54167C2.16677 7.42335 2.19212 7.30641 2.24097 7.19865C2.28982 7.09089 2.36107 6.99476 2.44996 6.91667L7.44996 2.54167C7.60203 2.40807 7.79753 2.33439 7.99996 2.33439C8.20238 2.33439 8.39788 2.40807 8.54996 2.54167L13.55 6.91667C13.6388 6.99476 13.7101 7.09089 13.7589 7.19865C13.8078 7.30641 13.8331 7.42335 13.8333 7.54167V14.8333Z"
-                                    fill="currentColor"></path>
-                            </svg></span>
-                        <span>{{ __('Home') }}</span>
-                    </a>
-                </div>
+    <div class="relative bg-indigo-50 p-4 sm:p-6 rounded-sm mb-4">
+        <div class="absolute right-0 top-0 -mt-4 mr-16 pointer-events-none hidden xl:block" aria-hidden="true">
+            <svg width="319" height="198" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <path id="welcome-a" d="M64 0l64 128-64-20-64 20z" />
+                    <path id="welcome-e" d="M40 0l40 80-40-12.5L0 80z" />
+                    <path id="welcome-g" d="M40 0l40 80-40-12.5L0 80z" />
+                    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="welcome-b">
+                        <stop stop-color="#A5B4FC" offset="0%" />
+                        <stop stop-color="#818CF8" offset="100%" />
+                    </linearGradient>
+                    <linearGradient x1="50%" y1="24.537%" x2="50%" y2="100%" id="welcome-c">
+                        <stop stop-color="#4338CA" offset="0%" />
+                        <stop stop-color="#6366F1" stop-opacity="0" offset="100%" />
+                    </linearGradient>
+                </defs>
+                <g fill="none" fill-rule="evenodd">
+                    <g transform="rotate(64 36.592 105.604)">
+                        <mask id="welcome-d" fill="#fff">
+                            <use xlink:href="#welcome-a" />
+                        </mask>
+                        <use fill="url(#welcome-b)" xlink:href="#welcome-a" />
+                        <path fill="url(#welcome-c)" mask="url(#welcome-d)" d="M64-24h80v152H64z" />
+                    </g>
+                    <g transform="rotate(-51 91.324 -105.372)">
+                        <mask id="welcome-f" fill="#fff">
+                            <use xlink:href="#welcome-e" />
+                        </mask>
+                        <use fill="url(#welcome-b)" xlink:href="#welcome-e" />
+                        <path fill="url(#welcome-c)" mask="url(#welcome-f)" d="M40.333-15.147h50v95h-50z" />
+                    </g>
+                    <g transform="rotate(44 61.546 392.623)">
+                        <mask id="welcome-h" fill="#fff">
+                            <use xlink:href="#welcome-g" />
+                        </mask>
+                        <use fill="url(#welcome-b)" xlink:href="#welcome-g" />
+                        <path fill="url(#welcome-c)" mask="url(#welcome-h)" d="M40.333-15.147h50v95h-50z" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="relative">
+            <h1 class="text-2xl md:text-3xl text-gray-800 font-bold mb-1">{{ 'Hello' }}, {{ Auth::user()->name }} 👋
+            </h1>
+            <p>{{ 'What are you look for today ?' }}</p>
+            <div class="py-5 px-4">
+                <livewire:livesearch />
             </div>
         </div>
     </div>
 @endsection
 <x-app-layout>
     <div class="px-2 mx-auto">
-
-        <div class="bg-gray-50 py-5 px-4">
-        <livewire:livesearch />
-        </div>
-
         {{-- <livewire:calculator /> --}}
-        <div class="bg-gray-50 py-5 px-4 rounded">
+        <div class="bg-gray-50 mb-4 px-4 rounded">
             <div class="flex flex-wrap justify-center lg:text-lg sm:text-sm gap-4 py-4">
                 <x-button type="button" primary data-date="today" class="js-date mr-2 active:bg-indigo-800">
                     {{ __('Today') }}
@@ -67,7 +89,7 @@
                 <x-button type="button" primary data-date="month" class="js-date mr-2">
                     {{ __('Last month') }}
                 </x-button>
-                
+
                 <x-button type="button" primary data-date="semi" class="js-date mr-2">
                     {{ __('Last 6 month') }}
                 </x-button>
@@ -80,8 +102,7 @@
                 @if ($loop->first)
                     <div class="w-full flex flex-wrap align-center mb-4 js-date-row" id="{{ $key }}">
                         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
-                            <div
-                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                            <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -99,8 +120,7 @@
                                 </div>
                             </div>
 
-                            <div
-                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                            <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -123,8 +143,7 @@
                     <div class="w-full flex flex-wrap align-center mb-4 js-date-row" style="display: none"
                         id="{{ $key }}">
                         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 w-full">
-                            <div
-                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                            <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -142,8 +161,7 @@
                                 </div>
                             </div>
 
-                            <div
-                                class="flex items-center p-4 bg-white rounded-lg shadow-md">
+                            <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                                 <div class="p-5 mr-4 text-blue-500 bg-blue-100 rounded-full">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -165,6 +183,11 @@
                 @endif
             @endforeach
         </div>
+        <div>
+            <livewire:stats.transactions />
+        </div>
+
+        {{--
         @can('show_total_stats')
             <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full py-4 px-4 bg-gray-50">
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
@@ -271,5 +294,6 @@
                 </div>
             </div>
         @endcan
+        --}}
     </div>
 </x-app-layout>
