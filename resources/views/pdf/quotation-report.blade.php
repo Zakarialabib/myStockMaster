@@ -15,7 +15,6 @@
          </div>
          <div id="company">
             <div><strong> Date: </strong>{{$quotation->date }}</div>
-            <div><strong> Numéro: </strong> {{$quotation->reference }}</div>
          </div>
          <div id="Title-heading">
             {{__('Quotation')}}  : {{$quotation->reference}}
@@ -34,11 +33,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom :</strong> {{$quotation->client_name }}</div>
-                           <div><strong>ICE :</strong> {{$quotation->client_ice }}</div>
-                           <div><strong>Téle :</strong> {{$quotation->client_phone }}</div>
-                           <div><strong>Adresse</strong>   {{$quotation->client_adr }}</div>
-                           <div><strong>Email :</strong>  {{$quotation->client_email }}</div>
+                           <div><strong>{{ __('Name') }}:</strong> {{ $quotation->customer->name }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $quotation->customer?->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $quotation->customer->phone }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ $quotation->customer->address }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ $quotation->customer->email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -54,11 +53,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{settings()->company_name}}</div>
-                           <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
-                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
-                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
+                           <div id="comp">{{ settings()->company_name }}</div>
+                                <div><strong>{{ __('ICE') }}:</strong> {{ settings()->company_tax }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ settings()->company_email }}</div>
                         </td>
                      </tr>
                   </tbody>

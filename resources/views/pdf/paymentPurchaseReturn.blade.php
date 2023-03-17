@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('Payment') }}_{{ $payment['reference'] }}</title>
+    <title>{{ __('Payment Purchase Return') }}_{{ $payment['reference'] }}</title>
     <link rel="stylesheet" href="{{ asset('/print/pdfStyle.css') }}" media="all" />
 </head>
 
@@ -15,11 +15,10 @@
             <img src="{{ asset('images/logo.png') }}">
         </div>
         <div id="company">
-            <div><strong> {{ __('Date') }}: </strong>{{ $payment['date'] }}</div>
-            <div><strong> {{ __('Number') }}: </strong> {{ $payment['reference'] }}</div>
+            <div><strong> {{ __('Date') }}: </strong>{{ $payment->date }}</div>
         </div>
         <div id="Title-heading">
-            {{ __('Payment') }} : {{ $payment['reference'] }}
+            {{ __('Payment Reference') }} : {{ $payment->reference }}
         </div>
         </div>
     </header>
@@ -35,9 +34,11 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div><strong>{{ __('Nom') }}:</strong> {{ $payment['name'] }}</div>
-                                <div><strong>{{ __('Tax number') }}:</strong> {{ $payment['tax_number'] }}</div>
-                                <div><strong>{{ __('Phone') }}:</strong> {{ $payment['phone'] }}</div>
+                                <div><strong>{{ __('Name') }}:</strong> {{ $payment->supplier->name }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $payment->supplier?->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $payment->supplier->phone }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ $payment->supplier->address }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ $payment->supplier->email }}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -74,18 +75,20 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ $payment['return_Ref'] }}</td>
-                        <td>{{ $payment['Reglement'] }}</td>
-                        <td>{{ $symbol }} {{ $payment['montant'] }} </td>
+                        <td>{{ $payment->returnpurchase->reference }}</td>
+                        <td>{{ $payment->paid_amount }}</td>
+                        <td>{{ $payment->amount }} </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div id="signature">
-            @if ($setting['is_invoice_footer'] && $setting['invoice_footer'] !== null)
-                <p>{{ $setting['invoice_footer'] }}</p>
-            @endif
+            <div id="signature">
+                @if (settings()->invoice_footer !== null)
+                    <p>{{ settings()->invoice_footer }}</p>
+                @endif
+             </div>
         </div>
     </main>
 </body>

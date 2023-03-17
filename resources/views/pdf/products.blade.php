@@ -105,7 +105,6 @@
                             <th>{{ __('Category') }}</th>
                             <th>{{ __('Quantity') }}</th>
                             <th>{{ __('Price') }}</th>
-                            <th>{{ __('Created At') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,7 +116,6 @@
                                 <td>{{ $row->quantity }}</td>
                                 <td>{{ $row->cost }}</td>
                                 <td>{{ $row->price }}</td>
-                                <td>{{ $row->created_at->format('d-m-Y') }}</td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -18,7 +18,7 @@
             <div><strong> {{__('Number')}}:  </strong> {{$payment['reference']}}</div>
          </div>
          <div id="Title-heading">
-           Paiement  : {{$payment['reference']}}
+           {{__('Payment')}}  : {{$payment['reference']}}
          </div>
          </div>
       </header>
@@ -34,10 +34,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$payment['client_name']}}</div>
-                           <div><strong>Téle:</strong> {{$payment['client_phone']}}</div>
-                           <div><strong>Adresse:</strong>   {{$payment['client_adr']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$payment['client_email']}}</div>
+                           <div><strong>{{ __('Name') }}:</strong> {{ $payment->customer->name }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $payment->customer?->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $payment->customer->phone }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ $payment->customer->address }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ $payment->customer->email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -53,10 +54,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{settings()->company_name}}</div>
-                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
-                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
+                           <div id="comp">{{ settings()->company_name }}</div>
+                                <div><strong>{{ __('ICE') }}:</strong> {{ settings()->company_tax }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ settings()->company_email }}</div>
                         </td>
                      </tr>
                   </tbody>
