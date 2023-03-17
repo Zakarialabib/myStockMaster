@@ -1,0 +1,418 @@
+<div>
+    <div>
+        <div class="flex flex-row flex-wrap px-2 py-3">
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="orange" counter="{{ $productCount }}" title="{{ __('Total Products') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="green" counter="{{ format_currency($totalSales) }}"
+                    title="{{ __('Total Value Sales') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="purple" counter="{{ format_currency($totalPurchases) }}"
+                    title="{{ __('Total Value Purchases') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="orange" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}">
+                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="lightGray" counter="{{ $customerCount }}" title="{{ __('Total Customer') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="indigo" counter="{{ $purchaseCount }}" title="Total Purchases">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="orange" counter="{{ $salesCount }}" title="Total Sales">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="px-2 pb-2 w-full sm:w-1/2">
+                <div class="card bg-white">
+                    <div class="flex w-full px-4 justify-between items-center">
+                        <h3>{{('Sales')}}</h3>
+                    </div>
+                    <div id="chart2"></div>
+                </div>
+            </div>
+            <div class="px-2 pb-2 w-full sm:w-1/2">
+                <div class="card bg-white">
+                    <div class="flex w-full px-4 justify-between items-center">
+                        <h3>{{('Purchases')}}</h3>
+                    </div>
+                    <div id="chart1"></div>
+                </div>
+            </div>
+            <div class="px-2 pb-2 w-full sm:w-full">
+                <div class="card bg-white">
+                    <div class="flex w-full px-4 justify-between items-center">
+                        <h3>Sales/Purchases</h3>
+                    </div>
+                    <div id="chart"></div>
+                </div>
+            </div>
+
+            <div class="px-2 pb-2 w-full">
+                <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                    <div class="py-3 px-5 mb-3 w-full inline-flex itees-center justify-between">
+                        <span class="text-md font-semibold text-gray-700">Recent Sale</span>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-left px-4">{{ 'Customer' }}</th>
+                                <th class="text-left px-4">{{ 'Total' }}</th>
+                                <th class="text-left px-4">{{ 'Date' }}</th>
+                                <th class="text-left px-4">{{ 'Status' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($lastSales as $sale)
+                                <tr class="text-sm antialiased">
+                                    <td class="px-4 py-2">
+                                        <p class="font-bold tracking-wide text-gray-800">{{ $sale->customer->name }}
+                                        </p>
+                                        <span
+                                            class="text-indigo-600 text-xs font-semibold">{{ $sale->reference }}</span>
+                                    </td>
+                                    <td class="px-4 py-2">{{ format_currency($sale->total_amount) }}</td>
+                                    <td class="px-4 py-2">{{ $sale->date }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($sale->status == \App\Enums\SaleStatus::PENDING)
+                                            <x-badge warning>{{ __('Pending') }}</x-badge>
+                                        @elseif ($sale->status == \App\Enums\SaleStatus::ORDERED)
+                                            <x-badge info>{{ __('Ordered') }}</x-badge>
+                                        @elseif($sale->status == \App\Enums\SaleStatus::COMPLETED)
+                                            <x-badge success>{{ __('Completed') }}</x-badge>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="px-2 pb-2 w-full">
+                <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                    <div class="py-3 px-5 mb-3 w-full inline-flex items-center justify-between">
+                        <span class="text-md font-semibold text-gray-700">Recent Purchase</span>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-left px-4">{{ 'Supplier' }}</th>
+                                <th class="text-left px-4">{{ 'Total' }}</th>
+                                <th class="text-left px-4">{{ 'Date' }}</th>
+                                <th class="text-left px-4">{{ 'Status' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($lastPurchases as $purchase)
+                                <tr class="text-sm antialiased">
+                                    <td class="px-4 py-2">
+                                        <p class="font-bold tracking-wide text-gray-800">
+                                            {{ $purchase->supplier->name }}</p>
+                                        <span
+                                            class="text-indigo-600 text-xs font-semibold">{{ $purchase->reference }}</span>
+                                    </td>
+                                    <td class="px-4 py-2">{{ format_currency($purchase->total_amount) }}</td>
+                                    <td class="px-4 py-2">{{ $purchase->date }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($purchase?->status == \App\Enums\PurchaseStatus::PENDING)
+                                            <x-badge warning class="text-xs">
+                                                {{ __('Pending') }}
+                                            </x-badge>
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::ORDERED)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Ordered') }}
+                                            </x-badge>
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::COMPLETED)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Completed') }}
+                                            </x-badge>
+                                        @elseif ($purchase?->status == \App\Enums\PurchaseStatus::Returned)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Returned') }}
+                                            </x-badge>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="px-2 pb-2 sm:w-1/2 w-full">
+                <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                    <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                        <span class="text-md font-semibold">Top 5 Seller on {{ DATE('F') }}</span>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-left">{{ 'Name' }}</th>
+                                <th>{{ 'Profit' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($bestSales as $sales)
+                                <tr class="antialiased">
+                                    <td class="py-1 px-2 font-bold tracking-wide text-gray-800">{{ $sales->name }}
+                                        <br><span class="text-indigo-600 text-xs font-semibold">{{ 'Total Sales' }}
+                                            :
+                                            {{ $sales->totalSales }}</span>
+                                    </td>
+                                    <td class="py-1 px-2 text-center text-xs tracking-wide">
+                                        {{ format_currency($sales->TotalAmount) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="px-2 pb-2 sm:w-1/2 w-full">
+                <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                    <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                        <span class="text-md font-semibold">Top Product on {{ DATE('F') }}</span>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{{ 'Name' }}</th>
+                                <th>{{ 'Total' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($topProduct as $product)
+                                <tr class="antialiased">
+                                    <td class="py-1 px-2 font-bold tracking-wide text-gray-800">{{ $product->name }}
+                                        <br><span class="text-indigo-600 text-xs font-semibold">code :
+                                            {{ $product->code }}</span>
+                                    </td>
+                                    <td class="py-1 px-2 text-center text-xs tracking-wide">{{ $product->qtyItem }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@prepend('scripts')
+    {{-- Push ApexCharts to the top of the scripts stack --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+@endprepend
+@push('scripts')
+    <script>
+        var options = {
+           chart: {
+                type: 'area',
+                height: '400px',
+                defaultLocale: 'en',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                },
+                locales: [{
+                    name: 'en',
+                    options: {
+                        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                            'September', 'October', 'November', 'December'
+                        ],
+                        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+                            'Nov', 'Dec'
+                        ],
+                        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                        shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                        toolbar: {
+                            download: 'تحميل',
+                            selection: 'تحديد',
+                            selectionZoom: 'تحديد التكبير',
+                            zoomIn: 'تكبير',
+                            zoomOut: 'تصغير',
+                            pan: 'Panning',
+                            reset: 'إعادة الحجم الطبيعي',
+                            menu: 'اللائحة',
+                            DownloadSVG: 'asdfasdf'
+                        }
+                    }
+                }]
+            },
+            series: [{
+                name: 'المشتريات',
+                data: @json($purchases_count)
+            }],
+            xaxis: {
+                categories: @json($purchases)
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val;
+                    }
+                }
+            }
+        }
+        var chart = new ApexCharts(document.querySelector("#chart1"), options);
+        chart.render();
+    </script>
+
+    <script>
+        var options = {
+            chart: {
+                type: 'area',
+                height: '400px',
+                defaultLocale: 'en',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                },
+                locales: [{
+                    name: 'en',
+                    options: {
+                        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                            'September', 'October', 'November', 'December'
+                        ],
+                        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+                            'Nov', 'Dec'
+                        ],
+                        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                        shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                        toolbar: {
+                            download: 'تحميل',
+                            selection: 'تحديد',
+                            selectionZoom: 'تحديد التكبير',
+                            zoomIn: 'تكبير',
+                            zoomOut: 'تصغير',
+                            pan: 'Panning',
+                            reset: 'إعادة الحجم الطبيعي',
+                            menu: 'اللائحة',
+                            DownloadSVG: 'asdfasdf'
+                        }
+                    }
+                }]
+            },
+            series: [{
+                name: 'المبيعات',
+                data: @json($sales_count)
+            }],
+            xaxis: {
+                categories: @json($sales)
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val;
+                    }
+                }
+            }
+        }
+        var chart = new ApexCharts(document.querySelector("#chart2"), options);
+        chart.render();
+    </script>
+
+@endpush
+
+
+@push('scripts')    
+    <script>
+        function chart(data, selector) {
+            let tes = data
+            let options = {
+                series: [{
+                    name: "Sales",
+                    data: tes.total.sales,
+                }, {
+                    name: "Purchase",
+                    data: tes.total.purchase,
+                }],
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                    zoom: {
+                        enabled: false,
+                    },
+                },
+                  plotOptions: {
+                    bar: {
+                        borderRadius: 4,
+                        horizontal: false,
+                        dataLabels: {
+                            position: 'top',
+                        },
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    offsetX: -6,
+                    style: {
+                        fontSize: '12px',
+                        colors: ['#fff']
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 1,
+                    colors: ['#fff']
+                },
+                markers: {
+                    size: 5,
+                    colors: ["#1a56db"],
+                    strokeColor: "#ffffff",
+                    strokeWidth: 3
+                },
+                xaxis: {
+                    categories: tes.labels,
+                    style: {
+                        colors: ['#1a56db']
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val;
+                        }
+                    }
+                }
+            };
+            var chart = new ApexCharts(document.querySelector(selector), options);
+            chart.render();
+        }
+        chart({!! $charts !!}, '#chart');
+    </script>
+@endpush
