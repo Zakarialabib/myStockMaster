@@ -2,7 +2,7 @@
 
 <div
     x-data="{
-        model: @entangle($attributes->wire('model')),
+        model: @entangle($attributes->wire('model')) ?? null
     }"
     x-init="
         select2 = $($refs.select)
