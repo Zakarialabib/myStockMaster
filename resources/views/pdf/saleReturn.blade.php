@@ -20,7 +20,7 @@
 
          </div>
          <div id="Title-heading">
-            Retour  : {{$return_sale->reference}}
+            {{__('Return')}}  : {{$return_sale->reference}}
          </div>
          </div>
       </header>
@@ -36,11 +36,11 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$return_sale->client_name }}</div>
-                           <div><strong>ICE:</strong> {{$return_sale->client_ice }}</div>
-                           <div><strong>Téle:</strong> {{$return_sale->client_phone }}</div>
-                           <div><strong>Adresse:</strong>   {{$return_sale->client_adr }}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$return_sale->client_email }}</div>
+                           <div><strong>{{ __('Name') }}:</strong> {{ $returnSale->customer->name }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $returnSale->customer?->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $returnSale->customer->phone }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ $returnSale->customer->address }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ $returnSale->customer->email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -71,12 +71,12 @@
             <table class="table-sm">
                <thead>
                   <tr>
-                     <th>PRODUIT</th>
-                     <th>PRIX UNITAIRE</th>
-                     <th>QUANTITE</th>
-                     <th>REMISE</th>
-                     <th>TAXE</th>
-                     <th>TOTAL</th>
+                     <th>{{__('Product')}}</th>
+                     <th>{{__('Unit Price')}}</th>
+                     <th>{{__('Qty')}}</th>
+                     <th>{{__('Discount')}}</th>
+                     <th>{{__('Tax')}}</th>
+                     <th>{{__('TOTAL')}}</th>
                   </tr>
                </thead>
                <tbody>
