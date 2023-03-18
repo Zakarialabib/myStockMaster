@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Sales\Payment;
 use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;

@@ -23,7 +23,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->languages = Language::select(['id', 'name'])->toArray();
+        $this->languages = Language::select(['id', 'name','status','is_default'])->get();
     }
 
     public function render()

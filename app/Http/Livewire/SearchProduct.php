@@ -110,7 +110,7 @@ class SearchProduct extends Component
 
     protected function initListsForFields(): void
     {
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
-        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
+        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
+        $this->listsForFields['categories'] = Category::select('name', 'id')->get();
     }
 }

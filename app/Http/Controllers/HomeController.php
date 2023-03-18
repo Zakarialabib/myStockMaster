@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseStatus;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -186,7 +187,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $sales = Sale::whereStatus('Completed')
+        $sales = Sale::whereStatus(SaleStatus::COMPLETED)
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')
@@ -220,7 +221,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $purchases = Purchase::whereStatus('Completed')
+        $purchases = Purchase::whereStatus(PurchaseStatus::COMPLETED)
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')
@@ -245,9 +246,6 @@ class HomeController extends Controller
 
     public function changeLanguage($locale)
     {
-        // Session::put('code', $locale);
-        // $language = Session::get('code');
-
         Cookie::queue('lang', $locale);
 
         return redirect()->back();
