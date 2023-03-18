@@ -121,7 +121,7 @@ class Details extends Component
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails.product')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->customer_id)->saleDetails()->with('product')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }

@@ -69,9 +69,9 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
-
         try {
+             $validatedData = $this->validate();
+
             $this->expense->save($validatedData);
 
             $this->expense->user()->associate(auth()->user());
@@ -88,7 +88,7 @@ class Create extends Component
 
     protected function initListsForFields()
     {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
+        $this->listsForFields['expensecategories'] = ExpenseCategory::select('name', 'id')->get();
+        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
     }
 }
