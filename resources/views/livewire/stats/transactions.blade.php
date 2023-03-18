@@ -60,7 +60,7 @@
             <div class="px-2 pb-2 w-full sm:w-1/2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{('Sales')}}</h3>
+                        <h3>{{ 'Sales' }}</h3>
                     </div>
                     <div id="chart2"></div>
                 </div>
@@ -68,7 +68,7 @@
             <div class="px-2 pb-2 w-full sm:w-1/2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{('Purchases')}}</h3>
+                        <h3>{{ 'Purchases' }}</h3>
                     </div>
                     <div id="chart1"></div>
                 </div>
@@ -238,7 +238,7 @@
 @push('scripts')
     <script>
         var options = {
-           chart: {
+            chart: {
                 type: 'area',
                 height: '400px',
                 defaultLocale: 'en',
@@ -345,50 +345,59 @@
         var chart = new ApexCharts(document.querySelector("#chart2"), options);
         chart.render();
     </script>
-
 @endpush
 
 
-@push('scripts')    
+@push('scripts')
     <script>
         function chart(data, selector) {
-            let tes = data
+            let tes = data;
             let options = {
                 series: [{
-                    name: "Sales",
-                    data: tes.total.sales,
-                }, {
-                    name: "Purchase",
-                    data: tes.total.purchase,
-                }],
+                        name: "Sales Total Amount",
+                        data: tes.total.sales
+                    },
+                    {
+                        name: "Sales Due Amount",
+                        data: tes.due_amount.sales
+                    },
+                    {
+                        name: "Purchase Total Amount",
+                        data: tes.total.purchase
+                    },
+                    {
+                        name: "Purchase Due Amount",
+                        data: tes.due_amount.purchase
+                    }
+                ],
                 chart: {
                     height: 350,
-                    type: 'bar',
+                    type: "bar",
                     zoom: {
-                        enabled: false,
-                    },
+                        enabled: false
+                    }
                 },
-                  plotOptions: {
+                plotOptions: {
                     bar: {
-                        borderRadius: 4,
                         horizontal: false,
+                        borderRadius: 4,
                         dataLabels: {
-                            position: 'top',
-                        },
+                            position: "top"
+                        }
                     }
                 },
                 dataLabels: {
                     enabled: true,
                     offsetX: -6,
                     style: {
-                        fontSize: '12px',
-                        colors: ['#fff']
+                        fontSize: "12px",
+                        colors: ["#fff"]
                     }
                 },
                 stroke: {
                     show: true,
                     width: 1,
-                    colors: ['#fff']
+                    colors: ["#fff"]
                 },
                 markers: {
                     size: 5,
@@ -398,8 +407,10 @@
                 },
                 xaxis: {
                     categories: tes.labels,
-                    style: {
-                        colors: ['#1a56db']
+                    labels: {
+                        style: {
+                            colors: "#1a56db"
+                        }
                     }
                 },
                 tooltip: {
