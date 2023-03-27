@@ -6,7 +6,7 @@
             <span class="sr-only">{{ config('settings.site_title') }}</span>
         </a>
 
-        <div class="md:flex gap-4">
+        <div class="flex gap-4">
             <div class="md:flex hidden">
                 <x-button-fullscreen />
             </div>
