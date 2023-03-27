@@ -29,7 +29,7 @@ class ApiToken extends Component
 
     public function mount()
     {
-       $this->integrations = Integration::select('id','store_url','last_sync','type' ,'products','status' )->get();
+       $this->integrations = Integration::select('id', 'store_url', 'last_sync', 'type', 'products', 'status' )->get();
        $this->integration = Integration::where('type', IntegrationType::CUSTOM)->first();
        $this->missingProducts = $this->integration?->products;
 

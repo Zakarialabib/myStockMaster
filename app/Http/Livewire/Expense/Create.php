@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Expense;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Warehouse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -23,7 +24,6 @@ class Create extends Component
 
     /** @var mixed */
     public $expense;
-    public $date;
 
     public $listsForFields = [];
 
@@ -44,8 +44,6 @@ class Create extends Component
 
     public function mount(): void
     {
-        $this->date = date('Y-m-d');
-
         $this->initListsForFields();
     }
 
@@ -69,21 +67,17 @@ class Create extends Component
 
     public function create(): void
     {
-        try {
-             $validatedData = $this->validate();
+        $validatedData = $this->validate();
 
-            $this->expense->save($validatedData);
+        $this->expense->save($validatedData);
 
-            $this->expense->user()->associate(auth()->user());
+        $this->expense->user()->associate(auth()->user());
 
-            $this->alert('success', __('Expense created successfully.'));
+        $this->alert('success', __('Expense created successfully.'));
 
-            $this->emit('refreshIndex');
+        $this->emit('refreshIndex');
 
-            $this->createExpense = false;
-        } catch (Throwable $th) {
-            $this->alert('success', __('Error.').$th->getMessage());
-        }
+        $this->createExpense = false;
     }
 
     protected function initListsForFields()

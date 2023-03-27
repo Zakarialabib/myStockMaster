@@ -16,6 +16,9 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Http\Response;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class Index extends Component
 {
@@ -62,7 +65,7 @@ class Index extends Component
         $this->orderable = (new Customer())->orderable;
     }
 
-    public function render()
+    public function render(): View|Factory
     {
         abort_if(Gate::denies('customer_access'), 403);
 
@@ -95,7 +98,7 @@ class Index extends Component
         $this->alert('warning', __('Customer deleted successfully'));
     }
 
-    public function showModal($id)
+    public function showModal($id): void
     {
         abort_if(Gate::denies('customer_access'), 403);
 
@@ -104,7 +107,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function downloadSelected()
+    public function downloadSelected(): BinaryFileResponse|Response
     {
         abort_if(Gate::denies('customer_access'), 403);
 
@@ -113,30 +116,28 @@ class Index extends Component
         return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function downloadAll(Customer $customers)
+    public function downloadAll(Customer $customers): BinaryFileResponse|Response
     {
         abort_if(Gate::denies('customer_access'), 403);
 
         return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function exportSelected(): BinaryFileResponse
+    public function exportSelected(): BinaryFileResponse|Response
     {
         abort_if(Gate::denies('customer_access'), 403);
-
-        // $customers = Customer::whereIn('id', $this->selected)->get();
 
         return $this->callExport()->forModels($this->selected)->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    public function exportAll(): BinaryFileResponse
+    public function exportAll(): BinaryFileResponse|Response
     {
         abort_if(Gate::denies('customer_access'), 403);
 
         return $this->callExport()->download('customers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
-    public function import()
+    public function import(): void
     {
         abort_if(Gate::denies('customer_access'), 403);
 
