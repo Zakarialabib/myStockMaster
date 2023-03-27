@@ -82,9 +82,7 @@
                                         </div>
                                     </ol>
                                 </div>
-
                                 <hr>
-
                             </div>
                         </div>
                     </div>

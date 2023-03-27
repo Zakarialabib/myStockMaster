@@ -60,7 +60,7 @@
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-                <x-button primary onclick="Livewire.emit('createExpense')">
+                <x-button primary type="button" onclick="Livewire.emit('createExpense')">
                     {{ __('Create Expense') }}
                 </x-button>
             </div>
@@ -70,7 +70,6 @@
 
 <x-app-layout>
     <x-card>
-
         <div>
             <livewire:expense.index />
         </div>
