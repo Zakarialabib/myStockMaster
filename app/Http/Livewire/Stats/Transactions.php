@@ -14,9 +14,20 @@ use Livewire\Component;
 
 class Transactions extends Component
 {
-    public $typeChart='yearly';
-    
-    public $officerCount,$categoriesCount,$topProduct,$productCount,$salesCount,$profit,$purchase,$purchaseCount,$lastPurchases,$supplierCount,$customerCount,$profitCount,$bestSales;
+    public $typeChart = 'monthly';
+
+    public $categoriesCount;
+    public $topProduct; 
+    public $productCount; 
+    public $salesCount;
+    public $profit;
+    public $purchase;
+    public $purchaseCount;
+    public $lastPurchases;
+    public $supplierCount;
+    public $customerCount;
+    public $profitCount;
+    public $bestSales;
     public $lastSales;
     public $totalSales;
     public $totalPurchases;
@@ -25,80 +36,135 @@ class Transactions extends Component
     public $purchases_count;
     public $sales;
     public $sales_count;
-
     public function mount()
     {
-        $this->officerCount= User::count('id');
-        $this->purchaseCount= Purchase::count('uuid');
-        $this->categoriesCount= Category::count('id');
-        $this->productCount= Product::count('id');
-        $this->salesCount= Sale::count('id');
-        $this->supplierCount= Supplier::count('id');
-        $this->customerCount= Customer::count('id');
-        $this->lastSales= Sale::select(['id','reference','total_amount','status','customer_id','user_id','date'])->with(['customer'])->latest()->take(5)->get();
-        $this->lastPurchases= Purchase::select(['id','reference','total_amount','status','supplier_id','date'])->with(['supplier'])->latest()->take(5)->get();
-        $this->bestSales= DB::select("SELECT COUNT(sales.id) as totalSales,SUM(sales.total_amount) as TotalAmount, users.name as name FROM `sales` INNER JOIN users ON sales.user_id=users.id WHERE MONTH(CURDATE())=MONTH(sales.created_at) GROUP by sales.user_id ORDER BY TotalAmount DESC LIMIT 5");
-        $this->totalSales= Sale::sum('total_amount');
+        $this->purchaseCount = Purchase::count('uuid');
+        $this->categoriesCount = Category::count('id');
+        $this->productCount = Product::count('id');
+        $this->salesCount = Sale::count('id');
+        $this->supplierCount = Supplier::count('id');
+        $this->customerCount = Customer::count('id');
+        $this->lastSales = Sale::with('customer')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'reference', 'total_amount', 'status', 'customer_id', 'user_id', 'date']);
+
+        $this->lastPurchases = Purchase::with('supplier')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date']);
+
+        $this->bestSales = DB::table('sales')
+            ->selectRaw('COUNT(sales.id) as totalSales, SUM(sales.total_amount) as TotalAmount, customers.name as name')
+            ->join('customers', 'sales.customer_id', '=', 'customers.id')
+            ->whereRaw('MONTH(CURDATE()) = MONTH(sales.created_at)')
+            ->groupBy('sales.customer_id', 'customers.name')
+            ->orderByDesc('TotalAmount')
+            ->limit(5)
+            ->get();
+
+        $this->totalSales = Sale::sum('total_amount');
         $this->totalPurchases = Purchase::sum('total_amount');
-        $this->topProduct= DB::select("SELECT SUM(sale_details.quantity) as qtyItem,products.name as name,products.code as code FROM `sale_details` INNER JOIN products ON products.id=sale_details.product_id WHERE MONTH(CURDATE())=MONTH(sale_details.created_at) GROUP BY sale_details.product_id ORDER by qtyItem DESC LIMIT 5");
-      
-        // $this->purchases =  DB::table('purchases')
-        // ->whereDate('date', '>=', now()->subWeek())
-        // ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
-        // ->groupBy('date')
-        // ->pluck('date');
 
-        $this->purchases_count =  DB::table('purchases')
-        ->whereDate('date', '>=', now()->subWeek())
-        ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
-        ->groupBy('date')
-        ->pluck('purchases');
+        $this->topProduct = DB::table('sale_details')
+            ->selectRaw('SUM(sale_details.quantity) as qtyItem, products.name as name, products.code as code')
+            ->join('products', 'products.id', '=', 'sale_details.product_id')
+            ->whereRaw('MONTH(CURDATE()) = MONTH(sale_details.created_at)')
+            ->groupBy('sale_details.product_id', 'products.name', 'products.code')
+            ->orderByDesc('qtyItem')
+            ->limit(5)
+            ->get();
 
-        // $this->sales =  DB::table('sales')
-        // ->whereDate('date', '>=', now()->subWeek())
-        // ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
-        // ->groupBy('date')
-        // ->pluck('date');
+        $this->purchases_count = Purchase::where('date', '>=', now()->subWeek())
+            ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
+            ->groupBy('date')
+            ->pluck('purchases');
 
-        $this->sales_count =  DB::table('sales')
-            ->whereDate('date', '>=', now()->subWeek())
+        $this->sales_count = Sale::whereDate('date', '>=', now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
-            ->pluck('sales');
-    
+            ->pluck('sales');   
+
         $this->chart();
     }
-    
     public function chart()
     {
-        if ($this->typeChart=='monthly') {
-            $sales= Sale::select(DB::raw('SUM(total_amount) as total,MONTH(date) as labels'), DB::raw('count(*) as sales'))->where(DB::raw('YEAR(date)'),'=',DB::raw('YEAR(CURDATE())'))->groupBy(DB::raw('MONTH(date)'))->get()->toArray();
-            $purchases= Purchase::select(DB::raw('SUM(total_amount) as total,MONTH(date) as labels'),DB::raw('count(*) as purchases'))->where(DB::raw('YEAR(date)'),'=',DB::raw('YEAR(CURDATE())'))->groupBy(DB::raw('MONTH(date)'))->get()->toArray();
-        }else{
-            $sales= Sale::select(DB::raw('SUM(total_amount) as total,year(date) as labels'), DB::raw('count(*) as sales'))->groupBy(DB::raw('YEAR(date)'))->get()->toArray();
-            $purchases= Purchase::select(DB::raw('SUM(total_amount) as total,year(date) as labels'),DB::raw('count(*) as purchases'))->groupBy(DB::raw('YEAR(date)'))->get()->toArray();
-        }
-        $this->charts = $this->getChart($sales,$purchases);
+        $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+            ->when($this->typeChart == 'monthly', function ($q) {
+                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw('MONTH(date)');
+            }, function ($q) {
+            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
+                ->groupByRaw('YEAR(date)');
+        })
+            ->get()
+            ->toArray();
+
+        $sales = [
+            'total' => array_column($query, 'total'),
+            'due_amount' => array_map(function ($total, $dueAmount) {
+                return $total - $dueAmount;
+            }, array_column($query, 'total'), array_column($query, 'due_amount')),
+            'labels' => array_column($query, 'labels')
+        ];
+
+        $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+            ->when($this->typeChart == 'monthly', function ($q) {
+                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw('MONTH(date)');
+            }, function ($q) {
+            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
+                ->groupByRaw('YEAR(date)');
+        })
+            ->get()
+            ->toArray();
+
+        $purchases = [
+            'total' => array_column($query, 'total'),
+            'due_amount' => array_map(function ($total, $dueAmount) {
+                return $total - $dueAmount;
+            }, array_column($query, 'total'), array_column($query, 'due_amount')),
+            'labels' => array_column($query, 'labels')
+        ];
+
+        $this->charts = json_encode([
+            'total' => [
+                'sales' => $sales['total'],
+                'purchase' => $purchases['total'],
+            ],
+            'due_amount' => [
+                'sales' => $sales['due_amount'],
+                'purchase' => $purchases['due_amount'],
+            ],
+            'labels' => $sales['labels']
+        ]);
     }
 
-    protected function getChart($sales,$purchases)
+
+    protected function getChart($sales, $purchases)
     {
-        $dataarray=[];
-        $i=0;
+        $dataarray = [];
+        $i = 0;
+
         foreach ($sales as $sale) {
-            $dataarray['total']['sales'][$i]=$sale['total'];
-            $dataarray['labels'][$i]=$sale['labels'];
+            $dataarray['total']['sales'][$i] = $sale['total'];
+            $dataarray['due_amount']['sales'][$i] = $sale['total'] - $sale['due_amount'];
+            $dataarray['labels'][$i] = $sale['labels'];
             $i++;
         }
-        $i=0;
+
+        $i = 0;
+
         foreach ($purchases as $purchase) {
-            $dataarray['total']['purchase'][$i]=$purchase['total'];
+            $dataarray['total']['purchase'][$i] = $purchase['total'];
+            $dataarray['due_amount']['purchase'][$i] = $purchase['total'] - $purchase['due_amount'];
             $i++;
         }
+
         return json_encode($dataarray);
     }
-
-  
     public function render()
     {
         return view('livewire.stats.transactions');
