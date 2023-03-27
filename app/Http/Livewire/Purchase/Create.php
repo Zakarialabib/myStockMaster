@@ -63,7 +63,8 @@ class Create extends Component
     public $payment_method;
 
     public $date;
-
+    public $discount_type;
+    public $item_discount;
     public $listsForFields = [];
 
     public function rules(): array
@@ -125,7 +126,7 @@ class Create extends Component
         } else {
             $payment_status = PaymentStatus::PAID;
         }
-
+        
         $purchase = Purchase::create([
             'reference' => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
             'date' => $this->date,

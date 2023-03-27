@@ -42,7 +42,7 @@ class PurchasesReturnReport extends Component
 
     public function render()
     {
-        $purchase_returns = PurchaseReturn::whereDate('date', '>=',$this->start_date)
+        $purchase_returns = PurchaseReturn::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, fn ($q) => $q->where('supplier_id', $this->supplier_id))
             ->when($this->purchase_return_status, fn ($q) => $q->where('purchase_return_status', $this->purchase_return_status))
