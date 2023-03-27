@@ -23,7 +23,10 @@ class WarehouseReport extends Component
     public $purchases;
     public $sales;
     public $quotations;
-
+    public $productPurchase;
+    public $productSale;
+    public $productQuotation;
+    
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
         'end_date' => 'required|date|after:start_date',
@@ -64,25 +67,29 @@ class WarehouseReport extends Component
         ->get();
     }
 
+    public function getExpensesProperty()
+    {
+        return Expense::with('expenseCategory')
+        ->where('warehouse_id', $this->warehouse_id)
+        ->whereDate('created_at', '>=', $this->start_date)
+        ->whereDate('created_at', '<=', $this->end_date)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    }
+
     public function warehouseReport()
     {
         
-        $expenses = Expense::with('expenseCategory')
-            ->where('warehouse_id', $this->warehouse_id)
-            ->whereDate('created_at', '>=', $this->start_date)
-            ->whereDate('created_at', '<=', $this->end_date)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $productPurchase = $this->purchases->map(function ($purchase) {
+        $this->productPurchase = $this->purchases->map(function ($purchase) {
             return PurchaseDetail::where('purchase_id', $purchase->id)->get();
         });
 
-        $productSale = $this->sales->map(function ($sale) {
+        $this->productSale = $this->sales->map(function ($sale) {
             return SaleDetails::where('sale_id', $sale->id)->get();
         });
 
-        $productQuotation = $this->quotations->map(function ($quotation) {
+        $this->productQuotation = $this->quotations->map(function ($quotation) {
             return QuotationDetails::where('quotation_id', $quotation->id)->get();
         });
     }
