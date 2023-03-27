@@ -26,6 +26,31 @@
                 <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
+        <div class="w-full mb-2 flex flex-wrap justify-center">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="startDate" type="date" name="startDate" />
+                    @error('startDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="endDate" type="date" name="endDate" />
+                    @error('endDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full space-x-2 md:w-1/3 flex mx-0 my-auto px-3 mb-4">
+                <x-button type="button" primary wire:click="filterByType('day')">Day</x-button>
+                <x-button type="button" info wire:click="filterByType('month')">Month</x-button>
+                <x-button type="button" warning wire:click="filterByType('year')">Year</x-button>
+            </div>
+        </div>
     </div>
 
     <x-table>
@@ -66,7 +91,10 @@
                         {{ $sale->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->customer->name }}
+                        <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
+                            href="{{ route('customer.details', $sale->customer->uuid) }}">
+                            {{ $sale->customer->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
@@ -191,11 +219,11 @@
                 <div class="flex flex-row">
                     <div class="w-full">
                         <div class="p-2 flex flex-wrap items-center">
-                            @if($sale != null)
-                            <x-button secondary class="d-print-none" target="_blank" wire:loading.attr="disabled"
-                                href="{{ route('sales.pdf', $sale->id) }}" class="ml-auto">
-                                <i class="fas fa-print"></i> {{ __('Print') }}
-                            </x-button>
+                            @if ($sale != null)
+                                <x-button secondary class="d-print-none" target="_blank" wire:loading.attr="disabled"
+                                    href="{{ route('sales.pdf', $sale->id) }}" class="ml-auto">
+                                    <i class="fas fa-print"></i> {{ __('Print') }}
+                                </x-button>
                             @endif
                         </div>
                         <div class="p-4">
@@ -258,28 +286,28 @@
                                     </x-slot>
 
                                     <x-table.tbody>
-                                        @if($sale != null)
-                                        @foreach ($sale->saleDetails as $item)
-                                            <x-table.tr>
-                                                <x-table.td>
-                                                    {{ $item->name }} <br>
-                                                    <x-badge success>
-                                                        {{ $item->code }}
-                                                    </x-badge>
-                                                </x-table.td>
-                                                <x-table.td>
-                                                    {{ format_currency($item->unit_price) }}
-                                                </x-table.td>
+                                        @if ($sale != null)
+                                            @foreach ($sale->saleDetails as $item)
+                                                <x-table.tr>
+                                                    <x-table.td>
+                                                        {{ $item->name }} <br>
+                                                        <x-badge success>
+                                                            {{ $item->code }}
+                                                        </x-badge>
+                                                    </x-table.td>
+                                                    <x-table.td>
+                                                        {{ format_currency($item->unit_price) }}
+                                                    </x-table.td>
 
-                                                <x-table.td>
-                                                    {{ $item->quantity }}
-                                                </x-table.td>
+                                                    <x-table.td>
+                                                        {{ $item->quantity }}
+                                                    </x-table.td>
 
-                                                <x-table.td>
-                                                    {{ format_currency($item->sub_total) }}
-                                                </x-table.td>
-                                            </x-table.tr>
-                                        @endforeach
+                                                    <x-table.td>
+                                                        {{ format_currency($item->sub_total) }}
+                                                    </x-table.td>
+                                                </x-table.tr>
+                                            @endforeach
                                         @endif
                                     </x-table.tbody>
                                 </x-table>
