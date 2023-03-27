@@ -96,7 +96,7 @@ class Details extends Component
 
     public function getTotalSaleReturnsProperty(): int|float
     {
-        return $this->customerSum('total_amount');
+        return SaleReturn::customerSum('total_amount');
     }
 
     public function getTotalPaymentsProperty(): int|float
