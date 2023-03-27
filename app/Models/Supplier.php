@@ -150,4 +150,9 @@ class Supplier extends Model
 
         return $debt - $product_costs;
     }
+
+    private function supplierSum($column, $model)
+    {
+        return $model::where('supplier_id', $this->id)->sum($column);
+    }
 }

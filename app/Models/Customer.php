@@ -114,7 +114,7 @@ class Customer extends Model
         return $this->HasOne(Sale::class);
     }
 
-    public function getTotalSalesAttribute(): int|float
+    public function getTotalSalesAttribute()
     {
         return $this->customerSum('total_amount', Sale::class);
     }
@@ -134,7 +134,7 @@ class Customer extends Model
         return $this->customerSum('due_amount', Sale::class);
     }
 
-    public function getProfitAttribute(): int|float
+    public function getProfit(): int|float
     {
         $sales = Sale::where('customer_id', $this->id)
             ->completed()->sum('total_amount');
@@ -144,7 +144,7 @@ class Customer extends Model
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->id)->saleDetails()->with('product')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->id)->with('saleDetails','saleDetails.product')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }
