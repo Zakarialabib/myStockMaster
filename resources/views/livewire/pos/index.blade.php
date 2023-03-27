@@ -17,8 +17,6 @@
                             <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                         @endforeach
                     </select>
-
-
                 </div>
 
                 <div>
@@ -149,95 +147,93 @@
             </x-slot>
 
             <x-slot name="content">
-                <form id="checkout-form" wire:submit.prevent="store">
-                    <div>
-                        <div class="flex flex-wrap">
-                            <div class="w-1/2 px-2">
-                                <div class="flex flex-wrap -mx-2 mb-3">
-                                    <div class="w-full px-2">
-                                        <x-label for="total_amount" :value="__('Total Amount')" required />
-                                        <input id="total_amount" type="text" wire:model="total_amount"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="total_amount" readonly required>
-                                    </div>
-                                    <div class="w-full px-2">
-                                        <x-label for="paid_amount" :value="__('Paid Amount')" required />
-                                        <input id="paid_amount" type="text" wire:model="paid_amount"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="paid_amount"  required>
-                                    </div>
-                                    <div class="w-full px-2">
-                                        <x-label for="payment_method" :value="__('Payment Method')" required />
-                                        <select wire:model="payment_method" id="payment_method" required
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                                            <option value="Cash">{{ __('Cash') }}</option>
-                                            <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
-                                            <option value="Cheque">{{ __('Cheque') }}</option>
-                                            <option value="Other">{{ __('Other') }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-4 w-full">
-                                        <x-label for="note" :value="__('Note')" />
-                                        <textarea name="note" id="note" rows="5" wire:model="note"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-                                    </div>
+                <form id="checkout-form" wire:submit.prevent="store" class="py-5">
+                    <div class="flex flex-wrap">
+                        <div class="w-1/2 px-2">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="w-full px-2">
+                                    <x-label for="total_amount" :value="__('Total Amount')" required />
+                                    <input id="total_amount" type="text" wire:model="total_amount"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                        name="total_amount" readonly required>
                                 </div>
-                            </div>
-
-                            <div class="w-1/2 px-2">
-                                <div>
-                                    <x-table-responsive>
-                                        <x-table.tr>
-                                            <x-table.th>
-                                                {{ __('Total Products') }}
-                                            </x-table.th>
-                                            <x-table.td>
-                                                <span class="badge badge-success">
-                                                    {{ Cart::instance($cart_instance)->count() }}
-                                                </span>
-                                            </x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.th>
-                                                {{ __('Order Tax') }} ({{ $global_tax }}%)
-                                            </x-table.th>
-                                            <x-table.td>
-                                                (+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}
-                                            </x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.th>
-                                                {{ __('Discount') }} ({{ $global_discount }}%)
-                                            </x-table.th>
-                                            <x-table.td>
-                                                (-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
-                                            </x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.th>
-                                                {{ __('Shipping') }}
-                                            </x-table.th>
-                                            <x-table.td>
-                                                (+) {{ format_currency($shipping) }}
-                                            </x-table.td>
-                                        </x-table.tr>
-                                        <x-table.tr>
-                                            <x-table.th>
-                                                {{ __('Grand Total') }}
-                                            </x-table.th>
-                                            @php
-                                                $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
-                                            @endphp
-                                            <x-table.th>
-                                                (=) {{ format_currency($total_with_shipping) }}
-                                            </x-table.th>
-                                        </x-table.tr>
-                                    </x-table-responsive>
+                                <div class="w-full px-2">
+                                    <x-label for="paid_amount" :value="__('Paid Amount')" required />
+                                    <input id="paid_amount" type="text" wire:model="paid_amount"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                        name="paid_amount" required>
+                                </div>
+                                <div class="w-full px-2">
+                                    <x-label for="payment_method" :value="__('Payment Method')" required />
+                                    <select wire:model="payment_method" id="payment_method" required
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                                        <option value="Cash">{{ __('Cash') }}</option>
+                                        <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
+                                        <option value="Cheque">{{ __('Cheque') }}</option>
+                                        <option value="Other">{{ __('Other') }}</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 w-full">
+                                    <x-label for="note" :value="__('Note')" />
+                                    <textarea name="note" id="note" rows="5" wire:model="note"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="w-1/2 px-2">
+                            <div>
+                                <x-table-responsive>
+                                    <x-table.tr>
+                                        <x-table.th>
+                                            {{ __('Total Products') }}
+                                        </x-table.th>
+                                        <x-table.td>
+                                            <span class="badge badge-success">
+                                                {{ Cart::instance($cart_instance)->count() }}
+                                            </span>
+                                        </x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>
+                                            {{ __('Order Tax') }} ({{ $global_tax }}%)
+                                        </x-table.th>
+                                        <x-table.td>
+                                            (+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}
+                                        </x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>
+                                            {{ __('Discount') }} ({{ $global_discount }}%)
+                                        </x-table.th>
+                                        <x-table.td>
+                                            (-) {{ format_currency(Cart::instance($cart_instance)->discount()) }}
+                                        </x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>
+                                            {{ __('Shipping') }}
+                                        </x-table.th>
+                                        <x-table.td>
+                                            (+) {{ format_currency($shipping) }}
+                                        </x-table.td>
+                                    </x-table.tr>
+                                    <x-table.tr>
+                                        <x-table.th>
+                                            {{ __('Grand Total') }}
+                                        </x-table.th>
+                                        @php
+                                            $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
+                                        @endphp
+                                        <x-table.th>
+                                            (=) {{ format_currency($total_with_shipping) }}
+                                        </x-table.th>
+                                    </x-table.tr>
+                                </x-table-responsive>
+                            </div>
+                        </div>
                     </div>
-                    <div class="float-left px-2">
+                    <div class="float-left pb-4 px-2">
                         <x-button secondary type="button" data-dismiss="modal">{{ __('Close') }}</x-button>
                         <x-button primary type="submit">{{ __('Submit') }}</x-button>
                     </div>

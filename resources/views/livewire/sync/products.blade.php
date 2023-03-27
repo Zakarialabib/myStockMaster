@@ -13,8 +13,10 @@
                         <select wire:model.lazy="type" id="type" name="type"
                             class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500">
                             <option value="">{{ 'Select way to sync' }}</option>
-                            @foreach (\App\Enums\IntegrationType::values() as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
+                            @foreach (\App\Enums\IntegrationType::cases() as $type)
+                                <option value="{{ $type->value }}">
+                                    {{ __($type->name) }}
+                                </option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('type')" for="type" class="mt-2" />

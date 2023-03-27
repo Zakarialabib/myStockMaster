@@ -57,7 +57,7 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="featured" :value="__('Featured in Pos')" />
-                            <x-input id="featured" class="block mt-1 w-full" type="text" name="featured"
+                            <x-input.checkbox id="featured" class="block mt-1 w-full" type="checkbox" name="featured"
                                 wire:model.lazy="product.featured" />
                             <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
                         </div>
