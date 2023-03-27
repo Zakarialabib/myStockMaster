@@ -58,7 +58,7 @@ class SyncCustomProducts implements ShouldQueue
             ]);
         } else {
             // Create new product
-            $product = Product::create([
+            Product::create([
                 'name' => $this->data['name'],
                 'description' => $this->data['description'],
                 'price' => $this->data['price'],

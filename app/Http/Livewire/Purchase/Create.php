@@ -72,11 +72,8 @@ class Create extends Component
     public $payment_status;
 
     public $date;
-
     public $discount_type;
-
     public $item_discount;
-
     public $listsForFields = [];
 
     public function rules(): array
@@ -128,31 +125,32 @@ class Create extends Component
 
          $due_amount = $this->total_amount - $this->paid_amount;
 
-         if ($due_amount === $this->total_amount) {
-             $this->payment_status = PaymentStatus::PENDING;
-         } elseif ($due_amount > 0) {
-             $this->payment_status = PaymentStatus::PARTIAL;
-         } else {
-             $this->payment_status = PaymentStatus::PAID;
-         }
-
-         $purchase = Purchase::create([
-             'date'                => $this->date,
-             'supplier_id'         => $this->supplier_id,
-             'user_id'             => Auth::user()->id,
-             'tax_percentage'      => $this->tax_percentage,
-             'discount_percentage' => $this->discount_percentage,
-             'shipping_amount'     => $this->shipping_amount * 100,
-             'paid_amount'         => $this->paid_amount * 100,
-             'total_amount'        => $this->total_amount * 100,
-             'due_amount'          => $due_amount * 100,
-             'status'              => $this->status,
-             'payment_status'      => $this->payment_status,
-             'payment_method'      => $this->payment_method,
-             'note'                => $this->note,
-             'tax_amount'          => Cart::instance('purchase')->tax() * 100,
-             'discount_amount'     => Cart::instance('purchase')->discount() * 100,
-         ]);
+        if ($due_amount === $this->total_amount) {
+            $payment_status = PaymentStatus::PENDING;
+        } elseif ($due_amount > 0) {
+            $payment_status = PaymentStatus::PARTIAL;
+        } else {
+            $payment_status = PaymentStatus::PAID;
+        }
+        
+        $purchase = Purchase::create([
+            'reference' => settings()->purchase_prefix.'-'.date('Y-m-d-h'),
+            'date' => $this->date,
+            'supplier_id' => $this->supplier_id,
+            'user_id' => Auth::user()->id,
+            'tax_percentage' => $this->tax_percentage,
+            'discount_percentage' => $this->discount_percentage,
+            'shipping_amount' => $this->shipping_amount * 100,
+            'paid_amount' => $this->paid_amount * 100,
+            'total_amount' => $this->total_amount * 100,
+            'due_amount' => $due_amount * 100,
+            'status' => 2,
+            'payment_status' => $payment_status,
+            'payment_method' => $this->payment_method,
+            'note' => $this->note,
+            'tax_amount' => Cart::instance('purchase')->tax() * 100,
+            'discount_amount' => Cart::instance('purchase')->discount() * 100,
+        ]);
 
          foreach (Cart::instance('purchase')->content() as $cart_item) {
              PurchaseDetail::create([
