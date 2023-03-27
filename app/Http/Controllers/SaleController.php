@@ -124,7 +124,7 @@ class SaleController extends Controller
                     'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
 
-                if ($request->status === SaleStatus::Shipped || $request->status === SaleStatus::Completed) {
+                if ($request->status === SaleStatus::SHIPPED || $request->status === SaleStatus::COMPLETED) {
                     $product = Product::findOrFail($cart_item->id);
                     $product->update([
                         'quantity' => $product->quantity - $cart_item->qty,
