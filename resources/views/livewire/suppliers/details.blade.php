@@ -121,9 +121,11 @@
                                     <x-table.td>
                                         {{ $purchase->supplier->name }}
                                     </x-table.td>
-                                    <x-table.td>
+                                    <x-table.td> 
                                         @if ($purchase->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
+                                        @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PENDING)
+                                            <x-badge info>{{ __('Pending') }}</x-badge>
                                         @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
                                         @elseif($purchase->payment_status == \App\Enums\PaymentStatus::DUE)

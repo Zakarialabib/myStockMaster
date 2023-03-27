@@ -1,5 +1,5 @@
 <nav aria-label="secondary" x-data="{ open: false }"
-    class="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transition-transform duration-500 bg-gray-50 dark:bg-dark-eval-1"
+    class="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transition-transform duration-500 bg-white dark:bg-dark-eval-1"
     :class="{
         '-translate-y-full': scrollingDown,
         'translate-y-0': scrollingUp,
