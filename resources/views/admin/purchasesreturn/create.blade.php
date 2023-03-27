@@ -108,7 +108,7 @@
                                                 name="status" id="status" required>
                                                 @foreach (\App\Enums\PurchaseReturnStatus::cases() as $status)
                                                     <option value="{{ $status->value }}">
-                                                        {{ __($status->name) }}
+                                                        {{ __( $status->name ) }}
                                                     </option>
                                                 @endforeach
                                             </select>

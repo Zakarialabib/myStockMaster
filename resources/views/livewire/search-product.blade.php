@@ -12,15 +12,11 @@
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="category" :value="__('Category')" />
-                <x-select-list
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    required id="categories" name="categories" wire:model="category_id" :options="$this->listsForFields['categories']" />
+                <x-select2 :options="$this->listsForFields['categories']" wire:model="category_id" name="category_id" id="category_id" />
             </div>
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="warehouse" :value="__('Warehouse')" />
-                <x-select-list
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                    required id="warehouses" name="warehouses" wire:model="warehouse_id" :options="$this->listsForFields['warehouses']" />
+                <x-select2 :options="$this->listsForFields['warehouses']" wire:model="warehouse_id" name="warehouse_id" id="warehouse_id" />
             </div>
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="showCount" :value="__('Product per page')" />
