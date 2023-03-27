@@ -7,8 +7,10 @@ namespace App\Http\Livewire\Expense;
 use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
 use App\Models\Expense;
+use App\Models\Warehouse;
 use App\Models\ExpenseCategory;
 use App\Traits\Datatable;
+use App\Domain\Filters\DateFilter;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -38,6 +40,10 @@ class Index extends Component
     public $editModal = false;
 
     public $showFilters = false;
+
+    public $startDate;
+    public $endDate;
+    public $filterType;
 
     public $listsForFields = [];
 
@@ -72,6 +78,47 @@ class Index extends Component
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Expense())->orderable;
         $this->initListsForFields();
+        $this->startDate = Expense::orderBy('created_at')->value('created_at');
+        $this->endDate = now()->format('Y-m-d');
+    }
+
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+    }
+
+    public function filterByType($type)
+    {
+        $this->filterType = $type;
+    }
+
+    public function filterType()
+    {
+        switch ($this->filterType) {
+            case 'day':
+                $this->startDate = now()->format('Y-m-d');
+                $this->endDate = now()->format('Y-m-d');
+
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+
+                break;
+            default:
+                $filter = '';
+                break;
+        }
     }
 
     public function render()
@@ -85,7 +132,11 @@ class Index extends Component
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $expenses = $query->paginate($this->perPage);
+        $this->filterType();
+
+        $filter = new DateFilter();
+
+        $expenses = $filter->filterDate($query, $this->startDate, $this->endDate)->paginate($this->perPage);
 
         return view('livewire.expense.index', compact('expenses'));
     }
@@ -171,7 +222,8 @@ class Index extends Component
 
     protected function initListsForFields()
     {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
+        $this->listsForFields['expensecategories'] = ExpenseCategory::select('name', 'id')->get();
+        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
     }
 
     private function callExport(): ExpenseExport

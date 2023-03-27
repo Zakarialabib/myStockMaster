@@ -11,7 +11,7 @@ use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Support\Facades\Auth;
+use App\Domain\Filters\DateFilter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -33,6 +33,10 @@ class Index extends Component
         'refreshIndex' => '$refresh',
         'delete',
     ];
+
+    public $filterType = null;
+    public $startDate;
+    public $endDate;
 
     public $showModal = false;
 
@@ -110,6 +114,47 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
+        $this->startDate = Purchase::orderBy('created_at')->value('created_at');
+        $this->endDate = now()->format('Y-m-d');
+    }
+
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+    }
+
+    public function filterByType($type)
+    {
+        $this->filterType = $type;
+    }
+
+    public function fileType()
+    {
+        switch ($this->filterType) {
+            case 'day':
+                $this->startDate = now()->format('Y-m-d');
+                $this->endDate = now()->format('Y-m-d');
+
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+
+                break;
+            default:
+                $filter = '';
+                break;
+        }
     }
 
     public function render()
@@ -121,7 +166,11 @@ class Index extends Component
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $purchases = $query->paginate($this->perPage);
+        $this->fileType();
+        
+        $filter = new DateFilter();
+
+        $purchases = $filter->filterDate($query, $this->startDate, $this->endDate)->paginate($this->perPage);
 
         return view('livewire.purchase.index', compact('purchases'));
     }
@@ -167,6 +216,7 @@ class Index extends Component
 
         $this->purchase = $purchase;
         $this->date = date('Y-m-d');
+        $this->reference = 'ref-' . date('Y-m-d-h');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchase->id;
@@ -219,7 +269,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', 'Error'.$th->getMessage());
+            $this->alert('error', 'Error' . $th->getMessage());
         }
     }
 }
