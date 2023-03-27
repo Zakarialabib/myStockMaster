@@ -26,6 +26,31 @@
                 <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
+        <div class="w-full mb-2 flex flex-wrap justify-center">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="startDate" type="date" name="startDate" />
+                    @error('startDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="endDate" type="date" name="endDate" />
+                    @error('endDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full space-x-2 md:w-1/3 flex mx-0 my-auto px-2 mb-2">
+                <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
+                <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
+                <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
+            </div>
+        </div>
     </div>
     <div>
         <x-table>
@@ -68,7 +93,10 @@
                             {{ $purchase->date }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->supplier->name }}
+                            <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
+                                href="{{ route('supplier.details', $purchase->supplier->uuid) }}">
+                                {{ $purchase->supplier->name }}
+                            </a>
                         </x-table.td>
                         <x-table.td>
                             @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
