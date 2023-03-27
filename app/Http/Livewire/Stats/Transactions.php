@@ -29,19 +29,16 @@ class Transactions extends Component
     public $profitCount;
     public $bestSales;
     public $lastSales;
-    public $totalSales;
-    public $totalPurchases;
     public $charts;
     public $purchases;
     public $purchases_count;
     public $sales;
     public $sales_count;
+
     public function mount()
     {
-        $this->purchaseCount = Purchase::count('uuid');
         $this->categoriesCount = Category::count('id');
         $this->productCount = Product::count('id');
-        $this->salesCount = Sale::count('id');
         $this->supplierCount = Supplier::count('id');
         $this->customerCount = Customer::count('id');
         $this->lastSales = Sale::with('customer')
@@ -62,9 +59,6 @@ class Transactions extends Component
             ->orderByDesc('TotalAmount')
             ->limit(5)
             ->get();
-
-        $this->totalSales = Sale::sum('total_amount');
-        $this->totalPurchases = Purchase::sum('total_amount');
 
         $this->topProduct = DB::table('sale_details')
             ->selectRaw('SUM(sale_details.quantity) as qtyItem, products.name as name, products.code as code')
@@ -165,6 +159,7 @@ class Transactions extends Component
 
         return json_encode($dataarray);
     }
+    
     public function render()
     {
         return view('livewire.stats.transactions');

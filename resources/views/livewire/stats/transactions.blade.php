@@ -15,22 +15,7 @@
                 </x-counter-card>
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="green" counter="{{ format_currency($totalSales) }}"
-                    title="{{ __('Total Value Sales') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="purple" counter="{{ format_currency($totalPurchases) }}"
-                    title="{{ __('Total Value Purchases') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="orange" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}">
+                <x-counter-card color="green" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}">
                     <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0">
@@ -38,22 +23,9 @@
                 </x-counter-card>
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="lightGray" counter="{{ $customerCount }}" title="{{ __('Total Customer') }}">
+                <x-counter-card color="indigo" counter="{{ $customerCount }}" title="{{ __('Total Customer') }}">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="indigo" counter="{{ $purchaseCount }}" title="Total Purchases">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="orange" counter="{{ $salesCount }}" title="Total Sales">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
                     </path>
                 </x-counter-card>
             </div>
