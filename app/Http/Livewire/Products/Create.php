@@ -46,7 +46,7 @@ class Create extends Component
         'product.category_id' => 'required|integer|min:0|max:100',
         'product.brand_id' => 'nullable|integer|min:0|max:100',
         'product.warehouse_id' => 'nullable|integer|min:0|max:100',
-        'product.featured' => 'nullable',
+        'product.featured' => 'boolean',
     ];
 
     public function updated($propertyName): void
@@ -60,6 +60,7 @@ class Create extends Component
         $this->product->stock_alert = 10;
         $this->product->order_tax = 0;
         $this->product->unit = 'pcs';
+        $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
     }
 

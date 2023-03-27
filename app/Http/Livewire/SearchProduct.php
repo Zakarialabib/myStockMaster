@@ -30,6 +30,8 @@ class SearchProduct extends Component
     public $search_results;
 
     public $how_many;
+    
+    public $showCount;
 
     protected $listeners = [
         'selectedCategory' => 'categoryChanged',
