@@ -14,6 +14,7 @@ use App\Traits\Datatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Domain\Filters\DateFilter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -27,16 +28,22 @@ class Index extends Component
     use LivewireAlert;
     use Datatable;
 
-    /** @var mixed */
+    /** @var Sale|null */
     public $sale;
 
     /** @var array<string> */
     public $listeners = [
         'importModal', 'refreshIndex' => '$refresh',
         'paymentModal', 'paymentSave', 'showModal',
+        'delete',
     ];
 
+
     public $showModal = false;
+
+    public $filterType = null;
+    public $startDate;
+    public $endDate;
 
     public $importModal = false;
 
@@ -84,7 +91,54 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Sale())->orderable;
+        $this->startDate = Sale::orderBy('created_at')->value('created_at');
+        $this->endDate = now()->format('Y-m-d');
         $this->initListsForFields();
+    }
+
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+    }
+
+    public function filterByType($type)
+    {
+        $this->filterType = $type;
+    }
+
+
+
+    protected function filterSalesByDateRange($query)
+    {
+        switch ($this->filterType) {
+            case 'day':
+                $this->startDate = now()->format('Y-m-d');
+                $this->endDate = now()->format('Y-m-d');
+
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+
+                break;
+            default:
+                $filter = '';
+                break;
+        }
+
+        $filter = new DateFilter();
+
+        return $filter->filterDate($query, $this->startDate, $this->endDate);
     }
 
     public function render()
@@ -98,10 +152,11 @@ class Index extends Component
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $sales = $query->paginate($this->perPage);
+        $sales = $this->filterSalesByDateRange($query)->paginate($this->perPage);
 
         return view('livewire.sales.index', compact('sales'));
     }
+
 
     public function showModal($id)
     {
@@ -121,11 +176,11 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Sale $product)
+    public function delete(Sale $sale)
     {
         abort_if(Gate::denies('delete_sales'), 403);
 
-        $product->delete();
+        $sale->delete();
 
         $this->emit('refreshIndex');
 
@@ -165,17 +220,17 @@ class Index extends Component
 
     //  Payment modal
 
-    public function paymentModal(Sale $sale)
+    public function paymentModal($id)
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $this->sale = $sale;
+
+        $this->sale = Sale::find($id);
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
-        $this->amount = $sale->due_amount;
+        $this->reference = 'ref-' . date('Y-m-d-h');
+        $this->amount = $this->sale->due_amount;
         $this->payment_method = 'Cash';
-        // $this->note = '';
-        $this->sale_id = $sale->id;
+        $this->sale_id = $this->sale->id;
         $this->paymentModal = true;
     }
 
@@ -195,7 +250,7 @@ class Index extends Component
 
             SalePayment::create([
                 'date' => $this->date,
-                'reference' => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'reference' => settings()->salepayment_prefix . '-' . date('Y-m-d-h'),
                 'amount' => $this->amount,
                 'note' => $this->note ?? null,
                 'sale_id' => $this->sale_id,
@@ -227,7 +282,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', __('Error.').$th->getMessage());
+            $this->alert('error', __('Error.') . $th->getMessage());
         }
     }
 
@@ -252,7 +307,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212'.$phone;
+        $phone = '+212' . $phone;
 
         $greeting = __('Hello');
 
