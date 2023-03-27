@@ -197,6 +197,11 @@ class Sale extends Model
         return $query->whereStatus(2);
     }
 
+    public function scopeThisMonth($query)
+    {
+        return $query->whereMonth('date', now()->month);
+    }
+
     /**
      * get shipping amount
      *

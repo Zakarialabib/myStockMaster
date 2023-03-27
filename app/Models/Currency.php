@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * App\Models\Currency
@@ -39,6 +40,7 @@ use Illuminate\Database\Eloquent\Model;
 class Currency extends Model
 {
     use HasAdvancedFilter;
+    use HasFactory;
 
     public $table = 'currencies';
 

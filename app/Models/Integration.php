@@ -54,7 +54,7 @@ class Integration extends Model
     use UuidGenerator;
     use HasFactory;
 
-    const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'id',
         'type',
         'store_url',
