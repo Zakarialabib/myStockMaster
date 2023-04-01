@@ -32,7 +32,7 @@
             <div class="px-2 pb-2 w-full sm:w-1/2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{ 'Sales' }}</h3>
+                        <h3>{{ __('Sales') }}</h3>
                     </div>
                     <div id="chart2"></div>
                 </div>
@@ -40,7 +40,7 @@
             <div class="px-2 pb-2 w-full sm:w-1/2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{ 'Purchases' }}</h3>
+                        <h3>{{ __('Purchases') }}</h3>
                     </div>
                     <div id="chart1"></div>
                 </div>
@@ -48,7 +48,7 @@
             <div class="px-2 pb-2 w-full sm:w-full">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>Sales/Purchases</h3>
+                        <h3>{{__('Sales/Purchases')}}</h3>
                     </div>
                     <div id="chart"></div>
                 </div>
@@ -57,7 +57,7 @@
             <div class="px-2 pb-2 w-full">
                 <div class="bg-white rounded-lg border border-gray-200 pb-2">
                     <div class="py-3 px-5 mb-3 w-full inline-flex itees-center justify-between">
-                        <span class="text-md font-semibold text-gray-700">Recent Sale</span>
+                        <span class="text-md font-semibold text-gray-700">{{__('Recent Sale')}}</span>
                     </div>
                     <table class="table">
                         <thead>
@@ -97,7 +97,7 @@
             <div class="px-2 pb-2 w-full">
                 <div class="bg-white rounded-lg border border-gray-200 pb-2">
                     <div class="py-3 px-5 mb-3 w-full inline-flex items-center justify-between">
-                        <span class="text-md font-semibold text-gray-700">Recent Purchase</span>
+                        <span class="text-md font-semibold text-gray-700">{{__('Recent Purchase')}}</span>
                     </div>
                     <table class="table">
                         <thead>
@@ -147,7 +147,7 @@
             <div class="px-2 pb-2 sm:w-1/2 w-full">
                 <div class="bg-white rounded-lg border border-gray-200 pb-2">
                     <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                        <span class="text-md font-semibold">Top 5 Seller on {{ DATE('F') }}</span>
+                        <span class="text-md font-semibold">{{__('Top 5 Seller on ')}}{{ DATE('F') }}</span>
                     </div>
                     <table class="table">
                         <thead>
@@ -175,7 +175,7 @@
             <div class="px-2 pb-2 sm:w-1/2 w-full">
                 <div class="bg-white rounded-lg border border-gray-200 pb-2">
                     <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                        <span class="text-md font-semibold">Top Product on {{ DATE('F') }}</span>
+                        <span class="text-md font-semibold">{{__('Top Product on ')}}{{ DATE('F') }}</span>
                     </div>
                     <table class="table">
                         <thead>
@@ -204,9 +204,9 @@
 </div>
 
 @prepend('scripts')
-    {{-- Push ApexCharts to the top of the scripts stack --}}
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 @endprepend
+
 @push('scripts')
     <script>
         var options = {
@@ -360,11 +360,14 @@
                 },
                 dataLabels: {
                     enabled: true,
-                    offsetX: -6,
+                    offsetY: -20,
                     style: {
                         fontSize: "12px",
-                        colors: ["#fff"]
-                    }
+                        colors: ["#fff"],
+                    },
+                    formatter: function(val, opt) {
+                        return opt.w.globals.labels[opt.dataPointIndex] + ": " + val;
+                    },
                 },
                 stroke: {
                     show: true,
@@ -385,13 +388,23 @@
                         }
                     }
                 },
+                yaxis: {
+                    title: {
+                        text: "Amount",
+                    },
+                },
                 tooltip: {
                     y: {
                         formatter: function(val) {
-                            return val;
-                        }
-                    }
-                }
+                            return "$" + val;
+                        },
+                    },
+                },
+                legend: {
+                    position: "top",
+                    horizontalAlign: "center",
+                    offsetX: 40,
+                },
             };
             var chart = new ApexCharts(document.querySelector(selector), options);
             chart.render();

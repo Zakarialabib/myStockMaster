@@ -77,6 +77,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereWarehouseId($value)
+ * @property string|null $document
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDocument($value)
  * @mixin \Eloquent
  */
 class Sale extends Model
@@ -186,7 +189,7 @@ class Sale extends Model
             foreignKey: 'customer_id',
         );
     }
-
+    
     /**
      * @param mixed $query
      *
