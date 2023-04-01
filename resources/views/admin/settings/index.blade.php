@@ -43,16 +43,12 @@
 
 <x-app-layout>
     <div class="w-full px-2">
-        <livewire:settings.api-token />
-    </div>
-    <div class="w-full px-2">
         <livewire:settings.index />
     </div>
 
     <div class="w-full px-2">
-       
         <x-card>
-          <livewire:settings.smtp />
+            <livewire:settings.smtp />
         </x-card>
     </div>
 </x-app-layout>

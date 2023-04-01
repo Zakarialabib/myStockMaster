@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 
 class SettingController extends Controller
 {
-    public function index()
+    public function __invoke()
     {
         abort_if(Gate::denies('setting_access'), 403);
 
