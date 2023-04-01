@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Product
@@ -72,6 +73,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @property int $featured
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereFeatured($value)
  * @mixin \Eloquent
  */
 class Product extends Model
@@ -128,7 +131,7 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -141,6 +144,11 @@ class Product extends Model
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
+    }
+
+    public function movements(): MorphMany
+    {
+        return $this->morphMany(Movement::class, 'movable');
     }
 
     /**
@@ -168,4 +176,6 @@ class Product extends Model
             set: fn ($value) => $value * 100,
         );
     }
+
+  
 }
