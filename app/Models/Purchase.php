@@ -69,6 +69,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $warehouse_id
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereWarehouseId($value)
+ * @property string|null $document
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDocument($value)
  * @mixin \Eloquent
  */
 class Purchase extends Model

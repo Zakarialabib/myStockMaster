@@ -31,6 +31,7 @@
                     <select
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="status" id="status" wire:model="status" required>
+                        <option>{{__('Select Status')}}</option>
                         @foreach (\App\Enums\PurchaseStatus::cases() as $status)
                             <option value="{{ $status->value }}">
                                 {{ __($status->name) }}

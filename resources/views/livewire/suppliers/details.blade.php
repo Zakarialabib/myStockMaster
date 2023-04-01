@@ -36,7 +36,7 @@
                 <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
                     <div>
                         <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
-                            {{ __('Credit') }}
+                            {{ __('Due amount') }}
                         </p>
                         <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                             {{ format_currency($this->Debit) }}
