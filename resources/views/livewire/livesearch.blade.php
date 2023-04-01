@@ -9,9 +9,9 @@
                 <ul>
                     @if ($this->product->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Product') }}</h3>
-                            @foreach ($this->product as $item)
-                                <div class="mx-4">
+                            <x-chips label="{{ __('Products') }}" shade="dark" color="red" />
+                            <div class="mx-4 space-y-2">
+                                @foreach ($this->product as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -21,22 +21,22 @@
                                         {{ format_currency($item->price) }}
                                     </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Price') }} <br>
+                                        {{ __('Cost') }} <br>
                                         {{ format_currency($item->cost) }}
                                     </p>
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Quantity') }} <br>
                                         {{ $item->quantity }}
                                     </p>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </li>
                     @endif
                     @if ($this->customer->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Customer') }}</h3>
-                            @foreach ($this->customer as $item)
-                                <div class="mx-4">
+                            <x-chips label="{{ __('Customers') }}" shade="dark" color="yellow" />
+                            <div class="mx-4 space-y-2">
+                                @foreach ($this->customer as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -45,27 +45,23 @@
                                         {{ __('Phone') }} <br>
                                         {{ $item->phone }}
                                     </p>
-                                    {{-- <p class="font-semibold text-gray-700">
-                                        {{ __('Sales amount') }} <br>
-                                        {{ format_currency($item->totalsales) }}
-                                    </p>
                                     <p class="font-semibold text-gray-700">
-                                        {{ __('Total Paid amount') }} <br>
-                                        {{ format_currency($item->totalPayments) }}
+                                        {{ __('Address') }} <br>
+                                        {{ $item->address }}
                                     </p>
-                                    <p class="font-semibold text-gray-700">
-                                        {{ __('Total Due amount') }} <br>
-                                        {{ format_currency($item->debit) }}
-                                    </p>--}}
-                                </div>
-                            @endforeach
+                                    <x-button info href="{{ route('customer.details', $item->uuid) }}">
+                                        <i class="fas fa-book"></i>
+                                        {{ __('Details') }}
+                                    </x-button>
+                                @endforeach
+                            </div>
                         </li>
                     @endif
                     @if ($this->supplier->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Supplier') }}</h3>
-                            @foreach ($this->supplier as $item)
-                                <div class="mx-4">
+                            <x-chips label="{{ __('Suppliers') }}" shade="dark" color="green" />
+                            <div class="mx-4 space-y-2">
+                                @foreach ($this->supplier as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -74,49 +70,38 @@
                                         {{ __('Phone') }} <br>
                                         {{ $item->phone }}
                                     </p>
-                                    {{-- Adding a button link to details --}}
-                                  {{--   <p class="font-semibold text-gray-700">
-                                        {{ __('Purchases amount') }} <br>
-                                        {{ format_currency($item->totalPurchases) }}
-                                    </p>
-                                    <p class="font-semibold text-gray-700">
-                                        {{ __('Total Paid amount') }} <br>
-                                        {{ format_currency($item->totalPayments) }}
-                                    </p>
-                                    <p class="font-semibold text-gray-700">
-                                        {{ __('Total Due amount') }} <br>
-                                        {{ format_currency($item->debit) }}
-                                    </p>--}}
-                                </div>
-                            @endforeach
+                                    <x-button info href="{{ route('supplier.details', $item->uuid) }}">
+                                        <i class="fas fa-book"></i>
+                                        {{ __('Details') }}
+                                    </x-button>
+                                @endforeach
+                            </div>
                         </li>
                     @endif
                     @if ($this->sale->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Sale') }}</h3>
-                            @foreach ($this->sale as $item)
-                                <div class="mx-4">
+                            <x-chips label="{{ __('Sales') }}" shade="dark" color="blue" />
+                            <div class="mx-4">
+                                @foreach ($this->sale as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Customer name') }}
-                                        :{ $item->customer->name }}</p>
+                                        : {{ $item->customer->name }}</p>
                                     <p class="font-semibold text-gray-700">{{ __('Reference') }}
-                                        :{{ $item->reference }}</p>
+                                        : {{ $item->reference }}</p>
                                     <p class="font-semibold text-gray-700">{{ __('Total amount') }}
-                                        :{{ format_currency($item->total_amount) }}</p>
-                                    <p class="font-semibold text-gray-700">{{ __('Paid amount') }}
-                                        :{ format_currency($item->paid_amount) }}</p>
+                                        : {{ format_currency($item->total_amount) }}</p>
                                     <p class="font-semibold text-gray-700">{{ __('Due amount') }}
-                                        :{{ format_currency($item->due_amount) }}</p>
-                                </div>
-                            @endforeach
+                                        : {{ format_currency($item->due_amount) }}</p>
+                                @endforeach
+                            </div>
                         </li>
                     @endif
                     @if ($this->purchase->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
-                            <h3 class="font-semibold text-gray-700 mb-2">{{ __('Purchase') }}</h3>
-                            @foreach ($this->purchase as $item)
-                                <div class="mx-4">
+                            <x-chips label="{{ __('Purchases') }}" shade="dark" color="cyan" />
+                            <div class="mx-4">
+                                @foreach ($this->purchase as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} <br>
                                         {{ $item->date }}
                                     </p>
@@ -132,21 +117,28 @@
                                         <br>
                                         {{ format_currency($item->total_amount) }}
                                     </p>
-                                    <p class="font-semibold text-gray-700">{{ __('Paid amount') }}
-                                        <br>
-                                        {{ format_currency($item->paid_amount) }}
-                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Due amount') }}
                                         <br>
                                         {{ format_currency($item->due_amount) }}
                                     </p>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
                         </li>
                     @endif
                     </li>
                 </ul>
             </div>
         @endif
+    </div>
+    <div class="flex flex-wrap my-2 gap-2">
+        <x-chips label="{{ __('Products') }}" shade="dark" color="red" />
+
+        <x-chips label="{{ __('Customers') }}" shade="dark" color="yellow" />
+
+        <x-chips label="{{ __('Suppliers') }}" shade="dark" color="green" />
+
+        <x-chips label="{{ __('Sales') }}" shade="dark" color="blue" />
+
+        <x-chips label="{{ __('Purchases') }}" shade="dark" color="cyan" />
     </div>
 </div>
