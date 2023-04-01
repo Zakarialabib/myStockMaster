@@ -74,7 +74,7 @@
                     {{ __('Total') }}
                 </x-table.th>
                 <x-table.th>
-                    {{ __('Credit') }}
+                    {{ __('Due amount') }}
                 </x-table.th>
                 <x-table.th>
                     {{ __('Actions') }}
@@ -90,7 +90,7 @@
                             {{ $purchase->reference }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->date }}
+                            {{ format_date($purchase->date) }}
                         </x-table.td>
                         <x-table.td>
                             <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
