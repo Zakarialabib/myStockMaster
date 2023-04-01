@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Pos;
 
+use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Jobs\PaymentNotification;
 use App\Models\Customer;
+use App\Models\Movement;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
@@ -23,7 +25,7 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'refreshPos', 'productSelected', 'refreshIndex' => '$refresh',
+        'productSelected', 'refreshIndex' => '$refresh',
         'discountModalRefresh', 'checkoutModal',
         'refreshCustomers',
     ];
@@ -147,7 +149,7 @@ class Index extends Component
 
             $sale = Sale::create([
                 'date' => date('Y-m-d'),
-                'reference' => settings()->sale_prefix.'-'.date('Y-m-d-h'),
+                'reference' => settings()->sale_prefix . '-' . date('Y-m-d-h'),
                 'customer_id' => $this->customer_id,
                 'user_id' => Auth::user()->id,
                 'tax_percentage' => $this->tax_percentage,
@@ -164,7 +166,6 @@ class Index extends Component
                 'discount_amount' => Cart::instance('sale')->discount() * 100,
             ]);
 
-            // foreach ($this->cart_instance as cart_items) {}
             foreach (Cart::instance('sale')->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id' => $sale->id,
@@ -181,6 +182,19 @@ class Index extends Component
                 ]);
 
                 $product = Product::findOrFail($cart_item->id);
+
+                $movement = new Movement([
+                    'type' => MovementType::SALE,
+                    'quantity' => $cart_item->qty,
+                    'price' => $cart_item->price * 100,
+                    'date' => date('Y-m-d'),
+                    'movable_type' => get_class($product),
+                    'movable_id' => $product->id,
+                    'user_id' => Auth::user()->id,
+                ]);
+
+                $movement->save();
+
                 $product->update([
                     'quantity' => $product->quantity - $cart_item->qty,
                 ]);
@@ -191,7 +205,7 @@ class Index extends Component
             if ($sale->paid_amount > 0) {
                 SalePayment::create([
                     'date' => date('Y-m-d'),
-                    'reference' => settings()->sale_prefix.'-'.date('Y-m-d-h'),
+                    'reference' => settings()->sale_prefix . '-' . date('Y-m-d-h'),
                     'amount' => $sale->paid_amount,
                     'sale_id' => $sale->id,
                     'payment_method' => $this->payment_method,
@@ -208,11 +222,6 @@ class Index extends Component
         } catch (Exception $e) {
             $this->alert('error', $e->getMessage());
         }
-    }
-
-    public function refreshPos(): void
-    {
-        $this->reset();
     }
 
     public function proceed(): void
@@ -236,14 +245,16 @@ class Index extends Component
 
     public function productSelected($product): void
     {
+        if (empty($product)) {
+            return;
+        }
+
         $cart = Cart::instance($this->cart_instance);
 
-        $exists = $cart->search(function ($cartItem, $rowId) use ($product) {
-            return $cartItem->id === $product['id'];
-        });
+        $exists = $cart->search(fn ($cartItem) => $cartItem->id === $product['id']);
 
         if ($exists->isNotEmpty()) {
-            $this->alert('error', __('Product already added to cart!'));
+            $this->alert('success', __('Product already added to cart!'));
 
             return;
         }
@@ -323,16 +334,17 @@ class Index extends Component
         ]);
 
         // $this->calculate($product)
-        Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $cart_item->price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $cart_item->price,
-            'product_discount' => $this->discount_amount,
-            'product_discount_type' => $this->discount_type[$product_id],
-        ],
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'options' => [
+                'sub_total' => $cart_item->price * $cart_item->qty,
+                'code' => $cart_item->options->code,
+                'stock' => $cart_item->options->stock,
+                'unit' => $cart_item->options->unit,
+                'product_tax' => $cart_item->options->product_tax,
+                'unit_price' => $cart_item->price,
+                'product_discount' => $this->discount_amount,
+                'product_discount_type' => $this->discount_type[$product_id],
+            ],
         ]);
     }
 
@@ -401,16 +413,17 @@ class Index extends Component
 
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount): void
     {
-        Cart::instance($this->cart_instance)->update($row_id, ['options' => [
-            'sub_total' => $cart_item->price * $cart_item->qty,
-            'code' => $cart_item->options->code,
-            'stock' => $cart_item->options->stock,
-            'unit' => $cart_item->options->unit,
-            'product_tax' => $cart_item->options->product_tax,
-            'unit_price' => $cart_item->options->unit_price,
-            'product_discount' => $this->discount_amount,
-            'product_discount_type' => $this->discount_type[$product_id],
-        ],
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'options' => [
+                'sub_total' => $cart_item->price * $cart_item->qty,
+                'code' => $cart_item->options->code,
+                'stock' => $cart_item->options->stock,
+                'unit' => $cart_item->options->unit,
+                'product_tax' => $cart_item->options->product_tax,
+                'unit_price' => $cart_item->options->unit_price,
+                'product_discount' => $this->discount_amount,
+                'product_discount_type' => $this->discount_type[$product_id],
+            ],
         ]);
     }
 

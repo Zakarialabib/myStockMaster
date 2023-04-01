@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Product
@@ -74,12 +75,6 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @property int $featured
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereFeatured($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Movement> $movements
- * @property-read int|null $movements_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PriceHistory> $priceHistory
- * @property-read int|null $price_history_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ProductWarehouse> $warehouses
- * @property-read int|null $warehouses_count
  * @mixin \Eloquent
  */
 class Product extends Model
@@ -136,7 +131,7 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -154,17 +149,6 @@ class Product extends Model
     public function movements(): MorphMany
     {
         return $this->morphMany(Movement::class, 'movable');
-    }
-
-    public function warehouses()
-    {
-        return $this->belongsToMany(Warehouse::class)->using(ProductWarehouse::class)
-            ->withPivot('price', 'qty', 'cost');
-    }
-
-    public function priceHistory()
-    {
-        return $this->hasMany(PriceHistory::class);
     }
 
     /**
@@ -192,4 +176,6 @@ class Product extends Model
             set: fn ($value) => $value * 100,
         );
     }
+
+  
 }
