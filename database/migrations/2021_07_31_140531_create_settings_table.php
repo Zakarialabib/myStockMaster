@@ -26,6 +26,7 @@ class CreateSettingsTable extends Migration
             
             $table->integer('default_currency_id');
             $table->string('default_currency_position');
+            $table->string('default_date_format');
 
             $table->integer('default_client_id')->nullable();
             $table->integer('default_warehouse_id')->nullable();

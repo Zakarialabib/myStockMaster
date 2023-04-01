@@ -81,6 +81,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereBackupStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCompanyLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereInvoiceHeader($value)
+ * @property string $default_date_format
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereDefaultDateFormat($value)
  * @mixin \Eloquent
  */
 class Setting extends Model

@@ -27,6 +27,7 @@ class SettingsSeeder extends Seeder
                 'company_tax'               => '0',
                 'default_currency_id'       => 1,
                 'default_currency_position' => 'right',
+                'default_date_format'       => 'd-m-Y',
                 'default_client_id'         => '1',
                 'default_warehouse_id'      => '1',
                 'default_language'          => 'fr',

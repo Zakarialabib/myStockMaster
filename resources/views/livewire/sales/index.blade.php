@@ -30,7 +30,7 @@
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model="startDate" type="date" name="startDate" />
+                    <x-input wire:model="startDate" type="date" name="startDate" value="$startDate" />
                     @error('startDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
@@ -39,16 +39,17 @@
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <div class="mb-4">
                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model="endDate" type="date" name="endDate" />
+                    <x-input wire:model="endDate" type="date" name="endDate" 
+                    value="$endDate" />
                     @error('endDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-            <div class="w-full space-x-2 md:w-1/3 flex mx-0 my-auto px-3 mb-4">
-                <x-button type="button" primary wire:click="filterByType('day')">Day</x-button>
-                <x-button type="button" info wire:click="filterByType('month')">Month</x-button>
-                <x-button type="button" warning wire:click="filterByType('year')">Year</x-button>
+            <div class="w-full space-x-2 md:w-1/3 flex mx-0 my-auto px-2 mb-2">
+                <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
+                <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
+                <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
             </div>
         </div>
     </div>
@@ -58,22 +59,22 @@
             <x-table.th>
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Date') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+            <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+            <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                 {{ __('Due Amount') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+            <x-table.th sortable wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+            <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
             </x-table.th>
             <x-table.th>
@@ -88,7 +89,7 @@
                         <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->date }}
+                        {{ format_date($sale->date) }}
                     </x-table.td>
                     <x-table.td>
                         <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"

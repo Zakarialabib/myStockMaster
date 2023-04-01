@@ -9,8 +9,7 @@
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_name" :value="__('Company Name')" required />
                         <x-input type="text" wire:model.defer="settings.company_name" id="company_name"
-                            name="company_name"
-                            required />
+                            name="company_name" required />
                         <x-input-error :messages="$errors->get('settings.company_name')" class="mt-2" />
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
@@ -47,15 +46,34 @@
                             id="default_currency_id" name="default_currency_id"
                             wire:model.defer="settings.default_currency_id" :options="$this->listsForFields['currencies']" required />
                     </div>
+
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="default_currency_position" :value="__('Default currency position')" required />
                         <select name="default_currency_position" id="default_currency_position"
+                            wire:model.defer="settings.default_currency_position"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required>
                             <option {{ $settings->default_currency_position == 'prefix' ? 'selected' : '' }}
                                 value="prefix">{{ __('Left') }}</option>
                             <option {{ $settings->default_currency_position == 'suffix' ? 'selected' : '' }}
                                 value="suffix">{{ __('Right') }}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="w-full md:w-1/3 px-3 mb-4">
+                        <x-label for="default_date_format" :value="__('Default date format')" required />
+                        <select name="default_date_format" wire:model.defer="settings.default_date_format"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                            required>
+                            <option value="d-m-Y">DD-MM-YYYY</option>
+                            <option value="d/m/Y">DD/MM/YYYY</option>
+                            <option value="d.m.Y">DD.MM.YYYY</option>
+                            <option value="m-d-Y">MM-DD-YYYY</option>
+                            <option value="m/d/Y">MM/DD/YYYY</option>
+                            <option value="m.d.Y">MM.DD.YYYY</option>
+                            <option value="Y-m-d">YYYY-MM-DD</option>
+                            <option value="Y/m/d">YYYY/MM/DD</option>
+                            <option value="Y.m.d">YYYY.MM.DD</option>
                         </select>
                     </div>
 
@@ -104,8 +122,8 @@
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="purchasepayment_prefix" :value="__('Purchase Payment Prefix')" />
-                        <input wire:model.defer="settings.purchasepayment_prefix" type="text" id="purchasepayment_prefix"
-                            name="purchasepayment_prefix"
+                        <input wire:model.defer="settings.purchasepayment_prefix" type="text"
+                            id="purchasepayment_prefix" name="purchasepayment_prefix"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
                     </div>
 
@@ -115,7 +133,7 @@
                             <input type="checkbox" name="is_invoice_footer" id="is_invoice_footer"
                                 {{ $settings->is_invoice_footer ? 'checked' : '' }}>
                         </div>
-                    
+
                         <div>
                             <x-label for="show_email" :value="__('Show Email')" required />
                             <input type="checkbox" name="show_email" id="show_email"
@@ -153,4 +171,3 @@
         </div>
     </x-card>
 </div>
-

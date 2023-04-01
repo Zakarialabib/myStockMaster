@@ -38,6 +38,7 @@ class Index extends Component
         'settings.company_tax' => 'nullable|string|min:0|max:255',
         'settings.default_currency_id' => 'required|integer|min:0|max:192',
         'settings.default_currency_position' => 'required|string|min:1|max:255',
+        'settings.default_date_format' => 'required|string|min:1|max:255',
         'settings.default_client_id' => 'nullable|integer|min:0|max:192',
         'settings.default_warehouse_id' => 'nullable|integer|min:0|max:192',
         'settings.default_language' => 'required|string|min:1|max:255',
