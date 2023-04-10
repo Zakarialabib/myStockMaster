@@ -84,11 +84,11 @@
             </table>
          </div>
          
-         <div id="signature">
-            @if (settings()->invoice_footer !== null)
-                <p>{{ settings()->invoice_footer }}</p>
+         <div>
+            @if (settings()->invoice_footer_text)
+                <p>{{ settings()->invoice_footer_text }}</p>
             @endif
-         </div>
+        </div>
       </main>
    </body>
 </html>
