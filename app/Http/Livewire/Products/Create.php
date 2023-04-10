@@ -65,6 +65,7 @@ class Create extends Component
         $this->product->unit = 'pcs';
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
+        $this->product->warehouse_id = settings()->default_warehouse_id ?? null;
     }
 
     public function render()

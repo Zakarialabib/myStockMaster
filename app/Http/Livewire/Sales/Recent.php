@@ -26,7 +26,7 @@ class Recent extends Component
     /** @var array<string> */
     public $listeners = [
         'recentSales', 'showModal',
-        'importModal', 'refreshIndex' => '$refresh',
+        'refreshIndex' => '$refresh',
     ];
 
     public $showModal = false;
