@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
+use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Jobs\PaymentNotification;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Movement;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
@@ -110,7 +112,7 @@ class Create extends Component
         if ($this->customer_id !== null) {
             $this->save();
         } else {
-            $this->alert('error', 'Please select a customer!');
+            $this->alert('error', __('Please select a customer!'));
         }
     }
 
@@ -164,6 +166,19 @@ class Create extends Component
             ]);
 
             $product = Product::findOrFail($cart_item->id);
+
+            $movement = new Movement([
+                'type' => MovementType::SALE,
+                'quantity' => $cart_item->qty,
+                'price' => $cart_item->price * 100,
+                'date' => date('Y-m-d'),
+                'movable_type' => get_class($product),
+                'movable_id' => $product->id,
+                'user_id' => Auth::user()->id,
+            ]);
+
+            $movement->save();
+
             $product->update([
                 'quantity' => $product->quantity - $cart_item->qty,
             ]);

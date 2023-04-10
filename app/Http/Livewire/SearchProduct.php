@@ -17,57 +17,55 @@ class SearchProduct extends Component
 
     public $product;
 
-    public $listsForFields = [];
-
-    public $categories;
+    public string $query = '';
 
     public $category_id;
 
     public $warehouse_id;
 
-    public $query;
-
     public $search_results;
 
-    public $how_many;
-    
-    public $showCount;
+    public $showCount = 9;
 
-    protected $listeners = [
-        'selectedCategory' => 'categoryChanged',
-        'selectedWarehouse' => 'warehouseChanged',
-        'showCount' => 'showCountChanged',
+    public bool $featured = false;
+
+    protected $queryString = [
+        'query' => ['except' => ''],
+        'category_id' => ['except' => null],
+        'warehouse_id' => ['except' => null],
+        'showCount' => ['except' => 9],
     ];
 
     public function mount(): void
     {
-        $this->query = '';
-        $this->how_many = 9;
         $this->search_results = Collection::empty();
-        $this->category_id = '';
-        $this->warehouse_id = '';
-        $this->initListsForFields();
+        // $this->warehouse_id = settings()->default_warehouse_id ?? null;
     }
 
     public function render()
     {
+        $products = Product::when($this->category_id, fn ($query, $category_id) => $query->where('category_id', $category_id))
+            ->when($this->warehouse_id, fn ($query, $warehouse_id) => $query->where('warehouse_id', $warehouse_id))
+            ->when($this->featured, fn ($query, $featured) => $query->where('featured', $featured))
+            ->paginate($this->showCount);
+
         return view('livewire.search-product', [
-            'products' => Product::where('name', 'like', '%'.$this->query.'%')
-                ->orWhere('code', 'like', '%'.$this->query.'%')
-                ->when($this->category_id, fn ($q) => $q->where('category_id', $this->category_id))
-                ->when($this->warehouse_id, fn ($q) => $q->where('warehouse_id', $this->warehouse_id))
-                ->paginate($this->how_many),
+            'products' => $products
         ]);
+    }
+
+    public function resetQuery()
+    {
+        $this->reset(['query', 'category_id', 'warehouse_id', 'featured']);
     }
 
     public function updatedQuery()
     {
-        // if the query is like name or code show search results
-        $this->search_results = Product::where('name', 'like', '%'.$this->query.'%')
-            ->orWhere('code', 'like', '%'.$this->query.'%')
-            ->take($this->how_many)
+        $this->search_results = Product::where('name', $this->query)
+            ->orWhere('code', $this->query)
+            ->take($this->showCount)
             ->get();
-        // issue here
+
         if ($this->search_results->count() > 0) {
             $this->product = $this->search_results->first();
             $this->emit('productSelected', $this->product);
@@ -76,15 +74,7 @@ class SearchProduct extends Component
 
     public function loadMore()
     {
-        $this->how_many += 5;
-        $this->updatedQuery();
-    }
-
-    public function resetQuery()
-    {
-        $this->query = '';
-        $this->how_many = 5;
-        $this->search_results = Collection::empty();
+        $this->showCount += 5;
     }
 
     public function selectProduct($product)
@@ -92,27 +82,12 @@ class SearchProduct extends Component
         $this->emit('productSelected', $product);
     }
 
-    public function categoryChanged($category_id)
+    public function getCategoriesProperty()
     {
-        $this->category_id = $category_id;
-        $this->resetPage();
+        return  Category::select('name', 'id')->get();
     }
-
-    public function warehouseChanged($warehouse_id)
+    public function getWarehousesProperty()
     {
-        $this->warehouse_id = $warehouse_id;
-        $this->resetPage();
-    }
-
-    public function showCountChanged($value)
-    {
-        $this->how_many = $value;
-        $this->resetPage();
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
-        $this->listsForFields['categories'] = Category::select('name', 'id')->get();
+        return  Warehouse::select('name', 'id')->get();
     }
 }

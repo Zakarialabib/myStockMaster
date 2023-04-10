@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Models\Movement;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
@@ -163,6 +165,19 @@ class Create extends Component
 
             if ($this->status === PurchaseStatus::PENDING) {
                 $product = Product::findOrFail($cart_item->id);
+
+                $movement = new Movement([
+                    'type' => MovementType::PURCHASE,
+                    'quantity' => $cart_item->qty,
+                    'price' => $cart_item->price * 100,
+                    'date' => date('Y-m-d'),
+                    'movable_type' => get_class($product),
+                    'movable_id' => $product->id,
+                    'user_id' => Auth::user()->id,
+                ]);
+    
+                $movement->save();
+
                 $product->update([
                     'quantity' => $product->quantity + $cart_item->qty,
                 ]);
