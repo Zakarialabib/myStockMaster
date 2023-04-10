@@ -33,6 +33,10 @@ if (! function_exists('format_currency')) {
 if (! function_exists('format_date')) {
     function format_date($date, $format = true)
     {
+        if (empty($date)) {
+            return '';
+        }
+
         if (! $format) {
             return $date;
         }
@@ -43,7 +47,6 @@ if (! function_exists('format_date')) {
         return date($date_format, strtotime($date));
     }
 }
-
 
 if (! function_exists('make_reference_id')) {
     function make_reference_id($prefix, $number)
