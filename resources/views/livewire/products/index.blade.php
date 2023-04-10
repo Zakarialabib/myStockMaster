@@ -59,12 +59,13 @@
                         <input type="checkbox" value="{{ $product->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        <div class=" whitespace-nowrap">
+                        <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
+                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge success>
                                 {{ $product->code }}
                             </x-badge>
-                        </div>
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $product->quantity }}

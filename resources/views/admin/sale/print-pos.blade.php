@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -7,17 +6,21 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     {{-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> --}}
-    
+
     <title>{{ __('Sale') }} : {{ $sale->reference }}</title>
-    
+
     <style>
         @font-face {
-        font-family: 'Cairo';
-        src: url('./fonts/cairo.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
+            font-family: 'Cairo';
+            src: url('./fonts/cairo.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
-        *{ font-family: 'Cairo'!important;}
+
+        * {
+            font-family: 'Cairo' !important;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -82,6 +85,11 @@
             font-size: 11px;
         }
 
+        @page {
+            header: page-header;
+            footer: page-footer;
+        }
+
         @media print {
             * {
                 font-size: 11px;
@@ -101,77 +109,75 @@
 </head>
 
 <body>
-
     <div>
-        <div>
+        <htmlpageheader name="page-header">
             <div class="centered">
                 <h2 style="margin-bottom: 5px;font-size: 16px;">{{ settings()->company_name }}</h2>
                 <p>
                     {{ settings()->company_phone }} <br>
                     {{ settings()->company_address }} <br>
-                    {{ __('Date') }}: {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}<br>
+                    {{ __('Date') }}: {{ format_date($sale->date) }}<br>
                     {{ __('Reference') }}: {{ $sale->reference }}<br>
                     {{ __('Name') }}: {{ $sale->customer->name }}
                 </p>
             </div>
-            <div id="table">
-                <table>
-                    <thead>
-                        <tr class="title">
-                            <th colspan="2" style="text-align: left;">{{ __('Product information') }}</th>
-                            <th colspan="2" style="text-align: right;">{{ __('Qty') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($sale->saleDetails as $saleDetail)
-                            <tr>
-                                <td colspan="2" style="text-align: left;">
-                                    {{ $saleDetail->product->name }} <br>
-                                    <small><strong>{{ format_currency($saleDetail->price) }}</strong></small>
-                                </td>
-                                <td colspan="2" style="text-align: right;">
-                                    {{ $saleDetail->quantity }}
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        @if (settings()->show_order_tax == true)
-                            <tr>
-                                <th colspan="3" style="text-align:left">{{ __('Tax') }}
-                                    ({{ $sale->tax_percentage }}%)</th>
-                                <th style="text-align:right">{{ format_currency($sale->tax_amount) }}</th>
-                            </tr>
-                        @endif
-                        @if (settings()->show_discount == true)
-                            <tr>
-                                <th colspan="3" style="text-align:left">{{ __('Discount') }}
-                                    ({{ $sale->discount_percentage }}%)</th>
-                                <th style="text-align:right">{{ format_currency($sale->discount_amount) }}</th>
-                            </tr>
-                        @endif
-                        @if (settings()->show_shipping == true)
-                            <tr>
-                                <th colspan="3" style="text-align:left">{{ __('Shipping') }}</th>
-                                <th style="text-align:right">{{ format_currency($sale->shipping_amount) }}</th>
-                            </tr>
-                        @endif
+        </htmlpageheader>
+        <div id="table">
+            <table>
+                <thead>
+                    <tr class="title">
+                        <th colspan="2" style="text-align: left;">{{ __('Product information') }}</th>
+                        <th colspan="2" style="text-align: right;">{{ __('Qty') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($sale->saleDetails as $saleDetail)
                         <tr>
-                            <th colspan="3" style="text-align:left">{{ __('Grand Total') }}</th>
-                            <th style="text-align:right">{{ format_currency($sale->total_amount) }}</th>
+                            <td colspan="2" style="text-align: left;">
+                                {{ $saleDetail->product->name }} <br>
+                                <small><strong>{{ format_currency($saleDetail->price) }}</strong></small>
+                            </td>
+                            <td colspan="2" style="text-align: right;">
+                                {{ $saleDetail->quantity }}
+                            </td>
                         </tr>
-                    </tbody>
-                </table>
+                    @endforeach
 
-                <div class="centered" style="background-color:#ddd;padding: 5px;">
-                    {{ __('Paid By') }}: {{ $sale->payment_method }} <br>
+                    @if (settings()->show_order_tax == true)
+                        <tr>
+                            <th colspan="3" style="text-align:left">{{ __('Tax') }}
+                                ({{ $sale->tax_percentage }}%)</th>
+                            <th style="text-align:right">{{ format_currency($sale->tax_amount) }}</th>
+                        </tr>
+                    @endif
+                    @if (settings()->show_discount == true)
+                        <tr>
+                            <th colspan="3" style="text-align:left">{{ __('Discount') }}
+                                ({{ $sale->discount_percentage }}%)</th>
+                            <th style="text-align:right">{{ format_currency($sale->discount_amount) }}</th>
+                        </tr>
+                    @endif
+                    @if (settings()->show_shipping == true)
+                        <tr>
+                            <th colspan="3" style="text-align:left">{{ __('Shipping') }}</th>
+                            <th style="text-align:right">{{ format_currency($sale->shipping_amount) }}</th>
+                        </tr>
+                    @endif
+                    <tr>
+                        <th colspan="3" style="text-align:left">{{ __('Grand Total') }}</th>
+                        <th style="text-align:right">{{ format_currency($sale->total_amount) }}</th>
+                    </tr>
+                </tbody>
+            </table>
 
-                    {{ __('Amount') }}: {{ format_currency($sale->paid_amount) }}
-                </div>
+            <div class="centered" style="background-color:#ddd;padding: 5px;">
+                {{ __('Paid By') }}: {{ $sale->payment_method }} <br>
 
+                {{ __('Amount') }}: {{ format_currency($sale->paid_amount) }}
             </div>
+
         </div>
     </div>
-
 </body>
 
 </html>

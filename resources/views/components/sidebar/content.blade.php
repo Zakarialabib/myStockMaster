@@ -38,7 +38,7 @@
             <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
         @endcan
         @can('adjustment_access')
-            <x-sidebar.sublink title="{{ __('All Adjustments') }}" href="{{ route('adjustments.index') }}"
+            <x-sidebar.sublink title="{{ __('Stock adjustments') }}" href="{{ route('adjustments.index') }}"
                 :active="request()->routeIs('adjustments.index')" />
         @endcan
 

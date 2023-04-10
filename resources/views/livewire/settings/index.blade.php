@@ -3,7 +3,10 @@
         <div class="py-3 px-6 mb-0 bg-gray-200 border-b-1 border-gray-light text-gray-500">
             <h5 class="mb-0">{{ __('General Settings') }}</h5>
         </div>
-        <div class="p-4">
+        <div class="w-full px-4">
+            
+            <x-validation-errors class="mb-4" :errors="$errors" />
+
             <form wire:submit.prevent="update">
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="w-full md:w-1/3 px-3 mb-4">
@@ -25,18 +28,25 @@
                         <x-input-error :messages="$errors->get('settings.company_phone')" class="mt-2" />
                     </div>
 
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                    <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_address" :value="__('Company Address')" required />
                         <x-input type="text" wire:model.defer="settings.company_address" id="company_address"
                             name="company_address" />
                         <x-input-error :messages="$errors->get('settings.company_address')" class="mt-2" />
                     </div>
 
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                    <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="company_tax" :value="__('Company Tax')" />
                         <x-input type="text" wire:model.defer="settings.company_tax" id="company_tax"
                             name="company_tax" />
                         <x-input-error :messages="$errors->get('settings.company_tax')" class="mt-2" />
+                    </div>
+
+                    <div class="w-full px-2">
+                        <x-label for="company_logo" :value="__('Company Logo')" />
+                        <x-fileupload wire:model="company_logo" :file="$company_logo"
+                            accept="image/jpg,image/jpeg,image/png" />
+                        <x-input-error :messages="$errors->get('company_logo')" for="company_logo" class="mt-2" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4">
@@ -59,7 +69,7 @@
                                 value="suffix">{{ __('Right') }}</option>
                         </select>
                     </div>
-                    
+
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="default_date_format" :value="__('Default date format')" required />
                         <select name="default_date_format" wire:model.defer="settings.default_date_format"
@@ -90,10 +100,15 @@
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4">
+                        <x-label for="invoice_header" :value="__('Invoice Header')" />
+                        <x-fileupload wire:model="invoice_header" :file="$invoice_header"
+                            accept="image/jpg,image/jpeg,image/png" />
+                    </div>
+
+                    <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="invoice_footer" :value="__('Invoice Footer')" />
-                        <input wire:model.defer="settings.invoice_footer" type="text" id="invoice_footer"
-                            name="invoice_footer"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                        <x-fileupload wire:model="invoice_footer" :file="$invoice_footer"
+                            accept="image/jpg,image/jpeg,image/png" />
                     </div>
 
                     <div class="w-full md:w-1/3 px-3 mb-4">

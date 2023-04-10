@@ -45,15 +45,15 @@
                     <x-slot name="content">
                         <x-dropdown-link onclick="Livewire.emit('import')" 
                             wire:loading.attr="disabled">
-                            {{ __('Import') }}
+                            {{ __('Excel Import') }}
                         </x-dropdown-link>
                         <x-dropdown-link onclick="Livewire.emit('exportAll')" 
                             wire:loading.attr="disabled">
-                            {{ __('PDF') }}
+                            {{ __('Export PDF') }}
                         </x-dropdown-link>
                         <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
                             wire:loading.attr="disabled">
-                            {{ __('Excel') }}
+                            {{ __('Export Excel') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
