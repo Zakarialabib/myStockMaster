@@ -242,7 +242,7 @@
                                 <div>{{ __('Invoice') }}:
                                     {{ settings()->purchase_prefix }}/{{ $purchase?->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchase?->date)->format('d M, Y') }}</div>
+                                    {{ format_date($purchase?->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($purchase?->status == \App\Enums\PurchaseStatus::PENDING)

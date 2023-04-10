@@ -192,7 +192,7 @@
                                     <strong>INV/{{ $purchasereturn?->reference }}</strong>
                                 </div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchasereturn?->date)->format('d M, Y') }}
+                                    {{ format_date($purchasereturn?->date) }}
                                 </div>
                                 <div>
                                     {{ __('Status') }}: <strong>{{ $purchasereturn?->status }}</strong>

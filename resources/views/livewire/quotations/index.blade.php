@@ -182,7 +182,7 @@
                                 <strong>{{ settings()->quotation_prefix }}/{{ $quotation?->reference }}</strong>
                             </div>
                             <div>{{ __('Date') }}:
-                                {{ \Carbon\Carbon::parse($quotation?->date)->format('d M, Y') }}</div>
+                                {{ format_date($quotation?->date) }}</div>
                             <div>
                                 {{ __('Status') }}: <strong>{{ $quotation?->status }}</strong>
                             </div>
