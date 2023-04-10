@@ -39,7 +39,7 @@ return new class () extends Migration {
             $table->tinyInteger('tax_type')->nullable();
             $table->text('image')->nullable();
             $table->boolean('featured')->default(0);
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -90,18 +90,17 @@ class Integration extends Model
 
     protected $casts = [
         'status' => Status::class,
-        'type' => IntegrationType::class,
+        'type'   => IntegrationType::class,
     ];
 
     public function getTypeName(): string
     {
         return match ($this->type) {
-            IntegrationType::CUSTOM => 'Custom',
-            IntegrationType::YOUCAN => 'Youcan',
+            IntegrationType::CUSTOM      => 'Custom',
+            IntegrationType::YOUCAN      => 'Youcan',
             IntegrationType::WOOCOMMERCE => 'WooCommerce',
-            IntegrationType::SHOPIFY => 'Shopify',
-            default => 'Unknown'
+            IntegrationType::SHOPIFY     => 'Shopify',
+            default                      => 'Unknown'
         };
     }
-    
 }

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sync;
 
-use App\Enums\IntegrationType;
 use App\Models\Integration;
 use GuzzleHttp\Client;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class Login extends Component
 {
@@ -28,10 +26,10 @@ class Login extends Component
     public $type;
 
     protected $rules = [
-        'email' => 'required|email',
-        'password' => 'required',
+        'email'     => 'required|email',
+        'password'  => 'required',
         'store_url' => 'required',
-        'type' => 'required',
+        'type'      => 'required',
     ];
 
     public function loginModal()
@@ -44,41 +42,38 @@ class Login extends Component
         $this->validate();
 
         $client = new Client();
-        
+
         $response = $client->request('POST', $this->store_url.'/api/login', [
             'headers' => [
-                'Accept' => 'application/json',
+                'Accept'           => 'application/json',
                 'X-Requested-With' => 'XMLHttpRequest',
             ],
             'json' => [
-                'email' => $this->email,
+                'email'    => $this->email,
                 'password' => $this->password,
             ],
         ]);
 
-        
         if ($response->getStatusCode() === Response::HTTP_OK) {
-
-            $data = json_decode((string)$response->getBody(), true);
+            $data = json_decode((string) $response->getBody(), true);
             $ecommerceToken = $data['api_token'];
-        
+
             $integration = Integration::firstOrNew(['type' => $this->type]);
             $integration->fill([
-                'store_url' => $this->store_url,
-                'api_key' => $ecommerceToken,
+                'store_url'  => $this->store_url,
+                'api_key'    => $ecommerceToken,
                 'api_secret' => $ecommerceToken,
-                'last_sync' => null, // set to null initially
-                'products' => null, // set to null initially
-                'status' => true, // or any other default status
+                'last_sync'  => null, // set to null initially
+                'products'   => null, // set to null initially
+                'status'     => true, // or any other default status
             ])->save();
-    
+
             $this->alert('success', __('Authentication successful !'));
-    
+
             $this->emit('refreshIndex');
-    
+
             $this->loginModal = false;
         }
-        
     }
 
     // public function authYoucan()
@@ -102,7 +97,6 @@ class Login extends Component
     //         $this->ecommerceToken = $data['access_token'];
     //     }
     // }
-    
 
     public function render()
     {

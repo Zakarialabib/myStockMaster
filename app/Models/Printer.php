@@ -75,11 +75,11 @@ class Printer extends Model
     public static function capabilityProfiles()
     {
         return [
-            'default' => 'Default',
-            'simple' => 'Simple',
-            'SP2000' => 'Star Branded',
+            'default'  => 'Default',
+            'simple'   => 'Simple',
+            'SP2000'   => 'Star Branded',
             'TEP-200M' => 'Espon Tep',
-            'P822D' => 'P822D',
+            'P822D'    => 'P822D',
         ];
     }
 
@@ -95,7 +95,7 @@ class Printer extends Model
         return [
             'network' => 'Network',
             'windows' => 'Windows',
-            'linux' => 'Linux',
+            'linux'   => 'Linux',
         ];
     }
 

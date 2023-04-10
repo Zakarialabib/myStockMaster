@@ -62,11 +62,11 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|max:255',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|max:255',
         'expense.warehouse_id' => 'nullable',
     ];
 
@@ -113,10 +113,6 @@ class Index extends Component
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-
-                break;
-            default:
-                $filter = '';
                 break;
         }
     }
@@ -127,8 +123,8 @@ class Index extends Component
 
         $query = Expense::with(['category', 'user', 'warehouse'])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

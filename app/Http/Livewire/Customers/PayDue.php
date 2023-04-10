@@ -24,7 +24,7 @@ class PayDue extends Component
 
     protected $rules = [
         'selectedSales' => 'required|array',
-        'amount' => 'required|numeric|min:0',
+        'amount'        => 'required|numeric|min:0',
     ];
 
     public function getSalesCustomerDueProperty()
@@ -50,17 +50,17 @@ class PayDue extends Component
             $paidAmount = min($this->amount, $dueAmount);
 
             SalePayment::create([
-                'date' => date('Y-m-d'),
-                'reference' => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
-                'amount' => $paidAmount,
-                'sale_id' => $sale->id,
+                'date'           => date('Y-m-d'),
+                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
+                'amount'         => $paidAmount,
+                'sale_id'        => $sale->id,
                 'payment_method' => $this->payment_method,
-                'user_id' => Auth::user()->id,
+                'user_id'        => Auth::user()->id,
             ]);
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $paidAmount) * 100,
-                'due_amount' => max(0, $dueAmount - $paidAmount) * 100,
+                'paid_amount'    => ($sale->paid_amount + $paidAmount) * 100,
+                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
                 'payment_status' => max(0, $dueAmount - $paidAmount) === 0 ? PaymentStatus::PAID : PaymentStatus::PARTIAL,
             ]);
 

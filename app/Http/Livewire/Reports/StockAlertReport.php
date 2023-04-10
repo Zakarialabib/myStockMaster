@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Reports;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Product;
+
 class StockAlertReport extends Component
 {
     use WithPagination;

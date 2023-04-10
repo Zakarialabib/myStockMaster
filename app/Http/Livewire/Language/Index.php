@@ -19,11 +19,12 @@ class Index extends Component
 
     protected $listeners = [
         'refreshIndex' => '$refresh',
+        'delete',
     ];
 
     public function mount()
     {
-        $this->languages = Language::select(['id', 'name','status','is_default'])->get();
+        $this->languages = Language::select(['id', 'name', 'status', 'is_default'])->get();
     }
 
     public function render()

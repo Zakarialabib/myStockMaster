@@ -71,7 +71,7 @@ class Details extends Component
     public function getTotalPurchaseReturnsProperty()
     {
         return PurchaseReturn::where('supplier_id', $this->supplier_id)
-        ->sum('total_amount');
+            ->sum('total_amount');
     }
 
     // total due amount
@@ -96,7 +96,7 @@ class Details extends Component
 
         $product_costs = 0;
 
-        foreach (Purchase::completed()->with('purchaseDetails','purchaseDetails.product')->get() as $purchase) {
+        foreach (Purchase::completed()->with('purchaseDetails', 'purchaseDetails.product')->get() as $purchase) {
             foreach ($purchase->purchaseDetails as $purchaseDetail) {
                 $product_costs += $purchaseDetail->product->cost;
             }
@@ -112,8 +112,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('supplier')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -125,8 +125,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('purchasepayments.purchase')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -137,6 +137,7 @@ class Details extends Component
     {
         return view('livewire.suppliers.details');
     }
+
     private function supplierSum(string $field): int|float
     {
         return Purchase::whereBelongsTo($this->supplier)->sum($field) / 100;

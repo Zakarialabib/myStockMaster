@@ -13,9 +13,8 @@ enum MovementType: string
     case SALERETURN = '2';
 
     case PURCHASERETURN = '3';
-    
+
     case SALETRANSFER = '4';
 
     case PURCHASETRANSFER = '5';
-
 }

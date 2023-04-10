@@ -13,5 +13,4 @@ enum IntegrationType: string
     case WOOCOMMERCE = '2';
 
     case SHOPIFY = '3';
-
 }

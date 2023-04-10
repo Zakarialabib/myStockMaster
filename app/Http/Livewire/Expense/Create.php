@@ -7,11 +7,9 @@ namespace App\Http\Livewire\Expense;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Warehouse;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Throwable;
 
 class Create extends Component
 {
@@ -28,12 +26,12 @@ class Create extends Component
     public $listsForFields = [];
 
     protected $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|min:3',
-        'expense.user_id' => 'nullable',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|min:3',
+        'expense.user_id'      => 'nullable',
         'expense.warehouse_id' => 'nullable',
     ];
 

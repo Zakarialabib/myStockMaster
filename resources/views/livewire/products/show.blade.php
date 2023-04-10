@@ -9,13 +9,15 @@
 
             <div class="px-4 mx-auto mb-4">
                 @if ($product)
-                    <div class="flex justify-center w-full my-5 px-3">
-                        <x-button success type="button" wire:click="sendTelegram({{ $product?->id }})"
-                            wire:loading.attr="disabled">
-                            <i class="fas fa-edit"></i>
-                            {{ __('Send to telegram') }}
-                        </x-button>
-                    </div>
+                    @if (settings()->telegram_channel)
+                        <div class="flex justify-center w-full my-5 px-3">
+                            <x-button success type="button" wire:click="$emit('sendTelegram',{{ $product?->id }})"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
+                                {{ __('Send to telegram') }}
+                            </x-button>
+                        </div>
+                    @endif
                     <div class="flex flex-row mb-4">
                         <div class="lg:w-1/2 sm:w-full px-3">
                             {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product?->code, $product?->barcode_symbology, 2, 110) !!}
@@ -117,14 +119,18 @@
                     </div>
                     <div x-show="activeTabs === 'productMovements'">
                         <div role="productMovements" aria-labelledby="tab-0" id="tab-panel-0" tabindex="0">
-                            <ul>
-                            @foreach ($product->movements as $movement)
-                                <li>Type : {{ $movement->type }}</li>
-                                <li>Quantity : {{ $movement->quantity }} </li>
-                                <li>User - {{ $movement->user->name }}</li>
-                                <li>Date - {{ $movement->created_at }}</li>
-                            @endforeach
-                            <ul>
+                            @if ($product)
+                                <ul>
+                                    @forelse ($product->movements as $movement)
+                                        <li>Type : {{ $movement->type }}</li>
+                                        <li>Quantity : {{ $movement->quantity }} </li>
+                                        <li>User - {{ $movement->user->name }}</li>
+                                        <li>Date - {{ $movement->created_at }}</li>
+                                    @empty
+                                        <li> {{ __('No movement recorded') }}</li>
+                                    @endforelse
+                                </ul>
+                            @endif
                         </div>
                     </div>
                 </div>

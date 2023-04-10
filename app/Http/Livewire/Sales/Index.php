@@ -18,6 +18,7 @@ use App\Domain\Filters\DateFilter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Storage;
 use Throwable;
 
 class Index extends Component
@@ -37,7 +38,6 @@ class Index extends Component
         'paymentModal', 'paymentSave', 'showModal',
         'delete',
     ];
-
 
     public $showModal = false;
 
@@ -72,16 +72,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|string|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|string|min:0|max:100',
         'discount_percentage' => 'required|string|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|min:0|max:100',
-        'payment_method' => 'required|integer|min:0|max:100',
-        'note' => 'string|nullable|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|min:0|max:100',
+        'payment_method'      => 'required|integer|min:0|max:100',
+        'note'                => 'string|nullable|max:1000',
     ];
 
     public function mount(): void
@@ -111,8 +111,6 @@ class Index extends Component
         $this->filterType = $type;
     }
 
-
-
     protected function filterSalesByDateRange($query)
     {
         switch ($this->filterType) {
@@ -131,9 +129,6 @@ class Index extends Component
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
 
                 break;
-            default:
-                $filter = '';
-                break;
         }
 
         $filter = new DateFilter();
@@ -147,8 +142,8 @@ class Index extends Component
 
         $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -156,7 +151,6 @@ class Index extends Component
 
         return view('livewire.sales.index', compact('sales'));
     }
-
 
     public function showModal($id)
     {
@@ -191,11 +185,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_create'), 403);
 
-        $this->resetSelected();
-
-        $this->resetValidation();
-
         $this->importModal = true;
+    }
+
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('sales_import_sample.xls');
     }
 
     public function import()
@@ -224,7 +219,6 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-
         $this->sale = Sale::find($id);
         $this->date = date('Y-m-d');
         $this->reference = 'ref-' . date('Y-m-d-h');
@@ -239,9 +233,9 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -249,13 +243,13 @@ class Index extends Component
             $sale = Sale::find($this->sale_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => settings()->salepayment_prefix . '-' . date('Y-m-d-h'),
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->sale_id,
+                'date'           => $this->date,
+                'reference'      => settings()->salepayment_prefix . '-' . date('Y-m-d-h'),
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
-                'user_id' => Auth::user()->id,
+                'user_id'        => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
@@ -271,8 +265,8 @@ class Index extends Component
             }
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

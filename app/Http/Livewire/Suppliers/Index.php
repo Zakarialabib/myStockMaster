@@ -14,6 +14,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
@@ -68,8 +69,8 @@ class Index extends Component
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -112,6 +113,11 @@ class Index extends Component
         abort_if(Gate::denies('supplier_import'), 403);
 
         $this->importModal = true;
+    }
+
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('suppliers_import_sample.xls');
     }
 
     public function import()

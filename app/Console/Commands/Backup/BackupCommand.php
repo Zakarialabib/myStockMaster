@@ -65,16 +65,16 @@ class BackupCommand extends Command
                 ini_set('max_execution_time', 600);
 
                 if (count($command) > 1) {
-                    
                     Artisan::call(trim($command[0]), [trim($command[1]) => true]);
-                    $output = \Artisan::output();
+                    $output = Artisan::output();
+
                     if (strpos($output, 'Backup failed because')) {
                         preg_match('/Backup failed because(.*?)$/ms', $output, $match);
                         // $message .= "Backup Manager -- backup process failed because ";
                         // $message .= isset($match[1]) ? $match[1] : '';
-                        Log::error('Backup Manager -- backup process failed because' . PHP_EOL . $output);
+                        Log::error('Backup Manager -- backup process failed because'.PHP_EOL.$output);
                     } else {
-                        Log::info("Backup Manager -- backup process has started");
+                        Log::info('Backup Manager -- backup process has started');
                     }
                 }
             } catch (Exception $e) {

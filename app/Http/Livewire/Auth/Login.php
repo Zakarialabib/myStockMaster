@@ -22,7 +22,7 @@ class Login extends Component
     public $remember = false;
 
     protected array $rules = [
-        'email' => 'required|email',
+        'email'    => 'required|email',
         'password' => 'required',
     ];
 
@@ -39,7 +39,7 @@ class Login extends Component
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if ( ! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

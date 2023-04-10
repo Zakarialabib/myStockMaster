@@ -22,13 +22,13 @@ class Modals extends Component
         $componentClass = app('livewire')->getClass($componentName);
         $requiredInterface = \App\Http\Livewire\ModalComponent::class;
 
-        if (! is_subclass_of($componentClass, $requiredInterface)) {
+        if ( ! is_subclass_of($componentClass, $requiredInterface)) {
             throw new Exception("[{$componentClass}] does not implement [{$requiredInterface}] interface.");
         }
 
         $this->components[] = [
-            'component' => $componentName,
-            'maxWidth' => $componentClass::modalMaxWidth,
+            'component'  => $componentName,
+            'maxWidth'   => $componentClass::modalMaxWidth,
             'attributes' => $attributes,
         ];
     }

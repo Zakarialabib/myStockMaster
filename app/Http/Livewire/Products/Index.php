@@ -7,10 +7,7 @@ namespace App\Http\Livewire\Products;
 use App\Exports\ProductExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\ProductImport;
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +15,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
@@ -92,13 +90,13 @@ class Index extends Component
         $query = Product::query()
             ->with([
                 'category' => fn ($query) => $query->select('id', 'name'),
-                'brand' => fn ($query) => $query->select('id', 'name'),
-                'movements'
+                'brand'    => fn ($query) => $query->select('id', 'name'),
+                'movements',
             ])
             ->select('products.*')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -130,7 +128,7 @@ class Index extends Component
         $this->product = Product::find($product);
 
         // Specify Telegram channel
-        $telegramChannel = '-877826769';
+        $telegramChannel = settings()->telegram_channel;
 
         // Pass in product details
         $productName = $this->product->name;
@@ -149,6 +147,11 @@ class Index extends Component
 
         $this->importModal = true;
     }
+
+     public function downloadSample()
+     {
+         return Storage::disk('exports')->download('products_import_sample.xls');
+     }
 
     public function import(): void
     {

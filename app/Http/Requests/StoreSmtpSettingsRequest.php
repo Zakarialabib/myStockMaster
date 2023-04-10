@@ -17,14 +17,14 @@ class StoreSmtpSettingsRequest extends FormRequest
     public function rules()
     {
         return [
-            'mail_mailer' => 'required|string|max:50',
-            'mail_host' => 'required|string|max:50',
-            'mail_port' => 'required|numeric',
-            'mail_username' => 'nullable|string|max:50',
-            'mail_password' => 'nullable|string|max:50',
-            'mail_encryption' => 'nullable|string|max:50',
+            'mail_mailer'       => 'required|string|max:50',
+            'mail_host'         => 'required|string|max:50',
+            'mail_port'         => 'required|numeric',
+            'mail_username'     => 'nullable|string|max:50',
+            'mail_password'     => 'nullable|string|max:50',
+            'mail_encryption'   => 'nullable|string|max:50',
             'mail_from_address' => 'nullable|string|max:50',
-            'mail_from_name' => 'required|string|max:50',
+            'mail_from_name'    => 'required|string|max:50',
         ];
     }
 

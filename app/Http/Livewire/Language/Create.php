@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Language;
 
 use App;
+use App\Models\Language;
 use File;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -19,34 +21,47 @@ class Create extends Component
     public array $languages = [];
 
     public $language;
-    public $name;
-    public $code;
 
     public $createLanguage = false;
 
     protected $rules = [
-        'name' => 'required|max:255',
-        'code' => 'required|max:255',
+        'language.name' => 'required|max:255',
+        'language.code' => 'required|max:255|unique:languages,code',
     ];
+
+    public function updated($propertyName): void
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function createLanguage()
     {
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->language = new Language();
+
         $this->createLanguage = true;
     }
 
     public function create()
     {
-        $this->validate();
+        try {
+            $validatedData = $this->validate();
 
-        $this->language->save();
+            $this->language->save($validatedData);
 
-        File::copy(App::langPath().'/en.json', App::langPath().('/'.$this->code.'.json'));
+            File::copy(App::langPath().'/en.json', App::langPath().('/'.$this->language->code.'.json'));
 
-        $this->alert('success', __('Data created successfully!'));
+            $this->alert('success', __('Language created successfully!'));
 
-        $this->emit('resetIndex');
+            $this->emit('refreshIndex');
 
-        $this->createLanguage = false;
+            $this->createLanguage = false;
+        } catch (Throwable $th) {
+            $this->alert('success', __('Language was not created!').$th->getMessage());
+        }
     }
 
     public function render()

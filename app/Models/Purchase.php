@@ -154,7 +154,7 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'status' => PurchaseStatus::class,
+        'status'         => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -170,7 +170,10 @@ class Purchase extends Model
 
     public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+        return $this->belongsTo(
+            related: Supplier::class,
+            foreignKey: 'user_id',
+        );
     }
 
     /** @param mixed $query */
@@ -178,6 +181,7 @@ class Purchase extends Model
     {
         return $query->whereStatus(2);
     }
+
     public function scopeThisMonth($query)
     {
         return $query->whereMonth('date', now()->month);

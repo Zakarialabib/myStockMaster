@@ -20,7 +20,7 @@ class SuppliersController extends Controller
     public function show($supplier)
     {
         abort_if(Gate::denies('supplier_access'), 403);
-        
+
         $supplier = Supplier::whereUuid($supplier)->first();
 
         return view('admin.suppliers.details', compact('supplier'));

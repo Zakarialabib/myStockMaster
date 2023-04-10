@@ -61,8 +61,8 @@ class Index extends Component
     public function render()
     {
         $query = Role::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -142,11 +142,11 @@ class Index extends Component
     protected function rules(): array
     {
         return [
-            'role.name' => 'required|string|min:3|max:255',
-            'role.label' => 'string|nullable|max:255',
-            'role.guard_name' => 'required|string|max:255',
+            'role.name'        => 'required|string|min:3|max:255',
+            'role.label'       => 'string|nullable|max:255',
+            'role.guard_name'  => 'required|string|max:255',
             'role.description' => 'string|nullable|max:255',
-            'role.status' => 'string|nullable|max:255',
+            'role.status'      => 'string|nullable|max:255',
         ];
     }
 

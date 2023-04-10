@@ -30,10 +30,10 @@ class SearchProduct extends Component
     public bool $featured = false;
 
     protected $queryString = [
-        'query' => ['except' => ''],
-        'category_id' => ['except' => null],
+        'query'        => ['except' => ''],
+        'category_id'  => ['except' => null],
         'warehouse_id' => ['except' => null],
-        'showCount' => ['except' => 9],
+        'showCount'    => ['except' => 9],
     ];
 
     public function mount(): void
@@ -50,7 +50,7 @@ class SearchProduct extends Component
             ->paginate($this->showCount);
 
         return view('livewire.search-product', [
-            'products' => $products
+            'products' => $products,
         ]);
     }
 
@@ -86,6 +86,7 @@ class SearchProduct extends Component
     {
         return  Category::select('name', 'id')->get();
     }
+
     public function getWarehousesProperty()
     {
         return  Warehouse::select('name', 'id')->get();

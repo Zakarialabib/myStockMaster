@@ -13,5 +13,4 @@ enum UnitType: string
     case METRE = 'm';
 
     case Gram = 'gr';
-
 }

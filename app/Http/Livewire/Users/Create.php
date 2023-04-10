@@ -24,10 +24,10 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'user.name' => 'required|string|min:3|max:255',
-        'user.email' => 'required|email|unique:users,email',
+        'user.name'     => 'required|string|min:3|max:255',
+        'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
+        'user.phone'    => 'required|numeric',
     ];
 
     public function mount(User $user): void

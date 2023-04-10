@@ -26,17 +26,17 @@ class Edit extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier.name' => 'required|string|min:3|max:255',
-        'supplier.email' => 'nullable|max:255',
-        'supplier.phone' => 'required|numeric',
-        'supplier.city' => 'nullable|max:255',
-        'supplier.country' => 'nullable|max:255',
-        'supplier.address' => 'nullable|max:255',
+        'supplier.name'       => 'required|string|min:3|max:255',
+        'supplier.email'      => 'nullable|max:255',
+        'supplier.phone'      => 'required|numeric',
+        'supplier.city'       => 'nullable|max:255',
+        'supplier.country'    => 'nullable|max:255',
+        'supplier.address'    => 'nullable|max:255',
         'supplier.tax_number' => 'nullable||max:255',
     ];
 
     protected $messages = [
-        'supplier.name.required' => 'The name field cannot be empty.',
+        'supplier.name.required'  => 'The name field cannot be empty.',
         'supplier.phone.required' => 'The phone field cannot be empty.',
     ];
 

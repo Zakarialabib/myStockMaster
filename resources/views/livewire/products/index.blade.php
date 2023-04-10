@@ -96,11 +96,13 @@
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
                                     </x-dropdown-link>
+                                    @if(settings()->telegram_channel)
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
                                         {{ __('Send to telegram') }}
                                     </x-dropdown-link>
+                                    @endif
                                     <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
