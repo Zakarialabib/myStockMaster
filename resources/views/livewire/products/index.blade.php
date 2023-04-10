@@ -63,7 +63,7 @@
                     </x-table.td>
                     <x-table.td>
                         <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
-                            class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
+                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge success>
                                 {{ $product->code }}
