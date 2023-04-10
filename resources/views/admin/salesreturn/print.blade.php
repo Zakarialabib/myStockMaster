@@ -52,7 +52,7 @@
                                     Invoice Info:</h4>
                                 <div>{{ __('Reference') }}: <strong>{{ $sale_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($sale_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}: @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
                                         <x-badge warning>{{ __('Pending') }}</x-badge>

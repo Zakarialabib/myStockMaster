@@ -52,7 +52,7 @@
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                 <div>{{ __('Invoice') }}: <strong>{{ $purchase_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($purchase_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($purchase_return->status == \App\Enums\PurchaseReturnStatus::PENDING)
