@@ -4,7 +4,7 @@
             <h5 class="mb-0">{{ __('General Settings') }}</h5>
         </div>
         <div class="w-full px-4">
-            
+
             <x-validation-errors class="mb-4" :errors="$errors" />
 
             <form wire:submit.prevent="update">
@@ -40,6 +40,13 @@
                         <x-input type="text" wire:model.defer="settings.company_tax" id="company_tax"
                             name="company_tax" />
                         <x-input-error :messages="$errors->get('settings.company_tax')" class="mt-2" />
+                    </div>
+
+                    <div class="w-full md:w-1/3 px-3 mb-4">
+                        <x-label for="telegram_channel" :value="__('Telegram Channel')" />
+                        <x-input type="text" wire:model.defer="settings.telegram_channel" id="telegram_channel"
+                            name="telegram_channel" />
+                        <x-input-error :messages="$errors->get('settings.telegram_channel')" class="mt-2" />
                     </div>
 
                     <div class="w-full px-2">
@@ -110,7 +117,12 @@
                         <x-fileupload wire:model="invoice_footer" :file="$invoice_footer"
                             accept="image/jpg,image/jpeg,image/png" />
                     </div>
-
+                    <div class="w-full md:w-1/3 px-3 mb-4">
+                        <x-label for="invoice_footer_text" :value="__('Invoice footer text')" />
+                        <x-input type="text" wire:model.defer="settings.invoice_footer_text" id="invoice_footer_text"
+                            name="invoice_footer_text" />
+                        <x-input-error :messages="$errors->get('settings.invoice_footer_text')" class="mt-2" />
+                    </div>
                     <div class="w-full md:w-1/3 px-3 mb-4">
                         <x-label for="sale_prefix" :value="__('Sale Prefix')" />
                         <input wire:model.defer="settings.sale_prefix" type="text" id="sale_prefix"
@@ -143,12 +155,6 @@
                     </div>
 
                     <div class="w-full flex justify-center p-4 space-x-4">
-                        <div>
-                            <x-label for="is_invoice_footer" :value="__('Activate Invoice Footer')" required />
-                            <input type="checkbox" name="is_invoice_footer" id="is_invoice_footer"
-                                {{ $settings->is_invoice_footer ? 'checked' : '' }}>
-                        </div>
-
                         <div>
                             <x-label for="show_email" :value="__('Show Email')" required />
                             <input type="checkbox" name="show_email" id="show_email"
