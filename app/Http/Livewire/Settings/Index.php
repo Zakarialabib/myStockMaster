@@ -9,13 +9,16 @@ use App\Models\Customer;
 use App\Models\Setting;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\File;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Str;
 
 class Index extends Component
 {
     use LivewireAlert;
+    use WithFileUploads;
 
     public $settings;
 
@@ -26,6 +29,9 @@ class Index extends Component
 
     public $company_logo;
 
+    public $invoice_header;
+    public $invoice_footer;
+    
     public $image;
 
     /** @var array */
@@ -43,6 +49,7 @@ class Index extends Component
         'settings.default_warehouse_id' => 'nullable|integer|min:0|max:192',
         'settings.default_language' => 'required|string|min:1|max:255',
         'settings.is_invoice_footer' => 'boolean',
+        'settings.invoice_header' => 'nullable|string|min:0|max:255',
         'settings.invoice_footer' => 'nullable|string|min:0|max:255',
         'settings.sale_prefix' => 'nullable',
         'settings.purchase_prefix' => 'nullable',
@@ -77,10 +84,24 @@ class Index extends Component
     {
         $this->validate();
 
-        if ($this->company_logo !== null) {
-            $imageName = Str::slug($this->settings->company_name).'.'.$this->image->extension();
-            $this->image->storeAs('settings', $imageName);
+        if ($this->company_logo) {
+            $imageName = Str::slug($this->settings->company_name).'.'.$this->company_logo->extension();
+            $this->company_logo->storeAs('uploads', $imageName, 'public');
             $this->company_logo = $imageName;
+        }
+
+        if ($this->invoice_header) {
+            $imageName = 'invoice-header';
+            $this->invoice_header->storeAs('uploads', $imageName, 'public');
+            $this->createHTMLfile($this->invoice_header, $imageName);
+            $this->settings->invoice_header = $imageName;
+        }
+        
+        if ($this->invoice_footer) {
+            $imageName = 'invoice-footer';
+            $this->invoice_footer->storeAs('uploads', $imageName, 'public');
+            $this->createHTMLfile($this->invoice_footer, $imageName);
+            $this->settings->invoice_footer = $imageName;
         }
 
         $this->settings->save();
@@ -89,6 +110,24 @@ class Index extends Component
 
         $this->alert('success', __('Settings Updated successfully !'));
     }
+
+    protected function createHTMLfile($file, $name)
+    {
+        $extension = $file->extension();
+        $data = File::get($file->getRealPath());
+        $base64 = 'data:image/' .$extension. ';base64,' . base64_encode($data);
+    
+        $html = sprintf(
+            '<div><img style="width: 100%%; display: block;" src="%s"></div>',
+            $base64
+        );
+    
+        $path = public_path('print/' . $name . '.html');
+        File::put($path, $html);
+    
+        return $base64;
+    }    
+
 
     protected function initListsForFields(): void
     {

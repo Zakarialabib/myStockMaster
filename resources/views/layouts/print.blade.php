@@ -22,12 +22,15 @@
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 10px 25px 0px 25px;
             background: #ffffff;
             font-size: 13px;
             line-height: 15px;
+            position: relative;
+            width: 80%;
             height: 100%;
             -webkit-font-smoothing: antialiased;
+            background-size: cover;
         }
 
         div,
@@ -44,7 +47,7 @@
             margin-top: 0 !important;
             margin-right: 0 !important;
             margin-bottom: 0 !important;
-            margin- left: 0 !important;
+            margin-left: 0 !important;
             font-size: 11px;
             line-height: 13px;
         }
@@ -55,39 +58,41 @@
             display: flex;
             -ms-flex-wrap: wrap;
             flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
         }
 
 
         table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #ccc;
+            border: none;
             padding-top: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        thead th {
+            background-color: #2980b9;
+            color: #ffffff;
+            text-align: left;
+            border: none;
+            padding: 8px;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            border: none;
+            padding: 8px;
+            text-align: left;
         }
 
         tfoot tr th:first-child {
             text-align: left;
         }
 
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
         tr {
-            border-bottom: 1px dashed #ddd;
-            border-top: 1px dashed #ddd;
-        }
-
-        /* Style the footer */
-        .footer {
-            background-color: #f5f5f5;
-            padding: 20px;
-            text-align: center;
+            border: none;
         }
 
         .col {
@@ -115,6 +120,7 @@
 
         .text-center {
             text-align: center;
+            margin: 0 10px;
             align-content: center;
         }
 
@@ -122,14 +128,43 @@
             text-align: right;
             align-content: right;
         }
+
+        @page {
+            header: myheader;
+            footer: myfooter;
+        }
     </style>
 
 </head>
 
 <body>
-    <div>
+
+
+    <div class="pageStyle">
         @yield('content')
     </div>
+    
+    <!--mpdf 
+    <htmlpageheader name="myheader">
+        @if(settings()->invoice_header)
+        {!! File::get(public_path('print/invoice-header.html')) !!}
+        @endif
+    </htmlpageheader>
+
+    <htmlpagefooter name="myfooter">
+        <div style="text-align:center; font-size:10pt;">
+            {{ settings()->company_name }} &copy;
+            {{ date('Y') }} - {{ __('Page') }} {PAGENO} {{ __('of') }} {nbpg}
+            @if(settings()->invoice_footer)
+            {{-- {!! File::get(public_path('print/invoice-footer.html')) !!} --}}
+            @endif
+        </div>
+    </htmlpagefooter>
+
+    <sethtmlpageheader name="myheader" show-this-page="1" />
+    <sethtmlpagefooter name="myfooter" page="O" value="on" show-this-page="1" />
+    mpdf-->
+
 </body>
 
 </html>

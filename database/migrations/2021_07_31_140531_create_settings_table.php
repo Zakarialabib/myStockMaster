@@ -34,8 +34,8 @@ class CreateSettingsTable extends Migration
             $table->boolean('is_rtl')->default(1);
             
             $table->boolean('is_invoice_footer')->default(0);
-            $table->string('invoice_header', 192)->nullable();
-            $table->string('invoice_footer', 192)->nullable();
+            $table->string('invoice_header')->nullable();
+            $table->string('invoice_footer')->nullable();
 
             $table->string('sale_prefix', 25)->default('SA-');
             $table->string('purchase_prefix', 25)->default('PR-');
