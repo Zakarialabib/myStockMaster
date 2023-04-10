@@ -252,7 +252,7 @@
                                         <strong>{{ settings()->sale_prefix }}/{{ $sale?->reference }}</strong>
                                     </div>
                                     <div>{{ __('Date') }}:
-                                        {{ \Carbon\Carbon::parse($sale?->date)->format('d/m/Y') }}</div>
+                                        {{ format_date($sale?->date) }}</div>
                                     <div>
                                         {{ __('Status') }} :
                                         @if ($sale?->status == \App\Enums\SaleStatus::PENDING)
@@ -366,7 +366,12 @@
     {{-- Import modal --}}
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Excel') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">
