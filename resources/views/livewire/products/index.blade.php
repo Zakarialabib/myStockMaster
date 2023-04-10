@@ -81,7 +81,7 @@
                     </x-table.td>
                     <x-table.td>
                         <x-badge warning>
-                        <small>{{ $product->category->name }}</small>
+                            <small>{{ $product->category->name }}</small>
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -171,7 +171,12 @@
 
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Excel') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">
