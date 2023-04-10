@@ -198,7 +198,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //General Settings
     Route::get('/settings', SettingController::class)->name('settings.index');
-    
+
     // Integrations
     Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 });

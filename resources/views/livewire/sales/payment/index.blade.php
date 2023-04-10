@@ -41,10 +41,6 @@
                                     <i class="fa fa-pen"></i>
                                 </x-button>
                                 @endcan
-                                <x-button wire:click="delete({{ $salepayment->id }})"
-                                    class="bg-red-500 hover:bg-red-700">
-                                    <i class="fa fa-trash"></i>
-                                </x-button>
                             </x-table.td>
                         </x-table.tr>
                     @empty

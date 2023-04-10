@@ -13,5 +13,4 @@ enum PaymentStatus: string
     case PARTIAL = '2';
 
     case DUE = '3';
-
 }

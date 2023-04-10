@@ -17,5 +17,4 @@ enum SaleStatus: string
     case RETURNED = '4';
 
     case CANCELED = '5';
-
 }

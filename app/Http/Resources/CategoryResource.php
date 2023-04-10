@@ -15,7 +15,7 @@ class CategoryResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * <<<<<<< HEAD
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      * =======
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      * >>>>>>> Api

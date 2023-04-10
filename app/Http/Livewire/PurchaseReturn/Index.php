@@ -9,6 +9,7 @@ use App\Http\Livewire\WithSorting;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
 use App\Traits\Datatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -61,16 +62,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'supplier_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|max:255',
-        'payment_method' => 'required|integer|max:255',
-        'note' => 'nullable|string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|max:255',
+        'payment_method'      => 'required|integer|max:255',
+        'note'                => 'nullable|string|max:1000',
     ];
 
     public function mount(): void
@@ -87,8 +88,8 @@ class Index extends Component
     {
         $query = PurchaseReturn::with(['supplier', 'purchaseReturnPayments', 'purchaseReturnDetails'])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -200,9 +201,9 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -210,11 +211,12 @@ class Index extends Component
             $purchasereturn = PurchaseReturn::find($this->purchase_id);
 
             PurchasePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'purchase_id' => $this->purchase_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'user_id'        => Auth::user()->id,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'purchase_id'    => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -231,8 +233,8 @@ class Index extends Component
             }
 
             $purchasereturn->update([
-                'paid_amount' => ($purchasereturn->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchasereturn->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

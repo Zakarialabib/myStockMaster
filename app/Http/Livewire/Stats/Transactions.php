@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Stats;
 
 use App\Models\Category;
@@ -8,7 +10,6 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Supplier;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -17,8 +18,8 @@ class Transactions extends Component
     public $typeChart = 'monthly';
 
     public $categoriesCount;
-    public $topProduct; 
-    public $productCount; 
+    public $topProduct;
+    public $productCount;
     public $salesCount;
     public $profit;
     public $purchase;
@@ -77,65 +78,65 @@ class Transactions extends Component
         $this->sales_count = Sale::whereDate('date', '>=', now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
-            ->pluck('sales');   
+            ->pluck('sales');
 
         $this->chart();
     }
+
     public function chart()
     {
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart == 'monthly', function ($q) {
+            ->when($this->typeChart === 'monthly', function ($q) {
                 return $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('MONTH(date)');
             }, function ($q) {
-            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
-                ->groupByRaw('YEAR(date)');
-        })
+                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
+                    ->groupByRaw('YEAR(date)');
+            })
             ->get()
             ->toArray();
 
         $sales = [
-            'total' => array_column($query, 'total'),
+            'total'      => array_column($query, 'total'),
             'due_amount' => array_map(function ($total, $dueAmount) {
                 return $total - $dueAmount;
             }, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels' => array_column($query, 'labels')
+            'labels' => array_column($query, 'labels'),
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart == 'monthly', function ($q) {
+            ->when($this->typeChart === 'monthly', function ($q) {
                 return $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('MONTH(date)');
             }, function ($q) {
-            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
-                ->groupByRaw('YEAR(date)');
-        })
+                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
+                    ->groupByRaw('YEAR(date)');
+            })
             ->get()
             ->toArray();
 
         $purchases = [
-            'total' => array_column($query, 'total'),
+            'total'      => array_column($query, 'total'),
             'due_amount' => array_map(function ($total, $dueAmount) {
                 return $total - $dueAmount;
             }, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels' => array_column($query, 'labels')
+            'labels' => array_column($query, 'labels'),
         ];
 
         $this->charts = json_encode([
             'total' => [
-                'sales' => $sales['total'],
+                'sales'    => $sales['total'],
                 'purchase' => $purchases['total'],
             ],
             'due_amount' => [
-                'sales' => $sales['due_amount'],
+                'sales'    => $sales['due_amount'],
                 'purchase' => $purchases['due_amount'],
             ],
-            'labels' => $sales['labels']
+            'labels' => $sales['labels'],
         ]);
     }
-
 
     protected function getChart($sales, $purchases)
     {
@@ -159,7 +160,7 @@ class Transactions extends Component
 
         return json_encode($dataarray);
     }
-    
+
     public function render()
     {
         return view('livewire.stats.transactions');

@@ -16,12 +16,10 @@ class Barcode extends Component
     use LivewireAlert;
 
     public $product;
-
     public $products;
-
     public $quantity;
-
     public $barcodes;
+    public $size;
 
     protected $listeners = ['productSelected', 'getPdf'];
 
@@ -31,12 +29,8 @@ class Barcode extends Component
         $this->product = '';
         $this->quantity = 0;
         $this->barcodes = [];
+        $this->size = 'medium';
     }
-
-     public function render()
-     {
-         return view('livewire.products.barcode');
-     }
 
     public function productSelected($product): void
     {
@@ -54,9 +48,43 @@ class Barcode extends Component
 
         $this->barcodes = [];
 
+        switch ($this->size) {
+            case 'small':
+                $sizeValue = 1;
+
+                break;
+            case 'medium':
+                $sizeValue = 2;
+
+                break;
+            case 'large':
+                $sizeValue = 3;
+
+                break;
+            case 'extra-large':
+                $sizeValue = 4;
+
+                break;
+            case 'huge':
+                $sizeValue = 5;
+
+                break;
+            default:
+                $sizeValue = 2;
+        }
+
         for ($i = 0; $i < $this->quantity; $i++) {
-            $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], 2, 60, 'black', false);
+            $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], $sizeValue, 60, 'black', false);
             array_push($this->barcodes, $barcode);
+        }
+    }
+
+    public function updatedQuantity(): void
+    {
+        $this->barcodes = [];
+
+        foreach ($this->products as $product) {
+            $this->generateBarcodes($product, $this->quantity);
         }
     }
 
@@ -72,8 +100,8 @@ class Barcode extends Component
         return $pdf->stream('barcodes-'.date('Y-m-d').'.pdf');
     }
 
-    public function updatedQuantity(): void
+    public function render()
     {
-        $this->barcodes = [];
+        return view('livewire.products.barcode');
     }
 }

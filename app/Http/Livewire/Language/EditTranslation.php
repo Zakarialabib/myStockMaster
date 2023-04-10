@@ -19,7 +19,12 @@ class EditTranslation extends Component
         'translations.*.value' => 'required',
     ];
 
-    public function mount($language)
+    protected $rules = [
+        'key'   => 'required',
+        'value' => 'required',
+    ];
+
+    public function mount($id)
     {
         $this->language = Language::find($id);
 

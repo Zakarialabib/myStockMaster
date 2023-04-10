@@ -144,7 +144,7 @@ class Customer extends Model
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->id)->with('saleDetails','saleDetails.product')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->id)->with('saleDetails', 'saleDetails.product')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }

@@ -64,7 +64,6 @@
                                             <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>
                                             <select class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method" id="payment_method" required>
                                                 <option value="Cash">Cash</option>
-                                                <option value="Credit Card">Credit Card</option>
                                                 <option value="Bank Transfer">Bank Transfer</option>
                                                 <option value="Cheque">Cheque</option>
                                                 <option value="Other">Other</option>

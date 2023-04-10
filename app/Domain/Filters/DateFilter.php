@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +34,6 @@ class DateFilter implements FilterDateInterface, FilterSumInterface
     public function filterSum($query, $startDate, $endDate)
     {
         return $query->whereBetween('created_at', [$startDate, $endDate])
-                     ->sum('total_amount');
+            ->sum('total_amount');
     }
 }

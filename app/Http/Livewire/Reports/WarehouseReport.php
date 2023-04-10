@@ -26,10 +26,10 @@ class WarehouseReport extends Component
     public $productPurchase;
     public $productSale;
     public $productQuotation;
-    
+
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date' => 'required|date|after:start_date',
+        'end_date'   => 'required|date|after:start_date',
     ];
 
     public function mount()
@@ -43,44 +43,44 @@ class WarehouseReport extends Component
     public function getPurchasesProperty()
     {
         return Purchase::where('warehouse_id', $this->warehouse_id)
-        ->whereDate('created_at', '>=', $this->start_date)
-        ->whereDate('created_at', '<=', $this->end_date)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->whereDate('created_at', '>=', $this->start_date)
+            ->whereDate('created_at', '<=', $this->end_date)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
+
     public function getSalesProperty()
     {
         return Sale::with('customer')
-        ->where('warehouse_id', $this->warehouse_id)
-        ->whereDate('created_at', '>=', $this->start_date)
-        ->whereDate('created_at', '<=', $this->end_date)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where('warehouse_id', $this->warehouse_id)
+            ->whereDate('created_at', '>=', $this->start_date)
+            ->whereDate('created_at', '<=', $this->end_date)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
+
     public function getQuotationsProperty()
     {
         return Quotation::with('customer')
-        ->where('warehouse_id', $this->warehouse_id)
-        ->whereDate('created_at', '>=', $this->start_date)
-        ->whereDate('created_at', '<=', $this->end_date)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where('warehouse_id', $this->warehouse_id)
+            ->whereDate('created_at', '>=', $this->start_date)
+            ->whereDate('created_at', '<=', $this->end_date)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function getExpensesProperty()
     {
         return Expense::with('expenseCategory')
-        ->where('warehouse_id', $this->warehouse_id)
-        ->whereDate('created_at', '>=', $this->start_date)
-        ->whereDate('created_at', '<=', $this->end_date)
-        ->orderBy('created_at', 'desc')
-        ->get();
-
+            ->where('warehouse_id', $this->warehouse_id)
+            ->whereDate('created_at', '>=', $this->start_date)
+            ->whereDate('created_at', '<=', $this->end_date)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function warehouseReport()
     {
-        
         $this->productPurchase = $this->purchases->map(function ($purchase) {
             return PurchaseDetail::where('purchase_id', $purchase->id)->get();
         });

@@ -79,7 +79,7 @@
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
-                            <x-button danger wire:click="confirm('delete', {{ $currency->id }})" type="button"
+                            <x-button danger wire:click="$emit('deleteModal', {{ $currency->id }})" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>

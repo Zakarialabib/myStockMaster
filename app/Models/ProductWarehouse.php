@@ -43,8 +43,9 @@ class ProductWarehouse extends Pivot
     ];
 
     protected $casts = [
-        'product_id' => 'integer',
+        'product_id'   => 'integer',
         'warehouse_id' => 'integer',
+        'qte'          => 'double',
     ];
 
     public function product()

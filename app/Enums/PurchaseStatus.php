@@ -15,6 +15,4 @@ enum PurchaseStatus: string
     case RETURNED = '3';
 
     case CANCELED = '4';
-
- 
 }

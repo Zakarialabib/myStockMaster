@@ -11,5 +11,4 @@ enum BackupSchedule: string
     case WEEKLY = '1';
 
     case MONTHLY = '2';
-
 }

@@ -140,7 +140,7 @@ class PurchaseReturn extends Model
     ];
 
     protected $casts = [
-        'status' => PurchaseReturnStatus::class,
+        'status'         => PurchaseReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -157,7 +157,10 @@ class PurchaseReturn extends Model
 
     public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+        return $this->belongsTo(
+            related: Supplier::class,
+            foreignKey: 'user_id',
+        );
     }
 
     /**

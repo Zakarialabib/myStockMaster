@@ -168,7 +168,7 @@ class Sale extends Model
     ];
 
     protected $casts = [
-        'status' => SaleStatus::class,
+        'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -189,7 +189,7 @@ class Sale extends Model
             foreignKey: 'customer_id',
         );
     }
-    
+
     /**
      * @param mixed $query
      *
