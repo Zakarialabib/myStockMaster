@@ -211,7 +211,7 @@
                                             <strong>{{ $salereturn?->reference }}</strong>
                                         </div>
                                         <div>{{ __('Date') }}:
-                                            {{ \Carbon\Carbon::parse($salereturn?->date)->format('d M, Y') }}
+                                            {{ format_date($salereturn?->date) }}
                                         </div>
                                         <div>
                                             {{ __('Status') }}: <strong>
@@ -332,37 +332,6 @@
         </x-slot>
     </x-modal>
     {{-- End Show SaleReturn --}}
-
-    {{-- Import modal --}}
-    <div>
-        <x-modal wire:model="importModal">
-            <x-slot name="title">
-                {{ __('Import Excel') }}
-            </x-slot>
-
-            <x-slot name="content">
-                <form wire:submit.prevent="import">
-                    <div class="mb-4">
-
-                        <div class="w-full px-3">
-                            <x-label for="import" :value="__('Import')" />
-                            <x-input id="import" class="block mt-1 w-full" type="file" name="import"
-                                wire:model.defer="import_file" />
-                            <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
-                        </div>
-
-                        <div class="w-full px-3">
-                            <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                                {{ __('Import') }}
-                            </x-button>
-                        </div>
-                    </div>
-                </form>
-            </x-slot>
-        </x-modal>
-    </div>
-
-    {{-- End Import modal --}}
 
     {{-- Sales Payment payment component   --}}
     <div>

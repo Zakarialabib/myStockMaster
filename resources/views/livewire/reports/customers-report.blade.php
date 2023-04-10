@@ -81,7 +81,7 @@
                         <x-table.tbody>
                             @forelse($sales as $sale)
                                 <x-table.tr>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</x-table.td>
+                                    <x-table.td>{{ format_date($sale->date) }}</x-table.td>
                                     <x-table.td>{{ $sale->reference }}</x-table.td>
                                     <x-table.td>{{ $sale->customer->name }}</x-table.td>
                                     <x-table.td>
