@@ -54,17 +54,16 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product): void
+    public function mount(): void
     {
-        $this->product = $product;
+        $this->product = new Product();
         $this->product->stock_alert = 10;
         $this->product->order_tax = 0;
         $this->product->unit = 'pcs';
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
-        $this->product->warehouse_id = settings()->default_warehouse_id ?? null;
     }
-
+    
     public function render()
     {
         abort_if(Gate::denies('product_create'), 403);
@@ -83,7 +82,7 @@ class Create extends Component
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
         if ($this->image) {
             $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
@@ -91,7 +90,7 @@ class Create extends Component
             $this->product->image = $imageName;
         }
 
-        $this->product->save();
+        $this->product->save($validatedData);
 
         $this->alert('success', __('Product created successfully'));
 
