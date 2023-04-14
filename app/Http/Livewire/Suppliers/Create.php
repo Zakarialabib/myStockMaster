@@ -64,9 +64,9 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
-
         try {
+            $validatedData = $this->validate();
+
             $this->supplier->save($validatedData);
 
             $this->alert('success', __('Supplier created successfully.'));
@@ -75,7 +75,7 @@ class Create extends Component
 
             $this->createSupplier = false;
         } catch (Throwable $th) {
-            $this->alert('success', __('Error.').$th->getMessage());
+            $this->alert('success', __('Supplier was not created .') . $th->getMessage());
         }
     }
 }
