@@ -57,17 +57,16 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product): void
+    public function mount(): void
     {
-        $this->product = $product;
+        $this->product = new Product();
         $this->product->stock_alert = 10;
         $this->product->order_tax = 0;
         $this->product->unit = 'pcs';
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
-        $this->product->warehouse_id = settings()->default_warehouse_id ?? null;
     }
-
+    
     public function render()
     {
         abort_if(Gate::denies('product_create'), 403);
@@ -93,7 +92,7 @@ class Create extends Component
 
     public function create(): void
     {
-        try {
+        $validatedData = $this->validate();
 
             $validatedData = $this->validate();
 
@@ -127,6 +126,14 @@ class Create extends Component
         } catch (\Throwable $th) {
             $this->alert('error', $th->getMessage());
         }
+
+        $this->product->save($validatedData);
+
+        $this->alert('success', __('Product created successfully'));
+
+        $this->emit('refreshIndex');
+
+        $this->createProduct = false;
     }
 
     public function getCategoriesProperty()
