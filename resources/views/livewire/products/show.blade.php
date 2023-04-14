@@ -122,10 +122,22 @@
                             @if ($product)
                                 <ul>
                                     @forelse ($product->movements as $movement)
-                                        <li>Type : {{ $movement->type }}</li>
-                                        <li>Quantity : {{ $movement->quantity }} </li>
-                                        <li>User - {{ $movement->user->name }}</li>
-                                        <li>Date - {{ $movement->created_at }}</li>
+                                        <li>
+                                        {{__('Type')}} :
+                                            @if ($movement->type == \App\Enums\MovementType::SALE)
+                                                <x-badge warning class="text-xs">
+                                                    {{ __('Sale') }}
+                                                </x-badge>
+                                            @elseif ($movement->type == \App\Enums\MovementType::PURCHASE)
+                                                <x-badge success class="text-xs">
+                                                    {{ __('Purchase') }}
+                                                </x-badge>
+                                            @endif
+                                        </li>
+
+                                        <li>{{__('Quantity')}} : {{ $movement->quantity }} </li>
+                                        <li>{{__('User')}} - {{ $movement->user->name }}</li>
+                                        <li>{{__('Date')}} - {{ $movement->created_at }}</li>
                                     @empty
                                         <li> {{ __('No movement recorded') }}</li>
                                     @endforelse
