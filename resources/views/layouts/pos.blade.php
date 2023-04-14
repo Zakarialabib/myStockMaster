@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ dark: isDarkMode, rtl : isRtl }" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html x-data="mainState" :class="{ dark: isDarkMode, rtl: isRtl }" class="scroll-smooth"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -19,35 +20,38 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
-    @include('includes.main-css')
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @include('includes.main-css')
 </head>
 
 <body class="antialiased bg-gray-50 text-body font-body" dir="ltr">
     <div x-data="mainState" :class="{ dark: isDarkMode }" @resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen">
-            
+
             <x-navbar-pos />
 
             <main class="pt-2 flex-1">
                 @yield('content')
                 @isset($slot)
-                {{ $slot }}
+                    {{ $slot }}
                 @endisset
             </main>
-            
+
             <livewire:sales.recent />
 
             <livewire:products.create />
-            
+
             <livewire:customers.create />
-            
+
             <x-settings-bar />
 
         </div>
     </div>
+
     @include('includes.main-js')
+
 </body>
 
 </html>

@@ -31,7 +31,7 @@
                     <select
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="status" id="status" wire:model="status" required>
-                        <option>{{__('Select Status')}}</option>
+                        <option>{{ __('Select Status') }}</option>
                         @foreach (\App\Enums\PurchaseStatus::cases() as $status)
                             <option value="{{ $status->value }}">
                                 {{ __($status->name) }}
@@ -58,19 +58,18 @@
                     <x-input-error :messages="$errors->get('paid_amount')" class="mt-2" />
                 </div>
             </div>
-    </div>
 
-    <div class="mb-4">
-        <label for="note">{{ __('Note (If Needed)') }}</label>
-        <textarea name="note" id="note" rows="5" wire:model="note"
-            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-    </div>
+            <div class="mb-4">
+                <label for="note">{{ __('Note (If Needed)') }}</label>
+                <textarea name="note" id="note" rows="5" wire:model="note"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
+            </div>
 
-    <div class="w-full mt-3">
-        <x-button type="submit" primary class="w-full">
-            {{ __('Create Purchase') }}
-        </x-button>
+            <div class="w-full mt-3">
+                <x-button type="submit" primary class="w-full">
+                    {{ __('Create Purchase') }}
+                </x-button>
+            </div>
+        </form>
     </div>
-    </form>
-</div>
 </div>
