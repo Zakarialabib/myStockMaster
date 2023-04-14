@@ -35,7 +35,6 @@ class Index extends Component
         'delete',
     ];
 
-    public $filterType = null;
     public $startDate;
     public $endDate;
 
@@ -86,6 +85,24 @@ class Index extends Component
         $this->endDate = $value;
     }
 
+    public function filterByType($type)
+    {
+        switch ($type) {
+            case 'day':
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+                break;
+        }
+    }
+
     public function mount(): void
     {
         $this->selectPage = false;
@@ -94,50 +111,21 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
-        $this->startDate = Purchase::orderBy('created_at')->value('created_at');
-        $this->endDate = now()->format('Y-m-d');
-    }
-
-    public function filterByType($type)
-    {
-        $this->filterType = $type;
-    }
-
-    public function fileType()
-    {
-        switch ($this->filterType) {
-            case 'day':
-                $this->startDate = now()->format('Y-m-d');
-                $this->endDate = now()->format('Y-m-d');
-
-                break;
-            case 'month':
-                $this->startDate = now()->startOfMonth()->format('Y-m-d');
-                $this->endDate = now()->endOfMonth()->format('Y-m-d');
-
-                break;
-            case 'year':
-                $this->startDate = now()->startOfYear()->format('Y-m-d');
-                $this->endDate = now()->endOfYear()->format('Y-m-d');
-
-                break;
-        }
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
     public function render()
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
+            ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $this->fileType();
-
-        $filter = new DateFilter();
-
-        $purchases = $filter->filterDate($query, $this->startDate, $this->endDate)->paginate($this->perPage);
+        $purchases = $query->paginate($this->perPage);
 
         return view('livewire.purchase.index', compact('purchases'));
     }
