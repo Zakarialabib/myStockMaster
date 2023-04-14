@@ -50,7 +50,7 @@ class Transactions extends Component
         $this->lastPurchases = Purchase::with('supplier')
             ->latest()
             ->take(5)
-            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date']);
+            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date','user_id']);
 
         $this->bestSales = DB::table('sales')
             ->selectRaw('COUNT(sales.id) as totalSales, SUM(sales.total_amount) as TotalAmount, customers.name as name')
