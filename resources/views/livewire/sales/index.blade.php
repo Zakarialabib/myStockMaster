@@ -194,13 +194,14 @@
                     </x-table.td>
                 </x-table.tr>
             @empty
-                <x-table.tr>
-                    <x-table.td>
-                        <div class="flex justify-center items-center">
-                            <span class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
+                 <x-table.tr>
+                        <x-table.td colspan="8">
+                            <div class="flex justify-center items-center">
+                                <i class="fas fa-box-open text-4xl text-gray-400"></i>
+                                {{ __('No results found') }}
+                            </div>
+                        </x-table.td>
+                    </x-table.tr>
             @endforelse
         </x-table.tbody>
     </x-table>
