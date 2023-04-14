@@ -1,47 +1,47 @@
-@props(['options'])
-
-<div
-    x-data="{
-        model: @entangle($attributes->wire('model')),
-    }"
-    x-init="
-        select2 = $($refs.select)
-            .not('.select2-hidden-accessible')
-            .select2({
-                dropdownAutoWidth: true,
-                placeholder: 'Select an option',
-                allowClear: true,
-                width: '100%',
-                minimumResultsForSearch: 10,
-            });
-        select2.on('select2:select', (event) => {
-            if (event.target.hasAttribute('multiple')) { model = Array.from(event.target.options).filter(option => option.selected).map(option => option.value); } else { model = event.params.data.id }
-        });
-        select2.on('select2:unselect', (event) => {
-           
-            if (event.target.hasAttribute('multiple')) { model = Array.from(event.target.options).filter(option => option.selected).map(option => option.value); } else { model = event.params.data.id }
-        });
-        $watch('model', (value) => {
-            select2.val(value).trigger('change');
-        });
-    "
-    wire:ignore
- >
-    <select x-ref="select" id="{{ $attributes['id'] }}-select" {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
-        @foreach ($options as $key => $value)
-            <option value="{{ $value['id'] }}"
-                selected="{{ old($attributes['wire:model'], $value['id']) == $value['id'] ? 'selected' : '' }}">
-                {{ $value['name'] }}
-            </option>
-        @endforeach
-    </select>
+<div>
+    <div wire:ignore class="w-full">
+        <select  data-placeholder="{{ __('Select your option') }}" {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
+            @if (!isset($attributes['multiple']))
+                <option></option>
+            @endif
+            @foreach ($options as $key => $value)
+                <option value="{{ $key }}">{{ $value['name'] }}</option>
+            @endforeach
+        </select>
+    </div>
 </div>
-
 @once
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
     @endpush
+
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
 @endonce
-@push('styles')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let el = $('#{{ $attributes['id'] }}')
+
+            function initSelect() {
+                el.select2({
+                    dropdownAutoWidth: true,
+                    placeholder: '{{ __('Select your option') }}',
+                    minimumResultsForSearch: 5,
+                    allowClear: !el.attr('required'),
+                    width: '100%'
+                })
+            }
+            initSelect()
+            el.on('change', function(e) {
+                let data = $(this).select2("val")
+                if (data === "") {
+                    data = null
+                }
+                console.log('Selected value:', data)
+            });
+        });
+    </script>
 @endpush
