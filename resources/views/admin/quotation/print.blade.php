@@ -64,7 +64,7 @@
                             </div>
                             <div class="panel-body">
                                 <p>{{ __('Invoice') }}:
-                                    <strong>{{ settings()->quotation_prefix }}{{ $quotation->reference }}</strong>
+                                    <strong>{{ $quotation->reference }}</strong>
                                 <div class="panel-body">
                                     <p>{{ __('Date') }}:
                                         {{ format_date($quotation->date) }}</p>
