@@ -159,6 +159,25 @@ class SaleReturn extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($saleReturn) {
+            $prefix = settings()->saleReturn_prefix;
+    
+            $latestSaleReturn = self::latest()->first();
+    
+            if ($latestSaleReturn) {
+                $number = intval(substr($latestSaleReturn->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+    
+            $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+
     /**
      * @param mixed $query
      *
@@ -167,16 +186,6 @@ class SaleReturn extends Model
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = SaleReturn::max('id') + 1;
-            $model->reference = make_reference_id('SLRN', $number);
-        });
     }
 
     /**

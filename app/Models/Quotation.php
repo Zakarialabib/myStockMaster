@@ -145,13 +145,22 @@ class Quotation extends Model
         );
     }
 
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $number = Quotation::max('id') + 1;
-            $model->reference = make_reference_id('QT', $number);
+        static::creating(function ($quotation) {
+            $prefix = settings()->quotation_prefix;
+    
+            $latestQuotation = self::latest()->first();
+    
+            if ($latestQuotation) {
+                $number = intval(substr($latestQuotation->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+    
+            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
