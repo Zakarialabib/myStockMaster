@@ -179,7 +179,7 @@
                         <div class="md-w-1/4 sm:w-full px-2 mb-2">
                             <h5 class="mb-2 border-b pb-2">{{ __('Invoice Info') }}:</h5>
                             <div>{{ __('Invoice') }}:
-                                <strong>{{ settings()->quotation_prefix }}/{{ $quotation?->reference }}</strong>
+                                <strong>{{ $quotation?->reference }}</strong>
                             </div>
                             <div>{{ __('Date') }}:
                                 {{ format_date($quotation?->date) }}</div>
