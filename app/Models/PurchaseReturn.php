@@ -163,6 +163,25 @@ class PurchaseReturn extends Model
         );
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchaseReturn) {
+            $prefix = settings()->purchaseReturn_prefix;
+    
+            $latestPurchaseReturn = self::latest()->first();
+    
+            if ($latestPurchaseReturn) {
+                $number = intval(substr($latestPurchaseReturn->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+    
+            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+    
     /**
      * @param mixed $query
      *
@@ -181,16 +200,6 @@ class PurchaseReturn extends Model
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = PurchaseReturn::max('id') + 1;
-            $model->reference = make_reference_id('PRRN', $number);
-        });
     }
 
     /**

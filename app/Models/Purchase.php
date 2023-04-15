@@ -176,6 +176,25 @@ class Purchase extends Model
         );
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchase) {
+            $prefix = settings()->purchase_prefix;
+    
+            $latestPurchase = self::latest()->first();
+    
+            if ($latestPurchase) {
+                $number = intval(substr($latestPurchase->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+    
+            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+
     /** @param mixed $query */
     public function scopeCompleted($query)
     {

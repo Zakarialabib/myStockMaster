@@ -34,15 +34,17 @@ class CreateSettingsTable extends Migration
             $table->string('default_language', 192)->default('fr');
             $table->boolean('is_rtl')->default(1);
 
-            $table->boolean('invoice_footer_text')->default(0);
+            $table->string('invoice_footer_text')->nullable();
             $table->string('invoice_header')->nullable();
             $table->string('invoice_footer')->nullable();
 
             $table->string('sale_prefix', 25)->default('SA-');
+            $table->string('saleReturn_prefix', 25)->default('SRE-');
             $table->string('purchase_prefix', 25)->default('PR-');
+            $table->string('purchaseReturn_prefix', 25)->default('PRE-');
             $table->string('quotation_prefix', 25)->default('DE-');
-            $table->string('salepayment_prefix', 25)->default('SP-');
-            $table->string('purchasepayment_prefix', 25)->default('PR-');
+            $table->string('salePayment_prefix', 25)->default('SP-');
+            $table->string('purchasePayment_prefix', 25)->default('PR-');
 
             $table->boolean('show_email')->default(1);
             $table->boolean('show_address')->default(1);
