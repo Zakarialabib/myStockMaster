@@ -35,11 +35,8 @@ class Index extends Component
     /** @var array<string> */
     public $listeners = [
         'importModal', 'refreshIndex' => '$refresh',
-        'paymentModal', 'paymentSave', 'showModal',
-        'delete',
+        'paymentModal', 'paymentSave', 'delete',
     ];
-
-    public $showModal = false;
 
     public $startDate;
     public $endDate;
@@ -140,15 +137,6 @@ class Index extends Component
         return view('livewire.sales.index', compact('sales'));
     }
 
-    public function showModal($id)
-    {
-        abort_if(Gate::denies('sale_access'), 403);
-
-        $this->sale = Sale::find($id);
-
-        $this->showModal = true;
-    }
-
     public function deleteSelected()
     {
         abort_if(Gate::denies('delete_sales'), 403);
@@ -232,7 +220,6 @@ class Index extends Component
 
             SalePayment::create([
                 'date'           => $this->date,
-                'reference'      => settings()->salepayment_prefix . '-' . date('Y-m-d-h'),
                 'amount'         => $this->amount,
                 'note'           => $this->note ?? null,
                 'sale_id'        => $this->sale_id,
