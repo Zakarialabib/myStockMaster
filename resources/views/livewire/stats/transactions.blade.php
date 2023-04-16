@@ -1,6 +1,7 @@
 <div>
     <div>
         <div class="flex flex-row flex-wrap px-2 py-3">
+            @can('show_total_stats')
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}"
                     href="{{ route('product-categories.index') }}">
@@ -33,22 +34,25 @@
                     </path>
                 </x-counter-card>
             </div>
-            <div class="px-2 pb-2 w-full sm:w-1/2">
+            @endcan
+            <div class="px-2 pb-2 w-full mx-2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{ __('Sales') }}</h3>
+                        <h3>{{ __('Daily Sales and Purchases') }}</h3>
                     </div>
-                    <div id="chart2"></div>
+                    <div id="daily-chart"></div>
                 </div>
             </div>
-            <div class="px-2 pb-2 w-full sm:w-1/2">
+            {{-- @can('show_monthly_cashflow') --}}
+            <div class="px-2 pb-2 w-full mx-2">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
-                        <h3>{{ __('Purchases') }}</h3>
+                        <h3>{{ __('Monthly Cash Flow (Payment Sent & Received)') }}</h3>
                     </div>
-                    <div id="chart1"></div>
+                    <div id="monthly-chart"></div>
                 </div>
             </div>
+            {{-- @endcan --}}
             <div class="px-2 pb-2 w-full sm:w-full">
                 <div class="card bg-white">
                     <div class="flex w-full px-4 justify-between items-center">
@@ -207,124 +211,21 @@
     </div>
 </div>
 
-@prepend('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-@endprepend
+@pushOnce('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+@endPushOnce
 
 @push('scripts')
     <script>
-        var options = {
-            chart: {
-                type: 'area',
-                height: '400px',
-                defaultLocale: 'en',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 800,
-                },
-                locales: [{
-                    name: 'en',
-                    options: {
-                        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                            'September', 'October', 'November', 'December'
-                        ],
-                        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
-                            'Nov', 'Dec'
-                        ],
-                        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                        shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                        toolbar: {
-                            download: 'تحميل',
-                            selection: 'تحديد',
-                            selectionZoom: 'تحديد التكبير',
-                            zoomIn: 'تكبير',
-                            zoomOut: 'تصغير',
-                            pan: 'Panning',
-                            reset: 'إعادة الحجم الطبيعي',
-                            menu: 'اللائحة',
-                            DownloadSVG: 'asdfasdf'
-                        }
-                    }
-                }]
-            },
-            series: [{
-                name: 'المشتريات',
-                data: @json($purchases_count)
-            }],
-            xaxis: {
-                categories: @json($purchases)
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return val;
-                    }
-                }
-            }
-        }
-        var chart = new ApexCharts(document.querySelector("#chart1"), options);
-        chart.render();
+        document.addEventListener('livewire:load', function() {
+            var dailyChart = new ApexCharts(document.querySelector("#daily-chart"), @json($this->dailyChartOptions));
+            dailyChart.render();
+        });
     </script>
-
     <script>
-        var options = {
-            chart: {
-                type: 'area',
-                height: '400px',
-                defaultLocale: 'en',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 800,
-                },
-                locales: [{
-                    name: 'en',
-                    options: {
-                        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-                            'September', 'October', 'November', 'December'
-                        ],
-                        shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
-                            'Nov', 'Dec'
-                        ],
-                        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                        shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                        toolbar: {
-                            download: 'تحميل',
-                            selection: 'تحديد',
-                            selectionZoom: 'تحديد التكبير',
-                            zoomIn: 'تكبير',
-                            zoomOut: 'تصغير',
-                            pan: 'Panning',
-                            reset: 'إعادة الحجم الطبيعي',
-                            menu: 'اللائحة',
-                            DownloadSVG: 'asdfasdf'
-                        }
-                    }
-                }]
-            },
-            series: [{
-                name: 'المبيعات',
-                data: @json($sales_count)
-            }],
-            xaxis: {
-                categories: @json($sales)
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return val;
-                    }
-                }
-            }
-        }
-        var chart = new ApexCharts(document.querySelector("#chart2"), options);
-        chart.render();
+        var monthlyChart = new ApexCharts(document.querySelector("#monthly-chart"), @json($this->monthlyChartOptions));
+        monthlyChart.render();
     </script>
-@endpush
-
-
-@push('scripts')
     <script>
         function chart(data, selector) {
             let tes = data;

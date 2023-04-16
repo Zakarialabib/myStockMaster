@@ -8,8 +8,11 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\PurchasePayment;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -50,7 +53,7 @@ class Transactions extends Component
         $this->lastPurchases = Purchase::with('supplier')
             ->latest()
             ->take(5)
-            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date','user_id']);
+            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date', 'user_id']);
 
         $this->bestSales = DB::table('sales')
             ->selectRaw('COUNT(sales.id) as totalSales, SUM(sales.total_amount) as TotalAmount, customers.name as name')
@@ -159,6 +162,119 @@ class Transactions extends Component
         }
 
         return json_encode($dataarray);
+    }
+
+    public function getDailyChartOptionsProperty()
+    {
+        $currentMonth = Carbon::now()->startOfMonth();
+
+        // Get all days in the current month
+        $daysInMonth = [];
+        $currentDay = Carbon::now()->startOfMonth();
+
+        while ($currentDay->month == $currentMonth->month) {
+            $daysInMonth[] = $currentDay->format('Y-m-d');
+            $currentDay->addDay();
+        }
+
+        // Get sales data for each day in the current month
+        $salesData = Sale::selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
+            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        // Get purchase data for each day in the current month
+        $purchasesData = Purchase::selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
+            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        // Combine sales and purchase data
+        $chartData = [];
+
+        foreach ($daysInMonth as $day) {
+            $sale = $salesData->where('day', $day)->first();
+            $purchase = $purchasesData->where('day', $day)->first();
+            $chartData[] = [
+                'day'       => $day,
+                'sales'     => ($sale) ? $sale->total_sales : 0,
+                'purchases' => ($purchase) ? $purchase->total_purchases : 0,
+            ];
+        }
+
+        // Create stacked bar chart options
+        $dailyChartOptions = [
+            'chart' => [
+                'type'    => 'bar',
+                'stacked' => true,
+            ],
+            'plotOptions' => [
+                'bar' => [
+                    'horizontal'  => false,
+                    'endingShape' => 'flat',
+                    'columnWidth' => '70%',
+                ],
+            ],
+            'series' => [
+                [
+                    'name' => __('Sales'),
+                    'data' => array_column($chartData, 'sales'),
+                ],
+                [
+                    'name' => __('Purchases'),
+                    'data' => array_column($chartData, 'purchases'),
+                ],
+            ],
+            'xaxis' => [
+                'categories' => array_column($chartData, 'day'),
+                'labels'     => [
+                    'rotateAlways' => true,
+                    'rotate'       => -45,
+                ],
+            ],
+            'yaxis' => [
+                'title' => [
+                    'text' => __('Amount'),
+                ],
+            ],
+            'legend' => [
+                'position'        => 'top',
+                'horizontalAlign' => 'center',
+                'offsetX'         => 40,
+            ],
+            'colors' => ['#4CAF50', '#F44336'],
+        ];
+
+        return $dailyChartOptions;
+    }
+
+    public function getMonthlyChartOptionsProperty()
+    {
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
+
+        // Get payment data for the month
+        $salePayments = SalePayment::whereBetween('created_at', [$startDate, $endDate])->get();
+        $purchasePayments = PurchasePayment::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        // Calculate total payment amounts
+        $totalPayments = [
+            'sent'     => $salePayments->sum('amount'),
+            'received' => $purchasePayments->sum('amount'),
+        ];
+
+        // Create the chart options array
+        $monthlyChartOptions = [
+            'chart' => [
+                'type' => 'donut',
+            ],
+            'series' => [$totalPayments['sent'], $totalPayments['received']],
+            'labels' => [__('Payment Sent'), __('Payment Received')],
+        ];
+
+        return $monthlyChartOptions;
     }
 
     public function render()
