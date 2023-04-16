@@ -48,7 +48,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereUpdatedAt($value)
- *
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleDetails whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class SaleDetails extends Model
@@ -93,6 +94,7 @@ class SaleDetails extends Model
     protected $fillable = [
         'sale_id',
         'product_id',
+        'warehouse_id',
         'name',
         'code',
         'quantity',

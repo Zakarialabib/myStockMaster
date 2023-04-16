@@ -1,22 +1,6 @@
-@page { margin: 0; } body {  }
-
-
-  body {
-	background-size: cover;
-	background-repeat: no-repeat;
-	padding: 10px 25px 0px 25px;
-	width: 80%;
-	height: 100%;
-	position: relative;
-	margin: 0.5cm; 
-	margin-bottom:1.6cm;
-	color: #555555;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-	font-family: SourceSansPro;
-	/* background-image: url("./images/background_invoice.jpg"); */
-
-  }
+@page {
+	margin: 0;
+}
 
 .clearfix:after {
 	content: "";
@@ -87,7 +71,7 @@ header {
 	font-size: 85%;
 	padding: 1.5%;
 	font-size: 22px;
-	color:#8A2BE2;
+	color: #8A2BE2;
 	font-weight: 900;
 }
 
@@ -103,7 +87,6 @@ header {
 }
 
 #company {
-
 	float: right;
 	float: right;
 	padding-left: 6px;
@@ -176,7 +159,7 @@ h2.name {
 }
 
 #client {
-	padding: 0!important;
+	padding: 0 !important;
 	float: left;
 	width: 50%;
 	min-height: 90px;
@@ -253,17 +236,17 @@ h2.name {
 
 #details_inv>table .Ref {
 	text-align: left;
-	font-size: 16px!important;
+	font-size: 16px !important;
 }
 
 #details_inv>table .Payment {
 	text-align: right;
-	font-size: 16px!important;
+	font-size: 16px !important;
 }
 
 #details_inv>table .mode {
 	text-align: center;
-	font-size: 16px!important;
+	font-size: 16px !important;
 }
 
 #details_inv>table td.unit,
@@ -333,10 +316,4 @@ footer {
 	border-top: 1px solid #AAAAAA;
 	padding: 8px 0;
 	text-align: center;
-}
-
-#paiment {
-	border: 2px solid;
-	padding: 24px;
-	width: 659px;
 }
