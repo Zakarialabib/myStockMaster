@@ -37,7 +37,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $deleted_at
  *
  * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereDeletedAt($value)
- *
+ * @property int|null $warehouse_id
+ * @property-read \App\Models\Product|null $warehouse
+ * @method static \Illuminate\Database\Eloquent\Builder|AdjustedProduct whereWarehouseId($value)
  * @mixin \Eloquent
  */
 
@@ -48,6 +50,7 @@ class AdjustedProduct extends Model
     public $orderable = [
         'id',
         'product_id',
+        'warehouse_id',
         'quantity',
         'created_at',
         'updated_at',
@@ -56,6 +59,7 @@ class AdjustedProduct extends Model
     public $filterable = [
         'id',
         'product_id',
+        'warehouse_id',
         'quantity',
         'created_at',
         'updated_at',
@@ -69,6 +73,11 @@ class AdjustedProduct extends Model
     }
 
     public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }

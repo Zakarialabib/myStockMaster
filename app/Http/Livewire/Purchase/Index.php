@@ -11,6 +11,7 @@ use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -69,6 +70,37 @@ class Index extends Component
         'payment_method' => 'required|integer|max:255',
         'note' => 'nullable|string|max:1000',
     ];
+
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+    }
+
+    public function filterByType($type)
+    {
+        switch ($type) {
+            case 'day':
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
+
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+
+                break;
+        }
+    }
 
     public function mount(): void
     {
@@ -135,7 +167,6 @@ class Index extends Component
 
         $this->purchase = $purchase;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchase->id;
@@ -147,9 +178,8 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -157,11 +187,11 @@ class Index extends Component
             $purchase = Purchase::find($this->purchase_id);
 
             PurchasePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'purchase_id' => $this->purchase_id,
+                'date'           => $this->date,
+                'user_id'        => Auth::user()->id,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'purchase_id'    => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 

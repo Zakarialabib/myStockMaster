@@ -36,48 +36,50 @@
                             </select>
                             <x-input-error :messages="$errors->get('product.category_id')" for="category_id" class="mt-2" />
                         </div>
-
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="cost" :value="__('Cost')" required />
-                            <x-input id="cost" class="block mt-1 w-full" type="text" name="cost"
-                                wire:model="product.cost" required />
-                            <x-input-error :messages="$errors->get('product.cost')" for="product.cost" class="mt-2" />
-
-                        </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="price" :value="__('Price')" required />
-                            <x-input id="price" class="block mt-1 w-full" type="text" name="price"
-                                wire:model="product.price" required />
-                            <x-input-error :messages="$errors->get('product.price')" for="product.price" class="mt-2" />
-
-                        </div>
-
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="quantity" :value="__('Quantity')" required />
-                            <x-input type="text" wire:model="product.quantity" name="quantity" disabled required />
-                            <x-input-error :messages="$errors->get('product.quantity')" for="product.quantity" class="mt-2" />
-                        </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="stock_alert" :value="__('Stock Alert')" required />
                             <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
                                 wire:model="product.stock_alert" required />
                             <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
                         </div>
+                        <div class="mt-4 flex flex-col justify-center px-4 mt-2">
+                            @if ($productWarehouses)
+                                @foreach ($productWarehouses as $warehouse)
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-1/4">
+                                            <h4 class="font-semibold">{{ $warehouse->name }}</h4>
+                                        </div>
+                                        <div class="w-1/4">
+                                            <x-label for="price_{{ $warehouse->id }}" :value="__('Price')" required />
+                                            <input id="price_{{ $warehouse->id }}" required class="w-full"
+                                                type="text" name="price_{{ $warehouse->id }}"
+                                                wire:model.lazy="productWarehouse.{{ $warehouse->id }}.price" />
+                                            <x-input-error :messages="$errors->get('prices.' . $warehouse->id)" for="price_{{ $warehouse->id }}"
+                                                class="mt-2" />
+                                        </div>
+                                        <div class="w-1/4">
+                                            <x-label for="cost_{{ $warehouse->id }}" :value="__('Cost')" required />
+                                            <input type="text" required class="w-full"
+                                                wire:model.lazy="productWarehouse.{{ $warehouse->id }}.cost"
+                                                id="cost_{{ $warehouse->id }}" name="cost_{{ $warehouse->id }}" />
+                                            <x-input-error :messages="$errors->get('costs.' . $warehouse->id)" for="cost_{{ $warehouse->id }}"
+                                                class="mt-2" />
+                                        </div>
+                                        <div class="w-1/4">
+                                            <x-label for="qty_{{ $warehouse->id }}" :value="__('Quantity')" />
+                                            <input type="text" required class="w-full bg-gray-200 text-gray-600"
+                                                wire:model.lazy="productWarehouse.{{ $warehouse->id }}.qty" disabled
+                                                id="qty_{{ $warehouse->id }}" name="qty_{{ $warehouse->id }}" />
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+
                     </div>
 
                     <x-accordion title="{{ 'More Details' }}">
                         <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="lg:w-1/3 sm:w-1/2 px-2">
-                                <x-label for="warehouse" :value="__('Warehouse')" />
-                                <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                id="warehouse_id" name="warehouse_id" wire:model="product.warehouse_id">
-                                    <option value="">{{__('Select Warehouse')}}</option>
-                                    @foreach ($this->warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                                    @endforeach
-                                </select>
-                                <x-input-error :messages="$errors->get('warehouse_id')" for="warehouse_id" class="mt-2" />
-                            </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="brand_id" :value="__('Brand')" />
                                 <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
@@ -122,7 +124,13 @@
                                     <option value="EAN8">EAN-8</option>
                                 </select>
                             </div>
-                            <div class="w-full mb-4">
+                            <div class="md:w-1/2 sm:w-full px-4 gap-2">
+                                <x-label for="featured" :value="__('Favorite proudct')" />
+                                <x-input.checkbox id="featured" type="checkbox" name="featured"
+                                    wire:model.lazy="product.featured" />
+                                <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
+                            </div>
+                            <div class="w-full mb-2 px-4">
                                 <x-label for="note" :value="__('Description')" />
                                 <textarea rows="4" wire:model="product.note" name="note"
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"

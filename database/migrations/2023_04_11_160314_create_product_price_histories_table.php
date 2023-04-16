@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Models\Product;
-use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Product;
+use App\Models\Warehouse;
 
 return new class () extends Migration {
     /**
@@ -16,15 +16,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('product_warehouse', function (Blueprint $table) {
+        Schema::create('product_price_histories', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignIdFor(Product::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Warehouse::class)->constrained()->restrictOnDelete();
-
-            $table->integer('price');
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->constrained()->cascadeOnDelete();
             $table->integer('cost');
-            $table->integer('qty');
+            $table->date('effective_date');
+            $table->date('expiry_date');
             $table->timestamps();
         });
     }
@@ -36,6 +34,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::drop('product_warehouse');
+        Schema::dropIfExists('product_price_histories');
     }
 };

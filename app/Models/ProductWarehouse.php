@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * App\Models\ProductWarehouse
@@ -32,32 +33,35 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @mixin \Eloquent
  */
-class ProductWarehouse extends Model
+class ProductWarehouse extends Pivot
 {
     protected $table = 'product_warehouse';
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'product_id', 'warehouse_id', 'qte',
+        'product_id', 'warehouse_id', 'qty', 'price', 'cost',
     ];
 
     protected $casts = [
         'product_id' => 'integer',
         'warehouse_id' => 'integer',
-        'qte' => 'double',
     ];
 
-    public function warehouse(): BelongsTo
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    
+    public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function product(): BelongsTo
+    public function productMovements()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(ProductMovement::class);
     }
 }
