@@ -169,19 +169,19 @@ class PurchaseReturn extends Model
 
         static::creating(function ($purchaseReturn) {
             $prefix = settings()->purchaseReturn_prefix;
-    
+
             $latestPurchaseReturn = self::latest()->first();
-    
+
             if ($latestPurchaseReturn) {
                 $number = intval(substr($latestPurchaseReturn->reference, -3)) + 1;
             } else {
                 $number = 1;
             }
-    
-            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+
+            $purchaseReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
-    
+
     /**
      * @param mixed $query
      *

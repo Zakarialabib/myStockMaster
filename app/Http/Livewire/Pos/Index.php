@@ -149,7 +149,6 @@ class Index extends Component
 
             $sale = Sale::create([
                 'date'                => date('Y-m-d'),
-                'reference'           => settings()->sale_prefix.'-'.date('Y-m-d-h'),
                 'customer_id'         => $this->customer_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
@@ -200,12 +199,9 @@ class Index extends Component
                 ]);
             }
 
-            Cart::instance('sale')->destroy();
-
             if ($sale->paid_amount > 0) {
                 SalePayment::create([
                     'date'           => date('Y-m-d'),
-                    'reference'      => settings()->sale_prefix.'-'.date('Y-m-d-h'),
                     'amount'         => $sale->paid_amount,
                     'sale_id'        => $sale->id,
                     'payment_method' => $this->payment_method,
@@ -217,6 +213,8 @@ class Index extends Component
 
             // dispatch the Send Payment Notification job
             PaymentNotification::dispatch($sale);
+
+            Cart::instance('sale')->destroy();
 
             $this->checkoutModal = false;
         } catch (Exception $e) {

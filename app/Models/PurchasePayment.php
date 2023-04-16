@@ -81,16 +81,16 @@ class PurchasePayment extends Model
 
         static::creating(function ($purchasePayment) {
             $prefix = settings()->purchasePayment_prefix;
-    
+
             $latestPurchasePayment = self::latest()->first();
-    
+
             if ($latestPurchasePayment) {
                 $number = intval(substr($latestPurchasePayment->reference, -3)) + 1;
             } else {
                 $number = 1;
             }
-    
-            $purchasePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+
+            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

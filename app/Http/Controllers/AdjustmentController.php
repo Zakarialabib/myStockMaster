@@ -51,8 +51,9 @@ class AdjustmentController extends Controller
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
                     'product_id'    => $id,
-                    'quantity'      => $request->quantities[$key],
-                    'type'          => $request->types[$key],
+                    // 'warehouse_id'    => $id,
+                    'quantity' => $request->quantities[$key],
+                    'type'     => $request->types[$key],
                 ]);
 
                 $product = Product::findOrFail($id);

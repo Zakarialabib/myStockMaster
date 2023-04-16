@@ -121,35 +121,33 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Discount') }}
-                                                    ({{ $purchase_return->discount_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->discount_amount) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Tax') }}
-                                                    ({{ $purchase_return->tax_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Shipping') }}</strong></td>
-                                            <td class="right">{{ format_currency($purchase_return->shipping_amount) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
-                                            <td class="right">
-                                                <strong>{{ format_currency($purchase_return->total_amount) }}</strong>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="w-full px-4 mb-4">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Discount') }}
+                                                ({{ $purchase_return->discount_percentage }}%)</strong></td>
+                                        <td class="right">{{ format_currency($purchase_return->discount_amount) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Tax') }}
+                                                ({{ $purchase_return->tax_percentage }}%)</strong></td>
+                                        <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Shipping') }}</strong></td>
+                                        <td class="right">{{ format_currency($purchase_return->shipping_amount) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
+                                        <td class="right">
+                                            <strong>{{ format_currency($purchase_return->total_amount) }}</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -137,7 +137,6 @@ class Index extends Component
 
         $this->salereturn = $salereturn;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $salereturn->due_amount;
         $this->payment_method = 'Cash';
         // $this->note = '';
@@ -151,7 +150,6 @@ class Index extends Component
             $this->validate(
                 [
                     'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
                     'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
@@ -161,7 +159,6 @@ class Index extends Component
 
             SaleReturnPayment::create([
                 'date'           => $this->date,
-                'reference'      => $this->reference,
                 'amount'         => $this->amount,
                 'note'           => $this->note ?? null,
                 'sale_id'        => $this->salereturn_id,

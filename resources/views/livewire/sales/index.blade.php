@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -56,6 +56,9 @@
             <x-table.th>
                 <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
+            <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+                {{ __('Reference') }}
+            </x-table.th>
             <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Date') }}
             </x-table.th>
@@ -84,6 +87,9 @@
                 <x-table.tr wire:loading.class.delay="opacity-50">
                     <x-table.td class="pr-0">
                         <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $sale->reference }}
                     </x-table.td>
                     <x-table.td>
                         {{ format_date($sale->date) }}

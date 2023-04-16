@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\PaymentStatus;
-use App\Enums\PurchaseStatus;
-use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Product;
 use App\Models\Purchase;
-use App\Models\PurchaseDetail;
-use App\Models\Supplier;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class PurchaseController extends Controller
@@ -65,5 +59,4 @@ class PurchaseController extends Controller
 
         return view('admin.purchases.edit', compact('purchase'));
     }
-
 }

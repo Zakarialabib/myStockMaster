@@ -75,7 +75,7 @@ class Create extends Component
 
             $this->createSupplier = false;
         } catch (Throwable $th) {
-            $this->alert('success', __('Supplier was not created .') . $th->getMessage());
+            $this->alert('success', __('Supplier was not created .').$th->getMessage());
         }
     }
 }

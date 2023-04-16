@@ -37,7 +37,6 @@ class PayDue extends Component
 
             PurchasePayment::create([
                 'date'           => date('Y-m-d'),
-                'reference'      => settings()->purchasepayment_prefix.'-'.date('Y-m-d-h'),
                 'amount'         => $paidAmount,
                 'purchase_id'    => $purchase->id,
                 'payment_method' => $this->payment_method,

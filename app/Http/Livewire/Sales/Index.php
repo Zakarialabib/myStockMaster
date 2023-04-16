@@ -14,7 +14,6 @@ use App\Traits\Datatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Domain\Filters\DateFilter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -108,14 +107,17 @@ class Index extends Component
             case 'day':
                 $this->startDate = now()->startOfDay()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
+
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
+
                 break;
         }
     }
@@ -197,7 +199,6 @@ class Index extends Component
 
         $this->sale = Sale::find($id);
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-' . date('Y-m-d-h');
         $this->amount = $this->sale->due_amount;
         $this->payment_method = 'Cash';
         $this->sale_id = $this->sale->id;
@@ -210,7 +211,6 @@ class Index extends Component
             $this->validate(
                 [
                     'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
                     'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
@@ -251,7 +251,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', __('Error.') . $th->getMessage());
+            $this->alert('error', __('Error.').$th->getMessage());
         }
     }
 
@@ -276,7 +276,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212' . $phone;
+        $phone = '+212'.$phone;
 
         $greeting = __('Hello');
 

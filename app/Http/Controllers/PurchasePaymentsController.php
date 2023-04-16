@@ -44,7 +44,6 @@ class PurchasePaymentsController extends Controller
         DB::transaction(function () use ($request) {
             PurchasePayment::create([
                 'date'           => $request->date,
-                'reference'      => settings()->purchasepayment_prefix.'-'.date('Y-m-d-h'),
                 'amount'         => $request->amount,
                 'note'           => $request->note,
                 'purchase_id'    => $request->purchase_id,
