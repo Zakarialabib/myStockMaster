@@ -113,6 +113,7 @@ class Index extends Component
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
+
                 break;
         }
     }

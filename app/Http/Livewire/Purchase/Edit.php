@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Purchase;
 
 use Livewire\Component;
@@ -14,13 +16,12 @@ use App\Models\Product;
 
 class Edit extends Component
 {
-
     use LivewireAlert;
 
     /** @var array<string> */
     public $listeners = [
         'productSelected',
-        'refreshIndex' => '$refresh'
+        'refreshIndex' => '$refresh',
     ];
 
     public $suppliers;
@@ -98,18 +99,18 @@ class Edit extends Component
 
     public function update()
     {
-
         $this->validate();
-
 
         // Only allow updates to PENDING or ORDERED purchases
         if ($this->purchase->status === PurchaseStatus::COMPLETED || $this->purchase->status === PurchaseStatus::RETURNED || $this->purchase->status === PurchaseStatus::CANCELED) {
             $this->alert('error', __('Cannot update a completed, returned or canceled purchase.'));
+
             return redirect()->back();
         }
-        
+
         // Get the payment status based on the paid amount
         $due_amount = $this->total_amount - $this->paid_amount;
+
         if ($due_amount === $this->total_amount) {
             $payment_status = PaymentStatus::PENDING;
         } elseif ($due_amount > 0) {
@@ -117,7 +118,7 @@ class Edit extends Component
         } else {
             $payment_status = PaymentStatus::PAID;
         }
-        
+
         // Update the purchase details and adjust the product quantities accordingly
         foreach ($this->purchase->purchaseDetails as $purchase_detail) {
             if ($this->purchase->status === PurchaseStatus::COMPLETED) {

@@ -82,7 +82,6 @@ class SalePayment extends Model
         'user_id',
     ];
 
-
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
@@ -106,16 +105,16 @@ class SalePayment extends Model
 
         static::creating(function ($salePayment) {
             $prefix = settings()->salePayment_prefix;
-    
+
             $latestSalePayment = self::latest()->first();
-    
+
             if ($latestSalePayment) {
                 $number = intval(substr($latestSalePayment->reference, -3)) + 1;
             } else {
                 $number = 1;
             }
-    
-            $salePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+
+            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

@@ -51,7 +51,6 @@ class PayDue extends Component
 
             SalePayment::create([
                 'date'           => date('Y-m-d'),
-                'reference'      => settings()->salepayment_prefix.'-'.date('Y-m-d-h'),
                 'amount'         => $paidAmount,
                 'sale_id'        => $sale->id,
                 'payment_method' => $this->payment_method,

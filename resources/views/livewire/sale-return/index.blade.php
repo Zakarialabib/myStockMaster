@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -281,48 +281,46 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="flex flex-row">
-                                    <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                        <table class="table">
-                                            <tbody>
+                                <div class="w-full px-4 mb-4">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="left"><strong>{{ __('Discount') }}
+                                                        ({{ $salereturn?->discount_percentage }}%)</strong>
+                                                </td>
+                                                <td class="right">
+                                                    {{ format_currency($salereturn?->discount_amount) }}
+                                                </td>
+                                            </tr>
+                                            @if ($salereturn?->tax_percentage)
                                                 <tr>
-                                                    <td class="left"><strong>{{ __('Discount') }}
-                                                            ({{ $salereturn?->discount_percentage }}%)</strong>
+                                                    <td class="left"><strong>{{ __('Tax') }}
+                                                            ({{ $salereturn?->tax_percentage }}%)</strong>
                                                     </td>
                                                     <td class="right">
-                                                        {{ format_currency($salereturn?->discount_amount) }}
+                                                        {{ format_currency($salereturn?->tax_amount) }}
                                                     </td>
                                                 </tr>
-                                                @if ($salereturn?->tax_percentage)
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Tax') }}
-                                                                ({{ $salereturn?->tax_percentage }}%)</strong>
-                                                        </td>
-                                                        <td class="right">
-                                                            {{ format_currency($salereturn?->tax_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                                @if ($salereturn?->shipping_amount)
-                                                    <tr>
-                                                        <td class="left"><strong>{{ __('Shipping') }}</strong>
-                                                        </td>
-                                                        <td class="right">
-                                                            {{ format_currency($salereturn?->shipping_amount) }}
-                                                        </td>
-                                                    </tr>
-                                                @endif
+                                            @endif
+                                            @if ($salereturn?->shipping_amount)
                                                 <tr>
-                                                    <td class="left">
-                                                        <strong>{{ __('Grand Total') }}</strong>
+                                                    <td class="left"><strong>{{ __('Shipping') }}</strong>
                                                     </td>
                                                     <td class="right">
-                                                        <strong>{{ format_currency($salereturn?->total_amount) }}</strong>
+                                                        {{ format_currency($salereturn?->shipping_amount) }}
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @endif
+                                            <tr>
+                                                <td class="left">
+                                                    <strong>{{ __('Grand Total') }}</strong>
+                                                </td>
+                                                <td class="right">
+                                                    <strong>{{ format_currency($salereturn?->total_amount) }}</strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

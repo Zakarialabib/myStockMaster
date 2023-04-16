@@ -42,7 +42,6 @@ class PaymentForm extends Component
 
     protected $rules = [
         'date'      => 'required|date',
-        'reference' => 'required|string|max:255',
         'amount'    => 'required|numeric',
         'note'      => 'nullable|string|max:1000',
         // 'sale_id' => 'nullable|integer',
@@ -53,7 +52,6 @@ class PaymentForm extends Component
     {
         $this->sale = $sale;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $sale->due_amount;
     }
 
@@ -75,7 +73,6 @@ class PaymentForm extends Component
 
             SalePayment::create([
                 'date'           => $this->date,
-                'reference'      => $this->reference,
                 'amount'         => $this->amount,
                 'note'           => $this->note ?? null,
                 'sale_id'        => $this->sale_id,

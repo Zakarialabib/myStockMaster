@@ -1,9 +1,6 @@
 <div>
     <div wire:ignore class="w-full">
-        <select  data-placeholder="{{ __('Select your option') }}" {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
-            @if (!isset($attributes['multiple']))
-                <option></option>
-            @endif
+        <select  {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
             @foreach ($options as $key => $value)
                 <option value="{{ $key }}">{{ $value['name'] }}</option>
             @endforeach
@@ -28,6 +25,7 @@
             function initSelect() {
                 el.select2({
                     dropdownAutoWidth: true,
+                    language: "{{ App::getLocale() }}",
                     placeholder: '{{ __('Select your option') }}',
                     minimumResultsForSearch: 5,
                     allowClear: !el.attr('required'),
@@ -36,11 +34,7 @@
             }
             initSelect()
             el.on('change', function(e) {
-                let data = $(this).select2("val")
-                if (data === "") {
-                    data = null
-                }
-                console.log('Selected value:', data)
+                @this.set('{{ $attributes['wire:model'] }}', el.val());
             });
         });
     </script>

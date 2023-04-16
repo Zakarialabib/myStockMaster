@@ -189,7 +189,6 @@ class Index extends Component
 
         $this->purchasereturn = $purchasereturn;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $purchasereturn->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchasereturn->id;
@@ -202,7 +201,6 @@ class Index extends Component
             $this->validate(
                 [
                     'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
                     'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
@@ -212,7 +210,6 @@ class Index extends Component
 
             PurchasePayment::create([
                 'date'           => $this->date,
-                'reference'      => $this->reference,
                 'user_id'        => Auth::user()->id,
                 'amount'         => $this->amount,
                 'note'           => $this->note ?? null,

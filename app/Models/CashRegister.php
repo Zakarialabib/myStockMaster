@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CashRegister extends Model
 {
-
     protected $fillable = ['cash_in_hand', 'user_id', 'warehouse_id', 'status'];
 
     public function user(): BelongsTo

@@ -151,16 +151,16 @@ class Quotation extends Model
 
         static::creating(function ($quotation) {
             $prefix = settings()->quotation_prefix;
-    
+
             $latestQuotation = self::latest()->first();
-    
+
             if ($latestQuotation) {
                 $number = intval(substr($latestQuotation->reference, -3)) + 1;
             } else {
                 $number = 1;
             }
-    
-            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+
+            $quotation->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

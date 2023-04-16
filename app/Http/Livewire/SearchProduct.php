@@ -44,8 +44,13 @@ class SearchProduct extends Component
 
     public function render()
     {
-        $products = Product::when($this->category_id, fn ($query, $category_id) => $query->where('category_id', $category_id))
-            ->when($this->warehouse_id, fn ($query, $warehouse_id) => $query->where('warehouse_id', $warehouse_id))
+        $warehouse_id = $this->warehouse_id;
+
+        $products = Product::with(['warehouses' => function ($query) use ($warehouse_id) {
+            $query->when($warehouse_id, function ($query, $warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);
+            });
+        }])->when($this->category_id, fn ($query, $category_id) => $query->where('category_id', $category_id))
             ->when($this->featured, fn ($query, $featured) => $query->where('featured', $featured))
             ->paginate($this->showCount);
 

@@ -165,16 +165,16 @@ class SaleReturn extends Model
 
         static::creating(function ($saleReturn) {
             $prefix = settings()->saleReturn_prefix;
-    
+
             $latestSaleReturn = self::latest()->first();
-    
+
             if ($latestSaleReturn) {
                 $number = intval(substr($latestSaleReturn->reference, -3)) + 1;
             } else {
                 $number = 1;
             }
-    
-            $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+
+            $saleReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
