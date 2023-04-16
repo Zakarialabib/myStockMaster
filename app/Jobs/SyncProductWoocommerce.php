@@ -59,7 +59,7 @@ class SyncProductWooCommerce implements ShouldQueue
     protected function saveProducts()
     {
         $products = $this->wooClient->get('products', [
-            'page' => $this->current_page,
+            'page'     => $this->current_page,
             'per_page' => 10,
         ]);
         $newProducts = [];
@@ -80,29 +80,29 @@ class SyncProductWooCommerce implements ShouldQueue
                     $categories[] = $slug->reference_id;
                 } else {
                     $newCategory = app(ProductCategoryInterface::class)->createOrUpdate([
-                        'name' => $category->name,
-                        'parent_id' => $category->parent ?? 0,
+                        'name'        => $category->name,
+                        'parent_id'   => $category->parent ?? 0,
                         'description' => $category->description ?? '',
-                        'order' => $category->menu_order ?? 0,
-                        'image' => $category->image ?? '',
+                        'order'       => $category->menu_order ?? 0,
+                        'image'       => $category->image ?? '',
                     ]);
                     Slug::create([
                         'reference_type' => ProductCategory::class,
-                        'reference_id' => $newCategory->id,
-                        'key' => Str::slug((string) $category->slug),
-                        'prefix' => SlugHelper::getPrefix(ProductCategory::class),
+                        'reference_id'   => $newCategory->id,
+                        'key'            => Str::slug((string) $category->slug),
+                        'prefix'         => SlugHelper::getPrefix(ProductCategory::class),
                     ]);
                     $categories[] = $newCategory->id;
                 }
             }
             $newProducts[$product->slug] = [
-                'name' => $product->name,
+                'name'        => $product->name,
                 'description' => $product->short_description,
-                'content' => $product->short_description,
-                'price' => $product->price,
-                'categories' => array_unique($categories),
-                'image' => $images[rand(0, count($images) - 1)],
-                'images' => json_encode($images),
+                'content'     => $product->short_description,
+                'price'       => $product->price,
+                'categories'  => array_unique($categories),
+                'image'       => $images[rand(0, count($images) - 1)],
+                'images'      => json_encode($images),
             ];
             //print_r("Import product " . $product->name . PHP_EOL);
             $newProduct = app(ProductInterface::class)->createOrUpdate($newProducts[$product->slug]);
@@ -113,9 +113,9 @@ class SyncProductWooCommerce implements ShouldQueue
             }
             Slug::create([
                 'reference_type' => Product::class,
-                'reference_id' => $newProduct->id,
-                'key' => Str::slug((string) $product->slug),
-                'prefix' => SlugHelper::getPrefix(Product::class),
+                'reference_id'   => $newProduct->id,
+                'key'            => Str::slug((string) $product->slug),
+                'prefix'         => SlugHelper::getPrefix(Product::class),
             ]);
             $newProduct->tags()->sync(array_unique($tags));
         }
@@ -123,7 +123,7 @@ class SyncProductWooCommerce implements ShouldQueue
 
     protected function getImage($image)
     {
-        if (! empty($image)) {
+        if ( ! empty($image)) {
             $info = pathinfo($image);
 
             try {
@@ -138,7 +138,7 @@ class SyncProductWooCommerce implements ShouldQueue
 
             $path = '/tmp';
 
-            if (! File::isDirectory($path)) {
+            if ( ! File::isDirectory($path)) {
                 File::makeDirectory($path, 0755);
             }
 

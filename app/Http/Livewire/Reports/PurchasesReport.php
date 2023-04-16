@@ -27,7 +27,7 @@ class PurchasesReport extends Component
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
-        'end_date' => 'required|date|after:start_date',
+        'end_date'   => 'required|date|after:start_date',
     ];
 
     public function mount()
@@ -42,7 +42,7 @@ class PurchasesReport extends Component
 
     public function render()
     {
-        $purchases = Purchase::whereDate('date', '>=',$this->start_date)
+        $purchases = Purchase::whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, function ($query) {
                 return $query->where('supplier_id', $this->supplier_id);

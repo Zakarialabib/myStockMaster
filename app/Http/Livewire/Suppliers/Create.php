@@ -25,17 +25,17 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier.name' => 'required|string|min:3|max:255',
-        'supplier.phone' => 'required|numeric',
-        'supplier.email' => 'nullable|email|max:255',
-        'supplier.address' => 'nullable|string|max:255',
-        'supplier.city' => 'nullable|string|max:255',
-        'supplier.country' => 'nullable|string|max:255',
+        'supplier.name'       => 'required|string|min:3|max:255',
+        'supplier.phone'      => 'required|numeric',
+        'supplier.email'      => 'nullable|email|max:255',
+        'supplier.address'    => 'nullable|string|max:255',
+        'supplier.city'       => 'nullable|string|max:255',
+        'supplier.country'    => 'nullable|string|max:255',
         'supplier.tax_number' => 'nullable|numeric|max:255',
     ];
 
     protected $messages = [
-        'supplier.name.required' => 'The name field cannot be empty.',
+        'supplier.name.required'  => 'The name field cannot be empty.',
         'supplier.phone.required' => 'The phone field cannot be empty.',
     ];
 
@@ -64,9 +64,9 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
-
         try {
+            $validatedData = $this->validate();
+
             $this->supplier->save($validatedData);
 
             $this->alert('success', __('Supplier created successfully.'));
@@ -75,7 +75,7 @@ class Create extends Component
 
             $this->createSupplier = false;
         } catch (Throwable $th) {
-            $this->alert('success', __('Error.').$th->getMessage());
+            $this->alert('success', __('Supplier was not created .').$th->getMessage());
         }
     }
 }

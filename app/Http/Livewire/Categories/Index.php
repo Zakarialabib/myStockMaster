@@ -14,6 +14,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Storage;
 
 class Index extends Component
 {
@@ -68,8 +69,8 @@ class Index extends Component
         abort_if(Gate::denies('category_access'), 403);
 
         $query = Category::with('products')->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -118,6 +119,11 @@ class Index extends Component
 
         $this->importModal = true;
     }
+
+     public function downloadSample()
+     {
+         return Storage::disk('exports')->download('categories_import_sample.xls');
+     }
 
     public function import(): void
     {

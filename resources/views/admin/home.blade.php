@@ -1,28 +1,3 @@
-@push('scripts')
-    <script>
-        document.querySelectorAll('.js-date').forEach(el => {
-            el.addEventListener('click', event => {
-                clearActive();
-                hideAll();
-                el.classList.add('active:bg-indigo-800');
-                document.querySelector(`#${el.dataset.date}`).style.display = 'flex';
-            });
-        });
-
-        const clearActive = () => {
-            document.querySelectorAll('.js-date').forEach(el => {
-                el.classList.remove('active');
-            });
-        };
-
-        const hideAll = () => {
-            document.querySelectorAll('.js-date-row').forEach(el => {
-                el.style.display = 'none';
-            });
-        };
-    </script>
-@endpush
-
 @section('title', __('Dashboard'))
 
 @section('breadcrumb')
@@ -183,117 +158,37 @@
                 @endif
             @endforeach
         </div>
+        {{-- <div>
+            <livewire:stats.profit-loss-stats />
+        </div> --}}
         <div>
             <livewire:stats.transactions />
         </div>
-
-        {{--
-        @can('show_total_stats')
-            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full py-4 px-4 bg-gray-50">
-                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-                    <div>
-                        <div class="flex mb-2">
-                            <span class="inline-block mx-2">
-                                <i class="bi bi-bar-chart font-2xl"></i>
-                            </span>
-                            <h3 class="text-sm text-gray-600">
-                                {{ __('Revenue') }}
-                            </h3>
-                        </div>
-                        <h2 class="mb-2 text-3xl font-bold">{{ format_currency($revenue) }}</h2>
-                    </div>
-                </div>
-
-                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-                    <div>
-                        <div class="flex mb-2">
-                            <span class="inline-block mx-2">
-                                <i class="bi bi-arrow-return-left font-2xl"></i>
-                            </span>
-                            <h3 class="text-sm text-gray-600">
-                                {{ __('Sales Return') }}
-                            </h3>
-                        </div>
-                        <h2 class="mb-2 text-3xl font-bold">{{ format_currency($sale_returns) }}</h2>
-                    </div>
-                </div>
-
-                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-                    <div>
-                        <div class="flex mb-2">
-                            <span class="inline-block mx-2">
-                                <i class="bi bi-arrow-return-right font-2xl"></i>
-                            </span>
-                            <h3 class="text-sm text-gray-600">
-                                {{ __('Purchases Return') }}
-                            </h3>
-                        </div>
-                        <h2 class="mb-2 text-3xl font-bold">{{ format_currency($purchase_returns) }}</h2>
-                    </div>
-                </div>
-
-
-                <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
-                    <div>
-                        <div class="flex mb-2">
-                            <span class="inline-block mx-2">
-                                <i class="bi bi-trophy font-2xl"></i>
-                            </span>
-                            <h3 class="text-sm text-gray-600">
-                                {{ __('Profit') }}
-                            </h3>
-                        </div>
-                        <h2 class="mb-2 text-3xl font-bold">{{ format_currency($profit) }}</h2>
-                    </div>
-                </div>
-            </div>
-        @endcan
-
-        @can('show_weekly_sales_purchases|show_month_overview')
-            <div class="bg-white flex flex-wrap py-4 px-4 m-4 bg-gray-50">
-                @can('show_weekly_sales_purchases')
-                    <div class="lg:w-3/5 sm:w-full p-2 mb-4 bg-white rounded">
-                        <div>
-                            <div class="text-xl mb-2">
-                                {{ __('Sales & Purchases of Last 7 Days') }}
-                            </div>
-                            <div class="p-4">
-                                <canvas id="salesPurchasesChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                @endcan
-                @can('show_month_overview')
-                    <div class="lg:w-2/5 sm:w-full p-2 mb-4 bg-white rounded">
-                        <div>
-                            <div class="text-xl mb-2">
-                                {{ __('Overview of') }} {{ now()->format('F, Y') }}
-                            </div>
-                            <div class="card-body d-flex justify-content-center">
-                                <div class="chart-container" style="position: relative; height:auto; width:280px">
-                                    <canvas id="currentMonthChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endcan
-            </div>
-        @endcan
-
-        @can('show_monthly_cashflow')
-            <div class="bg-gray-50 px-4 flex flex-wrap py-4">
-                <div class="w-full p-2 bg-white rounded">
-                    <div>
-                        <div class="text-xl mb-2">
-                            {{ __('Monthly Cash Flow (Payment Sent & Received)') }}
-                        </div>
-                        <div class="p-4">
-                            <canvas id="paymentChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endcan
-        --}}
     </div>
 </x-app-layout>
+
+
+@push('scripts')
+    <script>
+        document.querySelectorAll('.js-date').forEach(el => {
+            el.addEventListener('click', event => {
+                clearActive();
+                hideAll();
+                el.classList.add('active:bg-indigo-800');
+                document.querySelector(`#${el.dataset.date}`).style.display = 'flex';
+            });
+        });
+
+        const clearActive = () => {
+            document.querySelectorAll('.js-date').forEach(el => {
+                el.classList.remove('active');
+            });
+        };
+
+        const hideAll = () => {
+            document.querySelectorAll('.js-date-row').forEach(el => {
+                el.style.display = 'none';
+            });
+        };
+    </script>
+@endpush

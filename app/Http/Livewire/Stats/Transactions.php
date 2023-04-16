@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Stats;
 
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\PurchasePayment;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use App\Models\Supplier;
-use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -17,8 +21,8 @@ class Transactions extends Component
     public $typeChart = 'monthly';
 
     public $categoriesCount;
-    public $topProduct; 
-    public $productCount; 
+    public $topProduct;
+    public $productCount;
     public $salesCount;
     public $profit;
     public $purchase;
@@ -29,19 +33,16 @@ class Transactions extends Component
     public $profitCount;
     public $bestSales;
     public $lastSales;
-    public $totalSales;
-    public $totalPurchases;
     public $charts;
     public $purchases;
     public $purchases_count;
     public $sales;
     public $sales_count;
+
     public function mount()
     {
-        $this->purchaseCount = Purchase::count('uuid');
         $this->categoriesCount = Category::count('id');
         $this->productCount = Product::count('id');
-        $this->salesCount = Sale::count('id');
         $this->supplierCount = Supplier::count('id');
         $this->customerCount = Customer::count('id');
         $this->lastSales = Sale::with('customer')
@@ -52,7 +53,7 @@ class Transactions extends Component
         $this->lastPurchases = Purchase::with('supplier')
             ->latest()
             ->take(5)
-            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date']);
+            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date', 'user_id']);
 
         $this->bestSales = DB::table('sales')
             ->selectRaw('COUNT(sales.id) as totalSales, SUM(sales.total_amount) as TotalAmount, customers.name as name')
@@ -62,9 +63,6 @@ class Transactions extends Component
             ->orderByDesc('TotalAmount')
             ->limit(5)
             ->get();
-
-        $this->totalSales = Sale::sum('total_amount');
-        $this->totalPurchases = Purchase::sum('total_amount');
 
         $this->topProduct = DB::table('sale_details')
             ->selectRaw('SUM(sale_details.quantity) as qtyItem, products.name as name, products.code as code')
@@ -83,65 +81,65 @@ class Transactions extends Component
         $this->sales_count = Sale::whereDate('date', '>=', now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
-            ->pluck('sales');   
+            ->pluck('sales');
 
         $this->chart();
     }
+
     public function chart()
     {
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart == 'monthly', function ($q) {
+            ->when($this->typeChart === 'monthly', function ($q) {
                 return $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('MONTH(date)');
             }, function ($q) {
-            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
-                ->groupByRaw('YEAR(date)');
-        })
+                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
+                    ->groupByRaw('YEAR(date)');
+            })
             ->get()
             ->toArray();
 
         $sales = [
-            'total' => array_column($query, 'total'),
+            'total'      => array_column($query, 'total'),
             'due_amount' => array_map(function ($total, $dueAmount) {
                 return $total - $dueAmount;
             }, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels' => array_column($query, 'labels')
+            'labels' => array_column($query, 'labels'),
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart == 'monthly', function ($q) {
+            ->when($this->typeChart === 'monthly', function ($q) {
                 return $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('MONTH(date)');
             }, function ($q) {
-            return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
-                ->groupByRaw('YEAR(date)');
-        })
+                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
+                    ->groupByRaw('YEAR(date)');
+            })
             ->get()
             ->toArray();
 
         $purchases = [
-            'total' => array_column($query, 'total'),
+            'total'      => array_column($query, 'total'),
             'due_amount' => array_map(function ($total, $dueAmount) {
                 return $total - $dueAmount;
             }, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels' => array_column($query, 'labels')
+            'labels' => array_column($query, 'labels'),
         ];
 
         $this->charts = json_encode([
             'total' => [
-                'sales' => $sales['total'],
+                'sales'    => $sales['total'],
                 'purchase' => $purchases['total'],
             ],
             'due_amount' => [
-                'sales' => $sales['due_amount'],
+                'sales'    => $sales['due_amount'],
                 'purchase' => $purchases['due_amount'],
             ],
-            'labels' => $sales['labels']
+            'labels' => $sales['labels'],
         ]);
     }
-
 
     protected function getChart($sales, $purchases)
     {
@@ -165,6 +163,120 @@ class Transactions extends Component
 
         return json_encode($dataarray);
     }
+
+    public function getDailyChartOptionsProperty()
+    {
+        $currentMonth = Carbon::now()->startOfMonth();
+
+        // Get all days in the current month
+        $daysInMonth = [];
+        $currentDay = Carbon::now()->startOfMonth();
+
+        while ($currentDay->month == $currentMonth->month) {
+            $daysInMonth[] = $currentDay->format('Y-m-d');
+            $currentDay->addDay();
+        }
+
+        // Get sales data for each day in the current month
+        $salesData = Sale::selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
+            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        // Get purchase data for each day in the current month
+        $purchasesData = Purchase::selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
+            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        // Combine sales and purchase data
+        $chartData = [];
+
+        foreach ($daysInMonth as $day) {
+            $sale = $salesData->where('day', $day)->first();
+            $purchase = $purchasesData->where('day', $day)->first();
+            $chartData[] = [
+                'day'       => $day,
+                'sales'     => ($sale) ? $sale->total_sales : 0,
+                'purchases' => ($purchase) ? $purchase->total_purchases : 0,
+            ];
+        }
+
+        // Create stacked bar chart options
+        $dailyChartOptions = [
+            'chart' => [
+                'type'    => 'bar',
+                'stacked' => true,
+            ],
+            'plotOptions' => [
+                'bar' => [
+                    'horizontal'  => false,
+                    'endingShape' => 'flat',
+                    'columnWidth' => '70%',
+                ],
+            ],
+            'series' => [
+                [
+                    'name' => __('Sales'),
+                    'data' => array_column($chartData, 'sales'),
+                ],
+                [
+                    'name' => __('Purchases'),
+                    'data' => array_column($chartData, 'purchases'),
+                ],
+            ],
+            'xaxis' => [
+                'categories' => array_column($chartData, 'day'),
+                'labels'     => [
+                    'rotateAlways' => true,
+                    'rotate'       => -45,
+                ],
+            ],
+            'yaxis' => [
+                'title' => [
+                    'text' => __('Amount'),
+                ],
+            ],
+            'legend' => [
+                'position'        => 'top',
+                'horizontalAlign' => 'center',
+                'offsetX'         => 40,
+            ],
+            'colors' => ['#4CAF50', '#F44336'],
+        ];
+
+        return $dailyChartOptions;
+    }
+
+    public function getMonthlyChartOptionsProperty()
+    {
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
+
+        // Get payment data for the month
+        $salePayments = SalePayment::whereBetween('created_at', [$startDate, $endDate])->get();
+        $purchasePayments = PurchasePayment::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        // Calculate total payment amounts
+        $totalPayments = [
+            'sent'     => $salePayments->sum('amount'),
+            'received' => $purchasePayments->sum('amount'),
+        ];
+
+        // Create the chart options array
+        $monthlyChartOptions = [
+            'chart' => [
+                'type' => 'donut',
+            ],
+            'series' => [$totalPayments['sent'], $totalPayments['received']],
+            'labels' => [__('Payment Sent'), __('Payment Received')],
+        ];
+
+        return $monthlyChartOptions;
+    }
+
     public function render()
     {
         return view('livewire.stats.transactions');

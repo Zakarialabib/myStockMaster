@@ -49,10 +49,10 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'user.name' => 'required|string|min:3|max:255',
-        'user.email' => 'required|email|unique:users,email',
+        'user.name'     => 'required|string|min:3|max:255',
+        'user.email'    => 'required|email|unique:users,email',
         'user.password' => 'required|string|min:8',
-        'user.phone' => 'required|numeric',
+        'user.phone'    => 'required|numeric',
     ];
 
     public function mount(): void
@@ -69,8 +69,8 @@ class Index extends Component
         abort_if(Gate::denies('user_access'), 403);
 
         $query = User::with(['roles'])->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

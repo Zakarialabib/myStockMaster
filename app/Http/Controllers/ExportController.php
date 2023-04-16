@@ -45,12 +45,13 @@ class ExportController extends Controller
         $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
 
         $data = [
-            'sale' => $sale,
+            'sale'     => $sale,
             'customer' => $customer,
+            'logo'     => $this->getCompanyLogo(),
         ];
 
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
-            'format' => 'a4',
+            'format'    => 'a4',
             'watermark' => $this->setWaterMark($sale),
         ]);
 
@@ -64,7 +65,7 @@ class ExportController extends Controller
 
         $data = [
             'purchase_return' => $purchaseReturn,
-            'supplier' => $supplier,
+            'supplier'        => $supplier,
         ];
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
@@ -79,7 +80,7 @@ class ExportController extends Controller
 
         $data = [
             'quotation' => $quotation,
-            'customer' => $customer,
+            'customer'  => $customer,
         ];
 
         $pdf = PDF::loadView('admin.quotation.print', $data);
@@ -111,7 +112,7 @@ class ExportController extends Controller
 
         $data = [
             'sale_return' => $saleReturn,
-            'customer' => $customer,
+            'customer'    => $customer,
         ];
 
         $pdf = PDF::loadView('admin.salesreturn.print', $data);
@@ -121,7 +122,7 @@ class ExportController extends Controller
 
     private function getCompanyLogo()
     {
-        return 'data:image/jpg;base64,'.base64_encode(file_get_contents(public_path('images/logo.png')));
+        return 'data:image/png;base64,'.base64_encode(file_get_contents(public_path('images/logo.png')));
     }
 
     private function setWaterMark($model)

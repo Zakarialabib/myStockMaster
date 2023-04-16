@@ -71,8 +71,7 @@
                             @endforeach
                         </select>
                         @if ($selected)
-                            <x-button danger type="button" wire:click="$toggle('showDeleteModal')"
-                                wire:loading.attr="disabled">
+                            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         @endif
@@ -97,26 +96,23 @@
                             <x-table.th>
                                 <input type="checkbox" wire:model="selectPage" />
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                                 {{ __('Date') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                                 {{ __('Customer') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                                 {{ __('Payment status') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                                 {{ __('Due Amount') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
                                 {{ __('Total') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                                 {{ __('Status') }}
-                            </x-table.th>
-                            <x-table.th>
-                                {{ __('Actions') }}
                             </x-table.th>
                         </x-slot>
 
@@ -158,42 +154,7 @@
                                             <x-badge success>{{ __('Completed') }}</x-badge>
                                         @endif
                                     </x-table.td>
-                                    <x-table.td>
-                                        <div class="flex justify-start space-x-2">
-                                            <x-dropdown align="right" width="56">
-                                                <x-slot name="trigger" class="inline-flex">
-                                                    <x-button primary type="button"
-                                                        class="text-white flex items-center">
-                                                        <i class="fas fa-angle-double-down"></i>
-                                                    </x-button>
-                                                </x-slot>
 
-                                                <x-slot name="content">
-                                                    <x-dropdown-link wire:click="showModal({{ $sale->id }})"
-                                                        wire:loading.attr="disabled">
-                                                        <i class="fas fa-eye"></i>
-                                                        {{ __('View') }}
-                                                    </x-dropdown-link>
-
-                                                    @can('edit_sales')
-                                                        <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
-                                                            wire:loading.attr="disabled">
-                                                            <i class="fas fa-edit"></i>
-                                                            {{ __('Edit') }}
-                                                        </x-dropdown-link>
-                                                    @endcan
-
-                                                    <x-dropdown-link target="_blank"
-                                                        href="{{ route('sales.pos.pdf', $sale->id) }}"
-                                                        wire:loading.attr="disabled">
-                                                        <i class="fas fa-print"></i>
-                                                        {{ __('Print') }}
-                                                    </x-dropdown-link>
-
-                                                </x-slot>
-                                            </x-dropdown>
-                                        </div>
-                                    </x-table.td>
                                 </x-table.tr>
                             @empty
                                 <x-table.tr>
@@ -224,9 +185,7 @@
                         <x-table.th>{{ __('Date') }}</x-table.th>
                         <x-table.th>{{ __('Reference') }}</x-table.th>
                         <x-table.th>{{ __('Amount') }}</x-table.th>
-                        <x-table.th>{{ __('Due Amount') }}</x-table.th>
                         <x-table.th>{{ __('Payment Method') }}</x-table.th>
-                        <x-table.th>{{ __('Actions') }}</x-table.th>
                     </x-slot>
                     <x-table.tbody>
                         @foreach ($this->customerPayments as $customerPayment)
@@ -237,18 +196,7 @@
                                     <x-table.td>
                                         {{ format_currency($salepayment->amount) }}
                                     </x-table.td>
-                                    <x-table.td>
-                                        {{ format_currency($salepayment->sale->due_amount) }}
-                                    </x-table.td>
                                     <x-table.td>{{ $salepayment->payment_method }}</x-table.td>
-                                    <x-table.td>
-                                        @can('access_sale_payments')
-                                            <x-button wire:click="$emit('paymentModal', {{ $salepayment->id }} )"
-                                                type="button" primary>
-                                                <i class="bi bi-pencil"></i>
-                                            </x-button>
-                                        @endcan
-                                    </x-table.td>
                                 </x-table.tr>
                             @empty
                                 <x-table.tr>

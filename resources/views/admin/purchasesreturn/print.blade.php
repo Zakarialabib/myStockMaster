@@ -51,7 +51,7 @@
                                     {{ __('Invoice Info') }}:</h4>
                                 <div>{{ __('Reference') }}: <strong>{{ $purchase_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($purchase_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($purchase_return->status == \App\Enums\PurchaseReturnStatus::PENDING)

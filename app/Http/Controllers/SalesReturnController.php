@@ -14,6 +14,7 @@ use App\Models\SaleReturnDetail;
 use App\Models\SaleReturnPayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -50,35 +51,36 @@ class SalesReturnController extends Controller
             }
 
             $sale_return = SaleReturn::create([
-                'date' => $request->date,
-                'customer_id' => $request->customer_id,
-                'tax_percentage' => $request->tax_percentage,
+                'date'                => $request->date,
+                'customer_id'         => $request->customer_id,
+                'user_id'             => Auth::user()->id,
+                'tax_percentage'      => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
-                'shipping_amount' => $request->shipping_amount * 100,
-                'paid_amount' => $request->paid_amount * 100,
-                'total_amount' => $request->total_amount * 100,
-                'due_amount' => $due_amount * 100,
-                'status' => $request->status,
-                'payment_status' => $payment_status,
-                'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'tax_amount' => Cart::instance('sale_return')->tax() * 100,
-                'discount_amount' => Cart::instance('sale_return')->discount() * 100,
+                'shipping_amount'     => $request->shipping_amount * 100,
+                'paid_amount'         => $request->paid_amount * 100,
+                'total_amount'        => $request->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => $request->status,
+                'payment_status'      => $payment_status,
+                'payment_method'      => $request->payment_method,
+                'note'                => $request->note,
+                'tax_amount'          => Cart::instance('sale_return')->tax() * 100,
+                'discount_amount'     => Cart::instance('sale_return')->discount() * 100,
             ]);
 
             foreach (Cart::instance('sale_return')->content() as $cart_item) {
                 SaleReturnDetail::create([
-                    'sale_return_id' => $sale_return->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
+                    'sale_return_id'  => $sale_return->id,
+                    'product_id'      => $cart_item->id,
+                    'name'            => $cart_item->name,
+                    'code'            => $cart_item->options->code,
+                    'quantity'        => $cart_item->qty,
+                    'price'           => $cart_item->price * 100,
+                    'unit_price'      => $cart_item->options->unit_price * 100,
+                    'sub_total'       => $cart_item->options->sub_total * 100,
                     'discount_amount' => $cart_item->options->discount * 100,
-                    'discount_type' => $cart_item->options->discount_type,
-                    'tax_amount' => $cart_item->options->tax * 100,
+                    'discount_type'   => $cart_item->options->discount_type,
+                    'tax_amount'      => $cart_item->options->tax * 100,
                 ]);
 
                 if ($request->status === '2') {
@@ -93,9 +95,9 @@ class SalesReturnController extends Controller
 
             if ($sale_return->paid_amount > 0) {
                 SaleReturnPayment::create([
-                    'date' => $request->date,
-                    'reference' => 'INV/'.$sale_return->reference,
-                    'amount' => $sale_return->paid_amount,
+                    'date'           => $request->date,
+                    'reference'      => 'INV/'.$sale_return->reference,
+                    'amount'         => $sale_return->paid_amount,
                     'sale_return_id' => $sale_return->id,
                     'payment_method' => $request->payment_method,
                 ]);
@@ -128,19 +130,19 @@ class SalesReturnController extends Controller
 
         foreach ($sale_return_details as $sale_return_detail) {
             $cart->add([
-                'id' => $sale_return_detail->product_id,
-                'name' => $sale_return_detail->name,
-                'qty' => $sale_return_detail->quantity,
-                'price' => $sale_return_detail->price,
-                'weight' => 1,
+                'id'      => $sale_return_detail->product_id,
+                'name'    => $sale_return_detail->name,
+                'qty'     => $sale_return_detail->quantity,
+                'price'   => $sale_return_detail->price,
+                'weight'  => 1,
                 'options' => [
-                    'discount' => $sale_return_detail->discount_amount,
+                    'discount'      => $sale_return_detail->discount_amount,
                     'discount_type' => $sale_return_detail->discount_type,
-                    'sub_total' => $sale_return_detail->sub_total,
-                    'code' => $sale_return_detail->code,
-                    'stock' => Product::findOrFail($sale_return_detail->product_id)->quantity,
-                    'tax' => $sale_return_detail->tax_amount,
-                    'unit_price' => $sale_return_detail->unit_price,
+                    'sub_total'     => $sale_return_detail->sub_total,
+                    'code'          => $sale_return_detail->code,
+                    'stock'         => Product::findOrFail($sale_return_detail->product_id)->quantity,
+                    'tax'           => $sale_return_detail->tax_amount,
+                    'unit_price'    => $sale_return_detail->unit_price,
                 ],
             ]);
         }
@@ -172,36 +174,36 @@ class SalesReturnController extends Controller
             }
 
             $sale_return->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'customer_id' => $request->customer_id,
-                'tax_percentage' => $request->tax_percentage,
+                'date'                => $request->date,
+                'reference'           => $request->reference,
+                'customer_id'         => $request->customer_id,
+                'tax_percentage'      => $request->tax_percentage,
                 'discount_percentage' => $request->discount_percentage,
-                'shipping_amount' => $request->shipping_amount * 100,
-                'paid_amount' => $request->paid_amount * 100,
-                'total_amount' => $request->total_amount * 100,
-                'due_amount' => $due_amount * 100,
-                'status' => $request->status,
-                'payment_status' => $payment_status,
-                'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'tax_amount' => Cart::instance('sale_return')->tax() * 100,
-                'discount_amount' => Cart::instance('sale_return')->discount() * 100,
+                'shipping_amount'     => $request->shipping_amount * 100,
+                'paid_amount'         => $request->paid_amount * 100,
+                'total_amount'        => $request->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => $request->status,
+                'payment_status'      => $payment_status,
+                'payment_method'      => $request->payment_method,
+                'note'                => $request->note,
+                'tax_amount'          => Cart::instance('sale_return')->tax() * 100,
+                'discount_amount'     => Cart::instance('sale_return')->discount() * 100,
             ]);
 
             foreach (Cart::instance('sale_return')->content() as $cart_item) {
                 SaleReturnDetail::create([
-                    'sale_return_id' => $sale_return->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
+                    'sale_return_id'  => $sale_return->id,
+                    'product_id'      => $cart_item->id,
+                    'name'            => $cart_item->name,
+                    'code'            => $cart_item->options->code,
+                    'quantity'        => $cart_item->qty,
+                    'price'           => $cart_item->price * 100,
+                    'unit_price'      => $cart_item->options->unit_price * 100,
+                    'sub_total'       => $cart_item->options->sub_total * 100,
                     'discount_amount' => $cart_item->options->discount * 100,
-                    'discount_type' => $cart_item->options->discount_type,
-                    'tax_amount' => $cart_item->options->tax * 100,
+                    'discount_type'   => $cart_item->options->discount_type,
+                    'tax_amount'      => $cart_item->options->tax * 100,
                 ]);
 
                 if ($request->status === 'Completed') {

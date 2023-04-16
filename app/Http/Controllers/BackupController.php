@@ -11,7 +11,7 @@ class BackupController extends Controller
 {
     public function __invoke()
     {
-        if (! Gate::allows('access_backup')) {
+        if ( ! Gate::allows('access_backup')) {
             return abort(401);
         }
 

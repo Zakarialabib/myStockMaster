@@ -82,7 +82,7 @@
                             <x-table.tbody>
                             @forelse($information as $data)
                                 <x-table.tr>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($data->date)->format('d M, Y') }}</x-table.td>
+                                    <x-table.td>{{ format_date($data->date) }}</x-table.td>
                                     <x-table.td>{{ $data->reference }}</x-table.td>
                                     <x-table.td>
                                         @if($payments == 'sale')

@@ -95,7 +95,7 @@
                 <x-table.tbody>
                     @forelse($purchases as $purchase)
                         <x-table.tr>
-                            <x-table.td>{{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}
+                            <x-table.td>{{ format_date($purchase->date) }}
                             </x-table.td>
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
                             <x-table.td>{{ $purchase->name }}</x-table.td>

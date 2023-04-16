@@ -69,6 +69,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $warehouse_id
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereWarehouseId($value)
+ * @property string|null $document
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDocument($value)
  * @mixin \Eloquent
  */
 class Purchase extends Model
@@ -149,7 +154,7 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'status' => PurchaseStatus::class,
+        'status'         => PurchaseStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -165,7 +170,29 @@ class Purchase extends Model
 
     public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+        return $this->belongsTo(
+            related: Supplier::class,
+            foreignKey: 'user_id',
+        );
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchase) {
+            $prefix = settings()->purchase_prefix;
+
+            $latestPurchase = self::latest()->first();
+
+            if ($latestPurchase) {
+                $number = intval(substr($latestPurchase->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $purchase->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
     }
 
     /** @param mixed $query */
@@ -173,6 +200,7 @@ class Purchase extends Model
     {
         return $query->whereStatus(2);
     }
+
     public function scopeThisMonth($query)
     {
         return $query->whereMonth('date', now()->month);

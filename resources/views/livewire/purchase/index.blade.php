@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -74,7 +74,7 @@
                     {{ __('Total') }}
                 </x-table.th>
                 <x-table.th>
-                    {{ __('Credit') }}
+                    {{ __('Due amount') }}
                 </x-table.th>
                 <x-table.th>
                     {{ __('Actions') }}
@@ -90,7 +90,7 @@
                             {{ $purchase->reference }}
                         </x-table.td>
                         <x-table.td>
-                            {{ $purchase->date }}
+                            {{ format_date($purchase->date) }}
                         </x-table.td>
                         <x-table.td>
                             <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
@@ -182,7 +182,7 @@
                     </x-table.tr>
                 @empty
                     <x-table.tr>
-                        <x-table.td colspan="7">
+                        <x-table.td colspan="8">
                             <div class="flex justify-center items-center">
                                 <i class="fas fa-box-open text-4xl text-gray-400"></i>
                                 {{ __('No results found') }}
@@ -221,15 +221,7 @@
                 <div class="flex flex-row">
                     <div class="w-full">
                         <div class="flex flex-row mb-4">
-                            <div class="md:w-1/3 mb-3 md:mb-0">
-                                <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                <div><strong>{{ settings()->company_name }}</strong></div>
-                                <div>{{ settings()->company_address }}</div>
-                                <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
-                                <div>{{ __('Phone') }}: {{ settings()->company_phone }}</div>
-                            </div>
-
-                            <div class="md:w-1/3 mb-3 md:mb-0">
+                            <div class="md:w-1/2 mb-3 md:mb-0">
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Supplier Info') }}:</h5>
                                 <div><strong>{{ $purchase?->supplier->name }}</strong></div>
                                 <div>{{ $purchase?->supplier->address }}</div>
@@ -237,12 +229,12 @@
                                 <div>{{ __('Phone') }}: {{ $purchase?->supplier->phone }}</div>
                             </div>
 
-                            <div class="md:w-1/3 mb-3 md:mb-0">
+                            <div class="md:w-1/2 mb-3 md:mb-0">
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                 <div>{{ __('Invoice') }}:
-                                    {{ settings()->purchase_prefix }}/{{ $purchase?->reference }}</strong></div>
+                                    {{ $purchase?->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchase?->date)->format('d M, Y') }}</div>
+                                    {{ format_date($purchase?->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($purchase?->status == \App\Enums\PurchaseStatus::PENDING)

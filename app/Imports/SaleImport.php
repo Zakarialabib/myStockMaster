@@ -23,12 +23,12 @@ class SaleImport implements ToModel
     public function model(array $row)
     {
         return new Sale([
-            'product_id' => $row[0],
-            'quantity' => $row[1],
-            'price' => $row[2],
-            'total' => $row[3],
+            'product_id'  => $row[0],
+            'quantity'    => $row[1],
+            'price'       => $row[2],
+            'total'       => $row[3],
             'customer_id' => $row[4],
-            'user_id' => $row[5],
+            'user_id'     => $row[5],
         ]);
     }
 }

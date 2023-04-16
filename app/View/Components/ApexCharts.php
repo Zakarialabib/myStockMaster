@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
 use Illuminate\View\Component;
@@ -7,6 +9,7 @@ use Illuminate\View\Component;
 class ApexCharts extends Component
 {
     public string $chartId;
+    
     public $seriesData;
     public $categories;
     public $seriesName;

@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
                 <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
@@ -164,7 +164,12 @@
     {{-- Import modal --}}
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Excel') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">

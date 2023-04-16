@@ -59,12 +59,13 @@
                         <input type="checkbox" value="{{ $product->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
-                        <div class=" whitespace-nowrap">
+                        <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
+                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge success>
                                 {{ $product->code }}
                             </x-badge>
-                        </div>
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $product->quantity }}
@@ -77,7 +78,7 @@
                     </x-table.td>
                     <x-table.td>
                         <x-badge warning>
-                        <small>{{ $product->category->name }}</small>
+                            <small>{{ $product->category->name }}</small>
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -95,11 +96,13 @@
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
                                     </x-dropdown-link>
+                                    @if(settings()->telegram_channel)
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
                                         {{ __('Send to telegram') }}
                                     </x-dropdown-link>
+                                    @endif
                                     <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
@@ -158,7 +161,12 @@
 
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Excel') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">

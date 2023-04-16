@@ -25,7 +25,7 @@ class CustomerImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     public function model(array $row)
     {
         return new Customer([
-            'name' => $row['name'],
+            'name'  => $row['name'],
             'phone' => $row['phone'],
         ]);
     }

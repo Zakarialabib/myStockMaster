@@ -6,7 +6,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Support\HasAdvancedFilter;
 
 /**
  * App\Models\CashRegister
@@ -35,8 +34,6 @@ use App\Support\HasAdvancedFilter;
  */
 class CashRegister extends Model
 {
-    
-    use HasAdvancedFilter;
     protected $fillable = ['cash_in_hand', 'user_id', 'warehouse_id', 'status'];
 
     public function user(): BelongsTo

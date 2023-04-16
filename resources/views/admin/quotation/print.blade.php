@@ -64,10 +64,10 @@
                             </div>
                             <div class="panel-body">
                                 <p>{{ __('Invoice') }}:
-                                    <strong>{{ settings()->quotation_prefix }}{{ $quotation->reference }}</strong>
+                                    <strong>{{ $quotation->reference }}</strong>
                                 <div class="panel-body">
                                     <p>{{ __('Date') }}:
-                                        {{ \Carbon\Carbon::parse($quotation->date)->format('d M, Y') }}</p>
+                                        {{ format_date($quotation->date) }}</p>
                                     <p>
                                         {{ __('Status') }}: <strong>{{ $quotation->status }}</strong>
                                     </p>

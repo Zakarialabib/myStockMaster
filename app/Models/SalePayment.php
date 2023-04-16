@@ -99,6 +99,25 @@ class SalePayment extends Model
         );
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($salePayment) {
+            $prefix = settings()->salePayment_prefix;
+
+            $latestSalePayment = self::latest()->first();
+
+            if ($latestSalePayment) {
+                $number = intval(substr($latestSalePayment->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+
     /**
      * @param mixed $query
      *

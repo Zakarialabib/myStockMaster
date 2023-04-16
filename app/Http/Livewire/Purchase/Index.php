@@ -12,6 +12,7 @@ use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Domain\Filters\DateFilter;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -34,7 +35,6 @@ class Index extends Component
         'delete',
     ];
 
-    public $filterType = null;
     public $startDate;
     public $endDate;
 
@@ -63,29 +63,17 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'supplier_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|max:255',
-        'payment_method' => 'required|integer|max:255',
-        'note' => 'nullable|string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|max:255',
+        'payment_method'      => 'required|integer|max:255',
+        'note'                => 'nullable|string|max:1000',
     ];
-
-    public function mount(): void
-    {
-        $this->selectPage = false;
-        $this->sortBy = 'id';
-        $this->sortDirection = 'desc';
-        $this->perPage = 100;
-        $this->paginationOptions = config('project.pagination.options');
-        $this->orderable = (new Purchase())->orderable;
-        $this->startDate = Purchase::orderBy('created_at')->value('created_at');
-        $this->endDate = now()->format('Y-m-d');
-    }
 
     public function updatedStartDate($value)
     {
@@ -99,47 +87,45 @@ class Index extends Component
 
     public function filterByType($type)
     {
-        $this->filterType = $type;
-    }
-
-    public function fileType()
-    {
-        switch ($this->filterType) {
+        switch ($type) {
             case 'day':
-                $this->startDate = now()->format('Y-m-d');
-                $this->endDate = now()->format('Y-m-d');
-
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
-
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-
-                break;
-            default:
-                $filter = '';
                 break;
         }
+    }
+
+    public function mount(): void
+    {
+        $this->selectPage = false;
+        $this->sortBy = 'id';
+        $this->sortDirection = 'desc';
+        $this->perPage = 100;
+        $this->paginationOptions = config('project.pagination.options');
+        $this->orderable = (new Purchase())->orderable;
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
     public function render()
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
+            ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $this->fileType();
-        
-        $filter = new DateFilter();
-
-        $purchases = $filter->filterDate($query, $this->startDate, $this->endDate)->paginate($this->perPage);
+        $purchases = $query->paginate($this->perPage);
 
         return view('livewire.purchase.index', compact('purchases'));
     }
@@ -197,9 +183,9 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'reference'      => 'required|string|max:255',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -207,11 +193,12 @@ class Index extends Component
             $purchase = Purchase::find($this->purchase_id);
 
             PurchasePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'purchase_id' => $this->purchase_id,
+                'date'           => $this->date,
+                'reference'      => $this->reference,
+                'user_id'        => Auth::user()->id,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'purchase_id'    => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -228,8 +215,8 @@ class Index extends Component
             }
 
             $purchase->update([
-                'paid_amount' => ($purchase->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

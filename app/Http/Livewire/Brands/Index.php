@@ -14,6 +14,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Storage;
 
 class Index extends Component
 {
@@ -92,8 +93,8 @@ class Index extends Component
         abort_if(Gate::denies('brand_access'), 403);
 
         $query = Brand::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -138,6 +139,11 @@ class Index extends Component
         abort_if(Gate::denies('brand_create'), 403);
 
         $this->importModal = true;
+    }
+
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('brands_import_sample.xls');
     }
 
     public function import(): void

@@ -14,6 +14,7 @@ use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\PermissionController;
@@ -186,9 +187,6 @@ Route::group(['middleware' => 'auth'], function () {
     // Permissions
     Route::get('permissions', PermissionController::class)->name('permissions.index');
 
-    //Mail Settings
-    Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
-
     //Logs
     Route::get('logs', LogController::class)->name('logs.index');
 
@@ -199,5 +197,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('backup', BackupController::class)->name('backup.index');
 
     //General Settings
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings', SettingController::class)->name('settings.index');
+
+    // Integrations
+    Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 });

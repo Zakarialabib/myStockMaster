@@ -81,6 +81,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereBackupStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereCompanyLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Setting whereInvoiceHeader($value)
+ * @property string $default_date_format
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereDefaultDateFormat($value)
+ * @property string|null $telegram_channel
+ * @property string|null $invoice_footer_text
+ * @property string $saleReturn_prefix
+ * @property string $purchaseReturn_prefix
+ * @property string $salePayment_prefix
+ * @property string $purchasePayment_prefix
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereInvoiceFooterText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting wherePurchasePaymentPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting wherePurchaseReturnPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSalePaymentPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereSaleReturnPrefix($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Setting whereTelegramChannel($value)
  * @mixin \Eloquent
  */
 class Setting extends Model

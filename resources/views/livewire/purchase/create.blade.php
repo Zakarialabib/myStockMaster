@@ -4,19 +4,14 @@
 
         <form wire:submit.prevent="save">
             <div class="flex flex-wrap -mx-2 mb-3">
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                    <x-label for="reference" :value="__('Reference')" required />
-                    <x-input type="text" wire:model="reference" name="reference" required readonly />
-                    <x-input-error :messages="$errors->get('reference')" class="mt-2" />
-                </div>
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="w-full md:w-1/2 px-3 mb-4">
                     <x-label for='supplier_id' :value="__('Supplier')" required />
                     <x-select-list
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         required id="supplier_id" name="supplier_id" wire:model="supplier_id" :options="$this->listsForFields['suppliers']" />
                     <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
                 </div>
-                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="w-full md:w-1/2 px-3 mb-4">
                     <x-label for="date" :value="__('Date')" required />
                     <x-input type="date" wire:model="date" name="date" required value="{{ date('Y-m-d') }}" />
                     <x-input-error :messages="$errors->get('date')" class="mt-2" />
@@ -31,6 +26,7 @@
                     <select
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         name="status" id="status" wire:model="status" required>
+                        <option>{{ __('Select Status') }}</option>
                         @foreach (\App\Enums\PurchaseStatus::cases() as $status)
                             <option value="{{ $status->value }}">
                                 {{ __($status->name) }}
@@ -57,19 +53,18 @@
                     <x-input-error :messages="$errors->get('paid_amount')" class="mt-2" />
                 </div>
             </div>
-    </div>
 
-    <div class="mb-4">
-        <label for="note">{{ __('Note (If Needed)') }}</label>
-        <textarea name="note" id="note" rows="5" wire:model="note"
-            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-    </div>
+            <div class="mb-4">
+                <label for="note">{{ __('Note (If Needed)') }}</label>
+                <textarea name="note" id="note" rows="5" wire:model="note"
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
+            </div>
 
-    <div class="w-full mt-3">
-        <x-button type="submit" primary class="w-full">
-            {{ __('Create Purchase') }}
-        </x-button>
+            <div class="w-full mt-3">
+                <x-button type="submit" primary class="w-full">
+                    {{ __('Create Purchase') }}
+                </x-button>
+            </div>
+        </form>
     </div>
-    </form>
-</div>
 </div>

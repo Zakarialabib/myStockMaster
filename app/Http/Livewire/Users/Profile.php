@@ -25,10 +25,10 @@ class Profile extends Component
 
     /** @var array */
     protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|email|unique:users,email',
         'password' => 'required|string|min:8',
-        'phone' => 'required|numeric',
+        'phone'    => 'required|numeric',
     ];
 
     public function mount(): void
@@ -46,7 +46,7 @@ class Profile extends Component
         $this->validate();
 
         auth()->user()->update([
-            'name' => $this->name,
+            'name'  => $this->name,
             'email' => $this->email,
         ]);
 
@@ -64,7 +64,7 @@ class Profile extends Component
     {
         $this->validate([
             'current_password' => ['required', 'max:255', new MatchCurrentPassword()],
-            'password' => 'required|min:8|max:255|confirmed',
+            'password'         => 'required|min:8|max:255|confirmed',
         ]);
 
         auth()->user()->update([

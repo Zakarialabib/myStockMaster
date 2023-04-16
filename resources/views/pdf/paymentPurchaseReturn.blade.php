@@ -35,7 +35,8 @@
                         <tr>
                             <td>
                                 <div><strong>{{ __('Name') }}:</strong> {{ $payment->supplier->name }}</div>
-                                <div><strong>{{ __('Tax number') }}:</strong> {{ $payment->supplier?->tax_number }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $payment->supplier?->tax_number }}
+                                </div>
                                 <div><strong>{{ __('Phone') }}:</strong> {{ $payment->supplier->phone }}</div>
                                 <div><strong>{{ __('Address') }}:</strong> {{ $payment->supplier->address }}</div>
                                 <div><strong>{{ __('Email') }}:</strong> {{ $payment->supplier->email }}</div>
@@ -83,12 +84,10 @@
             </table>
         </div>
 
-        <div id="signature">
-            <div id="signature">
-                @if (settings()->invoice_footer !== null)
-                    <p>{{ settings()->invoice_footer }}</p>
-                @endif
-             </div>
+        <div>
+            @if (settings()->invoice_footer_text)
+                <p>{{ settings()->invoice_footer_text }}</p>
+            @endif
         </div>
     </main>
 </body>

@@ -77,6 +77,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereWarehouseId($value)
+ * @property string|null $document
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDocument($value)
  * @mixin \Eloquent
  */
 class Sale extends Model
@@ -165,9 +168,28 @@ class Sale extends Model
     ];
 
     protected $casts = [
-        'status' => SaleStatus::class,
+        'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($sale) {
+            $prefix = settings()->sale_prefix;
+
+            $latestSale = self::latest()->first();
+
+            if ($latestSale) {
+                $number = intval(substr($latestSale->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
 
     public function saleDetails(): HasMany
     {

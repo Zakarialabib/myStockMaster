@@ -75,6 +75,25 @@ class PurchasePayment extends Model
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchasePayment) {
+            $prefix = settings()->purchasePayment_prefix;
+
+            $latestPurchasePayment = self::latest()->first();
+
+            if ($latestPurchasePayment) {
+                $number = intval(substr($latestPurchasePayment->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+
     /**
      * Get ajustement date.
      *

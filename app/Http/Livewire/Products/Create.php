@@ -32,21 +32,21 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'product.name' => 'required|string|min:3|max:255',
-        'product.code' => 'required|string|max:255',
+        'product.name'              => 'required|string|min:3|max:255',
+        'product.code'              => 'required|string|max:255',
         'product.barcode_symbology' => 'required|string|max:255',
-        'product.unit' => 'required|string|max:255',
-        'product.quantity' => 'required|integer|min:1',
-        'product.cost' => 'required|numeric',
-        'product.price' => 'required|numeric',
-        'product.stock_alert' => 'required|integer|min:0|max:192',
-        'product.order_tax' => 'nullable|integer|min:0|max:1192',
-        'product.tax_type' => 'nullable|integer|min:0|max:100',
-        'product.note' => 'nullable|string|max:1000',
-        'product.category_id' => 'required|integer|min:0|max:100',
-        'product.brand_id' => 'nullable|integer|min:0|max:100',
-        'product.warehouse_id' => 'nullable|integer|min:0|max:100',
-        'product.featured' => 'nullable',
+        'product.unit'              => 'required|string|max:255',
+        'product.quantity'          => 'required|integer|min:1',
+        'product.cost'              => 'required|numeric',
+        'product.price'             => 'required|numeric',
+        'product.stock_alert'       => 'required|integer|min:0|max:192',
+        'product.order_tax'         => 'nullable|integer|min:0|max:1192',
+        'product.tax_type'          => 'nullable|integer|min:0|max:100',
+        'product.note'              => 'nullable|string|max:1000',
+        'product.category_id'       => 'required|integer|min:0|max:100',
+        'product.brand_id'          => 'nullable|integer|min:0|max:100',
+        'product.warehouse_id'      => 'nullable|integer|min:0|max:100',
+        'product.featured'          => 'boolean',
     ];
 
     public function updated($propertyName): void
@@ -54,15 +54,16 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function mount(Product $product): void
+    public function mount(): void
     {
-        $this->product = $product;
+        $this->product = new Product();
         $this->product->stock_alert = 10;
         $this->product->order_tax = 0;
         $this->product->unit = 'pcs';
+        $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
     }
-
+    
     public function render()
     {
         abort_if(Gate::denies('product_create'), 403);
@@ -81,7 +82,7 @@ class Create extends Component
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
         if ($this->image) {
             $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
@@ -89,7 +90,7 @@ class Create extends Component
             $this->product->image = $imageName;
         }
 
-        $this->product->save();
+        $this->product->save($validatedData);
 
         $this->alert('success', __('Product created successfully'));
 

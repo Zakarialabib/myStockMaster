@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereWarehouseId($value)
+ * @property string|null $document
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDocument($value)
  * @mixin \Eloquent
  */
 class Expense extends Model

@@ -14,10 +14,10 @@ use App\Traits\Datatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Domain\Filters\DateFilter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Storage;
 use Throwable;
 
 class Index extends Component
@@ -34,14 +34,9 @@ class Index extends Component
     /** @var array<string> */
     public $listeners = [
         'importModal', 'refreshIndex' => '$refresh',
-        'paymentModal', 'paymentSave', 'showModal',
-        'delete',
+        'paymentModal', 'paymentSave', 'delete',
     ];
 
-
-    public $showModal = false;
-
-    public $filterType = null;
     public $startDate;
     public $endDate;
 
@@ -72,16 +67,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'customer_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|string|min:0|max:100',
+        'customer_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|string|min:0|max:100',
         'discount_percentage' => 'required|string|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|min:0|max:100',
-        'payment_method' => 'required|integer|min:0|max:100',
-        'note' => 'string|nullable|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|min:0|max:100',
+        'payment_method'      => 'required|integer|min:0|max:100',
+        'note'                => 'string|nullable|max:1000',
     ];
 
     public function mount(): void
@@ -91,8 +86,8 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Sale())->orderable;
-        $this->startDate = Sale::orderBy('created_at')->value('created_at');
-        $this->endDate = now()->format('Y-m-d');
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
         $this->initListsForFields();
     }
 
@@ -108,17 +103,10 @@ class Index extends Component
 
     public function filterByType($type)
     {
-        $this->filterType = $type;
-    }
-
-
-
-    protected function filterSalesByDateRange($query)
-    {
-        switch ($this->filterType) {
+        switch ($type) {
             case 'day':
-                $this->startDate = now()->format('Y-m-d');
-                $this->endDate = now()->format('Y-m-d');
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
 
                 break;
             case 'month':
@@ -131,14 +119,7 @@ class Index extends Component
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
 
                 break;
-            default:
-                $filter = '';
-                break;
         }
-
-        $filter = new DateFilter();
-
-        return $filter->filterDate($query, $this->startDate, $this->endDate);
     }
 
     public function render()
@@ -146,25 +127,16 @@ class Index extends Component
         abort_if(Gate::denies('sale_access'), 403);
 
         $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
+            ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $sales = $this->filterSalesByDateRange($query)->paginate($this->perPage);
+        $sales = $query->paginate($this->perPage);
 
         return view('livewire.sales.index', compact('sales'));
-    }
-
-
-    public function showModal($id)
-    {
-        abort_if(Gate::denies('sale_access'), 403);
-
-        $this->sale = Sale::find($id);
-
-        $this->showModal = true;
     }
 
     public function deleteSelected()
@@ -191,11 +163,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_create'), 403);
 
-        $this->resetSelected();
-
-        $this->resetValidation();
-
         $this->importModal = true;
+    }
+
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('sales_import_sample.xls');
     }
 
     public function import()
@@ -224,10 +197,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-
         $this->sale = Sale::find($id);
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-' . date('Y-m-d-h');
         $this->amount = $this->sale->due_amount;
         $this->payment_method = 'Cash';
         $this->sale_id = $this->sale->id;
@@ -239,9 +210,8 @@ class Index extends Component
         try {
             $this->validate(
                 [
-                    'date' => 'required|date',
-                    'reference' => 'required|string|max:255',
-                    'amount' => 'required|numeric',
+                    'date'           => 'required|date',
+                    'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
             );
@@ -249,13 +219,12 @@ class Index extends Component
             $sale = Sale::find($this->sale_id);
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => settings()->salepayment_prefix . '-' . date('Y-m-d-h'),
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->sale_id,
+                'date'           => $this->date,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
-                'user_id' => Auth::user()->id,
+                'user_id'        => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
@@ -271,8 +240,8 @@ class Index extends Component
             }
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
@@ -282,7 +251,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', __('Error.') . $th->getMessage());
+            $this->alert('error', __('Error.').$th->getMessage());
         }
     }
 
@@ -307,7 +276,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212' . $phone;
+        $phone = '+212'.$phone;
 
         $greeting = __('Hello');
 
