@@ -45,7 +45,7 @@
                     <x-slot name="content">
                         <x-dropdown-link onclick="Livewire.emit('importModal')" 
                             wire:loading.attr="disabled">
-                            {{ __('Import') }}
+                            {{ __('Excel Import') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>

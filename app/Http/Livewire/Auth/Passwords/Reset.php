@@ -59,7 +59,6 @@ class Reset extends Component
         );
 
         if ($response === Password::PASSWORD_RESET) {
-        
             session()->flash(trans($response));
 
             return redirect(route('home'));
@@ -83,7 +82,6 @@ class Reset extends Component
         return view('livewire.auth.passwords.reset');
     }
 
-
     /**
      * Get the guard to be used during password reset.
      *
@@ -93,4 +91,4 @@ class Reset extends Component
     {
         return Auth::guard();
     }
- }   
+}

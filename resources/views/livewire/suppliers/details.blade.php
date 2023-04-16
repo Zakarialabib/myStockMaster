@@ -1,52 +1,49 @@
 <div>
-    <div class="container mx-auto">
+    <div class="container px-4 mx-auto">
         <div class="w-full">
-        <h2 class="my-5 text-2xl font-bold">
-            {{ $supplier->name }}{{ __('Details') }}
-        </h2>
-        <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full">
-            <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
-                <div>
-                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
-                        {{ __('Purchases Total') }}
-                    </p>
-                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
-                        {{ format_currency($this->TotalPurchases) }}
-                    </p>
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full">
+                <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div>
+                        <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            {{ __('Purchases Total') }}
+                        </p>
+                        <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            {{ format_currency($this->TotalPurchases) }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
-                <div>
-                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
-                        {{ __('Total Payments') }}
-                    </p>
-                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
-                        {{ format_currency($this->TotalPayments) }}
-                    </p>
+                <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div>
+                        <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            {{ __('Total Payments') }}
+                        </p>
+                        <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            {{ format_currency($this->TotalPayments) }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
-                <div>
-                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
-                        {{ __('Total Purchase Returns') }}
-                    </p>
-                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
-                        {{ format_currency($this->TotalPurchaseReturns) }}
-                    </p>
+                <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div>
+                        <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            {{ __('Total Purchase Returns') }}
+                        </p>
+                        <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            {{ format_currency($this->TotalPurchaseReturns) }}
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
-                <div>
-                    <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
-                        {{ __('Credit') }}
-                    </p>
-                    <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
-                        {{ format_currency($this->Debit) }}
-                    </p>
+                <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div>
+                        <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            {{ __('Due amount') }}
+                        </p>
+                        <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            {{ format_currency($this->Debit) }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <div class="w-full mx-auto">
@@ -63,8 +60,7 @@
                             @endforeach
                         </select>
                         @if ($selected)
-                            <x-button danger type="button" wire:click="$toggle('showDeleteModal')"
-                                wire:loading.attr="disabled">
+                            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         @endif
@@ -124,12 +120,14 @@
                                     <x-table.td>
                                         {{ $purchase->supplier->name }}
                                     </x-table.td>
-                                    <x-table.td>
-                                        @if ($purchase->payment_status == \App\Enums\PaymentStatus::Paid)
+                                    <x-table.td> 
+                                        @if ($purchase->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PENDING)
+                                            <x-badge info>{{ __('Pending') }}</x-badge>
+                                        @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($purchase->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($purchase->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </x-table.td>
@@ -148,6 +146,10 @@
                                             <x-badge info>{{ __('Ordered') }}</x-badge>
                                         @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                             <x-badge success>{{ __('Completed') }}</x-badge>
+                                        @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
+                                            <x-badge success class="text-xs">
+                                                {{ __('Returned') }}
+                                            </x-badge>
                                         @endif
                                     </x-table.td>
                                     <x-table.td>

@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Sales\Payment;
 use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -40,10 +41,9 @@ class PaymentForm extends Component
     public $note;
 
     protected $rules = [
-        'date' => 'required|date',
-        'reference' => 'required|string|max:255',
-        'amount' => 'required|numeric',
-        'note' => 'nullable|string|max:1000',
+        'date'      => 'required|date',
+        'amount'    => 'required|numeric',
+        'note'      => 'nullable|string|max:1000',
         // 'sale_id' => 'nullable|integer',
         'payment_method' => 'required|string|max:255',
     ];
@@ -52,7 +52,6 @@ class PaymentForm extends Component
     {
         $this->sale = $sale;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-'.date('Y-m-d-h');
         $this->amount = $sale->due_amount;
     }
 
@@ -73,13 +72,12 @@ class PaymentForm extends Component
             $this->sale = $this->salepayment->sale->id;
 
             SalePayment::create([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'amount' => $this->amount,
-                'note' => $this->note ?? null,
-                'sale_id' => $this->sale_id,
+                'date'           => $this->date,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
-                'user_id' => Auth::user()->id,
+                'user_id'        => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
@@ -87,16 +85,16 @@ class PaymentForm extends Component
             $due_amount = $sale->due_amount - $this->amount;
 
             if ($due_amount === $sale->total_amount) {
-                $payment_status = PaymentStatus::Due;
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = PaymentStatus::Paid;
+                $payment_status = PaymentStatus::PAID;
             }
 
             $sale->update([
-                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 

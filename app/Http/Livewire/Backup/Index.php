@@ -20,6 +20,10 @@ class Index extends Component
     public $backup_schedule;
     public $backup_include;
 
+    protected array $rules = [
+        'backup_status'   => 'required',
+        'backup_schedule' => 'nullable',
+    ];
     public $settingsModal = false;
 
     protected $listeners = [
@@ -27,7 +31,7 @@ class Index extends Component
         'refreshTable' => '$refresh',
         'delete',
     ];
-    
+
     public function cleanBackups()
     {
         Artisan::call('backup:clean');
@@ -41,25 +45,21 @@ class Index extends Component
         $this->backup_schedule = settings()->backup_schedule;
         $this->settingsModal = true;
     }
-    
+
     public function updateSettigns()
     {
         try {
-            $this->validate([
-            'backup_status' => 'required',
-            'backup_schedule' => 'nullable',
-            ]);
+            $this->validate();
 
             settings()->update([
-                'backup_status' => $this->backup_status,
+                'backup_status'   => $this->backup_status,
                 'backup_schedule' => $this->backup_schedule,
             ]);
 
             $this->alert('success', __('Settings backuped saved.'));
 
             $this->settingsModal = false;
-
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('success', __('Failed.'.$th->getMessage()));
         }
     }

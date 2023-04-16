@@ -51,8 +51,8 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'adjustment.date' => ['date|required'],
-        'adjustment.note' => ['string|max:255|nullable'],
+        'adjustment.date'      => ['date|required'],
+        'adjustment.note'      => ['string|max:255|nullable'],
         'adjustment.reference' => ['string|max:255|nullable'],
     ];
 
@@ -70,8 +70,8 @@ class Index extends Component
         abort_if(Gate::denies('adjustment_access'), 403);
 
         $query = Adjustment::advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

@@ -56,8 +56,8 @@ class Products extends Component
         } elseif ($this->type === IntegrationType::SHOPIFY) {
             $response = new \Shopify\Client([
                 'shop_domain' => $integration->store_url,
-                'api_key' => $integration->api_key,
-                'api_secret' => $integration->api_secret,
+                'api_key'     => $integration->api_key,
+                'api_secret'  => $integration->api_secret,
             ]);
         } elseif ($this->type === IntegrationType::YOUCAN) {
             $response = $client->get($integration->store_url.'/products');
@@ -80,7 +80,7 @@ class Products extends Component
                 })->catch(function (Batch $batch, Throwable $e) {
                     $this->alert('success', 'Sync Failed'.$e->getMessage());
                 })->name('sync Custom Products')->dispatch();
-                
+
                 $this->syncModal = false;
             }
         }
@@ -100,8 +100,8 @@ class Products extends Component
         } elseif ($this->type === IntegrationType::SHOPIFY) {
             $response = new \Shopify\Client([
                 'shop_domain' => $integration->store_url,
-                'api_key' => $integration->api_key,
-                'api_secret' => $integration->api_secret,
+                'api_key'     => $integration->api_key,
+                'api_secret'  => $integration->api_secret,
             ]);
         } elseif ($this->type === IntegrationType::YOUCAN) {
             $client = Http::withHeaders([
@@ -121,12 +121,12 @@ class Products extends Component
             $data = [];
             // Check which products need to be created
             foreach ($inventoryProducts as $product) {
-                if (! in_array($product->code, array_column($ecomProducts, 'code'))) {
+                if ( ! in_array($product->code, array_column($ecomProducts, 'code'))) {
                     $data[] = [
-                        'name' => $product['name'],
-                        'code' => $product['code'],
-                        'price' => $product['price'],
-                        'quantity' => $product['quantity'],
+                        'name'       => $product['name'],
+                        'code'       => $product['code'],
+                        'price'      => $product['price'],
+                        'quantity'   => $product['quantity'],
                         'categoryId' => $product['category']->name,
                     ];
                 }

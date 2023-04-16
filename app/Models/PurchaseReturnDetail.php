@@ -25,12 +25,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read mixed $product_discount_amount
  * @property-read mixed $product_tax_amount
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\PurchaseReturn $purchaseReturn
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail query()
@@ -48,7 +46,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail whereTaxAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturnDetail whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class PurchaseReturnDetail extends Model

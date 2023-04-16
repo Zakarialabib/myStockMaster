@@ -19,10 +19,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\AdjustedProduct> $adjustedProducts
  * @property-read int|null $adjusted_products_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment newQuery()
@@ -33,11 +31,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Adjustment whereDeletedAt($value)
- *
  * @mixin \Eloquent
  */
 class Adjustment extends Model

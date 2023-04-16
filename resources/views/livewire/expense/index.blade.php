@@ -9,7 +9,7 @@
             </select>
 
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
                 <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
@@ -34,15 +34,32 @@
                 <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
-    </div>
-
-    <div wire:loading.delay>
-        <div class="d-flex justify-content-center">
-            <x-loading />
+        <div class="w-full mb-2 flex flex-wrap justify-center">
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="startDate" type="date" name="startDate" />
+                    @error('startDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                <div class="mb-4">
+                    <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
+                    <x-input wire:model="endDate" type="date" name="endDate" />
+                    @error('endDate')
+                        <span class="text-danger mt-1">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 space-x-2 flex my-auto mx-0 my-auto px-2 mb-2">
+                <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
+                <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
+                <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
+            </div>
         </div>
     </div>
-
-
     <x-table>
         <x-slot name="thead">
             <x-table.th>
@@ -55,12 +72,11 @@
                 {{ __('Expense Category') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
-                {{ __('Entry Date') }}
+                {{ __('Date') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('amount')" :direction="$sorts['amount'] ?? null">
                 {{ __('Amount') }}
             </x-table.th>
-
             <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
@@ -79,13 +95,15 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->category->name ?? '' }}
+                        <x-badge info>
+                            <small>{{ $expense->category->name ?? '' }}</small>
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
                         {{ $expense->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $expense->amount }}
+                        {{ format_currency($expense->amount) }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -152,8 +170,7 @@
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.reference" :value="__('Reference')" />
-                        <x-input wire:model.lazy="expense.reference" id="expense.reference" 
-                            type="text" required />
+                        <x-input wire:model.lazy="expense.reference" id="expense.reference" type="text" required />
                         <x-input-error :messages="$errors->get('expense.reference')" class="mt-2" />
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
@@ -165,15 +182,19 @@
 
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.category_id" :value="__('Expense Category')" />
-                        <x-select-list
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="category_id" name="category_id" wire:model.lazy="expense.category_id"
-                            :options="$this->listsForFields['expensecategories']" />
+                        <x-select2 id="category_id" name="category_id" wire:model.lazy="expense.category_id"
+                            :options="$this->listsForFields['expensecategories']" required :placeholder="__('Select Expense Category')" />
+                        <x-input-error :messages="$errors->get('expense.category_id')" class="mt-2" />
+                    </div>
+                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
+                        <x-label for="expense.warehouse_id" :value="__('Expense Category')" />
+                        <x-select2 id="warehouse_id" name="warehouse_id" wire:model.lazy="expense.warehouse_id"
+                            :options="$this->listsForFields['warehouses']" :placeholder="__('Select Warehouse')" />
+                        <x-input-error :messages="$errors->get('expense.warehouse_id')" class="mt-2" />
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="expense.amount" :value="__('Amount')" required />
-                        <x-input wire:model.lazy="expense.amount" id="expense.amount" 
-                            type="text" required />
+                        <x-input wire:model.lazy="expense.amount" id="expense.amount" type="text" required />
                         <x-input-error :messages="$errors->get('expense.amount')" class="mt-2" />
                     </div>
                     <div class="w-full px-4 mb-4">
@@ -183,6 +204,11 @@
                             rows="6" wire:model.lazy="expense.details" id="expense.details"></textarea>
                         <x-input-error :messages="$errors->get('expense.details')" class="mt-2" />
                     </div>
+                </div>
+                <div class="w-full px-3">
+                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                        {{ __('Update') }}
+                    </x-button>
                 </div>
             </form>
         </x-slot>
@@ -198,28 +224,27 @@
                 <div class="flex flex-wrap">
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="category_id" :value="__('Expense Category')" />
-                        <x-input wire:model="expense.category_id" id="category_id" 
-                            type="text" disabled />
+                        {{ $this->expense?->category->name }}
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="category_id" :value="__('Warehouse')" />
+                        {{ $this->expense?->warehouse->name }}
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="date" :value="__('Entry Date')" />
-                        <x-input wire:model="expense.date" id="date"  type="text"
-                            disabled />
+                        {{ $this->expense?->date }}
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="reference" :value="__('Reference')" />
-                        <x-input wire:model="expense.reference" id="reference" 
-                            type="text" disabled />
+                        {{ $this->expense?->reference }}
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="amount" :value="__('Amount')" />
-                        <x-input wire:model="expense.amount" id="amount"  type="text"
-                            disabled />
+                        {{ $this->expense?->amount }}
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="details" :value="__('Description')" />
-                        <x-input wire:model="expense.details" id="details" 
-                            type="text" disabled />
+                        {{ $this->expense?->details }}
                     </div>
                 </div>
             </div>

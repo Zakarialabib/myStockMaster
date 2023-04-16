@@ -22,9 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\Purchase $purchase
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment byPurchase()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment newModelQuery()
@@ -39,15 +37,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment wherePurchaseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereDeletedAt($value)
- *
  * @property int $user_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchasePayment whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class PurchasePayment extends Model
@@ -80,6 +73,25 @@ class PurchasePayment extends Model
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchasePayment) {
+            $prefix = settings()->purchasePayment_prefix;
+
+            $latestPurchasePayment = self::latest()->first();
+
+            if ($latestPurchasePayment) {
+                $number = intval(substr($latestPurchasePayment->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
     }
 
     /**

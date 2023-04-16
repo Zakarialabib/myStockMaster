@@ -35,24 +35,22 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
     public function map($row): array
     {
         return [
-            $row->product->name,
-            $row->quantity,
-            $row->price,
-            $row->total,
+            $row->date,
+            $row->reference,
             $row->supplier->name,
-            $row->created_at,
+            $row->total_amount,
+            $row->due_amount,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'Product',
-            'Quantity',
-            'Price',
-            'Total',
-            'Supplier',
-            'Created At',
+            __('Date'),
+            __('Reference'),
+            __('Supplier'),
+            __('Total'),
+            __('Due Amount'),
         ];
     }
 }

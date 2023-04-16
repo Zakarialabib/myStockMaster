@@ -7,10 +7,7 @@ namespace App\Http\Livewire\Products;
 use App\Exports\ProductExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\ProductImport;
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\Warehouse;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +15,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
@@ -64,7 +62,7 @@ class Index extends Component
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
-        $this->perPage = 100;
+        $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Product())->orderable;
     }
@@ -98,8 +96,8 @@ class Index extends Component
             ])
             ->select('products.*')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -131,7 +129,7 @@ class Index extends Component
         $this->product = Product::find($product);
 
         // Specify Telegram channel
-        $telegramChannel = '-877826769';
+        $telegramChannel = settings()->telegram_channel;
 
         // Pass in product details
         $productName = $this->product->name;
@@ -150,6 +148,11 @@ class Index extends Component
 
         $this->importModal = true;
     }
+
+     public function downloadSample()
+     {
+         return Storage::disk('exports')->download('products_import_sample.xls');
+     }
 
     public function import(): void
     {
@@ -188,21 +191,6 @@ class Index extends Component
         abort_if(Gate::denies('product_access'), 403);
 
         return $this->callExport()->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    public function getCategoriesProperty()
-    {
-        return Category::select(['name', 'id'])->get();
-    }
-
-    public function getBrandsProperty()
-    {
-        return Brand::select(['name', 'id'])->get();
-    }
-
-    public function getWarehousesProperty()
-    {
-        return Warehouse::select(['name', 'id'])->get();
     }
 
     private function callExport(): ProductExport

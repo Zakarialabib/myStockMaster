@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PurchaseStatus;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -57,17 +58,17 @@ class HomeController extends Controller
         ];
 
         return view('admin.home', [
-            'revenue' => $revenue,
-            'sale_returns' => $sale_returns / 100,
+            'revenue'          => $revenue,
+            'sale_returns'     => $sale_returns / 100,
             'purchase_returns' => $purchase_returns / 100,
-            'profit' => $profit,
-            'data' => $data,
+            'profit'           => $profit,
+            'data'             => $data,
         ]);
     }
 
     public function currentMonthChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if( ! request()->ajax(), 404);
 
         $currentMonthSales = Sale::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
@@ -80,15 +81,15 @@ class HomeController extends Controller
             ->sum('amount') / 100;
 
         return response()->json([
-            'sales' => $currentMonthSales,
+            'sales'     => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
-            'expenses' => $currentMonthExpenses,
+            'expenses'  => $currentMonthExpenses,
         ]);
     }
 
     public function salesPurchasesChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if( ! request()->ajax(), 404);
 
         $sales = $this->salesChartData();
         $purchases = $this->purchasesChartData();
@@ -98,7 +99,7 @@ class HomeController extends Controller
 
     public function paymentChart()
     {
-        abort_if(! request()->ajax(), 404);
+        abort_if( ! request()->ajax(), 404);
 
         $dates = collect();
 
@@ -169,9 +170,9 @@ class HomeController extends Controller
         }
 
         return response()->json([
-            'payment_sent' => $sent_payments,
+            'payment_sent'     => $sent_payments,
             'payment_received' => $received_payments,
-            'months' => $months,
+            'months'           => $months,
         ]);
     }
 
@@ -186,7 +187,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $sales = Sale::whereStatus('Completed')
+        $sales = Sale::whereStatus(SaleStatus::COMPLETED)
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')
@@ -220,7 +221,7 @@ class HomeController extends Controller
 
         $date_range = Carbon::today()->subDays(6);
 
-        $purchases = Purchase::whereStatus('Completed')
+        $purchases = Purchase::whereStatus(PurchaseStatus::COMPLETED)
             ->where('date', '>=', $date_range)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%d-%m-%y')"))
             ->orderBy('date')
@@ -245,9 +246,6 @@ class HomeController extends Controller
 
     public function changeLanguage($locale)
     {
-        // Session::put('code', $locale);
-        // $language = Session::get('code');
-
         Cookie::queue('lang', $locale);
 
         return redirect()->back();

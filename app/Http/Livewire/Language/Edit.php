@@ -39,15 +39,15 @@ class Edit extends Component
 
     public function update()
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->language->save();
+        $this->language->save($validatedData);
 
         File::copy(App::langPath().'/en.json', App::langPath().('/'.$this->code.'.json'));
 
         $this->alert('success', __('Data created successfully!'));
 
-        $this->emit('resetIndex');
+        $this->emit('refreshIndex');
 
         $this->editLanguage = false;
     }

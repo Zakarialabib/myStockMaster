@@ -13,6 +13,8 @@ class EditTranslation extends Component
     public $key;
     public $value;
     public $lang;
+    public $language;
+    public $langList;
 
     public $editWord = false;
 
@@ -21,15 +23,15 @@ class EditTranslation extends Component
     ];
 
     protected $rules = [
-        'key' => 'required',
+        'key'   => 'required',
         'value' => 'required',
     ];
 
     public function mount($id)
     {
-        $this->la = Language::find($id);
+        $this->language = Language::find($id);
 
-        $this->list_lang = Language::all();
+        $this->langList = Language::all();
         $this->key = $this->la->key;
         $this->value = $this->la->value;
 

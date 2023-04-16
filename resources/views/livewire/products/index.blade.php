@@ -33,9 +33,6 @@
             <x-table.th>
                 <input wire:model="selected" type="checkbox" />
             </x-table.th>
-            <x-table.th>
-                {{ __('Image') }}
-            </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
@@ -71,7 +68,7 @@
                             <x-badge success>
                                 {{ $product->code }}
                             </x-badge>
-                        </div>
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $product->quantity }}
@@ -83,7 +80,9 @@
                         {{ format_currency($product->cost) }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $product->category->name }}
+                        <x-badge warning>
+                            <small>{{ $product->category->name }}</small>
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex flex-wrap">
@@ -109,6 +108,7 @@
                                     {{ __('View') }}
                                 </x-dropdown-link>
                                 @if (settings()->telegram_channel)
+
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
@@ -132,6 +132,7 @@
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
+
                     </x-table.td>
                 </x-table.tr>
             @empty
@@ -172,7 +173,12 @@
 
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Excel') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">

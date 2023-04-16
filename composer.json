@@ -21,6 +21,7 @@
         "milon/barcode": "^9.0",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^2.0",
+        "sentry/sentry-laravel": "^3.2",
         "shopify/shopify-api": "^4.1",
         "spatie/laravel-backup": "^8.1",
         "spatie/laravel-medialibrary": "^10.7",
@@ -91,7 +92,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "dev",

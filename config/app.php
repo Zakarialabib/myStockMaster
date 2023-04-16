@@ -220,7 +220,6 @@ return [
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        // 'PDF' => Barryvdh\DomPDF\Facade::class,
         'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class
     ])->toArray(),
 

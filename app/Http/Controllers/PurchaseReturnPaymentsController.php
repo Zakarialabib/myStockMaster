@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnPayment;
 use Illuminate\Http\Request;
@@ -36,22 +37,22 @@ class PurchaseReturnPaymentsController extends Controller
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
+            'date'               => 'required|date',
+            'reference'          => 'required|string|max:255',
+            'amount'             => 'required|numeric',
+            'note'               => 'nullable|string|max:1000',
             'purchase_return_id' => 'required',
-            'payment_method' => 'required|string|max:255',
+            'payment_method'     => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
             PurchaseReturnPayment::create([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
+                'date'               => $request->date,
+                'reference'          => $request->reference,
+                'amount'             => $request->amount,
+                'note'               => $request->note,
                 'purchase_return_id' => $request->purchase_return_id,
-                'payment_method' => $request->payment_method,
+                'payment_method'     => $request->payment_method,
             ]);
 
             $purchase_return = PurchaseReturn::findOrFail($request->purchase_return_id);
@@ -59,16 +60,16 @@ class PurchaseReturnPaymentsController extends Controller
             $due_amount = $purchase_return->due_amount - $request->amount;
 
             if ($due_amount === $purchase_return->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase_return->update([
-                'paid_amount' => ($purchase_return->paid_amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase_return->paid_amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
         });
@@ -92,12 +93,12 @@ class PurchaseReturnPaymentsController extends Controller
         abort_if(Gate::denies('access_purchase_return_payments'), 403);
 
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
+            'date'               => 'required|date',
+            'reference'          => 'required|string|max:255',
+            'amount'             => 'required|numeric',
+            'note'               => 'nullable|string|max:1000',
             'purchase_return_id' => 'required',
-            'payment_method' => 'required|string|max:255',
+            'payment_method'     => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request, $purchaseReturnPayment) {
@@ -106,26 +107,26 @@ class PurchaseReturnPaymentsController extends Controller
             $due_amount = $purchase_return->due_amount + $purchaseReturnPayment->amount - $request->amount;
 
             if ($due_amount === $purchase_return->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase_return->update([
-                'paid_amount' => ($purchase_return->paid_amount - $purchaseReturnPayment->amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase_return->paid_amount - $purchaseReturnPayment->amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
             $purchaseReturnPayment->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
+                'date'               => $request->date,
+                'reference'          => $request->reference,
+                'amount'             => $request->amount,
+                'note'               => $request->note,
                 'purchase_return_id' => $request->purchase_return_id,
-                'payment_method' => $request->payment_method,
+                'payment_method'     => $request->payment_method,
             ]);
         });
 

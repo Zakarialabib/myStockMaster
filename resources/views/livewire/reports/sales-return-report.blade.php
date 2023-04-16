@@ -26,14 +26,8 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <select wire:model.defer="customer_id"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="customer_id">
-                                        <option value="">{{ __('Select Customer') }}</option>
-                                        @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-select2 :options="$customers" name="customer_id" id="customer_id"
+                                        wire:model="customer_id" />
                                 </div>
                             </div>
                         </div>
@@ -101,7 +95,7 @@
                         <x-table.tbody>
                             @forelse($sale_returns as $sale_return)
                                 <x-table.tr>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}
+                                    <x-table.td>{{ format_date($sale_return->date) }}
                                     </x-table.td>
                                     <x-table.td>{{ $sale_return->reference }}</x-table.td>
                                     <x-table.td>{{ $sale_return->customer->name }}</x-table.td>
@@ -118,11 +112,11 @@
                                     <x-table.td>{{ format_currency($sale_return->paid_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->due_amount) }}</x-table.td>
                                     <x-table.td>
-                                        @if ($sale_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </x-table.td>

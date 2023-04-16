@@ -42,7 +42,7 @@ it('tests the edit user component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
-    // $currency = Currency::factory()->create();
+    $currency = Currency::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $currency->id])
         ->set('currency.name', '')

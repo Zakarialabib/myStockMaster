@@ -39,6 +39,7 @@ use Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|Movement whereUserId($value)
  * @mixin \Eloquent
  */
+
 class Movement extends Model
 {
     use HasFactory;
@@ -70,4 +71,5 @@ class Movement extends Model
     {
         return $this->belongsTo(ProductWarehouse::class);
     }
+
 }

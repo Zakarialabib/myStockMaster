@@ -28,7 +28,7 @@ class ReportsController extends Controller
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $customers = Customer::select('id', 'name')->get();
+        $customers = Customer::select(['id', 'name'])->get();
 
         return view('admin.reports.sales.index', compact('customers'));
     }

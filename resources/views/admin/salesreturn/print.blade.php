@@ -52,7 +52,7 @@
                                     Invoice Info:</h4>
                                 <div>{{ __('Reference') }}: <strong>{{ $sale_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($sale_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}: @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
                                         <x-badge warning>{{ __('Pending') }}</x-badge>
@@ -64,11 +64,11 @@
                                 </div>
                                 <div>
                                     {{ __('Payment Status') }}: 
-                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                 </div>

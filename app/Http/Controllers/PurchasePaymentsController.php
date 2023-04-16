@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Http\Request;
@@ -32,21 +33,20 @@ class PurchasePaymentsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
-            'purchase_id' => 'required',
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
+            'purchase_id'    => 'required',
             'payment_method' => 'required|string|max:255',
         ]);
 
         DB::transaction(function () use ($request) {
             PurchasePayment::create([
-                'date' => $request->date,
-                'reference' => settings()->purchasepayment_prefix.'-'.date('Y-m-d-h'),
-                'amount' => $request->amount,
-                'note' => $request->note,
-                'purchase_id' => $request->purchase_id,
+                'date'           => $request->date,
+                'amount'         => $request->amount,
+                'note'           => $request->note,
+                'purchase_id'    => $request->purchase_id,
                 'payment_method' => $request->payment_method,
             ]);
 
@@ -55,16 +55,16 @@ class PurchasePaymentsController extends Controller
             $due_amount = $purchase->due_amount - $request->amount;
 
             if ($due_amount === $purchase->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase->update([
-                'paid_amount' => ($purchase->paid_amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase->paid_amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
         });
@@ -86,11 +86,11 @@ class PurchasePaymentsController extends Controller
     public function update(Request $request, PurchasePayment $purchasePayment)
     {
         $request->validate([
-            'date' => 'required|date',
-            'reference' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'note' => 'nullable|string|max:1000',
-            'purchase_id' => 'required',
+            'date'           => 'required|date',
+            'reference'      => 'required|string|max:255',
+            'amount'         => 'required|numeric',
+            'note'           => 'nullable|string|max:1000',
+            'purchase_id'    => 'required',
             'payment_method' => 'required|string|max:255',
         ]);
 
@@ -100,25 +100,25 @@ class PurchasePaymentsController extends Controller
             $due_amount = $purchase->due_amount + $purchasePayment->amount - $request->amount;
 
             if ($due_amount === $purchase->total_amount) {
-                $payment_status = 'Unpaid';
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = 'Partial';
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = 'Paid';
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase->update([
-                'paid_amount' => ($purchase->paid_amount - $purchasePayment->amount + $request->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase->paid_amount - $purchasePayment->amount + $request->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
             $purchasePayment->update([
-                'date' => $request->date,
-                'reference' => $request->reference,
-                'amount' => $request->amount,
-                'note' => $request->note,
-                'purchase_id' => $request->purchase_id,
+                'date'           => $request->date,
+                'reference'      => $request->reference,
+                'amount'         => $request->amount,
+                'note'           => $request->note,
+                'purchase_id'    => $request->purchase_id,
                 'payment_method' => $request->payment_method,
             ]);
         });

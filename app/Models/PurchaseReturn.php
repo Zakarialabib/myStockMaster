@@ -33,13 +33,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnDetail> $purchaseReturnDetails
  * @property-read int|null $purchase_return_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseReturnPayment> $purchaseReturnPayments
  * @property-read int|null $purchase_return_payments_count
  * @property-read \App\Models\Supplier|null $supplier
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn completed()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn newModelQuery()
@@ -63,11 +61,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereDeletedAt($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseReturn whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class PurchaseReturn extends Model
@@ -141,7 +140,7 @@ class PurchaseReturn extends Model
     ];
 
     protected $casts = [
-        'status' => PurchaseReturnStatus::class,
+        'status'         => PurchaseReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -158,7 +157,29 @@ class PurchaseReturn extends Model
 
     public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
+        return $this->belongsTo(
+            related: Supplier::class,
+            foreignKey: 'user_id',
+        );
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($purchaseReturn) {
+            $prefix = settings()->purchaseReturn_prefix;
+
+            $latestPurchaseReturn = self::latest()->first();
+
+            if ($latestPurchaseReturn) {
+                $number = intval(substr($latestPurchaseReturn->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $purchaseReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
     }
 
     /**
@@ -179,16 +200,6 @@ class PurchaseReturn extends Model
     public function getDiscountAmountAttribute($value)
     {
         return $value / 100;
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = PurchaseReturn::max('id') + 1;
-            $model->reference = make_reference_id('PRRN', $number);
-        });
     }
 
     /**

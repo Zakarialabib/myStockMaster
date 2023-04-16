@@ -39,7 +39,7 @@ class PaymentNotification implements ShouldQueue
      */
     public function handle()
     {
-        if (! $this->sale->due_amount || ! $this->sale->payment_date) {
+        if ( ! $this->sale->due_amount || ! $this->sale->payment_date) {
             // $payment_date = Carbon::parse($this->sale->date)->addDays(15);
 
             // if (now()->gt($payment_date)) {

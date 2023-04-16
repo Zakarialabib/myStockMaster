@@ -41,7 +41,8 @@
                                             <span class="ml-2">
                                                 {{ $notification->data['message'] }}
                                             </span>
-                                            <button type="button" wire:click="markAsRead('{{ $key }}')" class="cursor-pointer">
+                                            <button type="button" wire:click="markAsRead('{{ $key }}')"
+                                                class="cursor-pointer">
                                                 <i class="fa fa-eye w-5 h-5 text-gray-500"></i>
                                             </button>
                                         </div>
@@ -81,9 +82,7 @@
                                         </div>
                                     </ol>
                                 </div>
-
                                 <hr>
-
                             </div>
                         </div>
                     </div>
@@ -91,3 +90,4 @@
             </div>
         </div>
     </div>
+</div>

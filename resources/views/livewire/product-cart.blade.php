@@ -30,6 +30,7 @@
 
                             <x-table.td>
                                 {{ format_currency($cart_item->options->unit_price) }}
+                                @include('livewire.includes.product-cart-price')
                             </x-table.td>
 
                                 <x-table.td>
@@ -118,5 +119,4 @@
             </div>
         </div>
     </x-accordion>
-   
 </div>

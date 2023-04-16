@@ -10,7 +10,6 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Throwable;
 
 class Create extends Component
 {
@@ -27,12 +26,12 @@ class Create extends Component
     public $listsForFields = [];
 
     protected $rules = [
-        'expense.reference' => 'required|string|max:255',
-        'expense.category_id' => 'required|integer|exists:expense_categories,id',
-        'expense.date' => 'required|date',
-        'expense.amount' => 'required|numeric',
-        'expense.details' => 'nullable|string|min:3',
-        'expense.user_id' => 'nullable',
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|min:3',
+        'expense.user_id'      => 'nullable',
         'expense.warehouse_id' => 'nullable',
     ];
 
@@ -43,8 +42,6 @@ class Create extends Component
 
     public function mount(): void
     {
-        $this->date = date('Y-m-d');
-
         $this->initListsForFields();
     }
 
@@ -70,24 +67,20 @@ class Create extends Component
     {
         $validatedData = $this->validate();
 
-        try {
-            $this->expense->save($validatedData);
+        $this->expense->save($validatedData);
 
-            $expense->user()->associate(auth()->user());
+        $this->expense->user()->associate(auth()->user());
 
-            $this->alert('success', __('Expense created successfully.'));
+        $this->alert('success', __('Expense created successfully.'));
 
-            $this->emit('refreshIndex');
+        $this->emit('refreshIndex');
 
-            $this->createExpense = false;
-        } catch (Throwable $th) {
-            $this->alert('success', __('Error.').$th->getMessage());
-        }
+        $this->createExpense = false;
     }
 
     protected function initListsForFields()
     {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::pluck('name', 'id')->toArray();
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
+        $this->listsForFields['expensecategories'] = ExpenseCategory::select('name', 'id')->get();
+        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
     }
 }

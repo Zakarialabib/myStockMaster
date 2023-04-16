@@ -21,7 +21,7 @@
                         </div>
                         <a target="_blank" class="btn-secondary mfs-auto mfe-1 d-print-none"
                             href="{{ route('sale-returns.pdf', $sale_return->id) }}">
-                            <i class="bi bi-printer"></i> {{__('Print')}}
+                            <i class="bi bi-printer"></i> {{ __('Print') }}
                         </a>
                     </div>
                     <div class="p-4">
@@ -48,7 +48,7 @@
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Invoice Info') }}:</h5>
                                 <div>{{ __('Reference') }}: <strong>{{ $sale_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($sale_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($sale_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
@@ -60,14 +60,14 @@
                                     @endif
                                 </div>
                                 <div>
-                                    {{ __('Payment Status') }}: 
-                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::Paid)
-                                            <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::Partial)
-                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::Due)
-                                            <x-badge danger>{{ __('Due') }}</x-badge>
-                                        @endif
+                                    {{ __('Payment Status') }}:
+                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
+                                        <x-badge success>{{ __('Paid') }}</x-badge>
+                                    @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
+                                        <x-badge warning>{{ __('Partially Paid') }}</x-badge>
+                                    @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
+                                        <x-badge danger>{{ __('Due') }}</x-badge>
+                                    @endif
                                 </div>
                             </div>
 
@@ -117,32 +117,31 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Discount') }}
-                                                    ({{ $sale_return->discount_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($sale_return->discount_amount) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Tax') }}
-                                                    ({{ $sale_return->tax_percentage }}%)</strong></td>
-                                            <td class="right">{{ format_currency($sale_return->tax_amount) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Shipping') }}</strong></td>
-                                            <td class="right">{{ format_currency($sale_return->shipping_amount) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
-                                            <td class="right">
-                                                <strong>{{ format_currency($sale_return->total_amount) }}</strong></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="w-full px-4 mb-4">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Discount') }}
+                                                ({{ $sale_return->discount_percentage }}%)</strong></td>
+                                        <td class="right">{{ format_currency($sale_return->discount_amount) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Tax') }}
+                                                ({{ $sale_return->tax_percentage }}%)</strong></td>
+                                        <td class="right">{{ format_currency($sale_return->tax_amount) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Shipping') }}</strong></td>
+                                        <td class="right">{{ format_currency($sale_return->shipping_amount) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
+                                        <td class="right">
+                                            <strong>{{ format_currency($sale_return->total_amount) }}</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

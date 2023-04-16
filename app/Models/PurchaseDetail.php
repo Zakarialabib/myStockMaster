@@ -26,10 +26,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $product_tax_amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Product|null $product
  * @property-read \App\Models\Purchase $purchase
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newQuery()

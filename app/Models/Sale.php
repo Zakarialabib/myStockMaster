@@ -37,13 +37,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Customer|null $customer
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleDetails> $saleDetails
  * @property-read int|null $sale_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SalePayment> $salePayments
  * @property-read int|null $sale_payments_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sale advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale completed()
  * @method static \Illuminate\Database\Eloquent\Builder|Sale newModelQuery()
@@ -69,11 +67,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUpdatedAt($value)
- *
  * @property string $uuid
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUuid($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @property string|null $payment_date
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale wherePaymentDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereWarehouseId($value)
+ * @property string|null $document
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Sale whereDocument($value)
  * @mixin \Eloquent
  */
 class Sale extends Model
@@ -94,6 +100,7 @@ class Sale extends Model
         'discount_amount',
         'shipping_amount',
         'total_amount',
+        'payment_date',
         'paid_amount',
         'due_amount',
         'status',
@@ -116,6 +123,7 @@ class Sale extends Model
         'discount_amount',
         'shipping_amount',
         'total_amount',
+        'payment_date',
         'paid_amount',
         'due_amount',
         'status',
@@ -143,6 +151,7 @@ class Sale extends Model
         'user_id',
         'tax_percentage',
         'tax_amount',
+        'payment_date',
         'discount_percentage',
         'discount_amount',
         'shipping_amount',
@@ -159,9 +168,28 @@ class Sale extends Model
     ];
 
     protected $casts = [
-        'status' => SaleStatus::class,
+        'status'         => SaleStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($sale) {
+            $prefix = settings()->sale_prefix;
+
+            $latestSale = self::latest()->first();
+
+            if ($latestSale) {
+                $number = intval(substr($latestSale->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
 
     public function saleDetails(): HasMany
     {
@@ -175,7 +203,10 @@ class Sale extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'id');
+        return $this->belongsTo(
+            related: Customer::class,
+            foreignKey: 'customer_id',
+        );
     }
 
     /**
@@ -186,6 +217,11 @@ class Sale extends Model
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
+    }
+
+    public function scopeThisMonth($query)
+    {
+        return $query->whereMonth('date', now()->month);
     }
 
     /**

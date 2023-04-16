@@ -28,8 +28,6 @@ class Create extends Component
 
     public $image;
 
-    public $listsForFields = [];
-
     /** @var mixed */
     public $product;
 
@@ -51,12 +49,25 @@ class Create extends Component
         'product.category_id'             => 'required|integer|min:0|max:100',
         'product.brand_id'                => 'nullable|integer|min:0|max:100',
         'product.featured'                => 'boolean',
+
     ];
 
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
     }
+
+
+    public function mount(): void
+    {
+        $this->product = new Product();
+        $this->product->stock_alert = 10;
+        $this->product->order_tax = 0;
+        $this->product->unit = 'pcs';
+        $this->product->featured = false;
+        $this->product->barcode_symbology = 'C128';
+    }
+    
 
     public function render()
     {
@@ -97,7 +108,7 @@ class Create extends Component
             $this->product->cost = 0;
             $this->product->quantity = 0;
 
-            $this->product->save();
+        $this->product->save($validatedData);
 
             foreach ($this->productWarehouse as $warehouseId => $warehouse) {
                 ProductWarehouse::create([
@@ -117,12 +128,21 @@ class Create extends Component
         } catch (\Throwable $th) {
             $this->alert('error', $th->getMessage());
         }
+
     }
 
-    protected function initListsForFields(): void
+    public function getCategoriesProperty()
     {
-        $this->listsForFields['categories'] = Category::pluck('name', 'id')->toArray();
-        $this->listsForFields['brands'] = Brand::pluck('name', 'id')->toArray();
-        $this->listsForFields['warehouses'] = Warehouse::pluck('name', 'id')->toArray();
+        return Category::select(['name', 'id'])->get();
+    }
+
+    public function getBrandsProperty()
+    {
+        return Brand::select(['name', 'id'])->get();
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::select(['name', 'id'])->get();
     }
 }

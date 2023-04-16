@@ -14,8 +14,9 @@ use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LogController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
@@ -29,7 +30,6 @@ use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\SendQuotationEmailController;
 use App\Http\Controllers\SettingController;
@@ -79,11 +79,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
-    Route::get('customer/details/{customer}', [CustomersController::class, 'show'])->name('customer.details');
+    Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
 
     //Suppliers
     Route::get('suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
-    Route::get('supplier/details/{supplier}', [SuppliersController::class, 'show'])->name('supplier.details');
+    Route::get('supplier/details/{id}', [SuppliersController::class, 'show'])->name('supplier.details');
 
     //Warehouses
     Route::get('warehouses', WarehouseController::class)->name('warehouses.index');
@@ -187,9 +187,6 @@ Route::group(['middleware' => 'auth'], function () {
     // Permissions
     Route::get('permissions', PermissionController::class)->name('permissions.index');
 
-    //Mail Settings
-    Route::patch('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
-
     //Logs
     Route::get('logs', LogController::class)->name('logs.index');
 
@@ -200,5 +197,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('backup', BackupController::class)->name('backup.index');
 
     //General Settings
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings', SettingController::class)->name('settings.index');
+
+    // Integrations
+    Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 });

@@ -30,7 +30,7 @@ class Edit extends Component
 
     /** @var array */
     protected $rules = [
-        'brand.name' => 'required|string||min:3|max:255',
+        'brand.name'        => 'required|string||min:3|max:255',
         'brand.description' => 'nullable|string',
     ];
 
@@ -64,6 +64,7 @@ class Edit extends Component
     public function update()
     {
         $validatedData = $this->validate();
+
         try {
             if ($this->image) {
                 $imageName = Str::slug($this->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();

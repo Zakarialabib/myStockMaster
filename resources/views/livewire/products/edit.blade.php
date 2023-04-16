@@ -1,6 +1,6 @@
 <div>
-     <!-- Edit Modal -->
-     <x-modal wire:model="editModal">
+    <!-- Edit Modal -->
+    <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Edit Product') }} - {{ $product?->name }}
         </x-slot>
@@ -27,13 +27,8 @@
                     <div class="flex flex-wrap -mx-2 mb-3">
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="category_id" :value="__('Category')" required />
-                            <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                            id="category_id" name="category_id" wire:model="product.category_id">
-                                <option value="">{{__('Select Category')}}</option>
-                                @foreach ($this->categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                            <x-select2 :options="$this->categories" id="category_edit" name="category_edit"
+                                wire:model="product.category_id" />
                             <x-input-error :messages="$errors->get('product.category_id')" for="category_id" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
@@ -76,19 +71,15 @@
                             @endif
                         </div>
 
+
                     </div>
 
                     <x-accordion title="{{ 'More Details' }}">
                         <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="lg:w-1/3 sm:w-1/2 px-2">
+                            <div class="lg:w-1/3 sm:w-1/2 px-2"
                                 <x-label for="brand_id" :value="__('Brand')" />
-                                <select class="block bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
-                                id="brand_id" name="brand_id" wire:model="product.brand_id">
-                                    <option value="">{{__('Select Brand')}}</option>
-                                    @foreach ($this->brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-                                </select>
+                                <x-select2 :options="$this->brands" id="brand_edit" name="brand_edit"
+                                    wire:model="product.brand_id" />
                                 <x-input-error :messages="$errors->get('product.brand_id')" for="brand_id" class="mt-2" />
                             </div>
                             <div class="lg:w-1/3 sm:w-1/2 px-2">

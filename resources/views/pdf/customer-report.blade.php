@@ -10,17 +10,23 @@
 </head>
 
 <body>
-    <header class="clearfix">
-        <div id="logo">
-            <img src="{{ asset('images/logo.png') }}">
+    <htmlpageheader name="page-header">
+        <div class="centered">
+            <div id="logo">
+                <img src="{{ asset('images/logo.png') }}">
+            </div>
+            <h2 style="margin-bottom: 5px;font-size: 16px;">{{ settings()->company_name }}</h2>
+            <p>
+                {{ settings()->company_phone }} <br>
+                {{ settings()->company_address }} <br>
+            </p>
+            <div id="Title-heading">
+                {{ __('Customer') }} : {{ $customer->name }}
+            </div>
         </div>
+    </htmlpageheader>
 
-        <div id="Title-heading">
-            {{ __('Customer') }} : {{ $customer->name }}
-        </div>
-        </div>
-    </header>
-    <main>
+    <div>
         <div id="details" class="clearfix">
             <div id="client">
                 <table class="table-sm">
@@ -36,8 +42,10 @@
                                 <div><strong>{{ __('Tax_number') }}:</strong> {{ $customer->tax_number }}</div>
                                 <div><strong>{{ __('Phone') }}:</strong> {{ $customer->phone }}</div>
                                 <div><strong>{{ __('Total Sales') }}:</strong> {{ $customer->total_sales }}</div>
-                                <div><strong>{{ __('Total Amount') }}:</strong> {{ format_currency($customer->total_amount) }}</div>
-                                <div><strong>{{ __('Total Paid') }}:</strong> {{ format_currency($customer->total_paid) }}</div>
+                                <div><strong>{{ __('Total Amount') }}:</strong>
+                                    {{ format_currency($customer->total_amount) }}</div>
+                                <div><strong>{{ __('Total Paid') }}:</strong>
+                                    {{ format_currency($customer->total_paid) }}</div>
                                 <div><strong>{{ __('Due') }}:</strong> {{ format_currency($customer->due) }}
                                 </div>
                             </td>
@@ -84,13 +92,21 @@
                             <td>{{ $sale->date }} </td>
                             <td>{{ $sale->reference }}</td>
                             <td>{{ format_currency($sale->paid_amount) }} </td>
-                            <td>{{ $sale->payment_status }} </td>
+                            <td>
+                                @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
+                                    {{ __('Paid') }}
+                                @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
+                                    {{ __('Partially Paid') }}
+                                @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
+                                    {{ __('Due') }}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-    </main>
+    </div>
 </body>
 
 </html>

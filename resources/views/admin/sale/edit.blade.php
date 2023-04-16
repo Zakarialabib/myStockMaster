@@ -81,7 +81,8 @@
                         <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                             <div class="from-group">
                                 <div class="mb-4">
-                                    <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>
+                                    <label for="date">{{ __('Date') }} <span
+                                            class="text-red-500">*</span></label>
                                     <input type="date"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="date" required value="{{ $sale->date }}">
@@ -99,11 +100,12 @@
                                 <select
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="status" id="status" required>
-                                    @foreach(\App\Enums\SaleStatus::cases() as $status)
-                                    <option {{ $sale->status == $status->value ? 'selected' : '' }} value="{{ $status->value }}">
-                                        {{ __($status->name) }}
-                                    </option>
-                                @endforeach
+                                    @foreach (\App\Enums\SaleStatus::cases() as $status)
+                                        <option {{ $sale->status == $status->value ? 'selected' : '' }}
+                                            value="{{ $status->value }}">
+                                            {{ __($status->name) }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

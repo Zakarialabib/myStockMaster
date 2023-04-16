@@ -107,7 +107,12 @@
     <!-- Import modal -->
     <x-modal wire:model="importModal">
         <x-slot name="title">
-            {{ __('Import Brands') }}
+            <div class="flex justify-between items-center">
+                {{ __('Import Excel') }}
+                <x-button primary wire:click="downloadSample" type="button">
+                    {{ __('Download Sample') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="content">

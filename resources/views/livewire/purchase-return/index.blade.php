@@ -192,7 +192,7 @@
                                     <strong>INV/{{ $purchasereturn?->reference }}</strong>
                                 </div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchasereturn?->date)->format('d M, Y') }}
+                                    {{ format_date($purchasereturn?->date) }}
                                 </div>
                                 <div>
                                     {{ __('Status') }}: <strong>{{ $purchasereturn?->status }}</strong>
@@ -253,7 +253,7 @@
                             </table>
                         </div>
                         <div class="row">
-                            <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 col-sm-5 ml-md-auto">
+                            <div class="w-full px-4 mb-4">
                                 <table class="table">
                                     <tbody>
                                         @if ($purchasereturn?->discount_percentage)
@@ -299,7 +299,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </x-slot>
     </x-modal>
     {{--  End ShowModal --}}

@@ -35,9 +35,10 @@ return new class () extends Migration {
             $table->integer('stock_alert');
             $table->integer('order_tax')->nullable();
             $table->text('note')->nullable();
-            $table->boolean('status')->nullable()->default(1);
+            $table->boolean('status')->default(1);
             $table->tinyInteger('tax_type')->nullable();
             $table->text('image')->nullable();
+            $table->boolean('featured')->default(0);
 
             $table->softDeletes();
             $table->timestamps();

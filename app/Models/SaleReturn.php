@@ -33,13 +33,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Customer|null $customer
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleReturnDetail> $saleReturnDetails
  * @property-read int|null $sale_return_details_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\SaleReturnPayment> $saleReturnPayments
  * @property-read int|null $sale_return_payments_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn completed()
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn newModelQuery()
@@ -63,11 +61,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTaxPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereDeletedAt($value)
- *
+ * @property int $user_id
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SaleReturn whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class SaleReturn extends Model
@@ -139,7 +138,7 @@ class SaleReturn extends Model
     ];
 
     protected $casts = [
-        'status' => SaleReturnStatus::class,
+        'status'         => SaleReturnStatus::class,
         'payment_status' => PaymentStatus::class,
     ];
 
@@ -160,6 +159,25 @@ class SaleReturn extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($saleReturn) {
+            $prefix = settings()->saleReturn_prefix;
+
+            $latestSaleReturn = self::latest()->first();
+
+            if ($latestSaleReturn) {
+                $number = intval(substr($latestSaleReturn->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $saleReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
+    }
+
     /**
      * @param mixed $query
      *
@@ -168,16 +186,6 @@ class SaleReturn extends Model
     public function scopeCompleted($query)
     {
         return $query->whereStatus(2);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $number = SaleReturn::max('id') + 1;
-            $model->reference = make_reference_id('SLRN', $number);
-        });
     }
 
     /**

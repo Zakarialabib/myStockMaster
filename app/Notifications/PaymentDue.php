@@ -55,20 +55,19 @@ class PaymentDue extends Notification
     {
         $sale = $this->sale;
 
-        if (! $sale->due_amount || ! $sale->payment_date) {
-        
+        if ( ! $sale->due_amount || ! $sale->payment_date) {
             $payment_date = Carbon::parse($sale->date)->addDays(15);
 
             if (now()->gt($payment_date)) {
                 return [
-                    'message' => 'Payment for sale with reference '.$sale->reference.' is due',
+                    'message' => __('Payment for sale with reference ').$sale->reference.__(' is due'),
                     'sale_id' => $sale->id,
                 ];
             }
         }
 
         return [
-            'message' => 'Payment for sale with reference '.$sale->reference.' is due on '.$sale->date,
+            'message' => __('Payment for sale with reference ').$sale->reference.__(' is due on ').$sale->date,
             'sale_id' => $sale->id,
         ];
     }

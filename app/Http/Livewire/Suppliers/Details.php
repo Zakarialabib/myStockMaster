@@ -53,7 +53,7 @@ class Details extends Component
 
     public function mount($supplier): void
     {
-        $this->supplier = Supplier::find($supplier->id);
+        $this->supplier = $supplier;
         $this->supplier_id = $this->supplier->id;
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -65,8 +65,7 @@ class Details extends Component
 
     public function getTotalPurchasesProperty()
     {
-        return Purchase::where('supplier_id', $this->supplier_id)
-            ->sum('total_amount');
+        return $this->supplierSum('total_amount');
     }
 
     public function getTotalPurchaseReturnsProperty()
@@ -78,15 +77,13 @@ class Details extends Component
     // total due amount
     public function getTotalDueProperty()
     {
-        return Purchase::where('supplier_id', $this->supplier_id)
-            ->sum('due_amount') / 100;
+        return $this->supplierSum('due_amount');
     }
 
     // show totalPayments
     public function getTotalPaymentsProperty()
     {
-        return Purchase::where('supplier_id', $this->supplier_id)
-            ->sum('paid_amount');
+        return $this->supplierSum('paid_amount');
     }
 
     // show Debit
@@ -99,7 +96,7 @@ class Details extends Component
 
         $product_costs = 0;
 
-        foreach (Purchase::completed()->with('purchaseDetails')->get() as $purchase) {
+        foreach (Purchase::completed()->with('purchaseDetails', 'purchaseDetails.product')->get() as $purchase) {
             foreach ($purchase->purchaseDetails as $purchaseDetail) {
                 $product_costs += $purchaseDetail->product->cost;
             }
@@ -115,8 +112,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('supplier')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -128,8 +125,8 @@ class Details extends Component
         $query = Purchase::where('supplier_id', $this->supplier_id)
             ->with('purchasepayments.purchase')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -139,5 +136,10 @@ class Details extends Component
     public function render()
     {
         return view('livewire.suppliers.details');
+    }
+
+    private function supplierSum(string $field): int|float
+    {
+        return Purchase::whereBelongsTo($this->supplier)->sum($field) / 100;
     }
 }

@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -179,10 +179,10 @@
                         <div class="md-w-1/4 sm:w-full px-2 mb-2">
                             <h5 class="mb-2 border-b pb-2">{{ __('Invoice Info') }}:</h5>
                             <div>{{ __('Invoice') }}:
-                                <strong>{{ settings()->quotation_prefix }}/{{ $quotation?->reference }}</strong>
+                                <strong>{{ $quotation?->reference }}</strong>
                             </div>
                             <div>{{ __('Date') }}:
-                                {{ \Carbon\Carbon::parse($quotation?->date)->format('d M, Y') }}</div>
+                                {{ format_date($quotation?->date) }}</div>
                             <div>
                                 {{ __('Status') }}: <strong>{{ $quotation?->status }}</strong>
                             </div>

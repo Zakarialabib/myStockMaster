@@ -35,22 +35,22 @@ class SaleExport implements FromQuery, WithMapping, WithHeadings
     public function map($row): array
     {
         return [
-            $row->product->name,
-            $row->quantity,
-            $row->price,
-            $row->total,
-            $row->created_at,
+            $row->date,
+            $row->reference,
+            $row->customer->name,
+            $row->total_amount,
+            $row->due_amount,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'Product',
-            'Quantity',
-            'Price',
-            'Total',
-            'Date',
+            __('Date'),
+            __('Reference'),
+            __('Customer'),
+            __('Total'),
+            __('Due amount'),
         ];
     }
 }

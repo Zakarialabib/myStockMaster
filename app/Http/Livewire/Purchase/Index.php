@@ -34,6 +34,9 @@ class Index extends Component
         'delete',
     ];
 
+    public $startDate;
+    public $endDate;
+
     public $showModal = false;
 
     public $paymentModal = false;
@@ -59,16 +62,16 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'supplier_id' => 'required|numeric',
-        'reference' => 'required|string|max:255',
-        'tax_percentage' => 'required|integer|min:0|max:100',
+        'supplier_id'         => 'required|numeric',
+        'reference'           => 'required|string|max:255',
+        'tax_percentage'      => 'required|integer|min:0|max:100',
         'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount' => 'required|numeric',
-        'total_amount' => 'required|numeric',
-        'paid_amount' => 'required|numeric',
-        'status' => 'required|integer|max:255',
-        'payment_method' => 'required|integer|max:255',
-        'note' => 'nullable|string|max:1000',
+        'shipping_amount'     => 'required|numeric',
+        'total_amount'        => 'required|numeric',
+        'paid_amount'         => 'required|numeric',
+        'status'              => 'required|integer|max:255',
+        'payment_method'      => 'required|integer|max:255',
+        'note'                => 'nullable|string|max:1000',
     ];
 
     public function updatedStartDate($value)
@@ -97,7 +100,7 @@ class Index extends Component
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-
+                
                 break;
         }
     }
@@ -110,14 +113,17 @@ class Index extends Component
         $this->perPage = 100;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
     public function render()
     {
         $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
+            ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -200,16 +206,16 @@ class Index extends Component
             $due_amount = $purchase->due_amount - $this->amount;
 
             if ($due_amount === $purchase->total_amount) {
-                $payment_status = PaymentStatus::Due;
+                $payment_status = PaymentStatus::DUE;
             } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::Partial;
+                $payment_status = PaymentStatus::PARTIAL;
             } else {
-                $payment_status = PaymentStatus::Paid;
+                $payment_status = PaymentStatus::PAID;
             }
 
             $purchase->update([
-                'paid_amount' => ($purchase->paid_amount + $this->amount) * 100,
-                'due_amount' => $due_amount * 100,
+                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
@@ -219,7 +225,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', 'Error'.$th->getMessage());
+            $this->alert('error', 'Error' . $th->getMessage());
         }
     }
 }

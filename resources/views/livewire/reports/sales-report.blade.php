@@ -26,14 +26,8 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <select wire:model.defer="customer_id"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="customer_id">
-                                        <option value="">{{ __('Select Customer') }}</option>
-                                        @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-select2 :options="$customers" name="customer_id" id="customer_id"
+                                        wire:model="customer_id" />
                                 </div>
                             </div>
                         </div>
@@ -45,11 +39,11 @@
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="sale_status">
                                         <option value="">{{ __('Select Status') }}</option>
-                                        @foreach(\App\Enums\SaleStatus::cases() as $status)
-                                        <option value="{{ $status->value }}">
-                                            {{ __($status->name) }}
-                                        </option>
-                                    @endforeach
+                                        @foreach (\App\Enums\SaleStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -60,11 +54,11 @@
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="payment_status">
                                         <option value="">{{ __('Select Payment Status') }}</option>
-                                        @foreach(\App\Enums\PaymentStatus::cases() as $status)
-                                        <option value="{{ $status->value }}">
-                                            {{ __($status->name) }}
-                                        </option>
-                                    @endforeach
+                                        @foreach (\App\Enums\PaymentStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">
+                                                {{ __($status->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -102,7 +96,7 @@
                         <x-table.tbody>
                             @forelse($sales as $sale)
                                 <x-table.tr>
-                                    <x-table.td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</x-table.td>
+                                    <x-table.td>{{ format_date($sale->date) }}</x-table.td>
                                     <x-table.td>{{ $sale->reference }}</x-table.td>
                                     <x-table.td>{{ $sale->customer->name }}</x-table.td>
                                     <x-table.td>

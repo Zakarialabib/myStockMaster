@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 
 /**
  * App\Models\Expense
@@ -25,11 +24,9 @@ use Illuminate\Support\Str;
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\ExpenseCategory $category
  * @property-read \App\Models\User|null $user
  * @property-read \App\Models\Warehouse|null $warehouse
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Expense advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newQuery()
@@ -45,7 +42,8 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereWarehouseId($value)
- *
+ * @property string|null $document
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDocument($value)
  * @mixin \Eloquent
  */
 class Expense extends Model
@@ -92,7 +90,8 @@ class Expense extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'reference' => 'EXP-'.Carbon::now()->format('Ymd').'-'.Str::random(4),
+            'reference' => 'EXP-'.Carbon::now()->format('d/m/Y'),
+            'date'      => Carbon::now()->format('d/m/Y'),
         ], true);
         parent::__construct($attributes);
     }
@@ -110,18 +109,6 @@ class Expense extends Model
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
-    }
-
-    /**
-     * Get Expense date attribute
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    public function date(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
-        );
     }
 
     /**

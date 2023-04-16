@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+   <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{{__('Return')}} _{{$return_purchase['reference']}}</title>
+      <title>{{__('Return')}} _{{$return_sale->reference}}</title>
       <link rel="stylesheet" href="{{asset('/print/pdfStyle.css')}}" media="all" />
    </head>
 
    <body>
       <header class="clearfix">
          <div id="logo">
-         <img src="{{asset('/images/'.$setting['logo'])}}">
+         <img src="{{asset('/images/'.$setting->logo )}}">
          </div>
          <div id="company">
-            <div><strong> {{__('Date')}}:  </strong>{{$return_purchase['date']}}</div>
-            <div><strong> {{__('Number')}}:  </strong> {{$return_purchase['reference']}}</div>
-            <div><strong> Réf d'achat: </strong> {{$return_purchase['purchase_ref']}}</div>
+            <div><strong> {{__('Date')}}: </strong>{{$return_sale->date}}</div>
+            <div><strong> {{__('Number')}}: </strong> {{$return_sale->reference}}</div>
+            <div><strong> {{__('Réf vente')}}: </strong> {{$return_sale->sale_ref}}</div>
+
          </div>
          <div id="Title-heading">
-            {{__('Return')}} {{$return_purchase['reference']}}
+            {{__('Return')}}  : {{$return_sale->reference}}
          </div>
          </div>
       </header>
@@ -29,17 +30,17 @@
                <table class="table-sm">
                   <thead>
                      <tr>
-                        <th class="desc">{{__('Supplier Info')}}</th>
+                        <th class="desc">{{__('Customer Info')}}</th>
                      </tr>
                   </thead>
                   <tbody>
                      <tr>
                         <td>
-                           <div><strong>Nom:</strong> {{$return_purchase['name']}}</div>
-                           <div><strong>ICE:</strong> {{$return_purchase['tax_number']}}</div>
-                           <div><strong>Téle:</strong> {{$return_purchase['phone']}}</div>
-                           <div><strong>Adresse:</strong>   {{$return_purchase['adress']}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{$return_purchase['email']}}</div>
+                           <div><strong>{{ __('Name') }}:</strong> {{ $returnSale->customer->name }}</div>
+                                <div><strong>{{ __('Tax number') }}:</strong> {{ $returnSale->customer?->tax_number }}</div>
+                                <div><strong>{{ __('Phone') }}:</strong> {{ $returnSale->customer->phone }}</div>
+                                <div><strong>{{ __('Address') }}:</strong> {{ $returnSale->customer->address }}</div>
+                                <div><strong>{{ __('Email') }}:</strong> {{ $returnSale->customer->email }}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -57,9 +58,9 @@
                         <td>
                            <div id="comp">{{settings()->company_name}}</div>
                            <div><strong>{{ __('Tax number') }}</strong> {{ settings()->company_tax }}</div>
-                           <div><strong>Adresse:</strong>  {{settings()->company_address}}</div>
-                           <div><strong>Téle:</strong>  {{settings()->company_phone}}</div>
-                           <div><strong>{{__('Email')}}:</strong>  {{settings()->company_email}}</div>
+                           <div><strong>{{__('Address')}}:</strong>{{settings()->company_address}}</div>
+                           <div><strong>{{__('Phone')}}:</strong>{{settings()->company_phone}}</div>
+                           <div><strong>{{__('Email')}}:</strong>{{settings()->company_email}}</div>
                         </td>
                      </tr>
                   </tbody>
@@ -70,11 +71,11 @@
             <table class="table-sm">
                <thead>
                   <tr>
-                     <th>{{__('PRODUCT')}}</th>
-                     <th>{{__('UNIT COST')}}</th>
-                     <th>{{__('QUANTITY')}}</th>
-                     <th>{{__('DISCOUNT')}}</th>
-                     <th>{{__('TAX')}}</th>
+                     <th>{{__('Product')}}</th>
+                     <th>{{__('Unit Price')}}</th>
+                     <th>{{__('Qty')}}</th>
+                     <th>{{__('Discount')}}</th>
+                     <th>{{__('Tax')}}</th>
                      <th>{{__('TOTAL')}}</th>
                   </tr>
                </thead>
@@ -83,14 +84,11 @@
                   <tr>
                      <td>
                         <span>{{$detail->code}} ({{$detail->name}})</span>
-                           @if($detail['is_imei'] && $detail['imei_number'] !==null)
-                              <p>IMEI/SN : {{$detail['imei_number']}}</p>
-                           @endif
                      </td>
-                     <td>{{$detail['cost']}} </td>
-                     <td>{{$detail->quantity}}/{{$detail['unit_purchase']}}</td>
-                     <td>{{$detail['DiscountNet']}} </td>
-                     <td>{{$detail['taxe']}} </td>
+                     <td>{{$detail->unit_price}} </td>
+                     <td>{{$detail->quantity}}/{{$detail->unit }}</td>
+                     <td>{{$detail->discount }} </td>
+                     <td>{{$detail->ta }} </td>
                      <td>{{$detail->total_amount}} </td>
                   </tr>
                   @endforeach
@@ -100,38 +98,38 @@
          <div id="total">
             <table>
                <tr>
-                  <td>{{__('Tax')}}</td>
-                  <td>{{$return_purchase['TaxNet']}} </td>
+                  <td>{{__('Order Tax')}}</td>
+                  <td>{{$return_sale->TaxNet }} </td>
                </tr>
                <tr>
                   <td>{{__('Discount')}}</td>
-                  <td>{{$return_purchase['discount']}} </td>
+                  <td>{{$return_sale->discount }} </td>
                </tr>
                <tr>
                   <td>{{__('Shipping')}}</td>
-                  <td>{{$return_purchase['shipping']}} </td>
+                  <td>{{$return_sale->shipping }} </td>
                </tr>
                <tr>
                   <td>{{__('Total')}}</td>
-                  <td>{{$symbol}} {{$return_purchase['GrandTotal']}} </td>
+                  <td>{{$symbol}} {{$return_sale->GrandTotal }} </td>
                </tr>
 
                <tr>
-                  <td>{{__('Paid amount')}}</td>
-                  <td>{{$symbol}} {{$return_purchase['paid_amount']}} </td>
+                  <td>{{__('Paid Amount')}}</td>
+                  <td>{{$symbol}} {{$return_sale->paid_amount }} </td>
                </tr>
 
                <tr>
-                  <td>{{__('Due amount')}}</td>
-                  <td>{{$symbol}} {{$return_purchase['due']}} </td>
+                  <td>{{__('Due')}}</td>
+                  <td>{{$symbol}} {{$return_sale->due }} </td>
                </tr>
             </table>
          </div>
-         <div id="signature">
-            @if (settings()->invoice_footer !== null)
-                <p>{{ settings()->invoice_footer }}</p>
+         <div>
+            @if (settings()->invoice_footer_text)
+                <p>{{ settings()->invoice_footer_text }}</p>
             @endif
-         </div>
+        </div>
       </main>
    </body>
 </html>

@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Printer advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Printer newQuery()
@@ -35,7 +34,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Printer whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Printer extends Model
@@ -77,11 +75,11 @@ class Printer extends Model
     public static function capabilityProfiles()
     {
         return [
-            'default' => 'Default',
-            'simple' => 'Simple',
-            'SP2000' => 'Star Branded',
+            'default'  => 'Default',
+            'simple'   => 'Simple',
+            'SP2000'   => 'Star Branded',
             'TEP-200M' => 'Espon Tep',
-            'P822D' => 'P822D',
+            'P822D'    => 'P822D',
         ];
     }
 
@@ -97,7 +95,7 @@ class Printer extends Model
         return [
             'network' => 'Network',
             'windows' => 'Windows',
-            'linux' => 'Linux',
+            'linux'   => 'Linux',
         ];
     }
 

@@ -8,7 +8,7 @@ enum PurchaseReturnStatus: string
 {
     case PENDING = '0';
 
-    case ORDRED = '1';
+    case ORDERED = '1';
 
     case COMPLETED = '2';
 

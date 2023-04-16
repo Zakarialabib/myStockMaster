@@ -33,12 +33,12 @@ class AdjustmentController extends Controller
         abort_if(Gate::denies('adjustment_create'), 403);
 
         $request->validate([
-            'reference' => 'required|string|max:255',
-            'date' => 'required|date',
-            'note' => 'nullable|string|max:1000',
+            'reference'   => 'required|string|max:255',
+            'date'        => 'required|date',
+            'note'        => 'nullable|string|max:1000',
             'product_ids' => 'required',
-            'quantities' => 'required',
-            'types' => 'required',
+            'quantities'  => 'required',
+            'types'       => 'required',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -50,9 +50,10 @@ class AdjustmentController extends Controller
             foreach ($request->product_ids as $key => $id) {
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
-                    'product_id' => $id,
+                    'product_id'    => $id,
+                    // 'warehouse_id'    => $id,
                     'quantity' => $request->quantities[$key],
-                    'type' => $request->types[$key],
+                    'type'     => $request->types[$key],
                 ]);
 
                 $product = Product::findOrFail($id);
@@ -84,19 +85,19 @@ class AdjustmentController extends Controller
         abort_if(Gate::denies('adjustment_edit'), 403);
 
         $request->validate([
-            'reference' => 'required|string|max:255',
-            'date' => 'required|date',
-            'note' => 'nullable|string|max:1000',
+            'reference'   => 'required|string|max:255',
+            'date'        => 'required|date',
+            'note'        => 'nullable|string|max:1000',
             'product_ids' => 'required',
-            'quantities' => 'required',
-            'types' => 'required',
+            'quantities'  => 'required',
+            'types'       => 'required',
         ]);
 
         DB::transaction(function () use ($request, $adjustment) {
             $adjustment->update([
                 'reference' => $request->reference,
-                'date' => $request->date,
-                'note' => $request->note,
+                'date'      => $request->date,
+                'note'      => $request->note,
             ]);
 
             foreach ($adjustment->adjustedProducts as $adjustedProduct) {
@@ -118,9 +119,9 @@ class AdjustmentController extends Controller
             foreach ($request->product_ids as $key => $id) {
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
-                    'product_id' => $id,
-                    'quantity' => $request->quantities[$key],
-                    'type' => $request->types[$key],
+                    'product_id'    => $id,
+                    'quantity'      => $request->quantities[$key],
+                    'type'          => $request->types[$key],
                 ]);
 
                 $product = Product::findOrFail($id);

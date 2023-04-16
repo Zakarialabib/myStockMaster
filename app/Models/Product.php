@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Product
@@ -37,16 +38,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- *
  * @property-read \App\Models\Brand|null $brand
  * @property-read \App\Models\Category $category
- *
  * @property mixed $product_cost
  * @property mixed $product_price
- *
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|array<\Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Product advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
@@ -71,10 +68,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereWarehouseId($value)
- *
  * @property string $uuid
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
@@ -105,22 +100,15 @@ class Product extends Model
         'quantity',
         'cost',
         'price',
-        'stock_alert',
         'created_at',
-        'updated_at',
     ];
 
     public $filterable = [
         'id',
-        'category_id',
         'name',
         'code',
-        'quantity',
         'cost',
         'price',
-        'stock_alert',
-        'created_at',
-        'updated_at',
     ];
 
     /**
@@ -130,6 +118,7 @@ class Product extends Model
      */
     protected $fillable = [
         'category_id',
+        'featured',
         'uuid',
         'name',
         'code',
@@ -148,7 +137,9 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
+        
             'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+
         ], true);
         parent::__construct($attributes);
     }

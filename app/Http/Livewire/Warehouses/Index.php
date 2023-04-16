@@ -35,9 +35,6 @@ class Index extends Component
     public $showModal = false;
 
     /** @var bool */
-    public $importModal = false;
-
-    /** @var bool */
     public $editModal = false;
 
     /** @var array<array<string>> */
@@ -55,11 +52,11 @@ class Index extends Component
 
     /** @var array */
     protected $rules = [
-        'warehouse.name' => 'string|required|max:255',
-        'warehouse.phone' => 'numeric|nullable|max:255',
+        'warehouse.name'    => 'string|required|max:255',
+        'warehouse.phone'   => 'numeric|nullable|max:255',
         'warehouse.country' => 'nullable|max:255',
-        'warehouse.city' => 'nullable|max:255',
-        'warehouse.email' => 'nullable|max:255',
+        'warehouse.city'    => 'nullable|max:255',
+        'warehouse.email'   => 'nullable|max:255',
     ];
 
     public function mount(): void
@@ -76,8 +73,8 @@ class Index extends Component
         abort_if(Gate::denies('warehouse_access'), 403);
 
         $query = Warehouse::with('products')->advancedFilter([
-            's' => $this->search ?: null,
-            'order_column' => $this->sortBy,
+            's'               => $this->search ?: null,
+            'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

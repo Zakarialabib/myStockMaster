@@ -95,7 +95,7 @@
                 <x-table.tbody>
                     @forelse($purchases as $purchase)
                         <x-table.tr>
-                            <x-table.td>{{ \Carbon\Carbon::parse($purchase->date)->format('d M, Y') }}
+                            <x-table.td>{{ format_date($purchase->date) }}
                             </x-table.td>
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
                             <x-table.td>{{ $purchase->name }}</x-table.td>
@@ -106,17 +106,21 @@
                                     <x-badge info>{{ __('Ordered') }}</x-badge>
                                 @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
                                     <x-badge success>{{ __('Completed') }}</x-badge>
+                                @elseif ($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
+                                    <x-badge success class="text-xs">
+                                        {{ __('Returned') }}
+                                    </x-badge>
                                 @endif
                             </x-table.td>
                             <x-table.td>{{ format_currency($purchase->total_amount) }}</x-table.td>
                             <x-table.td>{{ format_currency($purchase->paid_amount) }}</x-table.td>
                             <x-table.td>{{ format_currency($purchase->due_amount) }}</x-table.td>
                             <x-table.td>
-                                @if ($purchase->payment_status == \App\Enums\PaymentStatus::Paid)
+                                @if ($purchase->payment_status == \App\Enums\PaymentStatus::PAID)
                                     <x-badge success>{{ __('Paid') }}</x-badge>
-                                @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::Partial)
+                                @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                     <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                @elseif($purchase->payment_status == \App\Enums\PaymentStatus::Due)
+                                @elseif($purchase->payment_status == \App\Enums\PaymentStatus::DUE)
                                     <x-badge danger>{{ __('Due') }}</x-badge>
                                 @endif
                             </x-table.td>

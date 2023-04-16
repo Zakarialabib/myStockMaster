@@ -22,9 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read \App\Models\Sale $sale
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment bySale()
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment newModelQuery()
@@ -39,15 +37,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereReference($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereSaleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUpdatedAt($value)
- *
  * @property string|null $deleted_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereDeletedAt($value)
- *
  * @property int $user_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SalePayment whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class SalePayment extends Model
@@ -104,6 +97,25 @@ class SalePayment extends Model
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
         );
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($salePayment) {
+            $prefix = settings()->salePayment_prefix;
+
+            $latestSalePayment = self::latest()->first();
+
+            if ($latestSalePayment) {
+                $number = intval(substr($latestSalePayment->reference, -3)) + 1;
+            } else {
+                $number = 1;
+            }
+
+            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+        });
     }
 
     /**

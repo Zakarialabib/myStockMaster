@@ -51,8 +51,8 @@ class Edit extends Component
 
     /** @var array */
     protected $rules = [
-        'product.name' => 'required|string|min:3|max:255',
-        'product.code' => 'required|string|max:255',
+        'product.name'              => 'required|string|min:3|max:255',
+        'product.code'              => 'required|string|max:255',
         'product.barcode_symbology' => 'required|string|max:255',
         'product.unit'              => 'required|string|max:255',
         // 'product.quantity'          => 'required|integer|min:1',

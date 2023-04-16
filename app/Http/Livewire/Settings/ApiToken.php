@@ -16,7 +16,7 @@ class ApiToken extends Component
 
     public $integration;
     public $integrations;
-        
+
     public $inventoryProducts;
     public $missingProducts;
 
@@ -29,11 +29,11 @@ class ApiToken extends Component
 
     public function mount()
     {
-       $this->integrations = Integration::select('store_url','last_sync','type' ,'products','status' )->get();
-       $this->integration = Integration::where('type', IntegrationType::CUSTOM)->first();
-       $this->missingProducts = $this->integration?->products;
+        $this->integrations = Integration::select('id', 'store_url', 'last_sync', 'type', 'products', 'status')->get();
+        $this->integration = Integration::where('type', IntegrationType::CUSTOM)->first();
+        $this->missingProducts = $this->integration?->products;
 
-    $this->inventoryProducts = Product::count();
+        $this->inventoryProducts = Product::count();
     }
 
     public function createToken()
@@ -55,7 +55,6 @@ class ApiToken extends Component
 
     public function countNotExistingProducts()
     {
-
         $inventoryProducts = Product::pluck('code')->toArray();
 
         $response = Http::withHeaders([

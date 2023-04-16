@@ -14,7 +14,7 @@
         @endif
     </x-sidebar.link>
     
-    <div class="px-4" x-show="open && (isSidebarOpen || isSidebarHovered)" x-collapse>
+    <div class="px-4 py-2" x-show="open && (isSidebarOpen || isSidebarHovered)" x-collapse>
         <ul class="text-sm font-medium">
             {{ $slot }}
         </ul>

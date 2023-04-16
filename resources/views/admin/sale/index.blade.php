@@ -60,7 +60,7 @@
                     </x-slot>
                 </x-dropdown>
                 <!-- Button trigger livewire modal -->
-                <x-button primary href="{{ route('sales.create') }}">{{ __('Create') }}</x-button>
+                <x-button primary href="{{ route('sales.create') }}">{{ __('Create Invoice') }}</x-button>
             </div>
         </div>
     </section>

@@ -51,12 +51,12 @@
                                     {{ __('Invoice Info') }}:</h4>
                                 <div>{{ __('Reference') }}: <strong>{{ $purchase_return->reference }}</strong></div>
                                 <div>{{ __('Date') }}:
-                                    {{ \Carbon\Carbon::parse($purchase_return->date)->format('d M, Y') }}</div>
+                                    {{ format_date($purchase_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
                                     @if ($purchase_return->status == \App\Enums\PurchaseReturnStatus::PENDING)
                                         <x-badge warning>{{ __('Pending') }}</x-badge>
-                                    @elseif ($purchase_return->status == \App\Enums\PurchaseReturnStatus::SHIPPED)
+                                    @elseif ($purchase_return->status == \App\Enums\PurchaseReturnStatus::RETURNED)
                                         <x-badge info>{{ __('Shipped') }}</x-badge>
                                     @elseif($purchase_return->status == \App\Enums\PurchaseReturnStatus::COMPLETED)
                                         <x-badge success>{{ __('Completed') }}</x-badge>
@@ -64,11 +64,11 @@
                                 </div>
                                 <div>
                                     {{ __('Payment Status') }}:
-                                    @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::Paid)
+                                    @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::PAID)
                                         <x-badge success>{{ __('Paid') }}</x-badge>
-                                    @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::Partial)
+                                    @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                         <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                    @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::Due)
+                                    @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::DUE)
                                         <x-badge danger>{{ __('Due') }}</x-badge>
                                     @endif
                                 </div>

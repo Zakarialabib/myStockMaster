@@ -52,7 +52,8 @@ class Details extends Component
 
     public function mount($customer): void
     {
-        $this->customer = Customer::findOrFail($customer->id);
+        // dd($customer);
+        $this->customer = $customer;
         $this->customer_id = $this->customer->id;
         $this->selectPage = false;
         $this->sortBy = 'id';
@@ -67,8 +68,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('customer')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -80,8 +81,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('salepayments.sale')
             ->advancedFilter([
-                's' => $this->search ?: null,
-                'order_column' => $this->sortBy,
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -95,7 +96,8 @@ class Details extends Component
 
     public function getTotalSaleReturnsProperty(): int|float
     {
-        return $this->customerSum('total_amount');
+        return SaleReturn::whereBelongsTo($this->customer)
+            ->completed()->sum('total_amount');
     }
 
     public function getTotalPaymentsProperty(): int|float
@@ -120,7 +122,7 @@ class Details extends Component
 
         $product_costs = 0;
 
-        foreach (Sale::where('customer_id', $this->customer_id)->with('saleDetails.product')->get() as $sale) {
+        foreach (Sale::where('customer_id', $this->customer_id)->saleDetails()->with('product')->get() as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 $product_costs += $saleDetail->product->cost;
             }

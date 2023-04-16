@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
 use App\Jobs\UpdateProductCostHistory;
+use App\Enums\PurchaseStatus;
 use App\Models\Movement;
 use App\Models\Product;
 use App\Models\PriceHistory;
@@ -83,14 +85,15 @@ class Create extends Component
     {
         return [
             'supplier_id'         => 'required|numeric',
+            'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
-            'shipping_amount' => 'required|numeric',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'required|numeric',
-            'status' => 'required|int|max:255',
-            'payment_method' => 'required|string|max:255',
-            'note' => 'nullable|string|max:1000',
+            'shipping_amount'     => 'required|numeric',
+            'total_amount'        => 'required|numeric',
+            'paid_amount'         => 'required|numeric',
+            'status'              => 'required|int|max:255',
+            'payment_method'      => 'required|string|max:255',
+            'note'                => 'nullable|string|max:1000',
         ];
     }
 
@@ -220,6 +223,7 @@ class Create extends Component
          return redirect()->route('purchases.index');
      }
 
+
     public function calculateTotal(): mixed
     {
         return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
@@ -245,20 +249,20 @@ class Create extends Component
         }
 
         $cart->add([
-            'id' => $product['id'],
-            'name' => $product['name'],
-            'qty' => 1,
-            'price' => $this->calculate($product)['price'],
-            'weight' => 1,
+            'id'      => $product['id'],
+            'name'    => $product['name'],
+            'qty'     => 1,
+            'price'   => $this->calculate($product)['price'],
+            'weight'  => 1,
             'options' => [
-                'product_discount' => 0.00,
+                'product_discount'      => 0.00,
                 'product_discount_type' => 'fixed',
-                'sub_total' => $this->calculate($product)['sub_total'],
-                'code' => $product['code'],
-                'stock' => $product['quantity'],
-                'unit' => $product['unit'],
-                'product_tax' => $this->calculate($product)['product_tax'],
-                'unit_price' => $this->calculate($product)['unit_price'],
+                'sub_total'             => $this->calculate($product)['sub_total'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
+                'product_tax'           => $this->calculate($product)['product_tax'],
+                'unit_price'            => $this->calculate($product)['unit_price'],
             ],
         ]);
 
@@ -288,13 +292,13 @@ class Create extends Component
 
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $cart_item->options->product_discount,
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $cart_item->options->product_discount,
                 'product_discount_type' => $cart_item->options->product_discount_type,
             ],
         ]);
@@ -331,13 +335,13 @@ class Create extends Component
     {
         Cart::instance($this->cart_instance)->update($row_id, [
             'options' => [
-                'sub_total' => $cart_item->price * $cart_item->qty,
-                'code' => $cart_item->options->code,
-                'stock' => $cart_item->options->stock,
-                'unit' => $cart_item->options->unit,
-                'product_tax' => $cart_item->options->product_tax,
-                'unit_price' => $cart_item->options->unit_price,
-                'product_discount' => $discount_amount,
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->options->unit_price,
+                'product_discount'      => $discount_amount,
                 'product_discount_type' => $this->discount_type[$product_id],
             ],
         ]);

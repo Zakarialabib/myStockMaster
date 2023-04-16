@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Sync;
 
 use App\Models\Sale;
+use Illuminate\Support\Facades\Http;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -29,7 +30,7 @@ class Orders extends Component
             $this->store_url = settings()->woocommerce_store_url;
         } elseif ($this->type === 'shopify') {
             $this->store_url = settings()->shopify_store_url;
-        } elseif ($type === 'custom') {
+        } elseif ($this->type === 'custom') {
             $this->store_url = settings()->custom_store_url;
         }
     }
@@ -47,10 +48,10 @@ class Orders extends Component
         } elseif ($this->type === 'shopify') {
             $client = new \Shopify\Client([
                 'shop_domain' => settings()->shopify_store_url,
-                'api_key' => settings()->shopify_api_key,
-                'api_secret' => settings()->shopify_api_secret,
+                'api_key'     => settings()->shopify_api_key,
+                'api_secret'  => settings()->shopify_api_secret,
             ]);
-        } elseif ($type === 'custom') {
+        } elseif ($this->type === 'custom') {
             $client = Http::withHeaders([
                 'Authorization' => 'Bearer '.settings()->custom_api_key,
             ])->get(settings()->custom_store_url.'/api');

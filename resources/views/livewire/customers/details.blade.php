@@ -1,9 +1,6 @@
 <div>
-    <div class="container mx-auto">
+    <div class="container px-4 mx-auto">
         <div class="w-full">
-            <h2 class="my-5 text-2xl font-bold">
-                {{ $customer->name }}{{ __('Details') }}
-            </h2>
             <div class="w-full flex flex-wrap align-center mb-4">
                 <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 w-full">
                     <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
@@ -11,10 +8,8 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Sales Total') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalSales) }}
-                                {{ format_currency($customer->totalSales) }}
-
                             </p>
                         </div>
                     </div>
@@ -23,9 +18,8 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Payments') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalPayments) }}
-                                {{ format_currency($customer->totalPayments) }}
                             </p>
                         </div>
                     </div>
@@ -34,7 +28,7 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Sale Returns') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalSaleReturns) }}
                             </p>
                         </div>
@@ -45,9 +39,8 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Total Due') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
                                 {{ format_currency($this->totalDue) }}
-                                {{ format_currency($customer->debit) }}
                             </p>
                         </div>
                     </div>
@@ -56,9 +49,8 @@
                             <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Profit') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-gray-700 dark:text-gray-300">
-                                {{ format_currency($this->profit) }}
-                                
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                                {{ format_currency($customer->getProfit()) }}
                             </p>
                         </div>
                     </div>
@@ -79,8 +71,7 @@
                             @endforeach
                         </select>
                         @if ($selected)
-                            <x-button danger type="button" wire:click="$toggle('showDeleteModal')"
-                                wire:loading.attr="disabled">
+                            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                                 <i class="fas fa-trash"></i>
                             </x-button>
                         @endif
@@ -105,26 +96,23 @@
                             <x-table.th>
                                 <input type="checkbox" wire:model="selectPage" />
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                                 {{ __('Date') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                                 {{ __('Customer') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                                 {{ __('Payment status') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                                 {{ __('Due Amount') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
                                 {{ __('Total') }}
                             </x-table.th>
-                            <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
                                 {{ __('Status') }}
-                            </x-table.th>
-                            <x-table.th>
-                                {{ __('Actions') }}
                             </x-table.th>
                         </x-slot>
 
@@ -141,11 +129,11 @@
                                         {{ $sale->customer->name }}
                                     </x-table.td>
                                     <x-table.td>
-                                        @if ($sale->payment_status == \App\Enums\PaymentStatus::Paid)
+                                        @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
                                             <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::Partial)
+                                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
                                             <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::Due)
+                                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
                                             <x-badge danger>{{ __('Due') }}</x-badge>
                                         @endif
                                     </x-table.td>
@@ -166,42 +154,7 @@
                                             <x-badge success>{{ __('Completed') }}</x-badge>
                                         @endif
                                     </x-table.td>
-                                    <x-table.td>
-                                        <div class="flex justify-start space-x-2">
-                                            <x-dropdown align="right" width="56">
-                                                <x-slot name="trigger" class="inline-flex">
-                                                    <x-button primary type="button"
-                                                        class="text-white flex items-center">
-                                                        <i class="fas fa-angle-double-down"></i>
-                                                    </x-button>
-                                                </x-slot>
 
-                                                <x-slot name="content">
-                                                    <x-dropdown-link wire:click="showModal({{ $sale->id }})"
-                                                        wire:loading.attr="disabled">
-                                                        <i class="fas fa-eye"></i>
-                                                        {{ __('View') }}
-                                                    </x-dropdown-link>
-
-                                                    @can('edit_sales')
-                                                        <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
-                                                            wire:loading.attr="disabled">
-                                                            <i class="fas fa-edit"></i>
-                                                            {{ __('Edit') }}
-                                                        </x-dropdown-link>
-                                                    @endcan
-
-                                                    <x-dropdown-link target="_blank"
-                                                        href="{{ route('sales.pos.pdf', $sale->id) }}"
-                                                        wire:loading.attr="disabled">
-                                                        <i class="fas fa-print"></i>
-                                                        {{ __('Print') }}
-                                                    </x-dropdown-link>
-
-                                                </x-slot>
-                                            </x-dropdown>
-                                        </div>
-                                    </x-table.td>
                                 </x-table.tr>
                             @empty
                                 <x-table.tr>
@@ -232,9 +185,7 @@
                         <x-table.th>{{ __('Date') }}</x-table.th>
                         <x-table.th>{{ __('Reference') }}</x-table.th>
                         <x-table.th>{{ __('Amount') }}</x-table.th>
-                        <x-table.th>{{ __('Due Amount') }}</x-table.th>
                         <x-table.th>{{ __('Payment Method') }}</x-table.th>
-                        <x-table.th>{{ __('Actions') }}</x-table.th>
                     </x-slot>
                     <x-table.tbody>
                         @foreach ($this->customerPayments as $customerPayment)
@@ -245,18 +196,7 @@
                                     <x-table.td>
                                         {{ format_currency($salepayment->amount) }}
                                     </x-table.td>
-                                    <x-table.td>
-                                        {{ format_currency($salepayment->sale->due_amount) }}
-                                    </x-table.td>
                                     <x-table.td>{{ $salepayment->payment_method }}</x-table.td>
-                                    <x-table.td>
-                                        @can('access_sale_payments')
-                                            <x-button wire:click="$emit('paymentModal', {{ $salepayment->id }} )"
-                                                type="button" primary>
-                                                <i class="bi bi-pencil"></i>
-                                            </x-button>
-                                        @endcan
-                                    </x-table.td>
                                 </x-table.tr>
                             @empty
                                 <x-table.tr>

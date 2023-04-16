@@ -21,12 +21,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\User> $assignedUsers
  * @property-read int|null $assigned_users_count
  * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\Product> $products
  * @property-read int|null $products_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse newQuery()
@@ -41,7 +39,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Warehouse whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Warehouse extends Model
@@ -90,6 +87,7 @@ class Warehouse extends Model
     /** @return BelongsToMany<Product> */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class, 'product_warehouse', 'warehouse_id', 'product_id')
+                    ->withPivot('price','cost','qty');
     }
 }
