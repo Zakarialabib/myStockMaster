@@ -8,29 +8,26 @@ use Illuminate\Support\Facades\Artisan;
 
 class Update extends Component
 {
-    protected $listeners = [
-        'updateProject'
-    ];
+    public $message;
+    public $updateAvailable;
 
-    public $message = "";
-
-    public function updateProject()
+    public function checkForUpdates()
     {
         $gitHandler = new GitHandler();
-        $updated = $gitHandler->fetchAndPull();
-    
-        if ($updated) {
-            return __('Project fetched');
-        } elseif ($updatedPush){
-            return __('updating project');
-        } 
-        
-        return __('Error updating project');
+        $updatesAvailable = $gitHandler->checkForUpdates();
+
+        if ($updatesAvailable) {
+            $this->updateAvailable = true;
+            $this->message = "Updates available on origin/" . env('GIT_BRANCH', 'master') . ".";
+        } else {
+            $this->message = "No updates available.";
+        }
     }
 
-    public function mount()
+    public function updateSystem()
     {
-        $this->message = __('Upgrade to latest version');
+        $gitHandler = new GitHandler();
+        $this->message = $gitHandler->fetchAndPull();
     }
 
 
