@@ -26,15 +26,8 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'showModal', 'editModal', 'createModal',
         'refreshIndex' => '$refresh', 'delete',
     ];
-
-    public $showModal = false;
-
-    public $createModal;
-
-    public $editModal = false;
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -49,12 +42,6 @@ class Index extends Component
         ],
     ];
 
-    /** @var array */
-    protected $rules = [
-        'adjustment.date'      => ['date|required'],
-        'adjustment.note'      => ['string|max:255|nullable'],
-        'adjustment.reference' => ['string|max:255|nullable'],
-    ];
 
     public function mount(): void
     {
@@ -69,7 +56,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 
-        $query = Adjustment::advancedFilter([
+        $query = Adjustment::with('adjustedProducts','adjustedProducts.warehouse','adjustedProducts.product')
+        ->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
@@ -78,67 +66,6 @@ class Index extends Component
         $adjustments = $query->paginate($this->perPage);
 
         return view('livewire.adjustment.index', compact('adjustments'));
-    }
-
-    public function createModal(): void
-    {
-        // abort_if(Gate::denies('adjustment_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->adjustment = new Adjustment();
-
-        $this->createModal = true;
-    }
-
-    public function create(): void
-    {
-        // abort_if(Gate::denies('adjustment_create'), 403);
-
-        $this->validate();
-
-        Adjustment::create($this->adjustment);
-
-        $this->reset('createModal');
-
-        $this->alert('success', __('Adjustment created successfully.'));
-    }
-
-    public function editModal(Adjustment $adjustment): void
-    {
-        // abort_if(Gate::denies('adjustment_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->adjustment = $adjustment;
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        // abort_if(Gate::denies('adjustment_edit'), 403);
-
-        $this->validate();
-
-        $this->adjustment->save();
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Adjustment updated successfully.'));
-    }
-
-    public function showModal(Adjustment $adjustment): void
-    {
-        // abort_if(Gate::denies('adjustment_show'), 403);
-
-        $this->adjustment = Adjustment::find($adjustment->id);
-
-        $this->showModal = true;
     }
 
     public function deleteSelected(): void
