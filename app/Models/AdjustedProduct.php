@@ -75,6 +75,6 @@ class AdjustedProduct extends Model
 
     public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Warehouse::class, 'warehouse_id', 'id');
     }
 }
