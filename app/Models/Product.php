@@ -131,7 +131,9 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+
+            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+
         ], true);
         parent::__construct($attributes);
     }
@@ -176,4 +178,20 @@ class Product extends Model
             set: fn ($value) => $value * 100,
         );
     }
+
+    public function getTotalQuantityAttribute()
+    {
+        return $this->warehouses->sum('pivot.qty');
+    }
+
+    public function getAveragePriceAttribute()
+    {
+        return $this->warehouses->avg('pivot.price');
+    }
+
+    public function getAverageCostAttribute()
+    {
+        return $this->warehouses->avg('pivot.cost');
+    }
+
 }

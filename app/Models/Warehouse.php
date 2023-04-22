@@ -88,6 +88,18 @@ class Warehouse extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_warehouse', 'warehouse_id', 'product_id')
-                    ->withPivot('price','cost','qty');
+            ->withPivot('price', 'cost', 'qty');
+    }
+
+    public function getTotalQuantityAttribute()
+    {
+        return $this->products->sum('pivot.qty');
+    }
+
+    public function getStockValueAttribute()
+    {
+        return $this->products->sum(function ($product) {
+            return $product->pivot->qty * $product->pivot->cost;
+        });
     }
 }

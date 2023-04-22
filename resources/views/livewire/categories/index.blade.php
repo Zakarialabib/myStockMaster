@@ -13,13 +13,13 @@
                 </x-button>
             @endif
             @if ($this->selectedCount)
-            <p class="text-sm leading-5">
-                <span class="font-medium">
-                    {{ $this->selectedCount }}
-                </span>
-                {{ __('Entries selected') }}
-            </p>
-        @endif
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
@@ -40,12 +40,6 @@
                 {{ __('Products count') }}
             </x-table.th>
             <x-table.th>
-                {{ __('Stock count') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Stock Value') }}
-            </x-table.th>
-            <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
             </tr>
@@ -62,23 +56,8 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-badge type="info">
+                        <x-badge info>
                             {{ $category->products->count() }}
-                        </x-badge>
-                    </x-table.td>
-                    <x-table.td>
-                        <x-badge info>
-                            {{ $category->products->sum('quantity') }}
-                        </x-badge>
-                    </x-table.td>
-                    <x-table.td>
-                        @php
-                            $stockValue = $category->products->sum(function ($product) {
-                                return $product->quantity * $product->cost;
-                            });
-                        @endphp
-                        <x-badge info>
-                            {{ format_currency($stockValue) }}
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -139,18 +118,18 @@
     <!-- Show Modal -->
     <x-modal wire:model="showModal">
         <x-slot name="title">
-            {{ __('Show Category') }} {{ $category?->name}}
+            {{ __('Show Category') }} {{ $category?->name }}
         </x-slot>
 
         <x-slot name="content">
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full mb-4">
                     <label for="code">{{ __('Category Code') }}</label>
-                    {{ $category?->code}}
+                    {{ $category?->code }}
                 </div>
                 <div class="w-full mb-4">
                     <label for="name">{{ __('Category Name') }}</label>
-                    {{ $category?->name}}
+                    {{ $category?->name }}
                 </div>
             </div>
         </x-slot>
