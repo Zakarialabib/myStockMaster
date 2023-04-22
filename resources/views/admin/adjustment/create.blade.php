@@ -60,46 +60,13 @@
 
 @section('content')
     <x-card>
-        <div class="">
-            <div class="w-full">
+        <div class="flex flex-wrap">
+
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>
-            <div class="w-full px-4">
-                <x-card>
-                    <div class="p-4">
-                        @include('utils.alerts')
-                        <form action="{{ route('adjustments.store') }}" method="POST">
-                            @csrf
-                            <div class="flex flex-wrap -mx-2 mb-3">
-                                <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
-                                    <label for="reference">{{ __('Reference') }} <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="reference" required readonly value="ADJ">
-                                </div>
-                                <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
-                                    <label for="date">{{ __('Date') }} <span class="text-danger">*</span></label>
-                                    <input type="date"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="date" required value="{{ date('Y-m-d') }}">
-                                </div>
-                            </div>
-
-                            <livewire:adjustment.product-table />
-
-                            <div class="mb-4">
-                                <label for="note">{{ __('Note (If Needed)') }}</label>
-                                <textarea name="note" id="note" rows="5"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-                            </div>
-                            <div class="mt-3">
-                                <x-button type="submit" primary>
-                                    {{ __('Create Adjustment') }}
-                                </x-button>
-                            </div>
-                        </form>
-                    </div>
-                </x-card>
+            <div class="lg:w-1/2 sm:w-full h-full">
+                <livewire:adjustment.create />
             </div>
         </div>
     </x-card>
