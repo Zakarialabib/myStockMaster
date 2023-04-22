@@ -27,12 +27,15 @@ class Index extends Component
     public $listeners = [
         'productSelected', 'refreshIndex' => '$refresh',
         'discountModalRefresh', 'checkoutModal',
+        'warehouseSelected' => 'updatedWarehouseId',
         'refreshCustomers',
     ];
 
     public $cart_instance;
+    
+    public $discountModal;
 
-    // public $customers;
+    public $warehouse_id;
 
     public $global_discount;
 
@@ -169,6 +172,7 @@ class Index extends Component
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
                     'product_id'              => $cart_item->id,
+                    'warehouse_id'            => $this->warehouse_id, 
                     'name'                    => $cart_item->name,
                     'code'                    => $cart_item->options->code,
                     'quantity'                => $cart_item->qty,
@@ -351,6 +355,13 @@ class Index extends Component
         $this->item_discount[$name] = 0;
     }
 
+    public function discountModal($product_id, $row_id): void
+    {
+        $this->updateQuantity($row_id, $product_id);
+        
+        $this->discountModal = true;
+    }
+
     public function discountModalRefresh($product_id, $row_id): void
     {
         $this->updateQuantity($row_id, $product_id);
@@ -380,6 +391,8 @@ class Index extends Component
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
         $this->alert('success', __('Product discount set successfully!'));
+        
+        $this->discountModal = false;
     }
 
     public function calculate($product): array
@@ -428,5 +441,10 @@ class Index extends Component
     public function getCustomersProperty()
     {
         return Customer::select(['name', 'id'])->get();
+    }
+
+    public function updatedWarehouseId($value)
+    {
+        $this->warehouse_id = $value;
     }
 }
