@@ -109,8 +109,7 @@ class Create extends Component
             $this->alert('error', 'Error Occurred in ' . $th->getMessage());
         }
     }
-
-
+    
     public function productSelected($product): void
     {
         switch ($this->hasAdjustments) {

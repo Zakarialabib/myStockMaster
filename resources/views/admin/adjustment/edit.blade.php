@@ -57,51 +57,15 @@
 @endsection
 
 <x-app-layout>
-    <div class="px-4 mx-auto mb-4">
-        <div class="flex pb-4">
-            <div class="w-full">
+    <x-card>
+        <div class="flex flex-wrap">
+
+            <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>
-        </div>
-
-        <div class="flex">
-            <div class="w-full">
-                @include('utils.alerts')
-                <form action="{{ route('adjustments.update', $adjustment) }}" method="POST">
-                    @csrf
-                    @method('patch')
-                    <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="lg:w-1/2 sm:w-full px-3">
-                            <x-label for="reference" :value="__('Reference')" required />
-                            <input type="text"
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                name="reference" required value="{{ $adjustment->getAttributes()['reference'] }}"
-                                readonly>
-                        </div>
-                        <div class="lg:w-1/2 sm:w-full px-3">
-                            <x-label for="date" :value="__('Date')" required />
-                            <input type="date"
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                name="date" required value="{{ $adjustment->getAttributes()['date'] }}">
-
-                        </div>
-                    </div>
-                    <livewire:adjustment.product-table :adjustedProducts="$adjustment->adjustedProducts->toArray()" />
-
-                    <div class="mb-4">
-                        <label for="note">{{ __('Note (If Needed)') }}</label>
-                        <textarea name="note" id="note" rows="5"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                                    {{ $adjustment->note }}
-                                </textarea>
-                    </div>
-                    <div class="mt-3">
-                        <x-button type="submit" primary>
-                            {{ __('Update Adjustment') }}
-                        </x-button>
-                    </div>
-                </form>
+            <div class="lg:w-1/2 sm:w-full h-full">
+                @livewire('adjustment.edit', ['adjustment' => $adjustment])
             </div>
         </div>
-    </div>
+    </x-card>
 </x-app-layout>
