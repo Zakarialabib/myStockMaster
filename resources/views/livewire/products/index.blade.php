@@ -70,15 +70,9 @@
                             </x-badge>
                         </button>
                     </x-table.td>
-                    <x-table.td>
-                        {{ $product->quantity }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($product->price) }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($product->cost) }}
-                    </x-table.td>
+                    <x-table.td>{{ $product->total_quantity }}</x-table.td>
+                    <x-table.td>{{ format_currency($product->average_price) }}</x-table.td>
+                    <x-table.td>{{ format_currency($product->average_cost) }}</x-table.td>
                     <x-table.td>
                         <x-badge warning>
                             <small>{{ $product->category->name }}</small>
@@ -108,7 +102,6 @@
                                     {{ __('View') }}
                                 </x-dropdown-link>
                                 @if (settings()->telegram_channel)
-
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>

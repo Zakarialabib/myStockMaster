@@ -24,27 +24,6 @@
                             <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
-
-                            <x-label for="quantity" :value="__('Quantity')" required />
-                            <x-input id="quantity" class="block mt-1 w-full" type="text" name="quantity"
-                                wire:model.lazy="product.quantity" placeholder="{{ __('Enter Product Quantity') }}"
-                                required />
-                            <x-input-error :messages="$errors->get('quantity')" for="quantity" class="mt-2" />
-                        </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="price" :value="__('Price')" required />
-                            <x-input id="price" class="block mt-1 w-full" type="text" name="price"
-                                wire:model.lazy="product.price" placeholder="{{ __('Enter Product Price') }}"
-                                required />
-                            <x-input-error :messages="$errors->get('price')" for="price" class="mt-2" />
-                        </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="cost" :value="__('Cost')" required />
-                            <x-input type="text" wire:model.lazy="product.cost" id="cost" name="cost"
-                                class="block mt-1 w-full" placeholder="{{ __('Enter Product Cost') }}" required />
-                            <x-input-error :messages="$errors->get('cost')" for="cost" class="mt-2" />
-                        </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="category" :value="__('Category')" required />
                             <x-select2 :options="$this->categories" id="category_create" name="category_create"
                                 wire:model="product.category_id" />
@@ -56,14 +35,6 @@
                                 wire:model.lazy="product.stock_alert" />
                             <x-input-error :messages="$errors->get('stock_alert')" for="stock_alert" class="mt-2" />
                         </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="featured" :value="__('Favorite product')" />
-
-                            <x-input.checkbox id="featured" class="block mt-1 w-full" type="checkbox" name="featured"
-                                wire:model.lazy="product.featured" />
-                            <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
-                        </div>
-
                     </div>
 
                     {{-- improving warehouse ui making it one line  --}}
@@ -147,6 +118,12 @@
                                     <option value="EAN8">EAN-8</option>
                                 </select>
                                 <x-input-error :messages="$errors->get('barcode_symbology')" for="barcode_symbology" class="mt-2" />
+                            </div>
+                            <div class="md:w-1/2 sm:w-full px-4 gap-2">
+                                <x-label for="featured" :value="__('Favorite proudct')" />
+                                <x-input.checkbox id="featured" type="checkbox" name="featured"
+                                    wire:model.lazy="product.featured" />
+                                <x-input-error :messages="$errors->get('featured')" for="featured" class="mt-2" />
                             </div>
                             <div class="w-full px-2">
                                 <x-label for="note" :value="__('Description')" />

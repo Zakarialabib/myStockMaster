@@ -1,44 +1,44 @@
 <div>
     <!-- Edit Modal -->
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit Product') }} - {{ $product?->name }}
-        </x-slot>
+    @if ($editModal)
+        <x-modal wire:model="editModal">
+            <x-slot name="title">
+                {{ __('Edit Product') }} - {{ $product?->name }}
+            </x-slot>
 
-        <x-slot name="content">
-            <form wire:submit.prevent="update">
-                <x-validation-errors class="mb-4" :errors="$errors" />
-                <div>
-                    <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="name" :value="__('Product Name')" required autofocus />
-                            <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                wire:model="product.name" required autofocus />
-                            <x-input-error :messages="$errors->get('product.name')" for="product.name" class="mt-2" />
+            <x-slot name="content">
+                <form wire:submit.prevent="update">
+                    <x-validation-errors class="mb-4" :errors="$errors" />
+                    <div>
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="name" :value="__('Product Name')" required autofocus />
+                                <x-input id="name" class="block mt-1 w-full" type="text" name="name"
+                                    wire:model="product.name" required autofocus />
+                                <x-input-error :messages="$errors->get('product.name')" for="product.name" class="mt-2" />
+                            </div>
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="code" :value="__('Product Code')" required />
+                                <x-input id="code" class="block mt-1 w-full" type="text" name="code"
+                                    wire:model="product.code" disabled required />
+                                <x-input-error :messages="$errors->get('product.code')" for="product.code" class="mt-2" />
+                            </div>
                         </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="code" :value="__('Product Code')" required />
-                            <x-input id="code" class="block mt-1 w-full" type="text" name="code"
-                                wire:model="product.code" disabled required />
-                            <x-input-error :messages="$errors->get('product.code')" for="product.code" class="mt-2" />
-                        </div>
-                    </div>
 
-                    <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="category_id" :value="__('Category')" required />
-                            <x-select2 :options="$this->categories" id="category_edit" name="category_edit"
-                                wire:model="product.category_id" />
-                            <x-input-error :messages="$errors->get('product.category_id')" for="category_id" class="mt-2" />
-                        </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
-                            <x-label for="stock_alert" :value="__('Stock Alert')" required />
-                            <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
-                                wire:model="product.stock_alert" required />
-                            <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
-                        </div>
-                        <div class="mt-4 flex flex-col justify-center px-4 mt-2">
-                            @if ($productWarehouses)
+                        <div class="flex flex-wrap -mx-2 mb-3">
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="category_id" :value="__('Category')" required />
+                                <x-select2 :options="$this->categories" id="category_edit" name="category_edit"
+                                    wire:model="product.category_id" />
+                                <x-input-error :messages="$errors->get('product.category_id')" for="category_id" class="mt-2" />
+                            </div>
+                            <div class="md:w-1/2 sm:w-full px-3">
+                                <x-label for="stock_alert" :value="__('Stock Alert')" required />
+                                <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
+                                    wire:model="product.stock_alert" required />
+                                <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
+                            </div>
+                            <div class="mt-4 flex flex-col justify-center px-4 mt-2">
                                 @foreach ($productWarehouses as $warehouse)
                                     <div class="flex items-center gap-2">
                                         <div class="w-1/4">
@@ -68,16 +68,14 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif
+                            </div>
+
+
                         </div>
 
-
-                    </div>
-
-                    <x-accordion title="{{ 'More Details' }}">
-                        <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="lg:w-1/3 sm:w-1/2 px-2"
-                                <x-label for="brand_id" :value="__('Brand')" />
+                        <x-accordion title="{{ 'More Details' }}">
+                            <div class="flex flex-wrap -mx-2 mb-3">
+                                <div class="lg:w-1/3 sm:w-1/2 px-2" <x-label for="brand_id" :value="__('Brand')" />
                                 <x-select2 :options="$this->brands" id="brand_edit" name="brand_edit"
                                     wire:model="product.brand_id" />
                                 <x-input-error :messages="$errors->get('product.brand_id')" for="brand_id" class="mt-2" />
@@ -128,7 +126,7 @@
                                     rows="3">
                                             </textarea>
                             </div>
-                        </div>
+                    </div>
                     </x-accordion>
 
 
@@ -143,10 +141,10 @@
                             {{ __('Update') }}
                         </x-button>
                     </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
-
-    <!-- End Edit Modal -->
+</div>
+</form>
+</x-slot>
+</x-modal>
+@endif
+<!-- End Edit Modal -->
 </div>
