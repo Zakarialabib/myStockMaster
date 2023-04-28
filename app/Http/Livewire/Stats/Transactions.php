@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Models\SaleDetails;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\Supplier;
@@ -55,19 +56,18 @@ class Transactions extends Component
             ->take(5)
             ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date', 'user_id']);
 
-        $this->bestSales = DB::table('sales')
-            ->selectRaw('COUNT(sales.id) as totalSales, SUM(sales.total_amount) as TotalAmount, customers.name as name')
+        $this->bestSales = Sale::query()
+            ->select('sales.*', 'customers.name')
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
-            ->whereRaw('MONTH(CURDATE()) = MONTH(sales.created_at)')
-            ->groupBy('sales.customer_id', 'customers.name')
-            ->orderByDesc('TotalAmount')
-            ->limit(5)
+            ->whereMonth('sales.created_at', now()->month())
+            ->orderBy('sales.total_amount', 'desc')
+            ->take(5)
             ->get();
 
-        $this->topProduct = DB::table('sale_details')
+        $this->topProduct = SaleDetails::query()
             ->selectRaw('SUM(sale_details.quantity) as qtyItem, products.name as name, products.code as code')
             ->join('products', 'products.id', '=', 'sale_details.product_id')
-            ->whereRaw('MONTH(CURDATE()) = MONTH(sale_details.created_at)')
+            ->whereMonth('sale_details.created_at', now()->month())
             ->groupBy('sale_details.product_id', 'products.name', 'products.code')
             ->orderByDesc('qtyItem')
             ->limit(5)
