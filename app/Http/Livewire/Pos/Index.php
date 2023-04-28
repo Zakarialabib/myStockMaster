@@ -32,7 +32,7 @@ class Index extends Component
     ];
 
     public $cart_instance;
-    
+
     public $discountModal;
 
     public $warehouse_id;
@@ -172,7 +172,7 @@ class Index extends Component
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
                     'product_id'              => $cart_item->id,
-                    'warehouse_id'            => $this->warehouse_id, 
+                    'warehouse_id'            => $this->warehouse_id,
                     'name'                    => $cart_item->name,
                     'code'                    => $cart_item->options->code,
                     'quantity'                => $cart_item->qty,
@@ -358,7 +358,7 @@ class Index extends Component
     public function discountModal($product_id, $row_id): void
     {
         $this->updateQuantity($row_id, $product_id);
-        
+
         $this->discountModal = true;
     }
 
@@ -391,7 +391,7 @@ class Index extends Component
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
         $this->alert('success', __('Product discount set successfully!'));
-        
+
         $this->discountModal = false;
     }
 

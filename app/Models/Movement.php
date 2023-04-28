@@ -34,4 +34,9 @@ class Movement extends Model
             foreignKey: 'user_id',
         );
     }
+
+    public function productWarehouse()
+    {
+        return $this->belongsTo(ProductWarehouse::class);
+    }
 }

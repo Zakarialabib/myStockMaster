@@ -183,6 +183,57 @@ class Edit extends Component
         return view('livewire.purchase.edit');
     }
 
+    public function productSelected($product): void
+    {
+        if (empty($product)) {
+            $this->alert('error', __('Something went wrong!'));
+
+            return;
+        }
+
+        $cart = Cart::instance($this->cart_instance);
+
+        $exists = $cart->search(fn ($cartItem) => $cartItem->id === $product['id']);
+
+        if ($exists->isNotEmpty()) {
+            $this->alert('error', __('Product already added to cart!'));
+
+            return;
+        }
+
+        $cartItem = [
+            'id'      => $product['id'],
+            'name'    => $product['name'],
+            'qty'     => 1,
+            'price'   => $this->calculate($product)['price'],
+            'weight'  => 1,
+            'options' => [
+                'product_discount'      => 0.00,
+                'product_discount_type' => 'fixed',
+                'sub_total'             => $this->calculate($product)['sub_total'],
+                'code'                  => $product['code'],
+                'stock'                 => $product['quantity'],
+                'unit'                  => $product['unit'],
+                'product_tax'           => $this->calculate($product)['product_tax'],
+                'unit_price'            => $this->calculate($product)['unit_price'],
+            ],
+        ];
+
+        $cart->add($cartItem);
+
+        $this->check_quantity[$product['id']] = $product['quantity'];
+        $this->quantity[$product['id']] = 1;
+        $this->discount_type[$product['id']] = 'fixed';
+        $this->item_discount[$product['id']] = 0;
+        $this->total_amount = $this->calculateTotal();
+
+        if ($cart->count() > 0) {
+            $this->alert('success', __('Product added successfully!'));
+        } else {
+            $this->alert('error', __('Something went wrong!'));
+        }
+    }
+
     public function getSupplierProperty()
     {
         return Supplier::select('name', 'id')->get();

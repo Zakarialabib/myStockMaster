@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Edit extends Component
 {
@@ -57,14 +58,18 @@ class Edit extends Component
 
     public function update(): void
     {
-        $validatedData = $this->validate();
+        try {
+            $validatedData = $this->validate();
 
-        $this->category->save($validatedData);
+            $this->category->save($validatedData);
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->editModal = false;
+            $this->editModal = false;
 
-        $this->alert('success', __('Category updated successfully.'));
+            $this->alert('success', __('Category updated successfully.'));
+        } catch (Throwable $th) {
+            $this->alert('error', $th->getMessage());
+        }
     }
 }

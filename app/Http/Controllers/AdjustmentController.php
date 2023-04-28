@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\AdjustedProduct;
 use App\Models\Adjustment;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class AdjustmentController extends Controller
@@ -34,7 +30,4 @@ class AdjustmentController extends Controller
 
         return view('admin.adjustment.edit', compact('adjustment'));
     }
-
-  
-    
 }

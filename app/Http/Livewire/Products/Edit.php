@@ -7,7 +7,6 @@ namespace App\Http\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -44,6 +43,7 @@ class Edit extends Component
     ];
 
     public $listsForFields = [];
+
     public function mount()
     {
         $this->initListsForFields();
@@ -55,19 +55,19 @@ class Edit extends Component
         'product.code'              => 'required|string|max:255',
         'product.barcode_symbology' => 'required|string|max:255',
         'product.unit'              => 'required|string|max:255',
-        'product.quantity'          => 'required|integer|min:1',
-        'product.cost'              => 'required|numeric',
-        'product.price'             => 'required|numeric',
-        'product.stock_alert'       => 'required|integer|min:0',
-        'product.order_tax'         => 'nullable|integer|min:0|max:100',
-        'product.tax_type'          => 'nullable|integer|min:0|max:100',
-        'product.note'              => 'nullable|string|max:1000',
-        'product.category_id'       => 'required|integer|min:0|max:100',
-        'product.brand_id'          => 'nullable|integer|min:0|max:100',
-        'product.warehouse_id'      => 'nullable|integer|min:0|max:100',
-        'product.featured'          => 'nullable',
+        'productWarehouse'          => 'required|array',
+        'productWarehouse.*.price'  => 'required|numeric',
+        'productWarehouse.*.cost'   => 'required|numeric',
+        // 'productWarehouse.*.quantity' => 'required|numeric',
+        'product.stock_alert'  => 'required|integer|min:0',
+        'product.order_tax'    => 'nullable|integer|min:0|max:100',
+        'product.tax_type'     => 'nullable|integer|min:0|max:100',
+        'product.note'         => 'nullable|string|max:1000',
+        'product.category_id'  => 'required|integer|min:0|max:100',
+        'product.brand_id'     => 'nullable|integer|min:0|max:100',
+        'product.warehouse_id' => 'nullable|integer|min:0|max:100',
+        'product.featured'     => 'nullable',
     ];
-
 
     public function editModal($id)
     {
@@ -84,12 +84,11 @@ class Edit extends Component
         $this->productWarehouse = $this->productWarehouses->mapWithKeys(function ($warehouse) {
             return [$warehouse->id => [
                 'price' => $warehouse->pivot->price,
-                'qty' => $warehouse->pivot->qty,
-                'cost' => $warehouse->pivot->cost,
+                'qty'   => $warehouse->pivot->qty,
+                'cost'  => $warehouse->pivot->cost,
             ]];
         })->toArray();
 
-        // dd($this->all());
         $this->editModal = true;
     }
 
@@ -100,7 +99,7 @@ class Edit extends Component
         $this->validate();
 
         if ($this->image) {
-            $imageName = Str::slug($this->product->name) . '-' . Str::random(5) . '.' . $this->image->extension();
+            $imageName = Str::slug($this->product->name).'-'.Str::random(5).'.'.$this->image->extension();
             $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
@@ -113,8 +112,8 @@ class Edit extends Component
         foreach ($this->productWarehouse as $warehouseId => $warehouse) {
             $this->product->warehouses()->updateExistingPivot($warehouseId, [
                 'price' => $warehouse['price'],
-                'qty' => $warehouse['qty'],
-                'cost' => $warehouse['cost'],
+                'qty'   => $warehouse['qty'],
+                'cost'  => $warehouse['cost'],
             ]);
         }
 

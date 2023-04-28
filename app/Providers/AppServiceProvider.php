@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
-    private function getLanguages() 
+    private function getLanguages()
     {
         if ( ! app()->runningInConsole()) {
             if ( ! Schema::hasTable('languages')) {

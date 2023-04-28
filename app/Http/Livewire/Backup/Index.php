@@ -64,15 +64,6 @@ class Index extends Component
         }
     }
 
-    public function render()
-    {
-        $files = Storage::allFiles(env('APP_NAME'));
-
-        return view('livewire.backup.index', [
-            'backups' => $files,
-        ]);
-    }
-
     public function generate()
     {
         try {
@@ -97,5 +88,14 @@ class Index extends Component
                 @unlink($path);
             }
         }
+    }
+
+    public function render()
+    {
+        $files = Storage::allFiles(env('APP_NAME'));
+
+        return view('livewire.backup.index', [
+            'backups' => $files,
+        ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -36,13 +37,6 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function render()
-    {
-        abort_if(Gate::denies('category_access'), 403);
-
-        return view('livewire.categories.create');
-    }
-
     public function createCategory(): void
     {
         abort_if(Gate::denies('category_access'), 403);
@@ -58,14 +52,25 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
+        try {
+            $validatedData = $this->validate();
 
-        $this->category->save($validatedData);
+            $this->category->save($validatedData);
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->alert('success', __('Category created successfully.'));
+            $this->alert('success', __('Category created successfully.'));
 
-        $this->createCategory = false;
+            $this->createCategory = false;
+        } catch (Throwable $th) {
+            $this->alert('error', $th->getMessage());
+        }
+    }
+
+    public function render()
+    {
+        abort_if(Gate::denies('category_access'), 403);
+
+        return view('livewire.categories.create');
     }
 }

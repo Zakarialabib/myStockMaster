@@ -18,20 +18,20 @@ class Transfer extends Model
     use UuidGenerator;
     use GetModelByUuid;
 
-    const ATTRIBUTES = [
-    'id',
-    'reference',
-    'from_warehouse_id',
-    'to_warehouse_id',
-    'item',
-    'total_qty',
-    'total_tax',
-    'total_cost',
-    'total_amount',
-    'shipping',
-    'document',
-    'status',
-    'note',
+    public const ATTRIBUTES = [
+        'id',
+        'reference',
+        'from_warehouse_id',
+        'to_warehouse_id',
+        'item',
+        'total_qty',
+        'total_tax',
+        'total_cost',
+        'total_amount',
+        'shipping',
+        'document',
+        'status',
+        'note',
     ];
 
     public $orderable = self::ATTRIBUTES;
@@ -75,5 +75,4 @@ class Transfer extends Model
             foreignKey: 'user_id',
         );
     }
-   
 }

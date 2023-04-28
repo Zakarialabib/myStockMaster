@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
 use App\Models\AdjustedProduct;
@@ -7,7 +9,6 @@ use App\Models\Adjustment;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -30,14 +31,14 @@ class Edit extends Component
 
     protected $listeners = [
         'warehouseSelected' => 'updatedWarehouseId',
-        'productSelected'
+        'productSelected',
     ];
 
     protected $rules = [
-        'reference'   => 'required|string|max:255',
-        'note'        => 'nullable|string|max:1000',
+        'reference'           => 'required|string|max:255',
+        'note'                => 'nullable|string|max:1000',
         'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type' => 'required|in:add,sub',
+        'products.*.type'     => 'required|in:add,sub',
     ];
 
     public function mount($adjustment)
@@ -51,8 +52,6 @@ class Edit extends Component
 
         $this->products = $this->adjustment->adjustedProducts;
     }
-
-
 
     public function update()
     {
@@ -71,11 +70,10 @@ class Edit extends Component
                     'adjustment_id' => $this->adjustment->id,
                     'product_id'    => $product['product_id'],
                     'warehouse_id'  => $product['warehouse_id'],
-                    'quantity' => $product['quantity'],
-                    'type'     => $product['type'],
+                    'quantity'      => $product['quantity'],
+                    'type'          => $product['type'],
                 ]
             );
-
 
             $productWarehouse = ProductWarehouse::where('product_id', $product['product_id'])
                 ->where('warehouse_id', $product['warehouse_id'])
@@ -128,7 +126,6 @@ class Edit extends Component
 
         array_push($this->products, $product);
     }
-
 
     public function removeProduct($key): void
     {

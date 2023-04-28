@@ -148,10 +148,10 @@ class Index extends Component
         $this->importModal = true;
     }
 
-     public function downloadSample()
-     {
-         return Storage::disk('exports')->download('products_import_sample.xls');
-     }
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('products_import_sample.xls');
+    }
 
     public function import(): void
     {

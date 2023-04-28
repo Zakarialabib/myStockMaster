@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
 use App\Models\AdjustedProduct;
@@ -10,10 +12,10 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Throwable;
 
 class Create extends Component
 {
-
     use LivewireAlert;
 
     public $date;
@@ -29,22 +31,22 @@ class Create extends Component
 
     protected $listeners = [
         'warehouseSelected' => 'updatedWarehouseId',
-        'productSelected'
+        'productSelected',
     ];
 
     protected $rules = [
-        'reference'   => 'required|string|max:255',
-        'date'        => 'required|date',
-        'note'        => 'nullable|string|max:1000',
+        'reference'             => 'required|string|max:255',
+        'date'                  => 'required|date',
+        'note'                  => 'nullable|string|max:1000',
         'products.*.quantities' => 'required|integer|min:1',
-        'products.*.types' => 'required|in:add,sub',
+        'products.*.types'      => 'required|in:add,sub',
     ];
 
     public function mount()
     {
         $this->products = [];
 
-        $this->reference = 'Adj-' . Str::random(5);
+        $this->reference = 'Adj-'.Str::random(5);
         $this->date = date('Y-m-d');
     }
 
@@ -62,13 +64,13 @@ class Create extends Component
     {
         abort_if(Gate::denies('adjustment_create'), 403);
 
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
+
             return;
         }
 
         try {
-
             $this->validate();
 
             $adjustment = Adjustment::create([
@@ -77,13 +79,12 @@ class Create extends Component
             ]);
 
             foreach ($this->products as $product) {
-
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
                     'product_id'    => $product['id'],
-                    'warehouse_id'    => $this->warehouse_id,
-                    'quantity' => $product['quantities'],
-                    'type' => $product['types'],
+                    'warehouse_id'  => $this->warehouse_id,
+                    'quantity'      => $product['quantities'],
+                    'type'          => $product['types'],
                 ]);
 
                 $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
@@ -104,12 +105,11 @@ class Create extends Component
             $this->alert('success', __('Adjustment created successfully'));
 
             return redirect()->route('adjustments.index');
-        } catch (\Throwable $th) {
-
-            $this->alert('error', 'Error Occurred in ' . $th->getMessage());
+        } catch (Throwable $th) {
+            $this->alert('error', 'Error Occurred in '.$th->getMessage());
         }
     }
-    
+
     public function productSelected($product): void
     {
         switch ($this->hasAdjustments) {
@@ -143,7 +143,6 @@ class Create extends Component
 
         array_push($this->products, $product);
     }
-
 
     public function removeProduct($key): void
     {

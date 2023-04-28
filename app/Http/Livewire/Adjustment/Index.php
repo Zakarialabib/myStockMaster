@@ -42,12 +42,11 @@ class Index extends Component
         ],
     ];
 
-
     public function mount(): void
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
-        $this->perPage = 100;
+        $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Adjustment())->orderable;
     }
@@ -56,12 +55,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 
-        $query = Adjustment::with('adjustedProducts','adjustedProducts.warehouse','adjustedProducts.product')
-        ->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = Adjustment::with('adjustedProducts', 'adjustedProducts.warehouse', 'adjustedProducts.product')
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $adjustments = $query->paginate($this->perPage);
 
