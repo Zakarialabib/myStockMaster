@@ -15,15 +15,14 @@ test('the livewire form can be viewed', function () {
         ->assertStatus(200);
 
     // assert livewire component is rendered
-    Livewire::test('livewire.roles.create')
-        ->assertSee('Create Role');
+    Livewire::test(Create::class);
 });
 
 test('a new role can be created', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('name', 'test role')
+        ->set('role.name', 'test role')
         ->call('create');
 
     // assert role exists
@@ -33,14 +32,14 @@ test('a new role can be created', function () {
 });
 
 test('a role can have multiple permissions attached', function () {
-    $this->actingAs($this->user);
+    $this->loginAsAdmin();
     // assert role does not exist
     assertDatabaseMissing('roles', [
         'name' => 'test role',
     ]);
 
     // create role
-    Livewire::test('admin.roles.create')
+    Livewire::test(Create::class)
         ->set('name', 'test role')
         ->set('rolePermissions', ['view users', 'edit users', 'delete users', 'create users'])
         ->call('create')

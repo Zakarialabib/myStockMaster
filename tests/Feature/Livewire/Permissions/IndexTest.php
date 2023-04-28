@@ -8,7 +8,7 @@ test('the livewire permission component can be viewed', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
-    $this->get(route('permission.index'))
+    $this->get(route('permissions.index'))
         ->assertStatus(200);
 
     Livewire::test(Index::class)
