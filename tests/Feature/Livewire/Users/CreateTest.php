@@ -36,7 +36,6 @@ it('tests the create user component', function () {
     ]);
 });
 
-
 it('tests the create user component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();

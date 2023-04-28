@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Livewire\Brands\Create;
+use App\Models\Brand;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -21,7 +22,7 @@ it('tests the brand create component', function () {
 
     Livewire::test(Create::class)
         ->set('brand.name', 'apple')
-        ->set('brand.description', faker()->realText(120))
+        ->set('brand.description', 'Apple description')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -37,9 +38,23 @@ it('tests the create brand component validation', function () {
 
     Livewire::test(Create::class)
         ->set('brand.name', '')
-        ->set('brand.description', '')
         ->call('create')
         ->assertHasErrors(
             ['brand.name' => 'required'],
+        );
+});
+
+it('throws an error if the brand name is duplicated', function () {
+    $this->loginAsAdmin();
+
+    Brand::create([
+        'name' => 'apple',
+    ]);
+
+    Livewire::test(Create::class)
+        ->set('brand.name', 'apple')
+        ->call('create')
+        ->assertHasErrors(
+            ['name' => 'The brand name has already been taken.'],
         );
 });
