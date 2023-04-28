@@ -26,12 +26,12 @@
                                         <span class="badge badge-success">
                                             {{ $cart_item->options->code }}
                                         </span>
-                                        {{-- @include('livewire.includes.product-cart-modal') --}}
+                                        @include('livewire.includes.product-cart-modal')
                                     </x-table.td>
 
                                     <x-table.td>
                                         {{ format_currency($cart_item->price) }}
-                                        {{-- @include('livewire.includes.product-cart-price') --}}
+                                        @include('livewire.includes.product-cart-price')
                                     </x-table.td>
 
                                     <x-table.td>
