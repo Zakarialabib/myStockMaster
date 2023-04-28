@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Role;
 
 use App\Http\Livewire\WithSorting;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -26,13 +25,9 @@ class Index extends Component
     public $permissions;
 
     /** @var array<string> */
-    public $listeners = ['createModal', 'editModal'];
-
-    public $createModal = false;
-
-    public $editModal = false;
-
-    public $listsForFields = [];
+    public $listeners = [
+        'refreshIndex' => '$refresh',
+    ];
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -51,11 +46,10 @@ class Index extends Component
     {
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
-        $this->perPage = 100;
+        $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Role())->orderable;
         // $this->permissions = $this->role->permissions->pluck('id')->toArray();
-        $this->initListsForFields();
     }
 
     public function render()
@@ -69,58 +63,6 @@ class Index extends Component
         $roles = $query->paginate($this->perPage);
 
         return view('livewire.role.index', compact('roles'));
-    }
-
-    public function createModal(Role $role)
-    {
-        abort_if(Gate::denies('role_create'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->role = $role;
-
-        $this->createModal = true;
-    }
-
-    public function create(): void
-    {
-        $this->validate();
-
-        $this->role->save();
-
-        $this->role->permissions()->sync($this->permissions);
-
-        $this->createModal = false;
-
-        $this->alert('success', __('Role created successfully.'));
-    }
-
-    public function editModal(Role $role)
-    {
-        abort_if(Gate::denies('role_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->role = Role::find($role->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->role->save();
-
-        $this->role->permissions()->sync($this->permissions);
-
-        $this->editModal = false;
-
-        $this->alert('success', __('Role updated successfully.'));
     }
 
     public function deleteSelected()
@@ -137,21 +79,5 @@ class Index extends Component
         abort_if(Gate::denies('role_delete'), 403);
 
         $role->delete();
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'role.name'        => 'required|string|min:3|max:255',
-            'role.label'       => 'string|nullable|max:255',
-            'role.guard_name'  => 'required|string|max:255',
-            'role.description' => 'string|nullable|max:255',
-            'role.status'      => 'string|nullable|max:255',
-        ];
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['permissions'] = Permission::pluck('name', 'id')->toArray();
     }
 }
