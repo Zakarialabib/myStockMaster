@@ -1,8 +1,8 @@
 <div>
-    <div>
+    <div class="w-full px-4">
         <x-validation-errors class="mb-4" :errors="$errors" />
 
-        <form wire:submit.prevent="save">
+        <form wire:submit.prevent="store">
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full md:w-1/2 px-3 mb-4">
                     <x-label for='supplier_id' :value="__('Supplier')" required />
@@ -60,7 +60,13 @@
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
             </div>
 
-            <div class="w-full mt-3">
+            <div class="flex flex-wrap px-3 space-x-2">
+                
+                <x-button danger type="button" wire:click="resetCart" wire:loading.attr="disabled"
+                    class="ml-2 font-bold">
+                    {{ __('Reset') }}
+                </x-button>
+
                 <x-button type="submit" primary class="w-full">
                     {{ __('Create Purchase') }}
                 </x-button>

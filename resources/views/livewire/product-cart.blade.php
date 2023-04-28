@@ -25,7 +25,7 @@
                                 <span class="badge badge-success">
                                     {{ $cart_item->options->code }}
                                 </span>
-                                {{-- @include('livewire.includes.product-cart-modal') --}}
+                                @include('livewire.includes.product-cart-modal')
                             </x-table.td>
 
                             <x-table.td>

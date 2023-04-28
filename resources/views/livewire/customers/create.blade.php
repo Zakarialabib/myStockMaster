@@ -55,7 +55,7 @@
                         </div>
                     </x-accordion>
 
-                    <div class="w-full px-3 mt-4">
+                    <div class="w-full px-3 my-4">
                         <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>
