@@ -87,6 +87,12 @@ class SearchProduct extends Component
         $this->emit('productSelected', $product);
     }
 
+    public function updatedWarehouseId($value)
+    {
+        $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+
     public function getCategoriesProperty()
     {
         return  Category::select('name', 'id')->get();

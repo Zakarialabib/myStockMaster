@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Throwable;
 
 class Create extends Component
 {
@@ -35,20 +36,20 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'product.name'                    => 'required|string|min:3|max:255',
-        'product.code'                    => 'required|string|max:255',
-        'product.barcode_symbology'       => 'required|string|max:255',
-        'product.unit'                    => 'required|string|max:255',
-        'productWarehouse.*.quantity'     => 'required|integer|min:1',
-        'productWarehouse.*.price'        => 'required|numeric',
-        'productWarehouse.*.cost'         => 'required|numeric',
-        'product.stock_alert'             => 'required|integer|min:0|max:192',
-        'product.order_tax'               => 'nullable|integer|min:0|max:1192',
-        'product.tax_type'                => 'nullable|integer|min:0|max:100',
-        'product.note'                    => 'nullable|string|max:1000',
-        'product.category_id'             => 'required|integer|min:0|max:100',
-        'product.brand_id'                => 'nullable|integer|min:0|max:100',
-        'product.featured'                => 'boolean',
+        'product.name'                => 'required|string|min:3|max:255',
+        'product.code'                => 'required|string|max:255',
+        'product.barcode_symbology'   => 'required|string|max:255',
+        'product.unit'                => 'required|string|max:255',
+        'productWarehouse.*.quantity' => 'required|integer|min:1',
+        'productWarehouse.*.price'    => 'required|numeric',
+        'productWarehouse.*.cost'     => 'required|numeric',
+        'product.stock_alert'         => 'required|integer|min:0|max:192',
+        'product.order_tax'           => 'nullable|integer|min:0|max:1192',
+        'product.tax_type'            => 'nullable|integer|min:0|max:100',
+        'product.note'                => 'nullable|string|max:1000',
+        'product.category_id'         => 'required|integer|min:0|max:100',
+        'product.brand_id'            => 'nullable|integer|min:0|max:100',
+        'product.featured'            => 'boolean',
 
     ];
 
@@ -56,7 +57,6 @@ class Create extends Component
     {
         $this->validateOnly($propertyName);
     }
-
 
     public function mount(): void
     {
@@ -67,7 +67,6 @@ class Create extends Component
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
     }
-    
 
     public function render()
     {
@@ -95,28 +94,27 @@ class Create extends Component
     public function create(): void
     {
         try {
-
             $validatedData = $this->validate();
 
             if ($this->image) {
-                $imageName = Str::slug($this->product->name) . '-' . date('Y-m-d H:i:s') . '.' . $this->image->extension();
+                $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
                 $this->image->storeAs('products', $imageName);
                 $this->product->image = $imageName;
             }
-            
+
             $this->product->price = 0;
             $this->product->cost = 0;
             $this->product->quantity = 0;
 
-        $this->product->save($validatedData);
+            $this->product->save($validatedData);
 
             foreach ($this->productWarehouse as $warehouseId => $warehouse) {
                 ProductWarehouse::create([
-                    'product_id' => $this->product->id,
+                    'product_id'   => $this->product->id,
                     'warehouse_id' => $warehouseId,
-                    'price' => $warehouse['price'],
-                    'cost' => $warehouse['cost'],
-                    'qty' => $warehouse['quantity'],
+                    'price'        => $warehouse['price'],
+                    'cost'         => $warehouse['cost'],
+                    'qty'          => $warehouse['quantity'],
                 ]);
             }
 
@@ -125,10 +123,9 @@ class Create extends Component
             $this->emit('refreshIndex');
 
             $this->createProduct = false;
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }
-
     }
 
     public function getCategoriesProperty()

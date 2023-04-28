@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller;
 
 class TransfersController extends Controller
 {
-      public function __invoke()
+    public function __invoke()
     {
         abort_if(Gate::denies('transfers_access'), 403);
 

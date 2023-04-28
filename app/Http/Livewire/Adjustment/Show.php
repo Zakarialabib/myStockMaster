@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Adjustment;
 
 use App\Models\Adjustment;
@@ -24,7 +26,7 @@ class Show extends Component
     {
         // abort_if(Gate::denies('adjustment_show'), 403);
         $this->adjustment = Adjustment::with('adjustedProducts', 'adjustedProducts.warehouse', 'adjustedProducts.product')
-        ->where('id', $adjustment)->first();
+            ->where('id', $adjustment)->first();
 
         $this->showModal = true;
     }

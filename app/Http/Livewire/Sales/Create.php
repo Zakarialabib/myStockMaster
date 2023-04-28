@@ -14,7 +14,6 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use Carbon\Carbon;
 use Exception;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
@@ -26,14 +25,20 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['productSelected', 'discountModalRefresh', 'proceed'];
+    public $listeners = [
+        'productSelected', 'discountModalRefresh', 'proceed',
+        'warehouseSelected' => 'updatedWarehouseId',
+    ];
 
     public $cart_instance;
 
     public $customers;
 
     public $global_discount;
+
     public $discount_amount;
+
+    public $warehouse_id;
 
     public $global_tax;
 
@@ -95,7 +100,7 @@ class Create extends Component
         $this->payment_method = 'cash';
         $this->paid_amount = $this->total_amount;
         $this->customer_id = settings()->default_client_id;
-        $this->date = Carbon::today()->format('Y-m-d');
+        $this->date = date('Y-m-d');
     }
 
     public function hydrate(): void
@@ -118,13 +123,13 @@ class Create extends Component
     public function proceed()
     {
         if ($this->customer_id !== null) {
-            $this->save();
+            $this->store();
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
     }
 
-    public function save()
+    public function store()
     {
         try {
             $this->validate();
@@ -161,6 +166,7 @@ class Create extends Component
             foreach (Cart::instance('sale')->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
+                    'warehouse_id'            => $this->warehouse_id,
                     'product_id'              => $cart_item->id,
                     'name'                    => $cart_item->name,
                     'code'                    => $cart_item->options->code,
@@ -410,5 +416,10 @@ class Create extends Component
     public function getCategoryProperty()
     {
         return Category::select('name', 'id')->get();
+    }
+
+    public function updatedWarehouseId($value)
+    {
+        $this->warehouse_id = $value;
     }
 }

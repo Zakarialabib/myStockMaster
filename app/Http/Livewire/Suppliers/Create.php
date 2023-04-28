@@ -67,7 +67,7 @@ class Create extends Component
         try {
             $validatedData = $this->validate();
 
-            $this->supplier->save($validatedData);
+            $this->supplier->create($validatedData);
 
             $this->alert('success', __('Supplier created successfully.'));
 

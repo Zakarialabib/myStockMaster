@@ -41,9 +41,9 @@ class PaymentForm extends Component
     public $note;
 
     protected $rules = [
-        'date'      => 'required|date',
-        'amount'    => 'required|numeric',
-        'note'      => 'nullable|string|max:1000',
+        'date'   => 'required|date',
+        'amount' => 'required|numeric',
+        'note'   => 'nullable|string|max:1000',
         // 'sale_id' => 'nullable|integer',
         'payment_method' => 'required|string|max:255',
     ];

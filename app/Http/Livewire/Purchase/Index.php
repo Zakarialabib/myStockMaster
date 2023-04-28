@@ -100,7 +100,7 @@ class Index extends Component
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-                
+
                 break;
         }
     }
@@ -110,7 +110,7 @@ class Index extends Component
         $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
-        $this->perPage = 100;
+        $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
         $this->startDate = now()->startOfYear()->format('Y-m-d');
@@ -225,7 +225,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', 'Error' . $th->getMessage());
+            $this->alert('error', 'Error'.$th->getMessage());
         }
     }
 }

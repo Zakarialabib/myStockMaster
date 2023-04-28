@@ -22,7 +22,6 @@ class Edit extends Component
     /** @var mixed */
     public $brand;
 
-    /** @var string|null */
     public $image;
 
     /** @var array<string> */
@@ -41,11 +40,6 @@ class Edit extends Component
     public function updated($propertyName): void
     {
         $this->validateOnly($propertyName);
-    }
-
-    public function render()
-    {
-        return view('livewire.brands.edit');
     }
 
     public function editModal($id): void
@@ -82,5 +76,10 @@ class Edit extends Component
         } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
+    }
+
+    public function render()
+    {
+        return view('livewire.brands.edit');
     }
 }

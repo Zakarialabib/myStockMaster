@@ -19,9 +19,9 @@ class BrandFactory extends Factory
     public function definition()
     {
         return [
-            'name'        => fake()->company(),
-            'description' => fake()->realText(100),
-            'image'       => 'https://www.apple.com/v/iphone/home/ah/images/overview/compare/compare_iphone_12__f2x.png',
+            'name'        => $this->faker->company(),
+            'description' => $this->faker->realText(100),
+            'image'       => $this->faker->imageUrl(400, 400),
         ];
     }
 }

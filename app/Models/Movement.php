@@ -71,5 +71,4 @@ class Movement extends Model
     {
         return $this->belongsTo(ProductWarehouse::class);
     }
-
 }

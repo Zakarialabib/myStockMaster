@@ -22,7 +22,6 @@ class Create extends Component
     /** @var mixed */
     public $brand;
 
-    /** @var string|null */
     public $image;
 
     /** @var array<string> */
@@ -43,13 +42,6 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function render()
-    {
-        abort_if(Gate::denies('brand_create'), 403);
-
-        return view('livewire.brands.create');
-    }
-
     public function createBrand(): void
     {
         abort_if(Gate::denies('brand_create'), 403);
@@ -65,9 +57,9 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
-
         try {
+            $validatedData = $this->validate();
+
             if ($this->image) {
                 $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
                 $this->image->storeAs('brands', $imageName);
@@ -84,5 +76,12 @@ class Create extends Component
         } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
+    }
+
+    public function render()
+    {
+        abort_if(Gate::denies('brand_create'), 403);
+
+        return view('livewire.brands.create');
     }
 }
