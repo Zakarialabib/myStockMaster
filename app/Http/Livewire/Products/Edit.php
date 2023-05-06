@@ -7,7 +7,6 @@ namespace App\Http\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -20,6 +19,10 @@ class Edit extends Component
     use LivewireAlert;
 
     public $product;
+
+    public $productWarehouse = [];
+
+    public $productWarehouses;
 
     public $editModal = false;
 
@@ -41,29 +44,30 @@ class Edit extends Component
 
     public $listsForFields = [];
 
+    public function mount()
+    {
+        $this->initListsForFields();
+    }
+
     /** @var array */
     protected $rules = [
         'product.name'              => 'required|string|min:3|max:255',
         'product.code'              => 'required|string|max:255',
         'product.barcode_symbology' => 'required|string|max:255',
         'product.unit'              => 'required|string|max:255',
-        'product.quantity'          => 'required|integer|min:1',
-        'product.cost'              => 'required|numeric',
-        'product.price'             => 'required|numeric',
-        'product.stock_alert'       => 'required|integer|min:0',
-        'product.order_tax'         => 'nullable|integer|min:0|max:100',
-        'product.tax_type'          => 'nullable|integer|min:0|max:100',
-        'product.note'              => 'nullable|string|max:1000',
-        'product.category_id'       => 'required|integer|min:0|max:100',
-        'product.brand_id'          => 'nullable|integer|min:0|max:100',
-        'product.warehouse_id'      => 'nullable|integer|min:0|max:100',
-        'product.featured'          => 'nullable',
+        'productWarehouse'          => 'required|array',
+        'productWarehouse.*.price'  => 'required|numeric',
+        'productWarehouse.*.cost'   => 'required|numeric',
+        // 'productWarehouse.*.quantity' => 'required|numeric',
+        'product.stock_alert'  => 'required|integer|min:0',
+        'product.order_tax'    => 'nullable|integer|min:0|max:100',
+        'product.tax_type'     => 'nullable|integer|min:0|max:100',
+        'product.note'         => 'nullable|string|max:1000',
+        'product.category_id'  => 'required|integer|min:0|max:100',
+        'product.brand_id'     => 'nullable|integer|min:0|max:100',
+        'product.warehouse_id' => 'nullable|integer|min:0|max:100',
+        'product.featured'     => 'nullable',
     ];
-
-    public function mount()
-    {
-        $this->initListsForFields();
-    }
 
     public function editModal($id)
     {
@@ -75,6 +79,16 @@ class Edit extends Component
 
         $this->product = Product::findOrFail($id);
 
+        $this->productWarehouses = $this->product->warehouses()->withPivot('price', 'qty', 'cost')->get();
+
+        $this->productWarehouse = $this->productWarehouses->mapWithKeys(function ($warehouse) {
+            return [$warehouse->id => [
+                'price' => $warehouse->pivot->price,
+                'qty'   => $warehouse->pivot->qty,
+                'cost'  => $warehouse->pivot->cost,
+            ]];
+        })->toArray();
+
         $this->editModal = true;
     }
 
@@ -85,12 +99,23 @@ class Edit extends Component
         $this->validate();
 
         if ($this->image) {
-            $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
+            $imageName = Str::slug($this->product->name).'-'.Str::random(5).'.'.$this->image->extension();
             $this->image->storeAs('products', $imageName);
             $this->product->image = $imageName;
         }
+        $this->product->price = 0;
+        $this->product->cost = 0;
+        $this->product->quantity = 0;
 
         $this->product->save();
+
+        foreach ($this->productWarehouse as $warehouseId => $warehouse) {
+            $this->product->warehouses()->updateExistingPivot($warehouseId, [
+                'price' => $warehouse['price'],
+                'qty'   => $warehouse['qty'],
+                'cost'  => $warehouse['cost'],
+            ]);
+        }
 
         $this->emit('refreshIndex');
 
@@ -107,11 +132,6 @@ class Edit extends Component
     public function getBrandsProperty()
     {
         return Brand::select(['name', 'id'])->get();
-    }
-
-    public function getWarehousesProperty()
-    {
-        return Warehouse::select(['name', 'id'])->get();
     }
 
     public function render()

@@ -6,8 +6,6 @@ use App\Http\Livewire\Brands\Edit;
 use Livewire\Livewire;
 use App\Models\Brand;
 
-use function Pest\Laravel\assertDatabaseHas;
-
 it('test the brand edit component if working', function () {
     $this->loginAsAdmin();
 
@@ -25,12 +23,12 @@ it('tests the brand edit component', function () {
     Livewire::test(Edit::class, ['id' => $brand->id])
         ->set('brand.name', 'apple')
         ->set('brand.description', 'some description')
-        ->call('update');
+        ->call('update')
+        ->assertHasNoErrors();
 
-    assertDatabaseHas('brands', [
-        'name'        => 'apple',
-        'description' => 'some description',
-    ]);
+    $brand = Brand::find(1);
+    expect($brand->name)->toBe('apple');
+    expect($brand->description)->toBe('some description');
 });
 
 it('tests the update brand component validation', function () {

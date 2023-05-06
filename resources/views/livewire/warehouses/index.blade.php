@@ -58,11 +58,10 @@
                         {{ $warehouse->name }} -{{ $warehouse->phone }}
                     </x-table.td>
                     <x-table.td>
-                        {{-- calculate quantity of all products in this category --}}
-                        {{ $warehouse->products->sum('pivot.quantity') }}
+                        {{ $warehouse->total_quantity }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $warehouse->products->sum('pivot.quantity') * $warehouse->products->sum('pivot.cost') }}
+                        {{ format_currency($warehouse->stock_value) }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">

@@ -43,13 +43,6 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function render()
-    {
-        abort_if(Gate::denies('customer_create'), 403);
-
-        return view('livewire.customers.create');
-    }
-
     public function createCustomer(): void
     {
         $this->resetErrorBag();
@@ -63,9 +56,9 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
-
         try {
+            $validatedData = $this->validate();
+
             $this->customer->save($validatedData);
 
             if ($this->customer) {
@@ -82,5 +75,12 @@ class Create extends Component
         } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }
+    }
+
+    public function render()
+    {
+        abort_if(Gate::denies('customer_create'), 403);
+
+        return view('livewire.customers.create');
     }
 }

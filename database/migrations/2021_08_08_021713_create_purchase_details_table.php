@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +23,7 @@ class CreatePurchaseDetailsTable extends Migration
 
             $table->foreignIdFor(Purchase::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Product::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->nullOnDelete();
 
             $table->string('name');
             $table->string('code');

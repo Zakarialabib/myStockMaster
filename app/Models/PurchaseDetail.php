@@ -46,6 +46,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereSubTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUpdatedAt($value)
+ * @property int|null $warehouse_id
+ * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereWarehouseId($value)
  * @mixin \Eloquent
  */
 class PurchaseDetail extends Model
@@ -67,11 +69,16 @@ class PurchaseDetail extends Model
         'id',
         'purchase_id',
         'product_id',
+        'warehouse_id',
         'quantity',
         'price',
         'total',
         'created_at',
         'updated_at',
+    ];
+
+    protected $dispatchesEvents = [
+
     ];
 
     protected $guarded = [];

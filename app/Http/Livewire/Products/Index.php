@@ -92,6 +92,7 @@ class Index extends Component
                 'category' => fn ($query) => $query->select('id', 'name'),
                 'brand'    => fn ($query) => $query->select('id', 'name'),
                 'movements',
+                'warehouses',
             ])
             ->select('products.*')
             ->advancedFilter([
@@ -148,10 +149,10 @@ class Index extends Component
         $this->importModal = true;
     }
 
-     public function downloadSample()
-     {
-         return Storage::disk('exports')->download('products_import_sample.xls');
-     }
+    public function downloadSample()
+    {
+        return Storage::disk('exports')->download('products_import_sample.xls');
+    }
 
     public function import(): void
     {

@@ -11,7 +11,6 @@ use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Domain\Filters\DateFilter;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -91,14 +90,17 @@ class Index extends Component
             case 'day':
                 $this->startDate = now()->startOfDay()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
+
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
+
                 break;
         }
     }
@@ -108,7 +110,7 @@ class Index extends Component
         $this->selectPage = false;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
-        $this->perPage = 100;
+        $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Purchase())->orderable;
         $this->startDate = now()->startOfYear()->format('Y-m-d');
@@ -171,7 +173,6 @@ class Index extends Component
 
         $this->purchase = $purchase;
         $this->date = date('Y-m-d');
-        $this->reference = 'ref-' . date('Y-m-d-h');
         $this->amount = $purchase->due_amount;
         $this->payment_method = 'Cash';
         $this->purchase_id = $purchase->id;
@@ -184,7 +185,6 @@ class Index extends Component
             $this->validate(
                 [
                     'date'           => 'required|date',
-                    'reference'      => 'required|string|max:255',
                     'amount'         => 'required|numeric',
                     'payment_method' => 'required|string|max:255',
                 ]
@@ -194,7 +194,6 @@ class Index extends Component
 
             PurchasePayment::create([
                 'date'           => $this->date,
-                'reference'      => $this->reference,
                 'user_id'        => Auth::user()->id,
                 'amount'         => $this->amount,
                 'note'           => $this->note ?? null,
@@ -226,7 +225,7 @@ class Index extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', 'Error' . $th->getMessage());
+            $this->alert('error', 'Error'.$th->getMessage());
         }
     }
 }

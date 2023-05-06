@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="$toggle('showDeleteModal')" wire:loading.attr="disabled">
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -39,14 +39,17 @@
             <x-table.th>
                 {{ __('Quantity') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('price')" :direction="$sorts['price'] ?? null">
+            <x-table.th>
                 {{ __('Price') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Cost') }}
             </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null">
                 {{ __('Category') }}
+            </x-table.th>
+            <x-table.th>
+                {{ __('Warehouse') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
@@ -60,72 +63,74 @@
                     </x-table.td>
                     <x-table.td>
                         <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
-                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
+                            class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge success>
                                 {{ $product->code }}
                             </x-badge>
                         </button>
                     </x-table.td>
-                    <x-table.td>
-                        {{ $product->quantity }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($product->price) }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($product->cost) }}
-                    </x-table.td>
+                    <x-table.td>{{ $product->total_quantity }}</x-table.td>
+                    <x-table.td>{{ format_currency($product->average_price) }}</x-table.td>
+                    <x-table.td>{{ format_currency($product->average_cost) }}</x-table.td>
                     <x-table.td>
                         <x-badge warning>
                             <small>{{ $product->category->name }}</small>
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                            <x-dropdown align="right" width="56">
-                                <x-slot name="trigger" class="inline-flex">
-                                    <x-button primary type="button" class="text-white flex items-center">
-                                        <i class="fas fa-angle-double-down"></i>
-                                    </x-button>
-                                </x-slot>
+                        <div class="flex flex-wrap">
+                            @forelse ($product->warehouses as $warehouse)
+                                <x-badge info><small>{{ $warehouse->name }}</small></x-badge>
+                            @empty
+                                {{ __('No warehouse assigned') }}
+                            @endforelse
+                        </div>
+                    </x-table.td>
+                    <x-table.td>
+                        <x-dropdown align="right" width="56">
+                            <x-slot name="trigger" class="inline-flex">
+                                <x-button primary type="button" class="text-white flex items-center">
+                                    <i class="fas fa-angle-double-down"></i>
+                                </x-button>
+                            </x-slot>
 
-                                <x-slot name="content">
-                                    <x-dropdown-link wire:click="$emit('showModal',{{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-eye"></i>
-                                        {{ __('View') }}
-                                    </x-dropdown-link>
-                                    @if(settings()->telegram_channel)
+                            <x-slot name="content">
+                                <x-dropdown-link wire:click="$emit('showModal',{{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-eye"></i>
+                                    {{ __('View') }}
+                                </x-dropdown-link>
+                                @if (settings()->telegram_channel)
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-paper-plane"></i>
                                         {{ __('Send to telegram') }}
                                     </x-dropdown-link>
-                                    @endif
-                                    <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-paper-plane"></i>
-                                        {{ __('Send to Whatsapp') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link wire:click="$emit('editModal', {{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                        {{ __('Edit') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('Delete') }}
-                                    </x-dropdown-link>
-                                </x-slot>
-                            </x-dropdown>
-                        </div>
+                                @endif
+                                <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-paper-plane"></i>
+                                    {{ __('Send to Whatsapp') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('editModal', {{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                    {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+
                     </x-table.td>
                 </x-table.tr>
             @empty
                 <x-table.tr>
-                    <x-table.td colspan="10" class="text-center">
+                    <x-table.td colspan="8" class="text-center">
                         {{ __('No results found') }}
                     </x-table.td>
                 </x-table.tr>

@@ -37,11 +37,9 @@ class Barcode extends Component
     {
         $product = Product::find($product['id']);
 
-        // Check if product is already in the array
         $index = $this->findProductIndex($product->id);
 
         if ($index === false) {
-            // If product is not in the array, add it with quantity and barcodeSize
             array_push($this->products, [
                 'id'                => $product->id,
                 'name'              => $product->name,
@@ -57,7 +55,7 @@ class Barcode extends Component
     public function findProductIndex($productId)
     {
         foreach ($this->products as $index => $product) {
-            if ($product['id'] == $productId) {
+            if ($product['id'] === $productId) {
                 return $index;
             }
         }
@@ -117,8 +115,6 @@ class Barcode extends Component
 
         $stylesheet = file_get_contents(public_path('print/bootstrap.min.css'));
 
-        dd($data);
-
         $pdf = PDF::loadView('admin.barcode.print', $data, [
             'format' => $this->paperSize,
         ]);
@@ -133,7 +129,7 @@ class Barcode extends Component
         $index = null;
 
         foreach ($this->products as $key => $product) {
-            if ($product['id'] == $productId) {
+            if ($product['id'] === $productId) {
                 $index = $key;
 
                 break;

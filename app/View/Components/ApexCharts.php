@@ -9,7 +9,7 @@ use Illuminate\View\Component;
 class ApexCharts extends Component
 {
     public string $chartId;
-    
+
     public $seriesData;
     public $categories;
     public $seriesName;

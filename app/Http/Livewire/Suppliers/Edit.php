@@ -65,9 +65,9 @@ class Edit extends Component
 
     public function update(): void
     {
-        $validatedData = $this->validate();
-
         try {
+            $validatedData = $this->validate();
+
             $this->supplier->save($validatedData);
 
             $this->alert('success', __('Supplier updated successfully.'));

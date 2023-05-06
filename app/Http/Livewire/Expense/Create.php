@@ -10,6 +10,7 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Throwable;
 
 class Create extends Component
 {
@@ -65,17 +66,21 @@ class Create extends Component
 
     public function create(): void
     {
-        $validatedData = $this->validate();
+        try {
+            $validatedData = $this->validate();
 
-        $this->expense->save($validatedData);
+            $this->expense->save($validatedData);
 
-        $this->expense->user()->associate(auth()->user());
+            $this->expense->user()->associate(auth()->user());
 
-        $this->alert('success', __('Expense created successfully.'));
+            $this->alert('success', __('Expense created successfully.'));
 
-        $this->emit('refreshIndex');
+            $this->emit('refreshIndex');
 
-        $this->createExpense = false;
+            $this->createExpense = false;
+        } catch (Throwable $th) {
+            $this->alert('error', $th->getMessage());
+        }
     }
 
     protected function initListsForFields()
