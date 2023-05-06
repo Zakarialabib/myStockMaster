@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Laravel Inventory App</title>
+    <script src="https://unpkg.com/alpinejs@3.4.2/dist/alpine.js"></script>
+</head>
+
+<body>
+
+    <div x-data="{ step: 0, progress: 0 }">
+        <div x-data="installer">
+            <div x-show="step === 1">
+                <h2>Requirements Check</h2>
+                <p>Performing a check for the required software...</p>
+                <ul>
+                    <li>PHP version >= {{ requiredPhpVersion }}: <span x-text="phpVersion"></span></li>
+                    <li>PHP extension: pdo_mysql: <span x-text="pdoMysql"></span></li>
+                    <li>PHP extension: mbstring: <span x-text="mbstring"></span></li>
+                </ul>
+                <button x-on:click="checkRequirements()">Check Requirements</button>
+                <button x-on:click="nextStep()">Next</button>
+            </div>
+            <div x-show="step === 2">
+                <h2>Install Composer & Node</h2>
+                <div x-show="!composerInstalled">
+                    <p>Installing Composer...</p>
+                </div>
+                <div x-show="!nodeInstalled">
+                    <p>Installing Node...</p>
+                </div>
+                <button x-on:click="installDependencies()"
+                    x-bind:disabled="!(composerInstalled && nodeInstalled)">Install Dependencies</button>
+                <button x-on:click="nextStep()">Next</button>
+            </div>
+            <div x-show="step === 3">
+                <h2>Configure Environment & Database</h2>
+                <form>
+                    <label>APP_NAME</label>
+                    <input type="text" x-model="appName">
+
+                    <label>APP_ENV</label>
+                    <select x-model="appEnv">
+                        <option value="local">Local</option>
+                        <option value="production">Production</option>
+                    </select>
+
+                    <label>DB_CONNECTION</label>
+                    <select x-model="dbConnection">
+                        <option value="mysql">MySQL</option>
+                        <option value="sqlite">SQLite</option>
+                    </select>
+
+                    <!-- Other environment variables and database settings -->
+
+                    <button x-on:click="configureEnvAndDb()">Configure</button>
+                    <button x-on:click="nextStep()">Next</button>
+                </form>
+            </div>
+            <div x-show="step === 4">
+                <h2>Migration and Seeds</h2>
+                <p>Migrating the database and seeding data...</p>
+                <button x-on:click="nextStep()">Next</button>
+            </div>
+            <div x-show="step === 5">
+                <h2>Installation Complete</h2>
+                <p>Installation has completed successfully.</p>
+            </div>
+
+            <div>
+                <progress max="100" x-bind:value="progress"></progress>
+                <div class="progress-bar" :style="'width: ' + progress + '%'"></div>
+            </div>
+
+            <script>
+                function sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+
+                async function nextStep() {
+                    this.step++;
+                    this.progress = this.step * 25;
+                    await sleep(1000);
+                }
+
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
