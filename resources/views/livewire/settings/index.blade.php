@@ -18,6 +18,10 @@
                     class="px-4 py-2 w-full text-left hover:bg-indigo-500 hover:text-white transition-colors">
                     {{ __('Mail Configuration') }}
                 </button>
+                <button @click="tab = 'mail'" :class="{ 'bg-indigo-500 text-white': tab === 'messaging' }"
+                    class="px-4 py-2 w-full text-left hover:bg-indigo-500 hover:text-white transition-colors">
+                    {{ __('Messaging') }}
+                </button>
             </div>
         </div>
         <div class="w-3/4 px-4">
@@ -249,6 +253,14 @@
                 </div>
                 <div class="w-full px-2">
                     <livewire:settings.smtp />
+                </div>
+            </div>
+            <div x-show="tab === 'messaging'">
+                <div class="py-3 px-6 mb-2 bg-indigo-500 border-b-1 border-gray-light text-white">
+                    <h2>{{ __('Messaging') }}</h2>
+                </div>
+                <div class="w-full px-2">
+                    <livewire:settings.messaging />
                 </div>
             </div>
         </div>
