@@ -7,6 +7,7 @@ namespace App\Http\Livewire\Backup;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Config;
 use Livewire\Component;
 use Throwable;
 
@@ -32,6 +33,23 @@ class Index extends Component
         'delete',
     ];
 
+    public function updateGoogleDriveConfig()
+    {
+        $validatedData = $this->validate([
+            'clientId' => 'required',
+            'clientSecret' => 'required',
+            'refreshToken' => 'required',
+            'folderId' => 'required',
+        ]);
+
+        Config::set('filesystems.disks.google.clientId', $validatedData['clientId']);
+        Config::set('filesystems.disks.google.clientSecret', $validatedData['clientSecret']);
+        Config::set('filesystems.disks.google.refreshToken', $validatedData['refreshToken']);
+        Config::set('filesystems.disks.google.folderId', $validatedData['folderId']);
+
+        $this->alert('success', __('Google Drive configuration updated successfully.'));
+    }
+    
     public function cleanBackups()
     {
         Artisan::call('backup:clean');

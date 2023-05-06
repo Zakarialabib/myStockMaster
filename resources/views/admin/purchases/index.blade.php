@@ -47,7 +47,6 @@
 
 <x-app-layout>
     <x-card>
-
         <div>
             <livewire:purchase.index />
         </div>
