@@ -20,10 +20,18 @@ class Index extends Component
     public $backup_status;
     public $backup_schedule;
     public $backup_include;
+    public $clientId;
+    public $clientSecret;
+    public $refreshToken;
+    public $folderId;
 
     protected array $rules = [
         'backup_status'   => 'required',
         'backup_schedule' => 'nullable',
+        'clientId' => 'required',
+        'clientSecret' => 'required',
+        'refreshToken' => 'required',
+        'folderId' => 'required',
     ];
     public $settingsModal = false;
 
@@ -33,22 +41,6 @@ class Index extends Component
         'delete',
     ];
 
-    public function updateGoogleDriveConfig()
-    {
-        $validatedData = $this->validate([
-            'clientId' => 'required',
-            'clientSecret' => 'required',
-            'refreshToken' => 'required',
-            'folderId' => 'required',
-        ]);
-
-        Config::set('filesystems.disks.google.clientId', $validatedData['clientId']);
-        Config::set('filesystems.disks.google.clientSecret', $validatedData['clientSecret']);
-        Config::set('filesystems.disks.google.refreshToken', $validatedData['refreshToken']);
-        Config::set('filesystems.disks.google.folderId', $validatedData['folderId']);
-
-        $this->alert('success', __('Google Drive configuration updated successfully.'));
-    }
     
     public function cleanBackups()
     {
@@ -74,6 +66,11 @@ class Index extends Component
                 'backup_schedule' => $this->backup_schedule,
             ]);
 
+            Config::set('filesystems.disks.google.clientId', $this->clientId);
+            Config::set('filesystems.disks.google.clientSecret', $this->clientSecret);
+            Config::set('filesystems.disks.google.refreshToken', $this->refreshToken);
+            Config::set('filesystems.disks.google.folderId', $this->folderId);
+
             $this->alert('success', __('Settings backuped saved.'));
 
             $this->settingsModal = false;
@@ -91,6 +88,28 @@ class Index extends Component
             $this->alert('success', __('Database backup failed.'));
         }
     }
+
+    public function backupToDrive()
+    {
+        try {
+            // Generate backup file
+            Artisan::call('backup:run --only-db');
+            
+            $drive = Storage::disk('google');
+
+            // Get the path to the latest backup
+            $backupPath = Storage::allFiles(env('APP_NAME'));
+            $latestBackup = end($backupPath);
+        
+            // Upload the backup file to Google Drive
+            $drive->put($latestBackup, Storage::get($latestBackup));
+            
+            $this->alert('success', __('Backup generated and saved to Google Drive.'));
+        } catch (Throwable $th) {
+            $this->alert('danger', __('Backup failed: '.$th->getMessage()));
+        }
+    }
+
 
     public function downloadBackup($file)
     {

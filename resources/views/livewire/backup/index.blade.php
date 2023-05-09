@@ -3,6 +3,8 @@
         <x-button primary type="button" wire:click="generate" class="w-full">
             {{ __('Create Backup') }}
         </x-button>
+        <x-button primary wire:click="backupToDrive">{{ __('Backup to Google Drive') }}</x-button>
+        <a href="https://drive.google.com/drive/folders/{{ env('GOOGLE_DRIVE_FOLDER_ID') }}" target="_blank">{{ __('Open backup folder in Google Drive') }}</a>
         <x-button primary type="button" wire:click="cleanBackups">{{ __('clean Backups') }}</x-button>
         <x-button primary type="button" wire:click="settingsModal" class="w-full">
             {{ __('Settings') }}
@@ -83,7 +85,7 @@
                     <div class="w-1/2 px-2 my-4">
                         <label for="backup_status">{{ __('Backup status') }}</label>
                         <x-input type="text" type="checkbox" wire:model="backup_status" />
-                        {{-- error handle --}}
+                        <x-input-error :messages="$errors->get('backup_status')" for="backup_status" class="mt-2" />
                     </div>
 
                     <div class="w-1/2 px-2 my-4">
@@ -95,8 +97,23 @@
                                 </option>
                             @endforeach
                         </select>
-                        {{-- error handle --}}
+                        <x-input-error :messages="$errors->get('backup_schedule')" for="backup_schedule" class="mt-2" />
                     </div>
+                    <div class="w-1/2 px-2 my-4">
+                        <p>{{ __('Google Drive Configuration') }}</p>
+                        <label for="clientId">{{ __('Client ID') }}</label>
+                        <x-input id="clientId" type="text" wire:model="clientId" />
+                        
+                        <label for="clientSecret">{{ __('Client Secret') }}</label>
+                        <x-input id="clientSecret" type="text" wire:model="clientSecret" />
+                        
+                        <label for="refreshToken">{{ __('Refresh Token') }}</label>
+                        <x-input id="refreshToken" type="text" wire:model="refreshToken" />
+                        
+                        <label for="folderId">{{ __('Folder ID') }}</label>
+                        <x-input id="folderId" type="text" wire:model="folderId" />
+                    </div>
+
                     <div class="w-full justify-center my-4 space-x-2">
                         <x-button primary type="submit">{{ __('Save') }}</x-button>
                     </div>
