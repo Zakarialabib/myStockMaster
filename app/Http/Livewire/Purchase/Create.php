@@ -75,8 +75,11 @@ class Create extends Component
     public $payment_status;
 
     public $date;
+
     public $discount_type;
+
     public $item_discount;
+
     public $listsForFields = [];
 
     public function rules(): array

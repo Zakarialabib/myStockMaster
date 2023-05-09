@@ -75,12 +75,6 @@
                     <x-accordion title="{{ __('Details') }}">
                         <div class="flex flex-wrap mb-3">
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
-                                <x-label for="warehouse" :value="__('Warehouse')" />
-                                <x-select2 :options="$this->warehouses" id="warehouse_create" name="warehouse_create"
-                                    wire:model="product.warehouse_id" />
-                                <x-input-error :messages="$errors->get('warehouse_id')" for="warehouse_id" class="mt-2" />
-                            </div>
-                            <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="brand" :value="__('Brand')" />
                                 <x-select2 :options="$this->brands" id="brand_id" name="brand_id"
                                     wire:model="product.brand_id" />

@@ -75,6 +75,12 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @property int $featured
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereFeatured($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Movement> $movements
+ * @property-read int|null $movements_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PriceHistory> $priceHistory
+ * @property-read int|null $price_history_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ProductWarehouse> $warehouses
+ * @property-read int|null $warehouses_count
  * @mixin \Eloquent
  */
 class Product extends Model
@@ -151,6 +157,17 @@ class Product extends Model
     public function movements(): MorphMany
     {
         return $this->morphMany(Movement::class, 'movable');
+    }
+
+    public function warehouses()
+    {
+        return $this->belongsToMany(Warehouse::class)->using(ProductWarehouse::class)
+            ->withPivot('price', 'qty', 'cost');
+    }
+
+    public function priceHistory()
+    {
+        return $this->hasMany(PriceHistory::class);
     }
 
     /**

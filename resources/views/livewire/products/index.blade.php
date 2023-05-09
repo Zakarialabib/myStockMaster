@@ -63,7 +63,7 @@
                     </x-table.td>
                     <x-table.td>
                         <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
-                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
+                            class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge success>
                                 {{ $product->code }}
@@ -107,25 +107,25 @@
                                         <i class="fas fa-paper-plane"></i>
                                         {{ __('Send to telegram') }}
                                     </x-dropdown-link>
-                                    @endif
-                                    <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-paper-plane"></i>
-                                        {{ __('Send to Whatsapp') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link wire:click="$emit('editModal', {{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                        {{ __('Edit') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('Delete') }}
-                                    </x-dropdown-link>
-                                </x-slot>
-                            </x-dropdown>
-                        </div>
+                                @endif
+                                <x-dropdown-link wire:click="sendWhatsapp({{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-paper-plane"></i>
+                                    {{ __('Send to Whatsapp') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('editModal', {{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                    {{ __('Edit') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                    {{ __('Delete') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+
                     </x-table.td>
                 </x-table.tr>
             @empty

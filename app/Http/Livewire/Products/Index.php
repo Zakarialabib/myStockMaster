@@ -92,6 +92,7 @@ class Index extends Component
                 'category' => fn ($query) => $query->select('id', 'name'),
                 'brand'    => fn ($query) => $query->select('id', 'name'),
                 'movements',
+                'warehouses',
             ])
             ->select('products.*')
             ->advancedFilter([
