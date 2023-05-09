@@ -1,52 +1,34 @@
 <div>
-    {{-- show a table of words --}}
+    <div class="my-2 px-4 flex justify-between items-center">
+        <h2 class="text-left">
+            {{ $language->name }}
+        </h2>
+        <x-button primary type="button" wire:click="updateTranslation">
+            {{__('update translations')}}
+        </x-button>
+    </div>
     <x-table>
         <x-slot name="thead">
-            <x-table.th>#</x-table.th>
-            <x-table.th>key</x-table.th>
-            <x-table.th>value</x-table.th>
+            <x-table.th>{{__('System')}}</x-table.th>
+            <x-table.th>{{__('Translation')}}</x-table.th>
+            <x-table.th>{{__('Action')}}</x-table.th>
         </x-slot>
         <x-table.tbody>
-            @foreach ($json as $key => $value)
-                <x-table.td>
-                    <x-button type="button" wire:click="editWord('{{ $key }}')">
-                        {{ __('edit') }}
-                    </x-button>
+            @foreach($translations as $key => $translation)
+            <x-table.tr>
+                <x-table.td class="max-w-xs h-auto overflow-hidden">
+                    <p class="truncate">{{ $key }}</p>
                 </x-table.td>
                 <x-table.td>
-                    {{ $key }}
+                    <x-input type="text"  wire:model.lazy="translations.{{ $key }}.value" />
                 </x-table.td>
                 <x-table.td>
-                    {{ $value }}
+                    {{-- <x-button type="button" danger
+                        wire:click="deleteTranslation({{ $key }})">
+                        {{ __('Delete') }}</x-button> --}}
                 </x-table.td>
+            </x-table.tr>
             @endforeach
-            </x-table-tbody>
+        </x-table.tbody>
     </x-table>
-
-    {{--  edit translation --}}
-    <x-modal wire:model="editWord">
-        <x-slot name="title">
-            {{ 'Edit translation' }}
-        </x-slot>
-        <x-slot name="content">
-            <form wire:submit.prevent="updateTranslation">
-                <div class="form-group">
-                    <label for="key">{{ __('Key') }}</label>
-                    <input type="text" class="form-control" wire:model="key" id="key" placeholder="Enter key">
-                    @error('key')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="value">{{ __('Value') }}</label>
-                    <input type="text" class="form-control" wire:model="value" id="value"
-                        placeholder="Enter value">
-                    @error('value')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
-            </form>
-        </x-slot>
-    </x-modal>
 </div>
