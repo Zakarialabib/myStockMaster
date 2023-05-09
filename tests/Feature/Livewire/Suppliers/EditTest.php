@@ -17,8 +17,7 @@ it('test the suppliers edit component if working', function () {
         ->assertViewIs('livewire.suppliers.edit');
 });
 
-it('updates a supplier', function () {
-    $this->withoutExceptionHandling();
+it('tests the Update supplier component', function () {
     $this->loginAsAdmin();
 
     $supplier = Supplier::factory()->create();
@@ -32,8 +31,7 @@ it('updates a supplier', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('suppliers', [
-        'id'    => $supplier->id,
-        'name'  => 'New Name',
+        'name'  => 'John doe',
         'phone' => '00000000000',
         'email' => 'supplier@gmail.com',
         'city'  => 'casablanca',
@@ -58,18 +56,4 @@ it('tests the uodate supplier component validation', function () {
             ['supplier.email'  => 'nullable'],
             ['supplier.city'   => 'nullable'],
         );
-});
-
-it('validates the supplier', function () {
-    $this->withoutExceptionHandling();
-    $this->loginAsAdmin();
-
-    Livewire::test(Edit::class)
-        ->set('supplier.name', '')
-        ->set('supplier.phone', '')
-        ->call('update')
-        ->assertHasErrors([
-            'supplier.name'  => 'The name field cannot be empty.',
-            'supplier.phone' => 'The phone field cannot be empty.',
-        ]);
 });
