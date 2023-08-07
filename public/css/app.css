@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.toggle-checkbox:checked {
+    @apply right-0 border-green-400;
+}
+.toggle-checkbox:checked + .toggle-label {
+    @apply bg-green-400;
+}
+
+html.dragging {
+    background-color: #f5f5f5;
+  }
