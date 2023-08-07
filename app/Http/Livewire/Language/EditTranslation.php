@@ -4,69 +4,67 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Language;
 
-use App;
+use App\Models\Language;
+use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\File;
 
 class EditTranslation extends Component
 {
-    public $key;
-    public $value;
-    public $lang;
-    public $language;
-    public $langList;
+    use LivewireAlert;
 
-    public $rules = [
-        'translations.*.value' => 'required',
-    ];
+    public $selectedLanguage;
+    public $allLanguages;
+    public $translations = [];
+    public $newKey = '';
+    public $newValue = '';
 
     protected $rules = [
-        'key'   => 'required',
-        'value' => 'required',
+        'translations.*.value' => 'required',
     ];
 
     public function mount($id)
     {
-        $this->language = Language::find($id);
-
-        $this->langList = Language::all();
-        $this->key = $this->la->key;
-        $this->value = $this->la->value;
-
-        if (empty($json)) {
-            $this->editWord = false;
-        }
-
-        $json = json_decode($json);
-
-        $this->editWord = false;
-
-        return compact('json', 'list_lang', 'la', 'json');
+        $this->selectedLanguage = Language::find($id);
+        $this->allLanguages = Language::all();
+        $this->translations = $this->getTranslations();
     }
 
-    private function getTranslations()
+    private function getTranslations(): array
     {
-        $path = base_path("lang/{$this->language->code}.json");
-        $content = file_get_contents($path);
+        $content = File::get($this->languageFilePath());
         return json_decode($content, true);
+    }
+
+    private function languageFilePath(): string
+    {
+        return base_path("lang/{$this->selectedLanguage->code}.json");
     }
 
     public function updateTranslation()
     {
         $this->validate();
 
-        $path = base_path("lang/{$this->language->code}.json");
-
-        $data = file_get_contents($path);
-        $translations = json_decode($data, true);
-    
+        $translations = $this->getTranslations();
         foreach ($this->translations as $key => $translation) {
             $translations[$translation['key']] = $translation['value'];
         }
-    
-        file_put_contents($path, json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        File::put($this->languageFilePath(), json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        $this->alert('success', __('Data updated successfully!'));
+    }
 
-        $this->alert('success', __('Data created successfully!'));
+    public function deleteTranslation($key)
+    {
+        unset($this->translations[$key]);
+        $this->updateTranslation();
+    }
 
+    public function addTranslation()
+    {
+        $this->translations[$this->newKey] = ['key' => $this->newKey, 'value' => $this->newValue];
+        $this->newKey = '';
+        $this->newValue = '';
+        $this->updateTranslation();
     }
 
     public function render()
