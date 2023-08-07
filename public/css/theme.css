@@ -1,0 +1,65 @@
+/* Primary Color */
+:root {
+  --primary-color: {{ Helpers::settings('primary_color') }};
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.border-primary {
+  border-color: var(--primary-color);
+}
+
+/* Secondary Color */
+:root {
+  --secondary-color: {{ Helpers::settings('secondary_color') }}; /* Fetch the secondary color value from the database */
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.border-secondary {
+  border-color: var(--secondary-color);
+}
+
+.flatpickr input[type=text].form-control {
+@apply border-0 px-3 py-3 pl-10 placeholder-gray-300 text-gray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring;
+}
+
+.flatpickr input[type=text].form-control:required {
+@apply border-0 px-3 py-3 placeholder-gray-300 text-gray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring;
+}
+
+h1 { 
+@apply text-4xl font-bold text-center text-gray-800;
+}
+
+h2 {
+@apply text-2xl font-bold text-center text-gray-800;
+}
+
+h3 {
+@apply text-xl font-bold text-center text-gray-800;
+}
+
+h4 {
+@apply text-lg font-bold text-left text-gray-800;
+}
+
+h5 {
+@apply text-base font-bold text-left text-gray-800;
+}
+
+h6 {
+@apply text-sm font-bold text-left text-gray-800;
+}
