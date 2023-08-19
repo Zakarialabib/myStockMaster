@@ -100,25 +100,22 @@
                                     <x-table.td>{{ $sale_return->reference }}</x-table.td>
                                     <x-table.td>{{ $sale_return->customer->name }}</x-table.td>
                                     <x-table.td>
-                                        @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
-                                            <x-badge warning>{{ __('Pending') }}</x-badge>
-                                        @elseif ($sale_return->status == \App\Enums\SaleReturnStatus::ORDERED)
-                                            <x-badge info>{{ __('Ordered') }}</x-badge>
-                                        @elseif($sale_return->status == \App\Enums\SaleReturnStatus::COMPLETED)
-                                            <x-badge success>{{ __('Completed') }}</x-badge>
-                                        @endif
+                                        @php
+                                            $badgeType = $salereturn?->status->getBadgeType();
+                                        @endphp
+                                        <x-badge :type="$badgeType">{{ $salereturn?->status->getName() }}</x-badge>
+
                                     </x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->total_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->paid_amount) }}</x-table.td>
                                     <x-table.td>{{ format_currency($sale_return->due_amount) }}</x-table.td>
                                     <x-table.td>
-                                        @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
-                                            <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
-                                            <x-badge danger>{{ __('Due') }}</x-badge>
-                                        @endif
+                                        @php
+                                            $type = $sale_return->payment_status->getBadgeType();
+                                        @endphp
+                                        <x-badge
+                                            :type="$type">{{ $sale_return->payment_status->getName() }}</x-badge>
+
                                     </x-table.td>
                                 </x-table.tr>
                             @empty

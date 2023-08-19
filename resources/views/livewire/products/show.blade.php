@@ -122,11 +122,11 @@
                                         <li>
                                             {{ __('Type') }} :
                                             @if ($movement->type == \App\Enums\MovementType::SALE)
-                                                <x-badge warning class="text-xs">
+                                                <x-badge type="warning" class="text-xs">
                                                     {{ __('Sale') }}
                                                 </x-badge>
                                             @elseif ($movement->type == \App\Enums\MovementType::PURCHASE)
-                                                <x-badge success class="text-xs">
+                                                <x-badge type="success" class="text-xs">
                                                     {{ __('Purchase') }}
                                                 </x-badge>
                                             @endif

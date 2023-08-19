@@ -34,23 +34,18 @@
                             {{ format_date($sale?->date) }}</div>
                         <div>
                             {{ __('Status') }} :
-                            @if ($sale?->status == \App\Enums\SaleStatus::PENDING)
-                                <span style="color: orange; font-weight: bold;">{{ __('Pending') }}</span>
-                            @elseif ($sale?->status == \App\Enums\SaleStatus::ORDERED)
-                                <span style="color: #2e55f1; font-weight: bold;">{{ __('Ordered') }}</span>
-                            @elseif($sale?->status == \App\Enums\SaleStatus::COMPLETED)
-                                <span style="color: green; font-weight: bold;">{{ __('Completed') }}</span>
-                            @endif
+                            @php
+                                $badgeType = $sale?->status->getBadgeType();
+                            @endphp
+
+                            <x-badge :type="$badgeType">{{ $sale?->status->getName() }}</x-badge>
                         </div>
                         <div>
                             {{ __('Payment Status') }} :
-                            @if ($sale?->payment_status == \App\Enums\PaymentStatus::PAID)
-                                <span style="color: green; font-weight: bold;">{{ __('Paid') }}</span>
-                            @elseif ($sale?->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                <span style="color: orange; font-weight: bold;">{{ __('Partially Paid') }}</span>
-                            @elseif($sale?->payment_status == \App\Enums\PaymentStatus::DUE)
-                                <span style="color: red; font-weight: bold;">{{ __('Due') }}</span>
-                            @endif
+                            @php
+                                $type = $sale?->payment_status->getBadgeType();
+                            @endphp
+                            <x-badge :type="$type">{{ $sale?->payment_status->getName() }}</x-badge>
                         </div>
                     </div>
 

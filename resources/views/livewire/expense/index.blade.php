@@ -53,7 +53,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="w-full md:w-1/3 space-x-2 flex my-auto mx-0 my-auto px-2 mb-2">
+            <div class="w-full md:w-1/3 space-x-2 flex my-auto mx-0 px-2 mb-2">
                 <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
                 <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
                 <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
@@ -95,7 +95,7 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-badge info>
+                        <x-badge type="info">
                             <small>{{ $expense->category->name ?? '' }}</small>
                         </x-badge>
                     </x-table.td>

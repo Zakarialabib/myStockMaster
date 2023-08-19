@@ -88,13 +88,10 @@
                             <td>{{ $purchase->paid_amount }} </td>
                             <td>{{ $purchase->due_amount }} </td>
                             <td>
-                                @if ($purchase_return->payment_status == \App\Enums\PaymentStatus::PAID)
-                                    <x-badge success>{{ __('Paid') }}</x-badge>
-                                @elseif ($purchase_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                    <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                @elseif($purchase_return->payment_status == \App\Enums\PaymentStatus::DUE)
-                                    <x-badge danger>{{ __('Due') }}</x-badge>
-                                @endif
+                                @php
+                                    $type = $purchase_return->payment_status->getBadgeType();
+                                @endphp
+                                <x-badge :type="$type">{{ $purchase_return->payment_status->getName() }}</x-badge>
                             </td>
                         </tr>
                     @endforeach

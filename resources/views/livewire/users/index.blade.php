@@ -85,7 +85,9 @@
                     </x-table.td>
                     <x-table.td>
                         @foreach ($user->roles as $role)
-                            <x-badge primary>{{ $role->name }}</x-badge>
+                            <x-badge type="primary">
+                                {{ $role->name }}
+                            </x-badge>
                         @endforeach
                     </x-table.td>
                     <x-table.td>

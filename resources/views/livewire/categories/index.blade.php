@@ -56,7 +56,7 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-badge info>
+                        <x-badge type="info">
                             {{ $category->products->count() }}
                         </x-badge>
                     </x-table.td>
