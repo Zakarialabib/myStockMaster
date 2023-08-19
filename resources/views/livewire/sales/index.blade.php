@@ -101,13 +101,10 @@
                         </a>
                     </x-table.td>
                     <x-table.td>
-                        @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
-                            <x-badge success>{{ __('Paid') }}</x-badge>
-                        @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                        @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
-                            <x-badge danger>{{ __('Due') }}</x-badge>
-                        @endif
+                        @php
+                            $type = $sale->payment_status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($sale->due_amount) }}
@@ -118,13 +115,11 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @if ($sale->status == \App\Enums\SaleStatus::PENDING)
-                            <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($sale->status == \App\Enums\SaleStatus::ORDERED)
-                            <x-badge info>{{ __('Ordered') }}</x-badge>
-                        @elseif($sale->status == \App\Enums\SaleStatus::COMPLETED)
-                            <x-badge success>{{ __('Completed') }}</x-badge>
-                        @endif
+                        @php
+                            $badgeType = $sale->status->getBadgeType();
+                        @endphp
+
+                        <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -326,7 +321,9 @@
 
 </div>
 @pushOnce('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 @endPushOnce
 @push('scripts')
     <script>
@@ -353,7 +350,8 @@
         function printContent() {
             const content = document.getElementById("printable-content");
             html2canvas(content).then(canvas => {
-                const printWindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+                const printWindow = window.open('', '',
+                    'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
                 const printDocument = printWindow.document;
                 printDocument.body.appendChild(canvas);
                 canvas.onload = function() {
@@ -363,5 +361,4 @@
             });
         }
     </script>
-    
 @endpush

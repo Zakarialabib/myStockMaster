@@ -74,45 +74,34 @@
                     {{ __('Reference') }}: {{ $sale->reference }}<br>
                     {{ __('Date') }}: {{ format_date($sale->date) }}<br>
                     {{ __('Status') }}:
-                    @if ($sale->status == \App\Enums\SaleStatus::PENDING)
-                        <span class="badge badge-warning">{{ __('Pending') }}</span>
-                    @elseif ($sale->status == \App\Enums\SaleStatus::ORDERED)
-                        <span class="badge badge-info">{{ __('Ordered') }}</span>
-                    @elseif($sale->status == \App\Enums\SaleStatus::COMPLETED)
-                        <span class="badge badge-success">{{ __('Completed') }}</span>
-                    @endif
+                    @php
+                        $badgeType = $sale->status->getBadgeType();
+                    @endphp
+
+                    <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge>
                     <br>
                     {{ __('Payment Status') }}:
-                    @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
-                        <span class="badge badge-success">{{ __('Paid') }}</span>
-                    @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                        <span class="badge badge-warning">{{ __('Partially Paid') }}</span>
-                    @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
-                        <span class="badge badge-danger">{{ __('Due') }}</span>
-                    @endif
+                    @php
+                        $type = $sale->payment_status->getBadgeType();
+                    @endphp
+                    <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
                 </td>
             @elseif(isset($purchase))
                 <td style="padding:8px; border:1px solid #ddd; width:50%">
                     {{ __('Reference') }}: {{ $purchase->reference }}<br>
                     {{ __('Date') }}:{{ format_date($purchase->date) }}<br>
                     <strong>{{ __('Status') }}:</strong>
-                    @if ($purchase->status == \App\Enums\PurchaseStatus::PENDING)
-                        <span clacc="badge badge-warning">{{ __('Pending') }}</span>
-                    @elseif ($purchase->status == \App\Enums\PurchaseStatus::ORDERED)
-                        <span clacc="badge badge-info">{{ __('Ordered') }}</span>
-                    @elseif($purchase->status == \App\Enums\PurchaseStatus::COMPLETED)
-                        <span clacc="badge badge-success">{{ __('Completed') }}</span>
-                    @elseif($purchase->status == \App\Enums\PurchaseStatus::RETURNED)
-                        <span clacc="badge badge-success">{{ __('Returned') }}</span>
-                    @endif
+                    @php
+                        $badgeType = $purchase->status->getBadgeType();
+                    @endphp
+
+                    <x-badge :type="$badgeType">{{ $purchase->status->getName() }}</x-badge>
+                    <br>
                     <strong>{{ __('Payment Status') }}:</strong><br>
-                    @if ($purchase->payment_status == \App\Enums\PaymentStatus::PAID)
-                        <span clacc="badge badge-success">{{ __('Paid') }}</span>
-                    @elseif ($purchase->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                        <span clacc="badge badge-warning">{{ __('Partially Paid') }}</span>
-                    @elseif($purchase->payment_status == \App\Enums\PaymentStatus::DUE)
-                        <span clacc="badge badge-danger">{{ __('Due') }}</span>
-                    @endif
+                    @php
+                        $type = $purchase->payment_status->getBadgeType();
+                    @endphp
+                    <x-badge :type="$type">{{ $purchase->payment_status->getName() }}</x-badge>
                 </td>
             @endif
         </tr>

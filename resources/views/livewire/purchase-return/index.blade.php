@@ -55,13 +55,10 @@
                         {{ $purchasereturn->supplier->name }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::PENDING)
-                            <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($purchasereturn->status == \App\Enums\PurchaseReturnStatus::RETURNED)
-                            <x-badge info>{{ __('Returned') }}</x-badge>
-                        @elseif($purchasereturn->status == \App\Enums\PurchaseReturnStatus::COMPLETED)
-                            <x-badge success>{{ __('Completed') }}</x-badge>
-                        @endif
+                        @php
+                            $type = $purchase_return->status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$type">{{ $purchase_return->status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($salereturn->total_amount) }}

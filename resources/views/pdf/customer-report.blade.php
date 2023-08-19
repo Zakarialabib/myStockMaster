@@ -93,13 +93,10 @@
                             <td>{{ $sale->reference }}</td>
                             <td>{{ format_currency($sale->paid_amount) }} </td>
                             <td>
-                                @if ($sale->payment_status == \App\Enums\PaymentStatus::PAID)
-                                    {{ __('Paid') }}
-                                @elseif ($sale->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                    {{ __('Partially Paid') }}
-                                @elseif($sale->payment_status == \App\Enums\PaymentStatus::DUE)
-                                    {{ __('Due') }}
-                                @endif
+                                @php
+                                    $type = $sale->payment_status->getBadgeType();
+                                @endphp
+                                <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
                             </td>
                         </tr>
                     @endforeach

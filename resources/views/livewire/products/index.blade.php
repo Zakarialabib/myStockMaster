@@ -65,7 +65,7 @@
                         <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
-                            <x-badge success>
+                            <x-badge type="success">
                                 {{ $product->code }}
                             </x-badge>
                         </button>
@@ -74,14 +74,14 @@
                     <x-table.td>{{ format_currency($product->average_price) }}</x-table.td>
                     <x-table.td>{{ format_currency($product->average_cost) }}</x-table.td>
                     <x-table.td>
-                        <x-badge warning>
+                        <x-badge type="warning">
                             <small>{{ $product->category->name }}</small>
                         </x-badge>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex flex-wrap">
                             @forelse ($product->warehouses as $warehouse)
-                                <x-badge info><small>{{ $warehouse->name }}</small></x-badge>
+                                <x-badge type="info"><small>{{ $warehouse->name }}</small></x-badge>
                             @empty
                                 {{ __('No warehouse assigned') }}
                             @endforelse

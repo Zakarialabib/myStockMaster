@@ -9,7 +9,7 @@
         <x-slot name="title">
             <div class="text-center text-xl">
                 {{ $cart_item->name }}
-                <x-badge success>
+                <x-badge type="success">
                     {{ $cart_item->options->code }}
                 </x-badge>
             </div>

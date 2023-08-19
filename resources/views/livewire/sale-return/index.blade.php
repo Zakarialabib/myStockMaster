@@ -61,13 +61,10 @@
                         {{ $salereturn->customer->name }}
                     </x-table.td>
                     <x-table.td>
-                        @if ($salereturn->payment_status == \App\Enums\PaymentStatus::PAID)
-                            <x-badge success>{{ __('Paid') }}</x-badge>
-                        @elseif ($salereturn->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                        @elseif($salereturn->payment_status == \App\Enums\PaymentStatus::DUE)
-                            <x-badge danger>{{ __('Due') }}</x-badge>
-                        @endif
+                        @php
+                            $badgeType = $salereturn->payment_status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$badgeType">{{ $salereturn->payment_status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($salereturn->due_amount) }}
@@ -78,15 +75,11 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @if ($salereturn->status == \App\Enums\SaleReturnStatus::PENDING)
-                            <x-badge warning>{{ __('Pending') }}</x-badge>
-                        @elseif ($salereturn->status == \App\Enums\SaleReturnStatus::COMPLETED)
-                            <x-badge success>{{ __('Completed') }}</x-badge>
-                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::SHIPPED)
-                            <x-badge danger>{{ __('Shipped') }}</x-badge>
-                        @elseif($salereturn->status == \App\Enums\SaleReturnStatus::RETURNED)
-                            <x-badge danger>{{ __('Returned') }}</x-badge>
-                        @endif
+                        @php
+                            $type = $salereturn->status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$type">{{ $salereturn->status->getName() }}</x-badge>
+
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -215,15 +208,11 @@
                                         </div>
                                         <div>
                                             {{ __('Status') }}: <strong>
-                                                @if ($salereturn?->status == \App\Enums\SaleReturnStatus::PENDING)
-                                                    <x-badge warning>{{ __('Pending') }}</x-badge>
-                                                @elseif ($salereturn?->status == \App\Enums\SaleReturnStatus::COMPLETED)
-                                                    <x-badge success>{{ __('Completed') }}</x-badge>
-                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::SHIPPED)
-                                                    <x-badge danger>{{ __('Shipped') }}</x-badge>
-                                                @elseif($salereturn?->status == \App\Enums\SaleReturnStatus::RETURNED)
-                                                    <x-badge danger>{{ __('Returned') }}</x-badge>
-                                                @endif
+                                                @php
+                                                    $badgeType = $salereturn?->status->getBadgeType();
+                                                @endphp
+                                                <x-badge :type="$badgeType">{{ $salereturn?->status->getName() }}</x-badge>
+
                                             </strong>
                                         </div>
                                         <div>

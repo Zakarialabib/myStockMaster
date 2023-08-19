@@ -14,18 +14,18 @@
                     <x-table.td>{{ $language['name'] }}</x-table.td>
                     <x-table.td>
                         @if ($language['status'] == true)
-                            <x-badge primary>
+                            <x-badge type="primary">
                                 {{ __('Active') }}
                             </x-badge>
                         @elseif($language['status'] == false)
-                            <x-badge secondary>
+                            <x-badge type="secondary">
                                 {{ __('Inactive') }}
                             </x-badge>
                         @endif
                     </x-table.td>
                     <x-table.td>
                         @if ($language['is_default'] == true)
-                            <x-badge primary>
+                            <x-badge type="primary">
                                 {{ __('Yes') }}
                             </x-badge>
                         @endif

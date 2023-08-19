@@ -19,10 +19,7 @@ enum SaleReturnStatus: int
 
     case CANCELED = 5;
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'name', 'value');
-    }
+ 
 
     public function getName(): string
     {
@@ -43,5 +40,25 @@ enum SaleReturnStatus: int
         }
 
         return null;
+    }
+
+    public static function getBadgeType($value): string
+    {
+        switch ($value) {
+            case self::PENDING:
+                return 'warning';
+            case self::ORDERED:
+                return 'info';
+            case self::COMPLETED:
+                return 'success';
+            case self::SHIPPED:
+                return 'primary';
+            case self::RETURNED:
+                return 'alert';
+            case self::CANCELED:
+                return 'danger';
+            default:
+                return 'secondary';
+        }
     }
 }

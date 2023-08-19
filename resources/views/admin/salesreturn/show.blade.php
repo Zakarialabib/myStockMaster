@@ -51,23 +51,17 @@
                                     {{ format_date($sale_return->date) }}</div>
                                 <div>
                                     {{ __('Status') }}:
-                                    @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
-                                        <x-badge warning>{{ __('Pending') }}</x-badge>
-                                    @elseif ($sale_return->status == \App\Enums\SaleReturnStatus::ORDERED)
-                                        <x-badge info>{{ __('Ordered') }}</x-badge>
-                                    @elseif($sale_return->status == \App\Enums\SaleReturnStatus::COMPLETED)
-                                        <x-badge success>{{ __('Completed') }}</x-badge>
-                                    @endif
+                                    @php
+                                        $badgeType = $sale_return->status->getBadgeType();
+                                    @endphp
+                                    <x-badge :type="$badgeType">{{ $sale_return->status->getName() }}</x-badge>
                                 </div>
                                 <div>
                                     {{ __('Payment Status') }}:
-                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
-                                        <x-badge success>{{ __('Paid') }}</x-badge>
-                                    @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                        <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                    @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
-                                        <x-badge danger>{{ __('Due') }}</x-badge>
-                                    @endif
+                                    @php
+                                        $type = $sale_return->payment_status->getBadgeType();
+                                    @endphp
+                                    <x-badge :type="$type">{{ $sale_return->payment_status->getName() }}</x-badge>
                                 </div>
                             </div>
 

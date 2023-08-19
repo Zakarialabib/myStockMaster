@@ -15,11 +15,6 @@ enum PaymentStatus: int
 
     case DUE = 3;
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'name', 'value');
-    }
-
     public function getName(): string
     {
         return __(Str::studly($this->name));
@@ -39,5 +34,19 @@ enum PaymentStatus: int
         }
 
         return null;
+    }
+
+    public static function getBadgeType($value): string
+    {
+        switch ($value) {
+            case self::PENDING:
+                return 'warning';
+            case self::PARTIAL:
+                return 'info';
+            case self::PAID:
+                return 'success';
+            default:
+                return 'secondary';
+        }
     }
 }

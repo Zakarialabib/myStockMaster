@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use Illuminate\Support\Str;
+
 enum PurchaseReturnStatus: int
 {
     case PENDING = 0;
@@ -14,10 +16,7 @@ enum PurchaseReturnStatus: int
 
     case RETURNED = 3;
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'name', 'value');
-    }
+ 
 
     public function getName(): string
     {
@@ -39,5 +38,18 @@ enum PurchaseReturnStatus: int
 
         return null;
     }
-}
 
+    public static function getBadgeType($value): string
+    {
+        switch ($value) {
+            case self::PENDING:
+                return 'warning';
+            case self::RETURNED:
+                return 'info';
+            case self::COMPLETED:
+                return 'success';
+            default:
+                return 'secondary';
+        }
+    }
+}

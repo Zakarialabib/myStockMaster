@@ -6,7 +6,7 @@
     <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sale Return Details</title>
+    <title>{{ __('Sale Return Details') }}</title>
     <link rel="stylesheet" href="{{ public_path('print/bootstrap.min.css') }}">
 </head>
 
@@ -54,23 +54,18 @@
                                 <div>{{ __('Date') }}:
                                     {{ format_date($sale_return->date) }}</div>
                                 <div>
-                                    {{ __('Status') }}: @if ($sale_return->status == \App\Enums\SaleReturnStatus::PENDING)
-                                        <x-badge warning>{{ __('Pending') }}</x-badge>
-                                    @elseif ($sale_return->status == \App\Enums\SaleReturnStatus::ORDERED)
-                                        <x-badge info>{{ __('Ordered') }}</x-badge>
-                                    @elseif($sale_return->status == \App\Enums\SaleReturnStatus::COMPLETED)
-                                        <x-badge success>{{ __('Completed') }}</x-badge>
-                                    @endif
+                                    {{ __('Status') }}:
+                                    @php
+                                        $badgeType = $sale_return->status->getBadgeType();
+                                    @endphp
+                                    <x-badge :type="$badgeType">{{ $sale_return->status->getName() }}</x-badge>
                                 </div>
                                 <div>
-                                    {{ __('Payment Status') }}: 
-                                    @if ($sale_return->payment_status == \App\Enums\PaymentStatus::PAID)
-                                            <x-badge success>{{ __('Paid') }}</x-badge>
-                                        @elseif ($sale_return->payment_status == \App\Enums\PaymentStatus::PARTIAL)
-                                            <x-badge warning>{{ __('Partially Paid') }}</x-badge>
-                                        @elseif($sale_return->payment_status == \App\Enums\PaymentStatus::DUE)
-                                            <x-badge danger>{{ __('Due') }}</x-badge>
-                                        @endif
+                                    {{ __('Payment Status') }}:
+                                    @php
+                                        $type = $sale_return->payment_status->getBadgeType();
+                                    @endphp
+                                    <x-badge :type="$type">{{ $sale_return->payment_status->getName() }}</x-badge>
                                 </div>
                             </div>
 
@@ -149,7 +144,8 @@
                                         <tr>
                                             <td class="left"><strong>{{ __('Grand Total') }}</strong></td>
                                             <td class="right">
-                                                <strong>{{ format_currency($sale_return->total_amount) }}</strong></td>
+                                                <strong>{{ format_currency($sale_return->total_amount) }}</strong>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
