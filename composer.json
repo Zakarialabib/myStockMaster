@@ -19,7 +19,7 @@
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1",
         "masbug/flysystem-google-drive-ext": "^2.2",
-        "milon/barcode": "^9.0",
+        "milon/barcode": "^10.0",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^2.0",
         "sentry/sentry-laravel": "^3.2",
