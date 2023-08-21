@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b2f6d511080a5535981b6a679bb8f88",
+    "content-hash": "4c9f39128a24af61694dad21cbd8b68f",
     "packages": [
         {
             "name": "automattic/woocommerce",
@@ -6002,29 +6002,36 @@
         },
         {
             "name": "shopify/shopify-api",
-            "version": "v4.3.0",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Shopify/shopify-api-php.git",
-                "reference": "80cde593a69acb9b9095235fa8f7748e9389294c"
+                "reference": "d368eef93ebbe639b8ef0c7d0249a79c417fe910"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Shopify/shopify-api-php/zipball/80cde593a69acb9b9095235fa8f7748e9389294c",
-                "reference": "80cde593a69acb9b9095235fa8f7748e9389294c",
+                "url": "https://api.github.com/repos/Shopify/shopify-api-php/zipball/d368eef93ebbe639b8ef0c7d0249a79c417fe910",
+                "reference": "d368eef93ebbe639b8ef0c7d0249a79c417fe910",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "^2.0",
+                "ext-ctype": "*",
+                "ext-hash": "*",
                 "ext-json": "*",
+                "ext-mbstring": "*",
                 "firebase/php-jwt": "^5.2 || ^6.2",
                 "guzzlehttp/guzzle": "^7.0",
-                "php": "^7.4 || ^8.0 || ^8.1",
+                "guzzlehttp/psr7": "^2.0",
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
                 "psr/http-client": "^1.0",
+                "psr/http-message": "^1.0",
                 "psr/log": "^1.1 || ^2.0 || ^3.0",
                 "ramsey/uuid": "^4.1"
             },
             "require-dev": {
+                "ergebnis/composer-normalize": "^2.30",
+                "maglnet/composer-require-checker": "^3.0 || ^4.0",
                 "mikey179/vfsstream": "^1.6",
                 "phpunit/phpunit": "^9",
                 "squizlabs/php_codesniffer": "^3.6"
@@ -6059,9 +6066,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Shopify/shopify-api-php/issues",
-                "source": "https://github.com/Shopify/shopify-api-php/tree/v4.3.0"
+                "source": "https://github.com/Shopify/shopify-api-php/tree/v5.1.0"
             },
-            "time": "2023-04-12T15:42:26+00:00"
+            "time": "2023-07-11T18:03:11+00:00"
         },
         {
             "name": "spatie/db-dumper",
