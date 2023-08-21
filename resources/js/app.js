@@ -11,6 +11,8 @@ import swal from 'sweetalert2';
 
 window.Swal = swal;
 
+import "@fortawesome/fontawesome-free/css/all.css";
+
 import Alpine from 'alpinejs'
 import collapse from '@alpinejs/collapse'
 import focus from "@alpinejs/focus";
