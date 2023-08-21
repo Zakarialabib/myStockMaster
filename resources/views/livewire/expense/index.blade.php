@@ -31,29 +31,27 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
-        <div class="w-full mb-2 flex flex-wrap justify-center">
-            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                <div class="mb-4">
+        <div class="grid gap-4 grid-cols-2 justify-center mb-2">
+            <div class="w-full flex flex-wrap">
+                <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model="startDate" type="date" name="startDate" />
+                    <x-input wire:model="startDate" type="date" name="startDate" value="$startDate" />
                     @error('startDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                <div class="mb-4">
+                <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model="endDate" type="date" name="endDate" />
+                    <x-input wire:model="endDate" type="date" name="endDate" value="$endDate" />
                     @error('endDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-            <div class="w-full md:w-1/3 space-x-2 flex my-auto mx-0 px-2 mb-2">
+            <div class="gap-2 inline-flex items-center mx-0 px-2">
                 <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
                 <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
                 <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
@@ -111,7 +109,7 @@
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $expense->id }})" type="button"
+                            <x-button primary wire:click="$emit('editModal', {{ $expense->id }})" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
@@ -145,74 +143,14 @@
 
     <div class="p-4">
         <div class="pt-3">
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-            @endif
             {{ $expenses->links() }}
         </div>
     </div>
 
     <livewire:expense.create />
 
+    <livewire:expense.edit expense="{{ $expense }}" />
 
-    <x-modal wire:model="editModal">
-        <x-slot name="title">
-            {{ __('Edit Expense') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <form wire:submit.prevent="update">
-                <div class="flex flex-wrap -mx-2 mb-3">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-label for="expense.reference" :value="__('Reference')" />
-                        <x-input wire:model.lazy="expense.reference" id="expense.reference" type="text" required />
-                        <x-input-error :messages="$errors->get('expense.reference')" class="mt-2" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-label for="expense.date" :value="__('Date')" />
-                        <x-input-date wire:model.lazy="expense.date" id="expense.date" name="expense.date"
-                            required />
-                        <x-input-error :messages="$errors->get('expense.date')" class="mt-2" />
-                    </div>
-
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-label for="expense.category_id" :value="__('Expense Category')" />
-                        <x-select2 id="category_id" name="category_id" wire:model.lazy="expense.category_id"
-                            :options="$this->listsForFields['expensecategories']" required :placeholder="__('Select Expense Category')" />
-                        <x-input-error :messages="$errors->get('expense.category_id')" class="mt-2" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-label for="expense.warehouse_id" :value="__('Expense Category')" />
-                        <x-select2 id="warehouse_id" name="warehouse_id" wire:model.lazy="expense.warehouse_id"
-                            :options="$this->listsForFields['warehouses']" :placeholder="__('Select Warehouse')" />
-                        <x-input-error :messages="$errors->get('expense.warehouse_id')" class="mt-2" />
-                    </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-label for="expense.amount" :value="__('Amount')" required />
-                        <x-input wire:model.lazy="expense.amount" id="expense.amount" type="text" required />
-                        <x-input-error :messages="$errors->get('expense.amount')" class="mt-2" />
-                    </div>
-                    <div class="w-full px-4 mb-4">
-                        <x-label for="expense.details" :value="__('Description')" />
-                        <textarea
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            rows="6" wire:model.lazy="expense.details" id="expense.details"></textarea>
-                        <x-input-error :messages="$errors->get('expense.details')" class="mt-2" />
-                    </div>
-                </div>
-                <div class="w-full px-3">
-                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                        {{ __('Update') }}
-                    </x-button>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
 
     <x-modal wire:model="showModal">
         <x-slot name="title">
@@ -251,27 +189,26 @@
         </x-slot>
     </x-modal>
 
-
-</div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', expenseId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', expenseId)
-                    }
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', expenseId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', expenseId)
+                        }
+                    })
                 })
             })
-        })
-    </script>
-@endpush
+        </script>
+    @endpush
+
+</div>

@@ -86,7 +86,7 @@
                     </div>
                     <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                         <div class="my-2">
-                            <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
+                            <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
                         </div>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                                 </x-table.tr>
                             @empty
                                 <x-table.tr>
-                                    <x-table.td>
+                                    <x-table.td colspan="7">
                                         <div class="flex justify-center items-center">
                                             <span
                                                 class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>

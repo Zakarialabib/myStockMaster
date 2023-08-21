@@ -1,4 +1,3 @@
-
 <div>
     <x-modal wire:model="showPayments">
         <x-slot name="title">
@@ -6,10 +5,10 @@
                 {{ __('Purchase Payment') }}
             </h2>
             <div class="flex justify-end">
-                @if($purchase)
-                <x-button wire:click="$emit('paymentModal', {{ $purchase->id}})" primary type="button">
-                    {{ __('Add Payment') }}
-                </x-button>
+                @if ($purchase)
+                    <x-button wire:click="$emit('paymentModal', {{ $purchase->id }})" primary type="button">
+                        {{ __('Add Payment') }}
+                    </x-button>
                 @endif
             </div>
         </x-slot>
@@ -36,10 +35,10 @@
                             <x-table.td>{{ $purchasepayment->payment_method }}</x-table.td>
                             <x-table.td>
                                 @can('access_purchase_payments')
-                                <x-button wire:click="$emit('paymentModal', {{$purchasepayment->id}} )"
-                                    type="button" primary>
-                                    <i class="bi bi-pencil"></i>
-                                </x-button>
+                                    <x-button wire:click="$emit('paymentModal', {{ $purchasepayment->id }} )" type="button"
+                                        primary>
+                                        <i class="fa fa-pen"></i>
+                                    </x-button>
                                 @endcan
                                 <x-button wire:click="delete({{ $purchasepayment->id }})"
                                     class="bg-red-500 hover:bg-red-700">
@@ -58,7 +57,7 @@
             <div class="mt-4">
                 {{-- {{ $purchase->purchasepayments->links() }} --}}
             </div>
-           
+
         </x-slot>
     </x-modal>
 

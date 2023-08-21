@@ -10,7 +10,7 @@
                     @if ($this->product->count())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Products') }}" shade="dark" color="red" />
-                            <div class="mx-4 space-y-2">
+                            <div class="flex space-x-4">
                                 @foreach ($this->product as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>

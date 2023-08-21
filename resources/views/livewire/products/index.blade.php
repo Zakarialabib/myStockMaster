@@ -23,7 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -131,7 +131,7 @@
             @empty
                 <x-table.tr>
                     <x-table.td colspan="8" class="text-center">
-                        {{ __('No results found') }}
+                        {{ __('No products found') }}
                     </x-table.td>
                 </x-table.tr>
             @endforelse

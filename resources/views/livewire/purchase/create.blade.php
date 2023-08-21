@@ -16,6 +16,13 @@
                     <x-input type="date" wire:model="date" name="date" required value="{{ date('Y-m-d') }}" />
                     <x-input-error :messages="$errors->get('date')" class="mt-2" />
                 </div>
+                <div class="w-full md:w-1/2 px-3 mb-4">
+                    <x-label for="warehouse" :value="__('Warehouse')" />
+                    <x-select-list
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                        required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id" :options="$this->warehouses" />
+                    <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+                </div>
             </div>
 
             <livewire:product-cart :cartInstance="'purchase'" />
@@ -60,14 +67,13 @@
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
             </div>
 
-            <div class="flex flex-wrap px-3 space-x-2">
-                
+            <div class="grid grid-cols-2 gap-4">
                 <x-button danger type="button" wire:click="resetCart" wire:loading.attr="disabled"
                     class="ml-2 font-bold">
                     {{ __('Reset') }}
                 </x-button>
 
-                <x-button type="submit" primary class="w-full">
+                <x-button type="submit" primary>
                     {{ __('Create Purchase') }}
                 </x-button>
             </div>

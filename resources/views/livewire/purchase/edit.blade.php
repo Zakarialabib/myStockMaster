@@ -10,7 +10,7 @@
             </div>
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="supplier_id">{{ __('Supplier') }} <span class="text-red-500">*</span></label>
-                <x-select2 :options="$this->supplier" name="supplier_id" id="supplier_id" wire:model="supplier_id" />
+                <x-select :options="$this->supplier" name="supplier_id" id="supplier_id" wire:model="supplier_id" />
             </div>
             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                 <label for="date">{{ __('Date') }} <span class="text-red-500">*</span></label>

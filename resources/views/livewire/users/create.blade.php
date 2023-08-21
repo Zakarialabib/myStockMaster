@@ -26,7 +26,7 @@
                         <label for="role">{{ __('Role') }} <span class="text-red-500">*</span></label>
                         <select wire:model.defer="user.role"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="role" id="role" required>
+                            name="role" id="role" >
                             <option value="" selected disabled>{{ __('Select Role') }}</option>
 
                         </select>
@@ -40,20 +40,13 @@
                     </div>
 
                     <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="password_confirmation" :value="__('Confirm Password')" />
-                        <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                            wire:model.defer="user.password_confirmation" />
-                        <x-input-error :messages="$errors->get('user.password_confirmation')" class="mt-2" />
-                    </div>
-
-                    <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="email" :value="__('Email')" />
                         <x-input id="email" class="block mt-1 w-full" type="email"
                             wire:model.defer="user.email" />
                         <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
                     </div>
 
-                    <div class="w-full px-3">
+                    <div class="w-full my-2 px-3">
                         <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Create') }}
                         </x-button>

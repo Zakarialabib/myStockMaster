@@ -57,7 +57,7 @@
                                 <x-table.td>
                                     <button type="button" class="btn btn-danger"
                                         wire:click="removeProduct({{ $key }})">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 </x-table.td>
                             </x-table.tr>

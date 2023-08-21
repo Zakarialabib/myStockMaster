@@ -6,26 +6,46 @@
 
         <x-slot name="content">
             <form wire:submit.prevent="store">
-                <div class="flex flex-wrap justify-center">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <label for="title">{{ __('Title') }}</label>
-                        <input type="text" class="form-control" id="title" wire:model="role.title">
-                        @error('role.title')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
+                <div class="w-full px-3">
+                    <x-label for="name" :value="__('Name')" />
+                    <x-input type="text" id="name" wire:model.lazy="role.name" />
+                    @error('role.name')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="w-full px-3">
+                    <x-label for="permissions" :value="__('Permissions')" />
+                    <div class="flex items-center justify-center w-full gap-4 mb-3">
+                        <div>
+                            <input type="checkbox" id="select-all" wire:click="selectAllPermissions"
+                                {{ $this->isAllSelected ? 'checked' : '' }}>
+                            <label for="select-all" class="ml-2">{{ __('Select All') }}</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="deselectAll" wire:click="deselectAllPermissions"
+                                {{ $this->isNoneSelected ? 'checked' : '' }}>
+                            <label for="deselectAll" class="ml-2">{{ __('Deselect All') }}</label>
+                        </div>
                     </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <x-select-list
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="permissions" name="permissions" wire:model="permissions" :options="$this->permissions"
-                            multiple />
+                    <div class="py-2 grid grid-cols-3 gap-6">
+                        @foreach ($this->permissions as $permission)
+                            <div>
+                                <input type="checkbox" id="permission-{{ $permission->id }}"
+                                    wire:model="selectedPermissions" value="{{ $permission->id }}">
+                                <label for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="w-full px-3">
-                        <x-button primary type="submit" class="w-full text-center" 
-                        wire:loading.attr="disabled">
-                            {{ __('Save') }}
-                        </x-button>
-                    </div>
+                    @error('selectedPermissions')
+                        <span class="error">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="w-full px-3">
+                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                        {{ __('Save') }}
+                    </x-button>
                 </div>
             </form>
         </x-slot>

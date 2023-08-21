@@ -1,6 +1,6 @@
 <div>
     <!-- Create Modal -->
-    <x-modal wire:model="createCategory">
+    <x-modal wire:model="createModal">
         <x-slot name="title">
             {{ __('Create Category') }}
         </x-slot>

@@ -136,7 +136,7 @@
                                         <li>{{ __('User') }} - {{ $movement->user->name }}</li>
                                         <li>{{ __('Date') }} - {{ $movement->created_at }}</li>
                                     @empty
-                                        <li> {{ __('No movement recorded') }}</li>
+                                        <li class="text-center py-4"> {{ __('No movement recorded') }}</li>
                                     @endforelse
                                 </ul>
                             @endif

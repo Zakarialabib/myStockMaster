@@ -25,7 +25,7 @@
                         </div>
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="category" :value="__('Category')" required />
-                            <x-select2 :options="$this->categories" id="category_create" name="category_create"
+                            <x-select-list :options="$this->categories" id="category_create" name="category_create"
                                 wire:model="product.category_id" />
                             <x-input-error :messages="$errors->get('category_id')" for="category_id" class="mt-2" />
                         </div>
@@ -38,7 +38,7 @@
                     </div>
 
                     {{-- improving warehouse ui making it one line  --}}
-                    <div class="mt-6 flex flex-col justify-center px-4 mt-2">
+                    <div class="flex flex-col justify-center px-4 mt-2">
                         @foreach ($this->warehouses as $warehouse)
                             <h4 class="font-semibold">{{ $warehouse->name }}</h4>
 
@@ -76,7 +76,7 @@
                         <div class="flex flex-wrap mb-3">
                             <div class="lg:w-1/3 sm:w-1/2 px-2">
                                 <x-label for="brand" :value="__('Brand')" />
-                                <x-select2 :options="$this->brands" id="brand_id" name="brand_id"
+                                <x-select-list :options="$this->brands" id="brand_id" name="brand_id"
                                     wire:model="product.brand_id" />
                                 <x-input-error :messages="$errors->get('brand_id')" for="brand_id" class="mt-2" />
                             </div>

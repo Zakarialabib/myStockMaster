@@ -1,4 +1,4 @@
-<div class="relative" x-data="{ showScan: false }">
+<div class="relative mt-8" x-data="{ showScan: false }">
     <div class="mb-3 px-2">
         <div class="mb-2 w-full relative text-gray-600 focus-within:text-gray-400">
             <span class="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -6,21 +6,13 @@
                     <i class="fas fa-camera"></i>
                 </a>
             </span>
-            <x-input wire:keydown.escape="resetQuery" wire:model.debounce.700ms="query" type="search" class="pl-4"
+            <x-input wire:keydown.escape="resetQuery" wire:model.debounce.500ms="query" type="search" class="pl-10"
                 minlength="4" placeholder="{{ __('Search for products with code, reference or name') }}" autofocus />
-            <div class="absolute right-0 top-0 mt-3 mr-4 text-purple-lighter">
+            <div class="absolute right-0 top-0 mt-2 mr-4 text-purple-lighter">
                 <button wire:click="resetQuery" type="button">X</button>
             </div>
         </div>
         <div class="flex flex-wrap -mx-2 mb-3">
-            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
-                <x-label for="category" :value="__('Category')" />
-                <x-select2 :options="$this->categories" wire:model="category_id" name="category_id" id="category_id" />
-            </div>
-            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
-                <x-label for="warehouse" :value="__('Warehouse')" />
-                <x-select2 :options="$this->warehouses" wire:model="warehouse_id" name="warehouse_id" id="warehouse_id" />
-            </div>
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2 flex items-center">
                 <div class="flex items-center space-x-2">
                     <span>{{ __('All') }}</span>
@@ -37,6 +29,11 @@
                 </div>
             </div>
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
+                <x-label for="category" :value="__('Category')" />
+                <x-select-list :options="$this->categories" wire:model="category_id" name="category_id" id="category_id" />
+            </div>
+
+            <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2">
                 <x-label for="showCount" :value="__('Product per page')" />
                 <select wire:model="showCount"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
@@ -47,6 +44,7 @@
                     <option value="">{{ __('All') }}</option>
                 </select>
             </div>
+
         </div>
     </div>
 
@@ -65,7 +63,15 @@
                         class="w-full py-8 relative border border-green-400">
                         <div
                             class="inline-block p-1 text-center font-semibold text-xs align-baseline leading-none text-white bg-blue-400 mb-3 absolute top-0 right-0">
-                            {{ __('Stock') }}: {{ $product->quantity }}
+                            @php
+                                $currentWarehouse = $product->warehouses->firstWhere('pivot.warehouse_id', $this->warehouse_id);
+                            @endphp
+
+                            @if ($currentWarehouse)
+                                {{ __('Stock') }}: {{ $currentWarehouse->pivot->qty }}
+                            @else
+                                {{ __('Stock') }}: 0
+                            @endif
                         </div>
                         <div class="block p-1 text-center">
                             <div class="mb-2">
@@ -80,7 +86,7 @@
                         </span>
                     </div>
                 @empty
-                    <div class="w-full px-2 py-3 mb-4 border rounded">
+                    <div class="col-span-full w-full px-2 py-3 mb-4 border rounded">
                         <span class="inline-block align-middle mr-8">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"

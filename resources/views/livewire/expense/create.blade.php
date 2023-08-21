@@ -18,14 +18,24 @@
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="date" :value="__('Date')" required />
-                        <x-input-date wire:model="expense.date" name="date" type="date" required />
+                        <x-input-date wire:model.lazy="expense.date" name="date" type="date" required />
                         <x-input-error :messages="$errors->get('expense.date')" class="mt-2" />
                     </div>
 
                     <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="category_expense" :value="__('Expense Category')" />
-                        <x-select2 required id="category_expense" name="category_expense" wire:model.lazy="expense.category_id"
-                            :options="$this->listsForFields['expensecategories']" :placeholder="__('Select Expense Category')" />
+                        <x-label for="category_expense" :value="__('Expense Category')" required />
+                        <select required
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                            id="category_expense" name="category_expense" wire:model="expense.category_id">
+                            <option value="">
+                                {{ __('Select Expense Category') }}
+                            </option>
+                            @foreach ($this->expensecategories as $expensecategory)
+                                <option value="{{ $expensecategory->id }}">
+                                    {{ $expensecategory->name }}
+                                </option>
+                            @endforeach
+                        </select>
                         <x-input-error :messages="$errors->get('expense.category_id')" class="mt-2" />
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
@@ -35,10 +45,19 @@
                         <x-input-error :messages="$errors->get('expense.amount')" class="mt-2" />
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="warehouse_expense" :value="__('Warehouse')" />
-                        <x-select2 id="warehouse_expense" name="warehouse_expense" wire:model.lazy="expense.warehouse_id"
-                            :options="$this->listsForFields['warehouses']"
-                            :placeholder="__('Select Warehouse')" />
+                        <x-label for="warehouse_expense" :value="__('Warehouse')" required />
+                        <select
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                            id="warehouse_expense" name="warehouse_expense" wire:model="expense.warehouse_id">
+                            <option value="">
+                                {{ __('Select Warehouse') }}
+                            </option>
+                            @foreach ($this->warehouses as $warehouse)
+                                <option value="{{ $warehouse->id }}">
+                                    {{ $warehouse->name }}
+                                </option>
+                            @endforeach
+                        </select>
                         <x-input-error :messages="$errors->get('expense.warehouse_id')" class="mt-2" />
                     </div>
                     <div class="w-full px-3">
@@ -49,7 +68,7 @@
                         <x-input-error :messages="$errors->get('expense.details')" class="mt-2" />
                     </div>
                 </div>
-                <div class="w-full px-3">
+                <div class="w-full pb-2 px-3">
                     <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                         {{ __('Create') }}
                     </x-button>

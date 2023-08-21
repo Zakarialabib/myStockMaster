@@ -26,7 +26,7 @@
                             <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <x-select2 :options="$customers" name="customer_id" id="customer_id"
+                                    <x-select-list :options="$customers" name="customer_id" id="customer_id"
                                         wire:model="customer_id" />
                                 </div>
                             </div>

@@ -28,7 +28,7 @@
                         <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="md:w-1/2 sm:w-full px-3">
                                 <x-label for="category_id" :value="__('Category')" required />
-                                <x-select2 :options="$this->categories" id="category_edit" name="category_edit"
+                                <x-select-list :options="$this->categories" id="category_edit" name="category_edit"
                                     wire:model="product.category_id" />
                                 <x-input-error :messages="$errors->get('product.category_id')" for="category_id" class="mt-2" />
                             </div>
@@ -38,7 +38,7 @@
                                     wire:model="product.stock_alert" required />
                                 <x-input-error :messages="$errors->get('product.stock_alert')" for="product.stock_alert" class="mt-2" />
                             </div>
-                            <div class="mt-4 flex flex-col justify-center px-4 mt-2">
+                            <div class="flex flex-col justify-center px-4 mt-2">
                                 @foreach ($productWarehouses as $warehouse)
                                     <div class="flex items-center gap-2">
                                         <div class="w-1/4">
@@ -76,7 +76,7 @@
                         <x-accordion title="{{ 'More Details' }}">
                             <div class="flex flex-wrap -mx-2 mb-3">
                                 <div class="lg:w-1/3 sm:w-1/2 px-2" <x-label for="brand_id" :value="__('Brand')" />
-                                <x-select2 :options="$this->brands" id="brand_edit" name="brand_edit"
+                                <x-select-list :options="$this->brands" id="brand_edit" name="brand_edit"
                                     wire:model="product.brand_id" />
                                 <x-input-error :messages="$errors->get('product.brand_id')" for="brand_id" class="mt-2" />
                             </div>

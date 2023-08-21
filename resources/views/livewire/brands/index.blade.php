@@ -7,11 +7,13 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selected)
-            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
-            @endif
+            @can('brand_delete')
+                @if ($this->selected)
+                    <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                        <i class="fas fa-trash"></i>
+                    </x-button>
+                @endif
+            @endcan
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
                     <span class="font-medium">
@@ -23,14 +25,14 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
 
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -38,9 +40,6 @@
             </x-table.th>
             <x-table.th>
                 {{ __('Description') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Image') }}
             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
@@ -56,27 +55,24 @@
                     <x-table.td>
                         {{ $brand->name }}
                     </x-table.td>
-                    <x-table.td>
-                        {{ $brand->description }}
+                    <x-table.td class="whitespace-nowrap break-words">
+                        {{ Str::limit($brand->description, 50, '...') }}
                     </x-table.td>
-                    <x-table.td>
-                        @if ($brand->image)
-                        <img src="{{ asset('images/brands/' . $brand->image) }}" alt="{{ $brand->name }}"
-                            class="w-10 h-10 rounded-full">
-                        @else
-                        {{__('No image')}}
-                        @endif
-                    </x-table.td>
+
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button primary wire:click="$emit('editModal', {{ $brand->id }})"
-                              type="button"  wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $brand->id }})"
-                              type="button"  wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
+                            @can('brand_update')
+                                <x-button primary wire:click="$emit('editModal', {{ $brand->id }})" type="button"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-edit"></i>
+                                </x-button>
+                            @endcan
+                            @can('brand_delete')
+                                <x-button danger wire:click="$emit('deleteModal', {{ $brand->id }})" type="button"
+                                    wire:loading.attr="disabled">
+                                    <i class="fas fa-trash"></i>
+                                </x-button>
+                            @endcan
                         </div>
                     </x-table.td>
                 </x-table.tr>
@@ -136,26 +132,27 @@
     </x-modal>
     <!-- End Import modal -->
 
-</div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', brandId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', brandId)
-                    }
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', brandId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', brandId)
+                        }
+                    })
                 })
             })
-        })
-    </script>
-@endpush
+        </script>
+    @endpush
+
+
+</div>
