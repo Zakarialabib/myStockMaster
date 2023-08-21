@@ -23,26 +23,26 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
-        <div class="grid gap-4 grid-cols-2">
-            <div class="flex flex-wrap mb-2 px-2">
-                <div class="md:w-1/2 px-3">
+        <div class="grid gap-4 grid-cols-2 items-center justify-center">
+            <div class="w-full mb-2 flex flex-wrap ">
+                <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
                     <x-input wire:model="startDate" type="date" name="startDate" value="$startDate" />
                     @error('startDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="md:w-1/2 px-3">
+                <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
                     <x-input wire:model="endDate" type="date" name="endDate" value="$endDate" />
                     @error('endDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
+            </div> 
             <div class="gap-2 inline-flex items-center mx-0 px-2 mb-2">
                 <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
                 <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
@@ -109,7 +109,6 @@
                     <x-table.td>
                         {{ format_currency($sale->due_amount) }}
                     </x-table.td>
-
                     <x-table.td>
                         {{ format_currency($sale->total_amount) }}
                     </x-table.td>
