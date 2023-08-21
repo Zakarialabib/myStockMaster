@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -18,7 +21,7 @@
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1",
-        "masbug/flysystem-google-drive-ext": "^2.2",
+        "masbug/flysystem-google-drive-ext": "2.2.2",
         "milon/barcode": "^10.0",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^2.0",
@@ -30,7 +33,6 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
-        "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.17",
         "laravel/breeze": "^1.14",
@@ -56,7 +58,6 @@
             "app/Helpers/helpers.php"
         ]
     },
-   
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
@@ -67,12 +68,9 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "@php artisan ide-helper:generate",
-            "@php artisan ide-helper:models --nowrite",
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan ide-helper:models --nowrite",
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
