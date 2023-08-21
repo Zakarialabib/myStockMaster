@@ -45,7 +45,6 @@ class Create extends Component
 
     public function createModal()
     {
-
         $this->resetErrorBag();
 
         $this->resetValidation();

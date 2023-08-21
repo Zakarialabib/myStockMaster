@@ -33,6 +33,7 @@ class EditTranslation extends Component
     private function getTranslations(): array
     {
         $content = File::get($this->languageFilePath());
+
         return json_decode($content, true);
     }
 
@@ -46,6 +47,7 @@ class EditTranslation extends Component
         $this->validate();
 
         $translations = $this->getTranslations();
+
         foreach ($this->translations as $key => $translation) {
             $translations[$translation['key']] = $translation['value'];
         }

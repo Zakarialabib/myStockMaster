@@ -28,10 +28,10 @@ class Index extends Component
     protected array $rules = [
         'backup_status'   => 'required',
         'backup_schedule' => 'nullable',
-        'clientId' => 'required',
-        'clientSecret' => 'required',
-        'refreshToken' => 'required',
-        'folderId' => 'required',
+        'clientId'        => 'required',
+        'clientSecret'    => 'required',
+        'refreshToken'    => 'required',
+        'folderId'        => 'required',
     ];
     public $settingsModal = false;
 
@@ -41,7 +41,6 @@ class Index extends Component
         'delete',
     ];
 
-    
     public function cleanBackups()
     {
         Artisan::call('backup:clean');
@@ -94,22 +93,21 @@ class Index extends Component
         try {
             // Generate backup file
             Artisan::call('backup:run --only-db');
-            
+
             $drive = Storage::disk('google');
 
             // Get the path to the latest backup
             $backupPath = Storage::allFiles(env('APP_NAME'));
             $latestBackup = end($backupPath);
-        
+
             // Upload the backup file to Google Drive
             $drive->put($latestBackup, Storage::get($latestBackup));
-            
+
             $this->alert('success', __('Backup generated and saved to Google Drive.'));
         } catch (Throwable $th) {
             $this->alert('danger', __('Backup failed: '.$th->getMessage()));
         }
     }
-
 
     public function downloadBackup($file)
     {

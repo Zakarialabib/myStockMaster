@@ -29,7 +29,7 @@ class Create extends Component
     /** @var array<string> */
     public $listeners = [
         'productSelected',
-        'refreshIndex'      => '$refresh',
+        'refreshIndex' => '$refresh',
     ];
 
     public $cart_instance;
@@ -84,7 +84,7 @@ class Create extends Component
     {
         return [
             'supplier_id'         => 'required|numeric',
-            'warehouse_id'         => 'required',
+            'warehouse_id'        => 'required',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
@@ -125,7 +125,7 @@ class Create extends Component
 
     public function store()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -184,7 +184,7 @@ class Create extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if (!$product_warehouse) {
+                if ( ! $product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -215,9 +215,9 @@ class Create extends Component
                 $movement->save();
 
                 PriceHistory::create([
-                    'product_id' => $cart_item->id,
-                    'warehouse_id'  => $this->warehouse_id,
-                    'cost'       => $new_cost * 100,
+                    'product_id'   => $cart_item->id,
+                    'warehouse_id' => $this->warehouse_id,
+                    'cost'         => $new_cost * 100,
                 ]);
             }
 
@@ -237,7 +237,7 @@ class Create extends Component
 
             return redirect()->route('purchases.index');
         } catch (Throwable $th) {
-            $this->alert('success', __('Something went wrong!') . ' ' . $th->getMessage());
+            $this->alert('success', __('Something went wrong!').' '.$th->getMessage());
         }
     }
 

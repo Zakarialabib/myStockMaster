@@ -80,11 +80,11 @@ class Index extends Component
         abort_if(Gate::denies('role_delete'), 403);
 
         $this->confirm(__('Are you sure ?'), [
-            'toast' => false,
-            'position' => 'center',
+            'toast'             => false,
+            'position'          => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText' => __('Cancel'),
-            'onConfirmed' => 'confirmedDelete',
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'confirmedDelete',
         ]);
         $this->role = $role;
     }

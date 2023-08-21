@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use Illuminate\Support\Str;
+
 enum PaymentStatus: int
 {
     case PENDING = 0;
@@ -36,9 +37,9 @@ enum PaymentStatus: int
         return null;
     }
 
-   public function getBadgeType(): string
-{
-    switch ($this->value) {
+    public function getBadgeType(): string
+    {
+        switch ($this->value) {
             case self::PENDING:
                 return 'warning';
             case self::PARTIAL:

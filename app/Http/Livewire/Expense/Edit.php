@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Expense;
 
 use App\Models\Warehouse;
@@ -8,6 +10,7 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+
 class Edit extends Component
 {
     use LivewireAlert;
@@ -15,7 +18,7 @@ class Edit extends Component
     public $editModal = false;
     public $expense;
     public $listeners = [
-        'editModal'
+        'editModal',
     ];
     protected $rules = [
         'expense.reference'    => 'required|string|max:255',
@@ -28,7 +31,6 @@ class Edit extends Component
 
     public function editModal($id): void
     {
-
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -60,6 +62,7 @@ class Edit extends Component
     {
         return Warehouse::select('name', 'id')->get();
     }
+
     public function render()
     {
         abort_if(Gate::denies('expense_update'), 403);

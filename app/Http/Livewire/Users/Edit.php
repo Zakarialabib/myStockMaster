@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
@@ -12,7 +14,7 @@ class Edit extends Component
     use LivewireAlert;
 
     public $listeners = [
-        'editModal'
+        'editModal',
     ];
     public $editModal = false;
 
@@ -28,12 +30,11 @@ class Edit extends Component
 
     public function editModal($id)
     {
-
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->user = User::where('id',$id)->firstOrFail();
+        $this->user = User::where('id', $id)->firstOrFail();
 
         $this->editModal = true;
     }
@@ -48,6 +49,7 @@ class Edit extends Component
 
         $this->editModal = false;
     }
+
     public function render()
     {
         abort_if(Gate::denies('user_edit'), 403);

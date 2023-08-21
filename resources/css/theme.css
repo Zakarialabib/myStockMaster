@@ -220,3 +220,10 @@ textarea.form-control.is-invalid {
     @apply bg-green-400;
     background-color: #68D391;
 }
+
+#daily-chart,
+#monthly-chart,
+#chart {
+  width: 500px !important;
+  min-width: 300px !important;
+}

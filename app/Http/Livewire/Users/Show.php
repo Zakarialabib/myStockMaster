@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Users;
 
 use Livewire\Component;
@@ -16,12 +18,14 @@ class Show extends Component
     public $listeners = [
         'showModal',
     ];
+
     public function showModal($id)
     {
         $this->user = User::find($id);
 
         $this->showModal = true;
     }
+
     public function render()
     {
         return view('livewire.users.show');

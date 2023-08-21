@@ -11,49 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-/**
- * App\Models\Customer
- *
- * @property int $id
- * @property string $name
- * @property string $phone
- * @property string|null $email
- * @property string|null $city
- * @property string|null $country
- * @property string|null $address
- * @property string|null $tax_number
- * @property int|null $wallet_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Sale|null $sales
- * @property-read \App\Models\Wallet|null $wallet
- * @method static \Illuminate\Database\Eloquent\Builder|Customer advancedFilter($data)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereCountry($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTaxNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereWalletId($value)
- * @property string $uuid
- * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUuid($value)
- * @method static \Database\Factories\CustomerFactory factory($count = null, $state = [])
- * @property-read int|float $profit
- * @property-read int|float $total_due
- * @property-read int|float $total_payments
- * @property-read int|float $total_sale_returns
- * @property-read int|float $total_sales
- * @mixin \Eloquent
- */
 class Customer extends Model
 {
     use HasAdvancedFilter;

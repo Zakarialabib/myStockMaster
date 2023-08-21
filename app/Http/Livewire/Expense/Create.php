@@ -40,6 +40,7 @@ class Create extends Component
     {
         $this->validateOnly($propertyName);
     }
+
     public function render()
     {
         abort_if(Gate::denies('expense_create'), 403);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use Illuminate\Support\Str;
+
 enum MovementType: int
 {
     case SALE = 0;
@@ -18,8 +19,6 @@ enum MovementType: int
     case SALETRANSFER = 4;
 
     case PURCHASETRANSFER = 5;
-
- 
 
     public function getName(): string
     {

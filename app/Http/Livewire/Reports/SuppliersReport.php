@@ -35,18 +35,18 @@ class SuppliersReport extends Component
         $this->payment_status = '';
     }
 
-     public function getPurchasesProperty()
-     {
-         return Purchase::whereDate('date', '>=', $this->start_date)
-             ->whereDate('date', '<=', $this->end_date)
-             ->when($this->supplier_id, function ($query) {
-                 return $query->where('supplier_id', $this->supplier_id);
-             })
-             ->when($this->payment_status, function ($query) {
-                 return $query->where('payment_status', $this->payment_status);
-             })
-             ->orderBy('date', 'desc')->paginate(10);
-     }
+    public function getPurchasesProperty()
+    {
+        return Purchase::whereDate('date', '>=', $this->start_date)
+            ->whereDate('date', '<=', $this->end_date)
+            ->when($this->supplier_id, function ($query) {
+                return $query->where('supplier_id', $this->supplier_id);
+            })
+            ->when($this->payment_status, function ($query) {
+                return $query->where('payment_status', $this->payment_status);
+            })
+            ->orderBy('date', 'desc')->paginate(10);
+    }
 
     public function render()
     {

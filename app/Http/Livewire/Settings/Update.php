@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Settings;
 
 use App\Helpers\GitHandler;
 use Livewire\Component;
-use Illuminate\Support\Facades\Artisan;
 
 class Update extends Component
 {
@@ -18,9 +19,9 @@ class Update extends Component
 
         if ($updatesAvailable) {
             $this->updateAvailable = true;
-            $this->message = "Updates available on origin/" . env('GIT_BRANCH', 'master') . ".";
+            $this->message = 'Updates available on origin/'.env('GIT_BRANCH', 'master').'.';
         } else {
-            $this->message = "No updates available.";
+            $this->message = 'No updates available.';
         }
     }
 
@@ -29,7 +30,6 @@ class Update extends Component
         $gitHandler = new GitHandler();
         $this->message = $gitHandler->fetchAndPull();
     }
-
 
     public function render()
     {

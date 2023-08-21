@@ -10,42 +10,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * App\Models\Expense
- *
- * @property int $id
- * @property int $category_id
- * @property int|null $user_id
- * @property int|null $warehouse_id
- * @property \Illuminate\Support\Carbon $date
- * @property string $reference
- * @property string $details
- * @property float $amount
- * @property string|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\ExpenseCategory $category
- * @property-read \App\Models\User|null $user
- * @property-read \App\Models\Warehouse|null $warehouse
- * @method static \Illuminate\Database\Eloquent\Builder|Expense advancedFilter($data)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Expense newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Expense query()
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDetails($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereReference($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereWarehouseId($value)
- * @property string|null $document
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereDocument($value)
- * @mixin \Eloquent
- */
 class Expense extends Model
 {
     use HasAdvancedFilter;

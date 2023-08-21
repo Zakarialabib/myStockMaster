@@ -19,13 +19,13 @@ class Create extends Component
     public $createModal = false;
 
     public $listeners = [
-        'createModal'
+        'createModal',
     ];
 
     protected function rules(): array
     {
         return [
-            'role.name'        => 'required|string|min:3|max:255',
+            'role.name'             => 'required|string|min:3|max:255',
             'selectedPermissions.*' => 'exists:permissions,id',
         ];
     }
@@ -34,20 +34,22 @@ class Create extends Component
     {
         $this->selectedPermissions = $this->permissions->pluck('id')->toArray();
     }
+
     public function getIsAllSelectedProperty()
     {
         return count($this->selectedPermissions) === count($this->permissions->pluck('id')->toArray());
     }
-    
+
     public function getIsNoneSelectedProperty()
     {
         return count($this->selectedPermissions) === 0;
-    }    
+    }
 
     public function deselectAllPermissions()
     {
         $this->selectedPermissions = [];
     }
+
     public function createModal()
     {
         abort_if(Gate::denies('role_create'), 403);
@@ -67,13 +69,12 @@ class Create extends Component
 
         $this->role->save();
         $this->role->syncPermissions($this->selectedPermissions);
-        
-        $this->alert('success', __('Role created successfully.'));
-        
-        $this->emit('refreshIndex');
-        
-        $this->createModal = false;
 
+        $this->alert('success', __('Role created successfully.'));
+
+        $this->emit('refreshIndex');
+
+        $this->createModal = false;
     }
 
     public function getPermissionsProperty()

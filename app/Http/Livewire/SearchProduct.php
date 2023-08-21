@@ -6,9 +6,6 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Warehouse;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -34,9 +31,9 @@ class SearchProduct extends Component
         'warehouseSelected' => 'updatedWarehouseId',
     ];
     protected $queryString = [
-        'query'        => ['except' => ''],
-        'category_id'  => ['except' => null],
-        'showCount'    => ['except' => 9],
+        'query'       => ['except' => ''],
+        'category_id' => ['except' => null],
+        'showCount'   => ['except' => 9],
     ];
 
     public function loadMore()
@@ -72,10 +69,10 @@ class SearchProduct extends Component
             'warehouses' => function ($query) {
                 $query->withPivot('qty', 'price', 'cost');
             },
-            'category'
+            'category',
         ])
             ->when($this->query, function ($query) {
-                $query->where('name', 'like', '%' . $this->query . '%');
+                $query->where('name', 'like', '%'.$this->query.'%');
             })
             ->when($this->category_id, function ($query) {
                 $query->where('category_id', $this->category_id);
@@ -92,10 +89,9 @@ class SearchProduct extends Component
         $products = $query->paginate($this->showCount);
 
         return view('livewire.search-product', [
-            'products' => $products
+            'products' => $products,
         ]);
     }
-
 
     // Reset query, category, and featured
     public function resetQuery()
@@ -110,14 +106,14 @@ class SearchProduct extends Component
             'warehouses' => function ($query) {
                 $query->withPivot('qty', 'price', 'cost');
             },
-            'category'
+            'category',
         ])
-            ->where('name', 'like', '%' . $this->query . '%')
-            ->orWhere('code', 'like', '%' . $this->query . '%')
+            ->where('name', 'like', '%'.$this->query.'%')
+            ->orWhere('code', 'like', '%'.$this->query.'%')
             ->take($this->showCount)
             ->get();
 
-        if (!empty($this->search_results)) {
+        if ( ! empty($this->search_results)) {
             $this->product = $this->search_results[0];
             $this->emit('productSelected', $this->product);
         }

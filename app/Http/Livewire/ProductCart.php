@@ -164,6 +164,7 @@ class ProductCart extends Component
             ],
         ]);
     }
+
     public function updatedDiscountType($value, $name)
     {
         $this->item_discount[$name] = 0;
@@ -180,6 +181,7 @@ class ProductCart extends Component
     {
         $this->updateQuantity($row_id, $product_id);
     }
+
     public function productDiscount($row_id, $product_id): void
     {
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);

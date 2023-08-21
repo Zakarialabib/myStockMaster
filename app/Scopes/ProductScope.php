@@ -20,4 +20,9 @@ trait ProductScope
     {
         return $builder->whereDate('created_at', '>=', $date)->sum(DB::raw('quantity * cost'));
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', true);
+    }
 }

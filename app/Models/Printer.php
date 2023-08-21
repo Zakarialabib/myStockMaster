@@ -7,35 +7,6 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * App\Models\Printer
- *
- * @property int $id
- * @property string $name
- * @property string $connection_type
- * @property string $capability_profile
- * @property string|null $char_per_line
- * @property string|null $ip_address
- * @property string|null $port
- * @property string|null $path
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|Printer advancedFilter($data)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Printer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Printer query()
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereCapabilityProfile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereCharPerLine($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereConnectionType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereIpAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer wherePort($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Printer whereUpdatedAt($value)
- * @mixin \Eloquent
- */
 class Printer extends Model
 {
     use HasAdvancedFilter;

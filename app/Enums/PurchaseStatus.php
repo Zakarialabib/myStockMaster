@@ -18,8 +18,6 @@ enum PurchaseStatus: int
 
     case CANCELED = 4;
 
- 
-
     public function getName(): string
     {
         return __(Str::studly($this->name));
@@ -41,9 +39,9 @@ enum PurchaseStatus: int
         return null;
     }
 
-   public function getBadgeType(): string
-{
-    switch ($this->value) {
+    public function getBadgeType(): string
+    {
+        switch ($this->value) {
             case self::PENDING:
                 return 'warning';
             case self::ORDERED:

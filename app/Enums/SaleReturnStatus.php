@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use Illuminate\Support\Str;
+
 enum SaleReturnStatus: int
 {
     case PENDING = 0;
@@ -18,8 +19,6 @@ enum SaleReturnStatus: int
     case RETURNED = 4;
 
     case CANCELED = 5;
-
- 
 
     public function getName(): string
     {
@@ -42,9 +41,9 @@ enum SaleReturnStatus: int
         return null;
     }
 
-   public function getBadgeType(): string
-{
-    switch ($this->value) {
+    public function getBadgeType(): string
+    {
+        switch ($this->value) {
             case self::PENDING:
                 return 'warning';
             case self::ORDERED:

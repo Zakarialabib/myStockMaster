@@ -90,14 +90,17 @@ class Index extends Component
             case 'day':
                 $this->startDate = now()->startOfDay()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
+
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
+
                 break;
         }
     }

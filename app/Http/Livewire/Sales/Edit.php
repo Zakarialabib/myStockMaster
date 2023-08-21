@@ -75,7 +75,7 @@ class Edit extends Component
     {
         return [
             'customer_id'         => 'required|numeric',
-            'warehouse_id'         => 'required',
+            'warehouse_id'        => 'required',
             'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
@@ -107,8 +107,9 @@ class Edit extends Component
 
     public function update()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
+
             return;
         }
 
@@ -116,11 +117,13 @@ class Edit extends Component
 
         if (in_array($this->sale->status, [SaleStatus::COMPLETED, SaleStatus::RETURNED, SaleStatus::CANCELED])) {
             $this->alert('error', __('Cannot update a completed, returned or canceled sale.'));
+
             return redirect()->back();
         }
 
         // Determine payment status
         $due_amount = $this->total_amount - $this->paid_amount;
+
         if ($due_amount === $this->total_amount) {
             $payment_status = PaymentStatus::PENDING;
         } elseif ($due_amount > 0) {
@@ -154,7 +157,7 @@ class Edit extends Component
 
         foreach (Cart::instance('sale')->content() as $cart_item) {
             SaleDetails::create([
-                'sale_id'             => $this->sale->id,
+                'sale_id'                 => $this->sale->id,
                 'product_id'              => $cart_item->id,
                 'warehouse_id'            => $this->warehouse_id,
                 'name'                    => $cart_item->name,
@@ -172,8 +175,8 @@ class Edit extends Component
             $product_warehouse = ProductWarehouse::where('product_id', $product->id)
                 ->where('warehouse_id', $this->warehouse_id)
                 ->first();
-    
-            if (!$product_warehouse) {
+
+            if ( ! $product_warehouse) {
                 $product_warehouse = new ProductWarehouse([
                     'product_id'   => $cart_item->id,
                     'warehouse_id' => $this->warehouse_id,
@@ -182,15 +185,15 @@ class Edit extends Component
                     'qty'          => 0,
                 ]);
             }
-    
+
             $new_quantity = $product_warehouse->qty + $cart_item->qty;
             $new_cost = (($product_warehouse->cost * $product_warehouse->qty) + ($cart_item->options->unit_price * $cart_item->qty)) / $new_quantity;
-    
+
             $product_warehouse->update([
                 'qty'  => $new_quantity,
                 'cost' => $new_cost,
             ]);
-    
+
             $movement = new Movement([
                 'type'         => MovementType::PURCHASE,
                 'quantity'     => $cart_item->qty,
@@ -200,7 +203,7 @@ class Edit extends Component
                 'movable_id'   => $product->id,
                 'user_id'      => Auth::user()->id,
             ]);
-    
+
             $movement->save();
         }
 
@@ -218,7 +221,6 @@ class Edit extends Component
 
     public function productSelected($product): void
     {
-
         if (empty($product)) {
             $this->alert('error', __('Something went wrong!'));
 
@@ -278,6 +280,7 @@ class Edit extends Component
         $this->warehouse_id = $value;
         $this->emit('warehouseSelected', $this->warehouse_id);
     }
+
     public function getWarehousesProperty()
     {
         return  Warehouse::pluck('name', 'id')->toArray();

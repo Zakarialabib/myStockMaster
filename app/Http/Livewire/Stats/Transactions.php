@@ -65,7 +65,7 @@ class Transactions extends Component
             ->take(5)
             ->get();
 
-            $this->topProducts = SaleDetails::query()
+        $this->topProducts = SaleDetails::query()
             ->selectRaw(
                 'SUM(sale_details.quantity) as qtyItem, products.name as name, products.code as code, SUM(sale_details.sub_total) as totalSalesAmount, sale_details.id'
             )
@@ -75,7 +75,6 @@ class Transactions extends Component
             ->orderByDesc('qtyItem')
             ->limit(5)
             ->get();
-        
 
         $this->purchases_count = Purchase::where('date', '>=', Carbon::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
@@ -273,8 +272,8 @@ class Transactions extends Component
         // Create the chart options array
         $monthlyChartOptions = [
             'chart' => [
-                'type' => 'donut',
-                'width'   => '100%',
+                'type'  => 'donut',
+                'width' => '100%',
             ],
             'series' => [$totalPayments['sent'], $totalPayments['received']],
             'labels' => [__('Payment Sent'), __('Payment Received')],

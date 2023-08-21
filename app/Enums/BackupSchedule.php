@@ -14,8 +14,6 @@ enum BackupSchedule: int
 
     case MONTHLY = 2;
 
- 
-
     public function getName(): string
     {
         return __(Str::studly($this->name));

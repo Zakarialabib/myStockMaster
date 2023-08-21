@@ -8,7 +8,6 @@ use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
 use App\Models\Expense;
 use App\Traits\Datatable;
-use App\Domain\Filters\DateFilter;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -28,7 +27,7 @@ class Index extends Component
     /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 
+        'showModal',
         'exportAll', 'downloadAll',
         'delete',
     ];
@@ -39,7 +38,6 @@ class Index extends Component
     public $startDate;
     public $endDate;
     public $filterType;
-
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -55,7 +53,6 @@ class Index extends Component
     ];
 
     /** @var array */
-  
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -65,7 +62,7 @@ class Index extends Component
         $this->orderable = (new Expense())->orderable;
         $this->startDate = now()->startOfYear()->format('Y-m-d');
         $this->endDate = now()->endOfDay()->format('Y-m-d');
-   }
+    }
 
     public function updatedStartDate($value)
     {
@@ -83,14 +80,17 @@ class Index extends Component
             case 'day':
                 $this->startDate = now()->startOfDay()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
+
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
+
                 break;
         }
     }
@@ -136,7 +136,6 @@ class Index extends Component
         $this->showModal = true;
     }
 
-  
     public function downloadSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);

@@ -16,8 +16,6 @@ enum PurchaseReturnStatus: int
 
     case RETURNED = 3;
 
- 
-
     public function getName(): string
     {
         return __(Str::studly($this->name));
@@ -39,9 +37,9 @@ enum PurchaseReturnStatus: int
         return null;
     }
 
-   public function getBadgeType(): string
-{
-    switch ($this->value) {
+    public function getBadgeType(): string
+    {
+        switch ($this->value) {
             case self::PENDING:
                 return 'warning';
             case self::RETURNED:

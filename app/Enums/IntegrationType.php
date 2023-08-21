@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use Illuminate\Support\Str;
+
 enum IntegrationType: int
 {
     case CUSTOM = 0;
@@ -14,8 +15,6 @@ enum IntegrationType: int
     case WOOCOMMERCE = 2;
 
     case SHOPIFY = 3;
-
- 
 
     public function getName(): string
     {
@@ -38,4 +37,3 @@ enum IntegrationType: int
         return null;
     }
 }
-

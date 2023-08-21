@@ -6,7 +6,6 @@ namespace App\Http\Livewire\Role;
 
 use App\Models\Role;
 use App\Models\Permission;
-use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -19,13 +18,13 @@ class Edit extends Component
     public $editModal = false;
 
     public $listeners = [
-        'editModal'
+        'editModal',
     ];
 
     protected function rules(): array
     {
         return [
-            'role.name'        => 'required|string|min:3|max:255',
+            'role.name'             => 'required|string|min:3|max:255',
             'selectedPermissions.*' => 'exists:permissions,id',
         ];
     }
@@ -53,11 +52,12 @@ class Edit extends Component
 
         $this->emit('refreshIndex');
     }
+
     public function selectAllPermissions()
     {
         $this->selectedPermissions = $this->permissions->pluck('id')->toArray();
     }
-    
+
     public function deselectAllPermissions()
     {
         $this->selectedPermissions = [];
@@ -67,11 +67,12 @@ class Edit extends Component
     {
         return count($this->selectedPermissions) === count($this->permissions->pluck('id')->toArray());
     }
-    
+
     public function getIsNoneSelectedProperty()
     {
         return count($this->selectedPermissions) === 0;
-    }    
+    }
+
     public function getPermissionsProperty()
     {
         return Permission::select('name', 'id')->get();

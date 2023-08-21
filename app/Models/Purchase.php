@@ -14,68 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * App\Models\Purchase
- *
- * @property int $id
- * @property string $date
- * @property string $reference
- * @property int|null $supplier_id
- * @property int $tax_percentage
- * @property int $tax_amount
- * @property int $discount_percentage
- * @property int $discount_amount
- * @property int $shipping_amount
- * @property int $total_amount
- * @property int $paid_amount
- * @property int $due_amount
- * @property string $status
- * @property string $payment_status
- * @property string $payment_method
- * @property string|null $note
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchaseDetail> $purchaseDetails
- * @property-read int|null $purchase_details_count
- * @property-read \Illuminate\Database\Eloquent\Collection|array<\App\Models\PurchasePayment> $purchasePayments
- * @property-read int|null $purchase_payments_count
- * @property-read \App\Models\Supplier|null $supplier
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase advancedFilter($data)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase completed()
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase query()
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDiscountAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDiscountPercentage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDueAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereNote($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase wherePaidAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase wherePaymentMethod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase wherePaymentStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereReference($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereShippingAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereSupplierId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTaxAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTaxPercentage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereTotalAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUpdatedAt($value)
- * @property string $uuid
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUuid($value)
- * @property int $user_id
- * @property int|null $warehouse_id
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereWarehouseId($value)
- * @property string|null $document
- * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase thisMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Purchase whereDocument($value)
- * @mixin \Eloquent
- */
 class Purchase extends Model
 {
     use HasAdvancedFilter;

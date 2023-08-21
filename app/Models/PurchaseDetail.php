@@ -9,47 +9,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * App\Models\PurchaseDetail
- *
- * @property int $id
- * @property int $purchase_id
- * @property int|null $product_id
- * @property string $name
- * @property string $code
- * @property int $quantity
- * @property int $price
- * @property int $unit_price
- * @property int $sub_total
- * @property int $product_discount_amount
- * @property string $product_discount_type
- * @property int $product_tax_amount
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Product|null $product
- * @property-read \App\Models\Purchase $purchase
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail advancedFilter($data)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail query()
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereProductDiscountAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereProductDiscountType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereProductTaxAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail wherePurchaseId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereQuantity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereSubTotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUnitPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereUpdatedAt($value)
- * @property int|null $warehouse_id
- * @method static \Illuminate\Database\Eloquent\Builder|PurchaseDetail whereWarehouseId($value)
- * @mixin \Eloquent
- */
 class PurchaseDetail extends Model
 {
     use HasAdvancedFilter;

@@ -40,6 +40,7 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
+
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -48,6 +49,7 @@ class Index extends Component
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new User())->orderable;
     }
+
     public function render()
     {
         abort_if(Gate::denies('user_access'), 403);

@@ -71,7 +71,6 @@ class Edit extends Component
 
     public function editModal($id)
     {
-
         $this->resetErrorBag();
 
         $this->resetValidation();

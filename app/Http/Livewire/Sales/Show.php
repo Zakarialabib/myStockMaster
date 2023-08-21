@@ -20,7 +20,6 @@ class Show extends Component
 
     public function showModal($id)
     {
-
         $this->sale = Sale::findOrFail($id);
 
         $this->showModal = true;

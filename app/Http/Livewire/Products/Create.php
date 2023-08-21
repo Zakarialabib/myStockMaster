@@ -67,6 +67,7 @@ class Create extends Component
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
     }
+
     public function render()
     {
         abort_if(Gate::denies('product_create'), 403);

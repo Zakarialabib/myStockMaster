@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use Illuminate\Support\Str;
+
 enum UnitType: string
 {
     case KG = 'kg';
@@ -14,8 +15,6 @@ enum UnitType: string
     case METRE = 'm';
 
     case Gram = 'gr';
-
- 
 
     public function getName(): string
     {
