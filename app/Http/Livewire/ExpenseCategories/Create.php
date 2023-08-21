@@ -34,7 +34,7 @@ class Create extends Component
 
     public function render()
     {
-        abort_if(Gate::denies('expense_category_create'), 403);
+        abort_if(Gate::denies('expense_categories_create'), 403);
 
         return view('livewire.expense-categories.create');
     }

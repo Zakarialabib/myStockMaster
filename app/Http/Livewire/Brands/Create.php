@@ -17,7 +17,7 @@ class Create extends Component
     use LivewireAlert;
     use WithFileUploads;
 
-    public $createBrand = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $brand;
@@ -25,7 +25,7 @@ class Create extends Component
     public $image;
 
     /** @var array<string> */
-    public $listeners = ['createBrand'];
+    public $listeners = ['createModal'];
 
     /** @var array */
     protected $rules = [
@@ -42,7 +42,7 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function createBrand(): void
+    public function createModal(): void
     {
         abort_if(Gate::denies('brand_create'), 403);
 
@@ -52,7 +52,7 @@ class Create extends Component
 
         $this->brand = new Brand();
 
-        $this->createBrand = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -72,7 +72,7 @@ class Create extends Component
 
             $this->alert('success', __('Brand created successfully.'));
 
-            $this->createBrand = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }

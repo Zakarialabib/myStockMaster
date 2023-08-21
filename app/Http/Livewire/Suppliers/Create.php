@@ -39,11 +39,6 @@ class Create extends Component
         'supplier.phone.required' => 'The phone field cannot be empty.',
     ];
 
-    public function updated($propertyName): void
-    {
-        $this->validateOnly($propertyName);
-    }
-
     public function render()
     {
         abort_if(Gate::denies('supplier_create'), 403);
@@ -65,9 +60,9 @@ class Create extends Component
     public function create(): void
     {
         try {
-            $validatedData = $this->validate();
+            $this->validate();
 
-            $this->supplier->create($validatedData);
+            $this->supplier->save();
 
             $this->alert('success', __('Supplier created successfully.'));
 

@@ -7,6 +7,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Warehouse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,57 +26,18 @@ class SearchProduct extends Component
 
     public $search_results;
 
-    public $showCount = 9;
+    public int $showCount = 9;
 
     public bool $featured = false;
 
+    public $listeners = [
+        'warehouseSelected' => 'updatedWarehouseId',
+    ];
     protected $queryString = [
         'query'        => ['except' => ''],
         'category_id'  => ['except' => null],
-        'warehouse_id' => ['except' => null],
         'showCount'    => ['except' => 9],
     ];
-
-    public function mount(): void
-    {
-        $this->search_results = Collection::empty();
-        // $this->warehouse_id = settings()->default_warehouse_id ?? null;
-    }
-
-    public function render()
-    {
-        $warehouse_id = $this->warehouse_id;
-
-        $products = Product::with(['warehouses' => function ($query) use ($warehouse_id) {
-            $query->when($warehouse_id, function ($query, $warehouse_id) {
-                $query->where('warehouse_id', $warehouse_id);
-            });
-        }])->when($this->category_id, fn ($query, $category_id) => $query->where('category_id', $category_id))
-            ->when($this->featured, fn ($query, $featured) => $query->where('featured', $featured))
-            ->paginate($this->showCount);
-
-        return view('livewire.search-product', [
-            'products' => $products,
-        ]);
-    }
-
-    public function resetQuery()
-    {
-        $this->reset(['query', 'category_id', 'warehouse_id', 'featured']);
-    }
-
-    public function updatedQuery()
-    {
-        $this->search_results = Product::where('name', $this->query)
-            ->orWhere('code', $this->query)
-            ->take($this->showCount)
-            ->get();
-
-        if ($this->search_results->count() > 0) {
-            $this->product = $this->search_results->first();
-            $this->emit('productSelected', $this->product);
-        }
-    }
 
     public function loadMore()
     {
@@ -90,16 +52,74 @@ class SearchProduct extends Component
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
-        $this->emit('warehouseSelected', $this->warehouse_id);
+        $this->resetPage();
     }
 
     public function getCategoriesProperty()
     {
-        return  Category::select('name', 'id')->get();
+        return Category::pluck('name', 'id');
     }
 
-    public function getWarehousesProperty()
+    public function mount(): void
     {
-        return  Warehouse::select('name', 'id')->get();
+        // Initialize search_results as an array
+        $this->search_results = [];
+    }
+
+    public function render()
+    {
+        $query = Product::with([
+            'warehouses' => function ($query) {
+                $query->withPivot('qty', 'price', 'cost');
+            },
+            'category'
+        ])
+            ->when($this->query, function ($query) {
+                $query->where('name', 'like', '%' . $this->query . '%');
+            })
+            ->when($this->category_id, function ($query) {
+                $query->where('category_id', $this->category_id);
+            })
+            ->when($this->warehouse_id, function ($query) {
+                $query->whereHas('warehouses', function ($q) {
+                    $q->where('warehouse_id', $this->warehouse_id);
+                });
+            })
+            ->when($this->featured, function ($query) {
+                $query->where('featured', true);
+            });
+
+        $products = $query->paginate($this->showCount);
+
+        return view('livewire.search-product', [
+            'products' => $products
+        ]);
+    }
+
+
+    // Reset query, category, and featured
+    public function resetQuery()
+    {
+        // Reset query, category, and featured
+        $this->reset(['query', 'category_id', 'featured', 'warehouse_id']);
+    }
+
+    public function updatedQuery()
+    {
+        $this->search_results = Product::with([
+            'warehouses' => function ($query) {
+                $query->withPivot('qty', 'price', 'cost');
+            },
+            'category'
+        ])
+            ->where('name', 'like', '%' . $this->query . '%')
+            ->orWhere('code', 'like', '%' . $this->query . '%')
+            ->take($this->showCount)
+            ->get();
+
+        if (!empty($this->search_results)) {
+            $this->product = $this->search_results[0];
+            $this->emit('productSelected', $this->product);
+        }
     }
 }

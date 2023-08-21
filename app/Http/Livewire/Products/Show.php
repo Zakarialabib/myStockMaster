@@ -20,8 +20,6 @@ class Show extends Component
 
     public function showModal($id)
     {
-        abort_if(Gate::denies('product_show'), 403);
-
         $this->product = Product::findOrFail($id);
 
         $this->showModal = true;
@@ -29,6 +27,8 @@ class Show extends Component
 
     public function render()
     {
+        abort_if(Gate::denies('product_show'), 403);
+
         return view('livewire.products.show');
     }
 }

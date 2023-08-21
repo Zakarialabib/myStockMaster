@@ -15,9 +15,9 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createCurrency'];
+    public $listeners = ['createModal'];
 
-    public $createCurrency = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $currency;
@@ -49,7 +49,7 @@ class Create extends Component
         return view('livewire.currency.create');
     }
 
-    public function createCurrency(): void
+    public function createModal(): void
     {
         abort_if(Gate::denies('currency_create'), 403);
 
@@ -59,7 +59,7 @@ class Create extends Component
 
         $this->currency = new Currency();
 
-        $this->createCurrency = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -73,7 +73,7 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
-            $this->createCurrency = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('success', __('Error.').$th->getMessage());
         }

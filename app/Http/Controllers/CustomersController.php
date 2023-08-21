@@ -19,7 +19,7 @@ class CustomersController extends Controller
 
     public function show($customer)
     {
-        abort_if(Gate::denies('customer_access'), 403);
+        abort_if(Gate::denies('customer_show'), 403);
 
         $customer = Customer::whereUuid($customer)->first();
 

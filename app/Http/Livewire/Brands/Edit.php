@@ -44,8 +44,6 @@ class Edit extends Component
 
     public function editModal($id): void
     {
-        abort_if(Gate::denies('brand_edit'), 403);
-
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -80,6 +78,8 @@ class Edit extends Component
 
     public function render()
     {
+        abort_if(Gate::denies('brand_update'), 403);
+
         return view('livewire.brands.edit');
     }
 }

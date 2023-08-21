@@ -40,12 +40,6 @@ class Create extends Component
     {
         $this->validateOnly($propertyName);
     }
-
-    public function mount(): void
-    {
-        $this->initListsForFields();
-    }
-
     public function render()
     {
         abort_if(Gate::denies('expense_create'), 403);
@@ -83,9 +77,13 @@ class Create extends Component
         }
     }
 
-    protected function initListsForFields()
+    public function getExpenseCategoriesProperty()
     {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::select('name', 'id')->get();
-        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
+        return ExpenseCategory::select('name', 'id')->get();
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::select('name', 'id')->get();
     }
 }

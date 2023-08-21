@@ -25,14 +25,8 @@ class Index extends Component
     /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal', 'delete',
+        'delete',
     ];
-
-    /** @var bool */
-    public $showModal = false;
-
-    /** @var bool */
-    public $editModal = false;
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -46,15 +40,6 @@ class Index extends Component
             'except' => 'desc',
         ],
     ];
-
-    /** @var array */
-    protected $rules = [
-        'user.name'     => 'required|string|min:3|max:255',
-        'user.email'    => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone'    => 'required|numeric',
-    ];
-
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -63,7 +48,6 @@ class Index extends Component
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new User())->orderable;
     }
-
     public function render()
     {
         abort_if(Gate::denies('user_access'), 403);
@@ -95,36 +79,5 @@ class Index extends Component
         $user->delete();
 
         $this->alert('warning', __('User deleted successfully!'));
-    }
-
-    public function showModal(User $user)
-    {
-        $this->user = User::find($user->id);
-
-        $this->showModal = true;
-    }
-
-    public function editModal(User $user)
-    {
-        abort_if(Gate::denies('user_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->user = User::find($user->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->user->save();
-
-        $this->alert('success', __('User Updated Successfully'));
-
-        $this->editModal = false;
     }
 }

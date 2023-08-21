@@ -47,13 +47,13 @@ class Edit extends Component
 
     public function render()
     {
+        abort_if(Gate::denies('supplier_update'), 403);
+
         return view('livewire.suppliers.edit');
     }
 
     public function editModal($id)
     {
-        abort_if(Gate::denies('supplier_update'), 403);
-
         $this->resetErrorBag();
 
         $this->resetValidation();

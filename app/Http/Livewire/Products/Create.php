@@ -129,7 +129,7 @@ class Create extends Component
 
     public function getCategoriesProperty()
     {
-        return Category::select(['name', 'id'])->get();
+        return Category::pluck('name', 'id')->toArray();
     }
 
     public function getBrandsProperty()

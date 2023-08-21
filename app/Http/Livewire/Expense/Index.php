@@ -7,8 +7,6 @@ namespace App\Http\Livewire\Expense;
 use App\Exports\ExpenseExport;
 use App\Http\Livewire\WithSorting;
 use App\Models\Expense;
-use App\Models\Warehouse;
-use App\Models\ExpenseCategory;
 use App\Traits\Datatable;
 use App\Domain\Filters\DateFilter;
 use Illuminate\Support\Facades\Gate;
@@ -30,22 +28,18 @@ class Index extends Component
     /** @var array<string> */
     public $listeners = [
         'refreshIndex' => '$refresh',
-        'showModal', 'editModal',
+        'showModal', 
         'exportAll', 'downloadAll',
         'delete',
     ];
 
     public $showModal = false;
-
-    public $editModal = false;
-
     public $showFilters = false;
 
     public $startDate;
     public $endDate;
     public $filterType;
 
-    public $listsForFields = [];
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -61,15 +55,7 @@ class Index extends Component
     ];
 
     /** @var array */
-    protected $rules = [
-        'expense.reference'    => 'required|string|max:255',
-        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
-        'expense.date'         => 'required|date',
-        'expense.amount'       => 'required|numeric',
-        'expense.details'      => 'nullable|string|max:255',
-        'expense.warehouse_id' => 'nullable',
-    ];
-
+  
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -77,10 +63,9 @@ class Index extends Component
         $this->perPage = 25;
         $this->paginationOptions = config('project.pagination.options');
         $this->orderable = (new Expense())->orderable;
-        $this->initListsForFields();
-        $this->startDate = Expense::orderBy('created_at')->value('created_at');
-        $this->endDate = now()->format('Y-m-d');
-    }
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
+   }
 
     public function updatedStartDate($value)
     {
@@ -94,26 +79,18 @@ class Index extends Component
 
     public function filterByType($type)
     {
-        $this->filterType = $type;
-    }
-
-    public function filterType()
-    {
-        switch ($this->filterType) {
+        switch ($type) {
             case 'day':
-                $this->startDate = now()->format('Y-m-d');
-                $this->endDate = now()->format('Y-m-d');
-
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
-
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-
                 break;
         }
     }
@@ -129,11 +106,7 @@ class Index extends Component
                 'order_direction' => $this->sortDirection,
             ]);
 
-        $this->filterType();
-
-        $filter = new DateFilter();
-
-        $expenses = $filter->filterDate($query, $this->startDate, $this->endDate)->paginate($this->perPage);
+        $expenses = $query->paginate($this->perPage);
 
         return view('livewire.expense.index', compact('expenses'));
     }
@@ -163,32 +136,7 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function editModal(Expense $expense): void
-    {
-        abort_if(Gate::denies('expense_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->expense = Expense::find($expense->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->expense->save();
-
-        $this->alert('success', __('Expense updated successfully.'));
-
-        $this->emit('refreshIndex');
-
-        $this->editModal = false;
-    }
-
+  
     public function downloadSelected(): BinaryFileResponse
     {
         abort_if(Gate::denies('expense_download'), 403);
@@ -215,12 +163,6 @@ class Index extends Component
         abort_if(Gate::denies('expense_download'), 403);
 
         return $this->callExport()->download('expenses.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    protected function initListsForFields()
-    {
-        $this->listsForFields['expensecategories'] = ExpenseCategory::select('name', 'id')->get();
-        $this->listsForFields['warehouses'] = Warehouse::select('name', 'id')->get();
     }
 
     private function callExport(): ExpenseExport

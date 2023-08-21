@@ -81,6 +81,8 @@ class Index extends Component
 
     public function showModal($id)
     {
+        abort_if(Gate::denies('supplier_show'), 403);
+
         $this->supplier = Supplier::find($id);
 
         $this->resetErrorBag();

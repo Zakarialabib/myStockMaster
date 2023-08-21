@@ -15,6 +15,7 @@ class ProductCart extends Component
     /** @var array<string> */
     public $listeners = ['productSelected', 'discountModalRefresh'];
 
+    public $discountModal;
     public $cart_instance;
 
     public $global_discount;
@@ -163,18 +164,23 @@ class ProductCart extends Component
             ],
         ]);
     }
-
     public function updatedDiscountType($value, $name)
     {
         $this->item_discount[$name] = 0;
+    }
+
+    public function discountModal($product_id, $row_id): void
+    {
+        $this->updateQuantity($row_id, $product_id);
+
+        $this->discountModal = true;
     }
 
     public function discountModalRefresh($product_id, $row_id)
     {
         $this->updateQuantity($row_id, $product_id);
     }
-
-    public function productDiscount($row_id, $product_id)
+    public function productDiscount($row_id, $product_id): void
     {
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
 
@@ -197,7 +203,9 @@ class ProductCart extends Component
 
             $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
         }
-        $this->alert('success', __('Discount applied successfully!'));
+        $this->alert('success', __('Product discount set successfully!'));
+
+        $this->discountModal = false;
     }
 
     public function calculate($product)

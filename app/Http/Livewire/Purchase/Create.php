@@ -15,6 +15,7 @@ use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
 use App\Models\Supplier;
+use App\Models\Warehouse;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -29,7 +30,6 @@ class Create extends Component
     public $listeners = [
         'productSelected',
         'refreshIndex'      => '$refresh',
-        'warehouseSelected' => 'updatedWarehouseId',
     ];
 
     public $cart_instance;
@@ -47,8 +47,6 @@ class Create extends Component
     public $quantity;
 
     public $warehouse_id;
-
-    public $reference;
 
     public $total_amount;
 
@@ -86,7 +84,7 @@ class Create extends Component
     {
         return [
             'supplier_id'         => 'required|numeric',
-            'reference'           => 'required|string|max:255',
+            'warehouse_id'         => 'required',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
@@ -127,7 +125,7 @@ class Create extends Component
 
     public function store()
     {
-        if ( ! $this->warehouse_id) {
+        if (!$this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -181,12 +179,12 @@ class Create extends Component
                 ]);
 
                 // UpdateProductCostHistory::dispatch($cart_item);
-                $product = Product::findOrFail($this->cart_item->id);
+                $product = Product::findOrFail($cart_item->id);
                 $product_warehouse = ProductWarehouse::where('product_id', $product->id)
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if ( ! $product_warehouse) {
+                if (!$product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -206,8 +204,8 @@ class Create extends Component
 
                 $movement = new Movement([
                     'type'         => MovementType::PURCHASE,
-                    'quantity'     => $this->cart_item->qty,
-                    'price'        => $this->cart_item->price * 100,
+                    'quantity'     => $cart_item->qty,
+                    'price'        => $cart_item->price * 100,
                     'date'         => date('Y-m-d'),
                     'movable_type' => get_class($product),
                     'movable_id'   => $product->id,
@@ -218,6 +216,7 @@ class Create extends Component
 
                 PriceHistory::create([
                     'product_id' => $cart_item->id,
+                    'warehouse_id'  => $this->warehouse_id,
                     'cost'       => $new_cost * 100,
                 ]);
             }
@@ -238,7 +237,7 @@ class Create extends Component
 
             return redirect()->route('purchases.index');
         } catch (Throwable $th) {
-            $this->alert('success', __('Something went wrong!').' '.$th->getMessage());
+            $this->alert('success', __('Something went wrong!') . ' ' . $th->getMessage());
         }
     }
 
@@ -373,5 +372,11 @@ class Create extends Component
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+
+    public function getWarehousesProperty()
+    {
+        return  Warehouse::pluck('name', 'id')->toArray();
     }
 }

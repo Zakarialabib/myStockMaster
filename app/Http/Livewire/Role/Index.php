@@ -54,11 +54,12 @@ class Index extends Component
 
     public function render()
     {
-        $query = Role::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
-            'order_direction' => $this->sortDirection,
-        ]);
+        $query = Role::with('permissions')
+            ->advancedFilter([
+                's'               => $this->search ?: null,
+                'order_column'    => $this->sortBy,
+                'order_direction' => $this->sortDirection,
+            ]);
 
         $roles = $query->paginate($this->perPage);
 
@@ -78,6 +79,22 @@ class Index extends Component
     {
         abort_if(Gate::denies('role_delete'), 403);
 
-        $role->delete();
+        $this->confirm(__('Are you sure ?'), [
+            'toast' => false,
+            'position' => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'confirmedDelete',
+        ]);
+        $this->role = $role;
+    }
+
+    public function confirmedDelete()
+    {
+        abort_if(Gate::denies('role_delete'), 403);
+
+        $this->role->delete();
+        $this->emit('refreshIndex');
+        $this->alert('success', __('Role removed'));
     }
 }

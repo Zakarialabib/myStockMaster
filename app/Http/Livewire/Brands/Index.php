@@ -14,7 +14,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
@@ -136,7 +136,7 @@ class Index extends Component
 
     public function importModal(): void
     {
-        abort_if(Gate::denies('brand_create'), 403);
+        abort_if(Gate::denies('brand_import'), 403);
 
         $this->importModal = true;
     }
@@ -148,7 +148,7 @@ class Index extends Component
 
     public function import(): void
     {
-        abort_if(Gate::denies('brand_create'), 403);
+        abort_if(Gate::denies('brand_import'), 403);
 
         $this->validate([
             'file' => 'required|mimes:xlsx',

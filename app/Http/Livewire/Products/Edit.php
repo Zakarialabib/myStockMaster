@@ -71,7 +71,6 @@ class Edit extends Component
 
     public function editModal($id)
     {
-        abort_if(Gate::denies('product_update'), 403);
 
         $this->resetErrorBag();
 
@@ -136,6 +135,8 @@ class Edit extends Component
 
     public function render()
     {
+        abort_if(Gate::denies('product_update'), 403);
+
         return view('livewire.products.edit');
     }
 

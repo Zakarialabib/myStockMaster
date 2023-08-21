@@ -141,7 +141,7 @@ class Index extends Component
 
     public function deleteSelected()
     {
-        abort_if(Gate::denies('delete_sales'), 403);
+        abort_if(Gate::denies('sale_delete'), 403);
 
         Sale::whereIn('id', $this->selected)->delete();
 
@@ -150,7 +150,7 @@ class Index extends Component
 
     public function delete(Sale $sale)
     {
-        abort_if(Gate::denies('delete_sales'), 403);
+        abort_if(Gate::denies('sale_delete'), 403);
 
         $sale->delete();
 

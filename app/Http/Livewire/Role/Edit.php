@@ -8,34 +8,35 @@ use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Edit extends Component
 {
+    use LivewireAlert;
     public $role;
+    public $selectedPermissions = [];
 
     public $editModal = false;
+
+    public $listeners = [
+        'editModal'
+    ];
 
     protected function rules(): array
     {
         return [
             'role.name'        => 'required|string|min:3|max:255',
-            'role.label'       => 'string|nullable|max:255',
-            'role.guard_name'  => 'required|string|max:255',
-            'role.description' => 'string|nullable|max:255',
-            'role.status'      => 'string|nullable|max:255',
+            'selectedPermissions.*' => 'exists:permissions,id',
         ];
     }
 
-    public function editModal($role)
+    public function editModal($id)
     {
-        abort_if(Gate::denies('role_edit'), 403);
-
         $this->resetErrorBag();
-
         $this->resetValidation();
 
-        $this->role = Role::find($role->id);
-
+        $this->role = Role::find($id);
+        $this->selectedPermissions = $this->role->permissions->pluck('id')->toArray();
         $this->editModal = true;
     }
 
@@ -44,15 +45,34 @@ class Edit extends Component
         $this->validate();
 
         $this->role->save();
+        $this->role->syncPermissions($this->selectedPermissions);
 
-        $this->role->permissions()->sync($this->permissions);
+        $this->alert('success', __('Role updated successfully.'));
 
         $this->editModal = false;
 
-        $this->alert('success', __('Role updated successfully.'));
+        $this->emit('refreshIndex');
+    }
+    public function selectAllPermissions()
+    {
+        $this->selectedPermissions = $this->permissions->pluck('id')->toArray();
+    }
+    
+    public function deselectAllPermissions()
+    {
+        $this->selectedPermissions = [];
     }
 
-    public function getPermissionsProperty(): array
+    public function getIsAllSelectedProperty()
+    {
+        return count($this->selectedPermissions) === count($this->permissions->pluck('id')->toArray());
+    }
+    
+    public function getIsNoneSelectedProperty()
+    {
+        return count($this->selectedPermissions) === 0;
+    }    
+    public function getPermissionsProperty()
     {
         return Permission::select('name', 'id')->get();
     }

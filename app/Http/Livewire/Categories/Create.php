@@ -15,10 +15,10 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createCategory'];
+    public $listeners = ['createModal'];
 
     /** @var bool */
-    public $createCategory = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $category;
@@ -37,7 +37,7 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function createCategory(): void
+    public function createModal(): void
     {
         abort_if(Gate::denies('category_access'), 403);
 
@@ -47,7 +47,7 @@ class Create extends Component
 
         $this->category = new Category();
 
-        $this->createCategory = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -61,7 +61,7 @@ class Create extends Component
 
             $this->alert('success', __('Category created successfully.'));
 
-            $this->createCategory = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }

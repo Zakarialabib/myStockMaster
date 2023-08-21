@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
+use App\Models\Warehouse;
 use Exception;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,6 @@ class Create extends Component
     /** @var array<string> */
     public $listeners = [
         'productSelected', 'discountModalRefresh', 'proceed',
-        'warehouseSelected' => 'updatedWarehouseId',
     ];
 
     public $cart_instance;
@@ -410,7 +410,7 @@ class Create extends Component
 
     public function getCustomerProperty()
     {
-        return Customer::select('name', 'id')->get();
+        return Customer::pluck('name', 'id')->toArray();
     }
 
     public function getCategoryProperty()
@@ -421,5 +421,11 @@ class Create extends Component
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+
+    public function getWarehousesProperty()
+    {
+        return  Warehouse::pluck('name', 'id')->toArray();
     }
 }

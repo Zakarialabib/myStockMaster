@@ -64,7 +64,7 @@ class Index extends Component
 
     public function render()
     {
-        abort_if(Gate::denies('expense_category_access'), 403);
+        abort_if(Gate::denies('expense_categories_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
             's'               => $this->search ?: null,
@@ -79,7 +79,7 @@ class Index extends Component
 
     public function showModal(ExpenseCategory $expenseCategory): void
     {
-        abort_if(Gate::denies('expense_category_show'), 403);
+        abort_if(Gate::denies('expense_categories_show'), 403);
 
         $this->expenseCategory = ExpenseCategory::find($expenseCategory->id);
 
@@ -88,7 +88,7 @@ class Index extends Component
 
     public function editModal(ExpenseCategory $expenseCategory): void
     {
-        abort_if(Gate::denies('expense_category_edit'), 403);
+        abort_if(Gate::denies('expense_categories_edit'), 403);
 
         $this->resetErrorBag();
 
@@ -114,7 +114,7 @@ class Index extends Component
 
     public function deleteSelected(): void
     {
-        abort_if(Gate::denies('expense_category_delete'), 403);
+        abort_if(Gate::denies('expense_categories_delete'), 403);
 
         ExpenseCategory::whereIn('id', $this->selected)->delete();
 
@@ -123,7 +123,7 @@ class Index extends Component
 
     public function delete(ExpenseCategory $expenseCategory): void
     {
-        abort_if(Gate::denies('expense_category_delete'), 403);
+        abort_if(Gate::denies('expense_categories_delete'), 403);
 
         $expenseCategory->delete();
 

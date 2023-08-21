@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
+use App\Enums\MovementType;
+use App\Models\Movement;
+use App\Models\ProductWarehouse;
+use App\Models\Warehouse;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
@@ -49,6 +54,7 @@ class Edit extends Component
     public $discount_percentage;
 
     public $shipping_amount;
+    public $warehouse_id;
 
     public $shipping;
 
@@ -69,6 +75,7 @@ class Edit extends Component
     {
         return [
             'supplier_id'         => 'required|numeric',
+            'warehouse_id'         => 'required',
             'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
@@ -87,6 +94,7 @@ class Edit extends Component
         $this->reference = $this->purchase->reference;
         $this->date = $this->purchase->date;
         $this->supplier_id = $this->purchase->supplier_id;
+        $this->warehouse_id = $this->purchase->warehouse_id;
         $this->status = $this->purchase->status;
         $this->payment_method = $this->purchase->payment_method;
         $this->paid_amount = $this->purchase->paid_amount;
@@ -99,18 +107,20 @@ class Edit extends Component
 
     public function update()
     {
+        if (!$this->warehouse_id) {
+            $this->alert('error', __('Please select a warehouse'));
+            return;
+        }
+
         $this->validate();
 
-        // Only allow updates to PENDING or ORDERED purchases
-        if ($this->purchase->status === PurchaseStatus::COMPLETED || $this->purchase->status === PurchaseStatus::RETURNED || $this->purchase->status === PurchaseStatus::CANCELED) {
+        if (in_array($this->purchase->status, [PurchaseStatus::COMPLETED, PurchaseStatus::RETURNED, PurchaseStatus::CANCELED])) {
             $this->alert('error', __('Cannot update a completed, returned or canceled purchase.'));
-
             return redirect()->back();
         }
 
-        // Get the payment status based on the paid amount
+        // Determine payment status
         $due_amount = $this->total_amount - $this->paid_amount;
-
         if ($due_amount === $this->total_amount) {
             $payment_status = PaymentStatus::PENDING;
         } elseif ($due_amount > 0) {
@@ -119,14 +129,8 @@ class Edit extends Component
             $payment_status = PaymentStatus::PAID;
         }
 
-        // Update the purchase details and adjust the product quantities accordingly
+        // Delete previous purchase details
         foreach ($this->purchase->purchaseDetails as $purchase_detail) {
-            if ($this->purchase->status === PurchaseStatus::COMPLETED) {
-                $product = Product::findOrFail($purchase_detail->product_id);
-                $product->update([
-                    'quantity' => $product->quantity - $purchase_detail->quantity,
-                ]);
-            }
             $purchase_detail->delete();
         }
 
@@ -152,6 +156,7 @@ class Edit extends Component
             PurchaseDetail::create([
                 'purchase_id'             => $this->purchase->id,
                 'product_id'              => $cart_item->id,
+                'warehouse_id'            => $this->warehouse_id,
                 'name'                    => $cart_item->name,
                 'code'                    => $cart_item->options->code,
                 'quantity'                => $cart_item->qty,
@@ -163,12 +168,40 @@ class Edit extends Component
                 'product_tax_amount'      => $cart_item->options->product_tax * 100,
             ]);
 
-            if ($this->status === PurchaseStatus::COMPLETED) {
-                $product = Product::findOrFail($cart_item->id);
-                $product->update([
-                    'quantity' => $product->quantity + $cart_item->qty,
+            $product = Product::findOrFail($cart_item->id);
+            $product_warehouse = ProductWarehouse::where('product_id', $product->id)
+                ->where('warehouse_id', $this->warehouse_id)
+                ->first();
+    
+            if (!$product_warehouse) {
+                $product_warehouse = new ProductWarehouse([
+                    'product_id'   => $cart_item->id,
+                    'warehouse_id' => $this->warehouse_id,
+                    'price'        => $cart_item->price * 100,
+                    'cost'         => $cart_item->options->unit_price * 100,
+                    'qty'          => 0,
                 ]);
             }
+    
+            $new_quantity = $product_warehouse->qty + $cart_item->qty;
+            $new_cost = (($product_warehouse->cost * $product_warehouse->qty) + ($cart_item->options->unit_price * $cart_item->qty)) / $new_quantity;
+    
+            $product_warehouse->update([
+                'qty'  => $new_quantity,
+                'cost' => $new_cost,
+            ]);
+    
+            $movement = new Movement([
+                'type'         => MovementType::PURCHASE,
+                'quantity'     => $cart_item->qty,
+                'price'        => $cart_item->price * 100,
+                'date'         => date('Y-m-d'),
+                'movable_type' => get_class($product),
+                'movable_id'   => $product->id,
+                'user_id'      => Auth::user()->id,
+            ]);
+    
+            $movement->save();
         }
 
         Cart::instance('purchase')->destroy();
@@ -185,6 +218,7 @@ class Edit extends Component
 
     public function productSelected($product): void
     {
+
         if (empty($product)) {
             $this->alert('error', __('Something went wrong!'));
 
@@ -237,5 +271,16 @@ class Edit extends Component
     public function getSupplierProperty()
     {
         return Supplier::select('name', 'id')->get();
+    }
+
+
+    public function updatedWarehouseId($value)
+    {
+        $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+    public function getWarehousesProperty()
+    {
+        return  Warehouse::pluck('name', 'id')->toArray();
     }
 }

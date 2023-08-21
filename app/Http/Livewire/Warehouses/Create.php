@@ -14,10 +14,10 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createWarehouse'];
+    public $listeners = ['createModal'];
 
     /** @var bool */
-    public $createWarehouse = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $warehouse;
@@ -38,24 +38,23 @@ class Create extends Component
 
     public function render()
     {
+        abort_if(Gate::denies('warehouse_create'), 403);
+
         return view('livewire.warehouses.create');
     }
 
-    public function createWarehouse()
+    public function createModal()
     {
-        abort_if(Gate::denies('warehouse_create'), 403);
 
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createWarehouse = true;
+        $this->createModal = true;
     }
 
     public function create(): void
     {
-        abort_if(Gate::denies('warehouse_create'), 403);
-
         $this->validate();
 
         $this->warehouse->save();
@@ -64,6 +63,6 @@ class Create extends Component
 
         $this->emit('refreshIndex');
 
-        $this->createWarehouse = false;
+        $this->createModal = false;
     }
 }
