@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
@@ -106,7 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/quotation/mail/{quotation}', SendQuotationEmailController::class)->name('quotation.email');
 
     //Sales Form Quotation
-    Route::get('quotation-sales/{quotation]', QuotationSalesController::class)->name('quotation-sales.create');
+    Route::get('quotation-sales/{quotation}', QuotationSalesController::class)->name('quotation-sales.create');
 
     //Quotations
     Route::resource('quotations', QuotationController::class);
