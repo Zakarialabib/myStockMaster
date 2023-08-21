@@ -41,9 +41,9 @@ enum QuotationStatus: int
         return null;
     }
     
-    public static function getBadgeType($value): string
-    {
-        switch ($value) {
+   public function getBadgeType(): string
+{
+    switch ($this->value) {
             case self::PENDING:
                 return 'warning';
             case self::SENT:
