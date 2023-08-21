@@ -59,8 +59,9 @@
                     </x-dropdown-link> --}}
                     </x-slot>
                 </x-dropdown>
-                <!-- Button trigger livewire modal -->
-                <x-button primary href="{{ route('sales.create') }}">{{ __('Create Invoice') }}</x-button>
+                @can('sale_create')
+                    <x-button primary href="{{ route('sales.create') }}">{{ __('Create Invoice') }}</x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -68,8 +69,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:sales.index />
-        </div>
+        <livewire:sales.index />
     </x-card>
 </x-app-layout>

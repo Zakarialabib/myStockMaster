@@ -38,11 +38,7 @@
                 </div>
             </div>
             <div class="flex space-x-2">
-                @can('permission_create')
-                    <x-button primary >
-                        {{ __('Create') }}
-                    </x-button>
-                @endcan
+
             </div>
         </div>
     </section>
@@ -50,9 +46,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:permission.index />
-        </div>
+        <livewire:permission.index />
     </x-card>
 </x-app-layout>

@@ -61,7 +61,6 @@
 @section('content')
     <x-card>
         <div class="flex flex-wrap">
-
             <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:search-product />
             </div>

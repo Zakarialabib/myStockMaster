@@ -31,7 +31,7 @@
                 if (confirm('Are you sure? It will delete the data permanently!')) {
                 document.getElementById('destroy{{ $data->id }}').submit()
                 }">
-                <i class="bi bi-trash mr-2 text-danger" style="line-height: 1;"></i> Delete
+                <i class="fa fa-trash mr-2 text-danger" style="line-height: 1;"></i> Delete
                 <form id="destroy{{ $data->id }}" class="d-none" action="{{ route('purchase-returns.destroy', $data->id) }}" method="POST">
                     @csrf
                     @method('delete')

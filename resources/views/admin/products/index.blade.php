@@ -45,23 +45,27 @@
                         </x-button>
                     </x-slot>
                     <x-slot name="content">
-                        <x-dropdown-link onclick="Livewire.emit('importModal')" 
-                            wire:loading.attr="disabled">
-                            {{ __('Excel Import') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('exportAll')" 
-                            wire:loading.attr="disabled">
-                            {{ __('PDF Export') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
-                            wire:loading.attr="disabled">
-                            {{ __('Excel Export') }}
-                        </x-dropdown-link>
+                        @can('product_import')
+                            <x-dropdown-link onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                                {{ __('Excel Import') }}
+                            </x-dropdown-link>
+                        @endcan
+                        @can('product_export')
+                            <x-dropdown-link onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
+                                {{ __('PDF Export') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
+                                {{ __('Excel Export') }}
+                            </x-dropdown-link>
+                        @endcan
                     </x-slot>
                 </x-dropdown>
-                <x-button primary type="button" onclick="Livewire.emit('createProduct')">
-                    {{ __('Create Product') }}
-                </x-button>
+                @can('product_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createProduct')">
+                        {{ __('Create Product') }}
+                    </x-button>
+                @endcan
+
             </div>
         </div>
     </section>
@@ -69,9 +73,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:products.index />
-        </div>
+        <livewire:products.index />
     </x-card>
 </x-app-layout>

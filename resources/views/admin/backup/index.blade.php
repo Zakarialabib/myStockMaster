@@ -41,8 +41,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            @livewire('backup.index')
-        </div>
+        @livewire('backup.index')
     </x-card>
 </x-app-layout>

@@ -36,9 +36,11 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary type="button" onclick="Livewire.emit('createWarehouse')">
-                    {{ __('Create Warehouse') }}
-                </x-button>
+                @can('warehouse_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createModal')">
+                        {{ __('Create Warehouse') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -46,9 +48,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:warehouses.index />
-        </div>
+        <livewire:warehouses.index />
     </x-card>
 </x-app-layout>

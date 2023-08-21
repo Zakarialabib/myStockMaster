@@ -50,19 +50,19 @@
                             wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-dropdown-link> --}}
-                        <x-dropdown-link onclick="Livewire.emit('exportAll')" 
-                            wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
                             {{ __('PDF') }}
                         </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
-                            wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
                             {{ __('Excel') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-                <x-button primary type="button" onclick="Livewire.emit('createExpense')">
-                    {{ __('Create Expense') }}
-                </x-button>
+                @can('expense_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createExpense')">
+                        {{ __('Create Expense') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -70,8 +70,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:expense.index />
-        </div>
+        <livewire:expense.index />
     </x-card>
 </x-app-layout>

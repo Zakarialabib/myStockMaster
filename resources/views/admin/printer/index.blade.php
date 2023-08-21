@@ -38,8 +38,9 @@
                 </div>
             </div>
             <div class="float-right">
-                <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.emit('createPrinter')">{{ __('Create') }}</x-button>
+                @can('printer_create')
+                    <x-button primary onclick="Livewire.emit('createPrinter')">{{ __('Create') }}</x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -47,9 +48,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:printer.index />
-        </div>
+        <livewire:printer.index />
     </x-card>
 </x-app-layout>

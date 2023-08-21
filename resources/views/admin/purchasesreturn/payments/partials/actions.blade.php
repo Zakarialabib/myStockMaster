@@ -10,7 +10,7 @@
         document.getElementById('destroy{{ $data->id }}').submit()
         }
         ">
-        <i class="bi bi-trash"></i>
+        <i class="fa fa-trash"></i>
         <form id="destroy{{ $data->id }}" class="d-none" action="{{ route('purchase-return-payments.destroy', $data->id) }}" method="POST">
             @csrf
             @method('delete')

@@ -54,10 +54,11 @@
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-                
-                <x-button primary onclick="Livewire.emit('createSupplier')">
-                    {{ __('Create Supplier') }}
-                </x-button>
+                @can('supplier_create')
+                    <x-button primary onclick="Livewire.emit('createSupplier')">
+                        {{ __('Create Supplier') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -65,8 +66,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:suppliers.index />
-        </div>
+        <livewire:suppliers.index />
     </x-card>
 </x-app-layout>

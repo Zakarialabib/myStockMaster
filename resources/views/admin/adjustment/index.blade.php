@@ -36,17 +36,17 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button href="{{ route('adjustments.create') }}" primary>
-                    {{ __('Create Adjustment') }}
-                </x-button>
+                @can('adjustment_create')
+                    <x-button href="{{ route('adjustments.create') }}" primary>
+                        {{ __('Create Adjustment') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
 @endsection
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:adjustment.index />
-        </div>
+        <livewire:adjustment.index />
     </x-card>
 </x-app-layout>

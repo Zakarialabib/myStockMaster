@@ -38,9 +38,12 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary type="button" onclick="Livewire.emit('createLanguage')">
-                    {{ __('Create Language') }}
-                </x-button>
+                @can('language_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createLanguage')">
+                        {{ __('Create Language') }}
+                    </x-button>
+                @endcan
+
             </div>
         </div>
     </section>
@@ -48,8 +51,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:language.index />
-        </div>
+        <livewire:language.index />
     </x-card>
 </x-app-layout>

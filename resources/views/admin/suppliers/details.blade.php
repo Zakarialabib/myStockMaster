@@ -43,7 +43,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
             @livewire('suppliers.details', ['supplier' => $supplier])
         </div>
     </x-card>

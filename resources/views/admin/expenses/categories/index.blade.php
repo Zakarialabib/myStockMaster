@@ -56,8 +56,9 @@
                 </div>
             </div>
             <div class="float-right">
-                <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createExpenseCategory')">{{ __('Create') }}</x-button>
+                @can('expense_categories_create')
+                    <x-button primary onclick="Livewire.emit('createExpenseCategory')">{{ __('Create') }}</x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -65,9 +66,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:expense-categories.index />
-        </div>
+        <livewire:expense-categories.index />
     </x-card>
 </x-app-layout>

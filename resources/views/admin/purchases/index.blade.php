@@ -37,9 +37,11 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary href="{{ route('purchases.create') }}" wire:loading.attr="disabled" >
-                    {{__('Create Purchase order')}} 
-                </x-button>
+                @can('purchase_create')
+                    <x-button primary href="{{ route('purchases.create') }}" wire:loading.attr="disabled">
+                        {{ __('Create Purchase order') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -47,8 +49,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:purchase.index />
-        </div>
+        <livewire:purchase.index />
     </x-card>
 </x-app-layout>

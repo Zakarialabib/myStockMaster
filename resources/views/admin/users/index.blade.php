@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 @section('title', __('Users'))
 
 @section('breadcrumb')
@@ -45,14 +43,10 @@
         </div>
     </section>
 @endsection
-
+ 
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:users.index />
-            
-            <livewire:users.create />
-        </div>
+        <livewire:users.index />
     </x-card>
 </x-app-layout>

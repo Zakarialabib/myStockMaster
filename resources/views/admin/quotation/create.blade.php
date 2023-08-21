@@ -38,9 +38,6 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button href="{{ route('quotations.create') }}" primary>
-                    {{ __('Create Quotation') }}
-                </x-button>
                 <!-- Button trigger livewire modal -->
                 {{-- <x-button primary onclick="Livewire.emit('createModal')">{{ __('Create') }}</x-button> --}}
             </div>

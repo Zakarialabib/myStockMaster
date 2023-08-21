@@ -38,15 +38,14 @@
         </div>
     </section>
 @endsection
+
 <x-app-layout>
     <x-card>
         <div class="flex flex-row">
             <div class="w-full px-2">
                 <livewire:search-product />
             </div>
-        </div>
 
-        <div class="flex flex-row mt-4">
             <div class="w-full px-2">
                 <livewire:products.barcode />
             </div>

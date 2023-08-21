@@ -43,23 +43,22 @@
                         </x-button>
                     </x-slot>
                     <x-slot name="content">
-                        <x-dropdown-link onclick="Livewire.emit('import')" 
-                            wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.emit('import')" wire:loading.attr="disabled">
                             {{ __('Excel Import') }}
                         </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('exportAll')" 
-                            wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.emit('exportAll')" wire:loading.attr="disabled">
                             {{ __('Export PDF') }}
                         </x-dropdown-link>
-                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
-                            wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.emit('downloadAll')" wire:loading.attr="disabled">
                             {{ __('Export Excel') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-                <x-button primary type="button" onclick="Livewire.emit('createCustomer')">
-                    {{ __('Create Customer') }}
-                </x-button>
+                @can('customer_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createCustomer')">
+                        {{ __('Create Customer') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -67,9 +66,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-             <livewire:customers.index />
-        </div>
+        <livewire:customers.index />
     </x-card>
 </x-app-layout>

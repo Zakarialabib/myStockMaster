@@ -38,9 +38,12 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button href="{{ route('quotations.create') }}" primary>
-                    {{ __('Create Quotation') }}
-                </x-button>
+                @can('quotation_create')
+                    <x-button href="{{ route('quotations.create') }}" primary>
+                        {{ __('Create Quotation') }}
+                    </x-button>
+                @endcan
+
             </div>
         </div>
     </section>
@@ -48,8 +51,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:quotations.index />
-        </div>
+        <livewire:quotations.index />
     </x-card>
 </x-app-layout>

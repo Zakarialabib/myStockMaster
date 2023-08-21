@@ -38,9 +38,11 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary href="{{ route('purchase-returns.create') }}">
-                    {{ __('Add Purchase Return') }} <i class="bi bi-plus"></i>
+
+                {{-- <x-button primary href="{{ route('purchase-returns.create') }}">
+                    {{ __('Add Purchase Return') }}
                 </x-button>
+                 --}}
                 <!-- Button trigger livewire modal -->
                 {{-- <x-button primary  onclick="Livewire.emit('createModal')">{{ __('Create') }}</x-button> --}}
             </div>
@@ -79,7 +81,7 @@
                                         <div class="mb-4">
                                             <label for="supplier_id">{{ __('Supplier') }} <span
                                                     class="text-red-500">*</span></label>
-                                            <x-select2 :options="$supplier" name="supplier_id" id="supplier_id" />
+                                            <x-select-list :options="$supplier" name="supplier_id" id="supplier_id" />
                                         </div>
                                     </div>
                                     <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">

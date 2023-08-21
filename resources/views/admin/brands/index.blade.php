@@ -54,23 +54,14 @@
                 </div>
             </div>
             <div class="flex space-x-2">
-                <x-dropdown align="right" width="48" class="w-auto mr-2">
-                    <x-slot name="trigger" class="inline-flex">
-                        <x-button secondary type="button" class="text-white flex items-center">
-                            <i class="fas fa-angle-double-down w-4 h-4"></i>
-                        </x-button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link onclick="Livewire.emit('importModal')" 
-                            wire:loading.attr="disabled">
-                            {{ __('Import') }}
-                        </x-dropdown-link>
-                    </x-slot>
-                </x-dropdown>
-
-                <x-button primary type="button" onclick="Livewire.emit('createBrand')">
-                {{ __('Create Brand') }}
+                <x-button secondary type="button" onclick="Livewire.emit('importModal')">
+                    {{ __('Import') }}
                 </x-button>
+                @can('brand_create')
+                    <x-button primary type="button" onclick="Livewire.emit('createModal')">
+                        {{ __('Create Brand') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -78,8 +69,6 @@
 
 <x-app-layout>
     <x-card>
-        <div>
-            <livewire:brands.index />
-        </div>
+        <livewire:brands.index />
     </x-card>
 </x-app-layout>

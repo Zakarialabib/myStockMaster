@@ -36,10 +36,11 @@
                 </div>
             </div>
             <div class="float-right">
-                <!-- Button trigger livewire modal -->
-                <x-button primary  onclick="Livewire.emit('createCurrency')">
-                    {{ __('Create Currency') }}
-                </x-button>
+                @can('currency_access')
+                    <x-button primary onclick="Livewire.emit('createModal')">
+                        {{ __('Create Currency') }}
+                    </x-button>
+                @endcan
             </div>
         </div>
     </section>
@@ -47,9 +48,6 @@
 
 <x-app-layout>
     <x-card>
-
-        <div>
-            <livewire:currency.index />
-        </div>
+        <livewire:currency.index />
     </x-card>
 </x-app-layout>
