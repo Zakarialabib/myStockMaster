@@ -33,11 +33,6 @@ class SuperUserSeeder extends Seeder
             'created_at'        => now(),
         ]);
 
-        $superAdmin = Role::create([
-            'name'       => 'Super Admin',
-            'guard_name' => 'web',
-        ]);
-
-        $user->assignRole($superAdmin);
+        $user->assignRole('Super Admin');
     }
 }

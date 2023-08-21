@@ -21,20 +21,14 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
-
-            SuperUserSeeder::class,
-            // UsersSeeder::class,
             RolesAndPermissionsSeeder::class,
-            // PermissionsSeeder::class,
-            // PermissionRoleSeeder::class,
+            SuperUserSeeder::class,
             ExpenseSeeder::class,
             CategoriesSeeder::class,
             BrandSeeder::class,
-
             ProductsSeeder::class,
             CustomersSeeder::class,
             ProductsSeeder::class,
-
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
