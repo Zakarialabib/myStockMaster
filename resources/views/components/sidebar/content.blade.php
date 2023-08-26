@@ -141,6 +141,7 @@
 
     @can('user_access')
         <x-sidebar.dropdown title="{{ __('People') }}" :active="request()->routeIs('customers.*') ||
+            request()->routeIs('customer-group.*') ||
             request()->routeIs('suppliers.*') ||
             request()->routeIs('users.*') ||
             request()->routeIs('roles.*') ||
@@ -153,6 +154,9 @@
             <x-sidebar.sublink title="{{ __('Users') }}" href="{{ route('users.index') }}" :active="request()->routeIs('users.index')" />
             @can('customer_access')
                 <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
+            @endcan
+            @can('customer_group_access')
+                <x-sidebar.sublink title="{{ __('Customer Groups') }}" href="{{ route('customer-group.index') }}" :active="request()->routeIs('customer-group.index')" />
             @endcan
             @can('suppliers_access')
                 <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />
