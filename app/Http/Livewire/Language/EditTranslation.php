@@ -4,73 +4,86 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Language;
 
-use App\Models\Language;
 use Livewire\Component;
+use App\Models\Language;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 
 class EditTranslation extends Component
 {
     use LivewireAlert;
 
-    public $selectedLanguage;
-    public $allLanguages;
-    public $translations = [];
-    public $newKey = '';
-    public $newValue = '';
+    public $language;
 
-    protected $rules = [
+    public $translations;
+
+    public $rules = [
         'translations.*.value' => 'required',
     ];
 
-    public function mount($id)
+    public function mount($code)
     {
-        $this->selectedLanguage = Language::find($id);
-        $this->allLanguages = Language::all();
+        $this->language = Language::where('code', $code)->firstOrFail();
         $this->translations = $this->getTranslations();
+        $this->translations = collect($this->translations)->map(function ($item, $key) {
+            return [
+                'key'   => $key,
+                'value' => $item,
+            ];
+        })->toArray();
     }
 
-    private function getTranslations(): array
+    private function getTranslations()
     {
-        $content = File::get($this->languageFilePath());
+        $path = base_path("lang/{$this->language->code}.json");
+        $content = file_get_contents($path);
 
         return json_decode($content, true);
-    }
-
-    private function languageFilePath(): string
-    {
-        return base_path("lang/{$this->selectedLanguage->code}.json");
     }
 
     public function updateTranslation()
     {
         $this->validate();
 
-        $translations = $this->getTranslations();
+        $path = base_path("lang/{$this->language->code}.json");
+
+        if ( ! file_exists($path)) {
+            $this->alert('error', __('File does not exist!'));
+
+            return;
+        }
+
+        try {
+            $json = file_get_contents($path);
+            $translations = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $this->alert('error', __('Error decoding JSON data!'));
+
+            return;
+        }
 
         foreach ($this->translations as $key => $translation) {
+            if (array_key_exists($translation['key'], $translations)) {
+                $this->alert('error', __('Translation key already exists!'));
+
+                return;
+            }
             $translations[$translation['key']] = $translation['value'];
         }
-        File::put($this->languageFilePath(), json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-        $this->alert('success', __('Data updated successfully!'));
-    }
 
-    public function deleteTranslation($key)
-    {
-        unset($this->translations[$key]);
-        $this->updateTranslation();
-    }
+        try {
+            file_put_contents($path, json_encode($translations, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        } catch (JsonException $e) {
+            $this->alert('error', __('Error encoding JSON data!'));
 
-    public function addTranslation()
-    {
-        $this->translations[$this->newKey] = ['key' => $this->newKey, 'value' => $this->newValue];
-        $this->newKey = '';
-        $this->newValue = '';
-        $this->updateTranslation();
+            return;
+        }
+
+        $this->alert('success', __('Data created successfully!'));
     }
 
     public function render()
     {
-        return view('livewire.language.edit-translation');
+        return view('livewire.language.edit-translation')->extends('layouts.dashboard');
     }
 }

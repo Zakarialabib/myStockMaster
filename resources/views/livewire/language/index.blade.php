@@ -36,6 +36,10 @@
                                 {{ __('Set as Default') }}</x-button>
                         @endif
 
+                        <x-button success href="{{ route('translation.index', $language['code']) }}">
+                            {{ __('Translate') }}
+                        </x-button>
+
                         <x-button type="button" primary wire:click="sync({{ $language['id'] }})">
                             {{ __('Sync') }}
                         </x-button>

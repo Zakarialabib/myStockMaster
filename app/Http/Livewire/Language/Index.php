@@ -24,7 +24,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->languages = Language::select(['id', 'name', 'status', 'is_default'])->get();
+        $this->languages = Language::select(['id', 'name', 'status', 'code', 'is_default'])->get();
     }
 
     public function render()
