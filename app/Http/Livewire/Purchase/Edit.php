@@ -39,6 +39,8 @@ class Edit extends Component
     public $products;
 
     public $supplier_id;
+    
+    public $warehouse_id;
 
     public $product;
 
@@ -57,7 +59,6 @@ class Edit extends Component
     public $discount_percentage;
 
     public $shipping_amount;
-    public $warehouse_id;
 
     public $shipping;
 
@@ -77,17 +78,18 @@ class Edit extends Component
     public function rules(): array
     {
         return [
-            'supplier_id'         => 'required|numeric',
-            'warehouse_id'        => 'required',
+            'warehouse_id'         => 'required|integer',
+            'supplier_id'         => 'required|integer',
             'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
             'total_amount'        => 'required|numeric',
             'paid_amount'         => 'required|numeric',
-            'status'              => 'required|integer|max:255',
+            'status'              => 'required|string|max:50',
             'payment_method'      => 'required|string|max:255',
             'note'                => 'nullable|string|max:1000',
+            'date'                => 'required|string|max:1000',
         ];
     }
 
@@ -106,6 +108,7 @@ class Edit extends Component
         $this->discount_percentage = $this->purchase->discount_percentage;
         $this->shipping_amount = $this->purchase->shipping_amount;
         $this->total_amount = $this->purchase->total_amount;
+        $this->warehouse_id = $this->purchase->warehouse_id;
     }
 
     public function update()
@@ -249,4 +252,22 @@ class Edit extends Component
     {
         return Warehouse::pluck('name', 'id')->toArray();
     }
+
+
+    public function updatedWarehouseId($warehouse_id)
+    {
+        $this->warehouse_id = $warehouse_id;
+        $this->emit('warehouseUpdated', $warehouse_id);
+    } 
+
+    public function updatedStatus($value)
+    {
+        if ($value === PurchaseStatus::COMPLETED) {
+            $this->paid_amount = $this->total_amount;
+        } else {
+            $this->paid_amount = 0;
+        }
+    }
+    
+
 }

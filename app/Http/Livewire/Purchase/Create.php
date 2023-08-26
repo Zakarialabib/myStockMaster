@@ -6,8 +6,10 @@ namespace App\Http\Livewire\Purchase;
 
 use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
 use App\Jobs\UpdateProductCostHistory;
 use App\Models\Movement;
+use App\Models\Warehouse;
 use App\Models\Product;
 use App\Models\PriceHistory;
 use App\Models\ProductWarehouse;
@@ -15,7 +17,6 @@ use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
 use App\Models\Supplier;
-use App\Models\Warehouse;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -32,6 +33,7 @@ class Create extends Component
     ];
 
     public $cart_instance;
+    public $cart_item;
 
     public $supplier_id;
 
@@ -78,15 +80,16 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'supplier_id'         => 'required|numeric',
-            'warehouse_id'        => 'required',
+            'warehouse_id'         => 'required|integer',
+            'supplier_id'         => 'required|integer',
+            'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
             'total_amount'        => 'required|numeric',
             'paid_amount'         => 'required|numeric',
-            'status'              => 'required|int|max:255',
-            'payment_method'      => 'required|string|max:255',
+            'status'              => 'required|string|max:50',
+            'payment_method'      => 'required|string|max:50',
             'note'                => 'nullable|string|max:1000',
         ];
     }
@@ -100,6 +103,7 @@ class Create extends Component
         $this->paid_amount = 0;
         $this->payment_method = 'cash';
         $this->date = date('Y-m-d');
+        // $this->warehouse_id = "";
 
         $this->initListsForFields();
     }
@@ -250,14 +254,27 @@ class Create extends Component
         $this->listsForFields['suppliers'] = Supplier::pluck('name', 'id')->toArray();
     }
 
-    public function updatedWarehouseId($value)
-    {
-        $this->warehouse_id = $value;
-        $this->emit('warehouseSelected', $this->warehouse_id);
-    }
-
     public function getWarehousesProperty()
     {
         return  Warehouse::pluck('name', 'id')->toArray();
     }
+
+    public function updatedWarehouseId($warehouse_id)
+    {
+        $this->warehouse_id = $warehouse_id;
+        $this->emit('warehouseUpdated', $warehouse_id);
+    } 
+
+    public function updatedStatus($value)
+    {
+        if ($value === PurchaseStatus::COMPLETED) {
+            $this->paid_amount = $this->total_amount;
+            dd($value);
+        } else {
+            // Perform any other necessary actions when status is changed to something other than "iscompleted"
+            // For example, you might want to reset the paid_amount to 0
+            $this->paid_amount = 0;
+        }
+    }
+
 }
