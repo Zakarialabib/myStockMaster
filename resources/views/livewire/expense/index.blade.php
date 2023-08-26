@@ -109,7 +109,7 @@
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="$emit('editModal', {{ $expense->id }})" type="button"
+                            <x-button primary wire:click="$emit('editModal',{{ $expense->id }})" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
@@ -146,11 +146,10 @@
             {{ $expenses->links() }}
         </div>
     </div>
+    
+    @livewire('expense.edit', ['expense' => $expense])
 
     <livewire:expense.create />
-
-    <livewire:expense.edit expense="{{ $expense }}" />
-
 
     <x-modal wire:model="showModal">
         <x-slot name="title">

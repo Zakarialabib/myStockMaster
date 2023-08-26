@@ -24,8 +24,6 @@ class Create extends Component
     /** @var mixed */
     public $expense;
 
-    public $listsForFields = [];
-
     protected $rules = [
         'expense.reference'    => 'required|string|max:255',
         'expense.category_id'  => 'required|integer|exists:expense_categories,id',
@@ -55,6 +53,8 @@ class Create extends Component
         $this->resetValidation();
 
         $this->expense = new Expense();
+
+        $this->expense->date = date('Y-m-d');
 
         $this->createExpense = true;
     }

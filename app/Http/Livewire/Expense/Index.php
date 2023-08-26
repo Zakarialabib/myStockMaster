@@ -52,7 +52,6 @@ class Index extends Component
         ],
     ];
 
-    /** @var array */
     public function mount(): void
     {
         $this->sortBy = 'id';
@@ -127,11 +126,11 @@ class Index extends Component
         $expense->delete();
     }
 
-    public function showModal(Expense $expense): void
+    public function showModal($id): void
     {
         abort_if(Gate::denies('expense_show'), 403);
 
-        $this->expense = Expense::find($expense->id);
+        $this->expense = Expense::find($id);
 
         $this->showModal = true;
     }
