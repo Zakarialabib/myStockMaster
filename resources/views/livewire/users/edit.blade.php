@@ -10,58 +10,48 @@
                 <div class="flex flex-wrap -mx-2 mb-3">
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="name" :value="__('Name')" required />
-                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model.defer="user.name"
+                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model.defer="name"
                             required />
-                        <x-input-error :messages="$errors->get('user.name')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="phone" :value="__('Phone')" required />
                         <x-input id="phone" class="block mt-1 w-full" required type="text"
-                            wire:model.defer="user.phone" />
-                        <x-input-error :messages="$errors->get('user.phone')" class="mt-2" />
+                            wire:model.defer="phone" />
+                        <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                     </div>
 
                     <div class="md:w-1/2 sm:w-full px-3">
-                        <label for="role">{{ __('Role') }} <span class="text-red-500">*</span></label>
-                        <select wire:model.defer="user.role"
+                        <x-label for="role" :value="__('Role')" />
+                        <x-select-list
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="role" id="role" required>
-                            <option value="" selected disabled>{{ __('Select Role') }}</option>
-
-                        </select>
+                            id="roleEdit" wire:model="role" required :options="$this->roles" />
+                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
                     </div>
-
+                    <div class="md:w-1/2 sm:w-full px-3">
+                        <x-label for="warehouse" :value="__('Warehouse')" />
+                        <x-select-list multiple
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                            required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id"
+                            :options="$this->warehouses" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="password" :value="__('Password')" />
-                        <x-input id="password" class="block mt-1 w-full" type="password"
-                            wire:model.defer="user.password" />
-                        <x-input-error :messages="$errors->get('user.password')" class="mt-2" />
+                        <x-input id="password" name="password" class="block mt-1 w-full" type="password"
+                            wire:model.defer="password" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
                     <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="password_confirmation" :value="__('Confirm Password')" />
-                        <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                            wire:model.defer="user.password_confirmation" />
-                        <x-input-error :messages="$errors->get('user.password_confirmation')" class="mt-2" />
+                        <x-label for="email" :value="__('Email')" />
+                        <x-input id="email" class="block mt-1 w-full" type="email"
+                            wire:model.defer="email" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
-                    <x-accordion>
-                        <x-slot name="title">
-                            {{ __('Details') }}
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <div class="md:w-1/2 sm:w-full px-3">
-                                <x-label for="email" :value="__('Email')" />
-                                <x-input id="email" class="block mt-1 w-full" type="email"
-                                    wire:model.defer="user.email" />
-                                <x-input-error :messages="$errors->get('user.email')" class="mt-2" />
-                            </div>
-
-                        </x-slot>
-                    </x-accordion>
-                    <div class="w-full px-3">
+                    <div class="w-full py-2 px-3">
                         <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                             {{ __('Update') }}
                         </x-button>

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Livewire\Users;
 
 use App\Models\User;
+use App\Models\UserWarehouse;
+use App\Models\Role;
+use App\Models\Warehouse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Throwable;
@@ -22,12 +25,26 @@ class Create extends Component
     /** @var mixed */
     public $user;
 
+    public $name;
+
+    public $email;
+
+    public $password;
+
+    public $phone;
+
+    public $role;
+
+    public $warehouse_id;
+
     /** @var array */
     protected $rules = [
-        'user.name'     => 'required|string|min:3|max:255',
-        'user.email'    => 'required|email|unique:users,email',
-        'user.password' => 'required|string|min:8',
-        'user.phone'    => 'required|numeric',
+        'name'     => 'required|string|min:3|max:255',
+        'email'    => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8',
+        'phone'    => 'required|numeric',
+        'role'    => 'required',
+        'warehouse_id' => 'required|array',
     ];
 
     public function updated($propertyName): void
@@ -46,8 +63,6 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->user = new User();
-
         $this->createModal = true;
     }
 
@@ -56,7 +71,16 @@ class Create extends Component
         try {
             $validatedData = $this->validate();
 
-            $this->user->save($validatedData);
+            $user = User::create($validatedData);
+
+            $user->assignRole($this->role);
+
+            foreach ($this->warehosues_id as $warehouseId) {
+                UserWarehouse::create([
+                    'user_id'      => $user->id,
+                    'warehouse_id' => $warehouseId,
+                ]);
+            }
 
             $this->alert('success', __('User created successfully!'));
 
@@ -66,5 +90,16 @@ class Create extends Component
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }
+    }
+
+
+    public function getRolesProperty()
+    {
+        return Role::pluck('name', 'id')->toArray();
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::pluck('name', 'id')->toArray();
     }
 }
