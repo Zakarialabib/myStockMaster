@@ -44,6 +44,9 @@ class Index extends Component
     public $showModal = false;
 
     /** @var bool */
+    public $deleteModal = false;
+
+    /** @var bool */
     public $importModal = false;
 
     public $selectAll;
@@ -72,7 +75,7 @@ class Index extends Component
 
     public function selectPage()
     {
-        if (count(array_intersect($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) === count(Brand::paginate($this->perPage)->pluck('id')->toArray())) {
+        if (count($this->selected, Brand::paginate($this->perPage)->pluck('id')->toArray())) {
             $this->selected = [];
         } else {
             $this->selected = $this->brandIds;
@@ -116,6 +119,23 @@ class Index extends Component
         $this->showModal = true;
     }
 
+    public function confirmed()
+    {
+        $this->emit('delete');
+    }
+
+    public function deleteModal($brand)
+    {
+        $this->confirm(__('Are you sure you want to delete this?'), [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+        $this->brand = $brand;
+    }
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('brand_delete'), 403);
@@ -125,11 +145,11 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Brand $brand): void
+    public function delete(): void
     {
         abort_if(Gate::denies('brand_delete'), 403);
 
-        $brand->delete();
+        Brand::findOrFail($this->brand)->delete();
 
         $this->alert('success', __('Brand deleted successfully.'));
     }
