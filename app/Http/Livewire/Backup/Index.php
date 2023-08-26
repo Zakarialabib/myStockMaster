@@ -25,6 +25,8 @@ class Index extends Component
     public $refreshToken;
     public $folderId;
 
+    public $settingsModal = false;
+
     protected array $rules = [
         'backup_status'   => 'required',
         'backup_schedule' => 'nullable',
@@ -33,13 +35,27 @@ class Index extends Component
         'refreshToken'    => 'required',
         'folderId'        => 'required',
     ];
-    public $settingsModal = false;
 
     protected $listeners = [
         'deleteModel', 'generate',
         'refreshTable' => '$refresh',
         'delete',
     ];
+
+    public function settingsModal()
+    {
+        $this->backup_status = settings()->backup_status;
+        $this->backup_schedule = settings()->backup_schedule;
+        $this->settingsModal = true;
+    }
+
+    public function saveToDriveManually($filename)
+    {
+        $fileData = Storage::get($filename);
+        Storage::cloud()->put(env('APP_NAME').'/'.$filename, $fileData);
+
+        $this->alert('success', __('Backup saved to Google Drive successfully!'));
+    }
 
     public function cleanBackups()
     {
@@ -48,11 +64,26 @@ class Index extends Component
         $this->alert('success', __('Old backup cleaned.'));
     }
 
-    public function settingsModal()
+
+    public function backupToDrive()
     {
-        $this->backup_status = settings()->backup_status;
-        $this->backup_schedule = settings()->backup_schedule;
-        $this->settingsModal = true;
+        try {
+            // Generate backup file
+            Artisan::call('backup:run --only-db');
+
+            $drive = Storage::disk('google');
+
+            // Get the path to the latest backup
+            $backupPath = Storage::allFiles(env('APP_NAME'));
+            $latestBackup = end($backupPath);
+
+            // Upload the backup file to Google Drive
+            $drive->put($latestBackup, Storage::get($latestBackup));
+
+            $this->alert('success', __('Backup generated and saved to Google Drive.'));
+        } catch (Throwable $th) {
+            $this->alert('danger', __('Backup failed: '.$th->getMessage()));
+        }
     }
 
     public function updateSettigns()
@@ -88,26 +119,6 @@ class Index extends Component
         }
     }
 
-    public function backupToDrive()
-    {
-        try {
-            // Generate backup file
-            Artisan::call('backup:run --only-db');
-
-            $drive = Storage::disk('google');
-
-            // Get the path to the latest backup
-            $backupPath = Storage::allFiles(env('APP_NAME'));
-            $latestBackup = end($backupPath);
-
-            // Upload the backup file to Google Drive
-            $drive->put($latestBackup, Storage::get($latestBackup));
-
-            $this->alert('success', __('Backup generated and saved to Google Drive.'));
-        } catch (Throwable $th) {
-            $this->alert('danger', __('Backup failed: '.$th->getMessage()));
-        }
-    }
 
     public function downloadBackup($file)
     {
@@ -116,13 +127,20 @@ class Index extends Component
 
     public function delete($name)
     {
-        foreach (glob(storage_path().'/app/public/backup/*') as $filename) {
-            $path = storage_path().'/app/public/backup/'.basename($name);
+        foreach (glob(storage_path().'/app/*') as $filename) {
+            $path = storage_path().'/app/'.basename($name);
 
             if (file_exists($path)) {
                 @unlink($path);
             }
         }
+    }
+
+    public function getContentsProperty()
+    {
+        $mainDisk = Storage::disk('google');
+
+        return $mainDisk->listContents('', true /* is_recursive */);
     }
 
     public function render()
