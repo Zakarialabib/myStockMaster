@@ -65,8 +65,6 @@ class SearchProduct extends Component
     public function mount($warehouse_id = null): void
     {
         $this->warehouse_id = $warehouse_id;
-        // Initialize search_results as an array
-        $this->search_results = [];
     }
 
     public function render()
