@@ -110,7 +110,7 @@
                             </x-table.tr>
                         @empty
                             <x-table.tr>
-                                <x-table.td>
+                                <x-table.td colspan="9">
                                     <div class="flex justify-center items-center">
                                         <span
                                             class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
@@ -176,7 +176,8 @@
                                                 @php
                                                     $type = $sale?->payment_status->getBadgeType();
                                                 @endphp
-                                                <x-badge :type="$type">{{ $sale?->payment_status->getName() }}</x-badge>
+                                                <x-badge
+                                                    :type="$type">{{ $sale?->payment_status->getName() }}</x-badge>
                                             </div>
                                         </div>
 
@@ -197,7 +198,7 @@
                                                         <x-table.tr>
                                                             <x-table.td>
                                                                 {{ $item->name }} <br>
-                                                                <x-badge  type="success">
+                                                                <x-badge type="success">
                                                                     {{ $item->code }}
                                                                 </x-badge>
                                                             </x-table.td>

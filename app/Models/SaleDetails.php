@@ -4,44 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SaleDetails extends Model
 {
-    use HasAdvancedFilter;
-    public $orderable = [
-        'id',
-        'sale_id',
-        'product_id',
-        'name',
-        'code',
-        'quantity',
-        'price',
-        'unit_price',
-        'sub_total',
-        'product_discount_amount',
-        'product_discount_type',
-        'product_tax_amount',
-    ];
-
-    public $filterable = [
-        'id',
-        'sale_id',
-        'product_id',
-        'name',
-        'code',
-        'quantity',
-        'price',
-        'unit_price',
-        'sub_total',
-        'product_discount_amount',
-        'product_discount_type',
-        'product_tax_amount',
-    ];
-
+   
     /**
      * The attributes that are mass assignable.
      *

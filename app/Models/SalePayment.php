@@ -14,7 +14,7 @@ class SalePayment extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'sale_id',
         'payment_method',
@@ -22,18 +22,11 @@ class SalePayment extends Model
         'amount',
         'created_at',
         'updated_at',
+
     ];
 
-    public $filterable = [
-        'id',
-        'sale_id',
-        'payment_method',
-        'reference',
-        'amount',
-        'created_at',
-        'updated_at',
-    ];
-
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
     /**
      * The attributes that are mass assignable.
      *
@@ -81,7 +74,7 @@ class SalePayment extends Model
                 $number = 1;
             }
 
-            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $salePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

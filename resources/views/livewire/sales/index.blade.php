@@ -143,7 +143,7 @@
                                         </x-dropdown-link>
                                     @endif
                                     @can('edit_sales')
-                                        <x-dropdown-link href="{{ route('sales.edit', $sale) }}"
+                                        <x-dropdown-link href="{{ route('sales.edit', $sale->uuid) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
                                             {{ __('Edit') }}

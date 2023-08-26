@@ -22,11 +22,12 @@ class Sale extends Model
     use UuidGenerator;
     use GetModelByUuid;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'date',
         'reference',
         'customer_id',
+        'warehouse_id',
         'tax_percentage',
         'tax_amount',
         'discount_percentage',
@@ -40,34 +41,13 @@ class Sale extends Model
         'payment_status',
         'payment_method',
         'shipping_status',
-        'note',
         'created_at',
         'updated_at',
+
     ];
 
-    public $filterable = [
-        'id',
-        'date',
-        'reference',
-        'customer_id',
-        'tax_percentage',
-        'tax_amount',
-        'discount_percentage',
-        'discount_amount',
-        'shipping_amount',
-        'total_amount',
-        'payment_date',
-        'paid_amount',
-        'due_amount',
-        'status',
-        'payment_status',
-        'payment_method',
-        'shipping_status',
-        'note',
-        'created_at',
-        'updated_at',
-    ];
-
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
     /**
      * The attributes that are mass assignable.
      *
@@ -119,7 +99,7 @@ class Sale extends Model
                 $number = 1;
             }
 
-            $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $sale->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

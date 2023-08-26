@@ -43,16 +43,6 @@
 
 <x-app-layout>
     <x-card>
-        <div class="flex flex-wrap">
-
-            <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:search-product />
-            </div>
-            
-            <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:purchase.edit :purchase="$purchase" />
-            </div>
-        </div>
-
+        <livewire:purchase.edit :purchase="$purchase" />
     </x-card>
 </x-app-layout>
