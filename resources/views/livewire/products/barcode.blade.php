@@ -8,11 +8,11 @@
                     <x-slot name="thead">
                         <x-table.th>{{ __('Product Name') }}</x-table.th>
                         <x-table.th>{{ __('Code') }}</x-table.th>
-                        <x-table.th>{{ __('Size') }}</x-table.th>
                         <x-table.th>
                             {{ __('Quantity') }} <i class="bi bi-question-circle-fill text-info" data-toggle="tooltip"
                                 data-placement="top" title="Max Quantity: 100"></i>
                         </x-table.th>
+                        <x-table.th>{{ __('Size') }}</x-table.th>
                         <x-table.th></x-table.th>
                     </x-slot>
                     <x-table.tbody>
@@ -84,7 +84,7 @@
                                 {!! $barcode['barcode'] !!}
                             </div>
                             <p class="text-black font-bold text-lg text-center my-2">
-                                {{ __('Price') }}: {{ $barcode['price'] }}
+                                {{ format_currency($barcode['price']) }}
                             </p>
                         </div>
                     @endforeach
