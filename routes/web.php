@@ -10,6 +10,7 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
@@ -80,6 +81,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
+    
+    Route::get('customergroup', [CustomerGroupController::class, 'index'])->name('customer-group.index');
 
     //Suppliers
     Route::get('suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
