@@ -1,11 +1,12 @@
 <div>
-    <x-modal wire:model="createModal">
+    <!-- Edit Modal -->
+    <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Create Expense Category') }}
+            {{ __('Edit Expense Category') }}
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit.prevent="create">
+            <form wire:submit.prevent="update">
                 <div class="w-full px-3 mb-4">
                     <x-label for="name" :value="__('Name')" />
                     <x-input id="name" type="text" class="block mt-1 w-full" wire:model="expenseCategory.name" />
@@ -18,11 +19,12 @@
                     <x-input-error :messages="$errors->get('expenseCategory.description')" for="description" class="mt-2" />
                 </div>
                 <div class="w-full px-3 py-2">
-                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                        {{ __('Create') }}
+                    <x-button primary type="submit" wire:loading.attr="disabled">
+                        {{ __('Update') }}
                     </x-button>
                 </div>
             </form>
         </x-slot>
     </x-modal>
+    <!-- End Edit Modal -->
 </div>

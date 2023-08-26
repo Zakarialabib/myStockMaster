@@ -22,16 +22,14 @@ class Index extends Component
     /** @var mixed */
     public $expenseCategory;
 
+    public $showModal = false;
+
     /** @var array<string> */
     public $listeners = [
-        'showModal', 'editModal',
+        'showModal',
         'refreshIndex' => '$refresh',
         'delete',
     ];
-
-    public $showModal = false;
-
-    public $editModal = false;
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -44,12 +42,6 @@ class Index extends Component
         'sortDirection' => [
             'except' => 'desc',
         ],
-    ];
-
-    /** @var array */
-    protected $rules = [
-        'expenseCategory.name'        => 'required|string|min:3|max:255',
-        'expenseCategory.description' => 'nullable|string',
     ];
 
     public function mount(): void
@@ -77,15 +69,16 @@ class Index extends Component
         return view('livewire.expense-categories.index', compact('expenseCategories'));
     }
 
-    public function showModal(ExpenseCategory $expenseCategory): void
+    public function showModal($id): void
     {
         abort_if(Gate::denies('expense_categories_show'), 403);
 
-        $this->expenseCategory = ExpenseCategory::find($expenseCategory->id);
+        $this->expenseCategory = ExpenseCategory::where('id', $id)->get();
 
         $this->showModal = true;
     }
 
+<<<<<<< Updated upstream
     public function editModal(ExpenseCategory $expenseCategory): void
     {
         abort_if(Gate::denies('expense_categories_edit'), 403);
@@ -112,6 +105,8 @@ class Index extends Component
         $this->editModal = false;
     }
 
+=======
+>>>>>>> Stashed changes
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('expense_categories_delete'), 403);

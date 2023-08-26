@@ -33,7 +33,7 @@
             <x-table.th>
                 <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th>
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
             <x-table.th>
@@ -58,15 +58,18 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal({{ $expenseCategory->id }})"
+                            <x-button info type="button" 
+                                wire:click="showModal({{ $expenseCategory->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary wire:click="editModal({{ $expenseCategory->id }})"
+                            <x-button primary type="button"
+                                wire:click="$emit('editModal', {{ $expenseCategory->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
-                            <x-button danger wire:click="$emit('deleteModal', {{ $expenseCategory->id }})"
+                            <x-button danger type="button"
+                                wire:click="$emit('deleteModal', {{ $expenseCategory->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -99,6 +102,8 @@
         </div>
     </div>
 
+    @livewire('expense-categories.edit', ['expenseCategory' => $expenseCategory])
+
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Expense Category') }}
@@ -108,70 +113,18 @@
             <div class="flex flex-wrap justify-center">
                 <div class="w-full">
                     <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" type="text" class="block mt-1 w-full" wire:model="expenseCategory.name"
-                        disabled />
+                    {{ $expenseCategory?->name }}
                 </div>
                 <div class="w-full">
                     <x-label for="description" :value="__('Description')" />
-                    <x-input id="description" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.description" disabled />
+                    {{ $expenseCategory?->description }}
                 </div>
             </div>
         </x-slot>
     </x-modal>
-
-
-    <x-modal wire:click="editModal">
-        <x-slot name="title">
-            {{ __('Edit Expense Category') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <div class="flex flex-wrap justify-center">
-                <div class="w-full">
-                    <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.name" />
-                    <x-input-error :messages="$errors->first('expenseCategory.name')" />
-                </div>
-                <div class="w-full">
-                    <x-label for="description" :value="__('Description')" />
-                    <x-input id="description" type="text" class="block mt-1 w-full"
-                        wire:model="expenseCategory.description" />
-                    <x-input-error :messages="$errors->first('expenseCategory.description')" />
-                </div>
-            </div>
-            <div class="flex justify-center">
-                <x-button primary type="submit" wire:loading.attr="disabled">
-                    {{ __('Update') }}
-                </x-button>
-            </div>
-        </x-slot>
-    </x-modal>
-
 
     <livewire:expense-categories.create />
-
+    
+    
+    
 </div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', expenseCategoryId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', expenseCategoryId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush

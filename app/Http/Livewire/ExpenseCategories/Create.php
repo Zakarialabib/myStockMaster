@@ -13,51 +13,60 @@ class Create extends Component
 {
     use LivewireAlert;
 
-    /** @var array<string> */
-    public $listeners = ['createExpenseCategory'];
+    public $listeners = ['createModal'];
 
-    public $createExpenseCategory = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $expenseCategory;
 
     /** @var array */
     protected $rules = [
-        'expenseCategory.name'        => 'required|string|min:3|max:255',
-        'expenseCategory.description' => 'nullable|string',
+        'expenseCategory.name'        => 'required|min:3|max:255',
+        'expenseCategory.description' => 'nullable',
     ];
 
-    public function mount(ExpenseCategory $expenseCategory): void
+    protected $messages = [
+        'expenseCategory.name.required' => 'The name field cannot be empty.',
+    ];
+
+    public function updated($propertyName): void
     {
-        $this->expenseCategory = $expenseCategory;
+        $this->validateOnly($propertyName);
     }
 
     public function render()
     {
+<<<<<<< Updated upstream
         abort_if(Gate::denies('expense_categories_create'), 403);
+=======
+        // abort_if(Gate::denies('expense_category_create'), 403);
+>>>>>>> Stashed changes
 
         return view('livewire.expense-categories.create');
     }
 
-    public function createExpenseCategory(): void
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createExpenseCategory = true;
+        $this->expenseCategory = new ExpenseCategory();
+
+        $this->createModal = true;
     }
 
     public function create(): void
     {
-        $this->validate();
+        $validatedData = $this->validate();
 
-        $this->expenseCategory->save();
+        $this->expenseCategory->save($validatedData);
 
         $this->alert('success', __('Expense created successfully.'));
 
         $this->emit('refreshIndex');
 
-        $this->createExpenseCategory = false;
+        $this->createModal = false;
     }
 }
