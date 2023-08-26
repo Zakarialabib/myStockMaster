@@ -58,13 +58,6 @@
 
 <x-app-layout>
     <x-card>
-        <div class="flex flex-wrap">
-            <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:search-product />
-            </div>
-            <div class="lg:w-1/2 sm:w-full h-full">
-                @livewire('adjustment.edit', ['adjustment' => $adjustment])
-            </div>
-        </div>
+        @livewire('adjustment.edit', ['adjustment' => $adjustment])
     </x-card>
 </x-app-layout>

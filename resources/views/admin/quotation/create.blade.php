@@ -47,107 +47,105 @@
 
 <x-app-layout>
     <x-card>
-        <div class="px-4 mx-auto mb-4">
-            <div class="flex flex-row">
-                <div class="w-full px-4">
-                    <livewire:search-product />
-                </div>
+        <div class="flex flex-wrap">
+
+            <div class="lg:w-1/2 sm:w-full h-full">
+                <livewire:search-product />
             </div>
 
-            <div class="flex flex-row mt-4">
-                <div class="w-full px-4">
+            <div class="lg:w-1/2 sm:w-full h-full">
+                <x-validation-errors class="mb-4" :errors="$errors" />
 
-                    <form id="quotation-form" action="{{ route('quotations.store') }}" method="POST">
-                        @csrf
+                <form id="quotation-form" action="{{ route('quotations.store') }}" method="POST">
+                    @csrf
 
-                        <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <div class="mb-4">
-                                    <x-label for="reference" :value="__('Reference')" required />
-                                    <input type="text"
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="reference" required readonly value="QT">
-                                </div>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <div class="from-group">
-                                    <div class="mb-4">
-                                        <x-label for="customer_id" :value="__('Customer')" required />
-                                        <select
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="customer_id" id="customer_id" required>
-                                            @foreach (\App\Models\Customer::all() as $customer)
-                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <div class="from-group">
-                                    <div class="mb-4">
-                                        <x-label for="date" :value="__('Date')" required />
-                                        <input type="date"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            name="date" required value="{{ date('Y-m-d') }}">
-                                    </div>
-                                </div>
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="mb-4">
+                                <x-label for="reference" :value="__('Reference')" required />
+                                <input type="text"
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                    name="reference" required readonly value="QT">
                             </div>
                         </div>
-
-                        <livewire:product-cart :cartInstance="'quotation'" />
-
-                        <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="from-group">
                                 <div class="mb-4">
-                                    <x-label for="status" :value="__('Status')" required />
+                                    <x-label for="customer_id" :value="__('Customer')" required />
                                     <select
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        name="status" id="status" required>
-                                        @foreach (\App\Enums\QuotationStatus::cases() as $status)
-                                            <option value="{{ $status->value }}">
-                                                {{ __($status->name) }}
-                                            </option>
+                                        name="customer_id" id="customer_id" required>
+                                        @foreach (\App\Models\Customer::all() as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="w-full md:w-1/9 px-3 mb-4 md:mb-0">
-                                <label for="note">{{ __('Note (If Needed)') }}</label>
-                                <textarea name="note" id="note" rows="5"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-                            </div>
                         </div>
-
-                        <div class="flex flex-wrap my-2">
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="from-group">
                                 <div class="mb-4">
-                                    <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
-                                    <x-input name="tax_percentage" id="tax_percentage" value="0" />
-                                </div>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <div class="mb-4">
-                                    <label for="discount_percentage">{{ __('Discount (%)') }}</label>
-                                    <x-input name="discount_percentage" id="discount_percentage" value="0" />
-                                </div>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                                <div class="mb-4">
-                                    <label for="shipping_amount">{{ __('Shipping') }}</label>
-                                    <x-input name="shipping_amount" id="shipping_amount" value="0" />
+                                    <x-label for="date" :value="__('Date')" required />
+                                    <input type="date"
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                        name="date" required value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="w-full mt-3">
-                            <x-button type="submit" primary class="w-full text-center">
-                                {{ __('Create Quotation') }}
-                            </x-button>
+                    <livewire:product-cart :cartInstance="'quotation'" />
+
+                    <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="mb-4">
+                                <x-label for="status" :value="__('Status')" required />
+                                <select
+                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                    name="status" id="status" required>
+                                    @foreach (\App\Enums\QuotationStatus::cases() as $status)
+                                        <option value="{{ $status->value }}">
+                                            {{ __($status->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="w-full md:w-1/9 px-3 mb-4 md:mb-0">
+                            <label for="note">{{ __('Note (If Needed)') }}</label>
+                            <textarea name="note" id="note" rows="5"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap my-2">
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="mb-4">
+                                <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
+                                <x-input name="tax_percentage" id="tax_percentage" value="0" />
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="mb-4">
+                                <label for="discount_percentage">{{ __('Discount (%)') }}</label>
+                                <x-input name="discount_percentage" id="discount_percentage" value="0" />
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="mb-4">
+                                <label for="shipping_amount">{{ __('Shipping') }}</label>
+                                <x-input name="shipping_amount" id="shipping_amount" value="0" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full mt-3">
+                        <x-button type="submit" primary class="w-full text-center">
+                            {{ __('Create Quotation') }}
+                        </x-button>
+                    </div>
+                </form>
             </div>
         </div>
     </x-card>
