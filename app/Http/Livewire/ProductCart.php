@@ -19,14 +19,15 @@ class ProductCart extends Component
         'warehouseSelected' => 'updatedWarehouseId',
     ];
 
-    public $discountModal;
     public $cart_instance;
 
     public $global_discount;
 
     public $global_tax;
+    
+    public $discountModal = false;
 
-    public $shipping;
+    public $shipping_amount;
 
     public $quantity;
 
@@ -49,7 +50,7 @@ class ProductCart extends Component
 
             $this->global_discount = $data->discount_percentage;
             $this->global_tax = $data->tax_percentage;
-            $this->shipping = $data->shipping_amount;
+            $this->shipping_amount = $data->shipping_amount;
             $this->warehouse_id = $data->warehouse_id;
 
             $this->updatedGlobalTax();
@@ -77,7 +78,7 @@ class ProductCart extends Component
         } else {
             $this->global_discount = 0;
             $this->global_tax = 0;
-            $this->shipping = 0.00;
+            $this->shipping_amount = 0;
             $this->check_quantity = [];
             $this->quantity = [];
             $this->discount_type = [];
@@ -209,6 +210,8 @@ class ProductCart extends Component
     public function discountModalRefresh($product_id, $row_id)
     {
         $this->updateQuantity($row_id, $product_id);
+        
+        $this->discountModal = false;
     }
 
     public function productDiscount($row_id, $product_id): void
