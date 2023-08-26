@@ -40,9 +40,9 @@ class Create extends Component
         'product.code'                => 'required|string|max:255',
         'product.barcode_symbology'   => 'required|string|max:255',
         'product.unit'                => 'required|string|max:255',
-        'productWarehouse.*.quantity' => 'required|integer|min:1',
-        'productWarehouse.*.price'    => 'required|numeric',
-        'productWarehouse.*.cost'     => 'required|numeric',
+        'productWarehouse.*.quantity' => 'integer|min:1',
+        'productWarehouse.*.price'    => 'numeric',
+        'productWarehouse.*.cost'     => 'numeric',
         'product.stock_alert'         => 'required|integer|min:0|max:192',
         'product.order_tax'           => 'nullable|integer|min:0|max:1192',
         'product.tax_type'            => 'nullable|integer|min:0|max:100',
@@ -98,7 +98,7 @@ class Create extends Component
 
             if ($this->image) {
                 $imageName = Str::slug($this->product->name).'-'.date('Y-m-d H:i:s').'.'.$this->image->extension();
-                $this->image->storeAs('products', $imageName);
+                $this->image->store('products', $imageName);
                 $this->product->image = $imageName;
             }
 
@@ -109,13 +109,17 @@ class Create extends Component
             $this->product->save($validatedData);
 
             foreach ($this->productWarehouse as $warehouseId => $warehouse) {
+                $quantity = $warehouse['quantity'] ?? 0;
+                $price = $warehouse['price'];
+                $cost = $warehouse['cost'];
+    
                 ProductWarehouse::create([
                     'product_id'   => $this->product->id,
                     'warehouse_id' => $warehouseId,
-                    'price'        => $warehouse['price'],
-                    'cost'         => $warehouse['cost'],
-                    'qty'          => $warehouse['quantity'],
-                ]);
+                    'price'        => $price,
+                    'cost'         => $cost,
+                    'qty'          => $quantity,
+                ]);    
             }
 
             $this->alert('success', __('Product created successfully'));
@@ -135,7 +139,7 @@ class Create extends Component
 
     public function getBrandsProperty()
     {
-        return Brand::select(['name', 'id'])->get();
+        return Brand::pluck('name', 'id')->toArray();
     }
 
     public function getWarehousesProperty()

@@ -98,7 +98,7 @@ class Edit extends Component
 
         if ($this->image) {
             $imageName = Str::slug($this->product->name).'-'.Str::random(5).'.'.$this->image->extension();
-            $this->image->storeAs('products', $imageName);
+            $this->image->store('products', $imageName);
             $this->product->image = $imageName;
         }
         $this->product->price = 0;
@@ -124,12 +124,12 @@ class Edit extends Component
 
     public function getCategoriesProperty()
     {
-        return Category::select(['name', 'id'])->get();
+        return Category::pluck('name', 'id')->toArray();
     }
 
     public function getBrandsProperty()
     {
-        return Brand::select(['name', 'id'])->get();
+        return Brand::pluck('name', 'id')->toArray();
     }
 
     public function render()

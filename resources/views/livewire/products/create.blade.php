@@ -9,7 +9,7 @@
             <form wire:submit.prevent="create">
                 <x-validation-errors class="mb-4" :errors="$errors" />
                 <div>
-                    <div class="flex flex-wrap -mx-2 mb-3">
+                    <div class="flex flex-wrap mb-3">
                         <div class="md:w-1/2 sm:w-full px-3">
                             <x-label for="code" :value="__('Code')" required />
                             <x-input id="code" class="block mt-1 w-full" type="text" name="code"
@@ -17,59 +17,62 @@
                                 autofocus />
                             <x-input-error :messages="$errors->get('code')" for="code" class="mt-2" />
                         </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
+                        <div class="md:w-1/2 sm:w-full px-2">
                             <x-label for="name" :value="__('Product Name')" required />
                             <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                                 wire:model.lazy="product.name" placeholder="{{ __('Enter Product Name') }}" required />
                             <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                         </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
+                        <div class="md:w-1/2 sm:w-full px-2">
                             <x-label for="category" :value="__('Category')" required />
                             <x-select-list :options="$this->categories" id="category_create" name="category_create"
                                 wire:model="product.category_id" />
                             <x-input-error :messages="$errors->get('category_id')" for="category_id" class="mt-2" />
                         </div>
-                        <div class="md:w-1/2 sm:w-full px-3">
+                        <div class="md:w-1/2 sm:w-full px-2">
                             <x-label for="stock_alert" :value="__('Stock Alert')" />
                             <x-input id="stock_alert" class="block mt-1 w-full" type="text" name="stock_alert"
                                 wire:model.lazy="product.stock_alert" />
                             <x-input-error :messages="$errors->get('stock_alert')" for="stock_alert" class="mt-2" />
                         </div>
                     </div>
-
-                    {{-- improving warehouse ui making it one line  --}}
-                    <div class="flex flex-col justify-center px-4 mt-2">
+                    <div class="flex flex-col justify-center px-2 mt-2 border border-gray-300 rounded-md">
+                        <h4 class="font-semibold text-left">{{ __('Initial Warehouse Stock') }}</h4>
+                        <small class="my-2 text-left">
+                            {{ __('Enter the initial stock of the product in each warehouse, or leave it blank to create infos without stock.') }}
+                        </small>
                         @foreach ($this->warehouses as $warehouse)
-                            <h4 class="font-semibold">{{ $warehouse->name }}</h4>
-
-                            <div class="flex items-center gap-2">
-                                <div class="w-1/3">
-                                    <x-label for="quantity_{{ $warehouse->id }}" :value="__('Quantity')" required />
+                            <div class="flex items-center w-full gap-2 py-4">
+                                <div class="w-1/4">
+                                    <h4 class="font-semibold text-left">{{ $warehouse->name }}</h4>
+                                </div>
+                                <div class="w-1/4">
+                                    <x-label for="quantity_{{ $warehouse->id }}" :value="__('Quantity')" />
                                     <input id="quantity_{{ $warehouse->id }}" class="block mt-1 w-full" type="text"
                                         name="quantity_{{ $warehouse->id }}"
+                                        placeholder="{{ __('Enter Product Quantity') }}"
                                         wire:model.defer="productWarehouse.{{ $warehouse->id }}.quantity" />
-                                    <x-input-error :messages="$errors->get('quantity.' . $warehouse->id)" for="price_{{ $warehouse->id }}" class="mt-2" />
+                                    <x-input-error :messages="$errors->get('quantity.' . $warehouse->id)" for="price_{{ $warehouse->id }}"
+                                        class="mt-2" />
                                 </div>
-                                <div class="w-1/3">
-                                    <x-label for="price_{{ $warehouse->id }}" :value="__('Price')" required />
+                                <div class="w-1/4">
+                                    <x-label for="price_{{ $warehouse->id }}" :value="__('Price')" />
                                     <input id="price_{{ $warehouse->id }}" class="block mt-1 w-full" type="text"
                                         name="price_{{ $warehouse->id }}"
                                         wire:model.lazy="productWarehouse.{{ $warehouse->id }}.price"
-                                        placeholder="{{ __('Enter Product Price') }}" required />
+                                        placeholder="{{ __('Enter Product Price') }}" />
                                     <x-input-error :messages="$errors->get('prices.' . $warehouse->id)" for="price_{{ $warehouse->id }}"
                                         class="mt-2" />
                                 </div>
-                                <div class="w-1/3">
-                                    <x-label for="cost_{{ $warehouse->id }}" :value="__('Cost')" required />
+                                <div class="w-1/4">
+                                    <x-label for="cost_{{ $warehouse->id }}" :value="__('Cost')" />
                                     <input type="text" wire:model.lazy="productWarehouse.{{ $warehouse->id }}.cost"
                                         id="cost_{{ $warehouse->id }}" name="cost_{{ $warehouse->id }}"
-                                        class="block mt-1 w-full" placeholder="{{ __('Enter Product Cost') }}"
-                                        required />
+                                        class="block mt-1 w-full" placeholder="{{ __('Enter Product Cost') }}" />
                                     <x-input-error :messages="$errors->get('costs.' . $warehouse->id)" for="cost_{{ $warehouse->id }}" class="mt-2" />
                                 </div>
                             </div>
                         @endforeach
-
                     </div>
 
                     <x-accordion title="{{ __('Details') }}">

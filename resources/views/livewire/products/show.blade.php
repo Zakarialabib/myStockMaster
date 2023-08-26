@@ -133,7 +133,7 @@
                                         </li>
 
                                         <li>{{ __('Quantity') }} : {{ $movement->quantity }} </li>
-                                        <li>{{ __('User') }} - {{ $movement->user->name }}</li>
+                                       {{-- <li>{{ __('User') }} - {{ $movement->user->name }}</li> --}}
                                         <li>{{ __('Date') }} - {{ $movement->created_at }}</li>
                                     @empty
                                         <li class="text-center py-4"> {{ __('No movement recorded') }}</li>
