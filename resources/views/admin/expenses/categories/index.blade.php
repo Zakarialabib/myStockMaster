@@ -57,7 +57,7 @@
             </div>
             <div class="float-right">
                 @can('expense_categories_create')
-                    <x-button primary onclick="Livewire.emit('createExpenseCategory')">{{ __('Create') }}</x-button>
+                <x-button primary onclick="Livewire.emit('createModal')">{{ __('Create') }}</x-button>
                 @endcan
             </div>
         </div>
