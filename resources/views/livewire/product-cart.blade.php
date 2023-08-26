@@ -1,4 +1,4 @@
-<div >
+<div>
     <x-validation-errors class="mb-4" :errors="$errors" />
 
     <div>
@@ -33,24 +33,26 @@
                                 @include('livewire.includes.product-cart-price')
                             </x-table.td>
 
-                                <x-table.td>
-                                    <span
-                                        class="badge badge-info">{{ $cart_item->options->stock . ' ' . $cart_item->options->unit }}</span>
-                                </x-table.td>
+                            <x-table.td>
+                                <span
+                                    class="badge badge-info">
+                                    {{ $cart_item->options->stock . ' ' . $cart_item->options->unit }}
+                                </span>
+                            </x-table.td>
 
-                                <x-table.td>
-                                    @include('livewire.includes.product-cart-quantity')
-                                </x-table.td>
+                            <x-table.td>
+                                @include('livewire.includes.product-cart-quantity')
+                            </x-table.td>
 
-                                <x-table.td>
-                                    {{ format_currency($cart_item->options->sub_total) }}
-                                </x-table.td>
+                            <x-table.td>
+                                {{ format_currency($cart_item->options->sub_total) }}
+                            </x-table.td>
 
-                                <x-table.td>
-                                    <a href="#" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
-                                        <i class="bi bi-x-circle font-2xl text-danger"></i>
-                                    </a>
-                                </x-table.td>
+                            <x-table.td>
+                                <a href="#" wire:click.prevent="removeItem('{{ $cart_item->rowId }}')">
+                                    <i class="bi bi-x-circle font-2xl text-danger"></i>
+                                </a>
+                            </x-table.td>
                         </x-table.tr>
                     @endforeach
                 @else
@@ -96,27 +98,25 @@
     </div>
 
     <input type="hidden" name="total_amount" value="{{ $total_with_shipping }}">
-    
-    <x-accordion title="{{ __('Details') }}">
-        <div class="flex flex-wrap my-2">
-            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                <div class="mb-4">
-                    <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
-                    <x-input wire:model.lazy="global_tax" value="{{ $global_tax }}" />
-                </div>
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                <div class="mb-4">
-                    <label for="discount_percentage">{{ __('Discount (%)') }}</label>
-                    <x-input wire:model.lazy="global_discount" value="{{ $global_discount }}" />
-                </div>
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-                <div class="mb-4">
-                    <label for="shipping_amount">{{ __('Shipping') }}</label>
-                    <x-input wire:model.lazy="shipping" />
-                </div>
+
+    <div class="flex flex-wrap my-2">
+        <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+            <div class="mb-4">
+                <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
+                <x-input wire:model.lazy="global_tax" value="{{ $global_tax }}" />
             </div>
         </div>
-    </x-accordion>
+        <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+            <div class="mb-4">
+                <label for="discount_percentage">{{ __('Discount (%)') }}</label>
+                <x-input wire:model.lazy="global_discount" value="{{ $global_discount }}" />
+            </div>
+        </div>
+        <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+            <div class="mb-4">
+                <label for="shipping_amount">{{ __('Shipping') }}</label>
+                <x-input wire:model.lazy="shipping" />
+            </div>
+        </div>
+    </div>
 </div>
