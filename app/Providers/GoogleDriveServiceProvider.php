@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Google\Client;
+use Google\Service\Drive;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
-// use Masbug\Flysystem\GoogleDrive\GoogleDriveAdapter;
+use League\Flysystem\Filesystem;
 use Masbug\Flysystem\GoogleDriveAdapter;
-use Storage;
 use Google_Client;
 use Google_Service_Drive;
 
@@ -20,7 +23,7 @@ class GoogleDriveServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        
     }
 
     /**
