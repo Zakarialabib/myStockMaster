@@ -4,42 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseDetail extends Model
 {
-    use HasAdvancedFilter;
-
-    public $orderable = [
-        'id',
-        'purchase_id',
-        'product_id',
-        'quantity',
-        'price',
-        'total',
-        'created_at',
-        'updated_at',
-    ];
-
-    public $filterable = [
-        'id',
-        'purchase_id',
-        'product_id',
-        'warehouse_id',
-        'quantity',
-        'price',
-        'total',
-        'created_at',
-        'updated_at',
-    ];
-
-    protected $dispatchesEvents = [
-
-    ];
-
     protected $guarded = [];
 
     public function product(): BelongsTo

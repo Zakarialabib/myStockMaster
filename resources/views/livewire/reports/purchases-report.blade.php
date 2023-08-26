@@ -98,7 +98,7 @@
                             <x-table.td>{{ format_date($purchase->date) }}
                             </x-table.td>
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
-                            <x-table.td>{{ $purchase->name }}</x-table.td>
+                            <x-table.td>{{ $purchase->supplier->name }}</x-table.td>
                             <x-table.td>
                                 @php
                                     $badgeType = $purchase->status->getBadgeType();

@@ -29,15 +29,13 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'showModal', 'paymentModal',
+        'paymentModal',
         'refreshIndex' => '$refresh',
         'delete',
     ];
 
     public $startDate;
     public $endDate;
-
-    public $showModal = false;
 
     public $paymentModal = false;
 
@@ -131,21 +129,7 @@ class Index extends Component
 
         return view('livewire.purchase.index', compact('purchases'));
     }
-
-    public function showModal(Purchase $purchase): void
-    {
-        abort_if(Gate::denies('purchase_access'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->purchase = Purchase::find($purchase->id);
-
-        $this->showModal = true;
-    }
-
-    public function deleteSelected(): void
+        public function deleteSelected(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 

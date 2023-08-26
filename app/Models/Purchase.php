@@ -20,7 +20,7 @@ class Purchase extends Model
     use GetModelByUuid;
     use UuidGenerator;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'date',
         'reference',
@@ -36,32 +36,12 @@ class Purchase extends Model
         'status',
         'payment_status',
         'payment_method',
-        'note',
         'created_at',
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'date',
-        'reference',
-        'supplier_id',
-        'tax_percentage',
-        'tax_amount',
-        'discount_percentage',
-        'discount_amount',
-        'shipping_amount',
-        'total_amount',
-        'paid_amount',
-        'due_amount',
-        'status',
-        'payment_status',
-        'payment_method',
-        'note',
-        'created_at',
-        'updated_at',
-    ];
-
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
     /**
      * The attributes that are mass assignable.
      *
@@ -129,7 +109,7 @@ class Purchase extends Model
                 $number = 1;
             }
 
-            $purchase->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

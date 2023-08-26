@@ -20,7 +20,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Throwable;
+use Illuminate\Support\Facades\DB;
 
 class Create extends Component
 {
@@ -28,15 +28,10 @@ class Create extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'productSelected',
         'refreshIndex' => '$refresh',
     ];
 
     public $cart_instance;
-
-    public $suppliers;
-
-    public $products;
 
     public $supplier_id;
 
@@ -125,13 +120,13 @@ class Create extends Component
 
     public function store()
     {
-        if ( ! $this->warehouse_id) {
+        if (!$this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        try {
+        DB::transaction(function () {
             $this->validate();
 
             $due_amount = $this->total_amount - $this->paid_amount;
@@ -147,6 +142,7 @@ class Create extends Component
             $purchase = Purchase::create([
                 'date'                => $this->date,
                 'supplier_id'         => $this->supplier_id,
+                'warehouse_id'         => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -184,7 +180,7 @@ class Create extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if ( ! $product_warehouse) {
+                if (!$product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -195,7 +191,7 @@ class Create extends Component
                 }
 
                 $new_quantity = $product_warehouse->qty + $cart_item->qty;
-                $new_cost = (($product_warehouse->cost * $product_warehouse->qty) + ($cart_item->options->unit_price * $cart_item->qty)) / $new_quantity;
+                $new_cost = $product_warehouse->cost;
 
                 $product_warehouse->update([
                     'qty'  => $new_quantity,
@@ -236,9 +232,7 @@ class Create extends Component
             Cart::instance('purchase')->destroy();
 
             return redirect()->route('purchases.index');
-        } catch (Throwable $th) {
-            $this->alert('success', __('Something went wrong!').' '.$th->getMessage());
-        }
+        });
     }
 
     public function calculateTotal(): mixed
@@ -249,119 +243,6 @@ class Create extends Component
     public function resetCart(): void
     {
         Cart::instance($this->cart_instance)->destroy();
-    }
-
-    public function productSelected($product): void
-    {
-        $cart = Cart::instance($this->cart_instance);
-
-        $exists = $cart->search(function ($cartItem, $rowId) use ($product) {
-            return $cartItem->id === $product['id'];
-        });
-
-        if ($exists->isNotEmpty()) {
-            $this->alert('error', __('Product already added to cart!'));
-
-            return;
-        }
-
-        $cart->add([
-            'id'      => $product['id'],
-            'name'    => $product['name'],
-            'qty'     => 1,
-            'price'   => $this->calculate($product)['price'],
-            'weight'  => 1,
-            'options' => [
-                'product_discount'      => 0.00,
-                'product_discount_type' => 'fixed',
-                'sub_total'             => $this->calculate($product)['sub_total'],
-                'code'                  => $product['code'],
-                'stock'                 => $product['quantity'],
-                'unit'                  => $product['unit'],
-                'product_tax'           => $this->calculate($product)['product_tax'],
-                'unit_price'            => $this->calculate($product)['unit_price'],
-            ],
-        ]);
-
-        $this->check_quantity[$product['id']] = $product['quantity'];
-        $this->quantity[$product['id']] = 1;
-        $this->discount_type[$product['id']] = 'fixed';
-        $this->item_discount[$product['id']] = 0;
-        $this->total_amount = $this->calculateTotal();
-    }
-
-    public function removeItem($row_id): void
-    {
-        Cart::instance($this->cart_instance)->remove($row_id);
-    }
-
-    public function updateQuantity($row_id, $product_id): void
-    {
-        if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
-            $this->alert('error', __('Quantity is greater than stock!'));
-
-            return;
-        }
-
-        Cart::instance($this->cart_instance)->update($row_id, $this->quantity[$product_id]);
-
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $cart_item->options->product_discount,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-            ],
-        ]);
-    }
-
-    public function calculate($product): array
-    {
-        $price = 0;
-        $unit_price = 0;
-        $product_tax = 0;
-        $sub_total = 0;
-
-        if ($product['tax_type'] === 1) {
-            $price = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
-            $unit_price = $product['price'];
-            $product_tax = $product['price'] * $product['order_tax'] / 100;
-            $sub_total = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
-        } elseif ($product['tax_type'] === 2) {
-            $price = $product['price'];
-            $unit_price = $product['price'] - ($product['price'] * $product['order_tax'] / 100);
-            $product_tax = $product['price'] * $product['order_tax'] / 100;
-            $sub_total = $product['price'];
-        } else {
-            $price = $product['price'];
-            $unit_price = $product['price'];
-            $product_tax = 0.00;
-            $sub_total = $product['price'];
-        }
-
-        return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
-    }
-
-    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
-    {
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $discount_amount,
-                'product_discount_type' => $this->discount_type[$product_id],
-            ],
-        ]);
     }
 
     protected function initListsForFields(): void

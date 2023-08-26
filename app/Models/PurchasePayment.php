@@ -14,17 +14,7 @@ class PurchasePayment extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
-        'id',
-        'purchase_id',
-        'payment_method',
-        'amount',
-        'payment_date',
-        'created_at',
-        'updated_at',
-    ];
-
-    public $filterable = [
+    public const ATTRIBUTES = [
         'id',
         'purchase_id',
         'payment_method',
@@ -34,6 +24,10 @@ class PurchasePayment extends Model
         'created_at',
         'updated_at',
     ];
+
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
@@ -57,7 +51,7 @@ class PurchasePayment extends Model
                 $number = 1;
             }
 
-            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchasePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

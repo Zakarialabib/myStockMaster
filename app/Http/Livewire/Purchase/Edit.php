@@ -18,6 +18,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class Edit extends Component
 {
@@ -28,6 +29,8 @@ class Edit extends Component
         'productSelected',
         'refreshIndex' => '$refresh',
     ];
+
+    public $cart_instance;
 
     public $suppliers;
 
@@ -107,182 +110,143 @@ class Edit extends Component
 
     public function update()
     {
-        if ( ! $this->warehouse_id) {
+        if (!$this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        $this->validate();
+        DB::transaction(function () {
+            $this->validate();
 
-        if (in_array($this->purchase->status, [PurchaseStatus::COMPLETED, PurchaseStatus::RETURNED, PurchaseStatus::CANCELED])) {
-            $this->alert('error', __('Cannot update a completed, returned or canceled purchase.'));
+            if (in_array($this->purchase->status, [PurchaseStatus::COMPLETED, PurchaseStatus::RETURNED, PurchaseStatus::CANCELED])) {
+                $this->alert('error', __('Cannot update a completed, returned or canceled purchase.'));
 
-            return redirect()->back();
-        }
-
-        // Determine payment status
-        $due_amount = $this->total_amount - $this->paid_amount;
-
-        if ($due_amount === $this->total_amount) {
-            $payment_status = PaymentStatus::PENDING;
-        } elseif ($due_amount > 0) {
-            $payment_status = PaymentStatus::PARTIAL;
-        } else {
-            $payment_status = PaymentStatus::PAID;
-        }
-
-        // Delete previous purchase details
-        foreach ($this->purchase->purchaseDetails as $purchase_detail) {
-            $purchase_detail->delete();
-        }
-
-        $this->purchase->update([
-            'date'                => $this->date,
-            'reference'           => $this->reference,
-            'supplier_id'         => $this->supplier_id,
-            'tax_percentage'      => $this->tax_percentage,
-            'discount_percentage' => $this->discount_percentage,
-            'shipping_amount'     => $this->shipping_amount * 100,
-            'paid_amount'         => $this->paid_amount * 100,
-            'total_amount'        => $this->total_amount * 100,
-            'due_amount'          => $due_amount * 100,
-            'status'              => $this->purchase->status,
-            'payment_status'      => $payment_status,
-            'payment_method'      => $this->payment_method,
-            'note'                => $this->note,
-            'tax_amount'          => Cart::instance('purchase')->tax() * 100,
-            'discount_amount'     => Cart::instance('purchase')->discount() * 100,
-        ]);
-
-        foreach (Cart::instance('purchase')->content() as $cart_item) {
-            PurchaseDetail::create([
-                'purchase_id'             => $this->purchase->id,
-                'product_id'              => $cart_item->id,
-                'warehouse_id'            => $this->warehouse_id,
-                'name'                    => $cart_item->name,
-                'code'                    => $cart_item->options->code,
-                'quantity'                => $cart_item->qty,
-                'price'                   => $cart_item->price * 100,
-                'unit_price'              => $cart_item->options->unit_price * 100,
-                'sub_total'               => $cart_item->options->sub_total * 100,
-                'product_discount_amount' => $cart_item->options->product_discount * 100,
-                'product_discount_type'   => $cart_item->options->product_discount_type,
-                'product_tax_amount'      => $cart_item->options->product_tax * 100,
-            ]);
-
-            $product = Product::findOrFail($cart_item->id);
-            $product_warehouse = ProductWarehouse::where('product_id', $product->id)
-                ->where('warehouse_id', $this->warehouse_id)
-                ->first();
-
-            if ( ! $product_warehouse) {
-                $product_warehouse = new ProductWarehouse([
-                    'product_id'   => $cart_item->id,
-                    'warehouse_id' => $this->warehouse_id,
-                    'price'        => $cart_item->price * 100,
-                    'cost'         => $cart_item->options->unit_price * 100,
-                    'qty'          => 0,
-                ]);
+                return redirect()->back();
             }
 
-            $new_quantity = $product_warehouse->qty + $cart_item->qty;
-            $new_cost = (($product_warehouse->cost * $product_warehouse->qty) + ($cart_item->options->unit_price * $cart_item->qty)) / $new_quantity;
+            // Determine payment status
+            $due_amount = $this->total_amount - $this->paid_amount;
 
-            $product_warehouse->update([
-                'qty'  => $new_quantity,
-                'cost' => $new_cost,
+            if ($due_amount === $this->total_amount) {
+                $payment_status = PaymentStatus::PENDING;
+            } elseif ($due_amount > 0) {
+                $payment_status = PaymentStatus::PARTIAL;
+            } else {
+                $payment_status = PaymentStatus::PAID;
+            }
+
+            // Delete previous purchase details
+            foreach ($this->purchase->purchaseDetails as $purchase_detail) {
+                $purchase_detail->delete();
+            }
+
+            $this->purchase->update([
+                'date'                => $this->date,
+                'reference'           => $this->reference,
+                'supplier_id'         => $this->supplier_id,
+                'tax_percentage'      => $this->tax_percentage,
+                'discount_percentage' => $this->discount_percentage,
+                'shipping_amount'     => $this->shipping_amount * 100,
+                'paid_amount'         => $this->paid_amount * 100,
+                'total_amount'        => $this->total_amount * 100,
+                'due_amount'          => $due_amount * 100,
+                'status'              => $this->purchase->status,
+                'payment_status'      => $payment_status,
+                'payment_method'      => $this->payment_method,
+                'note'                => $this->note,
+                'tax_amount'          => Cart::instance('purchase')->tax() * 100,
+                'discount_amount'     => Cart::instance('purchase')->discount() * 100,
             ]);
 
-            $movement = new Movement([
-                'type'         => MovementType::PURCHASE,
-                'quantity'     => $cart_item->qty,
-                'price'        => $cart_item->price * 100,
-                'date'         => date('Y-m-d'),
-                'movable_type' => get_class($product),
-                'movable_id'   => $product->id,
-                'user_id'      => Auth::user()->id,
-            ]);
+            foreach (Cart::instance('purchase')->content() as $cart_item) {
+                PurchaseDetail::create([
+                    'purchase_id'             => $this->purchase->id,
+                    'product_id'              => $cart_item->id,
+                    'warehouse_id'            => $this->warehouse_id,
+                    'name'                    => $cart_item->name,
+                    'code'                    => $cart_item->options->code,
+                    'quantity'                => $cart_item->qty,
+                    'price'                   => $cart_item->price * 100,
+                    'unit_price'              => $cart_item->options->unit_price * 100,
+                    'sub_total'               => $cart_item->options->sub_total * 100,
+                    'product_discount_amount' => $cart_item->options->product_discount * 100,
+                    'product_discount_type'   => $cart_item->options->product_discount_type,
+                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
+                ]);
 
-            $movement->save();
-        }
+                $product = Product::findOrFail($cart_item->id);
+                $product_warehouse = ProductWarehouse::where('product_id', $product->id)
+                    ->where('warehouse_id', $this->warehouse_id)
+                    ->first();
 
-        Cart::instance('purchase')->destroy();
+                if (!$product_warehouse) {
+                    $product_warehouse = new ProductWarehouse([
+                        'product_id'   => $cart_item->id,
+                        'warehouse_id' => $this->warehouse_id,
+                        'price'        => $cart_item->price * 100,
+                        'cost'         => $cart_item->options->unit_price * 100,
+                        'qty'          => 0,
+                    ]);
+                }
 
-        $this->alert('success', __('Purchase Updated succesfully !'));
+                $new_quantity = $product_warehouse->qty + $cart_item->qty;
+                $new_cost = (($product_warehouse->cost * $product_warehouse->qty) + ($cart_item->options->unit_price * $cart_item->qty)) / $new_quantity;
 
-        return redirect()->route('purchases.index');
+                $product_warehouse->update([
+                    'qty'  => $new_quantity,
+                    'cost' => $new_cost,
+                ]);
+
+                $movement = new Movement([
+                    'type'         => MovementType::PURCHASE,
+                    'quantity'     => $cart_item->qty,
+                    'price'        => $cart_item->price * 100,
+                    'date'         => date('Y-m-d'),
+                    'movable_type' => get_class($product),
+                    'movable_id'   => $product->id,
+                    'user_id'      => Auth::user()->id,
+                ]);
+
+                $movement->save();
+            }
+
+            Cart::instance('purchase')->destroy();
+
+            $this->alert('success', __('Purchase Updated succesfully !'));
+
+            return redirect()->route('purchases.index');
+        });
     }
 
     public function render()
     {
         return view('livewire.purchase.edit');
     }
-
-    public function productSelected($product): void
+    public function hydrate(): void
     {
-        if (empty($product)) {
-            $this->alert('error', __('Something went wrong!'));
-
-            return;
-        }
-
-        $cart = Cart::instance($this->cart_instance);
-
-        $exists = $cart->search(fn ($cartItem) => $cartItem->id === $product['id']);
-
-        if ($exists->isNotEmpty()) {
-            $this->alert('error', __('Product already added to cart!'));
-
-            return;
-        }
-
-        $cartItem = [
-            'id'      => $product['id'],
-            'name'    => $product['name'],
-            'qty'     => 1,
-            'price'   => $this->calculate($product)['price'],
-            'weight'  => 1,
-            'options' => [
-                'product_discount'      => 0.00,
-                'product_discount_type' => 'fixed',
-                'sub_total'             => $this->calculate($product)['sub_total'],
-                'code'                  => $product['code'],
-                'stock'                 => $product['quantity'],
-                'unit'                  => $product['unit'],
-                'product_tax'           => $this->calculate($product)['product_tax'],
-                'unit_price'            => $this->calculate($product)['unit_price'],
-            ],
-        ];
-
-        $cart->add($cartItem);
-
-        $this->check_quantity[$product['id']] = $product['quantity'];
-        $this->quantity[$product['id']] = 1;
-        $this->discount_type[$product['id']] = 'fixed';
-        $this->item_discount[$product['id']] = 0;
         $this->total_amount = $this->calculateTotal();
-
-        if ($cart->count() > 0) {
-            $this->alert('success', __('Product added successfully!'));
-        } else {
-            $this->alert('error', __('Something went wrong!'));
-        }
     }
+
+
+    public function calculateTotal(): mixed
+    {
+        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
+    }
+
+    public function resetCart(): void
+    {
+        Cart::instance($this->cart_instance)->destroy();
+    }
+
 
     public function getSupplierProperty()
     {
-        return Supplier::select('name', 'id')->get();
-    }
-
-    public function updatedWarehouseId($value)
-    {
-        $this->warehouse_id = $value;
-        $this->emit('warehouseSelected', $this->warehouse_id);
+        return Supplier::pluck('name', 'id')->toArray();
     }
 
     public function getWarehousesProperty()
     {
-        return  Warehouse::pluck('name', 'id')->toArray();
+        return Warehouse::pluck('name', 'id')->toArray();
     }
 }

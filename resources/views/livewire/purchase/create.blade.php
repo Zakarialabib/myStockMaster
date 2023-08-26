@@ -4,19 +4,19 @@
 
         <form wire:submit.prevent="store">
             <div class="flex flex-wrap -mx-2 mb-3">
-                <div class="w-full md:w-1/2 px-3 mb-4">
+                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                     <x-label for='supplier_id' :value="__('Supplier')" required />
                     <x-select-list
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         required id="supplier_id" name="supplier_id" wire:model="supplier_id" :options="$this->listsForFields['suppliers']" />
                     <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
                 </div>
-                <div class="w-full md:w-1/2 px-3 mb-4">
+                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                     <x-label for="date" :value="__('Date')" required />
                     <x-input type="date" wire:model="date" name="date" required value="{{ date('Y-m-d') }}" />
                     <x-input-error :messages="$errors->get('date')" class="mt-2" />
                 </div>
-                <div class="w-full md:w-1/2 px-3 mb-4">
+                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                     <x-label for="warehouse" :value="__('Warehouse')" />
                     <x-select-list
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <livewire:product-cart :cartInstance="'purchase'" />
+            <livewire:product-cart :cartInstance="'purchase'"  />
 
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
