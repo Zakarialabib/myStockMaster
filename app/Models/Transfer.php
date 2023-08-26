@@ -23,13 +23,11 @@ class Transfer extends Model
         'reference',
         'from_warehouse_id',
         'to_warehouse_id',
-        'item',
         'total_qty',
         'total_tax',
         'total_cost',
         'total_amount',
         'shipping',
-        'document',
         'status',
         'note',
     ];
