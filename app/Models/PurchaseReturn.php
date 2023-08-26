@@ -16,7 +16,7 @@ class PurchaseReturn extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'date',
         'reference',
@@ -32,29 +32,10 @@ class PurchaseReturn extends Model
         'status',
         'payment_status',
         'payment_method',
-        'note',
         'supplier_id',
     ];
-
-    public $filterable = [
-        'id',
-        'date',
-        'reference',
-        'supplier_id',
-        'tax_percentage',
-        'tax_amount',
-        'discount_percentage',
-        'discount_amount',
-        'shipping_amount',
-        'total_amount',
-        'paid_amount',
-        'due_amount',
-        'status',
-        'payment_status',
-        'payment_method',
-        'note',
-        'supplier_id',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -121,7 +102,7 @@ class PurchaseReturn extends Model
                 $number = 1;
             }
 
-            $purchaseReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

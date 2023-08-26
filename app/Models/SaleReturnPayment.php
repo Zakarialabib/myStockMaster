@@ -14,27 +14,18 @@ class SaleReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'sale_return_id',
         'amount',
         'payment_method',
-        'payment_note',
         'created_at',
         'updated_at',
+
     ];
 
-    public $filterable = [
-        'id',
-        'sale_return_id',
-        'amount',
-        'payment_method',
-        'payment_note',
-        'user_id',
-        'created_at',
-        'updated_at',
-    ];
-
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
     protected $guarded = [];
 
     /** @return \Illuminate\Database\Eloquent\Relations\BelongsTo */

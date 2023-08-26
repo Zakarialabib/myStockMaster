@@ -12,8 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SaleReturnDetail extends Model
 {
     use HasAdvancedFilter;
-
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'sale_return_id',
         'product_id',
@@ -22,18 +21,11 @@ class SaleReturnDetail extends Model
         'total',
         'created_at',
         'updated_at',
+
     ];
 
-    public $filterable = [
-        'id',
-        'sale_return_id',
-        'product_id',
-        'quantity',
-        'price',
-        'total',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 

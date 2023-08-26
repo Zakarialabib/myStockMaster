@@ -12,7 +12,7 @@ class Wallet extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'recieved_amount',
@@ -23,20 +23,13 @@ class Wallet extends Model
         'user_id',
         'created_at',
         'updated_at',
+
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'recieved_amount',
-        'sent_amount',
-        'balance',
-        'customer_id',
-        'supplier_id',
-        'user_id',
-        'created_at',
-        'updated_at',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.

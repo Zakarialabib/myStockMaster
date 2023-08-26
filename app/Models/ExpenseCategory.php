@@ -14,21 +14,16 @@ class ExpenseCategory extends Model
     use HasAdvancedFilter;
     use HasFactory;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
-        'description',
-        'created_at',
         'updated_at',
+        'created_at',        
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'description',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.

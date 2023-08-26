@@ -10,17 +10,15 @@ use  Spatie\Permission\Models\Permission as SpatiePermission;
 class Permission extends SpatiePermission
 {
     use HasAdvancedFilter;
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'guard_name',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'guard_name',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.

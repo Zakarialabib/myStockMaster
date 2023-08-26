@@ -12,8 +12,8 @@ class Warehouse extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var array<string> */
-    public $orderable = [
+    
+    public const ATTRIBUTES = [
         'id',
         'name',
         'city',
@@ -22,19 +22,12 @@ class Warehouse extends Model
         'country',
         'created_at',
         'updated_at',
+        
     ];
+    
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
-    /** @var array<string> */
-    public $filterable = [
-        'id',
-        'name',
-        'city',
-        'phone',
-        'email',
-        'country',
-        'created_at',
-        'updated_at',
-    ];
 
     /**
      * The attributes that are mass assignable.

@@ -4,48 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationDetails extends Model
 {
-    use HasAdvancedFilter;
 
-    public $orderable = [
-        'id',
-        'quotation_id',
-        'product_id',
-        'name',
-        'code',
-        'quantity',
-        'price',
-        'unit_price',
-        'sub_total',
-        'product_discount_amount',
-        'product_discount_type',
-        'product_tax_amount',
-        'created_at',
-        'updated_at',
-    ];
-
-    public $filterable = [
-        'id',
-        'quotation_id',
-        'product_id',
-        'name',
-        'code',
-        'quantity',
-        'price',
-        'unit_price',
-        'sub_total',
-        'product_discount_amount',
-        'product_discount_type',
-        'product_tax_amount',
-        'created_at',
-        'updated_at',
-    ];
 
     protected $guarded = [];
 

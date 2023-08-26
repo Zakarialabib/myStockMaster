@@ -16,8 +16,17 @@ class Language extends Model
     public const IS_DEFAULT = 1;
     public const IS_NOT_DEFAULT = 0;
 
-    public $timestamps = false;
+    public const ATTRIBUTES = [
+        'id',
+        'name',
+        'code',
+        'status',
+        'is_default',
+    ];
 
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
     /**
      * The attributes that are mass assignable.
      *
@@ -33,14 +42,4 @@ class Language extends Model
     protected $casts = [
         'status' => Status::class,
     ];
-
-    public function categories(): HasMany
-    {
-        return $this->hasMany(Category::class, 'language_id');
-    }
-
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class, 'language_id');
-    }
 }

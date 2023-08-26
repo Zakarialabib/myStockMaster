@@ -10,28 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 class Printer extends Model
 {
     use HasAdvancedFilter;
-
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'connection_type',
-        'capability_profile',
-        'char_per_line',
-        'ip_address',
-        'port',
-        'path',
+
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'connection_type',
-        'capability_profile',
-        'char_per_line',
-        'ip_address',
-        'port',
-        'path',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     public $fillable = [
         'name',

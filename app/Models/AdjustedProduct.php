@@ -12,7 +12,7 @@ class AdjustedProduct extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'product_id',
         'warehouse_id',
@@ -21,14 +21,9 @@ class AdjustedProduct extends Model
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'product_id',
-        'warehouse_id',
-        'quantity',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     protected $guarded = [];
 

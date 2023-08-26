@@ -14,13 +14,12 @@ class Brand extends Model
     use HasAdvancedFilter;
     use HasFactory;
 
-    public $orderable = [
-        'id', 'name', 'description', 'image',
+    public const ATTRIBUTES = [
+        'id', 'name',
     ];
 
-    public $filterable = [
-        'id', 'name', 'description', 'image',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.

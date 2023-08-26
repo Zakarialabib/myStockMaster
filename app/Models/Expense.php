@@ -14,27 +14,19 @@ class Expense extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'category_id',
         'date',
         'reference',
-        'details',
         'amount',
         'created_at',
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'category_id',
-        'date',
-        'reference',
-        'details',
-        'amount',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.

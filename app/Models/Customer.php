@@ -18,7 +18,7 @@ class Customer extends Model
     use UuidGenerator;
     use HasFactory;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'email',
@@ -30,17 +30,9 @@ class Customer extends Model
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'city',
-        'country',
-        'address',
-        'created_at',
-        'updated_at',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.

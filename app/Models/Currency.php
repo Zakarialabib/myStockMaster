@@ -13,27 +13,19 @@ class Currency extends Model
     use HasAdvancedFilter;
     use HasFactory;
 
-    public $table = 'currencies';
-
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'code',
         'symbol',
         'exchange_rate',
-        'created_at',
         'updated_at',
+        'created_at',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'code',
-        'symbol',
-        'exchange_rate',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.

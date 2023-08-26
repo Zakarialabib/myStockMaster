@@ -14,14 +14,13 @@ class Category extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
-
-    public $orderable = [
+    public const ATTRIBUTES = [        
         'id', 'code', 'name',
     ];
 
-    public $filterable = [
-        'id', 'code', 'name',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.

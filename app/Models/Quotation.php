@@ -16,7 +16,7 @@ class Quotation extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'date',
         'reference',
@@ -30,19 +30,9 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'date',
-        'reference',
-        'customer_id',
-        'tax_amount',
-        'discount_amount',
-        'shipping_amount',
-        'total_amount',
-        'status',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
 
     /**
      * The attributes that are mass assignable.
@@ -108,7 +98,7 @@ class Quotation extends Model
                 $number = 1;
             }
 
-            $quotation->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

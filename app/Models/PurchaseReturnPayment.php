@@ -14,7 +14,7 @@ class PurchaseReturnPayment extends Model
 {
     use HasAdvancedFilter;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
         'id',
         'date',
         'reference',
@@ -26,18 +26,8 @@ class PurchaseReturnPayment extends Model
         'updated_at',
     ];
 
-    public $filterable = [
-        'id',
-        'date',
-        'reference',
-        'amount',
-        'note',
-        'purchase_return_id',
-        'payment_method',
-        'user_id',
-        'created_at',
-        'updated_at',
-    ];
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 

@@ -6,15 +6,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Support\HasAdvancedFilter;
 
 class Shipment extends Model
 {
-    public $orderable = [
-        'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
+    use HasAdvancedFilter;
+    public const ATTRIBUTES = [
+        'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'status',
+
     ];
-    public $filterable = [
-        'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *

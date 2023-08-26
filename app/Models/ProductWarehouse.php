@@ -35,6 +35,6 @@ class ProductWarehouse extends Pivot
 
     public function productMovements()
     {
-        return $this->hasMany(ProductMovement::class);
+        return $this->hasMany(Movement::class);
     }
 }

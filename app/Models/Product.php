@@ -25,24 +25,18 @@ class Product extends Model
     use GetModelByUuid;
     use UuidGenerator;
 
-    public $orderable = [
+
+    public const ATTRIBUTES = [
         'id',
         'category_id',
         'name',
         'code',
-        'quantity',
-        'cost',
-        'price',
         'created_at',
     ];
 
-    public $filterable = [
-        'id',
-        'name',
-        'code',
-        'cost',
-        'price',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -71,7 +65,7 @@ class Product extends Model
     {
         $this->setRawAttributes([
 
-            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
 
         ], true);
         parent::__construct($attributes);

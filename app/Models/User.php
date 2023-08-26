@@ -27,17 +27,16 @@ class User extends Authenticatable
     use GetModelByUuid;
     use UuidGenerator;
 
-    public $orderable = [
+    public const ATTRIBUTES = [
+
         'id', 'name', 'email', 'password', 'avatar',
         'phone', 'role_id', 'status', 'is_all_warehouses',
         'created_at', 'updated_at',
     ];
 
-    public $filterable = [
-        'id', 'name', 'email', 'password', 'avatar',
-        'phone', 'role_id', 'status', 'is_all_warehouses',
-        'created_at', 'updated_at', 'wallet_id',
-    ];
+
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -85,15 +84,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Warehouse::class);
     }
 
-    /**
-     * @param mixed $permission
-     *
-     * @return mixed
-     */
-    public function hasPermission($permission)
-    {
-        return $this->role->permissions->contains('name', $permission);
-    }
 
     /** @return HasOne<Wallet> */
     public function wallet(): HasOne
