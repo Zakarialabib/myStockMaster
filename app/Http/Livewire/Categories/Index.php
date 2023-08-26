@@ -42,6 +42,9 @@ class Index extends Component
     /** @var bool */
     public $importModal = false;
 
+    /** @var bool */
+    public $deleteModal = false;
+
     /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
@@ -92,6 +95,23 @@ class Index extends Component
         $this->showModal = true;
     }
 
+    public function confirmed()
+    {
+        $this->emit('delete');
+    }
+
+    public function deleteModal($category)
+    {
+        $this->confirm(__('Are you sure you want to delete this?'), [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+        $this->category = $category;
+    }
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('category_delete'), 403);
@@ -101,14 +121,14 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Category $category): void
+    public function delete(): void
     {
         abort_if(Gate::denies('category_delete'), 403);
 
         if ($category->products->count() > 0) {
             $this->alert('error', __('Category has products.'));
         } else {
-            $category->delete();
+            Category::findOrFail($this->category)->delete();
             $this->alert('success', __('Category deleted successfully.'));
         }
     }
