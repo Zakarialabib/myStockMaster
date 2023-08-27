@@ -192,11 +192,9 @@
     @livewire('purchase.show', ['purchase' => $purchase])
 
 
-    {{-- Purchase Payment payment component   --}}
     @if (empty($showPayments))
         <livewire:purchase.payment.index :purchase="$purchase" />
     @endif
-    {{-- End Purchase Payment payment component   --}}
 
     @if (!empty($paymentModal))
         <x-modal wire:model="paymentModal">

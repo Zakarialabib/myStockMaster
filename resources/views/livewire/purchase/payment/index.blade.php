@@ -48,7 +48,7 @@
                         </x-table.tr>
                     @empty
                         <x-table.tr>
-                            <x-table.td colspan="3">{{ __('No data found') }}</x-table.td>
+                            <x-table.td colspan="5">{{ __('No data found') }}</x-table.td>
                         </x-table.tr>
                     @endforelse
                 </x-table.tbody>

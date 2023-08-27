@@ -86,7 +86,8 @@
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Customer name') }}
-                                        : {{ $item->customer->name }}</p>
+                                        : {{ $item->customer->name }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Reference') }}
                                         : {{ $item->reference }}</p>
                                     <p class="font-semibold text-gray-700">{{ __('Total amount') }}

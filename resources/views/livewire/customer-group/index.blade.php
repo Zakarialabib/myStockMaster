@@ -102,8 +102,10 @@
         </div>
     </div>
 
-    @livewire('customer-groupd.edit', ['customergroup' => $customergroup])
+    @livewire('customer-group.edit', ['customergroup' => $customergroup])
 
+    <livewire:customer-group.create />
+    
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Customer Group') }}
@@ -122,7 +124,5 @@
             </div>
         </x-slot>
     </x-modal>
-
-    <livewire:customer-group.create />
     
 </div>

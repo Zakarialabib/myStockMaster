@@ -38,6 +38,7 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Language\EditTranslation;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,6 +196,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Language Settings
     Route::get('languages', LanguageController::class)->name('languages.index');
+    Route::get('/translation/{code}', EditTranslation::class)->name('translation.index');
 
     //Backup
     Route::get('backup', BackupController::class)->name('backup.index');

@@ -37,11 +37,7 @@ class Create extends Component
 
     public function render()
     {
-<<<<<<< Updated upstream
         abort_if(Gate::denies('expense_categories_create'), 403);
-=======
-        // abort_if(Gate::denies('expense_category_create'), 403);
->>>>>>> Stashed changes
 
         return view('livewire.expense-categories.create');
     }

@@ -41,14 +41,6 @@
 
 <x-app-layout>
     <x-card>
-        <div class="flex flex-row">
-            <div class="w-full px-2">
-                <livewire:search-product />
-            </div>
-
-            <div class="w-full px-2">
-                <livewire:products.barcode />
-            </div>
-        </div>
+        <livewire:products.barcode />
     </x-card>
 </x-app-layout>

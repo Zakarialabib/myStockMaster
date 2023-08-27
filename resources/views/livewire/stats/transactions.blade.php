@@ -1,5 +1,5 @@
 <div>
-    <div class="flex flex-row flex-wrap px-2 py-3">
+    <div class="flex flex-wrap px-2 py-3">
         @can('show_total_stats')
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}"
@@ -35,22 +35,20 @@
             </div>
         @endcan
     </div>
-    <div class="flex flex-wrap w-full">
-        <div class="w-full mx-4 pb-2 mb-2 bg-white">
+    <div class="grid grid-cols-2 gap-4">
+        <div class="w-full mx-4 pb-2 mb-2 bg-white relative">
             <div class="w-full px-4 justify-between items-center">
                 <h3>{{ __('Daily Sales and Purchases') }}</h3>
             </div>
             <div id="daily-chart"></div>
         </div>
-        {{-- @can('show_monthly_cashflow') --}}
-        <div class="w-full mx-4 pb-2 bg-white">
+        <div class="w-full mx-4 pb-2 bg-white relative">
             <div class="w-full px-4 justify-between items-center">
                 <h3>{{ __('Monthly Cash Flow (Payment Sent & Received)') }}</h3>
             </div>
             <div id="monthly-chart"></div>
         </div>
-        {{-- @endcan --}}
-        <div class="mx-4 pb-2 w-full mt-2 bg-white">
+        <div class="mx-4 pb-2 w-full mt-2 bg-white relative">
             <div class="flex w-full px-4 justify-between items-center">
                 <h3>{{ __('Sales/Purchases') }}</h3>
             </div>
@@ -112,8 +110,11 @@
                     @foreach ($lastPurchases as $purchase)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                <p class="font-bold tracking-wide text-gray-800">
-                                    {{ $purchase->supplier->name }}</p>
+                                <a href="{{ route('supplier.details', $purchase->supplier->uuid) }}"
+                                    class="text-indigo-500 hover:text-indigo-600 
+                                    font-bold tracking-wide">
+                                    {{ $purchase->supplier->name }}
+                                </a>
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $purchase->reference }}</span>
                             </td>
                             <td class="px-4 py-2">{{ format_currency($purchase->total_amount) }}</td>
@@ -131,59 +132,62 @@
             </table>
         </div>
     </div>
-    <div class="px-2 pb-2 sm:w-1/2 w-full">
-        <div class="bg-white rounded-lg border border-gray-200 pb-2">
-            <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                <span class="text-md font-semibold">{{ __('Top 5 Sellers in') }} {{ now()->format('F') }}</span>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('Seller') }}</th>
-                        <th>{{ __('Profit') }}</th>
-                        <th>{{ __('Customer') }}</th>
-                        <th>{{ __('Sale Date') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($bestSales as $sale)
-                        <tr class="antialiased">
-                            <td class="py-1 px-2">{{ $sale->user->name }}</td>
-                            <td class="py-1 px-2">{{ format_currency($sale->total_amount) }}</td>
-                            <td class="py-1 px-2">{{ $sale->customer->name }}</td>
-                            <td class="py-1 px-2">{{ $sale->created_at->format('Y-m-d') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <div class="px-2 pb-2 sm:w-1/2 w-full">
-        <div class="bg-white rounded-lg border border-gray-200 pb-2">
-            <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('Product Name') }}</th>
-                        <th>{{ __('Code') }}</th>
-                        <th>{{ __('Total Quantity') }}</th>
-                        <th>{{ __('Total Sales') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($topProducts as $product)
-                        <tr class="antialiased">
-                            <td class="py-1 px-2">{{ $product->name }}</td>
-                            <td class="py-1 px-2">{{ $product->code }}</td>
-                            <td class="py-1 px-2">{{ $product->qtyItem }}</td>
-                            <td class="py-1 px-2">{{ format_currency($product->totalSalesAmount) }}</td>
+    <div class="flex flex-wrap">
+        <div class="sm:w-1/2 w-full">
+            <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                    <span class="text-md font-semibold">{{ __('Top 5 Sellers in') }} {{ now()->format('F') }}</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Seller') }}</th>
+                            <th>{{ __('Profit') }}</th>
+                            <th>{{ __('Customer') }}</th>
+                            <th>{{ __('Sale Date') }}</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($bestSales as $sale)
+                            <tr class="antialiased">
+                                <td class="py-1 px-2">{{ $sale->user->name }}</td>
+                                <td class="py-1 px-2">{{ format_currency($sale->total_amount) }}</td>
+                                <td class="py-1 px-2">{{ $sale->customer->name }}</td>
+                                <td class="py-1 px-2">{{ $sale->created_at->format('Y-m-d') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="sm:w-1/2 w-full">
+            <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                    <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Product Name') }}</th>
+                            <th>{{ __('Code') }}</th>
+                            <th>{{ __('Total Quantity') }}</th>
+                            <th>{{ __('Total Sales') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($topProducts as $product)
+                            <tr class="antialiased">
+                                <td class="py-1 px-2">{{ $product->name }}</td>
+                                <td class="py-1 px-2">{{ $product->code }}</td>
+                                <td class="py-1 px-2">{{ $product->qtyItem }}</td>
+                                <td class="py-1 px-2">{{ format_currency($product->totalSalesAmount) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
