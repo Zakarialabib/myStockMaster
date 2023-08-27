@@ -86,7 +86,7 @@ class Edit extends Component
             'shipping_amount'     => 'required|numeric',
             'total_amount'        => 'required|numeric',
             'paid_amount'         => 'required|numeric',
-            'status'              => 'required|string|max:50',
+            'status'              => 'required',
             'payment_method'      => 'required|string|max:255',
             'note'                => 'nullable|string|max:1000',
             'date'                => 'required|string|max:1000',
@@ -257,12 +257,12 @@ class Edit extends Component
     public function updatedWarehouseId($warehouse_id)
     {
         $this->warehouse_id = $warehouse_id;
-        $this->emit('warehouseUpdated', $warehouse_id);
+        $this->emit('warehouseSelected', $warehouse_id);
     } 
 
     public function updatedStatus($value)
     {
-        if ($value === PurchaseStatus::COMPLETED) {
+        if ($value === PurchaseStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
         } else {
             $this->paid_amount = 0;

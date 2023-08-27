@@ -98,7 +98,13 @@
                             <x-table.td>{{ format_date($purchase->date) }}
                             </x-table.td>
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
-                            <x-table.td>{{ $purchase->supplier->name }}</x-table.td>
+                            <x-table.td>
+                                <a href="{{ route('supplier.details', $purchase->supplier->uuid) }}"
+                                    class="text-indigo-500 hover:text-indigo-600 
+                                    font-bold tracking-wide">
+                                    {{ $purchase->supplier->name }}
+                                </a>
+                            </x-table.td>
                             <x-table.td>
                                 @php
                                     $badgeType = $purchase->status->getBadgeType();

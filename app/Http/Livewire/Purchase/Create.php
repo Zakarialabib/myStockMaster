@@ -82,7 +82,6 @@ class Create extends Component
         return [
             'warehouse_id'         => 'required|integer',
             'supplier_id'         => 'required|integer',
-            'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
@@ -262,17 +261,14 @@ class Create extends Component
     public function updatedWarehouseId($warehouse_id)
     {
         $this->warehouse_id = $warehouse_id;
-        $this->emit('warehouseUpdated', $warehouse_id);
+        $this->emit('warehouseSelected', $warehouse_id);
     } 
 
     public function updatedStatus($value)
     {
-        if ($value === PurchaseStatus::COMPLETED) {
+        if ($value === PurchaseStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
-            dd($value);
         } else {
-            // Perform any other necessary actions when status is changed to something other than "iscompleted"
-            // For example, you might want to reset the paid_amount to 0
             $this->paid_amount = 0;
         }
     }

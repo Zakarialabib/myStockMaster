@@ -105,7 +105,13 @@
                                     <x-table.td>{{ format_date($purchase_return->date) }}
                                     </x-table.td>
                                     <x-table.td>{{ $purchase_return->reference }}</x-table.td>
-                                    <x-table.td>{{ $purchase_return->supplier->name }}</x-table.td>
+                                    <x-table.td>
+                                        <a href="{{ route('supplier.details', $purchase_return->supplier->uuid) }}"
+                                            class="text-indigo-500 hover:text-indigo-600 
+                                            font-bold tracking-wide">
+                                            {{ $purchase_return->supplier->name }}
+                                        </a>
+                                    </x-table.td>
                                     <x-table.td>
                                         @php
                                             $type = $purchase_return->status->getBadgeType();
@@ -119,7 +125,8 @@
                                         @php
                                             $type = $purchase_return->payment_status->getBadgeType();
                                         @endphp
-                                        <x-badge :type="$type">{{ $purchase_return->payment_status->getName() }}</x-badge>
+                                        <x-badge
+                                            :type="$type">{{ $purchase_return->payment_status->getName() }}</x-badge>
                                     </x-table.td>
                                 </x-table.tr>
                             @empty

@@ -259,6 +259,15 @@ class Create extends Component
         $this->emit('warehouseSelected', $this->warehouse_id);
     }
 
+    public function updatedStatus($value)
+    {
+        if ($value === SaleStatus::COMPLETED->value) {
+            $this->paid_amount = $this->total_amount;
+        } else {
+            $this->paid_amount = 0;
+        }
+    }
+
     public function getWarehousesProperty()
     {
         return Warehouse::pluck('name', 'id')->toArray();

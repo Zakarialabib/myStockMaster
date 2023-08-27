@@ -52,7 +52,10 @@
                         {{ $purchasereturn->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $purchasereturn->supplier->name }}
+                        <a href="{{ route('supplier.details', $purchasereturn->supplier->uuid) }}"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $purchasereturn->supplier->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         @php

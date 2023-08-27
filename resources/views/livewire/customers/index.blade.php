@@ -50,7 +50,10 @@
                         <input type="checkbox" value="{{ $customer->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
-                        {{ $customer->name }}
+                        <button type="button" wire:click="showModal({{ $customer->id }})"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $customer->name }}
+                        </button>
                     </x-table.td>
                     <x-table.td>
                         {{ $customer->phone }}
@@ -130,32 +133,32 @@
             <div class="flex flex-wrap">
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="name" :value="__('Name')" />
-                    <p>{{{ $customer?->name}}}</p>
+                    <p>{{ $customer?->name }}</p>
                 </div>
 
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="phone" :value="__('Phone')" />
-                    <p>{{{ $customer?->phone}}}</p>
+                    <p>{{ $customer?->phone }}</p>
                 </div>
 
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="email" :value="__('Email')" />
-                    <p>{{{ $customer?->email}}}</p>
+                    <p>{{ $customer?->email }}</p>
                 </div>
 
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="address" :value="__('Address')" />
-                    <p>{{{ $customer?->address}}}</p>
+                    <p>{{ $customer?->address }}</p>
                 </div>
 
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="city" :value="__('City')" />
-                    <p>{{{ $customer?->city}}}</p>
+                    <p>{{ $customer?->city }}</p>
 
                 </div>
                 <div class="w-full sm:w-1/2 px-3 mb-6">
                     <x-label for="tax_number" :value="__('Tax Number')" />
-                    <p>{{{ $customer?->tax_number}}}</p>
+                    <p>{{ $customer?->tax_number }}</p>
                 </div>
             </div>
         </x-slot>
@@ -220,27 +223,26 @@
     <livewire:customers.create />
 
 
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', customerId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', customerId)
-                    }
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', customerId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', customerId)
+                        }
+                    })
                 })
             })
-        })
-    </script>
-@endpush
+        </script>
+    @endpush
 
 </div>
-

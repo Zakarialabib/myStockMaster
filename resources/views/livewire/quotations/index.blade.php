@@ -50,7 +50,10 @@
                         {{ $quotation->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $quotation->customer->name }}
+                        <a href="{{ route('customer.details', $quotation->customer->uuid) }}"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $quotation->customer->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($quotation->total_amount) }}
