@@ -43,7 +43,7 @@ enum SaleReturnStatus: int
 
     public function getBadgeType(): string
     {
-        switch ($this->value) {
+        switch ($this) {
             case self::PENDING:
                 return 'warning';
             case self::ORDERED:
