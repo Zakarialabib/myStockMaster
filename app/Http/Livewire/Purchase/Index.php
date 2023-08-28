@@ -7,7 +7,6 @@ namespace App\Http\Livewire\Purchase;
 use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
-use App\Models\PurchasePayment;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -29,21 +28,12 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'paymentModal',
         'refreshIndex' => '$refresh',
         'delete',
     ];
 
     public $startDate;
     public $endDate;
-
-    public $paymentModal = false;
-
-    public $purchase_id;
-    public $date;
-    public $reference;
-    public $amount;
-    public $payment_method;
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -145,71 +135,5 @@ class Index extends Component
         $purchase->delete();
     }
 
-    //  Payment modal
-
-    public function paymentModal(Purchase $purchase): void
-    {
-        abort_if(Gate::denies('purchase_payment'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->purchase = $purchase;
-        $this->date = date('Y-m-d');
-        $this->amount = $purchase->due_amount;
-        $this->payment_method = 'Cash';
-        $this->purchase_id = $purchase->id;
-        $this->paymentModal = true;
-    }
-
-    public function paymentSave(): void
-    {
-        try {
-            $this->validate(
-                [
-                    'date'           => 'required|date',
-                    'amount'         => 'required|numeric',
-                    'payment_method' => 'required|string|max:255',
-                ]
-            );
-
-            $purchase = Purchase::find($this->purchase_id);
-
-            PurchasePayment::create([
-                'date'           => $this->date,
-                'user_id'        => Auth::user()->id,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'purchase_id'    => $this->purchase_id,
-                'payment_method' => $this->payment_method,
-            ]);
-
-            $purchase = Purchase::findOrFail($this->purchase_id);
-
-            $due_amount = $purchase->due_amount - $this->amount;
-
-            if ($due_amount === $purchase->total_amount) {
-                $payment_status = PaymentStatus::DUE;
-            } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::PARTIAL;
-            } else {
-                $payment_status = PaymentStatus::PAID;
-            }
-
-            $purchase->update([
-                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
-                'payment_status' => $payment_status,
-            ]);
-
-            $this->alert('success', __('Payment created successfully.'));
-
-            $this->paymentModal = false;
-
-            $this->emit('refreshIndex');
-        } catch (Throwable $th) {
-            $this->alert('error', 'Error'.$th->getMessage());
-        }
-    }
+  
 }

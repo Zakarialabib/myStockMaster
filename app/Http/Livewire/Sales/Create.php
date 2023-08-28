@@ -143,10 +143,13 @@ class Create extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = SaleStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = SaleStatus::PENDING;
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = SaleStatus::COMPLETED;
             }
 
             $sale = Sale::create([
@@ -263,9 +266,7 @@ class Create extends Component
     {
         if ($value === SaleStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
-        } else {
-            $this->paid_amount = 0;
-        }
+        } 
     }
 
     public function getWarehousesProperty()

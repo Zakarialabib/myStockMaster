@@ -117,30 +117,35 @@
                     <div x-show="activeTabs === 'productMovements'">
                         <div role="productMovements" aria-labelledby="tab-0" id="tab-panel-0" tabindex="0">
                             @if ($product)
-                                <ul>
+                                <ul class="space-y-4">
                                     @forelse ($product->movements as $movement)
-                                        <li>
-                                            {{ __('Type') }} :
-                                            @if ($movement->type == \App\Enums\MovementType::SALE)
-                                                <x-badge type="warning" class="text-xs">
-                                                    {{ __('Sale') }}
-                                                </x-badge>
-                                            @elseif ($movement->type == \App\Enums\MovementType::PURCHASE)
-                                                <x-badge type="success" class="text-xs">
-                                                    {{ __('Purchase') }}
-                                                </x-badge>
-                                            @endif
+                                        <li class="border p-4 rounded-md shadow-md">
+                                            <div class="flex items-center">
+                                                <span class="font-semibold">{{ __('Type') }}:</span>
+                                                <span class="ml-2">
+                                                    {{ $movement->type->getName() }}
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <span class="font-semibold">{{ __('Quantity') }}:</span>
+                                                <span class="ml-2">{{ $movement->quantity }}</span>
+                                            </div>
+                                            {{-- <div class="flex items-center">
+                                                <span class="font-semibold">{{ __('User') }}:</span>
+                                                <span class="ml-2">{{ $movement->user->id }}</span>
+                                            </div> --}}
+                                            <div class="flex items-center">
+                                                <span class="font-semibold">{{ __('Date') }}:</span>
+                                                <span class="ml-2">{{ $movement->created_at }}</span>
+                                            </div>
                                         </li>
-
-                                        <li>{{ __('Quantity') }} : {{ $movement->quantity }} </li>
-                                       {{-- <li>{{ __('User') }} - {{ $movement->user->name }}</li> --}}
-                                        <li>{{ __('Date') }} - {{ $movement->created_at }}</li>
                                     @empty
-                                        <li class="text-center py-4"> {{ __('No movement recorded') }}</li>
+                                        <li class="text-center py-4">{{ __('No movement recorded') }}</li>
                                     @endforelse
                                 </ul>
                             @endif
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -112,10 +112,16 @@ class Edit extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = SaleStatus::PENDING;
+
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = SaleStatus::PENDING;
+
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = SaleStatus::COMPLETED;
+
             }
 
             // Delete previous sale details
@@ -133,7 +139,7 @@ class Edit extends Component
                 'paid_amount'         => $this->paid_amount * 100,
                 'total_amount'        => $this->total_amount * 100,
                 'due_amount'          => $due_amount * 100,
-                'status'              => $this->sale->status,
+                'status'              => $this->status,
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
@@ -210,9 +216,7 @@ class Edit extends Component
     {
         if ($value === SaleStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
-        } else {
-            $this->paid_amount = 0;
-        }
+        } 
     }
 
 

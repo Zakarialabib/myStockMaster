@@ -28,7 +28,9 @@
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <x-label for="date" :value="__('Date')" required />
-                        <x-input type="date" name="date" required wire:model="date" />
+                        <input type="date" name="date" required wire:model="date"
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                        <x-input-error :messages="$errors->get('date')" class="mt-2" />
                     </div>
 
                 </div>

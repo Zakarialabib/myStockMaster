@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Purchase\Payment;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\PurchasePayment;
+use App\Models\Purchase;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -49,11 +50,6 @@ class Index extends Component
     public function mount($purchase): void
     {
         $this->purchase = $purchase;
-
-        if ($purchase) {
-            $this->purchase_id = $purchase->id;
-        }
-
         $this->perPage = 10;
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
@@ -80,7 +76,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_payment_access'), 403);
 
-        $this->purchase_id = $purchase_id;
+        $this->purchase = Purchase::findOrFail($purchase_id);
 
         $this->showPayments = true;
     }

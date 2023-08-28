@@ -133,10 +133,16 @@ class Edit extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = PurchaseStatus::PENDING;
+
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = PurchaseStatus::PENDING;
+
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = PurchaseStatus::COMPLETED;
+
             }
 
             // Delete previous purchase details
@@ -154,7 +160,7 @@ class Edit extends Component
                 'paid_amount'         => $this->paid_amount * 100,
                 'total_amount'        => $this->total_amount * 100,
                 'due_amount'          => $due_amount * 100,
-                'status'              => $this->purchase->status,
+                'status'              => $this->status,
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
@@ -226,11 +232,11 @@ class Edit extends Component
     {
         return view('livewire.purchase.edit');
     }
+
     public function hydrate(): void
     {
         $this->total_amount = $this->calculateTotal();
     }
-
 
     public function calculateTotal(): mixed
     {
@@ -241,7 +247,6 @@ class Edit extends Component
     {
         Cart::instance($this->cart_instance)->destroy();
     }
-
 
     public function getSupplierProperty()
     {

@@ -136,10 +136,16 @@ class Create extends Component
 
             if ($due_amount === $this->total_amount) {
                 $this->payment_status = PaymentStatus::PENDING;
+                $this->status = PurchaseStatus::PENDING;
+
             } elseif ($due_amount > 0) {
                 $this->payment_status = PaymentStatus::PARTIAL;
+                $this->status = PurchaseStatus::PENDING;
+
             } else {
                 $this->payment_status = PaymentStatus::PAID;
+                $this->status = PurchaseStatus::COMPLETED;
+
             }
 
             $purchase = Purchase::create([
@@ -268,9 +274,7 @@ class Create extends Component
     {
         if ($value === PurchaseStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
-        } else {
-            $this->paid_amount = 0;
-        }
+        } 
     }
 
 }

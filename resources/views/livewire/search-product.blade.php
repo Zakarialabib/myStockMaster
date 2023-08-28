@@ -48,12 +48,7 @@
         </div>
     </div>
 
-    <div wire:loading.flex
-        class="w-full px-2 absolute justify-center items-center top-0 right-0 button-0 z-50 opacity-50">
-        <x-loading />
-    </div>
-
-
+    
     <div class="w-full px-2 mb-4 bg-white">
         <div class="flex flex-wrap w-full">
             <div

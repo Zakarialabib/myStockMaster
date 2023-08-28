@@ -1,4 +1,3 @@
-
 <div>
     <x-modal wire:model="showPayments">
         <x-slot name="title">
@@ -6,10 +5,13 @@
                 {{ __('Sale Payment') }}
             </h2>
             <div class="flex justify-end">
-                @if($sale)
-                <x-button wire:click="$emit('paymentModal', {{ $sale->id}})" primary type="button">
-                    {{ __('Add Payment') }}
-                </x-button>
+                @if ($sale->due_amount > 0)
+                    <x-button 
+                    x-on:click="$wire.set('showPayments', false)"
+                    wire:click="$emit('paymentModal', {{ $sale->id }})"
+                        primary type="button">
+                        {{ __('Add Payment') }}
+                    </x-button>
                 @endif
             </div>
         </x-slot>
@@ -35,17 +37,17 @@
                             </x-table.td>
                             <x-table.td>{{ $salepayment->payment_method }}</x-table.td>
                             <x-table.td>
-                                @can('access_sale_payments')
-                                <x-button wire:click="$emit('paymentModal', {{$salepayment->id}} )"
-                                    type="button" primary>
-                                    <i class="fa fa-pen"></i>
-                                </x-button>
-                                @endcan
+                                {{-- @can('access_sale_payments')
+                                    <x-button wire:click="$emit('paymentModal', {{ $salepayment->id }} )" type="button"
+                                        primary>
+                                        <i class="fa fa-pen"></i>
+                                    </x-button>
+                                @endcan --}}
                             </x-table.td>
                         </x-table.tr>
                     @empty
                         <x-table.tr>
-                            <x-table.td colspan="3">{{ __('No data found') }}</x-table.td>
+                            <x-table.td colspan="5">{{ __('No data found') }}</x-table.td>
                         </x-table.tr>
                     @endforelse
                 </x-table.tbody>
@@ -54,7 +56,7 @@
             <div class="mt-4">
                 {{-- {{ $sale->salepayments->links() }} --}}
             </div>
-           
+
         </x-slot>
     </x-modal>
 

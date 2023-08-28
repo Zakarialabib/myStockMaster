@@ -6,6 +6,7 @@ namespace App\Http\Livewire\Sales\Payment;
 
 use App\Http\Livewire\WithSorting;
 use App\Models\SalePayment;
+use App\Models\Sale;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -48,11 +49,7 @@ class Index extends Component
 
     public function mount($sale)
     {
-        $this->sale = $sale;
-
-        if ($sale) {
-            $this->sale_id = $sale->id;
-        }
+        $this->sale =$sale;
 
         $this->perPage = 10;
         $this->sortBy = 'id';
@@ -80,7 +77,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $this->sale_id = $sale_id;
+        $this->sale = Sale::findOrFail($sale_id);
 
         $this->showPayments = true;
     }
