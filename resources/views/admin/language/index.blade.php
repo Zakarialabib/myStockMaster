@@ -39,7 +39,7 @@
             </div>
             <div class="float-right">
                 @can('language_create')
-                    <x-button primary type="button" onclick="Livewire.emit('createLanguage')">
+                    <x-button primary type="button" onclick="Livewire.emit('createModal')">
                         {{ __('Create Language') }}
                     </x-button>
                 @endcan

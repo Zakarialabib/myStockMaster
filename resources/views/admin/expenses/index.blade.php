@@ -59,7 +59,7 @@
                     </x-slot>
                 </x-dropdown>
                 @can('expense_create')
-                    <x-button primary type="button" onclick="Livewire.emit('createExpense')">
+                    <x-button primary type="button" onclick="Livewire.emit('createModal')">
                         {{ __('Create Expense') }}
                     </x-button>
                 @endcan

@@ -38,22 +38,26 @@ class Messaging extends Component
         return Product::select('id', 'name', 'price', 'image')->take(10)->get();
     }
 
-    public function getSalesProperty()
-    {
-        return Sale::all();
-    }
-
-    public function updatedType()
-    {
-        $this->chatId = '';
-    }
-
     public function getCustomersProperty()
     {
         return Customer::select('id', 'name', 'phone')
         ->orderBy('id', 'desc')
         ->take(10)
         ->get();
+    }
+
+    public function getSalesProperty()
+    {
+      return Sale::select('id', 'customer_id', 'due_amount')
+        ->where('due_amount', '>', 0)
+        ->orderBy('id', 'desc')
+        ->take(10)
+        ->get();
+    }
+
+    public function updatedType()
+    {
+        $this->chatId = '';
     }
 
     public function fillMessage($template)
@@ -78,6 +82,25 @@ class Messaging extends Component
         }
     }
 
+    public function sendDueAmount($saleId)
+    {
+        $sale = Sale::find($saleId);
+
+        if (!$sale) {
+            $this->alert('error', __('Sale not found'));
+            return;
+        }
+
+        $message = "Due Amount for Sale {$sale->id}: " . format_currency($sale->due_amount);
+
+        $this->chatId = settings()->telegram_channel; // Use your Telegram channel chat ID here
+        $this->message = $message;
+        $this->type = 'telegram';
+
+        // Send the message using the existing sendMessage method
+        $this->sendMessage();
+    }
+
     public function openProductModal()
     {
         $this->openProductModal = true;
@@ -96,14 +119,22 @@ class Messaging extends Component
     public function insertProduct($id)
     {
         $product = Product::find($id);
+        if (!$product) {
+            $this->alert('error', __('Product not found'));
+            return;
+        }
         $this->message .= ' ' . $product->name . ' : ' . format_currency($product->price);
         $this->openProductModal = false;
     }
 
     public function insertSale($id)
     {
-        $product = Product::find($id);
-        $this->message .= ' ' . $product->name . ' : ' . format_currency($product->price);
+        $sale = Sale::find($id);
+        if (!$sale) {
+            $this->alert('error', __('Sale not found'));
+            return;
+        }
+        $this->message .= ' ' . $sale->id . ' : ' . format_currency($sale->due_amount);
         $this->openProductModal = false;
     }
 
@@ -151,7 +182,7 @@ class Messaging extends Component
         }
 
         // Clear the inputs after sending the message
-        $this->reset(['chatId', 'message', 'type','product_id','sale_id']);
+        $this->reset(['message', 'type','product_id','sale_id']);
 
         $this->alert('success', __('Message sent successfully'));
     }

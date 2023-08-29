@@ -86,6 +86,8 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
+            $this->reset('name','email','password','phone','role','warehouse_id');
+            
             $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());

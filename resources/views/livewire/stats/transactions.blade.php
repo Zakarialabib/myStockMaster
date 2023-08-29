@@ -11,7 +11,7 @@
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="orange" counter="{{ $productCount }}" title="{{ __('Total Products') }}"
-                    href="{{ route('products.index') }}">
+                    href="{{ route('products') }}">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                 </x-counter-card>

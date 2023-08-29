@@ -23,17 +23,17 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             SuperUserSeeder::class,
-            ExpenseSeeder::class,
-            CategoriesSeeder::class,
-            BrandSeeder::class,
-            ProductsSeeder::class,
-            CustomersSeeder::class,
-            SupplierSeeder::class,
-            // ProductsSeeder::class,
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
-            WarehouseSeeder::class,
+            // ExpenseSeeder::class,
+            // CategoriesSeeder::class,
+            // BrandSeeder::class,
+            // ProductsSeeder::class,
+            // CustomersSeeder::class,
+            // SupplierSeeder::class,
+            // ProductsSeeder::class,
+            // WarehouseSeeder::class,
         ]);
     }
 }
