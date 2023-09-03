@@ -16,13 +16,13 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createLanguage'];
+    public $listeners = ['createModal'];
 
     public array $languages = [];
 
     public $language;
 
-    public $createLanguage = false;
+    public $createModal = false;
 
     protected $rules = [
         'language.name' => 'required|max:255',
@@ -34,7 +34,7 @@ class Create extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function createLanguage()
+    public function createModal()
     {
         $this->resetErrorBag();
 
@@ -42,7 +42,7 @@ class Create extends Component
 
         $this->language = new Language();
 
-        $this->createLanguage = true;
+        $this->createModal = true;
     }
 
     public function create()
@@ -58,7 +58,7 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
-            $this->createLanguage = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('success', __('Language was not created!').$th->getMessage());
         }

@@ -62,6 +62,8 @@ class Create extends Component
 
         $this->emit('refreshIndex');
 
+        $this->reset('warehouse');
+
         $this->createModal = false;
     }
 }

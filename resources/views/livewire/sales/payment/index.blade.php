@@ -5,7 +5,7 @@
                 {{ __('Sale Payment') }}
             </h2>
             <div class="flex justify-end">
-                @if ($sale->due_amount > 0)
+                @if ($sale?->due_amount > 0)
                     <x-button 
                     x-on:click="$wire.set('showPayments', false)"
                     wire:click="$emit('paymentModal', {{ $sale->id }})"

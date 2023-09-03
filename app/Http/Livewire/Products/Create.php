@@ -22,10 +22,10 @@ class Create extends Component
     use WithFileUploads;
 
     /** @var array<string> */
-    public $listeners = ['createProduct'];
+    public $listeners = ['createModal'];
 
     /** @var bool */
-    public $createProduct = null;
+    public $createModal = null;
 
     public $image;
 
@@ -75,7 +75,7 @@ class Create extends Component
         return view('livewire.products.create');
     }
 
-    public function createProduct(): void
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
@@ -88,7 +88,7 @@ class Create extends Component
         $this->product->featured = false;
         $this->product->barcode_symbology = 'C128';
 
-        $this->createProduct = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -126,7 +126,7 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
-            $this->createProduct = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }

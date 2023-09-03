@@ -1,6 +1,6 @@
 <div>
     <!-- Create Modal -->
-    <x-modal wire:model="createProduct">
+    <x-modal wire:model="createModal">
         <x-slot name="title">
             {{ __('Create Product') }}
         </x-slot>

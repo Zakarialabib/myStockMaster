@@ -1,9 +1,9 @@
 <div class="menu">
-    <x-menu-widget>
+    <x-theme.menu-widget>
         @foreach ($items as $item)
-            <x-menu-widget-item label="{{ $item['label'] }}" url="{{ $item['url'] }}" />
+            <x-theme.menu-widget-item label="{{ $item['label'] }}" url="{{ $item['url'] }}" />
         @endforeach
-    </x-menu-widget>
+    </x-theme.menu-widget>
 </div>
 
 @push('scripts')
