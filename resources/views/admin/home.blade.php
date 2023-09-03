@@ -4,7 +4,7 @@
     <div class="relative p-4 sm:p-6 ">
         <h1 class="text-2xl md:text-3xl text-gray-800 font-bold mb-1">{{ __('Hello') }}, {{ Auth::user()->name }} 👋
         </h1>
-        <p>{{ 'What are you look for today ?' }}</p>
+        <p>{{ __('What are you look for today ?') }}</p>
         <div class="py-5">
             <livewire:livesearch />
         </div>
@@ -15,7 +15,7 @@
         {{-- <livewire:calculator /> --}}
 
         @can('dashboard_access')
-            <div class="bg-gray-50 mb-4 px-4 rounded">
+            {{-- <div class="bg-gray-50 mb-4 px-4 rounded">
                 <div class="flex flex-wrap justify-center lg:text-lg sm:text-sm gap-4 py-4">
                     <x-button type="button" primary data-date="today" class="js-date mr-2 active:bg-indigo-800">
                         {{ __('Today') }}
@@ -117,10 +117,8 @@
                         </div>
                     @endif
                 @endforeach
-            </div>
-            <div>
-                <livewire:stats.transactions />
-            </div>
+            </div> --}}
+            <livewire:stats.transactions />
         @endcan
 
     </div>

@@ -26,7 +26,6 @@ class Edit extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'productSelected',
         'refreshIndex' => '$refresh',
     ];
 

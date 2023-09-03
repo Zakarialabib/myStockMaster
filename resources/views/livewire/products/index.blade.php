@@ -153,11 +153,11 @@
     </div>
 
     <!-- Show Modal -->
-    @livewire('products.show', ['product' => $product])
+    @livewire('products.show', ['product' => $product], key('show-modal-' . $product?->id))
     <!-- End Show Modal -->
 
     <!-- Edit Modal -->
-    @livewire('products.edit', ['product' => $product])
+    @livewire('products.edit', ['product' => $product], key('edit-modal-' . $product?->id))
     <!-- End Edit Modal -->
 
     <livewire:products.create />

@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Product Category
     Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
 
-    Route::get('products', ProductController::class)->name('products.index');
+    Route::get('/products', ProductController::class)->name('products');
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');

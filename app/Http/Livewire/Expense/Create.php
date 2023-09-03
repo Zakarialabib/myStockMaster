@@ -17,9 +17,9 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createExpense'];
+    public $listeners = ['createModal'];
 
-    public $createExpense = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $expense;
@@ -46,7 +46,7 @@ class Create extends Component
         return view('livewire.expense.create');
     }
 
-    public function createExpense(): void
+    public function createModal(): void
     {
         $this->resetErrorBag();
 
@@ -56,7 +56,7 @@ class Create extends Component
 
         $this->expense->date = date('Y-m-d');
 
-        $this->createExpense = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -72,7 +72,7 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
-            $this->createExpense = false;
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }

@@ -143,7 +143,7 @@
                                         </x-dropdown-link>
                                     @endif
                                     @can('edit_sales')
-                                        <x-dropdown-link href="{{ route('sales.edit', $sale->uuid) }}"
+                                        <x-dropdown-link href="{{ route('sales.edit', $sale->id) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
                                             {{ __('Edit') }}
@@ -207,9 +207,9 @@
         {{ $sales->links() }}
     </div>
 
-    @livewire('sales.show', ['sale' => $sale] , key('show' . $sale->id))
+    @livewire('sales.show', ['sale' => $sale] , key('show' . $sale?->id))
 
-    @livewire('sales.payment-form', ['sale' => $sale] , key('payment-form' . $sale->id))
+    @livewire('sales.payment-form', ['sale' => $sale] , key('payment-form' . $sale?->id))
 
     <x-modal wire:model="importModal">
         <x-slot name="title">
