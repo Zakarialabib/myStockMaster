@@ -5,7 +5,7 @@
                 {{ __('Purchase Payment') }}
             </h2>
             <div class="flex justify-end">
-                @if ($purchase->due_amount > 0)
+                @if ($purchase?->due_amount > 0)
                     <x-button wire:click="$emit('paymentModal', {{ $purchase_id }})"
                         x-on:click="$wire.set('showPayments', false)" primary type="button">
                         {{ __('Add Payment') }}

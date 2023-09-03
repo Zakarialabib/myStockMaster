@@ -6,7 +6,7 @@
                 <select required id="customer_id" name="customer_id" wire:model="customer_id"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     @if (settings()->default_client_id == true)
-                        <option value="{{ $default_client->id }}" selected>{{ $default_client->name }}</option>
+                        <option value="{{ $default_client?->id }}" selected>{{ $default_client?->name }}</option>
                     @endif
                     @foreach ($this->customers as $customer)
                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -17,7 +17,7 @@
                 <select required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id"
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     @if (settings()->default_warehouse_id == true)
-                        <option value="{{ $default_warehouse->id }}" selected>{{ $default_warehouse->name }}
+                        <option value="{{ $default_warehouse?->id }}" selected>{{ $default_warehouse?->name }}
                         </option>
                     @endif
                     @foreach ($this->warehouses as $warehouse)

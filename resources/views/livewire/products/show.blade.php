@@ -68,6 +68,7 @@
                                     <x-table.th>{{ __('Warehouse') }}</x-table.th>
                                     <x-table.td>
                                         <div class="flex flex-wrap">
+                                            @if ($product?->warehouses)
                                             @forelse ($product->warehouses as $warehouse)
                                                 <div class="mr-4 mb-4">
                                                     <p class="font-medium">{{ $warehouse->name }}</p>
@@ -84,6 +85,7 @@
                                             @empty
                                                 {{ __('No warehouse assigned') }}
                                             @endforelse
+                                            @endif
                                         </div>
                                     </x-table.td>
                                     <x-table.tr>
