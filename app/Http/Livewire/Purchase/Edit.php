@@ -107,7 +107,6 @@ class Edit extends Component
         $this->discount_percentage = $this->purchase->discount_percentage;
         $this->shipping_amount = $this->purchase->shipping_amount;
         $this->total_amount = $this->purchase->total_amount;
-        $this->warehouse_id = $this->purchase->warehouse_id;
     }
 
     public function update()

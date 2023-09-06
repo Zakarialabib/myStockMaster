@@ -64,9 +64,9 @@ class Edit extends Component
         ];
     }
 
-    public function mount(Sale $sale)
+    public function mount($id)
     {
-        $this->sale = Sale::findOrFail($sale->id);
+        $this->sale = Sale::findOrFail($id);
         $this->reference = $this->sale->reference;
         $this->date = $this->sale->date;
         $this->customer_id = $this->sale->customer_id;

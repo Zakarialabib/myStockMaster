@@ -1,5 +1,13 @@
 <div>
     <div class="flex flex-wrap px-2 py-3">
+
+        <div class="mb-6 flex justify-center gap-4 items-center w-full">
+            <label class="font-semibold">{{ __('Filtre by date') }}:</label>
+            <input type="date" wire:model="startDate" class="border rounded px-2 py-1">
+            <span class="mx-2">to</span>
+            <input type="date" wire:model="endDate" class="border rounded px-2 py-1">
+        </div>
+
         @can('show_total_stats')
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}"
@@ -17,7 +25,7 @@
                 </x-counter-card>
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="green" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}"
+                <x-counter-card color="yellow" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}"
                     href="{{ route('suppliers.index') }}">
                     <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -28,6 +36,37 @@
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="indigo" counter="{{ $customerCount }}" title="{{ __('Total Customer') }}"
                     href="{{ route('customers.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="teal" counter="{{ $salesCount }}" :title="__('Total Sales')"
+                    href="{{ route('sales.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="cyan" counter="{{ $purchasesCount }}" :title="__('Total Purchases')"
+                    href="{{ route('purchases.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="cyan" counter="{{ $salesTotal }}" :title="__('Sales Total')"
+                    href="{{ route('sales.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="lightGray" counter="{{ $stockValue }}" :title="__('Stock Value')" href="#">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
                     </path>
@@ -73,7 +112,7 @@
                     @foreach ($lastSales as $sale)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                <p class="font-bold tracking-wide text-gray-800">{{ $sale->customer->name }}
+                                <p class="font-bold tracking-wide text-gray-800">{{ $sale->customer?->name }}
                                 </p>
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $sale->reference }}</span>
                             </td>
@@ -110,11 +149,15 @@
                     @foreach ($lastPurchases as $purchase)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                <a href="{{ route('supplier.details', $purchase->supplier->uuid) }}"
-                                    class="text-indigo-500 hover:text-indigo-600 
-                                    font-bold tracking-wide">
+                                @if ($purchase->supplier)
+                                    <a href="{{ route('supplier.details', $purchase?->supplier?->uuid) }}"
+                                        class="text-indigo-500 hover:text-indigo-600 font-bold tracking-wide">
+                                        {{ $purchase->supplier->name }}
+                                    </a>
+                                @else
                                     {{ $purchase->supplier->name }}
-                                </a>
+                                @endif
+
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $purchase->reference }}</span>
                             </td>
                             <td class="px-4 py-2">{{ format_currency($purchase->total_amount) }}</td>

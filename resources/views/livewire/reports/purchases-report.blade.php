@@ -99,11 +99,15 @@
                             </x-table.td>
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
                             <x-table.td>
-                                <a href="{{ route('supplier.details', $purchase->supplier->uuid) }}"
-                                    class="text-indigo-500 hover:text-indigo-600 
+                                @if ($purchase->supplier)
+                                    <a href="{{ route('supplier.details', $purchase?->supplier?->uuid) }}"
+                                        class="text-indigo-500 hover:text-indigo-600 
                                     font-bold tracking-wide">
+                                        {{ $purchase->supplier->name }}
+                                    </a>
+                                @else
                                     {{ $purchase->supplier->name }}
-                                </a>
+                                @endif
                             </x-table.td>
                             <x-table.td>
                                 @php

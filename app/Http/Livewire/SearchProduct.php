@@ -25,9 +25,9 @@ class SearchProduct extends Component
 
     public $search_results;
 
-    public int $showCount = 9;
+    public $showCount = 9;
 
-    public bool $featured = false;
+    public $featured = false;
 
     public $listeners = [
         'warehouseSelected' => 'updatedWarehouseId',
@@ -62,13 +62,15 @@ class SearchProduct extends Component
         return Category::pluck('name', 'id');
     }
 
-    public function mount($warehouse_id = null): void
+    // in case parametre is passed to mount method, else it will be null
+    public function mount($warehouse_id = null)
     {
-        $this->warehouse_id = $warehouse_id;
-        // Initialize search_results as an array
-        $this->search_results = [];
+        if ($warehouse_id) {
+            $this->warehouse_id = $warehouse_id;
+        } else {
+            $this->search_results = [];
+        }
     }
-
     public function render()
     {
         $query = Product::with(['warehouses' => function ($query) {

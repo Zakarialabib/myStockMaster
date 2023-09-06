@@ -85,12 +85,12 @@
                     @endif
                     <x-table.tr>
                         <x-table.th>{{ __('Shipping') }}</x-table.th>
-                        <x-table.td>(+) {{ format_currency($shipping) }}</x-table.td>
+                        <x-table.td>(+) {{ format_currency($shipping_amount) }}</x-table.td>
                     </x-table.tr>
                     <x-table.tr>
                         <x-table.th>{{ __('Grand Total') }}</x-table.th>
                         @php
-                            $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping;
+                            $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping_amount;
                         @endphp
                         <x-table.th>
                             (=) {{ format_currency($total_with_shipping) }}
@@ -119,7 +119,7 @@
         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
                 <label for="shipping_amount">{{ __('Shipping') }}</label>
-                <x-input wire:model.lazy="shipping" value="{{ $shipping }}" />
+                <x-input wire:model.lazy="shipping_amount" value="{{ $shipping_amount }}" />
             </div>
         </div>
     </div>

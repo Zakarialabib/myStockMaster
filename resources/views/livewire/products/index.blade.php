@@ -26,6 +26,16 @@
                 <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
+        <div class="w-full flex justify-start items-center">
+            <x-label for="category" :value="__('Filter by category')" />
+            <select wire:model="category_id" name="category_id" id="category_id"
+                class="w-full block py-2 px-3 ml-2 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                <option value="all"> {{ __('Select all') }} </option>
+                @foreach ($this->categories as $index => $category)
+                    <option value="{{ $index }}">{{ $category }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 
     <x-table>
@@ -74,9 +84,12 @@
                     <x-table.td>{{ format_currency($product->average_price) }}</x-table.td>
                     <x-table.td>{{ format_currency($product->average_cost) }}</x-table.td>
                     <x-table.td>
-                        <x-badge type="warning">
-                            <small>{{ $product->category->name }}</small>
-                        </x-badge>
+                        <x-button type="button" warning x-on:click="$wire.category_id = {{ $product->category->id }}">
+                            {{ $product->category->name }}
+                            <small>
+                                ({{ $product->ProductsByCategory($product->category->id) }})
+                            </small>
+                        </x-button>
                     </x-table.td>
                     <x-table.td>
                         <div class="flex flex-wrap">
@@ -196,26 +209,25 @@
 
     {{-- End Import modal --}}
 
-</div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', productId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', productId)
-                    }
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', productId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', productId)
+                        }
+                    })
                 })
             })
-        })
-    </script>
-@endpush
+        </script>
+    @endpush
+</div>

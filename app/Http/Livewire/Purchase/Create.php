@@ -120,6 +120,15 @@ class Create extends Component
     {
         $this->total_amount = $this->calculateTotal();
     }
+    
+    public function proceed()
+    {
+        if ($this->supplier_id !== null) {
+            $this->store();
+        } else {
+            $this->alert('error', __('Please select a supplier!'));
+        }
+    }
 
     public function store()
     {
@@ -137,17 +146,15 @@ class Create extends Component
             if ($due_amount === $this->total_amount) {
                 $this->payment_status = PaymentStatus::PENDING;
                 $this->status = PurchaseStatus::PENDING;
-
             } elseif ($due_amount > 0) {
                 $this->payment_status = PaymentStatus::PARTIAL;
                 $this->status = PurchaseStatus::PENDING;
-
             } else {
                 $this->payment_status = PaymentStatus::PAID;
                 $this->status = PurchaseStatus::COMPLETED;
-
             }
 
+            // dd($this->supplier_id);
             $purchase = Purchase::create([
                 'date'                => $this->date,
                 'supplier_id'         => $this->supplier_id,
@@ -268,13 +275,12 @@ class Create extends Component
     {
         $this->warehouse_id = $warehouse_id;
         $this->emit('warehouseSelected', $warehouse_id);
-    } 
+    }
 
     public function updatedStatus($value)
     {
-        if ($value === PurchaseStatus::COMPLETED->value) {
+        if ($value === PurchaseStatus::COMPLETED) {
             $this->paid_amount = $this->total_amount;
-        } 
+        }
     }
-
 }

@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Models\ProductWarehouse;
 use App\Models\SaleDetails;
 use App\Models\Sale;
 use App\Models\SalePayment;
@@ -25,6 +26,7 @@ class Transactions extends Component
     public $topProducts;
     public $productCount;
     public $salesCount;
+    public $purchasesCount;
     public $profit;
     public $purchase;
     public $purchaseCount;
@@ -39,13 +41,39 @@ class Transactions extends Component
     public $purchases_count;
     public $sales;
     public $sales_count;
+    public $startDate;
+    public $endDate;
+    public $salesTotal;
+    public $stockValue;
+
+    public function getStartDateProperty()
+    {
+        return $this->startDate = Carbon::now()->startOfMonth()->toDateString();
+    }
+
+    public function getEndDateProperty()
+    {
+        return $this->endDate = Carbon::now()->endOfMonth()->toDateString();
+    }
 
     public function mount()
     {
+
         $this->categoriesCount = Category::count('id');
-        $this->productCount = Product::count('id');
-        $this->supplierCount = Supplier::count('id');
-        $this->customerCount = Customer::count('id');
+
+        $this->productCount = Product::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->supplierCount = Supplier::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->customerCount = Customer::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->salesCount = Sale::whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->count();
+        $this->purchasesCount = Purchase::whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->count();
+
+        $this->salesTotal = Sale::whereDate('created_at', [$this->startDate, $this->endDate])->sum('total_amount') / 100;
+
+        $this->stockValue = ProductWarehouse::whereDate('created_at', [$this->startDate, $this->endDate])->sum(DB::raw('qty * cost'));
+
+
         $this->lastSales = Sale::with('customer')
             ->latest()
             ->take(5)
@@ -89,6 +117,18 @@ class Transactions extends Component
         $this->chart();
     }
 
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;   
+        $this->mount();  
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+        $this->mount();     
+    }
+    
     public function chart()
     {
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')

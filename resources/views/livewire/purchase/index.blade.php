@@ -92,10 +92,14 @@
                         {{ format_date($purchase->date) }}
                     </x-table.td>
                     <x-table.td>
-                        <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
+                        @if ($purchase->supplier)
+                            <a  class="text-indigo-500 hover:text-indigo-600  font-bold tracking-wide"
                             href="{{ route('supplier.details', $purchase->supplier->uuid) }}">
+                                {{ $purchase->supplier->name }}
+                            </a>
+                        @else
                             {{ $purchase->supplier->name }}
-                        </a>
+                        @endif
                     </x-table.td>
                     <x-table.td>
                         @php

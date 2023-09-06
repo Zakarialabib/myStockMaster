@@ -90,6 +90,14 @@ class Purchase extends Model
     {
         return $this->belongsTo(
             related: Supplier::class,
+            foreignKey: 'supplier_id',
+        );
+    }
+  
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(
+            related: User::class,
             foreignKey: 'user_id',
         );
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\PurchaseStatus;
+use App\Enums\SaleStatus;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Purchase;

@@ -6,13 +6,6 @@
         <form wire:submit.prevent="store">
             <div class="flex flex-wrap -mx-2 mb-3">
                 <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-                    <x-label for='supplier_id' :value="__('Supplier')" required />
-                    <x-select-list
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        required id="supplier_id" name="supplier_id" wire:model.lazy="supplier_id" :options="$this->listsForFields['suppliers']" />
-                    <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
-                </div>
-                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                     <x-label for="date" :value="__('Date')" required />
                     <input type="date" name="date" required wire:model="date"
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
@@ -24,6 +17,13 @@
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id" :options="$this->warehouses" />
                     <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+                </div>
+                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+                    <x-label for='supplier_id' :value="__('Supplier')" required />
+                    <x-select-list
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                        required id="supplier_id" name="supplier_id" wire:model="supplier_id" :options="$this->listsForFields['suppliers']" />
+                    <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
                 </div>
             </div>
 
@@ -49,6 +49,7 @@
                     <select
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         wire:model.lazy="payment_method" name="payment_method" id="payment_method" required>
+                        <option>{{ __('Select Payment Method') }}</option>
                         <option value="Cash">{{ __('Cash') }}</option>
                         <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                         <option value="Cheque">{{ __('Cheque') }}</option>

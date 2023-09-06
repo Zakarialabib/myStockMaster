@@ -107,7 +107,7 @@ class Index extends Component
 
     public function render()
     {
-        $query = Purchase::with(['supplier', 'purchaseDetails', 'purchaseDetails.product'])
+        $query = Purchase::with(['supplier', 'user', 'purchaseDetails', 'purchasePayments', 'purchaseDetails.product'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
                 's'               => $this->search ?: null,
@@ -119,7 +119,8 @@ class Index extends Component
 
         return view('livewire.purchase.index', compact('purchases'));
     }
-        public function deleteSelected(): void
+    
+    public function deleteSelected(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
@@ -134,6 +135,4 @@ class Index extends Component
 
         $purchase->delete();
     }
-
-  
 }

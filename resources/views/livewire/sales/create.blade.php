@@ -7,13 +7,6 @@
 
             <div class="mb-4 flex flex-wrap">
                 <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-                    <x-label for='customer_id' :value="__('Customer')" required />
-                    <x-select-list
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                        required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->customers" />
-                    <x-input-error :messages="$errors->get('customer_id')" class="mt-2" />
-                </div>
-                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                     <x-label for="date" :value="__('Date')" required />
                     <input type="date" name="date" required wire:model="date"
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
@@ -25,6 +18,13 @@
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                         required id="warehouse_id" name="warehouse_id" wire:model="warehouse_id" :options="$this->warehouses" />
                     <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+                </div>
+                <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+                    <x-label for='customer_id' :value="__('Customer')" required />
+                    <x-select-list
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                        required id="customer_id" name="customer_id" wire:model="customer_id" :options="$this->customers" />
+                    <x-input-error :messages="$errors->get('customer_id')" class="mt-2" />
                 </div>
             </div>
 
@@ -92,7 +92,6 @@
                     {{ __('Proceed') }}
                 </button>
             </div>
-
         </form>
     </div>
 </div>

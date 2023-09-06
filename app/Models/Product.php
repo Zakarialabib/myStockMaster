@@ -137,4 +137,5 @@ class Product extends Model
     {
         return $this->warehouses->avg('pivot.cost');
     }
+
 }

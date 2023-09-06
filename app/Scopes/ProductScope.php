@@ -25,4 +25,10 @@ trait ProductScope
     {
         return $query->where('status', true);
     }
+
+    public function scopeProductsByCategory($query, $category_id)
+    {
+        return $query->where('category_id', $category_id)->count();
+    }
+
 }

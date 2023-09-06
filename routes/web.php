@@ -37,8 +37,10 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\DocsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Language\EditTranslation;
+use Illuminate\Support\Facades\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,20 @@ use App\Http\Livewire\Language\EditTranslation;
 require __DIR__.'/auth.php';
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
+
+// Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
+
+// Route::get('/docs', function() {
+//     View::addExtension('html', 'php'); // allows .html
+//     return view('docs.index'); // loads /public/docs/index.html
+// });
+
+Route::get('/docs', function() {
+    if ($file != 'index') {
+        $file = $file . '/index';
+    }
+    return File::get(public_path() . '/docs/' . $file . '.html');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     // change lang

@@ -8,6 +8,7 @@ use App\Exports\ProductExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\ProductImport;
 use App\Models\Product;
+use App\Models\Category;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +16,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
@@ -45,6 +46,22 @@ class Index extends Component
 
     public $selectAll;
 
+    public $category_id;
+
+    public function updatedCategoryId($value)
+    {
+        if ($value == 'all') {
+            $this->category_id = null;
+        } else {
+            $this->category_id = $value;
+        }
+    }
+    
+    public function getCategoriesProperty()
+    {
+        return Category::pluck('name','id')->toArray();
+    }
+
     /** @var array<array<string>> */
     protected $queryString = [
         'search' => [
@@ -73,6 +90,8 @@ class Index extends Component
 
         Product::whereIn('id', $this->selected)->delete();
 
+        $this->alert('success', __('Product(s) deleted successfully!'));
+
         $this->resetSelected();
     }
 
@@ -81,6 +100,8 @@ class Index extends Component
         abort_if(Gate::denies('product_delete'), 403);
 
         $product->delete();
+
+        $this->alert('success', __('Product deleted successfully!'));
     }
 
     public function render()
@@ -89,12 +110,14 @@ class Index extends Component
 
         $query = Product::query()
             ->with([
-                'category' => fn ($query) => $query->select('id', 'name'),
-                'brand'    => fn ($query) => $query->select('id', 'name'),
+                'category',
+                'brand',
                 'movements',
                 'warehouses',
             ])
-            ->select('products.*')
+            ->when($this->category_id, function ($query) {
+                return $query->where('category_id', $this->category_id);
+            })
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,

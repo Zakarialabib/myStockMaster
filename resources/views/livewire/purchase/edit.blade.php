@@ -2,7 +2,7 @@
     <div class="flex flex-wrap">
 
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:search-product />
+            <livewire:search-product :warehouse_id="$this->purchase->warehouse_id" />
         </div>
 
         <div class="lg:w-1/2 sm:w-full h-full">
@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="w-full px-3">
-                    <x-button type="submit" primary class="w-full text-center">
+                    <x-button type="submit" primary class="w-full text-center" wire:loading.attr="disabled">
                         {{ __('Update Purchase') }}
                     </x-button>
                 </div>

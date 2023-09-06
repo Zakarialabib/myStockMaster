@@ -117,7 +117,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
+        $query = Sale::with(['customer', 'user', 'saleDetails', 'salepayments', 'saleDetails.product'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
                 's'               => $this->search ?: null,
@@ -182,7 +182,7 @@ class Index extends Component
         $this->importModal = false;
     }
 
-  
+
     public function refreshCustomers()
     {
         $this->initListsForFields();
@@ -204,7 +204,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212'.$phone;
+        $phone = '+212' . $phone;
 
         $greeting = __('Hello');
 

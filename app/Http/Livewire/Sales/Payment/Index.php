@@ -47,9 +47,10 @@ class Index extends Component
         ],
     ];
 
-    public function mount($sale)
+    public function mount(Sale $sale)
     {
-        $this->sale =$sale;
+
+        $this->sale = $sale;
 
         $this->perPage = 10;
         $this->sortBy = 'id';
@@ -62,7 +63,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_payment_access'), 403);
 
-        $query = SalePayment::where('sale_id', $this->sale_id)->advancedFilter([
+        $query = SalePayment::where('sale_id', $this->sale->id)->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

@@ -42,7 +42,7 @@
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
-            </div> 
+            </div>
             <div class="gap-2 inline-flex items-center mx-0 px-2 mb-2">
                 <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
                 <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
@@ -95,10 +95,15 @@
                         {{ format_date($sale->date) }}
                     </x-table.td>
                     <x-table.td>
-                        <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
-                            href="{{ route('customer.details', $sale->customer->uuid) }}">
-                            {{ $sale->customer->name }}
-                        </a>
+                        @if ($sale?->customer)
+                            <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
+                                href="{{ route('customer.details', $sale->customer->uuid) }}">
+                                {{ $sale?->customer?->name }}
+                            </a>
+                        @else
+                            {{ $sale?->customer?->name }}
+                        @endif
+
                     </x-table.td>
                     <x-table.td>
                         @php
@@ -117,7 +122,7 @@
                         @php
                             $badgeType = $sale->status->getBadgeType();
                         @endphp
-                        
+
                         <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -178,8 +183,8 @@
                                     @endcan
                                     @can('access_sale_payments')
                                         @if ($sale->due_amount > 0)
-                                            <x-dropdown-link wire:click="$emit('paymentModal', {{ $sale->id }})" primary
-                                                wire:loading.attr="disabled">
+                                            <x-dropdown-link wire:click="$emit('paymentModal', {{ $sale->id }})"
+                                                primary wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Add Payment') }}
                                             </x-dropdown-link>
@@ -207,9 +212,9 @@
         {{ $sales->links() }}
     </div>
 
-    @livewire('sales.show', ['sale' => $sale] , key('show' . $sale?->id))
+    @livewire('sales.show', ['sale' => $sale], key('show' . $sale?->id))
 
-    @livewire('sales.payment-form', ['sale' => $sale] , key('payment-form' . $sale?->id))
+    @livewire('sales.payment-form', ['sale' => $sale], key('payment-form' . $sale?->id))
 
     <x-modal wire:model="importModal">
         <x-slot name="title">
@@ -250,46 +255,47 @@
 
     {{-- End Sales Payment payment component   --}}
 
-</div>
-@pushOnce('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-@endPushOnce
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', saleId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', saleId)
-                    }
+    @pushOnce('scripts')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @endPushOnce
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', saleId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', saleId)
+                        }
+                    })
                 })
-            })
 
-        })
-    </script>
-    <script>
-        function printContent() {
-            const content = document.getElementById("printable-content");
-            html2canvas(content).then(canvas => {
-                const printWindow = window.open('', '',
-                    'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-                const printDocument = printWindow.document;
-                printDocument.body.appendChild(canvas);
-                canvas.onload = function() {
-                    printWindow.print();
-                    printWindow.close();
-                };
-            });
-        }
-    </script>
-@endpush
+            })
+        </script>
+        <script>
+            function printContent() {
+                const content = document.getElementById("printable-content");
+                html2canvas(content).then(canvas => {
+                    const printWindow = window.open('', '',
+                        'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+                    const printDocument = printWindow.document;
+                    printDocument.body.appendChild(canvas);
+                    canvas.onload = function() {
+                        printWindow.print();
+                        printWindow.close();
+                    };
+                });
+            }
+        </script>
+    @endpush
+
+</div>

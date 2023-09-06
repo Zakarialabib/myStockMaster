@@ -42,8 +42,6 @@ class Index extends Component
 
     public $global_tax;
 
-    public $shipping;
-
     public $quantity;
 
     public $check_quantity;
@@ -109,7 +107,7 @@ class Index extends Component
         $this->cart_instance = $cartInstance;
         $this->global_discount = 0;
         $this->global_tax = 0;
-        $this->shipping = 0.00;
+        $this->shipping_amount = 0.00;
 
         $this->check_quantity = [];
         $this->quantity = [];
@@ -119,13 +117,12 @@ class Index extends Component
 
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
         $this->paid_amount = 0;
       
         $this->default_client = Customer::find(settings()->default_client_id);
         $this->default_warehouse = Warehouse::find(settings()->default_warehouse_id);
     
-        $this->total_with_shipping = Cart::instance($this->cart_instance)->total() + (float) $this->shipping;
+        $this->total_with_shipping = Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
     }
 
     public function hydrate(): void
@@ -251,10 +248,15 @@ class Index extends Component
         });
     }
 
+    // can you solve that issue please
+    // customer should provoke checkout
     public function proceed(): void
     {
         if ($this->customer_id !== null) {
+
             $this->checkoutModal = true;
+            $this->cart_instance = 'sale';
+
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -262,7 +264,7 @@ class Index extends Component
 
     public function calculateTotal(): mixed
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping;
+        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
     }
 
     public function resetCart(): void

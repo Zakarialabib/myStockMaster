@@ -47,7 +47,7 @@ class Index extends Component
         ],
     ];
 
-    public function mount($purchase): void
+    public function mount(Purchase $purchase): void
     {
         $this->purchase = $purchase;
         $this->perPage = 10;
@@ -61,7 +61,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_payment_access'), 403);
 
-        $query = PurchasePayment::where('purchase_id', $this->purchase_id)->advancedFilter([
+        $query = PurchasePayment::where('purchase_id', $this->purchase->id)->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
