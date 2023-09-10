@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                <x-button danger type="button" wire:click="deleteSelectedModal" class="ml-3">
                     <i class="fas fa-trash"></i>
                 </x-button>
             @endif
@@ -41,7 +41,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input wire:model="selected" type="checkbox" />
+                #
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
@@ -131,7 +131,7 @@
                                     <i class="fas fa-edit"></i>
                                     {{ __('Edit') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $product->id }})"
+                                <x-dropdown-link wire:click="deleteModal({{ $product->id }})"
                                     wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                     {{ __('Delete') }}
@@ -206,28 +206,4 @@
             </form>
         </x-slot>
     </x-modal>
-
-    {{-- End Import modal --}}
-
-    @push('scripts')
-        <script>
-            document.addEventListener('livewire:load', function() {
-                window.livewire.on('deleteModal', productId => {
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.livewire.emit('delete', productId)
-                        }
-                    })
-                })
-            })
-        </script>
-    @endpush
 </div>

@@ -83,7 +83,7 @@ class Edit extends Component
     public function proceed()
     {
         if ($this->customer_id !== null) {
-            $this->store();
+            $this->update();
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
