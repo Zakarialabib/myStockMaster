@@ -309,16 +309,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.3.2",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9"
+                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/3953f23262f2bff1919fc82183ad9acb13ff62c9",
-                "reference": "3953f23262f2bff1919fc82183ad9acb13ff62c9",
+                "url": "https://api.github.com/repos/composer/semver/zipball/35e8d0af4486141bc745f23a29cc2091eb624a32",
+                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32",
                 "shasum": ""
             },
             "require": {
@@ -368,9 +368,9 @@
                 "versioning"
             ],
             "support": {
-                "irc": "irc://irc.freenode.org/composer",
+                "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.3.2"
+                "source": "https://github.com/composer/semver/tree/3.4.0"
             },
             "funding": [
                 {
@@ -386,7 +386,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-01T19:23:25+00:00"
+            "time": "2023-08-31T09:50:34+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -6409,16 +6409,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "10.11.4",
+            "version": "10.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "54d240975662a3d971466434e84625876a0d8b46"
+                "reference": "38af83a445a9ccffede87b7251102580b6f3883f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/54d240975662a3d971466434e84625876a0d8b46",
-                "reference": "54d240975662a3d971466434e84625876a0d8b46",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/38af83a445a9ccffede87b7251102580b6f3883f",
+                "reference": "38af83a445a9ccffede87b7251102580b6f3883f",
                 "shasum": ""
             },
             "require": {
@@ -6501,7 +6501,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/10.11.4"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/10.12.2"
             },
             "funding": [
                 {
@@ -6513,7 +6513,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-25T08:54:08+00:00"
+            "time": "2023-09-05T07:56:04+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
