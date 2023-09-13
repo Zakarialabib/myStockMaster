@@ -38,7 +38,7 @@ class Index extends Component
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
         'downloadAll', 'exportAll',
-        'delete', 'deleteSelected'
+        'delete', 'deleteSelected',
     ];
 
     public $importModal = false;
@@ -142,6 +142,7 @@ class Index extends Component
 
         $product = Product::findOrFail($this->product);
         $productWarehouse = ProductWarehouse::where('product_id', $product->id)->first();
+
         if ($productWarehouse) {
             $productWarehouse->delete();
         }
@@ -176,7 +177,7 @@ class Index extends Component
 
     public function selectPage()
     {
-        //
+
     }
 
     public function sendTelegram($product): void

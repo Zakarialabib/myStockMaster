@@ -67,7 +67,7 @@
                         @php
                             $badgeType = $salereturn->payment_status->getBadgeType();
                         @endphp
-                        
+
                         <x-badge :type="$badgeType">{{ $salereturn->payment_status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -323,16 +323,10 @@
             </div>
         </x-slot>
     </x-modal>
-    {{-- End Show SaleReturn --}}
 
-    {{-- Sales Payment payment component   --}}
     <div>
-        {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($showPayments))
-            <livewire:sales.payment.index :sale="$salereturn" />
-        @endif
+        <livewire:sales.payment.index :salereturn="$salereturn" />
     </div>
-    {{-- End Sales Payment payment component   --}}
 
     @if (!empty($paymentModal))
         <div>

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\Status;
 
 class Language extends Model
@@ -23,7 +22,6 @@ class Language extends Model
         'status',
         'is_default',
     ];
-
 
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;

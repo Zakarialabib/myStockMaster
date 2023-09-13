@@ -74,7 +74,7 @@ class SalePayment extends Model
                 $number = 1;
             }
 
-            $salePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

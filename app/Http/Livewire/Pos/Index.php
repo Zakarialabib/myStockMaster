@@ -81,11 +81,11 @@ class Index extends Component
     public $note;
 
     public $refreshCustomers;
-    
+
     public $total_with_shipping;
 
     public $default_client;
-    
+
     public $default_warehouse;
 
     public function rules(): array
@@ -118,10 +118,10 @@ class Index extends Component
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
         $this->paid_amount = 0;
-      
+
         $this->default_client = Customer::find(settings()->default_client_id);
         $this->default_warehouse = Warehouse::find(settings()->default_warehouse_id);
-    
+
         $this->total_with_shipping = Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
     }
 
@@ -144,7 +144,7 @@ class Index extends Component
 
     public function store(): void
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -167,7 +167,7 @@ class Index extends Component
             $sale = Sale::create([
                 'date'                => date('Y-m-d'),
                 'customer_id'         => $this->customer_id,
-                'warehouse_id'         => $this->warehouse_id,
+                'warehouse_id'        => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -208,7 +208,7 @@ class Index extends Component
                 $new_quantity = $product_warehouse->qty - $cart_item->qty;
 
                 $product_warehouse->update([
-                    'qty'  => $new_quantity,
+                    'qty' => $new_quantity,
                 ]);
 
                 $movement = new Movement([
@@ -253,10 +253,8 @@ class Index extends Component
     public function proceed(): void
     {
         if ($this->customer_id !== null) {
-
             $this->checkoutModal = true;
             $this->cart_instance = 'sale';
-
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -276,7 +274,7 @@ class Index extends Component
     {
         return Customer::select(['name', 'id'])->get();
     }
- 
+
     public function getWarehousesProperty()
     {
         return Warehouse::select(['name', 'id'])->get();

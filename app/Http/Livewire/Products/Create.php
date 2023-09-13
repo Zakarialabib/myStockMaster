@@ -112,14 +112,14 @@ class Create extends Component
                 $quantity = $warehouse['quantity'] ?? 0;
                 $price = $warehouse['price'];
                 $cost = $warehouse['cost'];
-    
+
                 ProductWarehouse::create([
                     'product_id'   => $this->product->id,
                     'warehouse_id' => $warehouseId,
                     'price'        => $price,
                     'cost'         => $cost,
                     'qty'          => $quantity,
-                ]);    
+                ]);
             }
 
             $this->alert('success', __('Product created successfully'));

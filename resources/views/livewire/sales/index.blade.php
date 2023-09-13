@@ -247,19 +247,15 @@
         </x-slot>
     </x-modal>
 
-    {{-- Sales Payment payment component   --}}
-    @if (empty($showPayments))
-        <livewire:sales.payment.index :sale="$sale" />
-    @endif
+    @livewire('sales.payment.index', ['sale' => $sale])
 
-
-    {{-- End Sales Payment payment component   --}}
 
     @pushOnce('scripts')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
             integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @endPushOnce
+    
     @push('scripts')
         <script>
             document.addEventListener('livewire:load', function() {

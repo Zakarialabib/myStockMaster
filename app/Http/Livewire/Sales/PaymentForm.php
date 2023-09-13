@@ -56,7 +56,7 @@ class PaymentForm extends Component
         $this->resetErrorBag();
 
         $this->resetValidation();
-  
+
         $this->sale = Sale::findOrFail($id);
         $this->date = date('Y-m-d');
         $this->amount = $this->sale->due_amount;
@@ -64,7 +64,6 @@ class PaymentForm extends Component
         $this->sale_id = $this->sale->id;
         $this->paymentModal = true;
     }
-
 
     public function paymentSave()
     {
@@ -99,7 +98,7 @@ class PaymentForm extends Component
                 'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
                 'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
-                'status' => $status,
+                'status'         => $status,
             ]);
 
             $this->alert('success', __('Sale Payment created successfully.'));
@@ -111,7 +110,6 @@ class PaymentForm extends Component
             $this->alert('error', __('Error.').$th->getMessage());
         }
     }
-
 
     public function render()
     {

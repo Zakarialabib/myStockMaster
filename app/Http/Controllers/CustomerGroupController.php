@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,5 +15,4 @@ class CustomerGroupController extends Controller
 
         return view('admin.customer-group.index');
     }
-
 }

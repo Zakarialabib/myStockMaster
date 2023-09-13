@@ -16,9 +16,8 @@ use Throwable;
 
 class PaymentForm extends Component
 {
-
     use LivewireAlert;
-    
+
     public $paymentModal = false;
 
     public $purchase;
@@ -43,74 +42,72 @@ class PaymentForm extends Component
         'payment_method' => 'required|string|max:255',
     ];
 
-
     public function render()
     {
         return view('livewire.purchase.payment-form');
     }
 
-  //  Payment modal
+    //  Payment modal
 
-  public function paymentModal($id): void
-  {
-      // abort_if(Gate::denies('purchase_payment'), 403);
+    public function paymentModal($id): void
+    {
+        // abort_if(Gate::denies('purchase_payment'), 403);
 
-      $this->resetErrorBag();
+        $this->resetErrorBag();
 
-      $this->resetValidation();
+        $this->resetValidation();
 
-      $this->purchase = Purchase::findOrFail($id);
-      $this->date = date('Y-m-d');
-      $this->amount = $this->purchase->due_amount;
-      $this->payment_method = 'Cash';
-      $this->purchase_id = $this->purchase->id;
-      $this->paymentModal = true;
-  }
+        $this->purchase = Purchase::findOrFail($id);
+        $this->date = date('Y-m-d');
+        $this->amount = $this->purchase->due_amount;
+        $this->payment_method = 'Cash';
+        $this->purchase_id = $this->purchase->id;
+        $this->paymentModal = true;
+    }
 
-  public function paymentSave(): void
-  {
-      try {
-          $this->validate();
+    public function paymentSave(): void
+    {
+        try {
+            $this->validate();
 
-          PurchasePayment::create([
-              'date'           => $this->date,
-              'user_id'        => Auth::user()->id,
-              'amount'         => $this->amount,
-              'note'           => $this->note ?? null,
-              'purchase_id'    => $this->purchase_id,
-              'payment_method' => $this->payment_method,
-          ]);
+            PurchasePayment::create([
+                'date'           => $this->date,
+                'user_id'        => Auth::user()->id,
+                'amount'         => $this->amount,
+                'note'           => $this->note ?? null,
+                'purchase_id'    => $this->purchase_id,
+                'payment_method' => $this->payment_method,
+            ]);
 
-          $purchase = Purchase::findOrFail($this->purchase_id);
+            $purchase = Purchase::findOrFail($this->purchase_id);
 
-          $due_amount = $purchase->due_amount - $this->amount;
+            $due_amount = $purchase->due_amount - $this->amount;
 
-          if ($due_amount === $purchase->total_amount) {
-              $payment_status = PaymentStatus::DUE;
-              $status = PurchaseStatus::PENDING;
-          } elseif ($due_amount > 0) {
-              $payment_status = PaymentStatus::PARTIAL;
-              $status = PurchaseStatus::PENDING;
-          } else {
-              $payment_status = PaymentStatus::PAID;
-              $status = PurchaseStatus::COMPLETED;
-          }
+            if ($due_amount === $purchase->total_amount) {
+                $payment_status = PaymentStatus::DUE;
+                $status = PurchaseStatus::PENDING;
+            } elseif ($due_amount > 0) {
+                $payment_status = PaymentStatus::PARTIAL;
+                $status = PurchaseStatus::PENDING;
+            } else {
+                $payment_status = PaymentStatus::PAID;
+                $status = PurchaseStatus::COMPLETED;
+            }
 
-          $purchase->update([
-              'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
-              'due_amount'     => $due_amount * 100,
-              'payment_status' => $payment_status,
-              'status' => $status,
-          ]);
+            $purchase->update([
+                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
+                'due_amount'     => $due_amount * 100,
+                'payment_status' => $payment_status,
+                'status'         => $status,
+            ]);
 
-          $this->alert('success', __('Purchase Payment created successfully.'));
+            $this->alert('success', __('Purchase Payment created successfully.'));
 
-          $this->paymentModal = false;
+            $this->paymentModal = false;
 
-          $this->emit('refreshIndex');
-      } catch (Throwable $th) {
-          $this->alert('error', 'Error'.$th->getMessage());
-      }
-  }
-
+            $this->emit('refreshIndex');
+        } catch (Throwable $th) {
+            $this->alert('error', 'Error'.$th->getMessage());
+        }
+    }
 }

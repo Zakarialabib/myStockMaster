@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
-use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Imports\SaleImport;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Traits\Datatable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 class Index extends Component
 {
@@ -182,7 +179,6 @@ class Index extends Component
         $this->importModal = false;
     }
 
-
     public function refreshCustomers()
     {
         $this->initListsForFields();
@@ -204,7 +200,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212' . $phone;
+        $phone = '+212'.$phone;
 
         $greeting = __('Hello');
 

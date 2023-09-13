@@ -16,7 +16,6 @@ class Permission extends SpatiePermission
         'guard_name',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 

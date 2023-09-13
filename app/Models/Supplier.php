@@ -19,7 +19,7 @@ class Supplier extends Model
     use HasFactory;
 
     public const ATTRIBUTES = [
-        
+
         'id',
         'name',
         'email',
@@ -31,10 +31,8 @@ class Supplier extends Model
         'tax_number',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
-
 
     /**
      * The attributes that are mass assignable.

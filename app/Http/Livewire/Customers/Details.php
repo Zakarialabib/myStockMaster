@@ -114,23 +114,34 @@ class Details extends Component
     // show profit
     public function getProfitProperty(): int|float
     {
-        $sales = Sale::where('customer_id', $this->customer_id)
-            ->completed()->sum('total_amount');
+        // Step 1: Calculate total sales revenue for completed sales
+        $salesTotal = Sale::where('customer_id', $this->customer_id)
+            ->completed()
+            ->sum('total_amount');
 
-        $sale_returns = SaleReturn::whereBelongsTo($this->customer)
-            ->completed()->sum('total_amount');
+        // Step 2: Calculate total sales returns
+        $saleReturnsTotal = SaleReturn::where('customer_id', $this->customer_id)
+            ->completed()
+            ->sum('total_amount');
 
-        $product_costs = 0;
+        // Step 3: Calculate the total product cost from the pivot table
+        $productCosts = 0;
 
-        foreach (Sale::where('customer_id', $this->customer_id)->saleDetails()->with('product')->get() as $sale) {
+        foreach ($this->sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->cost;
+                // Assuming you have a warehouses relationship defined on the Product model
+                $productWarehouse = $saleDetail->product->warehouses->where('warehouse_id', $this->warehouse_id)->first();
+
+                if ($productWarehouse) {
+                    $productCosts += $productWarehouse->cost * $saleDetail->quantity;
+                }
             }
         }
 
-        $revenue = ($sales - $sale_returns) / 100;
+        // Step 4: Calculate profit
+        $profit = ($salesTotal - $saleReturnsTotal) - $productCosts;
 
-        return $revenue - $product_costs;
+        return $profit;
     }
 
     public function render()

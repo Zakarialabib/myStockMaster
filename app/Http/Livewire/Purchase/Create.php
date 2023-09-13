@@ -80,7 +80,7 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'warehouse_id'         => 'required|integer',
+            'warehouse_id'        => 'required|integer',
             'supplier_id'         => 'required|integer',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
@@ -120,7 +120,7 @@ class Create extends Component
     {
         $this->total_amount = $this->calculateTotal();
     }
-    
+
     public function proceed()
     {
         if ($this->supplier_id !== null) {
@@ -132,7 +132,7 @@ class Create extends Component
 
     public function store()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -158,7 +158,7 @@ class Create extends Component
             $purchase = Purchase::create([
                 'date'                => $this->date,
                 'supplier_id'         => $this->supplier_id,
-                'warehouse_id'         => $this->warehouse_id,
+                'warehouse_id'        => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -196,7 +196,7 @@ class Create extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if (!$product_warehouse) {
+                if ( ! $product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,

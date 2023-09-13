@@ -197,9 +197,9 @@
 
     @livewire('purchase.payment-form', ['purchase' => $purchase])
 
-    @if (empty($showPayments))
+    {{-- @if (empty($showPayments))
         <livewire:purchase.payment.index :purchase="$purchase" />
-    @endif
+    @endif --}}
 
 
     @push('scripts')

@@ -28,13 +28,11 @@ class Barcode extends Component
         'products.*.barcodeSize' => 'required|in:small,medium,large,extra,huge',
     ];
 
-   
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
         $this->emit('warehouseSelected', $this->warehouse_id);
     }
-
 
     public function productSelected($product): void
     {
@@ -55,11 +53,11 @@ class Barcode extends Component
         }
     }
 
-
     public function generateBarcodes()
     {
         if (empty($this->products)) {
             $this->alert('error', __('Please select at least one product to generate barcodes!'));
+
             return;
         }
 
@@ -69,10 +67,10 @@ class Barcode extends Component
             $quantity = $product['quantity'];
             $name = $product['name'];
             $price = $product['price'];
-            
-  
+
             if ($quantity > 100) {
                 $this->alert('error', __('Max quantity is 100 per barcode generation for product :name!', ['name' => $name]));
+
                 continue;
             }
 
@@ -98,7 +96,7 @@ class Barcode extends Component
 
         $pdf->getMpdf()->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
 
-        return $pdf->download('barcodes-' . date('Y-m-d') . '.pdf');
+        return $pdf->download('barcodes-'.date('Y-m-d').'.pdf');
     }
 
     public function deleteProduct($productId)
@@ -113,7 +111,7 @@ class Barcode extends Component
             }
         }
 
-        if (!is_null($index)) {
+        if ( ! is_null($index)) {
             unset($this->products[$index]);
             $this->products = array_values($this->products); // Reset array keys
         }

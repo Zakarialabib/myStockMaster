@@ -10,7 +10,6 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Throwable;
 
 class Edit extends Component
 {
@@ -26,21 +25,21 @@ class Edit extends Component
     /** @var mixed */
     public $expense;
 
-   /** @var array */
-   protected $rules = [
-    'expense.reference'    => 'required|string|max:255',
-    'expense.category_id'  => 'required|integer|exists:expense_categories,id',
-    'expense.date'         => 'required|date',
-    'expense.amount'       => 'required|numeric',
-    'expense.details'      => 'nullable|string|max:255',
-    'expense.warehouse_id' => 'nullable',
+    /** @var array */
+    protected $rules = [
+        'expense.reference'    => 'required|string|max:255',
+        'expense.category_id'  => 'required|integer|exists:expense_categories,id',
+        'expense.date'         => 'required|date',
+        'expense.amount'       => 'required|numeric',
+        'expense.details'      => 'nullable|string|max:255',
+        'expense.warehouse_id' => 'nullable',
     ];
 
     protected $messages = [
-        'expense.name.required' => 'The name field cannot be empty.',
+        'expense.name.required'        => 'The name field cannot be empty.',
         'expense.category_id.required' => 'The category field cannot be empty.',
-        'expense.date.required' => 'The date field cannot be empty.',
-        'expense.amount.required' => 'The amount field cannot be empty.',
+        'expense.date.required'        => 'The date field cannot be empty.',
+        'expense.amount.required'      => 'The amount field cannot be empty.',
     ];
 
     public function updated($propertyName): void

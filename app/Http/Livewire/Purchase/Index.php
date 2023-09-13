@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Purchase;
 
-use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Models\Purchase;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Throwable;
 
 class Index extends Component
 {
@@ -119,7 +116,7 @@ class Index extends Component
 
         return view('livewire.purchase.index', compact('purchases'));
     }
-    
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);

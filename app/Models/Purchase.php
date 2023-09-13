@@ -93,7 +93,7 @@ class Purchase extends Model
             foreignKey: 'supplier_id',
         );
     }
-  
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -117,7 +117,7 @@ class Purchase extends Model
                 $number = 1;
             }
 
-            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchase->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

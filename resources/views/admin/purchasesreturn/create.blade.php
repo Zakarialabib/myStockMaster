@@ -67,7 +67,7 @@
                                 method="POST">
                                 @csrf
                                 <div class="flex flex-wrap -mx-2 mb-3">
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="reference">{{ __('Reference') }} <span
                                                     class="text-red-500">*</span></label>
@@ -76,7 +76,7 @@
                                                 name="reference" required readonly value="PRRN">
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
 
                                         <div class="mb-4">
                                             <label for="supplier_id">{{ __('Supplier') }} <span
@@ -84,7 +84,7 @@
                                             <x-select-list :options="$supplier" name="supplier_id" id="supplier_id" />
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="date">{{ __('Date') }} <span
                                                     class="text-red-500">*</span></label>
@@ -98,7 +98,7 @@
                                 <livewire:product-cart :cartInstance="'purchase_return'" />
 
                                 <div class="flex flex-wrap -mx-2 mb-3">
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="status">{{ __('Status') }} <span
                                                     class="text-red-500">*</span></label>
@@ -113,7 +113,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="payment_method">{{ __('Payment Method') }} <span
                                                     class="text-red-500">*</span></label>
@@ -127,7 +127,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="paid_amount">{{ __('Amount Received') }} <span
                                                     class="text-red-500">*</span></label>

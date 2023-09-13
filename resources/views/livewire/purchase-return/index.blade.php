@@ -304,9 +304,9 @@
     {{--  End ShowModal --}}
 
     {{-- PurchaseReturn Payment payment component   --}}
-    @if (empty($purchasereturn))
-        <livewire:purchase.payment.index :purchase="$purchasereturn" />
-    @endif
+    {{-- @if (empty($purchasereturn)) --}}
+        <livewire:purchase.payment.index :purchasereturn="$purchasereturn" />
+    {{-- @endifp --}}
     {{-- End PurchaseReturn Payment payment component   --}}
 
     @if (!empty($paymentModal))

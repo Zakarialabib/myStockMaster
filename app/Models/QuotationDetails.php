@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationDetails extends Model
 {
-
-
     protected $guarded = [];
 
     public function product(): BelongsTo

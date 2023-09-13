@@ -25,7 +25,7 @@ return new class () extends Migration {
             $table->integer('price');
             $table->integer('cost');
             $table->integer('qty');
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

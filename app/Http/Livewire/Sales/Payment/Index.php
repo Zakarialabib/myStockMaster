@@ -49,7 +49,6 @@ class Index extends Component
 
     public function mount(Sale $sale)
     {
-
         $this->sale = $sale;
 
         $this->perPage = 10;

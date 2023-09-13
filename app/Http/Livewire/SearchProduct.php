@@ -51,6 +51,7 @@ class SearchProduct extends Component
             $this->alert('error', __('Please select a warehouse!'));
         }
     }
+
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
@@ -71,6 +72,7 @@ class SearchProduct extends Component
             $this->search_results = [];
         }
     }
+
     public function render()
     {
         $query = Product::with(['warehouses' => function ($query) {
@@ -78,8 +80,8 @@ class SearchProduct extends Component
         }, 'category'])
             ->when($this->query, function ($query) {
                 $query->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->query . '%')
-                        ->orWhere('code', 'like', '%' . $this->query . '%');
+                    $query->where('name', 'like', '%'.$this->query.'%')
+                        ->orWhere('code', 'like', '%'.$this->query.'%');
                 });
             })
             ->when($this->category_id, function ($query) {
@@ -110,8 +112,7 @@ class SearchProduct extends Component
 
     public function updatedQuery()
     {
-
-        if (!empty($this->search_results)) {
+        if ( ! empty($this->search_results)) {
             $this->product = $this->search_results[0];
             $this->emit('productSelected', $this->product);
         }

@@ -49,6 +49,7 @@ class EditTranslation extends Component
 
         if ( ! file_exists($path)) {
             $this->alert('error', __('File does not exist!'));
+
             return;
         }
 

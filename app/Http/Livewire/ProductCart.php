@@ -7,7 +7,6 @@ namespace App\Http\Livewire;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\ProductWarehouse;
-use App\Models\Product;
 use Livewire\Component;
 
 class ProductCart extends Component
@@ -31,7 +30,7 @@ class ProductCart extends Component
     public $shipping_amount;
 
     public $quantity = [];
-    
+
     public $price;
 
     public $check_quantity = [];
@@ -51,7 +50,7 @@ class ProductCart extends Component
         $this->cart_instance = $cartInstance;
 
         $this->shipping_amount = 0.00;
-        
+
         $this->discount_type = [];
         $this->item_discount = [];
 
@@ -78,19 +77,17 @@ class ProductCart extends Component
                     : round(100 * $cart_item->options->product_discount / $cart_item->price);
             }
         } else {
-
             $this->updatedGlobalTax();
             $this->updatedGlobalDiscount();
             $this->updatedTotalShipping();
-
         }
     }
-
 
     public function productSelected($product): void
     {
         if (empty($product)) {
             $this->alert('error', __('Something went wrong!'));
+
             return;
         }
 
@@ -99,6 +96,7 @@ class ProductCart extends Component
 
         if ($exists->isNotEmpty()) {
             $this->alert('error', __('Product already added to cart!'));
+
             return;
         }
 
@@ -142,15 +140,12 @@ class ProductCart extends Component
         return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
     }
 
-
-
     private function updateQuantityAndCheckQuantity($productId, $quantity)
     {
         $this->check_quantity[$productId] = $quantity;
         $this->quantity[$productId] = 1;
     }
 
-  
     private function createCartItem($product, $productWarehouse)
     {
         $calculation = $this->calculate($product);
@@ -193,7 +188,6 @@ class ProductCart extends Component
         ]);
     }
 
-
     public function updatedGlobalTax()
     {
         Cart::instance($this->cart_instance)->setGlobalTax((int) $this->global_tax);
@@ -203,12 +197,12 @@ class ProductCart extends Component
     {
         Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
     }
-  
+
     public function updatedTotalShipping()
     {
         Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
     }
- 
+
     public function updatedShippingAmount($value)
     {
         $this->shipping_amount = $value;
@@ -259,7 +253,6 @@ class ProductCart extends Component
         $this->item_discount[$name] = 0;
     }
 
-
     public function productDiscount($row_id, $product_id): void
     {
         $cart_item = Cart::instance($this->cart_instance)->get($row_id);
@@ -288,7 +281,6 @@ class ProductCart extends Component
         $this->discountModal = false;
     }
 
-
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
     {
         Cart::instance($this->cart_instance)->update($row_id, [
@@ -305,7 +297,6 @@ class ProductCart extends Component
         ]);
     }
 
-
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
@@ -321,6 +312,7 @@ class ProductCart extends Component
                 ? $cart_item->options->product_discount
                 : round(100 * $cart_item->options->product_discount / $cart_item->price);
         }
+
         return view('livewire.product-cart', [
             'cart_items' => $cart_items,
         ]);

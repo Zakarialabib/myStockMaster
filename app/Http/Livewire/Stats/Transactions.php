@@ -58,7 +58,6 @@ class Transactions extends Component
 
     public function mount()
     {
-
         $this->categoriesCount = Category::count('id');
 
         $this->productCount = Product::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
@@ -72,7 +71,6 @@ class Transactions extends Component
         $this->salesTotal = Sale::whereDate('created_at', [$this->startDate, $this->endDate])->sum('total_amount') / 100;
 
         $this->stockValue = ProductWarehouse::whereDate('created_at', [$this->startDate, $this->endDate])->sum(DB::raw('qty * cost'));
-
 
         $this->lastSales = Sale::with('customer')
             ->latest()
@@ -119,16 +117,16 @@ class Transactions extends Component
 
     public function updatedStartDate($value)
     {
-        $this->startDate = $value;   
-        $this->mount();  
+        $this->startDate = $value;
+        $this->mount();
     }
 
     public function updatedEndDate($value)
     {
         $this->endDate = $value;
-        $this->mount();     
+        $this->mount();
     }
-    
+
     public function chart()
     {
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')

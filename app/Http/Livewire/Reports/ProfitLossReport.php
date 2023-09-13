@@ -174,24 +174,27 @@ class ProfitLossReport extends Component
 
     public function calculateProfit()
     {
-        $product_costs = 0;
         $revenue = $this->sales_amount - $this->sale_returns_amount;
+
         $sales = Sale::completed()
-            ->when($this->start_date, function ($query) {
-                return $query->whereDate('date', '>=', $this->start_date);
-            })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+            ->when($this->start_date, fn ($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn ($query) => $query->whereDate('date', '<=', $this->end_date))
             ->with('saleDetails')->get();
+
+        $productCosts = 0;
 
         foreach ($sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->cost;
+                // Assuming you have a warehouses relationship defined on the Product model
+                $productWarehouse = $saleDetail->product->warehouses->where('warehouse_id', $this->warehouse_id)->first();
+
+                if ($productWarehouse) {
+                    $productCosts += $productWarehouse->cost * $saleDetail->quantity;
+                }
             }
         }
 
-        return $revenue - $product_costs;
+        return $revenue - $productCosts;
     }
 
     public function calculatePaymentsReceived()

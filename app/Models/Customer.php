@@ -30,7 +30,6 @@ class Customer extends Model
         'updated_at',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 

@@ -64,11 +64,12 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 //     return view('docs.index'); // loads /public/docs/index.html
 // });
 
-Route::get('/docs', function() {
+Route::get('/docs', function () {
     if ($file != 'index') {
-        $file = $file . '/index';
+        $file = $file.'/index';
     }
-    return File::get(public_path() . '/docs/' . $file . '.html');
+
+    return File::get(public_path().'/docs/'.$file.'.html');
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -98,7 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
-    
+
     Route::get('customergroup', [CustomerGroupController::class, 'index'])->name('customer-group.index');
 
     //Suppliers

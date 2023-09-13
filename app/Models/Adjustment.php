@@ -23,10 +23,8 @@ class Adjustment extends Model
         'updated_at',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
-
 
     protected $guarded = [];
 

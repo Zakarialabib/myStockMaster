@@ -38,7 +38,7 @@ class Edit extends Component
     public $products;
 
     public $supplier_id;
-    
+
     public $warehouse_id;
 
     public $product;
@@ -77,7 +77,7 @@ class Edit extends Component
     public function rules(): array
     {
         return [
-            'warehouse_id'         => 'required|integer',
+            'warehouse_id'        => 'required|integer',
             'supplier_id'         => 'required|integer',
             'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -111,7 +111,7 @@ class Edit extends Component
 
     public function update()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -132,15 +132,12 @@ class Edit extends Component
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
                 $this->status = PurchaseStatus::PENDING;
-
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
                 $this->status = PurchaseStatus::PENDING;
-
             } else {
                 $payment_status = PaymentStatus::PAID;
                 $this->status = PurchaseStatus::COMPLETED;
-
             }
 
             // Delete previous purchase details
@@ -187,7 +184,7 @@ class Edit extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if (!$product_warehouse) {
+                if ( ! $product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -256,12 +253,11 @@ class Edit extends Component
         return Warehouse::pluck('name', 'id')->toArray();
     }
 
-
     public function updatedWarehouseId($warehouse_id)
     {
         $this->warehouse_id = $warehouse_id;
         $this->emit('warehouseSelected', $warehouse_id);
-    } 
+    }
 
     public function updatedStatus($value)
     {
@@ -271,6 +267,4 @@ class Edit extends Component
             $this->paid_amount = 0;
         }
     }
-    
-
 }

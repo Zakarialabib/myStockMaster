@@ -45,7 +45,6 @@ enum SaleStatus: int
         }
     }
 
-    
     public function getValue()
     {
         return $this->value;
@@ -61,6 +60,4 @@ enum SaleStatus: int
 
         return null;
     }
-
- 
 }

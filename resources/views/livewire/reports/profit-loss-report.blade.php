@@ -1,167 +1,153 @@
 <div>
-    <div class="">
-        <form wire:submit.prevent="generateReport">
-            <div class="flex flex-wrap -mx-2 mb-3">
-                <div class="lg:w-1/2 sm:w-full px-4">
-                        <x-label for="start_date" :value="__('Start Date')" required />
-                        <x-input wire:model.defer="start_date" type="date" name="start_date" />
-                        @error('start_date')
-                            <span class="text-danger mt-1">{{ $message }}</span>
-                        @enderror
-
-                </div>
-                <div class="lg:w-1/2 sm:w-full px-4">
-                        <x-label for="end_date" :value="__('End Date')" required />
-                        <x-input wire:model.defer="end_date" type="date" name="end_date" />
-                        @error('end_date')
-                            <span class="text-danger mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
+    <form wire:submit.prevent="generateReport">
+        <div class="flex flex-wrap px-2 text-center mb-3">
+            <div class="lg:w-1/2 sm:w-full px-4">
+                <x-label for="start_date" :value="__('Start Date')" required />
+                <x-input wire:model.defer="start_date" type="date" name="start_date" />
+                @error('start_date')
+                    <span class="text-danger mt-1">{{ $message }}</span>
+                @enderror
             </div>
-            <div class="my-4">
-                <button type="submit"
-                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
-                    <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm"
-                        role="status" aria-hidden="true"></span>
-                    <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
-                    {{ __('Filter Report') }}
-                </button>
+            <div class="lg:w-1/2 sm:w-full px-4">
+                <x-label for="end_date" :value="__('End Date')" required />
+                <x-input wire:model.defer="end_date" type="date" name="end_date" />
+                @error('end_date')
+                    <span class="text-danger mt-1">{{ $message }}</span>
+                @enderror
             </div>
-        </form>
-    </div>
+        </div>
+        <div class="my-4 text-center">
+            <x-button primary type="submit" wire:target="generateReport" wire:loading.attr="disabled">
+                <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+                <i wire:target="generateReport" wire:loading.remove class="fa fa-shuffle"></i>
+                {{ __('Filter Report') }}
+            </x-button>
+        </div>
+    </form>
 
-    <div class="flex flex-wrap">
+    <div class="grid xl:grid-cols-3 sm:grid-cols-2 gap-2">
         {{-- Sales --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-receipt font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($sales_amount) }}</div>
-                        <div class="uppercase font-bold text-xs ">{{ $total_sales }} {{ __('Sales') }}
-                        </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-receipt font-2xl"></i>
+                </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($sales_amount) }}</div>
+                    <div class="uppercase font-bold text-xs ">{{ $total_sales }} {{ __('Sales') }}
                     </div>
                 </div>
-            </x-card>
-        </div>
+            </div>
+        </x-card>
+
         {{-- Sale Returns --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-arrow-return-left font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($sale_returns_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ $total_sale_returns }}
-                            {{ __('Sale Returns') }}</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-arrow-left font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($sale_returns_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ $total_sale_returns }}
+                        {{ __('Sale Returns') }}</div>
+                </div>
+            </div>
+        </x-card>
+
         {{-- Profit --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-trophy font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($profit_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ __('Profit') }}</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="bi bi-trophy font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($profit_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ __('Profit') }}</div>
+                </div>
+            </div>
+        </x-card>
+
         {{-- Purchases --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-bag font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($purchases_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ $total_purchases }}
-                            {{ __('Purchases') }}
-                        </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="bi bi-bag font-2xl"></i>
+                </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($purchases_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ $total_purchases }}
+                        {{ __('Purchases') }}
                     </div>
                 </div>
-            </x-card>
-        </div>
+            </div>
+        </x-card>
+
         {{-- Purchase Returns --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-arrow-return-right font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($purchase_returns_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ $total_purchase_returns }}
-                            {{ __('Purchase Returns') }}
-                        </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-arrow-right font-2xl"></i>
+                </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($purchase_returns_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ $total_purchase_returns }}
+                        {{ __('Purchase Returns') }}
                     </div>
                 </div>
-            </x-card>
-        </div>
+            </div>
+        </x-card>
+
         {{-- Expenses --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-wallet2 font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($expenses_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ __('Expenses') }}</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-wallet font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($expenses_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ __('Expenses') }}</div>
+                </div>
+            </div>
+        </x-card>
+
         {{-- Payments Received --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-cash-stack font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($payments_received_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ __('Payments Received') }}</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-cash-register font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($payments_received_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ __('Payments Received') }}</div>
+                </div>
+            </div>
+        </x-card>
+
         {{-- Payments Sent --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-cash-stack font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($payments_sent_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">{{ __('Payments Sent') }}</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounde5">
+                    <i class="fa fa-money-bill font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($payments_sent_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ __('Payments Sent') }}</div>
+                </div>
+            </div>
+        </x-card>
+
         {{-- Payments Net --}}
-        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
-            <x-card>
-                <div class="card-body p-3 d-flex items-center">
-                    <div class="bg-primary p-3 mfe-3 rounded">
-                        <i class="bi bi-cash-stack font-2xl"></i>
-                    </div>
-                    <div>
-                        <div class="text-value text-primary">{{ format_currency($payments_net_amount) }}</div>
-                        <div class="text-uppercase font-weight-bold small">Payments Net</div>
-                    </div>
+        <x-card>
+            <div class="flex p-2 items-center gap-4">
+                <div class="bg-blue-600 text-white p-5 rounded">
+                    <i class="fa fa-money-bills font-2xl"></i>
                 </div>
-            </x-card>
-        </div>
+                <div>
+                    <div class="text-bold">{{ format_currency($payments_net_amount) }}</div>
+                    <div class="text-uppercase font-bold text-sm">{{ __('Payments Net') }}</div>
+                </div>
+            </div>
+        </x-card>
     </div>
 </div>
