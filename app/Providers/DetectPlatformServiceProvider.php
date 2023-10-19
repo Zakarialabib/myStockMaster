@@ -22,7 +22,7 @@ class DetectPlatformServiceProvider extends ServiceProvider
 
         if ($this->nativephpIsDetected()) {
 
-            config(['database.default' => 'sqlite']);
+            config(['database.default' => 'nativephp']);
         } else {
             config(['database.default' => 'mysql']);
         }
