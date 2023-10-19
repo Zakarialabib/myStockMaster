@@ -25,10 +25,8 @@
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^3.0",
         "sentry/sentry-laravel": "^3.2",
-        "spatie/laravel-backup": "^8.1",
         "spatie/laravel-medialibrary": "^10.7",
         "spatie/laravel-permission": "^5.5",
-        "zakarialabib/flysystem-google-drive-ext": "^0.0.1",
         "zakarialabib/shoppingcart": "^1.0"
     },
     "require-dev": {
