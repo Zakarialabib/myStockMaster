@@ -131,11 +131,14 @@ class Transactions extends Component
     {
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
             ->when($this->typeChart === 'monthly', function ($q) {
-                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
+                return //$q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
+                     $q->selectRaw('strftime("%m", created_at) as labels')
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw('MONTH(date)');
+                    ->groupBy('month');
             }, function ($q) {
-                return $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
+                return 
+                //$q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
+                $q->selectRaw('strftime("%Y", created_at) as year')
                     ->groupByRaw('YEAR(date)');
             })
             ->get()
@@ -151,9 +154,10 @@ class Transactions extends Component
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
             ->when($this->typeChart === 'monthly', function ($q) {
-                return $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
+                return //$q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
+                $q->selectRaw('strftime("%m", date) as labels, COUNT(*) as purchases')
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw('MONTH(date)');
+                    ->groupBy('labels');
             }, function ($q) {
                 return $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
                     ->groupByRaw('YEAR(date)');
