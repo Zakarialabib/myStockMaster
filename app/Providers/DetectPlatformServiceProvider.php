@@ -19,9 +19,7 @@ class DetectPlatformServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
         if ($this->nativephpIsDetected()) {
-
             config(['database.default' => 'nativephp']);
         } else {
             config(['database.default' => 'mysql']);
