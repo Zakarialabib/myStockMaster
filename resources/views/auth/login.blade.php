@@ -16,7 +16,7 @@
             <div>
                 <x-input-label for="email" :value="__('Email')" />
 
-                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email') ?? 'admin@gmail.com'"
                     required autofocus />
 
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -27,7 +27,7 @@
                 <x-input-label for="password" :value="__('Password')" />
 
                 <div class="relative">
-                    <input placeholder="" :type="show ? 'password' : 'text'" name="password" required
+                    <input placeholder="" :type="show ? 'password' : 'text'" name="password" value="password" required
                         class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
 
@@ -52,19 +52,18 @@
                 </div>
             </div>
             <!-- Remember Me -->
-            
+
             <div class="flex items-center justify-between mt-4">
-                
+
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900"
                         href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
-                <a class="underline text-sm text-gray-600 hover:text-gray-900"
-                        href="{{ route('register') }}">
-                        {{ __('Register') }}
-                    </a>
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
+                    {{ __('Register') }}
+                </a>
             </div>
 
             <div class="flex items-center justify-between mt-4">

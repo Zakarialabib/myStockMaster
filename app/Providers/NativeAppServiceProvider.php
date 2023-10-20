@@ -7,6 +7,7 @@ use Native\Laravel\Contracts\ProvidesPhpIni;
 use Native\Laravel\Facades\MenuBar;
 use Native\Laravel\Menu\Menu;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 use Native\Laravel\Facades\Notification;
 
 class NativeAppServiceProvider implements ProvidesPhpIni
@@ -15,8 +16,11 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      * Executed once the native application has been booted.
      * Use this method to open windows, register global shortcuts, etc.
      */
+
+
     public function boot(): void
     {
+
         Menu::new()
             ->appMenu()
             ->editMenu()
@@ -30,17 +34,17 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             )
             ->register();
 
-        Window::title(config('app.name'))
+        Window::open()
+            ->title(config('app.name'))
             ->fullscreen()
             ->resizable()
             ->width(1080)
             ->minWidth(1080)
             ->maxWidth(1080)
-            ->height(800)
-            ->minHeight(800)
+            ->height(900)
+            ->minHeight(900)
             ->showDevTools(false)
-            ->maximizable(false)
-            ->open();
+            ->maximizable(false);
 
         // Menu::new()
         //     ->submenu(
@@ -54,11 +58,12 @@ class NativeAppServiceProvider implements ProvidesPhpIni
         //     )
         //     ->register();
 
-        $sqliteFilePath = database_path('database.sqlite');
+        $sqliteFilePath = database_path('nativephp.sqlite');
+
 
         if (file_exists($sqliteFilePath)) {
-            // Set the database connection to 'sqlite'
-            config(['database.default' => 'sqlite']);
+            // Set the database connection to 'nativephp'
+            config(['database.default' => 'nativephp']);
         } else {
             // Show a confirmation dialog to the user
             $dialogResult = Window::confirm('SQLite database not found. Would you like to open an existing SQLite file or create a new one?');
@@ -69,8 +74,8 @@ class NativeAppServiceProvider implements ProvidesPhpIni
 
                 if ($selectedFile) {
                     // Set the database connection to 'sqlite' and use the selected file as the SQLite database
-                    config(['database.connections.sqlite.database' => $selectedFile]);
-                    config(['database.default' => 'sqlite']);
+                    //config(['database.connections.sqlite.database' => $selectedFile]);
+                    config(['database.default' => 'nativephp']);
                 }
             } elseif ($dialogResult === 'Create') {
                 // Open a file dialog and allow the user to specify the location and name of the new SQLite file
@@ -82,12 +87,12 @@ class NativeAppServiceProvider implements ProvidesPhpIni
 
                     // Set the database connection to 'sqlite' and use the new file as the SQLite database
                     config(['database.connections.sqlite.database' => $newFile]);
-                    config(['database.default' => 'sqlite']);
+                    config(['database.default' => 'nativephp']);
                 }
             }
         }
 
-        if ($this->getInternetStatus() === 'Connected to Internet') {
+        if ($this->getInternetStatus()) {
             // Show a system-wide notification to connect to the last saved SQL connection
             Notification::title('✅ Your are Connected')
                 ->message("now your are connected to server.")
@@ -110,7 +115,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
         } else {
             // Show a system-wide notification to connect to the last saved SQL connection
             Notification::title('🛑 Not Connected')
-                ->message('Please connect to the last saved SQL connection.')
+                ->message('No Internet Connection.')
                 ->show();
 
             // Show a menu bar with the option to get data
@@ -126,20 +131,22 @@ class NativeAppServiceProvider implements ProvidesPhpIni
     // Remember, you can set the filesystem disk your application uses by default in your `config/filesystems.php` file or by
     // adding a `FILESYSTEM_DISK` variable to your `.env` file.
 
-    private function getInternetStatus(): string
+    private function getInternetStatus(): bool
     {
-        try {
-            $client = new Client();
-            $response = $client->get(config('app.url'));
-            $statusCode = $response->getStatusCode();
-            if ($statusCode === 200) {
-                return 'Connected to Internet';
-            }
-        } catch (\Exception $e) {
-            // Error occurred, not connected to the internet
-        }
+        /*if (connection_status() === CONNECTION_NORMAL) {
+            return true;
+        } elseif (in_array(connection_status(), [CONNECTION_ABORTED, CONNECTION_TIMEOUT])) {
+            return false;
+        }*/
 
-        return 'Not Connected to Internet';
+        try {
+            $response = Http::timeout(1)->get("https://www.google.com");
+
+            return $response->successful();
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+
+            return false;
+        }
     }
 
     /**
@@ -157,7 +164,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             'upload_max_filesize' => '20M',
             'max_file_uploads' => '20',
             'default_charset' => 'UTF-8',
-            'date.timezone' => 'America/New_York',
+            'date.timezone' => 'America/New_York'
         ];
     }
 }
