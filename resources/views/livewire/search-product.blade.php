@@ -12,6 +12,7 @@
                 <button wire:click="resetQuery" type="button">X</button>
             </div>
         </div>
+        
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="lg:w-1/3 md:w-1/3 sm:w-1/2 px-2 flex items-center">
                 <div class="flex items-center space-x-2">

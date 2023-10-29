@@ -19,6 +19,7 @@ import focus from "@alpinejs/focus";
 import intersect from "@alpinejs/intersect";
 
 Alpine.plugin(focus);
+
 Alpine.plugin(intersect);
 
 import PerfectScrollbar from "perfect-scrollbar";

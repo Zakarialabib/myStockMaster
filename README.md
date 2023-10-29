@@ -55,11 +55,12 @@ You can check the demo here:
 4.  Run `npm run dev`
 5.  Create a database and update the `.env` file
 6.  Run `php artisan migrate --seed`
-7.  Run `php artisan serve`
-8.  Login with the following credentials
+7.  run `php artisan key:generate`
+8.  Run `php artisan serve`
+9.  Login with the following credentials
     -   Email: `admin@ggmail.com`
     -   Password: `password`
-9.  Enjoy!
+10.  Enjoy!
 
 ## License
 
