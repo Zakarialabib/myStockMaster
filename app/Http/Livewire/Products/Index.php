@@ -30,7 +30,7 @@ class Index extends Component
 
     /** @var mixed */
     public $product;
-
+public $import_file;
     public $productIds;
 
     /** @var array<string> */
@@ -219,7 +219,7 @@ class Index extends Component
             ],
         ]);
 
-        Product::import(new ProductImport(), $this->file('import_file'));
+        Product::import(new ProductImport(), $this->import_file);
 
         $this->alert('success', __('Products imported successfully'));
 
