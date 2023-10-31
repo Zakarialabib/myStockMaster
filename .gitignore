@@ -2,10 +2,17 @@
 /public/build
 /public/hot
 /public/storage
-/public/images/products/*
-/public/images/livewire-temp/*
+/public/images/*
 /storage/*.key
+/storage/logs/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/docker/postgres/data/*
 /vendor
+/bin
+/docs
+composer.lock
+package-lock.json
 .env
 .env.backup
 .env.production
@@ -21,3 +28,4 @@ yarn-error.log
 public/vendor/*
 docs/.vitepress/dist and  
 docs/.vitepress/cache
+composer.lock

@@ -38,6 +38,19 @@ return [
      */
     'provider' => \App\Providers\NativeAppServiceProvider::class,
 
+     /**
+     * The PHP binary of your app.
+     * It is used to determine the PHP binary path, where you can use your own PHP binary.
+     * The folder structure should match the original "NativePHP/php-bin/bin".
+     * ── bin/
+     *    └── mac/
+     *        └── x86/
+     *
+     * For example, "bin" folder is on the root folder. Your .env should look like this.
+     * NATIVEPHP_PHP_BINARY_PATH="./bin/"
+     */
+    'binary' => env('NATIVEPHP_PHP_BINARY_PATH'),
+
     /**
      * A list of environment keys that should be removed from the
      * .env file when the application is bundled for production.
