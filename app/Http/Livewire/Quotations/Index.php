@@ -65,7 +65,7 @@ class Index extends Component
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
-        ]);
+        ])->with(['customer','quotationDetails']);
 
         $quotations = $query->paginate($this->perPage);
 
