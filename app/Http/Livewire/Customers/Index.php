@@ -89,9 +89,11 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Customer $customer)
+    public function delete( $customerID)
     {
         abort_if(Gate::denies('customer_delete'), 403);
+
+        $customer = Customer::findOrFail($customerID);
 
         $customer->delete();
 
