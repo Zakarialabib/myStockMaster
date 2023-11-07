@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Http\Livewire;
-
+use App\Models\Warehouse;
 use App\Models\Category;
 use App\Models\Product;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -61,6 +61,10 @@ class SearchProduct extends Component
     public function getCategoriesProperty()
     {
         return Category::pluck('name', 'id');
+    }
+    public function getWarehousesProperty()
+    {
+        return Warehouse::pluck('name', 'id');
     }
 
     // in case parametre is passed to mount method, else it will be null
