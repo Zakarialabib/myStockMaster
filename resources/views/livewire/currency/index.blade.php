@@ -79,7 +79,7 @@
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
-                            <x-button danger wire:click="$emit('deleteModal', {{ $currency->id }})" type="button"
+                            <x-button danger wire:click="deleteModal( {{ $currency->id }})" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -149,25 +149,3 @@
     <livewire:currency.create />
 </div>
 
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('deleteModal', currencyId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.livewire.emit('delete', currencyId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush

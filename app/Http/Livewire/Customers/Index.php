@@ -69,7 +69,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $query = Customer::advancedFilter([
+        $query = Customer::with('sales')->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,
@@ -89,9 +89,14 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Customer $customer)
+    public function delete( $customerID)
     {
         abort_if(Gate::denies('customer_delete'), 403);
+
+        $customer = Customer::findOrFail($customerID);
+
+        $customer->wallet()->delete();
+
 
         $customer->delete();
 

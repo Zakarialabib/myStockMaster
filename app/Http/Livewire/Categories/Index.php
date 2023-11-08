@@ -124,7 +124,8 @@ class Index extends Component
     public function delete(): void
     {
         abort_if(Gate::denies('category_delete'), 403);
-
+        $category = Category::findOrFail($this->category);
+        
         if ($category->products->count() > 0) {
             $this->alert('error', __('Category has products.'));
         } else {

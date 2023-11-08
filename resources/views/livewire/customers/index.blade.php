@@ -82,11 +82,13 @@
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
                                     </x-dropdown-link>
+                                    @if ($customer->sales->count() == 0)
                                     <x-dropdown-link wire:click="$emit('deleteModal', {{ $customer->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-trash"></i>
                                         {{ __('Delete') }}
                                     </x-dropdown-link>
+                                    @endif
                                 </x-slot>
                             </x-dropdown>
 
