@@ -80,27 +80,39 @@ class Index extends Component
 
         $this->showModal = true;
     }
-    public function confirmed()
+    public function deleteModal($currency=null)
     {
-        $this->emit('delete');
-    }
-   public function deleteModal($currency)
-    {
+        $confirm = null;
+        if ($currency === null) {
+            $confirm = 'deleteSelected';    
+        } else {
+            $confirm = in_array($currency, $this->selected) ? 'deleteSelected' : 'delete'; 
+        }
+
         $this->confirm(__('Are you sure you want to delete this?'), [
             'toast'             => false,
             'position'          => 'center',
             'showConfirmButton' => true,
             'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'onConfirmed'       =>  $confirm,
         ]);
         $this->currency = $currency;
     }
 
-    public function delete($currencyID)
+    public function deleteSelected()
+    { 
+        abort_if(Gate::denies('currency_delete'), 403);
+
+        Currency::whereIn('id', $this->selected)->delete();
+
+        $this->resetSelected();
+    }
+
+    public function delete():void
     {
         abort_if(Gate::denies('currency_delete'), 403);
 
-        $currency = Currency::findOrFail($currencyID);
+        $currency = Currency::findOrFail($this->currency);
 
         $currency->delete();
 
