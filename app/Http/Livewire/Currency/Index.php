@@ -26,8 +26,11 @@ class Index extends Component
     public $listeners = [
         'showModal',
         'refreshIndex' => '$refresh',
+        'delete',
     ];
 
+    public $deleteModal = false;
+    
     public $showModal = false;
 
     public $editModal = false;
@@ -77,10 +80,27 @@ class Index extends Component
 
         $this->showModal = true;
     }
+    public function confirmed()
+    {
+        $this->emit('delete');
+    }
+   public function deleteModal($currency)
+    {
+        $this->confirm(__('Are you sure you want to delete this?'), [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+        $this->currency = $currency;
+    }
 
-    public function delete(Currency $currency): void
+    public function delete($currencyID)
     {
         abort_if(Gate::denies('currency_delete'), 403);
+
+        $currency = Currency::findOrFail($currencyID);
 
         $currency->delete();
 
