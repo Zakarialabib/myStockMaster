@@ -40,7 +40,8 @@ class SearchProduct extends Component
 
     public function loadMore()
     {
-        $this->showCount += 5;
+        $this->showCount = (int)$this->showCount + 5;
+
     }
 
     public function selectProduct($product)
