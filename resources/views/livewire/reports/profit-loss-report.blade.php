@@ -1,19 +1,28 @@
 <div>
     <form wire:submit.prevent="generateReport">
+        <div class="w=full gap-2 flex justify-center items-center mx-0 px-2">
+            <x-button type="button" primary wire:click="filterByDate('day')">{{ __('Today') }}</x-button>
+            <x-button type="button" info wire:click="filterByDate('month')">{{ __('This Month') }}</x-button>
+            <x-button type="button" warning wire:click="filterByDate('year')">{{ __('This Year') }}</x-button>
+        </div>
         <div class="flex flex-wrap px-2 text-center mb-3">
-            <div class="lg:w-1/2 sm:w-full px-4">
+            <div class="lg:w-1/3 sm:w-full px-4">
                 <x-label for="start_date" :value="__('Start Date')" required />
                 <x-input wire:model.defer="start_date" type="date" name="start_date" />
                 @error('start_date')
                     <span class="text-danger mt-1">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="lg:w-1/2 sm:w-full px-4">
+            <div class="lg:w-1/3 sm:w-full px-4">
                 <x-label for="end_date" :value="__('End Date')" required />
                 <x-input wire:model.defer="end_date" type="date" name="end_date" />
                 @error('end_date')
                     <span class="text-danger mt-1">{{ $message }}</span>
                 @enderror
+            </div>
+            <div class="lg:w-1/3 sm:w-full px-4">
+                <x-select wire:model="warehouse_id" name="warehouse_id" :label="__('Warehouse')" required :placeholder="__('Select Warehouse')"
+                    :options="$this->warehouses" />
             </div>
         </div>
         <div class="my-4 text-center">

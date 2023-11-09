@@ -10,42 +10,46 @@ use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnPayment;
 use App\Models\Sale;
+use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
+use App\Models\Warehouse;
 use Livewire\Component;
 
 class ProfitLossReport extends Component
 {
-    public $start_date;
+    public $start_date = '';
 
-    public $end_date;
+    public $end_date = '';
 
-    public $total_sales;
+    public $total_sales = 0;
 
-    public $sales_amount;
+    public $sales_amount = 0;
 
-    public $total_purchases;
+    public $total_purchases = 0;
 
-    public $purchases_amount;
+    public $purchases_amount = 0;
 
-    public $total_sale_returns;
+    public $total_sale_returns = 0;
 
-    public $sale_returns_amount;
+    public $sale_returns_amount = 0;
 
-    public $total_purchase_returns;
+    public $total_purchase_returns = 0;
 
-    public $purchase_returns_amount;
+    public $purchase_returns_amount = 0;
 
-    public $expenses_amount;
+    public $expenses_amount = 0;
 
-    public $profit_amount;
+    public $profit_amount = 0;
 
-    public $payments_received_amount;
+    public $payments_received_amount = 0;
 
-    public $payments_sent_amount;
+    public $payments_sent_amount = 0;
 
-    public $payments_net_amount;
+    public $payments_net_amount = 0;
+
+    public $warehouse_id;
 
     protected $rules = [
         'start_date' => 'required|date|before:end_date',
@@ -54,19 +58,29 @@ class ProfitLossReport extends Component
 
     public function mount(): void
     {
-        $this->start_date = '';
-        $this->end_date = '';
-        $this->total_sales = 0;
-        $this->sales_amount = 0;
-        $this->total_sale_returns = 0;
-        $this->sale_returns_amount = 0;
-        $this->total_purchases = 0;
-        $this->purchases_amount = 0;
-        $this->total_purchase_returns = 0;
-        $this->purchase_returns_amount = 0;
-        $this->payments_received_amount = 0;
-        $this->payments_sent_amount = 0;
-        $this->payments_net_amount = 0;
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
+    }
+
+    public function filterDate($type)
+    {
+        switch ($type) {
+            case 'day':
+                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->endDate = now()->endOfDay()->format('Y-m-d');
+
+                break;
+            case 'month':
+                $this->startDate = now()->startOfMonth()->format('Y-m-d');
+                $this->endDate = now()->endOfMonth()->format('Y-m-d');
+
+                break;
+            case 'year':
+                $this->startDate = now()->startOfYear()->format('Y-m-d');
+                $this->endDate = now()->endOfYear()->format('Y-m-d');
+
+                break;
+        }
     }
 
     public function render()
@@ -172,6 +186,11 @@ class ProfitLossReport extends Component
         $this->payments_net_amount = $this->payments_received_amount - $this->payments_sent_amount;
     }
 
+    public function getWarehousesProperty()
+    {
+        return Warehouse::pluck('name', 'id')->toArray();
+    }
+
     public function calculateProfit()
     {
         $revenue = $this->sales_amount - $this->sale_returns_amount;
@@ -183,7 +202,7 @@ class ProfitLossReport extends Component
 
         $productCosts = 0;
 
-        foreach ($sales as $sale) {
+         foreach ($sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 // Assuming you have a warehouses relationship defined on the Product model
                 $productWarehouse = $saleDetail->product->warehouses->where('warehouse_id', $this->warehouse_id)->first();
@@ -196,6 +215,7 @@ class ProfitLossReport extends Component
 
         return $revenue - $productCosts;
     }
+
 
     public function calculatePaymentsReceived()
     {
