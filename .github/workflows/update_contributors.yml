@@ -40,6 +40,11 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add README.md
           git commit -m "Update Contributors [skip ci]"
+          
+          # Pull changes from the remote repository
+          git pull origin master --rebase
+
+          # Push the changes to the remote repository
           git push origin HEAD:refs/heads/update-contributors
           
       - name: Create Pull Request
