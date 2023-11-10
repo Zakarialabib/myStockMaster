@@ -72,6 +72,11 @@
                     </path>
                 </x-counter-card>
             </div>
+            {{-- Top-Selling Products --}}
+            <x-card-tooltip icon="bi bi-graph-up" color="lime" href="#topProducts">
+                <span class="text-2xl">{{ $top_selling_products }}</span>
+                <p>{{ __('Top-Selling Products') }}</p>
+            </x-card-tooltip>
         @endcan
     </div>
     <div class="grid grid-cols-2 gap-4">
@@ -205,7 +210,9 @@
             </div>
         </div>
 
-        <div class="sm:w-1/2 w-full">
+
+
+        <div class="sm:w-1/2 w-full" id="topProducts">
             <div class="bg-white rounded-lg border border-gray-200 pb-2">
                 <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
                     <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>

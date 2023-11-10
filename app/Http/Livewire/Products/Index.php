@@ -30,7 +30,7 @@ class Index extends Component
 
     /** @var mixed */
     public $product;
-public $import_file;
+    public $import_file;
     public $productIds;
 
     /** @var array<string> */
@@ -141,6 +141,7 @@ public $import_file;
         abort_if(Gate::denies('product_delete'), 403);
 
         $product = Product::findOrFail($this->product);
+        
         $productWarehouse = ProductWarehouse::where('product_id', $product->id)->first();
 
         if ($productWarehouse) {

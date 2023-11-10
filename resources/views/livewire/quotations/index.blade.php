@@ -99,7 +99,7 @@
                                     </x-dropdown-link>
                                 @endcan
                                 @can('quotation_delete')
-                                    <x-dropdown-link type="button" wire:click="confirm('delete', {{ $quotation->id }})">
+                                    <x-dropdown-link type="button" wire:click="delete({{ $quotation->id }})">
                                         <i class="fas fa-trash mr-2"></i>
                                         {{ __('Delete') }}
                                     </x-dropdown-link>
