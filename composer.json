@@ -14,7 +14,7 @@
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
-        "jantinnerezo/livewire-alert": "^2.2",
+        "jantinnerezo/livewire-alert": "^3.0",
         "laravel-notification-channels/telegram": "^3.0",
         "laravel/framework": "^9.35",
         "laravel/sanctum": "^3.0",

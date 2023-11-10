@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e5d584b76fdb38eea076a3d0be4d15f",
+    "content-hash": "01fdc143a7d525cee3440a0b80f6e9f0",
     "packages": [
         {
             "name": "automattic/woocommerce",
@@ -1785,16 +1785,16 @@
         },
         {
             "name": "jantinnerezo/livewire-alert",
-            "version": "2.2.7",
+            "version": "v3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jantinnerezo/livewire-alert.git",
-                "reference": "a017d3f41024ca3a589a6b0db5d0af3efe532fa9"
+                "reference": "53a4c04d413528a335864f5f6eb1f3ce3e42c963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jantinnerezo/livewire-alert/zipball/a017d3f41024ca3a589a6b0db5d0af3efe532fa9",
-                "reference": "a017d3f41024ca3a589a6b0db5d0af3efe532fa9",
+                "url": "https://api.github.com/repos/jantinnerezo/livewire-alert/zipball/53a4c04d413528a335864f5f6eb1f3ce3e42c963",
+                "reference": "53a4c04d413528a335864f5f6eb1f3ce3e42c963",
                 "shasum": ""
             },
             "require": {
@@ -1841,15 +1841,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jantinnerezo/livewire-alert/issues",
-                "source": "https://github.com/jantinnerezo/livewire-alert/tree/2.2.7"
+                "source": "https://github.com/jantinnerezo/livewire-alert/tree/v3.0"
             },
-            "funding": [
-                {
-                    "url": "https://www.paypal.com/paypalme/jantinn",
-                    "type": "custom"
-                }
-            ],
-            "time": "2023-02-15T18:05:31+00:00"
+            "time": "2023-07-21T18:17:43+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",
@@ -2566,16 +2560,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.18.0",
+            "version": "3.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "015633a05aee22490495159237a5944091d8281e"
+                "reference": "1b2aa10f2326e0351399b8ce68e287d8e9209a83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/015633a05aee22490495159237a5944091d8281e",
-                "reference": "015633a05aee22490495159237a5944091d8281e",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1b2aa10f2326e0351399b8ce68e287d8e9209a83",
+                "reference": "1b2aa10f2326e0351399b8ce68e287d8e9209a83",
                 "shasum": ""
             },
             "require": {
@@ -2640,7 +2634,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.18.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.19.0"
             },
             "funding": [
                 {
@@ -2652,20 +2646,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-20T17:59:40+00:00"
+            "time": "2023-11-07T09:04:28+00:00"
         },
         {
             "name": "league/flysystem-local",
-            "version": "3.18.0",
+            "version": "3.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-local.git",
-                "reference": "e7381ef7643f658b87efb7dbe98fe538fb1bbf32"
+                "reference": "8d868217f9eeb4e9a7320db5ccad825e9a7a4076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/e7381ef7643f658b87efb7dbe98fe538fb1bbf32",
-                "reference": "e7381ef7643f658b87efb7dbe98fe538fb1bbf32",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/8d868217f9eeb4e9a7320db5ccad825e9a7a4076",
+                "reference": "8d868217f9eeb4e9a7320db5ccad825e9a7a4076",
                 "shasum": ""
             },
             "require": {
@@ -2700,7 +2694,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-local/issues",
-                "source": "https://github.com/thephpleague/flysystem-local/tree/3.18.0"
+                "source": "https://github.com/thephpleague/flysystem-local/tree/3.19.0"
             },
             "funding": [
                 {
@@ -2712,7 +2706,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-19T20:07:13+00:00"
+            "time": "2023-11-06T20:35:28+00:00"
         },
         {
             "name": "league/glide",
@@ -5640,16 +5634,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.7.4",
+            "version": "4.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "60a4c63ab724854332900504274f6150ff26d286"
+                "reference": "5f0df49ae5ad6efb7afa69e6bfab4e5b1e080d8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/60a4c63ab724854332900504274f6150ff26d286",
-                "reference": "60a4c63ab724854332900504274f6150ff26d286",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/5f0df49ae5ad6efb7afa69e6bfab4e5b1e080d8e",
+                "reference": "5f0df49ae5ad6efb7afa69e6bfab4e5b1e080d8e",
                 "shasum": ""
             },
             "require": {
@@ -5716,7 +5710,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.7.4"
+                "source": "https://github.com/ramsey/uuid/tree/4.7.5"
             },
             "funding": [
                 {
@@ -5728,7 +5722,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-15T23:01:58+00:00"
+            "time": "2023-11-08T05:53:05+00:00"
         },
         {
             "name": "sentry/sdk",
@@ -14267,5 +14261,5 @@
         "php": "^8.1.17"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
