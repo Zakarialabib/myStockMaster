@@ -1,3 +1,5 @@
+name: Update Contributors
+
 on:
   workflow_dispatch:
     inputs:
@@ -29,7 +31,7 @@ jobs:
           # Iterate through contributors and add them to the table
           for contributor in $CONTRIBUTORS; do
             contributor_url="https://github.com/$contributor"
-            contributor_avatar_url="https://github.com/$contributor.png"
+            contributor_avatar_url="https://github.com/$contributor.png?size=50"  # Adjusted to 50x50
             echo -e "| [$contributor]($contributor_url) | [![Avatar]($contributor_avatar_url)]($contributor_url) |" >> README.md
           done
           
@@ -44,4 +46,5 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           branch: update-contributors
-          commit-message: "Update Contributors [skip ci]"
+          commit-message: "Update Contributors in README"
+          title: "Update Contributors in README"
