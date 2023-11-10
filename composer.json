@@ -70,6 +70,7 @@
             "@php artisan package:discover --ansi",
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ],
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
@@ -81,6 +82,16 @@
         ]
     },
     "extra": {
+        "google/apiclient-services": [
+            "Analytics",
+            "SearchConsole",
+            "Gmail",
+            "Drive",
+            "Sheets",
+            "PeopleService",
+            "ShoppingContent",
+            "SiteVerification"
+        ],
         "laravel": {
             "dont-discover": []
         }

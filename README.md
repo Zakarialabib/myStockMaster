@@ -93,14 +93,17 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 -   [LinkedIn](https://www.linkedin.com/in/zakaria-labib/)
 -   [GitHub](https://www.github.com/zakarialabib/)
 
-## Contributors
+## Donate
+
+If you like this project, leave a star and share it with your friends.
+
 ## Contributors
 
 | Contributor | GitHub Profile |
 | --- | --- |
-| [Zakarialabib](https://github.com/Zakarialabib) | [![Avatar](https://github.com/Zakarialabib.png)](https://github.com/Zakarialabib) |
-| [dependabot[bot]](https://github.com/dependabot[bot]) | [![Avatar](https://github.com/dependabot[bot].png)](https://github.com/dependabot[bot]) |
-| [elmarzouguidev](https://github.com/elmarzouguidev) | [![Avatar](https://github.com/elmarzouguidev.png)](https://github.com/elmarzouguidev) |
-| [bilton30](https://github.com/bilton30) | [![Avatar](https://github.com/bilton30.png)](https://github.com/bilton30) |
-| [ismaail](https://github.com/ismaail) | [![Avatar](https://github.com/ismaail.png)](https://github.com/ismaail) |
-| [yassinebenaid](https://github.com/yassinebenaid) | [![Avatar](https://github.com/yassinebenaid.png)](https://github.com/yassinebenaid) |
+| [Zakarialabib](https://github.com/Zakarialabib) | [![Avatar](https://github.com/Zakarialabib.png?size=50)](https://github.com/Zakarialabib) |
+| [dependabot[bot]](https://github.com/dependabot[bot]) | [![Avatar](https://github.com/dependabot[bot].png?size=50)](https://github.com/dependabot[bot]) |
+| [elmarzouguidev](https://github.com/elmarzouguidev) | [![Avatar](https://github.com/elmarzouguidev.png?size=50)](https://github.com/elmarzouguidev) |
+| [bilton30](https://github.com/bilton30) | [![Avatar](https://github.com/bilton30.png?size=50)](https://github.com/bilton30) |
+| [ismaail](https://github.com/ismaail) | [![Avatar](https://github.com/ismaail.png?size=50)](https://github.com/ismaail) |
+| [yassinebenaid](https://github.com/yassinebenaid) | [![Avatar](https://github.com/yassinebenaid.png?size=50)](https://github.com/yassinebenaid) |
