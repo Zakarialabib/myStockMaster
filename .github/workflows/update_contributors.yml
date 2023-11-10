@@ -41,11 +41,11 @@ jobs:
           git add README.md
           git commit -m "Update Contributors [skip ci]"
           
-          # Pull changes from the remote repository
+          # Pull changes from the remote repository and rebase
           git pull origin master --rebase
-
-          # Push the changes to the remote repository
-          git push origin HEAD:refs/heads/update-contributors
+          
+          # Force push the changes to the remote repository
+          git push -f origin HEAD:refs/heads/update-contributors
           
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
