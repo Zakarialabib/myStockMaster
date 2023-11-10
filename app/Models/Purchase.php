@@ -122,9 +122,15 @@ class Purchase extends Model
     }
 
     /** @param mixed $query */
+    public function scopePending($query)
+    {
+        return $query->whereStatus(PurchaseStatus::PENDING);
+
+    }
+    /** @param mixed $query */
     public function scopeCompleted($query)
     {
-        return $query->whereStatus(2);
+        return $query->whereStatus(PurchaseStatus::COMPLETED);
     }
 
     public function scopeThisMonth($query)

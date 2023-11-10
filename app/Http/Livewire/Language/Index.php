@@ -54,8 +54,10 @@ class Index extends Component
         $this->alert('success', __('Translation updated successfully!'));
     }
 
-    public function delete(Language $language)
+    public function delete($currencyId)
     {
+        $language = Language::findOrFail($currencyId);
+
         $language->delete();
 
         $this->alert('warning', __('Language deleted successfully!'));

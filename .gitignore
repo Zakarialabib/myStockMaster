@@ -6,6 +6,8 @@
 /public/images/livewire-temp/*
 /storage/*.key
 /vendor
+/bin
+/docs
 .env
 .env.backup
 .env.production
