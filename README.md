@@ -1,15 +1,14 @@
 ## Author 
 
-You may think that's a typical project, i hope that's not, within this project you will find many errors and lot of solutions for your problems,
-I experienced retail & ecommerce in electronics (pcs & smartphones), this thing keep my alarmed about some key points, easy to use & robust, we will be the best in our category of open source web apps
+Welcome to a unique project that goes beyond the ordinary. I bring to you MystockMaster, a solution born out of my experience in the retail and ecommerce sectors, particularly in electronics such as PCs and smartphones. My continuous vigilance over critical aspects like user-friendliness and robustness aims to position us as the best in the open-source web apps category.
 
-I'm very greatfulll for the contribution in the Laravel community, learned some much in the process, now it's my turn to give.
+I extend heartfelt gratitude to the Laravel community for their contributions, which have been a source of immense learning. Now, it's my turn to contribute and give back.
 
-(Peace) سلام
+(✌) سلام
 
 ## Overview 
 
-MystockMaster is a Laravel-based inventory management system that offers an easy and straightforward way to keep track of your inventory, sales, purchases, and more. It features a user-friendly dashboard, intuitive reports, and a wide range of features to help you manage and grow your business.
+MystockMaster, a Laravel-based inventory management system, simplifies the tracking of your inventory, sales, purchases, and more. Offering a user-friendly dashboard, intuitive reports, and an array of features, it becomes your partner in efficient business management and growth.
 
 Features:
 - Dashboard with key insights and metrics
@@ -25,9 +24,10 @@ Features:
 - Multi-language support
 - POS integration
 - Notifications and alerts
-- Send product promotion to telegram  
+- Send product promotions to Telegram
+    and more...
 
-Built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring a fast and responsive user experience. Try it out today and see how it can help you manage your inventory and grow your business.
+Built with Laravel 9, Livewire, AlpineJs, and Tailwind CSS, ensuring a fast and responsive user experience. Try it out today and witness how it streamlines inventory management, propelling your business forward.
 
 ## Demo
 
@@ -75,22 +75,17 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Screenshots : 
 
-- Login
-![Login](screens/login.png)
-- Dashboard
-![Dashboard](screens/dashboard.png)
-- Pos
-![Pos](screens/pos.png)
-- Products
-![Products](screens/products.png)
-- Product Create
-![Product Create](screens/product-modal.png)
-- Purchase Create
-![Purchase Create](screens/purchase-create.png)
-- Sale Create
-![Sale Create](screens/sale-create.png)
-- Customer Create
-![Customer Create](screens/customer-modal.png)
+| Login | Dashboard | POS |
+| --- | --- | --- |
+| ![Login](screens/login.png) | ![Dashboard](screens/dashboard.png) | ![POS](screens/pos.png) |
+
+| Products | Product Create | Purchase Create |
+| --- | --- | --- |
+| ![Products](screens/products.png) | ![Product Create](screens/product-modal.png) | ![Purchase Create](screens/purchase-create.png) |
+
+| Sale Create | Customer Create |
+| --- | --- |
+| ![Sale Create](screens/sale-create.png) | ![Customer Create](screens/customer-modal.png) |
 
 ## Contact
 

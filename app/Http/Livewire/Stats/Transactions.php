@@ -45,19 +45,18 @@ class Transactions extends Component
     public $endDate;
     public $salesTotal;
     public $stockValue;
+    public $topSellingProducts;
 
-    public function getStartDateProperty()
-    {
-        return $this->startDate = Carbon::now()->startOfMonth()->toDateString();
-    }
-
-    public function getEndDateProperty()
-    {
-        return $this->endDate = Carbon::now()->endOfMonth()->toDateString();
-    }
-
+    protected $rules = [
+        'start_date' => 'required|date|before:end_date',
+        'end_date'   => 'required|date|after:start_date',
+    ];
+    
     public function mount()
     {
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
+
         $this->categoriesCount = Category::count('id');
 
         $this->productCount = Product::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
@@ -113,6 +112,30 @@ class Transactions extends Component
             ->pluck('sales');
 
         $this->chart();
+    }
+
+    protected function calculateTopSellingProducts()
+    {
+        // Retrieve top-selling products based on the quantity sold
+        $this->topSellingProducts = Sale::completed()
+            ->when($this->start_date, fn ($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn ($query) => $query->whereDate('date', '<=', $this->end_date))
+            ->with('saleDetails.product')
+            ->get()
+            ->flatMap(function ($sale) {
+                return $sale->saleDetails;
+            })
+            ->groupBy('product_id')
+            ->map(function ($details, $productId) {
+                return [
+                    'product' => $details->first()->product,
+                    'quantity' => $details->sum('quantity'),
+                ];
+            })
+            ->sortByDesc('quantity')
+            ->take(5); // Adjust the number of top products to display
+
+        return $this->topSellingProducts;
     }
 
     public function updatedStartDate($value)

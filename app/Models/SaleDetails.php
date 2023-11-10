@@ -41,6 +41,11 @@ class SaleDetails extends Model
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
 
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
     /**
      * get price attribute
      *
