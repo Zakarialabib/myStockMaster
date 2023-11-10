@@ -126,9 +126,11 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Purchase $purchase): void
+    public function delete( $purchaseID): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
+
+        $purchase = Purchase::findOrFail($purchaseID);
 
         $purchase->delete();
     }

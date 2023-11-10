@@ -26,7 +26,7 @@ class Create extends Component
     /** @var array */
     protected $rules = [
         'supplier.name'       => 'required|string|min:3|max:255',
-        'supplier.phone'      => 'required|numeric',
+        'supplier.phone'      => 'required|string',
         'supplier.email'      => 'nullable|email|max:255',
         'supplier.address'    => 'nullable|string|max:255',
         'supplier.city'       => 'nullable|string|max:255',
