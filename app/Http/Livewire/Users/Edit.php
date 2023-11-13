@@ -22,7 +22,6 @@ class Edit extends Component
 
     public $user;
 
-
     public $name;
 
     public $email;
@@ -35,14 +34,13 @@ class Edit extends Component
 
     public $warehouse_id;
 
-
     /** @var array */
     protected $rules = [
-        'name'     => 'required|string|min:3|max:255',
-        'email'    => 'required|email',
-        'password' => 'required|string|min:8',
-        'phone'    => 'required|numeric',
-        'role'    => 'required',
+        'name'         => 'required|string|min:3|max:255',
+        'email'        => 'required|email',
+        'password'     => 'required|string|min:8',
+        'phone'        => 'required|numeric',
+        'role'         => 'required',
         'warehouse_id' => 'required|array',
     ];
 
@@ -62,7 +60,6 @@ class Edit extends Component
 
         $this->phone = $this->user->phone;
 
-
         $this->editModal = true;
     }
 
@@ -71,7 +68,6 @@ class Edit extends Component
         $this->validate();
 
         $this->user->save();
-
 
         // UserWarehouse::update([
         //     'user_id'      => $this->id,
@@ -91,7 +87,6 @@ class Edit extends Component
 
         return view('livewire.users.edit');
     }
-
 
     public function getRolesProperty()
     {

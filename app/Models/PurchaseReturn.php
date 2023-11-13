@@ -102,7 +102,7 @@ class PurchaseReturn extends Model
                 $number = 1;
             }
 
-            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchaseReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

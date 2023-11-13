@@ -92,9 +92,11 @@ class Index extends Component
         $this->showModal = true;
     }
 
-    public function delete(Supplier $supplier)
+    public function delete($supplierID)
     {
         abort_if(Gate::denies('supplier_delete'), 403);
+
+        $supplier = Supplier::findOrFail($supplierID);
 
         $supplier->delete();
 

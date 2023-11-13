@@ -102,8 +102,10 @@
         </div>
     </div>
 
-    @livewire('customer-groupd.edit', ['customergroup' => $customergroup])
+    @livewire('customer-group.edit', ['customergroup' => $customergroup])
 
+    <livewire:customer-group.create />
+    
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Customer Group') }}
@@ -122,7 +124,27 @@
             </div>
         </x-slot>
     </x-modal>
-
-    <livewire:customer-group.create />
     
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', customergroupID => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', customergroupID)
+                        }
+                    })
+                })
+            })
+        </script>
+    @endpush
+
 </div>

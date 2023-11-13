@@ -36,11 +36,11 @@
                                         <input type="date" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="date" required value="{{ $purchaseReturnPayment->getAttributes()['date'] }}">
                                 </div>
                             
-                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-2 mb-2">
                                         <label for="due_amount">{{__('Due Amount')}} <span class="text-red-500">*</span></label>
                                         <input type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="due_amount" required value="{{ format_currency($purchase_return->due_amount) }}" readonly>
                                 </div>
-                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-2 mb-2">
                                     <div class="mb-4">
                                         <label for="amount">{{__('Amount')}} <span class="text-red-500">*</span></label>
                                         <div class="input-group">
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                <div class="w-full md:w-1/3 px-2 mb-2">
                                     <div class="from-group">
                                         <div class="mb-4">
                                             <label for="payment_method">{{__('Payment Method')}} <span class="text-red-500">*</span></label>

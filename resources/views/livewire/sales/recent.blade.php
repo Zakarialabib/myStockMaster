@@ -58,7 +58,14 @@
                                     {{ $sale->date }}
                                 </x-table.td>
                                 <x-table.td>
-                                    {{ $sale->customer->name }}
+                                    @if ($sale->customer)
+                                        <a href="{{ route('customer.details', $sale->customer->uuid) }}"
+                                            class="text-indigo-500 hover:text-indigo-600">
+                                            {{ $sale->customer->name }}
+                                        </a>
+                                    @else
+                                        {{ $sale->customer?->name }}
+                                    @endif
                                 </x-table.td>
                                 <x-table.td>
                                     @php
@@ -149,10 +156,10 @@
 
                                         <div class="md:w-1/2 mb-3 md:mb-0">
                                             <h5 class="mb-2 border-bottom pb-2">{{ __('Customer Info') }}:</h5>
-                                            <div><strong>{{ $sale?->customer->name }}</strong></div>
-                                            <div>{{ $sale?->customer->address }}</div>
-                                            <div>{{ __('Email') }}: {{ $sale?->customer->email }}</div>
-                                            <div>{{ __('Phone') }}: {{ $sale?->customer->phone }}</div>
+                                            <div><strong>{{ $sale?->customer?->name }}</strong></div>
+                                            <div>{{ $sale?->customer?->address }}</div>
+                                            <div>{{ __('Email') }}: {{ $sale?->customer?->email }}</div>
+                                            <div>{{ __('Phone') }}: {{ $sale?->customer?->phone }}</div>
                                         </div>
 
                                         <div class="md:w-1/2 mb-3 md:mb-0">

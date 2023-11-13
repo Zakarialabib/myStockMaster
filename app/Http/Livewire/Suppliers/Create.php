@@ -15,10 +15,10 @@ class Create extends Component
     use LivewireAlert;
 
     /** @var array<string> */
-    public $listeners = ['createSupplier'];
+    public $listeners = ['createModal'];
 
     /** @var bool */
-    public $createSupplier = false;
+    public $createModal = false;
 
     /** @var mixed */
     public $supplier;
@@ -26,7 +26,7 @@ class Create extends Component
     /** @var array */
     protected $rules = [
         'supplier.name'       => 'required|string|min:3|max:255',
-        'supplier.phone'      => 'required|numeric',
+        'supplier.phone'      => 'required|string',
         'supplier.email'      => 'nullable|email|max:255',
         'supplier.address'    => 'nullable|string|max:255',
         'supplier.city'       => 'nullable|string|max:255',
@@ -46,7 +46,7 @@ class Create extends Component
         return view('livewire.suppliers.create');
     }
 
-    public function createSupplier()
+    public function createModal()
     {
         $this->resetErrorBag();
 
@@ -54,7 +54,7 @@ class Create extends Component
 
         $this->supplier = new Supplier();
 
-        $this->createSupplier = true;
+        $this->createModal = true;
     }
 
     public function create(): void
@@ -68,7 +68,9 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
-            $this->createSupplier = false;
+            $this->reset('supplier');
+
+            $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('success', __('Supplier was not created .').$th->getMessage());
         }

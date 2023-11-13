@@ -47,7 +47,9 @@
         <div class="flex flex-wrap">
 
             <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:search-product />
+                <livewire:search-product 
+                {{-- :warehouse_id="$this->quotation->warehouse_id" --}}
+                 />
             </div>
 
             <div class="lg:w-1/2 sm:w-full h-full">
@@ -57,13 +59,13 @@
                     @csrf
                     @method('patch')
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <x-label for="reference" :value="__('Reference')" required />
                             <input type="text"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="reference" required value="{{ $quotation->reference }}" readonly>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <x-label for="customer_id" :value="__('Customer')" required />
                             <select
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -74,7 +76,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <x-label for="date" :value="__('Date')" required />
                             <input type="date"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
@@ -85,7 +87,7 @@
                     <livewire:product-cart :cartInstance="'quotation'" :data="$quotation" />
 
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <x-label for="status" :value="__('Status')" required />
                             <select
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"

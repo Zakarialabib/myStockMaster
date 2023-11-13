@@ -66,7 +66,7 @@
                                             <li class="flex items-center px-4 py-2 text-sm font-medium text-gray-700">
                                                 <i class="fas fa-bell w-5 h-5 text-gray-500" aria-hidden="true"></i>
                                                 <span class="ml-2">{{ __('Product') }}: "{{ $product->name }}"
-                                                    {{ $product->quantity }}/{{ $product->stock_alert }}{{ __('product exceed alert quantity !') }}</span>
+                                                    {{ $product->quantity }}/{{ $product->stock_alert }} {{ __('product exceed alert quantity !') }}</span>
                                             </li>
                                         @empty
                                             <li class="flex items-center px-4 py-2 text-sm font-medium text-gray-700">

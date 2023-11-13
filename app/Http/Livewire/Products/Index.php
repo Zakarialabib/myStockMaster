@@ -8,6 +8,8 @@ use App\Exports\ProductExport;
 use App\Http\Livewire\WithSorting;
 use App\Imports\ProductImport;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\ProductWarehouse;
 use App\Notifications\ProductTelegram;
 use App\Traits\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +17,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Index extends Component
@@ -28,7 +30,7 @@ class Index extends Component
 
     /** @var mixed */
     public $product;
-
+    public $import_file;
     public $productIds;
 
     /** @var array<string> */
@@ -36,14 +38,32 @@ class Index extends Component
         'refreshIndex' => '$refresh',
         'importModal', 'sendTelegram',
         'downloadAll', 'exportAll',
-        'delete',
+        'delete', 'deleteSelected',
     ];
 
     public $importModal = false;
 
+    public $deleteModal = false;
+
     public $sendTelegram;
 
     public $selectAll;
+
+    public $category_id;
+
+    public function updatedCategoryId($value)
+    {
+        if ($value == 'all') {
+            $this->category_id = null;
+        } else {
+            $this->category_id = $value;
+        }
+    }
+
+    public function getCategoriesProperty()
+    {
+        return Category::pluck('name', 'id')->toArray();
+    }
 
     /** @var array<array<string>> */
     protected $queryString = [
@@ -67,20 +87,68 @@ class Index extends Component
         $this->orderable = (new Product())->orderable;
     }
 
+    public function deleteModal($product)
+    {
+        $confirmationMessage = __('Are you sure you want to delete this product? if something happens you can be recover it.');
+
+        $this->confirm($confirmationMessage, [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+
+        $this->product = $product;
+    }
+
+    public function deleteSelectedModal(): void
+    {
+        abort_if(Gate::denies('product_delete'), 403);
+
+        $confirmationMessage = __('Are you sure you want to delete the selected products? items can be recovered.');
+
+        $this->confirm($confirmationMessage, [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'deleteSelected',
+        ]);
+    }
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
         Product::whereIn('id', $this->selected)->delete();
+        ProductWarehouse::whereIn('product_id', $this->selected)->delete();
+
+        $deletedCount = count($this->selected);
+
+        if ($deletedCount > 0) {
+            $this->alert(
+                'success',
+                __(':count selected products and related warehouses deleted successfully! These items can be recovered.', ['count' => $deletedCount])
+            );
+        }
 
         $this->resetSelected();
     }
 
-    public function delete(Product $product): void
+    public function delete(): void
     {
         abort_if(Gate::denies('product_delete'), 403);
 
+        $product = Product::findOrFail($this->product);
+        
+        $productWarehouse = ProductWarehouse::where('product_id', $product->id)->first();
+
+        if ($productWarehouse) {
+            $productWarehouse->delete();
+        }
         $product->delete();
+        $this->alert('success', __('Product and related warehouse deleted successfully!'));
     }
 
     public function render()
@@ -89,12 +157,14 @@ class Index extends Component
 
         $query = Product::query()
             ->with([
-                'category' => fn ($query) => $query->select('id', 'name'),
-                'brand'    => fn ($query) => $query->select('id', 'name'),
+                'category',
+                'brand',
                 'movements',
                 'warehouses',
             ])
-            ->select('products.*')
+            ->when($this->category_id, function ($query) {
+                return $query->where('category_id', $this->category_id);
+            })
             ->advancedFilter([
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
@@ -106,22 +176,9 @@ class Index extends Component
         return view('livewire.products.index', compact('products'));
     }
 
-    public function selectAll()
-    {
-        if (count(array_intersect($this->selected, Product::pluck('id')->toArray())) === count(Product::pluck('id')->toArray())) {
-            $this->selected = [];
-        } else {
-            $this->selected = Product::pluck('id')->toArray();
-        }
-    }
-
     public function selectPage()
     {
-        if (count(array_intersect($this->selected, Product::paginate($this->perPage)->pluck('id')->toArray())) === count(Product::paginate($this->perPage)->pluck('id')->toArray())) {
-            $this->selected = [];
-        } else {
-            $this->selected = $this->productIds;
-        }
+
     }
 
     public function sendTelegram($product): void
@@ -163,7 +220,7 @@ class Index extends Component
             ],
         ]);
 
-        Product::import(new ProductImport(), $this->file('import_file'));
+        Product::import(new ProductImport(), $this->import_file);
 
         $this->alert('success', __('Products imported successfully'));
 

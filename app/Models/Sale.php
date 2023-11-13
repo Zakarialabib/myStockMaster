@@ -99,7 +99,7 @@ class Sale extends Model
                 $number = 1;
             }
 
-            $sale->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

@@ -6,14 +6,17 @@ namespace App\Http\Livewire\Pos;
 
 use App\Enums\MovementType;
 use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
 use App\Models\Customer;
+use App\Models\Warehouse;
 use App\Models\Movement;
 use App\Models\Product;
 use App\Models\Sale;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProductWarehouse;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use Exception;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -25,9 +28,7 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'productSelected', 'refreshIndex' => '$refresh',
-        'discountModalRefresh', 'checkoutModal',
-        'warehouseSelected' => 'updatedWarehouseId',
+        'refreshIndex' => '$refresh',
         'refreshCustomers',
     ];
 
@@ -40,8 +41,6 @@ class Index extends Component
     public $global_discount;
 
     public $global_tax;
-
-    public $shipping;
 
     public $quantity;
 
@@ -83,6 +82,12 @@ class Index extends Component
 
     public $refreshCustomers;
 
+    public $total_with_shipping;
+
+    public $default_client;
+
+    public $default_warehouse;
+
     public function rules(): array
     {
         return [
@@ -102,7 +107,7 @@ class Index extends Component
         $this->cart_instance = $cartInstance;
         $this->global_discount = 0;
         $this->global_tax = 0;
-        $this->shipping = 0.00;
+        $this->shipping_amount = 0.00;
 
         $this->check_quantity = [];
         $this->quantity = [];
@@ -112,10 +117,12 @@ class Index extends Component
 
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
         $this->paid_amount = 0;
 
-        $this->customer_id = settings()->default_client_id;
+        $this->default_client = Customer::find(settings()->default_client_id);
+        $this->default_warehouse = Warehouse::find(settings()->default_warehouse_id);
+
+        $this->total_with_shipping = Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
     }
 
     public function hydrate(): void
@@ -137,13 +144,20 @@ class Index extends Component
 
     public function store(): void
     {
-        try {
+        if ( ! $this->warehouse_id) {
+            $this->alert('error', __('Please select a warehouse'));
+
+            return;
+        }
+
+        DB::transaction(function () {
             $this->validate();
 
+            // Determine payment status
             $due_amount = $this->total_amount - $this->paid_amount;
 
             if ($due_amount === $this->total_amount) {
-                $payment_status = PaymentStatus::DUE;
+                $payment_status = PaymentStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
             } else {
@@ -153,6 +167,7 @@ class Index extends Component
             $sale = Sale::create([
                 'date'                => date('Y-m-d'),
                 'customer_id'         => $this->customer_id,
+                'warehouse_id'        => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -160,7 +175,7 @@ class Index extends Component
                 'paid_amount'         => $this->paid_amount * 100,
                 'total_amount'        => $this->total_amount * 100,
                 'due_amount'          => $due_amount * 100,
-                'status'              => '2',
+                'status'              => SaleStatus::COMPLETED,
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
@@ -168,11 +183,12 @@ class Index extends Component
                 'discount_amount'     => Cart::instance('sale')->discount() * 100,
             ]);
 
+            // foreach ($this->cart_instance as cart_items) {}
             foreach (Cart::instance('sale')->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
-                    'product_id'              => $cart_item->id,
                     'warehouse_id'            => $this->warehouse_id,
+                    'product_id'              => $cart_item->id,
                     'name'                    => $cart_item->name,
                     'code'                    => $cart_item->options->code,
                     'quantity'                => $cart_item->qty,
@@ -185,6 +201,15 @@ class Index extends Component
                 ]);
 
                 $product = Product::findOrFail($cart_item->id);
+                $product_warehouse = ProductWarehouse::where('product_id', $product->id)
+                    ->where('warehouse_id', $this->warehouse_id)
+                    ->first();
+
+                $new_quantity = $product_warehouse->qty - $cart_item->qty;
+
+                $product_warehouse->update([
+                    'qty' => $new_quantity,
+                ]);
 
                 $movement = new Movement([
                     'type'         => MovementType::SALE,
@@ -197,11 +222,9 @@ class Index extends Component
                 ]);
 
                 $movement->save();
-
-                $product->update([
-                    'quantity' => $product->quantity - $cart_item->qty,
-                ]);
             }
+
+            Cart::instance('sale')->destroy();
 
             if ($sale->paid_amount > 0) {
                 SalePayment::create([
@@ -215,21 +238,23 @@ class Index extends Component
 
             $this->alert('success', __('Sale created successfully!'));
 
-            // dispatch the Send Payment Notification job
-            PaymentNotification::dispatch($sale);
+            $this->checkoutModal = false;
 
             Cart::instance('sale')->destroy();
 
-            $this->checkoutModal = false;
-        } catch (Exception $e) {
-            $this->alert('error', $e->getMessage());
-        }
+            PaymentNotification::dispatch($sale);
+
+            return redirect()->route('app.pos.index');
+        });
     }
 
+    // can you solve that issue please
+    // customer should provoke checkout
     public function proceed(): void
     {
         if ($this->customer_id !== null) {
             $this->checkoutModal = true;
+            $this->cart_instance = 'sale';
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -237,7 +262,7 @@ class Index extends Component
 
     public function calculateTotal(): mixed
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping;
+        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
     }
 
     public function resetCart(): void
@@ -245,206 +270,19 @@ class Index extends Component
         Cart::instance($this->cart_instance)->destroy();
     }
 
-    public function productSelected($product): void
-    {
-        if (empty($product)) {
-            return;
-        }
-
-        $cart = Cart::instance($this->cart_instance);
-
-        $exists = $cart->search(fn ($cartItem) => $cartItem->id === $product['id']);
-
-        if ($exists->isNotEmpty()) {
-            $this->alert('success', __('Product already added to cart!'));
-
-            return;
-        }
-
-        $cart->add([
-            'id'      => $product['id'],
-            'name'    => $product['name'],
-            'qty'     => 1,
-            'price'   => $this->calculate($product)['price'],
-            'weight'  => 1,
-            'options' => [
-                'product_discount'      => 0.00,
-                'product_discount_type' => 'fixed',
-                'sub_total'             => $this->calculate($product)['sub_total'],
-                'code'                  => $product['code'],
-                'stock'                 => $product['quantity'],
-                'unit'                  => $product['unit'],
-                'product_tax'           => $this->calculate($product)['product_tax'],
-                'unit_price'            => $this->calculate($product)['unit_price'],
-            ],
-        ]);
-
-        $this->check_quantity[$product['id']] = $product['quantity'];
-        $this->quantity[$product['id']] = 1;
-        $this->discount_type[$product['id']] = 'fixed';
-        $this->item_discount[$product['id']] = 0;
-        $this->total_amount = $this->calculateTotal();
-    }
-
-    public function removeItem($row_id): void
-    {
-        Cart::instance($this->cart_instance)->remove($row_id);
-    }
-
-    public function updatedGlobalTax(): void
-    {
-        Cart::instance($this->cart_instance)->setGlobalTax((int) $this->global_tax);
-    }
-
-    public function updatedGlobalDiscount(): void
-    {
-        Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
-    }
-
-    public function updateQuantity($row_id, $product_id): void
-    {
-        if ($this->check_quantity[$product_id] < $this->quantity[$product_id]) {
-            $this->alert('error', 'Quantity not available in stock!');
-
-            return;
-        }
-
-        Cart::instance($this->cart_instance)->update($row_id, $this->quantity[$product_id]);
-
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $cart_item->options->product_discount,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-            ],
-        ]);
-    }
-
-    public function updatePrice($row_id, $product_id)
-    {
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'price' => $this->price[$product_id],
-        ]);
-
-        // $this->calculate($product)
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->price,
-                'product_discount'      => $this->discount_amount,
-                'product_discount_type' => $this->discount_type[$product_id],
-            ],
-        ]);
-    }
-
-    public function updatedDiscountType($value, $name): void
-    {
-        $this->item_discount[$name] = 0;
-    }
-
-    public function discountModal($product_id, $row_id): void
-    {
-        $this->updateQuantity($row_id, $product_id);
-
-        $this->discountModal = true;
-    }
-
-    public function discountModalRefresh($product_id, $row_id): void
-    {
-        $this->updateQuantity($row_id, $product_id);
-    }
-
-    public function productDiscount($row_id, $product_id): void
-    {
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
-
-        if ($this->discount_type[$product_id] === 'fixed') {
-            Cart::instance($this->cart_instance)
-                ->update($row_id, [
-                    'price' => $cart_item->price + $cart_item->options->product_discount - $this->item_discount[$product_id],
-                ]);
-
-            $discount_amount = $this->item_discount[$product_id];
-
-            $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
-        } elseif ($this->discount_type[$product_id] === 'percentage') {
-            $discount_amount = ($cart_item->price + $cart_item->options->product_discount) * $this->item_discount[$product_id] / 100;
-
-            Cart::instance($this->cart_instance)
-                ->update($row_id, [
-                    'price' => $cart_item->price + $cart_item->options->product_discount - $discount_amount,
-                ]);
-
-            $this->updateCartOptions($row_id, $product_id, $cart_item, $discount_amount);
-        }
-        $this->alert('success', __('Product discount set successfully!'));
-
-        $this->discountModal = false;
-    }
-
-    public function calculate($product): array
-    {
-        $price = 0;
-        $unit_price = 0;
-        $product_tax = 0;
-        $sub_total = 0;
-
-        if ($product['tax_type'] === 1) {
-            $price = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
-            $unit_price = $product['price'];
-            $product_tax = $product['price'] * $product['order_tax'] / 100;
-            $sub_total = $product['price'] + ($product['price'] * $product['order_tax'] / 100);
-        } elseif ($product['tax_type'] === 2) {
-            $price = $product['price'];
-            $unit_price = $product['price'] - ($product['price'] * $product['order_tax'] / 100);
-            $product_tax = $product['price'] * $product['order_tax'] / 100;
-            $sub_total = $product['price'];
-        } else {
-            $price = $product['price'];
-            $unit_price = $product['price'];
-            $product_tax = 0.00;
-            $sub_total = $product['price'];
-        }
-
-        return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
-    }
-
-    public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount): void
-    {
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->options->unit_price,
-                'product_discount'      => $this->discount_amount,
-                'product_discount_type' => $this->discount_type[$product_id],
-            ],
-        ]);
-    }
-
     public function getCustomersProperty()
     {
         return Customer::select(['name', 'id'])->get();
     }
 
+    public function getWarehousesProperty()
+    {
+        return Warehouse::select(['name', 'id'])->get();
+    }
+
     public function updatedWarehouseId($value)
     {
         $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
     }
 }

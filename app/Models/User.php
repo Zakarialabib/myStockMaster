@@ -34,7 +34,6 @@ class User extends Authenticatable
         'created_at', 'updated_at',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 
@@ -83,7 +82,6 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Warehouse::class);
     }
-
 
     /** @return HasOne<Wallet> */
     public function wallet(): HasOne

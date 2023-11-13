@@ -26,10 +26,8 @@ class Wallet extends Model
 
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
-
 
     /**
      * The attributes that are mass assignable.

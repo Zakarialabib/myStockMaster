@@ -21,29 +21,38 @@ class ProductCart extends Component
 
     public $cart_instance;
 
-    public $global_discount;
+    public $global_discount = 0;
 
-    public $global_tax;
-    
+    public $global_tax = 0;
+
     public $discountModal = false;
 
     public $shipping_amount;
 
-    public $quantity;
+    public $quantity = [];
 
     public $price;
 
+    public $check_quantity = [];
+
     public $warehouse_id;
-    public $check_quantity;
 
     public $discount_type;
 
     public $item_discount;
 
     public $data;
+
+    public $total_with_shipping;
+
     public function mount($cartInstance, $data = null)
     {
         $this->cart_instance = $cartInstance;
+
+        $this->shipping_amount = 0.00;
+
+        $this->discount_type = [];
+        $this->item_discount = [];
 
         if ($data) {
             $this->data = $data;
@@ -55,55 +64,30 @@ class ProductCart extends Component
 
             $this->updatedGlobalTax();
             $this->updatedGlobalDiscount();
+            $this->updatedTotalShipping();
 
             $cart_items = Cart::instance($this->cart_instance)->content();
 
-            foreach ($cart_items as $cart_item) {
-                $productWarehouse = ProductWarehouse::where('product_id', $cart_item->id)
-                    ->where('warehouse_id', $this->warehouse_id)
-                    ->first();
-
-                if ($productWarehouse) {
-                    $this->check_quantity[$cart_item->id] = [$productWarehouse->qty];
-                    $this->quantity[$cart_item->id] = $cart_item->qty;
-                    $this->discount_type[$cart_item->id] = $cart_item->options->product_discount_type;
-
-                    if ($cart_item->options->product_discount_type === 'fixed') {
-                        $this->item_discount[$cart_item->id] = $cart_item->options->product_discount;
-                    } elseif ($cart_item->options->product_discount_type === 'percentage') {
-                        $this->item_discount[$cart_item->id] = round(100 * $cart_item->options->product_discount / $cart_item->price);
-                    }
-                }
+            foreach ($cart_items as $index => $cart_item) {
+                $this->check_quantity[$cart_item->id] = [$cart_item->options->stock];
+                $this->quantity[$cart_item->id] = $cart_item->qty;
+                $this->discount_type[$cart_item->id] = $cart_item->options->product_discount_type;
+                $this->item_discount[$cart_item->id] = ($cart_item->options->product_discount_type === 'fixed')
+                    ? $cart_item->options->product_discount
+                    : round(100 * $cart_item->options->product_discount / $cart_item->price);
             }
         } else {
-            $this->global_discount = 0;
-            $this->global_tax = 0;
-            $this->shipping_amount = 0;
-            $this->check_quantity = [];
-            $this->quantity = [];
-            $this->discount_type = [];
-            $this->item_discount = [];
+            $this->updatedGlobalTax();
+            $this->updatedGlobalDiscount();
+            $this->updatedTotalShipping();
         }
-    }
-
-    public function updatedWarehouseId($value)
-    {
-        $this->warehouse_id = $value;
-    }
-
-    public function render()
-    {
-        $cart_items = Cart::instance($this->cart_instance)->content();
-
-        return view('livewire.product-cart', [
-            'cart_items' => $cart_items,
-        ]);
     }
 
     public function productSelected($product): void
     {
         if (empty($product)) {
             $this->alert('error', __('Something went wrong!'));
+
             return;
         }
 
@@ -112,6 +96,7 @@ class ProductCart extends Component
 
         if ($exists->isNotEmpty()) {
             $this->alert('error', __('Product already added to cart!'));
+
             return;
         }
 
@@ -125,6 +110,41 @@ class ProductCart extends Component
         $this->updateQuantityAndCheckQuantity($product['id'], $productWarehouse->qty);
     }
 
+    public function calculate($product): array
+    {
+        $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
+            ->where('warehouse_id', $this->warehouse_id)
+            ->first();
+
+        return $this->calculatePrices($product, $productWarehouse);
+    }
+
+    private function calculatePrices($product, $productWarehouse)
+    {
+        $price = $productWarehouse->price;
+        $unit_price = $price;
+        $product_tax = 0.00;
+        $sub_total = $price;
+
+        if ($product['tax_type'] === 1) {
+            $tax = $price * $product['order_tax'] / 100;
+            $price += $tax;
+            $product_tax = $tax;
+            $sub_total = $price;
+        } elseif ($product['tax_type'] === 2) {
+            $tax = $price * $product['order_tax'] / 100;
+            $unit_price -= $tax;
+            $product_tax = $tax;
+        }
+
+        return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
+    }
+
+    private function updateQuantityAndCheckQuantity($productId, $quantity)
+    {
+        $this->check_quantity[$productId] = $quantity;
+        $this->quantity[$productId] = 1;
+    }
 
     private function createCartItem($product, $productWarehouse)
     {
@@ -146,15 +166,26 @@ class ProductCart extends Component
         ];
     }
 
-    private function updateQuantityAndCheckQuantity($productId, $quantity)
+    public function updatePrice($row_id, $product_id)
     {
-        $this->check_quantity[$productId] = $quantity;
-        $this->quantity[$productId] = 1;
-    }
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'price' => $this->price[$product_id],
+        ]);
 
-    public function removeItem($row_id)
-    {
-        Cart::instance($this->cart_instance)->remove($row_id);
+        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
+
+        Cart::instance($this->cart_instance)->update($row_id, [
+            'options' => [
+                'sub_total'             => $cart_item->price * $cart_item->qty,
+                'code'                  => $cart_item->options->code,
+                'stock'                 => $cart_item->options->stock,
+                'unit'                  => $cart_item->options->unit,
+                'product_tax'           => $cart_item->options->product_tax,
+                'unit_price'            => $cart_item->price,
+                'product_discount'      => $cart_item->options->product_discount,
+                'product_discount_type' => $cart_item->options->product_discount_type,
+            ],
+        ]);
     }
 
     public function updatedGlobalTax()
@@ -165,6 +196,23 @@ class ProductCart extends Component
     public function updatedGlobalDiscount()
     {
         Cart::instance($this->cart_instance)->setGlobalDiscount((int) $this->global_discount);
+    }
+
+    public function updatedTotalShipping()
+    {
+        Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
+    }
+
+    public function updatedShippingAmount($value)
+    {
+        $this->shipping_amount = $value;
+    }
+
+    public function discountModal($product_id, $row_id): void
+    {
+        $this->updateQuantity($row_id, $product_id);
+
+        $this->discountModal = true;
     }
 
     public function updateQuantity($row_id, $product_id)
@@ -195,23 +243,14 @@ class ProductCart extends Component
         ]);
     }
 
+    public function removeItem($row_id)
+    {
+        Cart::instance($this->cart_instance)->remove($row_id);
+    }
+
     public function updatedDiscountType($value, $name)
     {
         $this->item_discount[$name] = 0;
-    }
-
-    public function discountModal($product_id, $row_id): void
-    {
-        $this->updateQuantity($row_id, $product_id);
-
-        $this->discountModal = true;
-    }
-
-    public function discountModalRefresh($product_id, $row_id)
-    {
-        $this->updateQuantity($row_id, $product_id);
-        
-        $this->discountModal = false;
     }
 
     public function productDiscount($row_id, $product_id): void
@@ -242,39 +281,6 @@ class ProductCart extends Component
         $this->discountModal = false;
     }
 
-    public function calculate($product): array
-    {
-        $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
-            ->where('warehouse_id', $this->warehouse_id)
-            ->first();
-
-        // dd($productWarehouse);
-
-        return $this->calculatePrices($product, $productWarehouse);
-    }
-
-    private function calculatePrices($product, $productWarehouse)
-    {
-        // dd($productWarehouse);
-        $price = $productWarehouse->price;
-        $unit_price = $price;
-        $product_tax = 0.00;
-        $sub_total = $price;
-
-        if ($product['tax_type'] === 1) {
-            $tax = $price * $product['order_tax'] / 100;
-            $price += $tax;
-            $product_tax = $tax;
-            $sub_total = $price;
-        } elseif ($product['tax_type'] === 2) {
-            $tax = $price * $product['order_tax'] / 100;
-            $unit_price -= $tax;
-            $product_tax = $tax;
-        }
-
-        return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
-    }
-
     public function updateCartOptions($row_id, $product_id, $cart_item, $discount_amount)
     {
         Cart::instance($this->cart_instance)->update($row_id, [
@@ -286,32 +292,29 @@ class ProductCart extends Component
                 'product_tax'           => $cart_item->options->product_tax,
                 'unit_price'            => $cart_item->options->unit_price,
                 'product_discount'      => $discount_amount,
-                'product_discount_type' => $this->discount_type[$product_id],
+                'product_discount_type' => $cart_item->options->product_discount_type,
             ],
         ]);
     }
 
-
-
-    public function updatePrice($row_id, $product_id)
+    public function updatedWarehouseId($value)
     {
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'price' => $this->price[$product_id],
-        ]);
+        $this->warehouse_id = $value;
+    }
 
-        $cart_item = Cart::instance($this->cart_instance)->get($row_id);
+    public function render()
+    {
+        $cart_items = Cart::instance($this->cart_instance)->content();
 
-        Cart::instance($this->cart_instance)->update($row_id, [
-            'options' => [
-                'sub_total'             => $cart_item->price * $cart_item->qty,
-                'code'                  => $cart_item->options->code,
-                'stock'                 => $cart_item->options->stock,
-                'unit'                  => $cart_item->options->unit,
-                'product_tax'           => $cart_item->options->product_tax,
-                'unit_price'            => $cart_item->price,
-                'product_discount'      => $cart_item->options->product_discount,
-                'product_discount_type' => $cart_item->options->product_discount_type,
-            ],
+        foreach ($cart_items as $index => $cart_item) {
+            $this->discount_type[$cart_item->id] = $cart_item->options->product_discount_type;
+            $this->item_discount[$cart_item->id] = ($cart_item->options->product_discount_type === 'fixed')
+                ? $cart_item->options->product_discount
+                : round(100 * $cart_item->options->product_discount / $cart_item->price);
+        }
+
+        return view('livewire.product-cart', [
+            'cart_items' => $cart_items,
         ]);
     }
 }

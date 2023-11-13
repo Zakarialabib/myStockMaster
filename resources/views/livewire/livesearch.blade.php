@@ -1,7 +1,8 @@
 <div>
     <div class="relative mb-4">
         <div class="w-full rounded-lg">
-            <x-input wire:model.lazy="searchQuery" autofocus
+            <x-input wire:model="searchQuery" autofocus
+                x-on:keydown.escape="searchQuery"
                 placeholder="{{ __('Search with names and codes, or reference') }}" />
         </div>
         @if (!empty($searchQuery))
@@ -86,7 +87,8 @@
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Customer name') }}
-                                        : {{ $item->customer->name }}</p>
+                                        : {{ $item->customer->name }}
+                                    </p>
                                     <p class="font-semibold text-gray-700">{{ __('Reference') }}
                                         : {{ $item->reference }}</p>
                                     <p class="font-semibold text-gray-700">{{ __('Total amount') }}

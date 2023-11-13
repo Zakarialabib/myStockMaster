@@ -25,7 +25,6 @@ class PurchasePayment extends Model
         'updated_at',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 
@@ -51,7 +50,7 @@ class PurchasePayment extends Model
                 $number = 1;
             }
 
-            $purchasePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

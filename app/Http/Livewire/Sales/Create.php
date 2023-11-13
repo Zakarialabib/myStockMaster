@@ -17,7 +17,6 @@ use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use App\Models\Warehouse;
 use App\Models\ProductWarehouse;
-use Exception;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -73,7 +72,7 @@ class Create extends Component
     {
         return [
             'customer_id'         => 'required|numeric',
-            'warehouse_id'         => 'required',
+            'warehouse_id'        => 'required',
             'tax_percentage'      => 'integer|min:0|max:100',
             'discount_percentage' => 'integer|min:0|max:100',
             'shipping_amount'     => 'numeric',
@@ -128,8 +127,7 @@ class Create extends Component
 
     public function store()
     {
-
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -143,16 +141,19 @@ class Create extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = SaleStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = SaleStatus::PENDING;
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = SaleStatus::COMPLETED;
             }
 
             $sale = Sale::create([
                 'date'                => $this->date,
                 'customer_id'         => $this->customer_id,
-                'warehouse_id'         => $this->warehouse_id,
+                'warehouse_id'        => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -193,7 +194,7 @@ class Create extends Component
                 $new_quantity = $product_warehouse->qty - $cart_item->qty;
 
                 $product_warehouse->update([
-                    'qty'  => $new_quantity,
+                    'qty' => $new_quantity,
                 ]);
 
                 $movement = new Movement([
@@ -242,7 +243,6 @@ class Create extends Component
         Cart::instance($this->cart_instance)->destroy();
     }
 
-
     public function getCustomersProperty()
     {
         return Customer::pluck('name', 'id')->toArray();
@@ -257,6 +257,13 @@ class Create extends Component
     {
         $this->warehouse_id = $value;
         $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+
+    public function updatedStatus($value)
+    {
+        if ($value === SaleStatus::COMPLETED->value) {
+            $this->paid_amount = $this->total_amount;
+        }
     }
 
     public function getWarehousesProperty()

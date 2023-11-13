@@ -58,12 +58,16 @@
                         {{ $salereturn->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $salereturn->customer->name }}
+                        <a href="{{ route('customer.details', $salereturn->customer->uuid) }}"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $salereturn->customer->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         @php
                             $badgeType = $salereturn->payment_status->getBadgeType();
                         @endphp
+
                         <x-badge :type="$badgeType">{{ $salereturn->payment_status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
@@ -211,7 +215,8 @@
                                                 @php
                                                     $badgeType = $salereturn?->status->getBadgeType();
                                                 @endphp
-                                                <x-badge :type="$badgeType">{{ $salereturn?->status->getName() }}</x-badge>
+                                                <x-badge
+                                                    :type="$badgeType">{{ $salereturn?->status->getName() }}</x-badge>
 
                                             </strong>
                                         </div>
@@ -318,16 +323,10 @@
             </div>
         </x-slot>
     </x-modal>
-    {{-- End Show SaleReturn --}}
 
-    {{-- Sales Payment payment component   --}}
     <div>
-        {{-- if showPayments livewire proprety empty don't show --}}
-        @if (empty($showPayments))
-            <livewire:sales.payment.index :sale="$salereturn" />
-        @endif
+        <livewire:sales.payment.index :salereturn="$salereturn" />
     </div>
-    {{-- End Sales Payment payment component   --}}
 
     @if (!empty($paymentModal))
         <div>

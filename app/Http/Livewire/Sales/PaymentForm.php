@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Livewire\Sales\Payment;
+namespace App\Http\Livewire\Sales;
 
 use App\Enums\PaymentStatus;
+use App\Enums\SaleStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ use Throwable;
 class PaymentForm extends Component
 {
     use LivewireAlert;
-    /** @var array<string> */
+
     public $listeners = [
         'paymentModal',
         'refreshIndex' => '$refresh',
@@ -26,11 +27,9 @@ class PaymentForm extends Component
 
     public $sale;
 
-    public $salepayment;
-
     public $sale_id;
 
-    public $reference;
+    // public $reference;
 
     public $date;
 
@@ -48,33 +47,33 @@ class PaymentForm extends Component
         'payment_method' => 'required|string|max:255',
     ];
 
-    public function mount(Sale $sale)
+    //  Payment modal
+
+    public function paymentModal($id)
     {
-        $this->sale = $sale;
+        // abort_if(Gate::denies('sale_access'), 403);
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+        $this->sale = Sale::findOrFail($id);
         $this->date = date('Y-m-d');
-        $this->amount = $sale->due_amount;
-    }
-
-    public function paymentModal($sale)
-    {
-        abort_if(Gate::denies('sale_access'), 403);
-
-        $this->sale_id = $sale;
-
+        $this->amount = $this->sale->due_amount;
+        $this->payment_method = 'Cash';
+        $this->sale_id = $this->sale->id;
         $this->paymentModal = true;
     }
 
-    public function save()
+    public function paymentSave()
     {
         try {
             $this->validate();
 
-            $this->sale = $this->salepayment->sale->id;
-
             SalePayment::create([
                 'date'           => $this->date,
                 'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
+                'note'           => $this->note,
                 'sale_id'        => $this->sale_id,
                 'payment_method' => $this->payment_method,
                 'user_id'        => Auth::user()->id,
@@ -86,16 +85,20 @@ class PaymentForm extends Component
 
             if ($due_amount === $sale->total_amount) {
                 $payment_status = PaymentStatus::DUE;
+                $status = SaleStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $status = SaleStatus::PENDING;
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $status = SaleStatus::COMPLETED;
             }
 
             $sale->update([
                 'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
                 'due_amount'     => $due_amount * 100,
                 'payment_status' => $payment_status,
+                'status'         => $status,
             ]);
 
             $this->alert('success', __('Sale Payment created successfully.'));
@@ -104,12 +107,12 @@ class PaymentForm extends Component
 
             $this->emit('refreshIndex');
         } catch (Throwable $th) {
-            $this->alert('error', 'Error'.$th->getMessage());
+            $this->alert('error', __('Error.').$th->getMessage());
         }
     }
 
     public function render()
     {
-        return view('livewire.sales.payment.payment-form');
+        return view('livewire.sales.payment-form');
     }
 }

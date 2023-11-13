@@ -80,9 +80,8 @@ class Create extends Component
     public function rules(): array
     {
         return [
-            'warehouse_id'         => 'required|integer',
+            'warehouse_id'        => 'required|integer',
             'supplier_id'         => 'required|integer',
-            'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
             'discount_percentage' => 'required|integer|min:0|max:100',
             'shipping_amount'     => 'required|numeric',
@@ -122,9 +121,18 @@ class Create extends Component
         $this->total_amount = $this->calculateTotal();
     }
 
+    public function proceed()
+    {
+        if ($this->supplier_id !== null) {
+            $this->store();
+        } else {
+            $this->alert('error', __('Please select a supplier!'));
+        }
+    }
+
     public function store()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -137,16 +145,20 @@ class Create extends Component
 
             if ($due_amount === $this->total_amount) {
                 $this->payment_status = PaymentStatus::PENDING;
+                $this->status = PurchaseStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $this->payment_status = PaymentStatus::PARTIAL;
+                $this->status = PurchaseStatus::PENDING;
             } else {
                 $this->payment_status = PaymentStatus::PAID;
+                $this->status = PurchaseStatus::COMPLETED;
             }
 
+            // dd($this->supplier_id);
             $purchase = Purchase::create([
                 'date'                => $this->date,
                 'supplier_id'         => $this->supplier_id,
-                'warehouse_id'         => $this->warehouse_id,
+                'warehouse_id'        => $this->warehouse_id,
                 'user_id'             => Auth::user()->id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
@@ -184,7 +196,7 @@ class Create extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if (!$product_warehouse) {
+                if ( ! $product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -262,19 +274,13 @@ class Create extends Component
     public function updatedWarehouseId($warehouse_id)
     {
         $this->warehouse_id = $warehouse_id;
-        $this->emit('warehouseUpdated', $warehouse_id);
-    } 
+        $this->emit('warehouseSelected', $warehouse_id);
+    }
 
     public function updatedStatus($value)
     {
         if ($value === PurchaseStatus::COMPLETED) {
             $this->paid_amount = $this->total_amount;
-            dd($value);
-        } else {
-            // Perform any other necessary actions when status is changed to something other than "iscompleted"
-            // For example, you might want to reset the paid_amount to 0
-            $this->paid_amount = 0;
         }
     }
-
 }

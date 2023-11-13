@@ -30,7 +30,6 @@ class Customer extends Model
         'updated_at',
     ];
 
-
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 
@@ -81,27 +80,6 @@ class Customer extends Model
     public function getTotalDueAttribute(): int|float
     {
         return $this->customerSum('due_amount', Sale::class);
-    }
-
-    public function getProfit(): int|float
-    {
-        $sales = Sale::where('customer_id', $this->id)
-            ->completed()->sum('total_amount');
-
-        $sale_returns = SaleReturn::where('customer_id', $this->id)
-            ->completed()->sum('total_amount');
-
-        $product_costs = 0;
-
-        foreach (Sale::where('customer_id', $this->id)->with('saleDetails', 'saleDetails.product')->get() as $sale) {
-            foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->cost;
-            }
-        }
-
-        $revenue = ($sales - $sale_returns) / 100;
-
-        return $revenue - $product_costs;
     }
 
     private function customerSum($column, $model)

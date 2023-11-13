@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\PurchaseStatus;
+use App\Enums\SaleStatus;
 use App\Models\Expense;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -41,19 +42,19 @@ class HomeController extends Controller
         $data = [
             'today' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()),
-                'stockValue' => Product::stockValue(Carbon::now()),
+                // 'stockValue' => Product::stockValue(Carbon::now()),
             ],
             'month' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonth()),
-                'stockValue' => Product::stockValue(Carbon::now()->subMonth()),
+                // 'stockValue' => Product::stockValue(Carbon::now()->subMonth()),
             ],
             'semi' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subMonths(6)),
-                'stockValue' => Product::stockValue(Carbon::now()->subMonths(6)),
+                // 'stockValue' => Product::stockValue(Carbon::now()->subMonths(6)),
             ],
             'year' => [
                 'salesTotal' => Sale::salesTotal(Carbon::now()->subYear()),
-                'stockValue' => Product::stockValue(Carbon::now()->subYear()),
+                // 'stockValue' => Product::stockValue(Carbon::now()->subYear()),
             ],
         ];
 

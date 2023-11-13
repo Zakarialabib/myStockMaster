@@ -52,7 +52,10 @@
                         {{ $purchasereturn->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $purchasereturn->supplier->name }}
+                        <a href="{{ route('supplier.details', $purchasereturn->supplier->uuid) }}"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $purchasereturn->supplier->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         @php
@@ -301,9 +304,9 @@
     {{--  End ShowModal --}}
 
     {{-- PurchaseReturn Payment payment component   --}}
-    @if (empty($purchasereturn))
-        <livewire:purchase.payment.index :purchase="$purchasereturn" />
-    @endif
+    {{-- @if (empty($purchasereturn)) --}}
+        <livewire:purchase.payment.index :purchasereturn="$purchasereturn" />
+    {{-- @endifp --}}
     {{-- End PurchaseReturn Payment payment component   --}}
 
     @if (!empty($paymentModal))

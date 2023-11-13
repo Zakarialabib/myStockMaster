@@ -22,12 +22,12 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'customergroup.name'        => 'required|min:3|max:255',
+        'customergroup.name'       => 'required|min:3|max:255',
         'customergroup.percentage' => 'required',
     ];
 
     protected $messages = [
-        'customergroup.name.required' => 'The name field cannot be empty.',
+        'customergroup.name.required'       => 'The name field cannot be empty.',
         'customergroup.percentage.required' => 'The percentage field cannot be empty.',
     ];
 

@@ -18,12 +18,11 @@ class ExpenseCategory extends Model
         'id',
         'name',
         'updated_at',
-        'created_at',        
+        'created_at',
     ];
 
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
-
 
     /**
      * The attributes that are mass assignable.

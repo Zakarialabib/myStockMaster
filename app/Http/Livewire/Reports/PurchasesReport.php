@@ -32,7 +32,7 @@ class PurchasesReport extends Component
 
     public function mount()
     {
-        $this->suppliers = Supplier::select(['id', 'name'])->get();
+        $this->suppliers = Supplier::with('purchases')->select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->supplier_id = '';

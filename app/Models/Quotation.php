@@ -33,7 +33,6 @@ class Quotation extends Model
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -98,7 +97,7 @@ class Quotation extends Model
                 $number = 1;
             }
 
-            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $quotation->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

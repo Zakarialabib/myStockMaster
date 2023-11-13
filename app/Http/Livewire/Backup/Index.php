@@ -64,7 +64,6 @@ class Index extends Component
         $this->alert('success', __('Old backup cleaned.'));
     }
 
-
     public function backupToDrive()
     {
         try {
@@ -118,7 +117,6 @@ class Index extends Component
             $this->alert('success', __('Database backup failed.'));
         }
     }
-
 
     public function downloadBackup($file)
     {

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
@@ -24,7 +25,7 @@ class Product extends Model
     use HasFactory;
     use GetModelByUuid;
     use UuidGenerator;
-
+    use SoftDeletes;
 
     public const ATTRIBUTES = [
         'id',
@@ -33,7 +34,6 @@ class Product extends Model
         'code',
         'created_at',
     ];
-
 
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
@@ -65,7 +65,7 @@ class Product extends Model
     {
         $this->setRawAttributes([
 
-            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
 
         ], true);
         parent::__construct($attributes);

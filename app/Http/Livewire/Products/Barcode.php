@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Products;
 
+use App\Models\ProductWarehouse; // Import ProductWarehouse model instead of Product model
 use App\Models\Product;
+use App\Models\Warehouse;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
@@ -14,11 +16,9 @@ class Barcode extends Component
 {
     use LivewireAlert;
 
-    public $product;
+    public $warehouse_id;
     public $products = [];
-    public $quantity;
     public $barcodes = [];
-    public $barcodeSize;
     public $paperSize = 'A4';
 
     protected $listeners = ['productSelected'];
@@ -28,56 +28,32 @@ class Barcode extends Component
         'products.*.barcodeSize' => 'required|in:small,medium,large,extra,huge',
     ];
 
-    public function mount(): void
+    public function updatedWarehouseId($value)
     {
-        $this->product = null;
+        $this->warehouse_id = $value;
+        $this->emit('warehouseSelected', $this->warehouse_id);
     }
 
     public function productSelected($product): void
     {
-        $product = Product::find($product['id']);
+        $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
+            ->where('warehouse_id', $this->warehouse_id)
+            ->first();
 
-        $index = $this->findProductIndex($product->id);
-
-        if ($index === false) {
+        if ($productWarehouse) {
             array_push($this->products, [
-                'id'                => $product->id,
-                'name'              => $product->name,
-                'code'              => $product->code,
-                'price'             => $product->price,
+                'id'                => $productWarehouse->product_id,
+                'name'              => $productWarehouse->product->name,
+                'code'              => $productWarehouse->product->code,
+                'price'             => $productWarehouse->price,
                 'quantity'          => 1,
-                'barcode_symbology' => $product->barcode_symbology,
+                'barcode_symbology' => $productWarehouse->product->barcode_symbology,
                 'barcodeSize'       => 1,
             ]);
         }
     }
 
-    public function findProductIndex($productId)
-    {
-        foreach ($this->products as $index => $product) {
-            if ($product['id'] === $productId) {
-                return $index;
-            }
-        }
-
-        return false;
-    }
-
-    public function updatedQuantity($quantity, $productId)
-    {
-        $index = $this->findProductIndex($productId);
-
-        $this->products[$index]['quantity'] = $quantity;
-    }
-
-    public function updatedBarcodeSize($barcodeSize, $productId)
-    {
-        $index = $this->findProductIndex($productId);
-
-        $this->products[$index]['barcodeSize'] = $barcodeSize;
-    }
-
-    public function generateBarcodes(): void
+    public function generateBarcodes()
     {
         if (empty($this->products)) {
             $this->alert('error', __('Please select at least one product to generate barcodes!'));
@@ -87,7 +63,7 @@ class Barcode extends Component
 
         $this->barcodes = [];
 
-        foreach ($this->products as $key => $product) {
+        foreach ($this->products as  $product) {
             $quantity = $product['quantity'];
             $name = $product['name'];
             $price = $product['price'];
@@ -97,7 +73,6 @@ class Barcode extends Component
 
                 continue;
             }
-            // dd($product);
 
             for ($i = 0; $i < $quantity; $i++) {
                 $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], $product['barcodeSize'], 60, 'black', false);
@@ -140,6 +115,11 @@ class Barcode extends Component
             unset($this->products[$index]);
             $this->products = array_values($this->products); // Reset array keys
         }
+    }
+
+    public function getWarehousesProperty()
+    {
+        return Warehouse::pluck('name', 'id')->toArray();
     }
 
     public function render()

@@ -26,7 +26,6 @@ class Edit extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'productSelected',
         'refreshIndex' => '$refresh',
     ];
 
@@ -39,7 +38,7 @@ class Edit extends Component
     public $products;
 
     public $supplier_id;
-    
+
     public $warehouse_id;
 
     public $product;
@@ -78,7 +77,7 @@ class Edit extends Component
     public function rules(): array
     {
         return [
-            'warehouse_id'         => 'required|integer',
+            'warehouse_id'        => 'required|integer',
             'supplier_id'         => 'required|integer',
             'reference'           => 'required|string|max:255',
             'tax_percentage'      => 'required|integer|min:0|max:100',
@@ -86,7 +85,7 @@ class Edit extends Component
             'shipping_amount'     => 'required|numeric',
             'total_amount'        => 'required|numeric',
             'paid_amount'         => 'required|numeric',
-            'status'              => 'required|string|max:50',
+            'status'              => 'required',
             'payment_method'      => 'required|string|max:255',
             'note'                => 'nullable|string|max:1000',
             'date'                => 'required|string|max:1000',
@@ -108,12 +107,11 @@ class Edit extends Component
         $this->discount_percentage = $this->purchase->discount_percentage;
         $this->shipping_amount = $this->purchase->shipping_amount;
         $this->total_amount = $this->purchase->total_amount;
-        $this->warehouse_id = $this->purchase->warehouse_id;
     }
 
     public function update()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -133,10 +131,13 @@ class Edit extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = PurchaseStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = PurchaseStatus::PENDING;
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = PurchaseStatus::COMPLETED;
             }
 
             // Delete previous purchase details
@@ -154,7 +155,7 @@ class Edit extends Component
                 'paid_amount'         => $this->paid_amount * 100,
                 'total_amount'        => $this->total_amount * 100,
                 'due_amount'          => $due_amount * 100,
-                'status'              => $this->purchase->status,
+                'status'              => $this->status,
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
@@ -183,7 +184,7 @@ class Edit extends Component
                     ->where('warehouse_id', $this->warehouse_id)
                     ->first();
 
-                if (!$product_warehouse) {
+                if ( ! $product_warehouse) {
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
@@ -226,11 +227,11 @@ class Edit extends Component
     {
         return view('livewire.purchase.edit');
     }
+
     public function hydrate(): void
     {
         $this->total_amount = $this->calculateTotal();
     }
-
 
     public function calculateTotal(): mixed
     {
@@ -242,7 +243,6 @@ class Edit extends Component
         Cart::instance($this->cart_instance)->destroy();
     }
 
-
     public function getSupplierProperty()
     {
         return Supplier::pluck('name', 'id')->toArray();
@@ -253,21 +253,18 @@ class Edit extends Component
         return Warehouse::pluck('name', 'id')->toArray();
     }
 
-
     public function updatedWarehouseId($warehouse_id)
     {
         $this->warehouse_id = $warehouse_id;
-        $this->emit('warehouseUpdated', $warehouse_id);
-    } 
+        $this->emit('warehouseSelected', $warehouse_id);
+    }
 
     public function updatedStatus($value)
     {
-        if ($value === PurchaseStatus::COMPLETED) {
+        if ($value === PurchaseStatus::COMPLETED->value) {
             $this->paid_amount = $this->total_amount;
         } else {
             $this->paid_amount = 0;
         }
     }
-    
-
 }

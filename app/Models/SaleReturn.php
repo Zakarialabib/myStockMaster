@@ -16,7 +16,6 @@ class SaleReturn extends Model
 {
     use HasAdvancedFilter;
 
-
     public const ATTRIBUTES = [
         'id',
         'date',
@@ -102,7 +101,7 @@ class SaleReturn extends Model
                 $number = 1;
             }
 
-            $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $saleReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 

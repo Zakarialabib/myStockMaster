@@ -8,12 +8,12 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.1.17",
         "automattic/woocommerce": "^3.1",
         "bumbummen99/shoppingcart": "^4.2",
+        "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
-        "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "jantinnerezo/livewire-alert": "^2.2",
         "laravel-notification-channels/telegram": "^3.0",
         "laravel/framework": "^9.35",
@@ -32,8 +32,8 @@
         "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
+        "barryvdh/laravel-debugbar": "^3.7",
         "kkomelin/laravel-translatable-string-exporter": "^1.17",
         "laravel/breeze": "^1.14",
         "laravel/pint": "^1.2",

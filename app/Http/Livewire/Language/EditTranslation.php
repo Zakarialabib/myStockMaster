@@ -63,11 +63,6 @@ class EditTranslation extends Component
         }
 
         foreach ($this->translations as $key => $translation) {
-            if (array_key_exists($translation['key'], $translations)) {
-                $this->alert('error', __('Translation key already exists!'));
-
-                return;
-            }
             $translations[$translation['key']] = $translation['value'];
         }
 
@@ -79,11 +74,11 @@ class EditTranslation extends Component
             return;
         }
 
-        $this->alert('success', __('Data created successfully!'));
+        $this->alert('success', __('Translated  successfully!'));
     }
 
     public function render()
     {
-        return view('livewire.language.edit-translation')->extends('layouts.dashboard');
+        return view('livewire.language.edit-translation');
     }
 }

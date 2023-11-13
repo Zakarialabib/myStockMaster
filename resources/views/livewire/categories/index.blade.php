@@ -80,7 +80,7 @@
                                     <i class="fas fa-edit"></i>
                                     {{ __('Edit') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link wire:click="$emit('deleteModal', {{ $category->id }})"
+                                <x-dropdown-link wire:click="deleteModal( {{ $category->id }})"
                                     wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                     {{ __('Delete') }}
@@ -152,9 +152,9 @@
                 <div class="mb-4">
                     <div class="my-4">
                         <x-label for="import" :value="__('Import')" />
-                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
-                            wire:model.defer="import" />
-                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="file"
+                            wire:model.defer="file" />
+                        <x-input-error :messages="$errors->get('file')" for="import" class="mt-2" />
                     </div>
 
                     <div class="w-full flex justify-start">

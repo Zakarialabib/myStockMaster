@@ -1,5 +1,13 @@
 <div>
-    <div class="flex flex-row flex-wrap px-2 py-3">
+    <div class="flex flex-wrap px-2 py-3">
+
+        <div class="mb-6 flex justify-center gap-4 items-center w-full">
+            <label class="font-semibold">{{ __('Filtre by date') }}:</label>
+            <input type="date" wire:model="startDate" class="border rounded px-2 py-1">
+            <span class="mx-2">to</span>
+            <input type="date" wire:model="endDate" class="border rounded px-2 py-1">
+        </div>
+
         @can('show_total_stats')
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}"
@@ -11,13 +19,13 @@
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
                 <x-counter-card color="orange" counter="{{ $productCount }}" title="{{ __('Total Products') }}"
-                    href="{{ route('products.index') }}">
+                    href="{{ route('products') }}">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                 </x-counter-card>
             </div>
             <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="green" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}"
+                <x-counter-card color="yellow" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}"
                     href="{{ route('suppliers.index') }}">
                     <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -33,24 +41,58 @@
                     </path>
                 </x-counter-card>
             </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="purple" counter="{{ $salesCount }}" :title="__('Total Sales')"
+                    href="{{ route('sales.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="cyan" counter="{{ $purchasesCount }}" :title="__('Total Purchases')"
+                    href="{{ route('purchases.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="green" counter="{{ $salesTotal }}" :title="__('Sales Total')"
+                    href="{{ route('sales.index') }}">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
+                <x-counter-card color="gray" counter="{{ $stockValue }}" :title="__('Stock Value')" href="#">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </x-counter-card>
+            </div>
+            {{-- Top-Selling Products --}}
+            <x-card-tooltip icon="bi bi-graph-up" color="lime" href="#topProducts">
+                <span class="text-2xl">{{ $top_selling_products }}</span>
+                <p>{{ __('Top-Selling Products') }}</p>
+            </x-card-tooltip>
         @endcan
     </div>
-    <div class="flex flex-wrap w-full">
-        <div class="w-full mx-4 pb-2 mb-2 bg-white">
+    <div class="grid grid-cols-2 gap-4">
+        <div class="w-full mx-4 pb-2 mb-2 bg-white relative">
             <div class="w-full px-4 justify-between items-center">
                 <h3>{{ __('Daily Sales and Purchases') }}</h3>
             </div>
             <div id="daily-chart"></div>
         </div>
-        {{-- @can('show_monthly_cashflow') --}}
-        <div class="w-full mx-4 pb-2 bg-white">
+        <div class="w-full mx-4 pb-2 bg-white relative">
             <div class="w-full px-4 justify-between items-center">
                 <h3>{{ __('Monthly Cash Flow (Payment Sent & Received)') }}</h3>
             </div>
             <div id="monthly-chart"></div>
         </div>
-        {{-- @endcan --}}
-        <div class="mx-4 pb-2 w-full mt-2 bg-white">
+        <div class="mx-4 pb-2 w-full mt-2 bg-white relative">
             <div class="flex w-full px-4 justify-between items-center">
                 <h3>{{ __('Sales/Purchases') }}</h3>
             </div>
@@ -75,7 +117,7 @@
                     @foreach ($lastSales as $sale)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                <p class="font-bold tracking-wide text-gray-800">{{ $sale->customer->name }}
+                                <p class="font-bold tracking-wide text-gray-800">{{ $sale->customer?->name }}
                                 </p>
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $sale->reference }}</span>
                             </td>
@@ -112,8 +154,15 @@
                     @foreach ($lastPurchases as $purchase)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                <p class="font-bold tracking-wide text-gray-800">
-                                    {{ $purchase->supplier->name }}</p>
+                                @if ($purchase->supplier)
+                                    <a href="{{ route('supplier.details', $purchase?->supplier?->uuid) }}"
+                                        class="text-indigo-500 hover:text-indigo-600 font-bold tracking-wide">
+                                        {{ $purchase->supplier->name }}
+                                    </a>
+                                @else
+                                    {{ $purchase->supplier->name }}
+                                @endif
+
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $purchase->reference }}</span>
                             </td>
                             <td class="px-4 py-2">{{ format_currency($purchase->total_amount) }}</td>
@@ -131,59 +180,64 @@
             </table>
         </div>
     </div>
-    <div class="px-2 pb-2 sm:w-1/2 w-full">
-        <div class="bg-white rounded-lg border border-gray-200 pb-2">
-            <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                <span class="text-md font-semibold">{{ __('Top 5 Sellers in') }} {{ now()->format('F') }}</span>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('Seller') }}</th>
-                        <th>{{ __('Profit') }}</th>
-                        <th>{{ __('Customer') }}</th>
-                        <th>{{ __('Sale Date') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($bestSales as $sale)
-                        <tr class="antialiased">
-                            <td class="py-1 px-2">{{ $sale->user->name }}</td>
-                            <td class="py-1 px-2">{{ format_currency($sale->total_amount) }}</td>
-                            <td class="py-1 px-2">{{ $sale->customer->name }}</td>
-                            <td class="py-1 px-2">{{ $sale->created_at->format('Y-m-d') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <div class="px-2 pb-2 sm:w-1/2 w-full">
-        <div class="bg-white rounded-lg border border-gray-200 pb-2">
-            <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
-                <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('Product Name') }}</th>
-                        <th>{{ __('Code') }}</th>
-                        <th>{{ __('Total Quantity') }}</th>
-                        <th>{{ __('Total Sales') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($topProducts as $product)
-                        <tr class="antialiased">
-                            <td class="py-1 px-2">{{ $product->name }}</td>
-                            <td class="py-1 px-2">{{ $product->code }}</td>
-                            <td class="py-1 px-2">{{ $product->qtyItem }}</td>
-                            <td class="py-1 px-2">{{ format_currency($product->totalSalesAmount) }}</td>
+    <div class="flex flex-wrap">
+        <div class="sm:w-1/2 w-full">
+            <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                    <span class="text-md font-semibold">{{ __('Top 5 Sellers in') }} {{ now()->format('F') }}</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Seller') }}</th>
+                            <th>{{ __('Profit') }}</th>
+                            <th>{{ __('Customer') }}</th>
+                            <th>{{ __('Sale Date') }}</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($bestSales as $sale)
+                            <tr class="antialiased">
+                                <td class="py-1 px-2">{{ $sale->user->name }}</td>
+                                <td class="py-1 px-2">{{ format_currency($sale->total_amount) }}</td>
+                                <td class="py-1 px-2">{{ $sale->customer->name }}</td>
+                                <td class="py-1 px-2">{{ $sale->created_at->format('Y-m-d') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <div class="sm:w-1/2 w-full" id="topProducts">
+            <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                    <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Product Name') }}</th>
+                            <th>{{ __('Code') }}</th>
+                            <th>{{ __('Total Quantity') }}</th>
+                            <th>{{ __('Total Sales') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($topProducts as $product)
+                            <tr class="antialiased">
+                                <td class="py-1 px-2">{{ $product->name }}</td>
+                                <td class="py-1 px-2">{{ $product->code }}</td>
+                                <td class="py-1 px-2">{{ $product->qtyItem }}</td>
+                                <td class="py-1 px-2">{{ format_currency($product->totalSalesAmount) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

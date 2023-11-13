@@ -78,35 +78,6 @@ class Index extends Component
         $this->showModal = true;
     }
 
-<<<<<<< Updated upstream
-    public function editModal(ExpenseCategory $expenseCategory): void
-    {
-        abort_if(Gate::denies('expense_categories_edit'), 403);
-
-        $this->resetErrorBag();
-
-        $this->resetValidation();
-
-        $this->expenseCategory = ExpenseCategory::find($expenseCategory->id);
-
-        $this->editModal = true;
-    }
-
-    public function update(): void
-    {
-        $this->validate();
-
-        $this->expenseCategory->save();
-
-        $this->alert('success', __('Expense Category Updated Successfully.'));
-
-        $this->emit('refreshIndex');
-
-        $this->editModal = false;
-    }
-
-=======
->>>>>>> Stashed changes
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('expense_categories_delete'), 403);

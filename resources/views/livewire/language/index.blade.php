@@ -66,11 +66,11 @@
 
     <!-- Update Language-->
     @livewire('language.edit', ['language' => $language])
-
+    
     @push('scripts')
         <script>
             document.addEventListener('livewire:load', function() {
-                window.livewire.on('deleteModal', brandId => {
+                window.livewire.on('deleteModal', languageId => {
                     Swal.fire({
                         title: 'Are you sure?',
                         text: "You won't be able to revert this!",

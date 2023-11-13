@@ -40,42 +40,44 @@
                 </div>
             </div>
             <div class="float-right">
-                <x-button primary type="button" wire:click="updateTranslation">
+                <x-button primary type="button" wire:click="updateTranslation" wire:loading.attr="disabled">
                     {{ __('Update') }}
                 </x-button>
             </div>
         </div>
     </section>
     <x-card>
-        <x-table>
-            <x-slot name="thead">
-                <x-table.th>{{ __('System') }}</x-table.th>
-                <x-table.th>{{ __('Translation') }}</x-table.th>
-                <x-table.th>{{ __('Action') }}</x-table.th>
-            </x-slot>
-            <x-table.tbody>
-                @foreach ($translations as $key => $translation)
-                    <x-table.tr>
-                        <x-table.td class="max-w-xs h-auto overflow-hidden">
-                            <p class="truncate">{{ $key }}</p>
-                        </x-table.td>
-                        <x-table.td>
-                            <textarea type="text" id="value-{{ $key }}" rows="3"
-                                wire:model="translations.{{ $key }}.value">
+        <div wire:loading.class="opacity-50">
+            <x-table>
+                <x-slot name="thead">
+                    <x-table.th>{{ __('System') }}</x-table.th>
+                    <x-table.th>{{ __('Translation') }}</x-table.th>
+                    <x-table.th>{{ __('Action') }}</x-table.th>
+                </x-slot>
+                <x-table.tbody>
+                    @foreach ($translations as $key => $translation)
+                        <x-table.tr>
+                            <x-table.td class="max-w-xs h-auto overflow-hidden">
+                                <p class="truncate">{{ $key }}</p>
+                            </x-table.td>
+                            <x-table.td>
+                                <textarea type="text" id="value-{{ $key }}" rows="3"
+                                    wire:model="translations.{{ $key }}.value">
                             </textarea>
-                            @error('translations.' . $key . '.value')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </x-table.td>
-                        <x-table.td>
-                            {{-- <x-button type="button" danger
+                                @error('translations.' . $key . '.value')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </x-table.td>
+                            <x-table.td>
+                                {{-- <x-button type="button" danger
                         wire:click="deleteTranslation({{ $key }})">
                         <i class="fa fa-trash"></i>
                     </x-button> --}}
-                        </x-table.td>
-                    </x-table.tr>
-                @endforeach
-            </x-table.tbody>
-        </x-table>
+                            </x-table.td>
+                        </x-table.tr>
+                    @endforeach
+                </x-table.tbody>
+            </x-table>
+        </div>
     </x-card>
 </div>

@@ -37,7 +37,10 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\DocsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Language\EditTranslation;
+use Illuminate\Support\Facades\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +56,21 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
 Route::get('/', [AuthenticatedSessionController::class, 'create']);
+
+// Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
+
+// Route::get('/docs', function() {
+//     View::addExtension('html', 'php'); // allows .html
+//     return view('docs.index'); // loads /public/docs/index.html
+// });
+
+Route::get('/docs', function () {
+    if ($file != 'index') {
+        $file = $file.'/index';
+    }
+
+    return File::get(public_path().'/docs/'.$file.'.html');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     // change lang
@@ -81,7 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Customers
     Route::get('customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('customer/details/{id}', [CustomersController::class, 'show'])->name('customer.details');
-    
+
     Route::get('customergroup', [CustomerGroupController::class, 'index'])->name('customer-group.index');
 
     //Suppliers
@@ -100,7 +118,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Product Category
     Route::get('product-categories', CategoriesController::class)->name('product-categories.index');
 
-    Route::get('products', ProductController::class)->name('products.index');
+    Route::get('/products', ProductController::class)->name('products');
 
     //Generate Quotation PDF
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
@@ -195,6 +213,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Language Settings
     Route::get('languages', LanguageController::class)->name('languages.index');
+    Route::get('/translation/{code}', EditTranslation::class)->name('translation.index');
 
     //Backup
     Route::get('backup', BackupController::class)->name('backup.index');

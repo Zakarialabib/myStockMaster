@@ -5,7 +5,7 @@
                 <div class="p-4">
                     <form wire:submit.prevent="generateReport">
                         <div class="flex flex-wrap -mx-2 mb-3">
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="w-full md:w-1/3 px-2 mb-2">
                                 <div class="mb-4">
                                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
                                     <x-input wire:model.defer="start_date" type="date" name="start_date" />
@@ -14,7 +14,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="w-full md:w-1/3 px-2 mb-2">
                                 <div class="mb-4">
                                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
                                     <x-input wire:model.defer="end_date" type="date" name="end_date" />
@@ -23,7 +23,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                            <div class="w-full md:w-1/3 px-2 mb-2">
                                 <div class="mb-4">
                                     <label>{{ __('Supplier') }}</label>
                                     <select wire:model.defer="supplier_id"
@@ -105,7 +105,13 @@
                                     <x-table.td>{{ format_date($purchase_return->date) }}
                                     </x-table.td>
                                     <x-table.td>{{ $purchase_return->reference }}</x-table.td>
-                                    <x-table.td>{{ $purchase_return->supplier->name }}</x-table.td>
+                                    <x-table.td>
+                                        <a href="{{ route('supplier.details', $purchase_return->supplier->uuid) }}"
+                                            class="text-indigo-500 hover:text-indigo-600 
+                                            font-bold tracking-wide">
+                                            {{ $purchase_return->supplier->name }}
+                                        </a>
+                                    </x-table.td>
                                     <x-table.td>
                                         @php
                                             $type = $purchase_return->status->getBadgeType();
@@ -119,7 +125,8 @@
                                         @php
                                             $type = $purchase_return->payment_status->getBadgeType();
                                         @endphp
-                                        <x-badge :type="$type">{{ $purchase_return->payment_status->getName() }}</x-badge>
+                                        <x-badge
+                                            :type="$type">{{ $purchase_return->payment_status->getName() }}</x-badge>
                                     </x-table.td>
                                 </x-table.tr>
                             @empty

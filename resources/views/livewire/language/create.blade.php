@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="createLanguage">
+    <x-modal wire:model="createModal">
         <x-slot name="title">
             {{ __('Create Language') }}
         </x-slot>

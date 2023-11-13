@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Sales;
 
-use App\Enums\PaymentStatus;
 use App\Http\Livewire\WithSorting;
 use App\Imports\SaleImport;
 use App\Models\Customer;
 use App\Models\Sale;
-use App\Models\SalePayment;
 use App\Traits\Datatable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Storage;
-use Throwable;
+use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
@@ -33,22 +29,14 @@ class Index extends Component
 
     /** @var array<string> */
     public $listeners = [
-        'importModal', 'refreshIndex' => '$refresh',
-        'paymentModal', 'paymentSave', 'delete',
+        'importModal',   'delete',
+        'refreshIndex' => '$refresh',
     ];
 
     public $startDate;
     public $endDate;
 
     public $importModal = false;
-
-    public $paymentModal = false;
-
-    public $sale_id;
-    public $date;
-    public $reference;
-    public $amount;
-    public $payment_method;
 
     public $listsForFields = [];
 
@@ -126,7 +114,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $query = Sale::with(['customer', 'salepayments', 'saleDetails'])
+        $query = Sale::with(['customer', 'user', 'saleDetails', 'salepayments', 'saleDetails.product'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
                 's'               => $this->search ?: null,
@@ -189,70 +177,6 @@ class Index extends Component
         $this->emit('refreshIndex');
 
         $this->importModal = false;
-    }
-
-    //  Payment modal
-
-    public function paymentModal($id)
-    {
-        abort_if(Gate::denies('sale_access'), 403);
-
-        $this->sale = Sale::find($id);
-        $this->date = date('Y-m-d');
-        $this->amount = $this->sale->due_amount;
-        $this->payment_method = 'Cash';
-        $this->sale_id = $this->sale->id;
-        $this->paymentModal = true;
-    }
-
-    public function paymentSave()
-    {
-        try {
-            $this->validate(
-                [
-                    'date'           => 'required|date',
-                    'amount'         => 'required|numeric',
-                    'payment_method' => 'required|string|max:255',
-                ]
-            );
-
-            $sale = Sale::find($this->sale_id);
-
-            SalePayment::create([
-                'date'           => $this->date,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'sale_id'        => $this->sale_id,
-                'payment_method' => $this->payment_method,
-                'user_id'        => Auth::user()->id,
-            ]);
-
-            $sale = Sale::findOrFail($this->sale_id);
-
-            $due_amount = $sale->due_amount - $this->amount;
-
-            if ($due_amount === $sale->total_amount) {
-                $payment_status = PaymentStatus::DUE;
-            } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::PARTIAL;
-            } else {
-                $payment_status = PaymentStatus::PAID;
-            }
-
-            $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
-                'payment_status' => $payment_status,
-            ]);
-
-            $this->alert('success', __('Sale Payment created successfully.'));
-
-            $this->paymentModal = false;
-
-            $this->emit('refreshIndex');
-        } catch (Throwable $th) {
-            $this->alert('error', __('Error.').$th->getMessage());
-        }
     }
 
     public function refreshCustomers()

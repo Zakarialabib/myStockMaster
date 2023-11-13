@@ -60,7 +60,7 @@
                     @csrf
 
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="mb-4">
                                 <x-label for="reference" :value="__('Reference')" required />
                                 <input type="text"
@@ -68,7 +68,7 @@
                                     name="reference" required readonly value="QT">
                             </div>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="from-group">
                                 <div class="mb-4">
                                     <x-label for="customer_id" :value="__('Customer')" required />
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="from-group">
                                 <div class="mb-4">
                                     <x-label for="date" :value="__('Date')" required />
@@ -97,7 +97,7 @@
                     <livewire:product-cart :cartInstance="'quotation'" />
 
                     <div class="flex flex-wrap -mx-2 mb-3">
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="mb-4">
                                 <x-label for="status" :value="__('Status')" required />
                                 <select
@@ -120,19 +120,19 @@
                     </div>
 
                     <div class="flex flex-wrap my-2">
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="mb-4">
                                 <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
                                 <x-input name="tax_percentage" id="tax_percentage" value="0" />
                             </div>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="mb-4">
                                 <label for="discount_percentage">{{ __('Discount (%)') }}</label>
                                 <x-input name="discount_percentage" id="discount_percentage" value="0" />
                             </div>
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                        <div class="w-full md:w-1/3 px-2 mb-2">
                             <div class="mb-4">
                                 <label for="shipping_amount">{{ __('Shipping') }}</label>
                                 <x-input name="shipping_amount" id="shipping_amount" value="0" />

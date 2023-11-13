@@ -25,6 +25,26 @@ enum SaleStatus: int
         return __(Str::studly($this->name));
     }
 
+    public function getBadgeType(): string
+    {
+        switch ($this) {
+            case self::PENDING:
+                return 'warning';
+            case self::ORDERED:
+                return 'primary';
+            case self::COMPLETED:
+                return 'success';
+            case self::SHIPPED:
+                return 'info';
+            case self::RETURNED:
+                return 'danger';
+            case self::CANCELED:
+                return 'secondary';
+            default:
+                return 'secondary';
+        }
+    }
+
     public function getValue()
     {
         return $this->value;
@@ -39,25 +59,5 @@ enum SaleStatus: int
         }
 
         return null;
-    }
-
-    public function getBadgeType(): string
-    {
-        switch ($this->value) {
-            case self::PENDING:
-                return 'warning';
-            case self::ORDERED:
-                return 'primary';
-            case self::COMPLETED:
-                return 'success';
-            case self::SHIPPED:
-                return 'info';
-            case self::RETURNED:
-                return 'danger';
-            case self::CANCELED:
-                return 'secondary';
-            default:
-                return 'dark';
-        }
     }
 }

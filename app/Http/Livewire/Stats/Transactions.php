@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Models\ProductWarehouse;
 use App\Models\SaleDetails;
 use App\Models\Sale;
 use App\Models\SalePayment;
@@ -25,6 +26,7 @@ class Transactions extends Component
     public $topProducts;
     public $productCount;
     public $salesCount;
+    public $purchasesCount;
     public $profit;
     public $purchase;
     public $purchaseCount;
@@ -39,13 +41,36 @@ class Transactions extends Component
     public $purchases_count;
     public $sales;
     public $sales_count;
+    public $startDate;
+    public $endDate;
+    public $salesTotal;
+    public $stockValue;
+    public $topSellingProducts;
 
+    protected $rules = [
+        'start_date' => 'required|date|before:end_date',
+        'end_date'   => 'required|date|after:start_date',
+    ];
+    
     public function mount()
     {
+        $this->startDate = now()->startOfYear()->format('Y-m-d');
+        $this->endDate = now()->endOfDay()->format('Y-m-d');
+
         $this->categoriesCount = Category::count('id');
-        $this->productCount = Product::count('id');
-        $this->supplierCount = Supplier::count('id');
-        $this->customerCount = Customer::count('id');
+
+        $this->productCount = Product::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->supplierCount = Supplier::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->customerCount = Customer::whereBetween('created_at', [$this->startDate, $this->endDate])->count();
+        $this->salesCount = Sale::whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->count();
+        $this->purchasesCount = Purchase::whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->count();
+
+        $this->salesTotal = Sale::whereDate('created_at', [$this->startDate, $this->endDate])->sum('total_amount') / 100;
+
+        $this->stockValue = ProductWarehouse::whereDate('created_at', [$this->startDate, $this->endDate])->sum(DB::raw('qty * cost'));
+
         $this->lastSales = Sale::with('customer')
             ->latest()
             ->take(5)
@@ -87,6 +112,42 @@ class Transactions extends Component
             ->pluck('sales');
 
         $this->chart();
+    }
+
+    protected function calculateTopSellingProducts()
+    {
+        // Retrieve top-selling products based on the quantity sold
+        $this->topSellingProducts = Sale::completed()
+            ->when($this->start_date, fn ($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn ($query) => $query->whereDate('date', '<=', $this->end_date))
+            ->with('saleDetails.product')
+            ->get()
+            ->flatMap(function ($sale) {
+                return $sale->saleDetails;
+            })
+            ->groupBy('product_id')
+            ->map(function ($details, $productId) {
+                return [
+                    'product' => $details->first()->product,
+                    'quantity' => $details->sum('quantity'),
+                ];
+            })
+            ->sortByDesc('quantity')
+            ->take(5); // Adjust the number of top products to display
+
+        return $this->topSellingProducts;
+    }
+
+    public function updatedStartDate($value)
+    {
+        $this->startDate = $value;
+        $this->mount();
+    }
+
+    public function updatedEndDate($value)
+    {
+        $this->endDate = $value;
+        $this->mount();
     }
 
     public function chart()

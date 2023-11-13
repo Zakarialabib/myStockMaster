@@ -53,7 +53,7 @@ class Index extends Component
     /** @var array */
     protected $rules = [
         'warehouse.name'    => 'string|required|max:255',
-        'warehouse.phone'   => 'numeric|nullable|max:255',
+        'warehouse.phone'   => 'numeric|nullable',
         'warehouse.country' => 'nullable|max:255',
         'warehouse.city'    => 'nullable|max:255',
         'warehouse.email'   => 'nullable|max:255',

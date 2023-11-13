@@ -39,11 +39,11 @@ class Create extends Component
 
     /** @var array */
     protected $rules = [
-        'name'     => 'required|string|min:3|max:255',
-        'email'    => 'required|email|unique:users,email',
-        'password' => 'required|string|min:8',
-        'phone'    => 'required|numeric',
-        'role'    => 'required',
+        'name'         => 'required|string|min:3|max:255',
+        'email'        => 'required|email|unique:users,email',
+        'password'     => 'required|string|min:8',
+        'phone'        => 'required|numeric',
+        'role'         => 'required',
         'warehouse_id' => 'required|array',
     ];
 
@@ -86,12 +86,13 @@ class Create extends Component
 
             $this->emit('refreshIndex');
 
+            $this->reset('name', 'email', 'password', 'phone', 'role', 'warehouse_id');
+
             $this->createModal = false;
         } catch (Throwable $th) {
             $this->alert('error', $th->getMessage());
         }
     }
-
 
     public function getRolesProperty()
     {

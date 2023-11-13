@@ -90,6 +90,14 @@ class Purchase extends Model
     {
         return $this->belongsTo(
             related: Supplier::class,
+            foreignKey: 'supplier_id',
+        );
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(
+            related: User::class,
             foreignKey: 'user_id',
         );
     }
@@ -109,14 +117,20 @@ class Purchase extends Model
                 $number = 1;
             }
 
-            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchase->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
     /** @param mixed $query */
+    public function scopePending($query)
+    {
+        return $query->whereStatus(PurchaseStatus::PENDING);
+
+    }
+    /** @param mixed $query */
     public function scopeCompleted($query)
     {
-        return $query->whereStatus(2);
+        return $query->whereStatus(PurchaseStatus::COMPLETED);
     }
 
     public function scopeThisMonth($query)

@@ -61,7 +61,7 @@
                                 @csrf
                                 @method('patch')
                                 <div class="flex flex-wrap -mx-2 mb-3">
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="reference">{{ __('Reference') }} <span
                                                     class="text-red-500">*</span></label>
@@ -71,7 +71,7 @@
                                                 readonly>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="from-group">
                                             <div class="mb-4">
                                                 <label for="customer_id">Customer <span
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="from-group">
                                             <div class="mb-4">
                                                 <label for="date">{{ __('Date') }} <span
@@ -104,7 +104,7 @@
                                 <livewire:product-cart :cartInstance="'sale_return'" :data="$sale_return" />
 
                                 <div class="flex flex-wrap -mx-2 mb-3">
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="status">{{ __('Status') }} <span
                                                     class="text-red-500">*</span></label>
@@ -121,7 +121,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="from-group">
                                             <div class="mb-4">
                                                 <label for="payment_method">{{ __('Payment Method') }} <span
@@ -133,7 +133,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+                                    <div class="w-full md:w-1/3 px-2 mb-2">
                                         <div class="mb-4">
                                             <label for="paid_amount">Amount Paid <span
                                                     class="text-red-500">*</span></label>

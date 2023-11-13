@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
@@ -12,14 +14,14 @@ class CustomerGroup extends Model
     use HasFactory;
 
     public $orderable = [
-        'id', 'name', 'percentage', 'status'
+        'id', 'name', 'percentage', 'status',
     ];
 
     public $filterable = [
-        'id', 'name', 'percentage', 'status'
+        'id', 'name', 'percentage', 'status',
     ];
 
-    protected $fillable =[
-        "name", "percentage", "status"
+    protected $fillable = [
+        'name', 'percentage', 'status',
     ];
 }

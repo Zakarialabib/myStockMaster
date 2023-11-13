@@ -28,7 +28,7 @@
             <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
                 :active="request()->routeIs('product-categories.index')" />
         @endcan
-            <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products.index') }}" :active="request()->routeIs('products.index')" />
+            <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products') }}" :active="request()->routeIs('products')" />
         @can('print_barcodes')
             <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
         @endcan

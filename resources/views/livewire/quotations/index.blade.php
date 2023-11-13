@@ -50,7 +50,10 @@
                         {{ $quotation->date }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $quotation->customer->name }}
+                        <a href="{{ route('customer.details', $quotation->customer->uuid) }}"
+                            class="text-indigo-500 hover:text-indigo-600">
+                            {{ $quotation->customer->name }}
+                        </a>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($quotation->total_amount) }}
@@ -96,7 +99,7 @@
                                     </x-dropdown-link>
                                 @endcan
                                 @can('quotation_delete')
-                                    <x-dropdown-link type="button" wire:click="confirm('delete', {{ $quotation->id }})">
+                                    <x-dropdown-link type="button" wire:click="delete({{ $quotation->id }})">
                                         <i class="fas fa-trash mr-2"></i>
                                         {{ __('Delete') }}
                                     </x-dropdown-link>

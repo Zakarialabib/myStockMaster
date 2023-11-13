@@ -64,9 +64,9 @@ class Edit extends Component
         ];
     }
 
-    public function mount(Sale $sale)
+    public function mount($id)
     {
-        $this->sale = Sale::findOrFail($sale->id);
+        $this->sale = Sale::findOrFail($id);
         $this->reference = $this->sale->reference;
         $this->date = $this->sale->date;
         $this->customer_id = $this->sale->customer_id;
@@ -80,10 +80,11 @@ class Edit extends Component
         $this->shipping_amount = $this->sale->shipping_amount;
         $this->total_amount = $this->sale->total_amount;
     }
+
     public function proceed()
     {
         if ($this->customer_id !== null) {
-            $this->store();
+            $this->update();
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -91,14 +92,13 @@ class Edit extends Component
 
     public function update()
     {
-        if (!$this->warehouse_id) {
+        if ( ! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
         DB::transaction(function () {
-
             $this->validate();
 
             if (in_array($this->sale->status, [SaleStatus::COMPLETED, SaleStatus::RETURNED, SaleStatus::CANCELED])) {
@@ -112,10 +112,13 @@ class Edit extends Component
 
             if ($due_amount === $this->total_amount) {
                 $payment_status = PaymentStatus::PENDING;
+                $this->status = SaleStatus::PENDING;
             } elseif ($due_amount > 0) {
                 $payment_status = PaymentStatus::PARTIAL;
+                $this->status = SaleStatus::PENDING;
             } else {
                 $payment_status = PaymentStatus::PAID;
+                $this->status = SaleStatus::COMPLETED;
             }
 
             // Delete previous sale details
@@ -133,7 +136,7 @@ class Edit extends Component
                 'paid_amount'         => $this->paid_amount * 100,
                 'total_amount'        => $this->total_amount * 100,
                 'due_amount'          => $due_amount * 100,
-                'status'              => $this->sale->status,
+                'status'              => $this->status,
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
@@ -165,7 +168,7 @@ class Edit extends Component
                 $new_quantity = $product_warehouse->qty + $cart_item->qty;
 
                 $product_warehouse->update([
-                    'qty'  => $new_quantity,
+                    'qty' => $new_quantity,
                 ]);
 
                 $movement = new Movement([
@@ -203,6 +206,13 @@ class Edit extends Component
     {
         $this->warehouse_id = $value;
         $this->emit('warehouseSelected', $this->warehouse_id);
+    }
+
+    public function updatedStatus($value)
+    {
+        if ($value === SaleStatus::COMPLETED->value) {
+            $this->paid_amount = $this->total_amount;
+        }
     }
 
     public function getWarehousesProperty()

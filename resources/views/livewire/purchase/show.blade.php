@@ -23,10 +23,10 @@
 
                     <div class="md:w-1/2 mb-3 md:mb-0">
                         <h5 class="mb-2 border-bottom pb-2">{{ __('Supplier Info') }}:</h5>
-                        <div><strong>{{ $purchase?->supplier->name }}</strong></div>
-                        <div>{{ $purchase?->supplier->address }}</div>
-                        <div>{{ __('Email') }}: {{ $purchase?->supplier->email }}</div>
-                        <div>{{ __('Phone') }}: {{ $purchase?->supplier->phone }}</div>
+                        <div><strong>{{ $purchase?->supplier?->name }}</strong></div>
+                        <div>{{ $purchase?->supplier?->address }}</div>
+                        <div>{{ __('Email') }}: {{ $purchase?->supplier?->email }}</div>
+                        <div>{{ __('Phone') }}: {{ $purchase?->supplier?->phone }}</div>
                     </div>
 
                     <div class="md:w-1/2 mb-3 md:mb-0">
