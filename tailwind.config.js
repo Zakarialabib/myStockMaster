@@ -3,25 +3,24 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-    mode: 'jit',
-    darkMode: "class",
-    rtl : false,
+    darkMode: false,
+    rtl: false,
     content: [
-    './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-    './storage/framework/views/*.php',
-    './resources/views/**/*.blade.php',
-    './public/*.html',
-    "./app/**/*.php",
-    "./resources/**/*.html",
-    "./resources/**/*.js",
-    "./resources/**/*.jsx",
-    "./resources/**/*.ts",
-    "./resources/**/*.tsx",
-    "./resources/**/*.php",
-],
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './public/*.html',
+        "./app/**/*.php",
+        "./resources/**/*.html",
+        "./resources/**/*.js",
+        "./resources/**/*.jsx",
+        "./resources/**/*.ts",
+        "./resources/**/*.tsx",
+        "./resources/**/*.php",
+    ],
 
     theme: {
-        darkMode: "class",
+        darkMode: false,
         screens: {
             sm: '640px',
             md: '768px',
@@ -140,7 +139,7 @@ module.exports = {
             },
 
             teal: {
-                50:  '#effdfd',
+                50: '#effdfd',
                 100: '#d2f7f9',
                 200: '#aaf0f4',
                 300: '#76e4ec',
@@ -150,34 +149,34 @@ module.exports = {
                 700: '#097684',
                 800: '#0b5e6b',
                 900: '#0d4f5a',
-              },
+            },
 
-              cyan: {
-                50 : '#ecfeff',
-                100 : '#cffafe',
-                200 : '#a5f3fc',
-                300 : '#67e8f9',
-                400 : '#22d3ee',
-                500 : '#06b6d4',
-                600 : '#0891b2',
-                700 : '#0e7490',
-                800 : '#155e75',
-                900 : '#164e63',
-              },
+            cyan: {
+                50: '#ecfeff',
+                100: '#cffafe',
+                200: '#a5f3fc',
+                300: '#67e8f9',
+                400: '#22d3ee',
+                500: '#06b6d4',
+                600: '#0891b2',
+                700: '#0e7490',
+                800: '#155e75',
+                900: '#164e63',
+            },
 
-              yellow: {
-                50 :'#fefce8',
-                100 :'#fef9c3',
-                200 :'#fef08a',
-                300 :'#fde047',
-                400 :'#facc15',
-                500 :'#eab308',
-                600 :'#ca8a04',
-                700 :'#a16207',
-                800 :'#854d0e',
-                900 :'#713f12',
-                950 :'#422006',
-              }
+            yellow: {
+                50: '#fefce8',
+                100: '#fef9c3',
+                200: '#fef08a',
+                300: '#fde047',
+                400: '#facc15',
+                500: '#eab308',
+                600: '#ca8a04',
+                700: '#a16207',
+                800: '#854d0e',
+                900: '#713f12',
+                950: '#422006',
+            }
         },
         spacing: {
             px: '1px',
@@ -645,20 +644,13 @@ module.exports = {
     plugins: [
         require('@tailwindcss/forms'),
         require('tailwindcss-rtl'),
-        require('tailwindcss-plugins/pagination')({
-        color: 'purple-dark',
-        linkFirst: 'mr-6 border rounded',
-        linkSecond: 'rounded-l border-l',
-        linkBeforeLast: 'rounded-r border-r',
-        linkLast: 'ml-6 border rounded',
-        }),
         require('tailwindcss-tables')({
-          cellPadding: '.75rem',  // default: .75rem
-          tableBorderColor: '#dee2e6',  // default: #dee2e6
-          tableStripedBackgroundColor: 'rgba(0,0,0,.05)',  // default: rgba(0,0,0,.05)
-          tableHoverBackgroundColor: 'rgba(0,0,0,.075)',  // default: rgba(0,0,0,.075)
-          tableBodyBorder: true, // default: true. If set to false, borders for the table body will be removed. Only works for normal tables (i.e. does not apply to .table-bordered)
-          verticalAlign: 'top', // default: 'top'
+            cellPadding: '.75rem',  // default: .75rem
+            tableBorderColor: '#dee2e6',  // default: #dee2e6
+            tableStripedBackgroundColor: 'rgba(0,0,0,.05)',  // default: rgba(0,0,0,.05)
+            tableHoverBackgroundColor: 'rgba(0,0,0,.075)',  // default: rgba(0,0,0,.075)
+            tableBodyBorder: true, // default: true. If set to false, borders for the table body will be removed. Only works for normal tables (i.e. does not apply to .table-bordered)
+            verticalAlign: 'top', // default: 'top'
         }),
-      ]
+    ]
 };
