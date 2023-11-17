@@ -1,24 +1,22 @@
 <?php
 
-declare(strict_types=1);
+namespace app\Http\Controllers\Api;
 
-namespace App\Http\Controllers\Api;
-
-use App\Http\Resources\ProductResource;
-use App\Models\Product;
+use App\Http\Controllers\Api\BaseController;
+use App\Http\Resources\WarehouseResource;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends BaseController
+class WarehouseController extends BaseController
 {
-
     /**
-     * Retrieve a list of products with optional filters and pagination.
+     * Retrieve a list of Warehouse with optional filters and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
      *
      */
-    public function index(Request $request)
+       public function index(Request $request)
     {
         try {
             if ($request->get('_end') !== null) {
@@ -32,33 +30,34 @@ class ProductController extends BaseController
                 $where_raw = ' 1=1 ';
 
                 //capture brand_id filter
-                $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                if ($brand_id !== '') {
-                    $where_raw .= " AND (brand_id =  $brand_id)";
-                }
+                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
+                // if ($brand_id !== '') {
+                //     $where_raw .= " AND (brand_id =  $brand_id)";
+                // }
+
                 //capture sort fields 
                 $sort_array = explode(',', $sort);
                 if (count($sort_array) > 0) {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->whereRaw($where_raw)
+                    // retireve ordered and limit Warehouses list
+                   $Warehouses = Warehouse::whereRaw($where_raw)
                         // ->orderByRaw("COALESCE($sort)")
-                        // ->offset($offset)
-                        // ->limit($limit)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
+                        
                 } else {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->orderBy($sort, $order)
-                        // ->offset($offset)
-                        // ->limit($limit)
+                    // retireve ordered and limit Warehouses list
+                    $Warehouses = Warehouse::orderBy($sort, $order)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
                 }
             } else {
-                // retireve all products
-                $products = Product::with(['category', 'brand'])->get();
+                // retireve all Warehouses
+                $Warehouses = Warehouse::get();
             }
-            return $this->sendResponse($products, 'Product List');
+            return $this->sendResponse($Warehouses, 'Warehouse List');
+
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -75,9 +74,9 @@ class ProductController extends BaseController
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $product = Product::create($input);
+            $Warehouse = Warehouse::create($input);
             DB::commit();
-            return $this->sendResponse($product, 'Product updated successfully');
+            return $this->sendResponse($Warehouse, 'Warehouse created successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
@@ -93,11 +92,11 @@ class ProductController extends BaseController
     public function show($id)
     {
         try {
-            $product = Product::find($id);
-            if (is_null($product)) {
-                return $this->sendError('Product not found');
+            $Warehouse = Warehouse::find($id);
+            if (is_null($Warehouse)) {
+                return $this->sendError('Warehouse not found');
             } else {
-                return $this->sendResponse($product, 'Product retrieved successfully');
+                return $this->sendResponse($Warehouse, 'Warehouse retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -113,10 +112,10 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $Warehouse = Warehouse::findOrFail($id);
+        $Warehouse->update($request->all());
 
-        return new ProductResource($product);
+        return new WarehouseResource($Warehouse);
     }
 
     /**
@@ -128,9 +127,9 @@ class ProductController extends BaseController
     public function destroy($id)
     {
         try {
-            $product = Product::findorFail($id);
-            $product->delete();
-            return $this->sendResponse($product, 'Product deleted successfully');
+            $Warehouse = Warehouse::findOrFail($id);
+            $Warehouse->delete();
+            return $this->sendResponse($Warehouse, 'Warehouse deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());

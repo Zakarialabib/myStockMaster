@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types=1);
+namespace app\Http\Controllers\Api;
 
-namespace App\Http\Controllers\Api;
-
-use App\Http\Resources\ProductResource;
-use App\Models\Product;
+use App\Http\Controllers\Api\BaseController;
+use App\Http\Resources\SupplierResource;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends BaseController
+class SupplierController extends BaseController
 {
-
-    /**
-     * Retrieve a list of products with optional filters and pagination.
+     /**
+     * Retrieve a list of suppliers with optional filters and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
      *
@@ -31,34 +29,27 @@ class ProductController extends BaseController
                 //Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
-                $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                if ($brand_id !== '') {
-                    $where_raw .= " AND (brand_id =  $brand_id)";
-                }
                 //capture sort fields 
                 $sort_array = explode(',', $sort);
                 if (count($sort_array) > 0) {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->whereRaw($where_raw)
+                    // retireve ordered and limit suppliers list
+                    $suppliers = Supplier::whereRaw($where_raw)
                         // ->orderByRaw("COALESCE($sort)")
-                        // ->offset($offset)
-                        // ->limit($limit)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
                 } else {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->orderBy($sort, $order)
-                        // ->offset($offset)
-                        // ->limit($limit)
+                    // retireve ordered and limit suppliers list
+                    $suppliers = Supplier::orderBy($sort, $order)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
                 }
             } else {
-                // retireve all products
-                $products = Product::with(['category', 'brand'])->get();
+                // retireve all suppliers
+                $suppliers = Supplier::get();
             }
-            return $this->sendResponse($products, 'Product List');
+            return $this->sendResponse($suppliers, 'Supplier List');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -75,9 +66,9 @@ class ProductController extends BaseController
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $product = Product::create($input);
+            $Supplier = Supplier::create($input);
             DB::commit();
-            return $this->sendResponse($product, 'Product updated successfully');
+            return $this->sendResponse($Supplier, 'Supplier created successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
@@ -93,11 +84,11 @@ class ProductController extends BaseController
     public function show($id)
     {
         try {
-            $product = Product::find($id);
-            if (is_null($product)) {
-                return $this->sendError('Product not found');
+            $Supplier = Supplier::find($id);
+            if (is_null($Supplier)) {
+                return $this->sendError('Supplier not found');
             } else {
-                return $this->sendResponse($product, 'Product retrieved successfully');
+                return $this->sendResponse($Supplier, 'Supplier retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -113,10 +104,10 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $Supplier = Supplier::findOrFail($id);
+        $Supplier->update($request->all());
 
-        return new ProductResource($product);
+        return new SupplierResource($Supplier);
     }
 
     /**
@@ -128,9 +119,9 @@ class ProductController extends BaseController
     public function destroy($id)
     {
         try {
-            $product = Product::findorFail($id);
-            $product->delete();
-            return $this->sendResponse($product, 'Product deleted successfully');
+            $Supplier = Supplier::findOrFail($id);
+            $Supplier->delete();
+            return $this->sendResponse($Supplier, 'Supplier deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());

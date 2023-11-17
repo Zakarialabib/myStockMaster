@@ -73,10 +73,10 @@
                 </x-counter-card>
             </div>
             {{-- Top-Selling Products --}}
-            <x-card-tooltip icon="bi bi-graph-up" color="lime" href="#topProducts">
+            {{-- <x-card-tooltip icon="bi bi-graph-up" color="lime" href="#topProducts">
                 <span class="text-2xl">{{ $top_selling_products }}</span>
                 <p>{{ __('Top-Selling Products') }}</p>
-            </x-card-tooltip>
+            </x-card-tooltip> --}}
         @endcan
     </div>
     <div class="grid grid-cols-2 gap-4">

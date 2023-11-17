@@ -130,7 +130,7 @@ class Details extends Component
         foreach ($this->sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
                 // Assuming you have a warehouses relationship defined on the Product model
-                $productWarehouse = $saleDetail->product->warehouses->where('warehouse_id', $this->warehouse_id)->first();
+                $productWarehouse = $saleDetail->product->product_warehouse->where('warehouse_id', $this->warehouse_id)->first();
 
                 if ($productWarehouse) {
                     $productCosts += $productWarehouse->cost * $saleDetail->quantity;

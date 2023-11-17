@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\ProductResource;
-use App\Models\Product;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends BaseController
+class CategoryController extends BaseController
 {
 
     /**
-     * Retrieve a list of products with optional filters and pagination.
+     * Retrieve a list of categories with optional filters and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
      *
@@ -32,33 +32,31 @@ class ProductController extends BaseController
                 $where_raw = ' 1=1 ';
 
                 //capture brand_id filter
-                $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                if ($brand_id !== '') {
-                    $where_raw .= " AND (brand_id =  $brand_id)";
-                }
+                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
+                // if ($brand_id !== '') {
+                //     $where_raw .= " AND (brand_id =  $brand_id)";
+                // }
                 //capture sort fields 
                 $sort_array = explode(',', $sort);
                 if (count($sort_array) > 0) {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->whereRaw($where_raw)
+                    // retireve ordered and limit categories list
+                    $categories = Category::whereRaw($where_raw)
                         // ->orderByRaw("COALESCE($sort)")
                         // ->offset($offset)
                         // ->limit($limit)
                         ->get();
                 } else {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->orderBy($sort, $order)
+                    // retireve ordered and limit categories list
+                    $categories = Category::orderBy($sort, $order)
                         // ->offset($offset)
                         // ->limit($limit)
                         ->get();
                 }
             } else {
-                // retireve all products
-                $products = Product::with(['category', 'brand'])->get();
+                // retireve all categories
+                $categories = Category::get();
             }
-            return $this->sendResponse($products, 'Product List');
+            return $this->sendResponse($categories, 'Category List');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -75,9 +73,9 @@ class ProductController extends BaseController
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $product = Product::create($input);
+            $category = Category::create($input);
             DB::commit();
-            return $this->sendResponse($product, 'Product updated successfully');
+            return $this->sendResponse($category, 'Category updated successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
@@ -93,11 +91,11 @@ class ProductController extends BaseController
     public function show($id)
     {
         try {
-            $product = Product::find($id);
-            if (is_null($product)) {
-                return $this->sendError('Product not found');
+            $category = Category::find($id);
+            if (is_null($category)) {
+                return $this->sendError('Category not found');
             } else {
-                return $this->sendResponse($product, 'Product retrieved successfully');
+                return $this->sendResponse($category, 'Category retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -113,10 +111,10 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $category = Category::findOrFail($id);
+        $category->update($request->all());
 
-        return new ProductResource($product);
+        return new CategoryResource($category);
     }
 
     /**
@@ -128,9 +126,9 @@ class ProductController extends BaseController
     public function destroy($id)
     {
         try {
-            $product = Product::findorFail($id);
-            $product->delete();
-            return $this->sendResponse($product, 'Product deleted successfully');
+            $category = Category::findorFail($id);
+            $category->delete();
+            return $this->sendResponse($category, 'Category deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());

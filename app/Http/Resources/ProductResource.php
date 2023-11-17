@@ -26,6 +26,15 @@ class ProductResource extends JsonResource
             'quantity'   => $this->quantity,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
+            // 'warehouses' => $this->warehousess()->map(function ($warehouse) {
+            //     return [
+            //         'id'    => $warehouse->id,
+            //         'name'  => $warehouse->name,
+            //         'qty'   => $warehouse->pivot->qty,
+            //         'price' => $warehouse->pivot->price,
+            //         'cost'  => $warehouse->pivot->cost,
+            //     ];
+            // }),
         ];
     }
 }

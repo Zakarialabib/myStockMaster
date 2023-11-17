@@ -1,19 +1,23 @@
 <?php
 
-declare(strict_types=1);
+namespace app\Http\Controllers\Api;
 
-namespace App\Http\Controllers\Api;
-
-use App\Http\Resources\ProductResource;
-use App\Models\Product;
+use App\Http\Controllers\Api\BaseController;
+use App\Http\Resources\ExpenseResource;
+use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductController extends BaseController
+class ExpenseController extends BaseController
 {
-
     /**
-     * Retrieve a list of products with optional filters and pagination.
+     * Retrieve a list of Expense with optional filters and pagination.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     */
+    /**
+     * Retrieve a list of expenses with optional filters and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
      *
@@ -31,34 +35,32 @@ class ProductController extends BaseController
                 //Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
-                $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                if ($brand_id !== '') {
-                    $where_raw .= " AND (brand_id =  $brand_id)";
+                //capture category_id filter
+                $category_id = $request->get('category_id') ? $request->get('category_id')  : '';
+                if ($category_id !== '') {
+                    $where_raw .= " AND (category_id =  $category_id)";
                 }
                 //capture sort fields 
                 $sort_array = explode(',', $sort);
                 if (count($sort_array) > 0) {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->whereRaw($where_raw)
+                    // retireve ordered and limit expenses list
+                    $expenses = Expense::whereRaw($where_raw)
                         // ->orderByRaw("COALESCE($sort)")
-                        // ->offset($offset)
-                        // ->limit($limit)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
                 } else {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->orderBy($sort, $order)
-                        // ->offset($offset)
-                        // ->limit($limit)
+                    // retireve ordered and limit expenses list
+                    $expenses = Expense::orderBy($sort, $order)
+                        ->offset($offset)
+                        ->limit($limit)
                         ->get();
                 }
             } else {
-                // retireve all products
-                $products = Product::with(['category', 'brand'])->get();
+                // retireve all expenses
+                $expenses = Expense::get();
             }
-            return $this->sendResponse($products, 'Product List');
+            return $this->sendResponse($expenses, 'Expense List');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -75,9 +77,9 @@ class ProductController extends BaseController
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $product = Product::create($input);
+            $Expense = Expense::create($input);
             DB::commit();
-            return $this->sendResponse($product, 'Product updated successfully');
+            return $this->sendResponse($Expense, 'Expense created successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
@@ -93,11 +95,11 @@ class ProductController extends BaseController
     public function show($id)
     {
         try {
-            $product = Product::find($id);
-            if (is_null($product)) {
-                return $this->sendError('Product not found');
+            $Expense = Expense::find($id);
+            if (is_null($Expense)) {
+                return $this->sendError('Expense not found');
             } else {
-                return $this->sendResponse($product, 'Product retrieved successfully');
+                return $this->sendResponse($Expense, 'Expense retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -113,10 +115,10 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $Expense = Expense::findOrFail($id);
+        $Expense->update($request->all());
 
-        return new ProductResource($product);
+        return new ExpenseResource($Expense);
     }
 
     /**
@@ -128,9 +130,9 @@ class ProductController extends BaseController
     public function destroy($id)
     {
         try {
-            $product = Product::findorFail($id);
-            $product->delete();
-            return $this->sendResponse($product, 'Product deleted successfully');
+            $Expense = Expense::findOrFail($id);
+            $Expense->delete();
+            return $this->sendResponse($Expense, 'Expense deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());

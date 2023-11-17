@@ -8,6 +8,7 @@ use App\Models\Language;
 use App\Models\Setting;
 use App\Observers\SettingsObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -40,6 +41,8 @@ class AppServiceProvider extends ServiceProvider
         View::share('languages', $this->getLanguages());
 
         Setting::observe(SettingsObserver::class);
+        
+        JsonResource::withoutWrapping();
 
         Model::shouldBeStrict( ! $this->app->isProduction());
     }
