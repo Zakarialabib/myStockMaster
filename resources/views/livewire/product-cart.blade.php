@@ -107,19 +107,19 @@
         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
                 <label for="tax_percentage">{{ __('Order Tax (%)') }}</label>
-                <x-input wire:model.lazy="global_tax" value="{{ $global_tax }}" />
+                <x-input wire:model.lazy="global_tax" name="tax_percentage" value="{{ $global_tax }}" />
             </div>
         </div>
         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
                 <label for="discount_percentage">{{ __('Discount (%)') }}</label>
-                <x-input wire:model.lazy="global_discount" value="{{ $global_discount }}" />
+                <x-input wire:model.lazy="global_discount" name="discount_percentage" value="{{ $global_discount }}" />
             </div>
         </div>
         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
                 <label for="shipping_amount">{{ __('Shipping') }}</label>
-                <x-input wire:model.lazy="shipping_amount" value="{{ $shipping_amount }}" />
+                <x-input wire:model.lazy="shipping_amount" name="shipping_amount" value="{{ $shipping_amount }}" />
             </div>
         </div>
     </div>
