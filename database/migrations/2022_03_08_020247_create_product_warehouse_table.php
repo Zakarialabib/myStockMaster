@@ -22,8 +22,8 @@ return new class () extends Migration {
             $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->constrained()->cascadeOnDelete();
 
-            $table->integer('price');
-            $table->integer('cost');
+           $table->decimal('price',15,2);
+            $table->decimal('cost',15,2);
             $table->integer('qty');
 
             $table->softDeletes();

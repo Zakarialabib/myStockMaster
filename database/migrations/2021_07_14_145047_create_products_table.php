@@ -29,8 +29,8 @@ return new class () extends Migration {
             $table->string('code')->unique()->nullable();
             $table->string('barcode_symbology')->nullable();
             $table->integer('quantity');
-            $table->integer('cost');
-            $table->integer('price');
+            $table->decimal('cost',15,2);
+            $table->decimal('price',15,2);
             $table->string('unit')->nullable();
             $table->integer('stock_alert');
             $table->integer('order_tax')->nullable();

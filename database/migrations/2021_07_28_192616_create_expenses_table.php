@@ -27,7 +27,7 @@ return new class () extends Migration {
             $table->date('date');
             $table->string('reference', 192);
             $table->string('details', 192)->nullable();
-            $table->float('amount', 10, 0);
+            $table->decimal('amount', 10, 2);
             $table->string('document')->nullable();
             $table->softDeletes();
             $table->timestamps();
