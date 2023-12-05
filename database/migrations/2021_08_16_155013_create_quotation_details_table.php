@@ -26,12 +26,12 @@ class CreateQuotationDetailsTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->integer('quantity');
-            $table->integer('price');
-            $table->integer('unit_price');
-            $table->integer('sub_total');
-            $table->integer('product_discount_amount');
+            $table->decimal('price',15,2);
+            $table->decimal('unit_price',15,2);
+            $table->decimal('sub_total',15,2);
+            $table->decimal('product_discount_amount',15,2);
             $table->string('product_discount_type')->default('fixed');
-            $table->integer('product_tax_amount');
+            $table->decimal('product_tax_amount',15,2);
 
             $table->timestamps();
         });

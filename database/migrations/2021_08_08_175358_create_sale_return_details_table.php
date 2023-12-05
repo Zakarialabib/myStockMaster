@@ -26,10 +26,10 @@ class CreateSaleReturnDetailsTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->integer('quantity');
-            $table->integer('price');
-            $table->integer('unit_price');
-            $table->integer('sub_total');
-            $table->integer('discount_amount');
+            $table->decimal('price',15,2);
+            $table->decimal('unit_price',15,2);
+            $table->decimal('sub_total',15,2);
+            $table->decimal('discount_amount',15,2);
             $table->string('discount_type')->default('fixed');
             $table->integer('tax_amount');
             // $table->foreign('id')->references('id')->on('products')->cascadeOnDelete();
