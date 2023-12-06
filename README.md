@@ -58,7 +58,7 @@ You can check the demo here:
 7.  run `php artisan key:generate`
 8.  Run `php artisan serve`
 9.  Login with the following credentials
-    -   Email: `admin@ggmail.com`
+    -   Email: `admin@gmail.com`
     -   Password: `password`
 10.  Enjoy!
 
