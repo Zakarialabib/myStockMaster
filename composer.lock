@@ -4118,20 +4118,20 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "v2.3.4",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "e1cca194c57cf242fd8635b2e72e11e990279c95"
+                "reference": "a1f86abc0b4896f287f7851573e5965682b1f2ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/e1cca194c57cf242fd8635b2e72e11e990279c95",
-                "reference": "e1cca194c57cf242fd8635b2e72e11e990279c95",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/a1f86abc0b4896f287f7851573e5965682b1f2ab",
+                "reference": "a1f86abc0b4896f287f7851573e5965682b1f2ab",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0 <8.3"
+                "php": ">=8.0 <8.4"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.8",
@@ -4170,9 +4170,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.4"
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.5"
             },
-            "time": "2023-03-21T15:10:38+00:00"
+            "time": "2023-11-23T15:38:20+00:00"
         },
         {
             "name": "nyholm/psr7",
