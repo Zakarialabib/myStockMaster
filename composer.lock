@@ -4119,16 +4119,16 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "v2.3.5",
+            "version": "v2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "a1f86abc0b4896f287f7851573e5965682b1f2ab"
+                "reference": "dca855e25f8ba6ab019c2fe9bd8065d4713d00de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/a1f86abc0b4896f287f7851573e5965682b1f2ab",
-                "reference": "a1f86abc0b4896f287f7851573e5965682b1f2ab",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/dca855e25f8ba6ab019c2fe9bd8065d4713d00de",
+                "reference": "dca855e25f8ba6ab019c2fe9bd8065d4713d00de",
                 "shasum": ""
             },
             "require": {
@@ -4171,9 +4171,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.5"
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.6"
             },
-            "time": "2023-11-23T15:38:20+00:00"
+            "time": "2024-02-15T22:51:27+00:00"
         },
         {
             "name": "nyholm/psr7",
