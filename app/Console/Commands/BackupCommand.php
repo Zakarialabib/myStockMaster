@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands\Backup;
+namespace App\Console\Commands;
 
 use Artisan;
 use Exception;

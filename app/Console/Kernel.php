@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
-use App\Console\Commands\Backup\BackupCommand;
+use App\Console\Commands\BackupCommand;
 use App\Enums\BackupSchedule;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
