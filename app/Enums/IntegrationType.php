@@ -10,8 +10,6 @@ enum IntegrationType: int
 {
     case CUSTOM = 0;
 
-    case YOUCAN = 1;
-
     case WOOCOMMERCE = 2;
 
     case SHOPIFY = 3;

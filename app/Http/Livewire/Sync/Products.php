@@ -59,16 +59,7 @@ class Products extends Component
                 'api_key'     => $integration->api_key,
                 'api_secret'  => $integration->api_secret,
             ]);
-        } elseif ($this->type === IntegrationType::YOUCAN) {
-            $response = $client->get($integration->store_url.'/products');
-
-            if ($response->getStatusCode() === Response::HTTP_OK) {
-                $data = $response->json()['data'];
-                SyncYoucanProducts::dispatch($data);
-                $this->alert('success', 'Sync from youcan to inventory completed');
-                $this->syncModal = false;
-            }
-        } elseif ($this->type === IntegrationType::CUSTOM) {
+        }  elseif ($this->type === IntegrationType::CUSTOM) {
             $response = $client->get($integration->store_url.'/api/products');
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
@@ -103,11 +94,6 @@ class Products extends Component
                 'api_key'     => $integration->api_key,
                 'api_secret'  => $integration->api_secret,
             ]);
-        } elseif ($this->type === IntegrationType::YOUCAN) {
-            $client = Http::withHeaders([
-                'Authorization' => 'Bearer '.$integration->api_key,
-            ]);
-            $response = $client->get($integration->store_url.'/api/products');
         } elseif ($this->type === IntegrationType::CUSTOM) {
             $client = Http::withHeaders([
                 'Authorization' => 'Bearer '.$integration->api_key,

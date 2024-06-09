@@ -62,7 +62,6 @@ class Integration extends Model
     {
         return match ($this->type) {
             IntegrationType::CUSTOM      => 'Custom',
-            IntegrationType::YOUCAN      => 'Youcan',
             IntegrationType::WOOCOMMERCE => 'WooCommerce',
             IntegrationType::SHOPIFY     => 'Shopify',
             default                      => 'Unknown'

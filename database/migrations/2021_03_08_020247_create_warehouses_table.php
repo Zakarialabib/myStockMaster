@@ -22,6 +22,8 @@ return new class () extends Migration {
             $table->string('phone', 192)->nullable();
             $table->string('email', 192)->nullable();
             $table->string('country', 192)->nullable();
+            $table->boolean('status')->default(true);
+            $table->foreignId('user_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

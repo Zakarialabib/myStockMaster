@@ -18,15 +18,15 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->uuid();
-
-            $table->string('name', 192);
-            $table->string('phone', 192);
-            $table->string('email', 192)->nullable();
+            $table->string('name');
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
             $table->text('address')->nullable();
-            $table->string('tax_number', 192)->nullable();
-
+            $table->string('tax_number')->nullable();
+            $table->foreignIdFor(CustomerGroup::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->boolean('status')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });

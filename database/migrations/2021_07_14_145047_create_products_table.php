@@ -28,7 +28,7 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('code')->unique()->nullable();
             $table->string('barcode_symbology')->nullable();
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
             $table->decimal('cost',15,2);
             $table->decimal('price',15,2);
             $table->string('unit')->nullable();
@@ -37,9 +37,17 @@ return new class () extends Migration {
             $table->text('note')->nullable();
             $table->boolean('status')->default(1);
             $table->tinyInteger('tax_type')->nullable();
+            $table->string('slug')->unique();
+            $table->string('gallery')->nullable();
             $table->text('image')->nullable();
-            $table->boolean('featured')->default(0);
-
+            $table->boolean('featured')->default(false);
+            $table->boolean('best')->default(false);
+            $table->boolean('hot')->default(false);
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->text('embeded_video')->nullable();
+            $table->json('options')->nullable();
+            $table->date('expiration_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

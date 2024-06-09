@@ -14,18 +14,16 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('email_templates', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 192);
-            $table->string('image')->nullable();
-            $table->string('slug')->unique();
+            $table->string('name');
             $table->text('description')->nullable();
-            $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
-            $table->string('origin')->nullable();
-            $table->foreignId('category_id')->nullable();
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
+            $table->text('message')->nullable();
+            $table->text('default')->nullable();
+            $table->json('placeholders')->nullable();
+            $table->string('type')->nullable();
+            $table->string('subject')->nullable();
+            $table->string('status')->default(true);
             $table->timestamps();
         });
     }
@@ -37,6 +35,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::drop('brands');
+        Schema::dropIfExists('email_templates');
     }
 };

@@ -11,6 +11,15 @@ class PriceHistory extends Model
 {
     use HasFactory;
 
+    /** @var array<int, string> */
+    final public const ATTRIBUTES = [
+        'id', 'product_id', 'price', 'effective_date', 'expiration_date',
+    ];
+
+    public $orderable = self::ATTRIBUTES;
+
+    public $filterable = self::ATTRIBUTES;
+
     protected $fillable = [
         'product_id',
         'warehouse_id',

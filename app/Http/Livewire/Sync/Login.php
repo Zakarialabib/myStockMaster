@@ -76,27 +76,7 @@ class Login extends Component
         }
     }
 
-    // public function authYoucan()
-    // {
-    //     $response = $client->post(
-    //         'https://seller-area.youcan.shop/admin/oauth/token',
-    //         [
-    //             'form_params' => [
-    //                 'grant_type' => 'authorization_code',
-    //                 'client_id' => 1,
-    //                 'client_secret' => '<CLIENT SECRET>',
-    //                 'redirect_uri' => 'https://myapp.com/callback',
-    //                 'code' => $this->get('code'),
-    //             ],
-    //             'http_errors' => false,
-    //         ]
-    //     );
-
-    //     if ($response->getStatusCode() === Response::HTTP_OK) {
-    //         $data = json_decode($response->getBody(), true);
-    //         $this->ecommerceToken = $data['access_token'];
-    //     }
-    // }
+   
 
     public function render()
     {
