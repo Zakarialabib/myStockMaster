@@ -6,6 +6,7 @@
 /public/images/livewire-temp/*
 /storage/*.key
 /vendor
+/stubs
 /bin
 /docs
 .env
