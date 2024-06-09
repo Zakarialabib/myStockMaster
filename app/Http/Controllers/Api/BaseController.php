@@ -26,7 +26,7 @@ class BaseController extends Controller
             'data' => $result
         ];
 
-        return response()->json($result, 200);
+        return response()->json($response);
     }
 
     /**

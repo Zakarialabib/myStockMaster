@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\ProductController as ProductApi;
 use App\Http\Controllers\Api\CustomerController as CustomerApi;
 use App\Http\Controllers\Api\CategoryController as CategoryApi;
+use App\Http\Controllers\Api\UserController as UserApi;
 use App\Http\Controllers\Api\SupplierController as SupplierApi;
 use App\Http\Controllers\Api\ExpenseController as ExpenseApi;
 use App\Http\Controllers\Api\RoleController as RoleApi;
@@ -52,6 +53,7 @@ Route::post('/login', [AuthApi::class, 'login']);
 
 Route::apiResource('products', ProductApi::class);
 Route::apiResource('categories', CategoryApi::class);
+Route::apiResource('users', UserApi::class);
 Route::apiResource('customers', CustomerApi::class);
 Route::apiResource('suppliers', SupplierApi::class);
 Route::apiResource('expenses',ExpenseApi::class);

@@ -3,15 +3,21 @@
 namespace app\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\BaseController;
-use App\Http\Resources\CustomerResource;
-use App\Models\Customer;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CustomerController extends BaseController
+class UserController extends BaseController
 {
     /**
-     * Retrieve a list of Customer with optional filters and pagination.
+     * Retrieve a list of User with optional filters and pagination.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     */
+    /**
+     * Retrieve a list of expenses with optional filters and pagination.
      *
      * @param  \Illuminate\Http\Request  $request
      *
@@ -29,32 +35,32 @@ class CustomerController extends BaseController
                 //Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
+                //capture category_id filter
+                $category_id = $request->get('category_id') ? $request->get('category_id')  : '';
+                if ($category_id !== '') {
+                    $where_raw .= " AND (category_id =  $category_id)";
+                }
                 //capture sort fields 
                 $sort_array = explode(',', $sort);
                 if (count($sort_array) > 0) {
-                    // retireve ordered and limit customers list
-                    $customers = Customer::whereRaw($where_raw)
+                    // retireve ordered and limit expenses list
+                    $expenses = User::whereRaw($where_raw)
                         // ->orderByRaw("COALESCE($sort)")
                         ->offset($offset)
                         ->limit($limit)
                         ->get();
                 } else {
-                    // retireve ordered and limit customers list
-                    $customers = Customer::orderBy($sort, $order)
+                    // retireve ordered and limit expenses list
+                    $expenses = User::orderBy($sort, $order)
                         ->offset($offset)
                         ->limit($limit)
                         ->get();
                 }
             } else {
-                // retireve all customers
-                $customers = Customer::get();
+                // retireve all expenses
+                $expenses = User::get();
             }
-            return $this->sendResponse($customers, 'Customer List');
+            return $this->sendResponse($expenses, 'User List');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -71,9 +77,9 @@ class CustomerController extends BaseController
         DB::beginTransaction();
         try {
             $input = $request->all();
-            $customer = Customer::create($input);
+            $user = User::create($input);
             DB::commit();
-            return $this->sendResponse($customer, 'Customer created successfully'); 
+            return $this->sendResponse($user, 'User created successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
@@ -89,11 +95,11 @@ class CustomerController extends BaseController
     public function show($id)
     {
         try {
-            $Customer = Customer::find($id);
-            if (is_null($Customer)) {
-                return $this->sendError('Customer not found');
+            $user = User::find($id);
+            if (is_null($user)) {
+                return $this->sendError('User not found');
             } else {
-                return $this->sendResponse($Customer, 'Customer retrieved successfully');
+                return $this->sendResponse($user, 'User retrieved successfully');
             }
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -109,10 +115,10 @@ class CustomerController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $Customer = Customer::findOrFail($id);
-        $Customer->update($request->all());
+        $user = User::findOrFail($id);
+        $user->update($request->all());
 
-        return new CustomerResource($Customer);
+        return new UserResource($user);
     }
 
     /**
@@ -124,9 +130,9 @@ class CustomerController extends BaseController
     public function destroy($id)
     {
         try {
-            $Customer = Customer::findOrFail($id);
-            $Customer->delete();
-            return $this->sendResponse($Customer, 'Customer deleted successfully');
+            $user = User::findOrFail($id);
+            $user->delete();
+            return $this->sendResponse($user, 'User deleted successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage());
