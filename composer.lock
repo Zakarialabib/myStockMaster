@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "845de80cfd63583d7dd776492e5efb18",
+    "content-hash": "6f9569e81c24d0a03a38ceba22f1e225",
     "packages": [
         {
             "name": "automattic/woocommerce",
@@ -1094,16 +1094,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.358.0",
+            "version": "v0.359.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd"
+                "reference": "e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd",
-                "reference": "a6daf60ee25cb45b6e3dbd04b62d1df39a609fbd",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338",
+                "reference": "e975e6d0efa47f7e49280c4ea7fd6a93b6d7e338",
                 "shasum": ""
             },
             "require": {
@@ -1132,9 +1132,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.358.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.359.0"
             },
-            "time": "2024-06-03T01:02:16+00:00"
+            "time": "2024-06-10T01:02:17+00:00"
         },
         {
             "name": "google/auth",
@@ -3235,16 +3235,16 @@
         },
         {
             "name": "masbug/flysystem-google-drive-ext",
-            "version": "v2.2.2",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/masbug/flysystem-google-drive-ext.git",
-                "reference": "3947d39be212bff9cea95b2a5252e52c9eb36cc0"
+                "reference": "549c3675f24e6495b6b29dd1bd1782a6a58d6876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/masbug/flysystem-google-drive-ext/zipball/3947d39be212bff9cea95b2a5252e52c9eb36cc0",
-                "reference": "3947d39be212bff9cea95b2a5252e52c9eb36cc0",
+                "url": "https://api.github.com/repos/masbug/flysystem-google-drive-ext/zipball/549c3675f24e6495b6b29dd1bd1782a6a58d6876",
+                "reference": "549c3675f24e6495b6b29dd1bd1782a6a58d6876",
                 "shasum": ""
             },
             "require": {
@@ -3289,9 +3289,9 @@
             ],
             "support": {
                 "issues": "https://github.com/masbug/flysystem-google-drive-ext/issues",
-                "source": "https://github.com/masbug/flysystem-google-drive-ext/tree/v2.2.2"
+                "source": "https://github.com/masbug/flysystem-google-drive-ext/tree/v2.3.0"
             },
-            "time": "2022-06-24T06:43:42+00:00"
+            "time": "2023-10-02T06:52:18+00:00"
         },
         {
             "name": "milon/barcode",
@@ -15056,5 +15056,5 @@
         "php": "^8.1.17"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
