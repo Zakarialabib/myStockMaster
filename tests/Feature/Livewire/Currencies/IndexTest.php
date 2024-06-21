@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Currency\Index;
+use App\Livewire\Currency\Index;
 
 test('the livewire currency component can be viewed', function () {
     $this->withoutExceptionHandling();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Backup\Index;
+use App\Livewire\Backup\Index;
 
 it('test backup page if can be rendred', function () {
     $this->withoutExceptionHandling();

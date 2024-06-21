@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="showModal">
+    <x-modal wire:model.live="showModal">
         <x-slot name="title">
             {{ __('Show Adjustment') }} - {{ $adjustment?->date }}
         </x-slot>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('title', __('Show - ') . ($permission->title))
 @section('content')
-    <div class="card bg-white dark:bg-dark-eval-1">
+    <div class="card bg-white">
         <div class="p-6 rounded-t rounded-r mb-0 border-b border-blueGray-200">
             <div class="card-header-container flex flex-wrap">
-                <h6 class="text-xl font-bold text-gray-700 dark:text-gray-300">
+                <h6 class="text-xl font-bold text-gray-700">
                     {{ $permission->title }}
                 </h6>
                 <div class="float-right">

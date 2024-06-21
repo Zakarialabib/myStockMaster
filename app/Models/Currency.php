@@ -17,8 +17,7 @@ class Currency extends Model
         'id',
         'name',
         'code',
-        'symbol',
-        'exchange_rate',
+        'locale',
         'updated_at',
         'created_at',
     ];
@@ -34,9 +33,7 @@ class Currency extends Model
     protected $fillable = [
         'name',
         'code',
-        'symbol',
-        'thousand_separator',
-        'decimal_separator',
-        'exchange_rate',
+        'locale',
+
     ];
 }

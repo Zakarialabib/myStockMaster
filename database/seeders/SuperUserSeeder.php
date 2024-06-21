@@ -6,7 +6,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class SuperUserSeeder extends Seeder
 {
@@ -18,11 +21,10 @@ class SuperUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'id'                => 1,
-            'uuid'              => Str::uuid()->toString(),
+            'id'                => Str::uuid(),
             'name'              => 'Admin',
             'email'             => 'admin@gmail.com',
-            'password'          => bcrypt('password'),
+            'password'          => Hash::make('password'),
             'avatar'            => 'avatar.png',
             'phone'             => '0123456789',
             'role_id'           => 1,
@@ -32,6 +34,12 @@ class SuperUserSeeder extends Seeder
             'created_at'        => now(),
         ]);
 
-        $user->assignRole('Super Admin');
+        $role = Role::where('name', 'admin')->first();
+
+        $permissions = Permission::pluck('id', 'id')->all();
+
+        $role->syncPermissions($permissions);
+
+        $user->assignRole([$role->id]);
     }
 }

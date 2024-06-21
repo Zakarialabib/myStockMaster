@@ -20,7 +20,6 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('title')->nullable();
-            $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();

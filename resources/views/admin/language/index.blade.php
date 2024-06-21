@@ -8,7 +8,7 @@
                     {{ __('Languages') }}
                 </h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@
             </div>
             <div class="float-right">
                 @can('language_create')
-                    <x-button primary type="button" onclick="Livewire.emit('createModal')">
+                    <x-button primary type="button" onclick="Livewire.dispatch('createModal')">
                         {{ __('Create Language') }}
                     </x-button>
                 @endcan

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\CashRegister;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -26,17 +27,17 @@ class CreatePurchaseReturnsTable extends Migration
             $table->foreignIdFor(Supplier::class)->nullOnDelete();
             $table->foreignIdFor(User::class)->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(CashRegister::class)->nullable()->cascadeOnDelete();
             $table->integer('tax_percentage')->default(0);
-            $table->decimal('tax_amount',15,2)->default(0);
+            $table->decimal('tax_amount', 15, 2)->default(0);
             $table->integer('discount_percentage')->default(0);
-            $table->decimal('discount_amount',15,2)->default(0);
-            $table->decimal('shipping_amount',15,2)->default(0);
-            $table->decimal('total_amount',15,2);
-            $table->decimal('paid_amount',15,2);
-            $table->decimal('due_amount',15,2);
+            $table->decimal('discount_amount', 15, 2)->default(0);
+            $table->decimal('shipping_amount', 15, 2)->default(0);
+            $table->decimal('total_amount', 15, 2);
+            $table->decimal('paid_amount', 15, 2);
+            $table->decimal('due_amount', 15, 2);
             $table->string('status');
-            $table->string('payment_status');
-            $table->string('payment_method');
+            $table->integer('payment_id')->nullable();
             $table->text('note')->nullable();
 
             $table->softDeletes();

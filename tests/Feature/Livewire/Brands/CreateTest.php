@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Brands\Create;
+use App\Livewire\Brands\Create;
 use App\Models\Brand;
 use Livewire\Livewire;
 

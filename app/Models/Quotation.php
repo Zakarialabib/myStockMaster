@@ -73,7 +73,7 @@ class Quotation extends Model
     /**
      * Get ajustement date.
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function date(): Attribute
     {
@@ -104,7 +104,7 @@ class Quotation extends Model
     /**
      * get shipping amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -116,7 +116,7 @@ class Quotation extends Model
     /**
      * get paid amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -128,7 +128,7 @@ class Quotation extends Model
     /**
      * get total amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -140,7 +140,7 @@ class Quotation extends Model
     /**
      * get due amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -152,7 +152,7 @@ class Quotation extends Model
     /**
      * get tax amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -164,7 +164,7 @@ class Quotation extends Model
     /**
      * get discount amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {

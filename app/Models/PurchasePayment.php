@@ -17,9 +17,8 @@ class PurchasePayment extends Model
     public const ATTRIBUTES = [
         'id',
         'purchase_id',
-        'payment_method',
+        'payment_id',
         'amount',
-        'payment_date',
         'user_id',
         'created_at',
         'updated_at',
@@ -57,7 +56,7 @@ class PurchasePayment extends Model
     /**
      * Get ajustement date.
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function date(): Attribute
     {

@@ -34,7 +34,7 @@
             }
             initSelect()
             el.on('change', function(e) {
-                @this.set('{{ $attributes['wire:model'] }}', el.val());
+                @this.set('{{ $attributes['wire:model.live'] }}', el.val());
             });
         });
     </script>

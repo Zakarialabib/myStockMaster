@@ -47,7 +47,7 @@
                 </div>
                 <div class="mb-4">
                     <p class="font-medium">{{ __('Website URL') }}</p>
-                    <input type="text" wire:model.lazy="custom_store_url" id="url" name="url"
+                    <input type="text" wire:model="custom_store_url" id="url" name="url"
                         class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
                 <button wire:click="countNotExistingProducts" type="button"
@@ -55,11 +55,11 @@
                     {{ __('Count missing products') }}
                 </button>
 
-                <button wire:click="$emit('syncModal')"
+                <button wire:click="$dispatch('syncModal')"
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
                     {{ __('Sync Products') }}
                 </button>
-                <button wire:click="$emit('loginModal')"
+                <button wire:click="$dispatch('loginModal')"
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
                     {{ __('Login') }}
                 </button>

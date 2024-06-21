@@ -137,23 +137,23 @@
         </div>
     </div>
 
-    <x-modal wire:model="settingsModal">
+    <x-modal wire:model.live="settingsModal">
         <x-slot name="title">
             {{ __('Backup settings') }}
         </x-slot>
         <x-slot name="content">
             {{-- error message --}}
-            <form wire:submit.prevent="updateSettigns">
+            <form wire:submit="updateSettigns">
                 <div class="w-full flex flex-wrap px-2">
                     <div class="w-1/2 px-2 my-4">
                         <label for="backup_status">{{ __('Backup status') }}</label>
-                        <x-input type="text" type="checkbox" wire:model="backup_status" />
+                        <x-input type="text" type="checkbox" wire:model.live="backup_status" />
                         <x-input-error :messages="$errors->get('backup_status')" for="backup_status" class="mt-2" />
                     </div>
 
                     <div class="w-1/2 px-2 my-4">
                         <label for="backup_status">{{ __('Backup Schedule') }}</label>
-                        <select wire:model="backup_schedule" name="backup_schedule">
+                        <select wire:model.live="backup_schedule" name="backup_schedule">
                             @foreach (\App\Enums\BackupSchedule::cases() as $type)
                                 <option value="{{ $type->value }}">
                                     {{ __($type->name) }}
@@ -165,16 +165,16 @@
                     <div class="w-1/2 px-2 my-4">
                         <p>{{ __('Google Drive Configuration') }}</p>
                         <label for="clientId">{{ __('Client ID') }}</label>
-                        <x-input id="clientId" type="text" wire:model="clientId" />
+                        <x-input id="clientId" type="text" wire:model.live="clientId" />
 
                         <label for="clientSecret">{{ __('Client Secret') }}</label>
-                        <x-input id="clientSecret" type="text" wire:model="clientSecret" />
+                        <x-input id="clientSecret" type="text" wire:model.live="clientSecret" />
 
                         <label for="refreshToken">{{ __('Refresh Token') }}</label>
-                        <x-input id="refreshToken" type="text" wire:model="refreshToken" />
+                        <x-input id="refreshToken" type="text" wire:model.live="refreshToken" />
 
                         <label for="folderId">{{ __('Folder ID') }}</label>
-                        <x-input id="folderId" type="text" wire:model="folderId" />
+                        <x-input id="folderId" type="text" wire:model.live="folderId" />
                     </div>
 
                     <div class="w-full justify-center my-4 space-x-2">
@@ -189,7 +189,7 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('livewire:load', function() {
+        document.addEventListener('livewire:init', function() {
             window.livewire.on('deleteModal', brandId => {
                 Swal.fire({
                     title: 'Are you sure?',
@@ -201,7 +201,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.livewire.emit('delete', brandId)
+                        window.Livewire.dispatch('delete', brandId)
                     }
                 })
             })

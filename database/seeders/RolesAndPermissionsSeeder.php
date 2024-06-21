@@ -37,12 +37,19 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'customer_create']);
         Permission::create(['name' => 'customer_update']);
         Permission::create(['name' => 'customer_delete']);
+        Permission::create(['name' => 'customer_export']);
+        Permission::create(['name' => 'customer_import']);
+        Permission::create(['name' => 'customer-group_access']);
+        Permission::create(['name' => 'customer-group_create']);
+        Permission::create(['name' => 'customer-group_update']);
+        Permission::create(['name' => 'customer-group_delete']);
         Permission::create(['name' => 'product_access']);
         Permission::create(['name' => 'product_create']);
         Permission::create(['name' => 'product_update']);
         Permission::create(['name' => 'product_delete']);
         Permission::create(['name' => 'product_show']);
         Permission::create(['name' => 'product_import']);
+        Permission::create(['name' => 'product_export']);
         Permission::create(['name' => 'sale_access']);
         Permission::create(['name' => 'sale_create']);
         Permission::create(['name' => 'sale_show']);
@@ -61,6 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'category_create']);
         Permission::create(['name' => 'category_update']);
         Permission::create(['name' => 'category_delete']);
+        Permission::create(['name' => 'category_import']);
         Permission::create(['name' => 'brand_access']);
         Permission::create(['name' => 'brand_create']);
         Permission::create(['name' => 'brand_update']);
@@ -81,22 +89,36 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'printer_show']);
         Permission::create(['name' => 'printer_edit']);
         Permission::create(['name' => 'printer_delete']);
+        Permission::create(['name' => 'quotation_access']);
         Permission::create(['name' => 'quotation_create']);
         Permission::create(['name' => 'quotation_update']);
         Permission::create(['name' => 'quotation_delete']);
+        Permission::create(['name' => 'quotation_show']);
         Permission::create(['name' => 'quotation_sale']);
+        Permission::create(['name' => 'send_quotation_mails']);
         Permission::create(['name' => 'print_barcodes']);
         Permission::create(['name' => 'purchase_return_access']);
         Permission::create(['name' => 'purchase_return_create']);
         Permission::create(['name' => 'purchase_return_update']);
         Permission::create(['name' => 'purchase_return_show']);
         Permission::create(['name' => 'purchase_return_delete']);
+        Permission::create(['name' => 'purchase_return_payments_access']);
+        Permission::create(['name' => 'purchase_return_payments_create']);
+        Permission::create(['name' => 'purchase_return_payments_update']);
+        Permission::create(['name' => 'purchase_return_payments_delete']);
         Permission::create(['name' => 'sale_return_access']);
         Permission::create(['name' => 'sale_return_create']);
         Permission::create(['name' => 'sale_return_update']);
         Permission::create(['name' => 'sale_return_show']);
         Permission::create(['name' => 'sale_return_delete']);
+        Permission::create(['name' => 'sale_return_payments_access']);
+        Permission::create(['name' => 'sale_return_payments_create']);
+        Permission::create(['name' => 'sale_return_payments_update']);
+        Permission::create(['name' => 'sale_return_payments_delete']);
         Permission::create(['name' => 'currency_access']);
+        Permission::create(['name' => 'currency_create']);
+        Permission::create(['name' => 'currency_update']);
+        Permission::create(['name' => 'currency_delete']);
         Permission::create(['name' => 'expense_categories_access']);
         Permission::create(['name' => 'expense_categories_create']);
         Permission::create(['name' => 'expense_categories_show']);
@@ -106,7 +128,6 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'purchase_payment_create']);
         Permission::create(['name' => 'purchase_payment_update']);
         Permission::create(['name' => 'purchase_payment_delete']);
-        Permission::create(['name' => 'quotation_access']);
         Permission::create(['name' => 'supplier_access']);
         Permission::create(['name' => 'supplier_create']);
         Permission::create(['name' => 'supplier_show']);
@@ -127,7 +148,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'language_update']);
         Permission::create(['name' => 'language_delete']);
 
-        $role = Role::create(['name' => 'Super Admin']);
+        $role = Role::create(['name' => 'admin']);
         $role->givePermissionTo(Permission::all());
     }
 }

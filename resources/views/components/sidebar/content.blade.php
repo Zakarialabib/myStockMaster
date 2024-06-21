@@ -1,6 +1,6 @@
 <x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-3 px-3">
 
-    <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('home') }}" :isActive="request()->routeIs('home')">
+    <x-sidebar.link title="{{ __('Dashboard') }}" href="{{ route('dashboard') }}" :isActive="request()->routeIs('dashboard')">
         <x-slot name="icon">
             <span class="inline-block mx-4">
                 <x-icons.dashboard class="w-5 h-5" aria-hidden="true" />
@@ -9,41 +9,43 @@
     </x-sidebar.link>
     @can('product_access')
 
-    <x-sidebar.dropdown title="{{ __('Products') }}" :active="request()->routeIs([
-        'products.*',
-        'product-categories.index',
-        'barcode.print',
-        'product-brands.index',
-        'warehouses.index',
-        'adjustments.index',
-    ])">
+        <x-sidebar.dropdown title="{{ __('Products') }}" :active="request()->routeIs([
+            'products.*',
+            'product-categories.index',
+            'products.barcode-print',
+            'brands.index',
+            'warehouses.index',
+            'adjustments.index',
+        ])">
 
-        <x-slot name="icon">
-            <span class="inline-block mx-4">
-                <i class="fas fa-boxes w-5 h-5"></i>
-            </span>
-        </x-slot>
+            <x-slot name="icon">
+                <span class="inline-block mx-4">
+                    <i class="fas fa-boxes w-5 h-5"></i>
+                </span>
+            </x-slot>
 
-        @can('category_access')
-            <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
-                :active="request()->routeIs('product-categories.index')" />
-        @endcan
-            <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products') }}" :active="request()->routeIs('products')" />
-        @can('print_barcodes')
-            <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('barcode.print') }}" :active="request()->routeIs('barcode.print')" />
-        @endcan
-        @can('brand_access')
-            <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('product-brands.index')" />
-        @endcan
-        @can('warehouse_access')
-            <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
-        @endcan
-        @can('adjustment_access')
-            <x-sidebar.sublink title="{{ __('Stock adjustments') }}" href="{{ route('adjustments.index') }}"
-                :active="request()->routeIs('adjustments.index')" />
-        @endcan
+            @can('category_access')
+                <x-sidebar.sublink title="{{ __('Categories') }}" href="{{ route('product-categories.index') }}"
+                    :active="request()->routeIs('product-categories.index')" />
+            @endcan
+            @can('product_access')
+                <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products.index') }}" :active="request()->routeIs('products.index')" />
+            @endcan
+            @can('print_barcodes')
+                <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('products.barcode-print') }}" :active="request()->routeIs('products.barcode-print')" />
+            @endcan
+            @can('brand_access')
+                <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('brands.index')" />
+            @endcan
+            @can('warehouse_access')
+                <x-sidebar.sublink title="{{ __('Warehouses') }}" href="{{ route('warehouses.index') }}" :active="request()->routeIs('warehouses.index')" />
+            @endcan
+            @can('adjustment_access')
+                <x-sidebar.sublink title="{{ __('Stock adjustments') }}" href="{{ route('adjustments.index') }}"
+                    :active="request()->routeIs('adjustments.index')" />
+            @endcan
 
-    </x-sidebar.dropdown>
+        </x-sidebar.dropdown>
     @endcan
 
     @can('quotation_access')
@@ -156,7 +158,8 @@
                 <x-sidebar.sublink title="{{ __('Customers') }}" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')" />
             @endcan
             @can('customer_group_access')
-                <x-sidebar.sublink title="{{ __('Customer Groups') }}" href="{{ route('customer-group.index') }}" :active="request()->routeIs('customer-group.index')" />
+                <x-sidebar.sublink title="{{ __('Customer Groups') }}" href="{{ route('customer-group.index') }}"
+                    :active="request()->routeIs('customer-group.index')" />
             @endcan
             @can('suppliers_access')
                 <x-sidebar.sublink title="{{ __('Suppliers') }}" href="{{ route('suppliers.index') }}" :active="request()->routeIs('suppliers.index')" />

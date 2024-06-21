@@ -14,11 +14,12 @@ class Brand extends Model
     use HasAdvancedFilter;
     use HasFactory;
 
-    public const ATTRIBUTES = [
-        'id', 'name',
+    protected const ATTRIBUTES = [
+        'id', 'name',  'status',
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -27,8 +28,14 @@ class Brand extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'description', 'image',
+        'id', 'name', 'image',
+        'description', 'status', 'origin',
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', true);
+    }
 
     public function products(): HasMany
     {

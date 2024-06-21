@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+
 class SupplierImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     /**  */
@@ -19,7 +20,7 @@ class SupplierImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     /**
      * @param  array $row
      *
-     * @return \App\Models\Supplier
+     * @return Supplier
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
@@ -29,9 +30,8 @@ class SupplierImport implements ToModel, WithHeadingRow, SkipsEmptyRows
         // Check if a record with the same name already exists
         $existingRecord = Supplier::where('name', $name)->first();
 
-       
         // If it doesn't exist, create a new record
-        if (!$existingRecord) {
+        if ( ! $existingRecord) {
             $attributes = [
                 'name'       => $name,
                 'phone'      => $row['phone'],
@@ -41,6 +41,7 @@ class SupplierImport implements ToModel, WithHeadingRow, SkipsEmptyRows
                 'tax_number' => $row['tax_number'] ?? null,
                 'uuid'       => Str::uuid(), // Generate the UUID only on creation
             ];
+
             return new Supplier($attributes);
         }
 

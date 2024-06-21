@@ -16,14 +16,14 @@ class PaymentDue extends Notification
     /**
      * The sale instance.
      *
-     * @var \App\Models\Sale
+     * @var Sale
      */
     public $sale;
 
     /**
      * Create a new notification instance.
      *
-     * @param  \App\Models\Sale  $sale
+     * @param  Sale  $sale
      *
      * @return void
      */

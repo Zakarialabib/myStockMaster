@@ -49,4 +49,7 @@ return [
         'time' => 4,
     ],
 
+
+    'rehash_on_login' => false,
+
 ];

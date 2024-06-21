@@ -6,7 +6,7 @@
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Currencies') }}</h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -36,8 +36,8 @@
                 </div>
             </div>
             <div class="float-right">
-                @can('currency_access')
-                    <x-button primary onclick="Livewire.emit('createModal')">
+                @can('currency_create')
+                    <x-button primary onclick="Livewire.dispatch('createModal')">
                         {{ __('Create Currency') }}
                     </x-button>
                 @endcan

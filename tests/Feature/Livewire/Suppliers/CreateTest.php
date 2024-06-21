@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Suppliers\Create;
+use App\Livewire\Suppliers\Create;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;

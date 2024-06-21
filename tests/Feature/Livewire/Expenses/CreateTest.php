@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Expense\Create;
+use App\Livewire\Expense\Create;
 use App\Models\ExpenseCategory;
 
 use function Pest\Laravel\assertDatabaseHas;

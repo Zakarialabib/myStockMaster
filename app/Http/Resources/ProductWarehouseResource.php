@@ -24,7 +24,7 @@ class ProductWarehouseResource extends JsonResource
     {
         return [
             'warehouse_id' => $this->warehouse_id,
-            'product_id' => $this->product_id,
+            'product_id'   => $this->product_id,
         ];
     }
 }

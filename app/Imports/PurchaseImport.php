@@ -7,7 +7,7 @@ namespace App\Imports;
 use App\Models\Purchase;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class PurchaseImport implements Tomodel
+class PurchaseImport implements ToModel
 {
     /**  */
     public function __construct()
@@ -17,7 +17,7 @@ class PurchaseImport implements Tomodel
     /**
      * @param  array $row
      *
-     * @return \App\Models\Purchase
+     * @return Purchase
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)

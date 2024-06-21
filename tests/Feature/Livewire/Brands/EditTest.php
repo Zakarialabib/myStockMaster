@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Brands\Edit;
+use App\Livewire\Brands\Edit;
 use Livewire\Livewire;
 use App\Models\Brand;
 
@@ -18,7 +18,7 @@ it('tests the brand edit component', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
-    $brand = brand::factory()->create();
+    $brand = Brand::factory()->create();
 
     Livewire::test(Edit::class, ['id' => $brand->id])
         ->set('brand.name', 'apple')

@@ -1,105 +1,32 @@
 <div>
-    <div class="flex flex-wrap px-2 py-3">
 
-        <div class="mb-6 flex justify-center gap-4 items-center w-full">
-            <label class="font-semibold">{{ __('Filtre by date') }}:</label>
-            <input type="date" wire:model="startDate" class="border rounded px-2 py-1">
-            <span class="mx-2">to</span>
-            <input type="date" wire:model="endDate" class="border rounded px-2 py-1">
-        </div>
-
-        @can('show_total_stats')
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="blue" counter="{{ $categoriesCount }}" title="{{ __('Total Categories') }}"
-                    href="{{ route('product-categories.index') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="orange" counter="{{ $productCount }}" title="{{ __('Total Products') }}"
-                    href="{{ route('products') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="yellow" counter="{{ $supplierCount }}" title="{{ __('Total Supplier') }}"
-                    href="{{ route('suppliers.index') }}">
-                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="indigo" counter="{{ $customerCount }}" title="{{ __('Total Customer') }}"
-                    href="{{ route('customers.index') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="purple" counter="{{ $salesCount }}" :title="__('Total Sales')"
-                    href="{{ route('sales.index') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="cyan" counter="{{ $purchasesCount }}" :title="__('Total Purchases')"
-                    href="{{ route('purchases.index') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="green" counter="{{ $salesTotal }}" :title="__('Sales Total')"
-                    href="{{ route('sales.index') }}">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            <div class="sm:w-1/4 w-1/2 px-2 pb-2">
-                <x-counter-card color="gray" counter="{{ $stockValue }}" :title="__('Stock Value')" href="#">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </x-counter-card>
-            </div>
-            {{-- Top-Selling Products --}}
-            {{-- <x-card-tooltip icon="bi bi-graph-up" color="lime" href="#topProducts">
-                <span class="text-2xl">{{ $top_selling_products }}</span>
-                <p>{{ __('Top-Selling Products') }}</p>
-            </x-card-tooltip> --}}
-        @endcan
-    </div>
-    <div class="grid grid-cols-2 gap-4">
-        <div class="w-full mx-4 pb-2 mb-2 bg-white relative">
-            <div class="w-full px-4 justify-between items-center">
-                <h3>{{ __('Daily Sales and Purchases') }}</h3>
-            </div>
-            <div id="daily-chart"></div>
-        </div>
-        <div class="w-full mx-4 pb-2 bg-white relative">
-            <div class="w-full px-4 justify-between items-center">
-                <h3>{{ __('Monthly Cash Flow (Payment Sent & Received)') }}</h3>
-            </div>
-            <div id="monthly-chart"></div>
-        </div>
-        <div class="mx-4 pb-2 w-full mt-2 bg-white relative">
+    <div class="flex flex-wrap">
+        <div class="lg:w-1/2 sm:w-full pb-2 mb-2 bg-white relative">
             <div class="flex w-full px-4 justify-between items-center">
                 <h3>{{ __('Sales/Purchases') }}</h3>
             </div>
             <div id="chart"></div>
         </div>
+        <div class="lg:w-1/2 sm:w-full pb-2 mb-2 bg-white relative">
+            <div class="w-full px-4 justify-between items-center">
+                <h3>{{ __('Monthly Cash Flow (Payment Sent & Received)') }}</h3>
+            </div>
+            <div id="monthly-chart"></div>
+        </div>
+        <div class="w-full pb-2 mb-2 bg-white relative">
+            <div class="w-full px-4 justify-between items-center">
+                <h3>{{ __('Daily Sales and Purchases') }}</h3>
+            </div>
+            <div id="daily-chart"></div>
+        </div>
+        <div class="w-full pb-2 mb-2 bg-white relative">
+            <div class="w-full px-4 justify-between items-center">
+                <h3>{{ __('Payment Chart') }}</h3>
+            </div>
+            <div id="payment-chart"></div>
+        </div>
     </div>
-    <div class="px-2 pb-2 mt-2 w-full">
+    <div class="w-full px-2 pb-2 mt-2">
         <div class="bg-white rounded-lg border border-gray-200 pb-2">
             <div class="py-3 px-5 mb-3 w-full inline-flex itees-center justify-between">
                 <span class="text-md font-semibold text-gray-700">{{ __('Recent Sale') }}</span>
@@ -127,7 +54,7 @@
                                 @php
                                     $type = $sale->status->getBadgeType();
                                 @endphp
-                                <x-badge :type="$type">{{ $sale->status->getName() }}</x-badge>
+                                <x-badge :type="$type">{{ $sale->status->label() }}</x-badge>
                             </td>
                         </tr>
                     @endforeach
@@ -135,8 +62,7 @@
             </table>
         </div>
     </div>
-
-    <div class="px-2 pb-2 w-full">
+    <div class="px-2 w-full pb-2">
         <div class="bg-white rounded-lg border border-gray-200 pb-2">
             <div class="py-3 px-5 mb-3 w-full inline-flex items-center justify-between">
                 <span class="text-md font-semibold text-gray-700">{{ __('Recent Purchase') }}</span>
@@ -154,15 +80,11 @@
                     @foreach ($lastPurchases as $purchase)
                         <tr class="text-sm antialiased">
                             <td class="px-4 py-2">
-                                @if ($purchase->supplier)
-                                    <a href="{{ route('supplier.details', $purchase?->supplier?->uuid) }}"
-                                        class="text-indigo-500 hover:text-indigo-600 font-bold tracking-wide">
-                                        {{ $purchase->supplier->name }}
-                                    </a>
-                                @else
+                                <a href="{{ route('supplier.details', $purchase->supplier->id) }}"
+                                    class="text-indigo-500 hover:text-indigo-600 
+                                    font-bold tracking-wide">
                                     {{ $purchase->supplier->name }}
-                                @endif
-
+                                </a>
                                 <span class="text-indigo-600 text-xs font-semibold">{{ $purchase->reference }}</span>
                             </td>
                             <td class="px-4 py-2">{{ format_currency($purchase->total_amount) }}</td>
@@ -172,7 +94,7 @@
                                     $badgeType = $purchase->status->getBadgeType();
                                 @endphp
 
-                                <x-badge :type="$badgeType">{{ $purchase->status->getName() }}</x-badge>
+                                <x-badge :type="$badgeType">{{ $purchase->status->label() }}</x-badge>
                             </td>
                         </tr>
                     @endforeach
@@ -181,8 +103,8 @@
         </div>
     </div>
 
-    <div class="flex flex-wrap">
-        <div class="sm:w-1/2 w-full">
+    <div class="flex flex-wrap gap-y-4">
+        <div class="sm:w-1/2 w-full px-2">
             <div class="bg-white rounded-lg border border-gray-200 pb-2">
                 <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
                     <span class="text-md font-semibold">{{ __('Top 5 Sellers in') }} {{ now()->format('F') }}</span>
@@ -198,7 +120,7 @@
                     </thead>
                     <tbody>
                         @foreach ($bestSales as $sale)
-                            <tr class="antialiased">
+                            <tr class="antialiased" wire:key="{{ $sale->id }}">
                                 <td class="py-1 px-2">{{ $sale->user->name }}</td>
                                 <td class="py-1 px-2">{{ format_currency($sale->total_amount) }}</td>
                                 <td class="py-1 px-2">{{ $sale->customer->name }}</td>
@@ -210,9 +132,7 @@
             </div>
         </div>
 
-
-
-        <div class="sm:w-1/2 w-full" id="topProducts">
+        <div class="sm:w-1/2 w-full px-2">
             <div class="bg-white rounded-lg border border-gray-200 pb-2">
                 <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
                     <span class="text-md font-semibold">{{ __('Top Products in') }} {{ now()->format('F') }}</span>
@@ -224,15 +144,55 @@
                             <th>{{ __('Code') }}</th>
                             <th>{{ __('Total Quantity') }}</th>
                             <th>{{ __('Total Sales') }}</th>
+                            <th>{{ __('Warehouse') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($topProducts as $product)
-                            <tr class="antialiased">
+                        @foreach ($this->topProducts as $product)
+                            <tr class="antialiased" wire:key="{{ $product->id }}">
                                 <td class="py-1 px-2">{{ $product->name }}</td>
                                 <td class="py-1 px-2">{{ $product->code }}</td>
                                 <td class="py-1 px-2">{{ $product->qtyItem }}</td>
                                 <td class="py-1 px-2">{{ format_currency($product->totalSalesAmount) }}</td>
+                                <td class="py-1 px-2">
+                                    <x-badge danger
+                                        class="text-sm">{{ \App\Helpers::warehouseName($product->warehouse_id) }}</x-badge>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="sm:w-1/2 w-full px-2">
+            <div class="bg-white rounded-lg border border-gray-200 pb-2">
+                <div class="py-3 px-5 w-full inline-flex items-center justify-between text-gray-700">
+                    <span class="text-md font-semibold">{{ __('Top Customers by Warehouse') }}</span>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>{{ __('Warehouse') }}</th>
+                            <th>{{ __('Top Customer') }}</th>
+                            <th>{{ __('Total Sales') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($this->topCustomers as $index => $customer)
+                            <tr class="antialiased" wire:key="{{ $index }}">
+                                <td>{{ $index }}</td>
+                                <td class="py-1 px-2">
+                                    <x-badge danger
+                                        class="text-sm">{{ \App\Helpers::warehouseName($customer->warehouse_id) }}</x-badge>
+                                </td>
+
+                                <td class="py-1 px-2">{{ $customer->name }}</td>
+
+                                <td class="py-1 px-2">{{ format_currency($customer->totalSalesAmount) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -241,116 +201,119 @@
         </div>
     </div>
 
-    @pushOnce('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    @endPushOnce
 
-    @push('scripts')
+    @script
         <script>
-            document.addEventListener('livewire:load', function() {
+            document.addEventListener('livewire:init', () => {
                 var dailyChart = new ApexCharts(document.querySelector("#daily-chart"), @json($this->dailyChartOptions));
+                console.log(dailyChart);
                 dailyChart.render();
-            });
-        </script>
-        <script>
-            var monthlyChart = new ApexCharts(document.querySelector("#monthly-chart"), @json($this->monthlyChartOptions));
-            monthlyChart.render();
-        </script>
-        <script>
-            function chart(data, selector) {
-                let tes = data;
-                let options = {
-                    series: [{
-                            name: "Sales Total Amount",
-                            data: tes.total.sales
-                        },
-                        {
-                            name: "Sales Due Amount",
-                            data: tes.due_amount.sales
-                        },
-                        {
-                            name: "Purchase Total Amount",
-                            data: tes.total.purchase
-                        },
-                        {
-                            name: "Purchase Due Amount",
-                            data: tes.due_amount.purchase
-                        }
-                    ],
-                    chart: {
-                        height: 350,
-                        width: '100%',
-                        type: "bar",
-                        zoom: {
-                            enabled: false
-                        }
-                    },
-                    responsive: [{
-                        breakpoint: undefined,
-                        options: {},
-                    }],
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            borderRadius: 4,
-                            dataLabels: {
-                                position: "top"
+
+                // Render the monthly cash flow chart
+                var monthlyChart = new ApexCharts(document.querySelector("#monthly-chart"),
+                    @json($this->monthlyChartOptions));
+
+                monthlyChart.render();
+
+                var paymentChart = new ApexCharts(document.querySelector("#payment-chart"),
+                    @json($this->paymentChart));
+                paymentChart.render();
+
+                function chart(data, selector) {
+                    let tes = data;
+                    let options = {
+                        series: [{
+                                name: "Sales Total Amount",
+                                data: tes.total.sales
+                            },
+                            {
+                                name: "Sales Due Amount",
+                                data: tes.due_amount.sales
+                            },
+                            {
+                                name: "Purchase Total Amount",
+                                data: tes.total.purchase
+                            },
+                            {
+                                name: "Purchase Due Amount",
+                                data: tes.due_amount.purchase
                             }
-                        }
-                    },
-                    dataLabels: {
-                        enabled: true,
-                        offsetY: -20,
-                        style: {
-                            fontSize: "12px",
-                            colors: ["#fff"],
+                        ],
+                        chart: {
+                            height: 350,
+                            width: '100%',
+                            type: "bar",
+                            zoom: {
+                                enabled: false
+                            }
                         },
-                        formatter: function(val, opt) {
-                            return opt.w.globals.labels[opt.dataPointIndex] + ": " + val;
+                        responsive: [{
+                            breakpoint: undefined,
+                            options: {},
+                        }],
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                borderRadius: 4,
+                                dataLabels: {
+                                    position: "top"
+                                }
+                            }
                         },
-                    },
-                    stroke: {
-                        show: true,
-                        width: 1,
-                        colors: ["#fff"]
-                    },
-                    markers: {
-                        size: 5,
-                        colors: ["#1a56db"],
-                        strokeColor: "#ffffff",
-                        strokeWidth: 3
-                    },
-                    xaxis: {
-                        categories: tes.labels,
-                        labels: {
+                        dataLabels: {
+                            enabled: true,
+                            offsetY: -20,
                             style: {
-                                colors: "#1a56db"
-                            }
-                        }
-                    },
-                    yaxis: {
-                        title: {
-                            text: "Amount",
-                        },
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function(val) {
-                                return "$" + val;
+                                fontSize: "12px",
+                                colors: ["#fff"],
+                            },
+                            formatter: function(val, opt) {
+                                return opt.w.globals.labels[opt.dataPointIndex] + ": " + val;
                             },
                         },
-                    },
-                    legend: {
-                        position: "top",
-                        horizontalAlign: "center",
-                        offsetX: 40,
-                    },
-                };
-                var chart = new ApexCharts(document.querySelector(selector), options);
-                chart.render();
-            }
-            chart({!! $charts !!}, '#chart');
+                        stroke: {
+                            show: true,
+                            width: 1,
+                            colors: ["#fff"]
+                        },
+                        markers: {
+                            size: 5,
+                            colors: ["#1a56db"],
+                            strokeColor: "#ffffff",
+                            strokeWidth: 3
+                        },
+                        xaxis: {
+                            categories: tes.labels,
+                            labels: {
+                                style: {
+                                    colors: "#1a56db"
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: "Amount",
+                            },
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function(val) {
+                                    return "$" + val;
+                                },
+                            },
+                        },
+                        legend: {
+                            position: "top",
+                            horizontalAlign: "center",
+                            offsetX: 40,
+                        },
+                    };
+                    const chart = new ApexCharts(document.querySelector(selector), options);
+                    chart.render();
+                }
+                chart({!! $charts !!}, '#chart');
+            })
         </script>
-    @endpush
+    @endscript
 
 </div>

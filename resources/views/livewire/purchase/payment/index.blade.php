@@ -1,12 +1,12 @@
 <div>
-    <x-modal wire:model="showPayments">
+    <x-modal wire:model.live="showPayments">
         <x-slot name="title">
             <h2 class="text-lg font-medium text-gray-900">
                 {{ __('Purchase Payment') }}
             </h2>
             <div class="flex justify-end">
                 @if ($purchase?->due_amount > 0)
-                    <x-button wire:click="$emit('paymentModal', {{ $purchase_id }})"
+                    <x-button wire:click="$dispatch('paymentModal', {{ $purchase_id }})"
                         x-on:click="$wire.set('showPayments', false)" primary type="button">
                         {{ __('Add Payment') }}
                     </x-button>
@@ -35,8 +35,8 @@
                             </x-table.td>
                             <x-table.td>{{ $purchasepayment->payment_method }}</x-table.td>
                             <x-table.td>
-                                {{-- @can('access_purchase_payments')
-                                    <x-button wire:click="$emit('paymentModal', {{ $purchasepayment->id }} )" type="button"
+                                {{-- @can('purchase_payment_access')
+                                    <x-button wire:click="$dispatch('paymentModal', {{ $purchasepayment->id }} )" type="button"
                                         primary>
                                         <i class="fa fa-pen"></i>
                                     </x-button>

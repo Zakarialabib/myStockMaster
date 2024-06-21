@@ -1,14 +1,14 @@
 <div>
-    <x-modal wire:model="editModal">
+    <x-modal wire:model="openModal">
         <x-slot name="title">
             {{ __('Edit Role') }}
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit.prevent="update">
+            <form wire:submit="update">
                 <div class="w-full px-3">
                     <x-label for="name" :value="__('Name')" />
-                    <x-input type="text" id="name" wire:model.lazy="role.name" />
+                    <x-input type="text" id="name" wire:model="role.name" />
                     @error('role.name')
                         <span class="error">{{ $message }}</span>
                     @enderror
@@ -32,7 +32,7 @@
                         @foreach ($this->permissions as $permission)
                             <div>
                                 <input type="checkbox" id="permission-{{ $permission->id }}"
-                                    wire:model="selectedPermissions" value="{{ $permission->id }}"
+                                    wire:model.live="selectedPermissions" value="{{ $permission->id }}"
                                     {{ in_array($permission->id, $selectedPermissions) ? 'checked' : '' }}>
                                 <label for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
                             </div>

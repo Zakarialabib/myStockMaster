@@ -17,7 +17,7 @@ class SalePayment extends Model
     public const ATTRIBUTES = [
         'id',
         'sale_id',
-        'payment_method',
+        'payment_id',
         'reference',
         'amount',
         'created_at',
@@ -38,8 +38,9 @@ class SalePayment extends Model
         'amount',
         'note',
         'sale_id',
-        'payment_method',
+        'payment_id',
         'user_id',
+        'cash_register_id',
     ];
 
     public function sale(): BelongsTo
@@ -50,7 +51,7 @@ class SalePayment extends Model
     /**
      * Get ajustement date.
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     public function date(): Attribute
     {
@@ -91,7 +92,7 @@ class SalePayment extends Model
     /**
      * Interact with the expenses amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function amount(): Attribute
     {

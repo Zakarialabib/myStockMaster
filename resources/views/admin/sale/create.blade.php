@@ -8,7 +8,7 @@
                     {{ __('Create Sale') }}
                 </h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@
     <x-card>
         <div class="flex flex-wrap">
             <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:search-product />
+                <livewire:utils.search-product />
             </div>
             <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:sales.create :cartInstance="'sale'" />

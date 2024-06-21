@@ -10,7 +10,7 @@
                 {{__('Roles')}}
             </h2>
             <div class="flex items-center">
-                <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
                     <span class="inline-block mx-2">
                         <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +41,7 @@
         </div>
         <div class="float-right">
             <!-- Button trigger livewire modal -->
-            <x-button primary  onclick="Livewire.emit('createModal')">{{ __('Create') }}</x-button>
+            <x-button primary  onclick="Livewire.dispatch('createModal')">{{ __('Create') }}</x-button>
         </div>
     </div>
 </section>

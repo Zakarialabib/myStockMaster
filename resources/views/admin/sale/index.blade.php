@@ -8,7 +8,7 @@
                     {{ __('Sales') }}
                 </h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -45,15 +45,15 @@
                         </x-button>
                     </x-slot>
                     <x-slot name="content">
-                        <x-dropdown-link onclick="Livewire.emit('importModal')" wire:loading.attr="disabled">
+                        <x-dropdown-link onclick="Livewire.dispatch('importModal')" wire:loading.attr="disabled">
                             {{ __('Import') }}
                         </x-dropdown-link>
                         {{-- use livewire - coming soon --}}
-                        {{-- <x-dropdown-link onclick="Livewire.emit('exportAll')" 
+                        {{-- <x-dropdown-link onclick="Livewire.dispatch('exportAll')" 
                         wire:loading.attr="disabled">
                         {{ __('PDF') }}
                     </x-dropdown-link>
-                    <x-dropdown-link onclick="Livewire.emit('downloadAll')" 
+                    <x-dropdown-link onclick="Livewire.dispatch('downloadAll')" 
                         wire:loading.attr="disabled">
                         {{ __('Excel') }}
                     </x-dropdown-link> --}}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Warehouses\Index;
+use App\Livewire\Warehouses\Index;
 
 test('the livewire warehouse component can be viewed', function () {
     $this->withoutExceptionHandling();

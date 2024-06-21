@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Purchase\Index;
+use App\Livewire\Purchase\Index;
 
 it('test purchases list if can be rendred', function () {
     $this->withoutExceptionHandling();

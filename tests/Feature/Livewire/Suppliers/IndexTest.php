@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Suppliers\Index;
+use App\Livewire\Suppliers\Index;
 
 it('test suppliers list if can be rendred', function () {
     $this->withoutExceptionHandling();

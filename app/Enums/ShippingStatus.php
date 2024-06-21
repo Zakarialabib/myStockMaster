@@ -6,28 +6,44 @@ namespace App\Enums;
 
 enum ShippingStatus: string
 {
-    public const  PENDING = '0';
-    public const  PREPARING = '1';
-    public const SUBMITTED = '2';
-    public const  SHIPPING = '3';
-    public const  DELIVERED = '4';
-    public const  CANCELLED = '5';
-    public const  FAILED = '6';
+    case  PENDING = '0';
 
-    /**
-     * Return a human-readable description of this payment method.
-     * @return string
-     */
-    public function getDescription(): string
+    case  PREPARING = '1';
+
+    case SUBMITTED = '2';
+
+    case  SHIPPING = '3';
+
+    case  DELIVERED = '4';
+
+    case  CANCELLED = '5';
+
+    case  FAILED = '6';
+
+    public function label(): string
     {
         return match ($this) {
-            ShippingStatus::PENDING   => 'Shipping is pending needs review',
-            ShippingStatus::PREPARING => 'Shipping is getting prepared',
-            ShippingStatus::SUBMITTED => 'Shipping is submitted',
-            ShippingStatus::SHIPPING  => 'Shipping is on route',
-            ShippingStatus::DELIVERED => 'Shipping is delivered',
-            ShippingStatus::CANCELLED => 'Shipping is canceled',
-            ShippingStatus::FAILED    => 'Shipping failed',
+            static::PENDING   => __('Pending'),
+            static::PREPARING => __('Processing'),
+            static::SUBMITTED => __('Completed'),
+            static::SHIPPING  => __('Shipped'),
+            static::DELIVERED => __('Returned'),
+            static::CANCELLED => __('Canceled'),
+            static::FAILED    => __('Failed'),
+        };
+    }
+
+    public function getBadgeType(): string
+    {
+        return match ($this) {
+            self::PENDING   => 'secondary',
+            self::PREPARING => 'info',
+            self::SUBMITTED => 'success',
+            self::SHIPPING  => 'primary',
+            self::DELIVERED => 'success',
+            self::CANCELLED => 'warning',
+            self::FAILED    => 'danger',
+            default         => 'secondary',
         };
     }
 }

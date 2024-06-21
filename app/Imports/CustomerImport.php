@@ -19,7 +19,7 @@ class CustomerImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     /**
      * @param  array $row
      *
-     * @return \App\Models\Customer
+     * @return Customer
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)

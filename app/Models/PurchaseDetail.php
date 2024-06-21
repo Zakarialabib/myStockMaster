@@ -25,7 +25,7 @@ class PurchaseDetail extends Model
     /**
      * get price attribute
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function price(): Attribute
     {
@@ -37,7 +37,7 @@ class PurchaseDetail extends Model
     /**
      * Interact with unit price
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -49,7 +49,7 @@ class PurchaseDetail extends Model
     /**
      * get subtotal attribute
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -61,7 +61,7 @@ class PurchaseDetail extends Model
     /**
      * Interact with shipping amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function productTaxAmountAttribute(): Attribute
     {
@@ -73,7 +73,7 @@ class PurchaseDetail extends Model
     /**
      * Interact with shipping amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function productDiscountAmount(): Attribute
     {

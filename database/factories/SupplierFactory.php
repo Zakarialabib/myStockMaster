@@ -20,7 +20,7 @@ class SupplierFactory extends Factory
     {
         return [
             'name'    => fake()->name(),
-            'uuid'    => fake()->uuid(),
+            'id'      => fake()->uuid(),
             'email'   => fake()->unique()->safeEmail(),
             'phone'   => fake()->phoneNumber(),
             'city'    => fake()->city(),
