@@ -19,7 +19,7 @@ class CustomerFactory extends Factory
     public function definition()
     {
         return [
-            'uuid'    => fake()->uuid(),
+            'id'      => fake()->uuid(),
             'name'    => fake()->name(),
             'email'   => fake()->unique()->safeEmail(),
             'phone'   => fake()->phoneNumber(),

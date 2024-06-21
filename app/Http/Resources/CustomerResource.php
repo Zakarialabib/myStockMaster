@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use App\Models\Customer;
@@ -10,33 +12,29 @@ class CustomerResource extends Resource
     /**
      * Transform the resource into an array.
      *
-     * @param  \App\Models\Customer $resource
+     * @param  Customer $resource
      * @return array
      */
     public function toArray($request)
     {
         // Relationships
-        // $data['user'] = $this->resource->user ? UserResource::make($this->resource->user)->only(['id', 'name', 'email'] : null;
-        // $data['customerGroup'] = CustomerGroupResource::make($this->resource->customerGroup);
-        // $data['wallet'] = WalletResource::make($this->resource->wallet);
+        // $data['user'] = $request->user ? UserResource::make($request->user)->only(['id', 'name', 'email'] : null;
+        // $data['customerGroup'] = CustomerGroupResource::make($request->customerGroup);
 
         return [
-            'id' => $this->resource->id,
-            'uuid' => $this->resource->uuid,
-            'name' => $this->resource->name,
-            'phone' => $this->resource->phone,
-            'email' => $this->resource->email,
-            'city' => $this->resource->city,
-            'country' => $this->resource->country,
-            'address' => $this->resource->address,
-            'taxNumber' => $this->resource->tax_number,
+            'id'            => $request->id,
+            'uuid'          => $request->uuid,
+            'name'          => $request->name,
+            'phone'         => $request->phone,
+            'email'         => $request->email,
+            'city'          => $request->city,
+            'country'       => $request->country,
+            'address'       => $request->address,
+            'taxNumber'     => $request->tax_number,
             'customerGroup' => $data['customerGroup'],
-            'user' => $data['user'],
-            'wallet' => $data['wallet'],
-            'createdAt' => $this->resource->created_at->format('Y-m-d H:i:s'),
-            'updatedAt' => $this->resource->updated_at->format('Y-m-d H:i:s'),
+            'user'          => $data['user'],
+            'createdAt'     => $request->created_at->format('Y-m-d H:i:s'),
+            'updatedAt'     => $request->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }
-
-  

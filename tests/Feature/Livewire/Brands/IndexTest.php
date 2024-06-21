@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Brands\Index;
+use App\Livewire\Brands\Index;
 
 test('the livewire brand component can be viewed', function () {
     $this->withoutExceptionHandling();

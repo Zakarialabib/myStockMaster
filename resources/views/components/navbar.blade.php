@@ -1,5 +1,5 @@
 <nav aria-label="secondary" x-data="{ open: false }"
-    class="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transition-transform duration-500 bg-white dark:bg-dark-eval-1"
+    class="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transition-transform duration-500 bg-white"
     :class="{
         '-translate-y-full': scrollingDown,
         'translate-y-0': scrollingUp,
@@ -21,22 +21,13 @@
 
         @can('show_notifications')
             <div class="md:flex hidden flex-wrap items-center">
-                @livewire('notifications')
+                @livewire('utils.notifications')
             </div>
         @endcan
 
-        <x-button primary :href="route('app.pos.index')">
+        <x-button primary :href="route('pos.index')">
             {{ __('POS') }}
         </x-button>
-
-        {{--
-             <x-button type="button" class="hidden md:inline-flex" iconOnly secondary srText="Toggle dark mode"
-            @click="toggleTheme">
-            <x-icons.moon x-show="!isDarkMode" aria-hidden="true" class="w-5 h-5" />
-            <x-icons.sun x-show="isDarkMode" aria-hidden="true" class="w-5 h-5" />
-             </x-button>
-              --}}
-
 
         {{--
                  <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
@@ -68,7 +59,7 @@
                     <div class="border-t border-gray-100"></div>
 
                     <x-dropdown-link>
-                        @livewire('cache')
+                        @livewire('utils.cache')
                     </x-dropdown-link>
 
 
@@ -79,13 +70,13 @@
                     <div class="border-t border-gray-100"></div>
 
                     <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="">
                         @csrf
-                        <x-dropdown-link :href="route('logout')"
+                        {{-- <x-dropdown-link :href=""
                             onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                                        this.closest('form').submit();"> --}}
                             {{ __('Log Out') }}
-                        </x-dropdown-link>
+                        {{-- </x-dropdown-link>  --}}
                     </form>
                 </x-slot>
             </x-dropdown>

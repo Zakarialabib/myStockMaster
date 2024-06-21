@@ -50,7 +50,7 @@
             </div>
             <div>
                 <ul class="flex flex-col gap-3 font-bold">
-                    <li class="mb-3 text-lg font-extrabold text-black dark:text-white">{{ __('Quick Menu') }}</li>
+                    <li class="mb-3 text-lg font-extrabold text-black">{{ __('Quick Menu') }}</li>
                     <li><a href="{{ route('front.index') }}"
                             class="capitalize inline-block transition hover:scale-110 hover:text-secondary hover:underline">{{ __('Home') }}</a>
                     </li>
@@ -64,7 +64,7 @@
             </div>
             <div>
                 <ul class="flex flex-col gap-3 font-bold">
-                    <li class="mb-3 text-lg font-extrabold text-black dark:text-white">{{ __('Categories') }}</li>
+                    <li class="mb-3 text-lg font-extrabold text-black">{{ __('Categories') }}</li>
                     @foreach (\App\Helpers::getActiveCategories() as $category)
                         <li>
                             <a href="{{ route('front.categories') }}"
@@ -75,7 +75,7 @@
             </div>
             <div>
                 <ul class="flex flex-col gap-3 font-bold">
-                    <li class="mb-3 text-lg font-extrabold text-black dark:text-white">{{ __('About us') }}</li>
+                    <li class="mb-3 text-lg font-extrabold text-black">{{ __('About us') }}</li>
                     @foreach (Helpers::getActivePages() as $page)
                         <li><a href="{{ route('front.dynamicPage', $page->slug) }}"
                                 class="capitalize inline-block transition hover:scale-110 hover:text-secondary hover:underline">{{ $page->title }}</a>
@@ -88,7 +88,7 @@
             </div>
             <div>
                 <ul class="flex flex-col gap-3 font-bold">
-                    <li class="mb-3 text-lg font-extrabold text-black dark:text-white">{{ __('Information') }}</li>
+                    <li class="mb-3 text-lg font-extrabold text-black">{{ __('Information') }}</li>
                     <li>
                         {{ Helpers::settings('company_address') }}
                     </li>
@@ -101,9 +101,9 @@
         </div>
     </div>
 
-    <div class="py-5 dark:border-t-2 dark:border-white/5 dark:bg-none">
+    <div class="py-5">
         <div class="px-6">
-            <div class="flex flex-col items-center justify-between text-center font-bold dark:text-white md:flex-row">
+            <div class="flex flex-col items-center justify-between text-center font-bold md:flex-row">
                 <div>
                     Copyright© <span class="curr-year">
                         {{ date('Y') }}

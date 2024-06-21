@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Sales\Index;
+use App\Livewire\Sales\Index;
 
 it('test sales list if can be rendred', function () {
     $this->withoutExceptionHandling();

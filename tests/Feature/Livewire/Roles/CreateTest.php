@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-use App\Http\Livewire\Role\Create;
+use App\Livewire\Role\Create;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 

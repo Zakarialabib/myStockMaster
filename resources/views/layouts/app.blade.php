@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ dark: isDarkMode, rtl: isRtl }" class="scroll-smooth"
+<html x-data="mainState" :class="{ rtl: isRtl }" class="scroll-smooth"
     lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" value="{{ csrf_token() }}" />
+    <meta name="csrf_token" value="{{ csrf_token() }}" />
     <meta name="robots" content="nofollow">
 
     <title>@yield('title') || {{ settings()->company_name }}</title>
@@ -21,14 +22,29 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="{{ settings()->company_name }}">
 
+    @include('includes.main-css')
     @vite('resources/css/app.css')
 
-    @include('includes.main-css')
+    @livewireStyles
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.css" />
+
+    @stack('styles')
     <style>
         [x-cloak] {
             display: none;
         }
     </style>
+    @vite('resources/js/app.js')
+
+    @livewireScriptConfig
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
+
+    <x-livewire-alert::scripts />
+
+    @stack('scripts')
 </head>
 
 <body class="antialiased bg-gray-50 text-body font-body" dir="ltr">
@@ -54,9 +70,11 @@
 
                     @yield('content')
 
-                    @isset($slot)
-                        {{ $slot }}
-                    @endisset
+                    <x-card>
+                        @isset($slot)
+                            {{ $slot }}
+                        @endisset
+                    </x-card>
                     <x-settings-bar />
 
                 </main>
@@ -67,11 +85,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Scripts -->
-    @include('includes.main-js')
-    @vite('resources/js/app.js')
-
-  
 </body>
+
 </html>

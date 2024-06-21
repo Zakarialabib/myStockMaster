@@ -5,7 +5,7 @@
                 <h2 class="text-lg font-medium mb-4">{{ __('Messaging Configuration') }}</h2>
                 <div class="mb-4">
                     <label for="type">{{ __('Message Type') }}:</label>
-                    <select id="type" wire:model.lazy="type" class="w-full">
+                    <select id="type" wire:model="type" class="w-full">
                         <option value="">{{ __('Select Message Type') }}</option>
                         <option value="whatsapp">WhatsApp</option>
                         <option value="telegram">Telegram</option>
@@ -38,13 +38,13 @@
                     </div>
                     <div class="mb-4">
                         <label for="chat-id" class="block font-medium mb-1">{{ __('Chat ID') }}:</label>
-                        <input type="text" wire:model.lazy="chatId" id="chat-id"
+                        <input type="text" wire:model="chatId" id="chat-id"
                             class="w-full p-2 border rounded-lg">
                     </div>
                 @elseif($type == 'whatsapp')
                     <div class="mb-4">
                         <label for="chat-id" class="block font-medium mb-1">{{ __('Phone') }}:</label>
-                        <input type="text" wire:model.lazy="chatId" id="chat-id"
+                        <input type="text" wire:model="chatId" id="chat-id"
                             class="w-full p-2 border rounded-lg">
                     </div>
                     <div class="px-4 pb-2">
@@ -68,7 +68,7 @@
                 <h2 class="text-lg font-medium mb-4">{{ __('Message Content') }}</h2>
                 @if ($type == 'whatsapp' || $type == 'telegram')
                     <div class="mb-4">
-                        <x-input.textarea id="message" wire:model.lazy="message" />
+                        <x-input.textarea id="message" wire:model="message" />
                     </div>
                     <div class="px-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
@@ -82,7 +82,7 @@
 
 
         <!-- Message templates modal -->
-        <x-modal wire:model="openTemplate">
+        <x-modal wire:model.live="openTemplate">
             <x-slot name="title">
                 {{ __('Message Templates') }}
             </x-slot>
@@ -117,7 +117,7 @@
 
 
         <!-- Product selection modal -->
-        <x-modal wire:model="openProductModal">
+        <x-modal wire:model.live="openProductModal">
             <x-slot name="title">
                 {{ __('Select a Product') }}
             </x-slot>
@@ -136,7 +136,7 @@
             </x-slot>
         </x-modal>
         
-        <x-modal wire:model="openClientModal">
+        <x-modal wire:model.live="openClientModal">
             <x-slot name="title">
                 {{ __('Select a Client') }}
             </x-slot>

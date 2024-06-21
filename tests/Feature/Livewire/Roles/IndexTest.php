@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Role\Index;
+use App\Livewire\Role\Index;
 
 test('the livewire role component can be viewed', function () {
     $this->withoutExceptionHandling();

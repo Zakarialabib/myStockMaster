@@ -12,8 +12,7 @@ class EmailTemplate extends Model
 {
     use HasAdvancedFilter;
 
-    /** @var array<int, string> */
-    final public const ATTRIBUTES = [
+    protected const ATTRIBUTES = [
         'id',
         'name',
         'message',

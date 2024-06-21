@@ -17,7 +17,7 @@ class SaleImport implements ToModel
     /**
      * @param  array $row
      *
-     * @return \App\Models\Sale
+     * @return Sale
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
