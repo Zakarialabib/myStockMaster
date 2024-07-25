@@ -7,17 +7,14 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Adjustment extends Model
 {
     use HasAdvancedFilter;
-    use SoftDeletes;
 
-    protected const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'id',
         'reference_no',
         'warehouse_id',
@@ -27,32 +24,19 @@ class Adjustment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
-
     public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
-    /** Get ajustement date attribute */
+    /**
+     * Get ajustement date attribute
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     public function date(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => Carbon::parse($value)->format('d M, Y'),
-        );
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(
-            related: User::class,
-            foreignKey: 'user_id'
-        );
-    }
-
-    public function warehouse(): BelongsTo
-    {
-        return $this->belongsTo(
-            related: Warehouse::class,
-            foreignKey: 'warehouse_id'
+            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
         );
     }
 
@@ -61,11 +45,11 @@ class Adjustment extends Model
         return $this->hasMany(AdjustedProduct::class, 'adjustment_id', 'id');
     }
 
-    protected static function boot()
+    public static function boot()
     {
         parent::boot();
 
-        static::creating(static function ($model): void {
+        static::creating(function ($model) {
             $number = Adjustment::max('id') + 1;
             $model->reference = make_reference_id('ADJ', $number);
         });

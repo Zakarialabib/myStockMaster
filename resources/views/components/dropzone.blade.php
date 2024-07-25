@@ -41,7 +41,7 @@
         }
     },
     init: function () {
-        document.addEventListener("livewire:init", () => {
+        document.addEventListener("livewire:load", () => {
             let files = @this.mediaCollections["{{ $attributes['collection-name'] ?? 'default' }}"]
             if (files !== undefined && files.length) {
                 files.forEach(file => {

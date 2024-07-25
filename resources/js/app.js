@@ -3,19 +3,24 @@ import '../css/app.css';
 import "../css/theme.css";
 import "../css/font.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import {livewire_hot_reload} from 'virtual:livewire-hot-reload'
+
+livewire_hot_reload();
 
 import swal from 'sweetalert2';
+
 window.Swal = swal;
 
 import "@fortawesome/fontawesome-free/css/all.css";
 
-import ApexCharts from 'apexcharts';
-window.ApexCharts = ApexCharts;
+import Alpine from 'alpinejs'
+import collapse from '@alpinejs/collapse'
+import focus from "@alpinejs/focus";
+import intersect from "@alpinejs/intersect";
 
-import Sortable from 'sortablejs';
-window.Sortable = Sortable;
+Alpine.plugin(focus);
 
+Alpine.plugin(intersect);
 
 import PerfectScrollbar from "perfect-scrollbar";
 window.PerfectScrollbar = PerfectScrollbar;
@@ -120,4 +125,9 @@ Alpine.data("mainState", () => {
     };
 });
 
-Livewire.start();
+
+Alpine.plugin(collapse)
+
+window.Alpine = Alpine;
+
+Alpine.start();

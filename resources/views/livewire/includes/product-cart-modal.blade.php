@@ -5,7 +5,7 @@
         <i class="bi bi-percent text-black"></i>
     </button>
     <!-- Discount Modal -->
-    <x-modal wire:model.live="discountModal">
+    <x-modal wire:model="discountModal">
         <x-slot name="title">
             <div class="text-center text-xl">
                 {{ $cart_item->name }}
@@ -15,13 +15,13 @@
             </div>
         </x-slot>
         <x-slot name="content">
-            <form wire:submit="productDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')">
+            <form wire:submit.prevent="productDiscount('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')">
                 <!-- Validation Errors -->
                 <x-validation-errors class="mb-4" :errors="$errors" />
                 <div class="grid grid-cols-2 gap-4 my-4">
                     <div>
                         <label>{{ __('Discount Type') }}<span class="text-red-500">*</span></label>
-                        <select wire:model.live="discount_type.{{ $cart_item->id }}"
+                        <select wire:model="discount_type.{{ $cart_item->id }}"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required>
                             <option value="fixed">{{ __('Fixed') }}</option>
@@ -31,11 +31,11 @@
                     <div>
                         @if ($discount_type[$cart_item->id] == 'percentage')
                             <label>{{ __('Discount(%)') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="item_discount.{{ $cart_item->id }}" type="text"
+                            <x-input wire:model.defer="item_discount.{{ $cart_item->id }}" type="text"
                                 value="{{ $item_discount[$cart_item->id] }}" min="0" max="100" />
                         @elseif($discount_type[$cart_item->id] == 'fixed')
                             <label>{{ __('Discount') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="item_discount.{{ $cart_item->id }}" type="text"
+                            <x-input wire:model.defer="item_discount.{{ $cart_item->id }}" type="text"
                                 value="{{ $item_discount[$cart_item->id] }}" />
                         @endif
                     </div>

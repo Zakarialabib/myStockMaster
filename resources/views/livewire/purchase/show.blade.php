@@ -1,6 +1,6 @@
 <div>
     {{-- ShowModal Purchase --}}
-    <x-modal wire:model.live="showModal">
+    <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Purchase') }} - {{ __('Reference') }}: <strong>{{ $purchase?->reference }}</strong>
 
@@ -46,13 +46,10 @@
                         </div>
                         <div>
                             {{ __('Payment Status') }} :
-                            {{-- @php
-                                $type = $purchase?->payment_id->getBadgeType();
+                            @php
+                                $type = $purchase?->payment_status->getBadgeType();
                             @endphp
-                            <x-badge :type="$type">
-                                {{ $purchase?->payment_id->getName() }}
-                            </x-badge> --}}
-                            {{ $purchase?->payment_id->getName() }}
+                            <x-badge :type="$type">{{ $purchase?->payment_status->getName() }}</x-badge>
                         </div>
                     </div>
                 </div>
@@ -110,7 +107,7 @@
                                 <x-table.tr>
                                     <x-table.heading class="left">
                                         <strong>{{ __('Tax') }}
-                                            ({{ format_percentage($purchase?->tax_percentage) }})</strong>
+                                            ({{ $purchase?->tax_percentage }}%)</strong>
                                     </x-table.heading>
                                     <x-table.td class="right">
                                         {{ format_currency($purchase?->tax_amount) }}

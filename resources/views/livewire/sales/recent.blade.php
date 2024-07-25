@@ -1,13 +1,13 @@
 <div>
-    <x-modal wire:model.live="recentSales" maxWidth="3xl">
+    <x-modal wire:model="recentSales" maxWidth="3xl">
         <x-slot name="title">
             {{ __('Recent Sales') }}
         </x-slot>
         <x-slot name="content">
             <div class="flex flex-wrap justify-center">
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-                    <select wire:model.live="perPage"
-                        class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                    <select wire:model="perPage"
+                        class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                         @foreach ($paginationOptions as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
@@ -15,7 +15,7 @@
                 </div>
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                     <div class="my-2">
-                        <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                        <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <x-table>
                     <x-slot name="thead">
                         <x-table.th>
-                            <input type="checkbox" wire:model.live="selectPage" />
+                            <input type="checkbox" wire:model="selectPage" />
                         </x-table.th>
                         <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                             {{ __('Date') }}
@@ -31,7 +31,7 @@
                         <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                             {{ __('Customer') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                             {{ __('Payment status') }}
                         </x-table.th>
                         <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
@@ -52,7 +52,7 @@
                         @forelse ($sales as $sale)
                             <x-table.tr wire:loading.class.delay="opacity-50">
                                 <x-table.td class="pr-0">
-                                    <input type="checkbox" value="{{ $sale->id }}" wire:model.live="selected" />
+                                    <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
                                 </x-table.td>
                                 <x-table.td>
                                     {{ $sale->date }}
@@ -68,12 +68,10 @@
                                     @endif
                                 </x-table.td>
                                 <x-table.td>
-                                    {{ $sale->payment_id}}
-{{-- 
                                     @php
-                                        $type = $sale->payment_id->getBadgeType();
+                                        $type = $sale->payment_status->getBadgeType();
                                     @endphp
-                                    <x-badge :type="$type">{{ $sale->payment_id->getName() }}</x-badge> --}}
+                                    <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
                                 </x-table.td>
                                 <x-table.td>
                                     {{ format_currency($sale->due_amount) }}
@@ -122,7 +120,7 @@
                                 <x-table.td colspan="9">
                                     <div class="flex justify-center items-center">
                                         <span
-                                            class="text-gray-400">{{ __('No results found') }}</span>
+                                            class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
                                     </div>
                                 </x-table.td>
                             </x-table.tr>
@@ -135,7 +133,7 @@
                 {{ $sales->links() }}
             </div>
 
-            <x-modal wire:model.live="showModal">
+            <x-modal wire:model="showModal">
                 <x-slot name="title">
                     {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale?->reference }}</strong>
                 </x-slot>
@@ -183,10 +181,10 @@
                                             <div>
                                                 {{ __('Payment Status') }} :
                                                 @php
-                                                    $type = $sale?->payment_id->getBadgeType();
+                                                    $type = $sale?->payment_status->getBadgeType();
                                                 @endphp
                                                 <x-badge
-                                                    :type="$type">{{ $sale?->payment_id->getName() }}</x-badge>
+                                                    :type="$type">{{ $sale?->payment_status->getName() }}</x-badge>
                                             </div>
                                         </div>
 
@@ -241,7 +239,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="left"><strong>{{ __('Tax') }}
-                                                            ({{ $sale??->tax_percentage }})</strong></td>
+                                                            ({{ $sale?->tax_percentage }}%)</strong></td>
                                                     <td class="right">
                                                         {{ format_currency($sale?->tax_amount) }}
                                                     </td>

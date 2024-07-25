@@ -8,24 +8,25 @@
         <x-slot name="content">
             <!-- Validation Errors -->
             <x-validation-errors class="mb-4" :errors="$errors" />
-            <form wire:submit="update">
+            <form wire:submit.prevent="update">
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="name" />
-                    <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="name"
+                        wire:model.lazy="brand.name" />
+                    <x-input-error :messages="$errors->get('brand.name')" for="name" class="mt-2" />
                 </div>
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="description" :value="__('Description')" />
-                    <textarea id="description" class="block mt-1 w-full" type="text" name="description" wire:model="description"></textarea>
-                    <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
+                    <textarea id="description" class="block mt-1 w-full" type="text" name="description"
+                        wire:model.lazy="brand.description"></textarea>
+                    <x-input-error :messages="$errors->get('brand.description')" for="description" class="mt-2" />
                 </div>
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="image" :value="__('Image')" />
-                    <x-media-upload title="{{ __('Image') }}" name="image" wire:model="image" :file="$image"
-                        single types="PNG / JPEG / WEBP" fileTypes="image/*" />
+                    <x-fileupload wire:model="image" :file="$image" accept="image/jpg,image/jpeg,image/png" />
                     <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                 </div>
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Purchase;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,8 +21,8 @@ class CreatePurchasePaymentsTable extends Migration
             $table->id();
 
             $table->foreignIdFor(Purchase::class)->constrained()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->decimal('amount', 8, 2);
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->decimal('amount',15,2);
             $table->date('date');
             $table->string('reference');
             $table->string('payment_method');

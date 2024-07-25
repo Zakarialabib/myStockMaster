@@ -7,18 +7,18 @@ namespace App\Models;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
-use App\Traits\HasUuid;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
     use HasAdvancedFilter;
-    use SoftDeletes;
-    use HasUuid;
+    use GetModelByUuid;
+    use UuidGenerator;
 
     public const ATTRIBUTES = [
         'id',
@@ -34,7 +34,8 @@ class Purchase extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_id',
+        'payment_status',
+        'payment_method',
         'created_at',
         'updated_at',
     ];
@@ -62,17 +63,17 @@ class Purchase extends Model
         'total_amount',
         'paid_amount',
         'due_amount',
-        'payment_id',
         'status',
-        'shipping_status',
+        'payment_status',
+        'payment_method',
         'note',
         'created_at',
         'updated_at',
     ];
 
     protected $casts = [
-        'status' => PurchaseStatus::class,
-        // 'payment_status' => PaymentStatus::class,
+        'status'         => PurchaseStatus::class,
+        'payment_status' => PaymentStatus::class,
     ];
 
     public function purchaseDetails(): HasMany
@@ -101,11 +102,6 @@ class Purchase extends Model
         );
     }
 
-    public function cashRegister(): BelongsTo
-    {
-        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
-    }
-
     protected static function boot()
     {
         parent::boot();
@@ -129,8 +125,8 @@ class Purchase extends Model
     public function scopePending($query)
     {
         return $query->whereStatus(PurchaseStatus::PENDING);
-    }
 
+    }
     /** @param mixed $query */
     public function scopeCompleted($query)
     {
@@ -145,7 +141,7 @@ class Purchase extends Model
     /**
      * get shipping amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -157,7 +153,7 @@ class Purchase extends Model
     /**
      * get paid amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -169,7 +165,7 @@ class Purchase extends Model
     /**
      * get total amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -181,7 +177,7 @@ class Purchase extends Model
     /**
      * get due amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -193,7 +189,7 @@ class Purchase extends Model
     /**
      * get tax amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -205,7 +201,7 @@ class Purchase extends Model
     /**
      * get discount amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function discountAmount(): Attribute
     {

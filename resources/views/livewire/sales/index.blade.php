@@ -1,43 +1,16 @@
 <div>
-    @section('title', __('Sales'))
-
-    <x-theme.breadcrumb :title="__('Sales List')" :parent="route('sales.index')" :parentName="__('Sales List')">
-
-        <x-dropdown align="right" width="48" class="w-auto mr-2">
-            <x-slot name="trigger" class="inline-flex">
-                <x-button secondary type="button" class="text-white flex items-center">
-                    <i class="fas fa-angle-double-down w-4 h-4"></i>
-                </x-button>
-            </x-slot>
-            <x-slot name="content">
-                <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
-                    {{ __('PDF') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
-                    {{ __('Excel') }}
-                </x-dropdown-link>
-            </x-slot>
-        </x-dropdown>
-        @can('sale_create')
-            <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
-        @endcan
-
-    </x-theme.breadcrumb>
-
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model="perPage"
+                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
             @if ($selected)
-                @can('sale_delete')
-                    <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                        <i class="fas fa-trash"></i>
-                    </x-button>
-                @endcan
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
             @endif
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
@@ -46,29 +19,25 @@
                     </span>
                     {{ __('Entries selected') }}
                 </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
         <div class="grid gap-4 grid-cols-2 items-center justify-center">
             <div class="w-full mb-2 flex flex-wrap ">
                 <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="startDate" type="date" name="startDate" value="$startDate" />
+                    <x-input wire:model="startDate" type="date" name="startDate" value="$startDate" />
                     @error('startDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="endDate" type="date" name="endDate" value="$endDate" />
+                    <x-input wire:model="endDate" type="date" name="endDate" value="$endDate" />
                     @error('endDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
@@ -85,7 +54,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input type="checkbox" wire:model.live="selectPage" />
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
                 {{ __('Reference') }}
@@ -96,7 +65,7 @@
             <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
@@ -117,7 +86,7 @@
             @forelse ($sales as $sale)
                 <x-table.tr wire:loading.class.delay="opacity-50">
                     <x-table.td class="pr-0">
-                        <input type="checkbox" value="{{ $sale->id }}" wire:model.live="selected" />
+                        <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $sale->reference }}
@@ -137,11 +106,10 @@
 
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->payment_id }}
                         @php
-                            $type = $sale->payment_id;
+                            $type = $sale->payment_status->getBadgeType();
                         @endphp
-                        <x-badge :type="$type">{{ $sale->payment_id }}</x-badge>
+                        <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($sale->due_amount) }}
@@ -167,7 +135,7 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link wire:click="$dispatch('showModal', {{ $sale->id }})"
+                                    <x-dropdown-link wire:click="$emit('showModal', {{ $sale->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
@@ -179,15 +147,15 @@
                                             {{ __('Send to Whatsapp') }}
                                         </x-dropdown-link>
                                     @endif
-                                    @can('sale_update')
+                                    @can('edit_sales')
                                         <x-dropdown-link href="{{ route('sales.edit', $sale->id) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
                                             {{ __('Edit') }}
                                         </x-dropdown-link>
                                     @endcan
-                                    @can('sale_delete')
-                                        <x-dropdown-link wire:click="$dispatch('deleteModal', {{ $sale->id }})"
+                                    @can('delete_sales')
+                                        <x-dropdown-link wire:click="$emit('deleteModal', {{ $sale->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-trash"></i>
                                             {{ __('Delete') }}
@@ -207,15 +175,15 @@
                                     </x-dropdown-link>
 
                                     @can('access_sale_payments')
-                                        <x-dropdown-link wire:click="$dispatch('showPayments', {{ $sale->id }})"
-                                            primary wire:loading.attr="disabled">
+                                        <x-dropdown-link wire:click="$emit('showPayments', {{ $sale->id }})" primary
+                                            wire:loading.attr="disabled">
                                             <i class="fas fa-money-bill-wave"></i>
                                             {{ __('Payments') }}
                                         </x-dropdown-link>
                                     @endcan
                                     @can('access_sale_payments')
                                         @if ($sale->due_amount > 0)
-                                            <x-dropdown-link wire:click="$dispatch('paymentModal', {{ $sale->id }})"
+                                            <x-dropdown-link wire:click="$emit('paymentModal', {{ $sale->id }})"
                                                 primary wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Add Payment') }}
@@ -248,7 +216,7 @@
 
     @livewire('sales.payment-form', ['sale' => $sale], key('payment-form' . $sale?->id))
 
-    <x-modal wire:model.live="importModal">
+    <x-modal wire:model="importModal">
         <x-slot name="title">
             <div class="flex justify-between items-center">
                 {{ __('Import Excel') }}
@@ -259,13 +227,13 @@
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit="import">
+            <form wire:submit.prevent="import">
                 <div class="mb-4">
 
                     <div class="w-full px-3">
                         <x-label for="import" :value="__('Import')" />
                         <x-input id="import" class="block mt-1 w-full" type="file" name="import"
-                            wire:model="import_file" />
+                            wire:model.defer="import_file" />
                         <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
 
@@ -287,10 +255,10 @@
             integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @endPushOnce
-
+    
     @push('scripts')
         <script>
-            document.addEventListener('livewire:init', function() {
+            document.addEventListener('livewire:load', function() {
                 window.livewire.on('deleteModal', saleId => {
                     Swal.fire({
                         title: 'Are you sure?',
@@ -302,7 +270,7 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.Livewire.dispatch('delete', saleId)
+                            window.livewire.emit('delete', saleId)
                         }
                     })
                 })

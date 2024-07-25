@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Passport\AuthCode;
-use App\Models\Passport\Client;
-use App\Models\Passport\PersonalAccessClient;
-use App\Models\Passport\RefreshToken;
-use App\Models\Passport\Token;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Sanctum::ignoreMigrations();
     }
 
     /**
@@ -45,16 +41,10 @@ class AppServiceProvider extends ServiceProvider
         View::share('languages', $this->getLanguages());
 
         Setting::observe(SettingsObserver::class);
-
+        
         JsonResource::withoutWrapping();
 
-        // Model::shouldBeStrict( ! $this->app->isProduction());
-
-        // Passport::useTokenModel(Token::class);
-        // Passport::useRefreshTokenModel(RefreshToken::class);
-        // Passport::useAuthCodeModel(AuthCode::class);
-        // Passport::useClientModel(Client::class);
-        // Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
+        Model::shouldBeStrict( ! $this->app->isProduction());
     }
 
     private function getLanguages()

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class SettingsObserver
 {
     /**
-     * @param Setting $settings
+     * @param \App\Models\Setting $settings
      * @return void
      */
     public function updated(Setting $settings)

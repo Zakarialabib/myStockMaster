@@ -8,7 +8,7 @@
                     {{ __('Edit Sale Return') }}
                 </h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +47,7 @@
             <div class="flex flex-row">
                 <div class="w-full px-4">
 
-                    <livewire:utils.search-product />
+                    <livewire:search-product />
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
 
-                                <livewire:utils.product-cart :cartInstance="'sale_return'" :data="$sale_return" />
+                                <livewire:product-cart :cartInstance="'sale_return'" :data="$sale_return" />
 
                                 <div class="flex flex-wrap -mx-2 mb-3">
                                     <div class="w-full md:w-1/3 px-2 mb-2">

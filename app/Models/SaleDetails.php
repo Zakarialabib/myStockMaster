@@ -41,7 +41,7 @@ class SaleDetails extends Model
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
     }
 
-    public function warehouse(): BelongsTo
+    public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
     }
@@ -49,7 +49,7 @@ class SaleDetails extends Model
     /**
      * get price attribute
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function price(): Attribute
     {
@@ -61,7 +61,7 @@ class SaleDetails extends Model
     /**
      * Interact with unit price
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -73,7 +73,7 @@ class SaleDetails extends Model
     /**
      * get subtotal attribute
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -85,7 +85,7 @@ class SaleDetails extends Model
     /**
      * product discount amount attribute
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -97,7 +97,7 @@ class SaleDetails extends Model
     /**
      * Interact with shipping amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function productTaxAmountAttribute(): Attribute
     {

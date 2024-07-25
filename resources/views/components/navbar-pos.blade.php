@@ -1,7 +1,7 @@
 <section class="py-5 px-6 bg-gray-50 shadow">
     <nav class="flex items-center justify-between flex-shrink-0 px-3">
         <!-- Logo -->
-        <a href="{{ route('dashboard') }}" class="text-xl font-semibold">
+        <a href="{{ route('home') }}" class="text-xl font-semibold">
             <img class="w-14 h-auto" src="{{ asset('images/logo.png') }}" alt="Site Logo">
             <span class="sr-only">{{ config('settings.site_title') }}</span>
         </a>
@@ -15,7 +15,7 @@
 
             @can('show_notifications')
                 <div class="md:flex hidden flex-wrap items-center">
-                    @livewire('utils.notifications')
+                    @livewire('notifications')
                 </div>
             @endcan
 
@@ -27,19 +27,19 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('dashboard')">
+                    <x-dropdown-link :href="route('home')">
                         {{ __('Dashboard') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('createModal')">
+                    <x-dropdown-link onclick="Livewire.emit('createModal')">
                         {{ __('Create Product') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('createCustomer')">
+                    <x-dropdown-link onclick="Livewire.emit('createCustomer')">
                         {{ __('Create Customer') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('recentSales')">
+                    <x-dropdown-link onclick="Livewire.emit('recentSales')">
                         {{ __('Recent Sales') }}
                     </x-dropdown-link>
                 </x-slot>

@@ -33,7 +33,7 @@ class ProductImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 'quantity'          => $row['quantity'] ?? 1,
                 'unit'              => 'pc', // change this
                 'stock_alert'       => $row['stock_alert'] ?? 10,
-                'tax_amount'        => 0, // change this
+                'order_tax'         => 0, // change this
                 'tax_type'          => 'inclusive', // change this
             ]);
         }

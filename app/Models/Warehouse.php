@@ -7,13 +7,12 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 
 class Warehouse extends Model
 {
     use HasAdvancedFilter;
 
-    protected const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'city',
@@ -22,10 +21,10 @@ class Warehouse extends Model
         'country',
         'created_at',
         'updated_at',
+
     ];
 
     public $orderable = self::ATTRIBUTES;
-
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -34,39 +33,31 @@ class Warehouse extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'city', 'address', 'phone', 'email', 'country',
+        'name', 'phone', 'country', 'city', 'email',
     ];
 
-    public function users()
+    /** @return BelongsToMany<User> */
+    public function assignedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_warehouse', 'warehouse_id', 'user_id');
+        return $this->belongsToMany(User::class);
     }
 
     /** @return BelongsToMany<Product> */
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_warehouse', 'warehouse_id', 'product_id')
-            ->withPivot('price', 'cost', 'qty', 'old_price', 'stock_alert');
-    }
-
-    public function productWarehouse()
-    {
-        return $this->hasMany(ProductWarehouse::class, 'warehouse_id');
+            ->withPivot('price', 'cost', 'qty');
     }
 
     public function getTotalQuantityAttribute()
     {
-        return $this->productWarehouse()->sum('qty');
+        return $this->products->sum('pivot.qty');
     }
 
-    public function getStockValueAttribute(): float
+    public function getStockValueAttribute()
     {
-        return $this->productWarehouse()->sum(DB::raw('qty * cost')) / 100;
-    }
-
-    public function assignedUsers()
-    {
-        return $this->belongsToMany(User::class)->using(UserWarehouse::class)
-            ->withPivot('user_id', 'warehouse_id');
+        return $this->products->sum(function ($product) {
+            return $product->pivot->qty * $product->pivot->cost;
+        });
     }
 }

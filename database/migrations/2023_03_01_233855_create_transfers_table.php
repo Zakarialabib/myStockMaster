@@ -15,15 +15,16 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('transfers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+            $table->uuid();
             $table->string('reference');
             $table->integer('from_warehouse_id');
             $table->integer('to_warehouse_id');
             $table->integer('item');
-            $table->integer('total_qty');
-            $table->integer('total_tax');
-            $table->decimal('total_cost', 8, 2);
-            $table->decimal('total_amount', 8, 2);
+            $table->double('total_qty');
+            $table->double('total_tax');
+            $table->double('total_cost');
+            $table->double('total_amount');
             $table->double('shipping')->nullable();
             $table->string('document')->nullable();
             $table->integer('status');

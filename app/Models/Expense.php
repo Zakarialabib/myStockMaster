@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ class Expense extends Model
 {
     use HasAdvancedFilter;
 
-    protected const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'id',
         'category_id',
         'date',
@@ -23,9 +24,8 @@ class Expense extends Model
         'updated_at',
     ];
 
-    public array $orderable = self::ATTRIBUTES;
-
-    public array $filterable = self::ATTRIBUTES;
+    public $orderable = self::ATTRIBUTES;
+    public $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -38,57 +38,44 @@ class Expense extends Model
         'warehouse_id',
         'date',
         'reference',
-        'description',
+        'details',
         'amount',
-        'cash_register_id',
     ];
 
-    protected static function boot()
+    public function __construct(array $attributes = [])
     {
-        parent::boot();
-
-        static::creating(static function ($expense): void {
-            $prefix = settings()->expense_prefix;
-            $latestExpense = self::latest()->first();
-            $number = $latestExpense ? (int) substr((string) $latestExpense->reference, -3) + 1 : 1;
-            $expense->reference = $prefix.str_pad((string) $number, 3, '0', STR_PAD_LEFT);
-        });
+        $this->setRawAttributes([
+            'reference' => 'EXP-'.Carbon::now()->format('d/m/Y'),
+            'date'      => Carbon::now()->format('d/m/Y'),
+        ], true);
+        parent::__construct($attributes);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(
-            related: ExpenseCategory::class,
-            foreignKey: 'category_id'
-        );
+        return $this->belongsTo(ExpenseCategory::class, 'category_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(
-            related: User::class,
-            foreignKey: 'user_id'
-        );
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(
-            related: Warehouse::class,
-            foreignKey: 'warehouse_id',
-        );
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 
-    public function cashRegister(): BelongsTo
-    {
-        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
-    }
-
+    /**
+     * Interact with the expenses amount
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value): int|float => $value / 100,
-            set: static fn ($value): int|float => $value * 100,
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 }

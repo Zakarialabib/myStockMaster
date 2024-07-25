@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('sales.index') }}">Sales</a></li>
         <li class="breadcrumb-item"><a href="{{ route('sales.show', $sale) }}">{{ $sale->reference }}</a></li>
         <li class="breadcrumb-item active">Edit Payment</li>
@@ -85,9 +85,8 @@
 
                             <div class="mb-4">
                                 <label for="note">{{ __('Note') }}</label>
-                                <textarea
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    rows="4" name="note">{{ old('note') ?? $salePayment->note }}</textarea>
+                                <textarea class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" rows="4"
+                                    name="note">{{ old('note') ?? $salePayment->note }}</textarea>
                             </div>
 
                             <input type="hidden" value="{{ $sale->id }}" name="sale_id">
@@ -98,3 +97,27 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/jquery-mask-money.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#amount').maskMoney({
+                prefix: '{{ settings()->currency->symbol }}',
+                thousands: '{{ settings()->currency->thousand_separator }}',
+                decimal: '{{ settings()->currency->decimal_separator }}',
+            });
+
+            $('#amount').maskMoney('mask');
+
+            $('#getTotalAmount').click(function() {
+                $('#amount').maskMoney('mask', {{ $sale->due_amount }});
+            });
+
+            $('#payment-form').submit(function() {
+                var amount = $('#amount').maskMoney('unmasked')[0];
+                $('#amount').val(amount);
+            });
+        });
+    </script>
+@endpush

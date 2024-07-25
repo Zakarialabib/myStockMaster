@@ -30,7 +30,8 @@ class PurchaseReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_id',
+        'payment_status',
+        'payment_method',
         'supplier_id',
     ];
     public $orderable = self::ATTRIBUTES;
@@ -56,14 +57,15 @@ class PurchaseReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_id',
+        'payment_status',
+        'payment_method',
         'note',
         'supplier_id',
     ];
 
     protected $casts = [
-        'status' => PurchaseReturnStatus::class,
-        // 'payment_status' => PaymentStatus::class,
+        'status'         => PurchaseReturnStatus::class,
+        'payment_status' => PaymentStatus::class,
     ];
 
     /** @return HasMany<PurchaseReturnDetail> */
@@ -83,11 +85,6 @@ class PurchaseReturn extends Model
             related: Supplier::class,
             foreignKey: 'user_id',
         );
-    }
-
-    public function cashRegister(): BelongsTo
-    {
-        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
     protected static function boot()
@@ -132,7 +129,7 @@ class PurchaseReturn extends Model
     /**
      * get shipping amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -144,7 +141,7 @@ class PurchaseReturn extends Model
     /**
      * get paid amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -156,7 +153,7 @@ class PurchaseReturn extends Model
     /**
      * get total amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -168,7 +165,7 @@ class PurchaseReturn extends Model
     /**
      * get due amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function dueAmount(): Attribute
     {

@@ -43,7 +43,7 @@ class ProductTelegram extends Notification
     /**
      * @param mixed $notifiable
      *
-     * @return TelegramMessage
+     * @return \NotificationChannels\Telegram\TelegramMessage
      */
     public function toTelegram($notifiable)
     {

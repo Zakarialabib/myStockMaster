@@ -62,7 +62,7 @@
                             </x-table.td>
                             <x-table.td>
                                 <textarea type="text" id="value-{{ $key }}" rows="3"
-                                    wire:model.live="translations.{{ $key }}.value">
+                                    wire:model="translations.{{ $key }}.value">
                             </textarea>
                                 @error('translations.' . $key . '.value')
                                     <span class="text-danger">{{ $message }}</span>

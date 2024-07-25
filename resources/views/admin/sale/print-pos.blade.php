@@ -146,8 +146,7 @@
                     @if (settings()->show_order_tax == true)
                         <tr>
                             <th colspan="3" style="text-align:left">{{ __('Tax') }}
-                                ({{ format_percentage($sale->tax_percentage) }})
-                            </th>
+                                ({{ $sale->tax_percentage }}%)</th>
                             <th style="text-align:right">{{ format_currency($sale->tax_amount) }}</th>
                         </tr>
                     @endif

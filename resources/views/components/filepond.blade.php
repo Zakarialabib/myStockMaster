@@ -6,10 +6,10 @@
         post.setOptions({
             server: {
                 process:(fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                    @this.upload('{{ $attributes->whereStartsWith('wire:model.live')->first() }}', file, load, error, progress)
+                    @this.upload('{{ $attributes->whereStartsWith('wire:model')->first() }}', file, load, error, progress)
                 },
                 revert: (filename, load) => {
-                    @this.removeUpload('{{ $attributes->whereStartsWith('wire:model.live')->first() }}', filename, load)
+                    @this.removeUpload('{{ $attributes->whereStartsWith('wire:model')->first() }}', filename, load)
                 },
             }
         });

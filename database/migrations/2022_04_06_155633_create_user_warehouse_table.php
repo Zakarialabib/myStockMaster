@@ -18,13 +18,8 @@ class CreateUserWarehouseTable extends Migration
     public function up()
     {
         Schema::create('user_warehouse', function (Blueprint $table) {
-            $table->id();
             $table->foreignIdFor(User::class)->index('user_warehouse_user_id')->constrained();
             $table->foreignIdFor(Warehouse::class)->index('user_warehouse_warehouse_id')->constrained();
-            $table->boolean('is_default')->default(false);
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
         });
     }
 

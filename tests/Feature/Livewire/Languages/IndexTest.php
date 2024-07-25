@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Language\Index;
+use App\Http\Livewire\Language\Index;
 
 test('the livewire language component can be viewed', function () {
     $this->withoutExceptionHandling();

@@ -1,17 +1,8 @@
 <div>
-    @section('title', __('Currency'))
-    <x-theme.breadcrumb :title="__('Currency List')" :parent="route('currencies.index')" :parentName="__('Currency List')">
-        @can('currency_create')
-            <x-button primary wire:click="dispatchTo('currency.create', 'createModal')">
-                {{ __('Create Currency') }}
-            </x-button>
-        @endcan
-    </x-theme.breadcrumb>
-
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model="perPage"
+                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -32,7 +23,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -40,7 +31,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input type="checkbox" wire:model.live="selectPage" />
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
@@ -51,6 +42,9 @@
             <x-table.th sortable wire:click="sortBy('symbol')" :direction="$sorts['symbol'] ?? null">
                 {{ __('Symbol') }}
             </x-table.th>
+            <x-table.th sortable wire:click="sortBy('rate')" :direction="$sorts['rate'] ?? null">
+                {{ __('Rate') }}
+            </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
@@ -59,7 +53,7 @@
             @forelse ($currencies as $currency)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $currency->id }}">
                     <x-table.td class="pr-0">
-                        <input type="checkbox" value="{{ $currency->id }}" wire:model.live="selected" />
+                        <input type="checkbox" value="{{ $currency->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $currency->name }}
@@ -68,29 +62,27 @@
                         {{ $currency->code }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $currency->locale }}
+                        {{ $currency->symbol }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $currency->exchange_rate }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button alert
-                                wire:click="dispatchTo('currency.show', 'showModal', {id : '{{ $currency->id }}'})"
-                                type="button" wire:loading.attr="disabled">
+                            <x-button alert wire:click="showModal({{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            @can('currency_update')
-                                <x-button primary
-                                    wire:click="dispatchTo('currency.edit', 'editModal',{id : '{{ $currency->id }}'})"
-                                    type="button" wire:loading.attr="disabled">
-                                    <i class="fas fa-edit"></i>
-                                </x-button>
-                            @endcan
 
-                            @can('currency_delete')
-                                <x-button danger wire:click="deleteModal( {{ $currency->id }})" type="button"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-trash"></i>
-                                </x-button>
-                            @endcan
+                            <x-button primary wire:click="$emit('editModal', {{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-edit"></i>
+                            </x-button>
+
+                            <x-button danger wire:click="deleteModal( {{ $currency->id }})" type="button"
+                                wire:loading.attr="disabled">
+                                <i class="fas fa-trash"></i>
+                            </x-button>
                         </div>
                     </x-table.td>
                 </x-table.tr>
@@ -119,10 +111,41 @@
             {{ $currencies->links() }}
         </div>
     </div>
+    
+    <x-modal wire:model="showModal">
+        <x-slot name="title">
+            {{ __('Show Currency') }} {{ $currency?->name}}
+        </x-slot>
 
-    @livewire('currency.show', ['currency' => $currency])
+        <x-slot name="content">
+            <div class="flex flex-col">
+                <div class="flex flex-col">
+                    <x-label for="currency.name" :value="__('Name')" />
+                    <x-input id="name" class="block mt-1 w-full" required type="text" disabled
+                        wire:model.defer="currency.name" />
+                </div>
+                <div class="flex flex-col">
+                    <x-label for="currency.code" :value="__('Code')" />
+                    <x-input id="code" class="block mt-1 w-full" type="text" disabled
+                        wire:model.defer="currency.code" />
+                </div>
+                <div class="flex flex-col">
+                    <x-label for="currency.symbol" :value="__('Symbol')" />
+                    <x-input id="symbol" class="block mt-1 w-full" type="text" disabled
+                        wire:model.defer="currency.symbol" />
+                </div>
+                <div class="flex flex-col">
+                    <x-label for="currency.rate" :value="__('Rate')" />
+                    <x-input id="rate" class="block mt-1 w-full" type="text" disabled
+                        wire:model.defer="currency.rate" />
+                </div>
+            </div>
+        </x-slot>
+    </x-modal>
 
+    
     @livewire('currency.edit', ['currency' => $currency])
 
     <livewire:currency.create />
 </div>
+

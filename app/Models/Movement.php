@@ -40,7 +40,7 @@ class Movement extends Model
         );
     }
 
-    public function productWarehouse(): BelongsTo
+    public function productWarehouse()
     {
         return $this->belongsTo(ProductWarehouse::class);
     }

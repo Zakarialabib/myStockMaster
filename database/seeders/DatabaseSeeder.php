@@ -29,10 +29,10 @@ class DatabaseSeeder extends Seeder
             ExpenseSeeder::class,
             CategoriesSeeder::class,
             BrandSeeder::class,
-            WarehouseSeeder::class,
             ProductsSeeder::class,
             CustomersSeeder::class,
             SupplierSeeder::class,
+            // WarehouseSeeder::class,
         ]);
     }
 }

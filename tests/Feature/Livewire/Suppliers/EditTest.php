@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Suppliers\Edit;
+use App\Http\Livewire\Suppliers\Edit;
 use App\Models\Supplier;
 use Livewire\Livewire;
 

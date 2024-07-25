@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Categories\Index;
+use App\Http\Livewire\Categories\Index;
 
 test('the livewire category component can be viewed', function () {
     $this->withoutExceptionHandling();

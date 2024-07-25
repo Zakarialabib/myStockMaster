@@ -19,17 +19,12 @@ return new class () extends Migration {
         Schema::create('product_warehouse', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(Product::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Warehouse::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->constrained()->cascadeOnDelete();
 
-            $table->decimal('price', 8, 2);
-            $table->decimal('cost', 8, 2)->nullable();
-            $table->decimal('old_price', 8, 2)->nullable();
+           $table->decimal('price',15,2);
+            $table->decimal('cost',15,2);
             $table->integer('qty');
-            $table->integer('stock_alert');
-            $table->boolean('is_ecommerce')->default(false);
-            $table->tinyInteger('is_discount')->default(false);
-            $table->date('discount_date')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

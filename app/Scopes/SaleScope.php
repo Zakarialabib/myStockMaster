@@ -10,8 +10,8 @@ use Illuminate\Support\Carbon;
 trait SaleScope
 {
     /**
-     * @param Builder $builder
-     * @param Carbon $date
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Support\Carbon $date
      * @param int $dividedNumber
      *
      * @return mixed

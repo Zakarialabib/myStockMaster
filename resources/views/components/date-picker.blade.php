@@ -8,13 +8,13 @@
             </div>
         @endif
 
-        <input type="text" class="p-3 leading-5 bg-white text-zinc-700 rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500" {{ $attributes }} data-input>
+        <input type="text" class="p-3 leading-5 bg-white dark:bg-dark-eval-2 text-zinc-700 dark:text-zinc-300 rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500" {{ $attributes }} data-input>
     </div>
 </div>
 
 @push('scripts')
     <script>
-        document.addEventListener("livewire:init", () => {
+        document.addEventListener("livewire:load", () => {
     function update(value) {
         let el = document.getElementById('clear-{{ $attributes['id'] }}')
 
@@ -28,7 +28,7 @@
             el.classList.remove('invisible')
         }
 
-@this.set('{{ $attributes['wire:model.live'] }}', value)
+@this.set('{{ $attributes['wire:model'] }}', value)
     }
 
 @if($attributes['picker'] === 'date')

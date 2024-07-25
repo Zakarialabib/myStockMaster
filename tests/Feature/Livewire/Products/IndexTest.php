@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Livewire\Products;
 
-use App\Livewire\Products\Index;
+use App\Http\Livewire\Products\Index;
 use Livewire\Livewire;
 use Tests\TestCase;
 

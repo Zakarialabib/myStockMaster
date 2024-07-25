@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Expense\Index;
+use App\Http\Livewire\Expense\Index;
 
 test('the livewire expense component can be viewed', function () {
     $this->withoutExceptionHandling();

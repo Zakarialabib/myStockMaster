@@ -46,17 +46,14 @@ class CreateSettingsTable extends Migration
             $table->string('salePayment_prefix', 25)->default('SP-');
             $table->string('purchasePayment_prefix', 25)->default('PR-');
 
-            // $table->boolean('show_email')->default(1);
-            // $table->boolean('show_address')->default(1);
-            // $table->boolean('show_order_tax')->default(1);
-            // $table->boolean('show_discount')->default(1);
-            // $table->boolean('show_shipping')->default(1);
+            $table->boolean('show_email')->default(1);
+            $table->boolean('show_address')->default(1);
+            $table->boolean('show_order_tax')->default(1);
+            $table->boolean('show_discount')->default(1);
+            $table->boolean('show_shipping')->default(1);
 
             $table->boolean('backup_status')->default(0);
             $table->string('backup_schedule')->nullable();
-
-            $table->json('invoice_control')->nullable();
-            $table->json('analytics_control')->nullable();
 
             $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
             $table->integer('printer_id')->nullable();

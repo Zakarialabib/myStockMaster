@@ -3,12 +3,12 @@
         <i class="bi bi-three-dots-vertical"></i>
     </button>
     <div class="dropdown-menu">
-        @can('purchase_return_payments_access')
+        @can('access_purchase_return_payments')
             <a href="{{ route('purchase-return-payments.index', $data->id) }}" class="dropdown-item">
                 <i class="bi bi-cash-coin mr-2 text-warning" style="line-height: 1;"></i> Show Payments
             </a>
         @endcan
-        @can('purchase_return_payments_access')
+        @can('access_purchase_return_payments')
             @if($data->due_amount > 0)
                 <a href="{{ route('purchase-return-payments.create', $data->id) }}" class="dropdown-item">
                     <i class="bi bi-plus-circle-dotted mr-2 text-success" style="line-height: 1;"></i> Add Payment

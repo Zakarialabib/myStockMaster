@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\PurchaseReturn;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ class CreatePurchaseReturnPaymentsTable extends Migration
             $table->id();
 
             $table->foreignIdFor(PurchaseReturn::class)->constrained()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->date('date');
             $table->string('reference');

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Livewire\Livewire;
-use App\Livewire\Role\Edit;
+use App\Http\Livewire\Role\Edit;
 use Spatie\Permission\Models\Role;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -38,7 +38,7 @@ test('a name is unique', function () {
     $role = Role::create(['name' => 'Test Role']);
 
     Livewire::test(Edit::class, ['role' => $role->id])
-        ->set('role.name', 'admin')
+        ->set('role.name', 'Super Admin')
         ->call('update')
         ->assertHasErrors(['name' => 'unique']);
 });

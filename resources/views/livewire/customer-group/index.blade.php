@@ -1,16 +1,8 @@
 <div>
-    @section('title', __('Customer Groups'))
-
-    <x-theme.breadcrumb :title="__('Customer Groups')" :parent="route('customer-group.index')" :parentName="__('Customer Group List')">
-        <x-button primary type="button" wire:click="dispatchTo('customer-group.create','createModal')">
-            {{ __('Create Customer Group') }}
-        </x-button>
-    </x-theme.breadcrumb>
-
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out">
+            <select wire:model="perPage"
+                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -27,15 +19,11 @@
                     </span>
                     {{ __('Entries selected') }}
                 </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.lazy="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -43,12 +31,12 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input wire:model.live="selectPage" type="checkbox" />
+                <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th sortable :direction="$sorts['name'] ?? null" field="name" wire:click="sortingBy('name')">
+            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
-            <x-table.th sortable :direction="$sorts['percentage'] ?? null" field="percentage" wire:click="sortingBy('percentage')">
+            <x-table.th>
                 {{ __('Percentage') }}
             </x-table.th>
             <x-table.th>
@@ -60,7 +48,7 @@
             @forelse($customergroups as $customergroup)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $customergroup->id }}">
                     <x-table.td>
-                        <input type="checkbox" value="{{ $customergroup->id }}" wire:model.live="selected">
+                        <input type="checkbox" value="{{ $customergroup->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
                         {{ $customergroup->name }}
@@ -70,16 +58,18 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info type="button" wire:click="openShowModal({ id :'{{ $customergroup->id }}'})"
+                            <x-button info type="button" 
+                                wire:click="showModal({{ $customergroup->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
                             <x-button primary type="button"
-                                wire:click="dispatchTo('customer-group.edit','editModal', { id : '{{ $customergroup->id }}'})"
+                                wire:click="$emit('editModal', {{ $customergroup->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
-                            <x-button danger type="button" wire:click="deleteModal({ id :'{{ $customergroup->id }}'})"
+                            <x-button danger type="button"
+                                wire:click="$emit('deleteModal', {{ $customergroup->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -98,14 +88,24 @@
         </x-table.tbody>
     </x-table>
 
-    <div class="pt-3">
-        {{ $customergroups->links() }}
+    <div class="p-4">
+        <div class="pt-3">
+            @if ($this->selectedCount)
+                <p class="text-sm leading-5">
+                    <span class="font-medium">
+                        {{ $this->selectedCount }}
+                    </span>
+                    {{ __('Entries selected') }}
+                </p>
+            @endif
+            {{ $customergroups->links() }}
+        </div>
     </div>
 
-    <livewire:customer-group.edit :customergroup="$customergroup" lazy />
+    @livewire('customer-group.edit', ['customergroup' => $customergroup])
 
     <livewire:customer-group.create />
-
+    
     <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Show Customer Group') }}
@@ -124,4 +124,27 @@
             </div>
         </x-slot>
     </x-modal>
+    
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', customergroupID => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', customergroupID)
+                        }
+                    })
+                })
+            })
+        </script>
+    @endpush
+
 </div>

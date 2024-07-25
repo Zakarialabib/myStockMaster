@@ -1,19 +1,8 @@
 <div>
-    @section('title', __('Purchases'))
-
-    <x-theme.breadcrumb :title="__('Purchases List')" :parent="route('quotations.index')" :parentName="__('Purchases List')">
-
-        @can('purchase_create')
-            <x-button primary href="{{ route('purchase.create') }}" wire:loading.attr="disabled">
-                {{ __('Create Purchase order') }}
-            </x-button>
-        @endcan
-
-    </x-theme.breadcrumb>
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model="perPage"
+                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -30,15 +19,11 @@
                     </span>
                     {{ __('Entries selected') }}
                 </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
             @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
 
@@ -47,14 +32,14 @@
             <div class="w-full flex flex-wrap">
                 <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="startDate" type="date" name="startDate" />
+                    <x-input wire:model="startDate" type="date" name="startDate" />
                     @error('startDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="w-full md:w-1/2 px-2">
                     <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="endDate" type="date" name="endDate" />
+                    <x-input wire:model="endDate" type="date" name="endDate" />
                     @error('endDate')
                         <span class="text-danger mt-1">{{ $message }}</span>
                     @enderror
@@ -70,7 +55,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input type="checkbox" wire:model.live="selectPage" />
+                <input type="checkbox" wire:model="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
                 {{ __('Reference') }}
@@ -81,7 +66,7 @@
             <x-table.th sortable wire:click="sortBy('supplier_id')" :direction="$sorts['supplier_id'] ?? null">
                 {{ __('Supplier') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
             <x-table.th>
@@ -98,7 +83,7 @@
             @forelse ($purchases as $purchase)
                 <x-table.tr>
                     <x-table.td class="pr-0">
-                        <input type="checkbox" value="{{ $purchase->id }}" wire:model.live="selected" />
+                        <input type="checkbox" value="{{ $purchase->id }}" wire:model="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $purchase->reference }}
@@ -108,8 +93,8 @@
                     </x-table.td>
                     <x-table.td>
                         @if ($purchase->supplier)
-                            <a class="text-indigo-500 hover:text-indigo-600  font-bold tracking-wide"
-                                href="{{ route('supplier.details', $purchase->supplier->uuid) }}">
+                            <a  class="text-indigo-500 hover:text-indigo-600  font-bold tracking-wide"
+                            href="{{ route('supplier.details', $purchase->supplier->uuid) }}">
                                 {{ $purchase->supplier->name }}
                             </a>
                         @else
@@ -121,10 +106,7 @@
                             $badgeType = $purchase->status->getBadgeType();
                         @endphp
 
-                        <x-badge :type="$badgeType">
-                            {{ $purchase->payment_id }}
-                            {{-- {{ \app\Enums\PaymentStatus::getName($purchase->payment_id) }} --}}
-                        </x-badge>
+                        <x-badge :type="$badgeType">{{ $purchase->payment_status->getName() }}</x-badge>
 
                     </x-table.td>
                     <x-table.td>
@@ -143,17 +125,17 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    @can('purchase_payment_access')
-                                        <x-dropdown-link wire:click="$dispatch('showPayments', {{ $purchase->id }})"
+                                    @can('access_purchase_payments')
+                                        <x-dropdown-link wire:click="$emit('showPayments', {{ $purchase->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-money-bill-wave"></i>
                                             {{ __('Payments') }}
                                         </x-dropdown-link>
                                     @endcan
 
-                                    @can('purchase_payment_access')
+                                    @can('access_purchase_payments')
                                         @if ($purchase->due_amount > 0)
-                                            <x-dropdown-link wire:click="$dispatch('paymentModal', {{ $purchase->id }})"
+                                            <x-dropdown-link wire:click="$emit('paymentModal', {{ $purchase->id }})"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 {{ __('Add Payment') }}
@@ -162,7 +144,7 @@
                                     @endcan
 
                                     @can('purchase_access')
-                                        <x-dropdown-link wire:click="$dispatch('showModal', {{ $purchase->id }})"
+                                        <x-dropdown-link wire:click="$emit('showModal', {{ $purchase->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-eye"></i>
                                             {{ __('View') }}
@@ -184,7 +166,7 @@
                                     </x-dropdown-link>
 
                                     @can('purchase_delete')
-                                        <x-dropdown-link wire:click="$dispatch('deleteModal', {{ $purchase->id }})"
+                                        <x-dropdown-link wire:click="$emit('deleteModal', {{ $purchase->id }})"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-trash"></i>
                                             {{ __('Delete') }}
@@ -222,7 +204,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('livewire:init', function() {
+            document.addEventListener('livewire:load', function() {
                 window.livewire.on('deleteModal', purchaseId => {
                     Swal.fire({
                         title: 'Are you sure?',
@@ -234,7 +216,7 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.Livewire.dispatch('delete', purchaseId)
+                            window.livewire.emit('delete', purchaseId)
                         }
                     })
                 })

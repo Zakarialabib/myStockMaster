@@ -31,7 +31,7 @@
                 blocks: [],
             },
             onChange: function() {
-                Livewire.dispatch('editorChanged', this);
+                Livewire.emit('editorChanged', this);
             },
         });
 

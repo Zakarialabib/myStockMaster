@@ -20,7 +20,10 @@ class CreateCurrenciesTable extends Migration
 
             $table->string('name');
             $table->string('code');
-            $table->string('locale');
+            $table->string('symbol');
+            $table->string('thousand_separator')->default(',');
+            $table->string('decimal_separator')->default('.');
+            $table->integer('exchange_rate')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

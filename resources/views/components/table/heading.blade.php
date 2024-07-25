@@ -6,7 +6,7 @@
 ])
 
 @php
-    $hover = $sortable ? 'hover:bg-brand-300/50' : '';
+    $hover = $sortable ? 'hover:bg-brand-300/50 dark:hover:bg-indigo-500/25' : '';
 @endphp
 
 <th

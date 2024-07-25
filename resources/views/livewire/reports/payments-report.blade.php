@@ -3,12 +3,12 @@
         <div class="w-full">
             <div class="card border-0 shadow-sm">
                 <div class="p-4">
-                    <form wire:submit="generateReport">
-                        <div class="flex flex-wrap mb-3">
+                    <form wire:submit.prevent="generateReport">
+                        <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Start Date')}} <span class="text-red-500">*</span></label>
-                                    <x-input wire:model="start_date" type="date" name="start_date" />
+                                    <x-input wire:model.defer="start_date" type="date" name="start_date" />
                                     @error('start_date')
                                     <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -17,18 +17,18 @@
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('End Date')}} <span class="text-red-500">*</span></label>
-                                    <x-input wire:model="end_date" type="date" name="end_date" />
+                                    <x-input wire:model.defer="end_date" type="date" name="end_date" />
                                     @error('end_date')
                                     <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-wrap mb-3">
+                        <div class="flex flex-wrap -mx-2 mb-3">
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payments')}}</label>
-                                    <select wire:model.live="payments" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payments">
+                                    <select wire:model="payments" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payments">
                                         <option value="">{{__('Select Payments')}}</option>
                                         <option value="sale">{{__('Sales')}}</option>
                                         <option value="sale_return">{{__('Sale Returns')}}</option>
@@ -43,7 +43,7 @@
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payment Method')}}</label>
-                                    <select wire:model="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method">
+                                    <select wire:model.defer="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method">
                                         <option value="">{{__('Select Payment Method')}}</option>
                                         <option value="Cash">{{__('Cash')}}</option>
                                         <option value="Bank Transfer">{{__('Bank Transfer')}}</option>

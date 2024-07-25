@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Categories\Edit;
+use App\Http\Livewire\Categories\Edit;
 use App\Models\Category;
 use Livewire\Livewire;
 

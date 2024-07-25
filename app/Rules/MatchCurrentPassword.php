@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
-use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
 class MatchCurrentPassword implements Rule

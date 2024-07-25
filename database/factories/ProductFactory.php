@@ -6,17 +6,12 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Product;
-use App\Models\Warehouse;
-use App\Models\ProductWarehouse;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
 class ProductFactory extends Factory
 {
-    protected $model = Product::class;
-
     /**
      * Define the model's default state.
      *
@@ -25,48 +20,20 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'id'                => Str::uuid(),
-            'name'              => $this->faker->name,
+            'name'              => 'iPhone 12',
+            'uuid'              => fake()->uuid(),
             'code'              => Str::random(5),
             'category_id'       => 1,
-            'brand_id'          => null,
-            'slug'              => Str::slug($this->faker->name),
+            'cost'              => 1000,
+            'price'             => 1000,
+            'quantity'          => 10,
             'unit'              => 'pcs',
-            'description'       => $this->faker->sentence,
-            'image'             => null, // uploadImage('images/products', '1000', '1000'),
-            'gallery'           => null,
+            'note'              => 'iPhone 12',
+            'image'             => 'https://www.apple.com/v/iphone/home/ah/images/overview/compare/compare_iphone_12__f2x.png',
             'barcode_symbology' => 'C39',
-            'tax_amount'        => 0,
+            'stock_alert'       => 10,
+            'order_tax'         => 0,
             'tax_type'          => 0,
-            'featured'          => true,
-            'best'              => true,
-            'hot'               => true,
-            'status'            => true,
-            'embeded_video'     => null,
-            'options'           => null,
-            'usage'             => null,
         ];
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function (Product $product) {
-            $warehouses = Warehouse::inRandomOrder()->limit(2)->get();
-
-            foreach ($warehouses as $warehouse) {
-                ProductWarehouse::create([
-                    'product_id'    => $product->id,
-                    'warehouse_id'  => $warehouse->id,
-                    'qty'           => 20,
-                    'cost'          => 250,
-                    'price'         => 1000,
-                    'old_price'     => 500,
-                    'is_ecommerce'  => true,
-                    'stock_alert'   => 10,
-                    'is_discount'   => true,
-                    'discount_date' => now(),
-                ]);
-            }
-        });
     }
 }

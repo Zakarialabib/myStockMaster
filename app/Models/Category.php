@@ -27,9 +27,7 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'code', 'name', 'category_id',
-        'description', 'title',  'image',
-        'status',
+        'code', 'name',
     ];
 
     public function __construct(array $attributes = [])
@@ -38,11 +36,6 @@ class Category extends Model
             'code' => Str::random(8),
         ], true);
         parent::__construct($attributes);
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', true);
     }
 
     public function products(): HasMany

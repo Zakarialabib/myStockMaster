@@ -4,37 +4,33 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Customer extends Model
 {
     use HasAdvancedFilter;
-    use HasFactory;
-    use Notifiable;
-    use HasUuid;
+    use GetModelByUuid;
+    use UuidGenerator;
     use HasFactory;
 
-    protected const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'id',
         'name',
         'email',
         'phone',
-        'customer_group_id',
-        'user_id',
         'city',
         'country',
+        'address',
         'created_at',
         'updated_at',
     ];
 
     public $orderable = self::ATTRIBUTES;
-
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -43,52 +39,51 @@ class Customer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'name', 'phone', 'email', 'city', 'country',
-        'address', 'tax_number', 'password', 'status',
-        'customer_group_id', 'user_id',
+        'uuid',
+        'id',
+        'city',
+        'tax_number',
+        'name',
+        'email',
+        'phone',
+        'country',
+        'address',
     ];
 
-    protected $casts = [
-        'status' => Status::class,
-    ];
-
-    public function sales(): HasMany
+    /** @return HasOne<Wallet> */
+    public function wallet(): HasOne
     {
-        return $this->hasMany(Sale::class, 'customer_id', 'id');
+        return $this->hasOne(Wallet::class);
+    }
+
+    /** @return HasOne<Sale> */
+    public function sales(): HasOne
+    {
+        return $this->HasOne(Sale::class);
+    }
+
+    public function getTotalSalesAttribute()
+    {
+        return $this->customerSum('total_amount', Sale::class);
+    }
+
+    public function getTotalSaleReturnsAttribute(): int|float
+    {
+        return $this->customerSum('total_amount', SaleReturn::class);
+    }
+
+    public function getTotalPaymentsAttribute(): int|float
+    {
+        return $this->customerSum('paid_amount', Sale::class);
+    }
+
+    public function getTotalDueAttribute(): int|float
+    {
+        return $this->customerSum('due_amount', Sale::class);
     }
 
     private function customerSum($column, $model)
     {
         return $model::where('customer_id', $this->id)->sum($column);
-    }
-
-    public function customerGroup()
-    {
-        return $this->belongsTo(CustomerGroup::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function getFullNameAttribute(): string
-    {
-        return $this->attributes['first_name'].' '.$this->attributes['last_name'];
-    }
-
-    public function setPhoneAttribute($value)
-    {
-        $this->attributes['phone'] = preg_replace('/[^0-9]/', '', $value);
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('active', true);
-    }
-
-    public function getTotalSalesAmount(): float
-    {
-        return $this->sales()->sum('total_amount');
     }
 }

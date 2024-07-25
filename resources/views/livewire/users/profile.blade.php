@@ -1,31 +1,31 @@
 <div>
     <div class="flex flex-row">
         <div class="lg:w-1/2 sm:w-full px-3">
-            <form wire:submit="update">
+            <form wire:submit.prevent="update">
                 <div class="flex flex-wrap">
                     <div class="w-1/2 sm:w-full px-2">
                         <x-label for="name" :value="__('Name')" required />
                         <input
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            type="text" name="name" wire:model.live="name" required>
+                            type="text" name="name" wire:model="name" required>
                     </div>
                     <div class="w-1/2 sm:w-full px-2">
                         <x-label for="email" :value="__('Email')" required />
                         <input
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            type="email" name="email" wire:model.live="email" required>
+                            type="email" name="email" wire:model="email" required>
                     </div>
                     <div class="w-1/2 sm:w-full px-2">
                         <x-label for="phone" :value="__('Phone')" required />
                         <input
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            type="text" name="phone" wire:model.live="phone" required>
+                            type="text" name="phone" wire:model="phone" required>
                     </div>
                     <div class="w-full px-2">
                         <x-label for="Role" :value="__('Role')" required />
                         <select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="role" id="role" wire:model.live="role" required>
+                            name="role" id="role" wire:model="role" required>
                         </select>
                     </div>
 
@@ -33,7 +33,7 @@
                         <x-label for="is_active" :value="__('Status')" required />
                         <select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="is_active" id="is_active" wire:model.live="is_active" required>
+                            name="is_active" id="is_active" wire:model="is_active" required>
                             <option value="1" {{ $user->is_active == 1 ? 'selected' : '' }}>
                                 {{ __('Active') }}
                             </option>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="lg:w-1/2 sm:w-full px-3">
-            <form wire:submit="updatePassword">
+            <form wire:submit.prevent="updatePassword">
                 <div class="mb-4">
                     <label for="current_password">{{ __('Current Password') }} <span
                             class="text-danger">*</span></label>

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Console\Commands\BackupCommand;
-use App\Enums\BackupSchedule;
-use Illuminate\Support\Facades\Schedule;
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +16,6 @@ use Illuminate\Support\Facades\Schedule;
 |
 */
 
-// if (settings()->backup_schedule === BackupSchedule::DAILY) {
-//     Schedule::command('backup:monitor')->dailyAt('17:00');
-//     Schedule::command(BackupCommand::class)->dailyAt('17:00');
-// } elseif (settings()->backup_schedule === BackupSchedule::WEEKLY) {
-//     Schedule::command('backup:monitor')->weeklyOn(1, '17:00');
-//     Schedule::command(BackupCommand::class)->weeklyOn(1, '17:00');
-// } elseif (settings()->backup_schedule === BackupSchedule::MONTHLY) {
-//     Schedule::command('backup:monitor')->monthlyOn(1, '17:00');
-//     Schedule::command(BackupCommand::class)->monthlyOn(1, '17:00');
-// }
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})->purpose('Display an inspiring quote');

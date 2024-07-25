@@ -15,7 +15,8 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('integrations', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+            $table->uuid();
             $table->integer('type');
             $table->string('store_url')->nullable();
             $table->string('api_key')->nullable();

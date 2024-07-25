@@ -129,7 +129,7 @@
                                         @if ($purchase_return->tax_percentage)
                                             <tr>
                                                 <td class="left"><strong>{{ __('Tax') }}
-                                                        ({{ format_percentage($purchase_return->tax_percentage) }})</strong></td>
+                                                        ({{ $purchase_return->tax_percentage }}%)</strong></td>
                                                 <td class="right">{{ format_currency($purchase_return->tax_amount) }}
                                                 </td>
                                             </tr>

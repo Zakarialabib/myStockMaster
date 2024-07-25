@@ -18,7 +18,7 @@ class SaleReturnPayment extends Model
         'id',
         'sale_return_id',
         'amount',
-        'payment_id',
+        'payment_method',
         'created_at',
         'updated_at',
 
@@ -28,7 +28,7 @@ class SaleReturnPayment extends Model
     public $filterable = self::ATTRIBUTES;
     protected $guarded = [];
 
-    /** @return BelongsTo */
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsTo */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturn::class, 'sale_return_id', 'id');
@@ -37,7 +37,7 @@ class SaleReturnPayment extends Model
     /**
      * Get ajustement date.
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     public function date(): Attribute
     {
@@ -59,7 +59,7 @@ class SaleReturnPayment extends Model
     /**
      * Interact with the expenses amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function amount(): Attribute
     {

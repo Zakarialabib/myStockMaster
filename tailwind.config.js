@@ -3,6 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
+    darkMode: false,
     rtl: false,
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -19,6 +20,7 @@ module.exports = {
     ],
 
     theme: {
+        darkMode: false,
         screens: {
             sm: '640px',
             md: '768px',

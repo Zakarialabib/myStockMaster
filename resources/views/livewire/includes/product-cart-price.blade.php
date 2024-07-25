@@ -11,7 +11,7 @@
 
     <div x-show="editPrice && selectedRowId === '{{ $cart_item->rowId }}'">
         <form wire:change="updatePrice('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')" class="flex  justify-center">
-            <x-input type="text" wire:model="price.{{ $cart_item->id }}" />
+            <x-input type="text" wire:model.defer="price.{{ $cart_item->id }}" />
         </form>
     </div>
 </div>

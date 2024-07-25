@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Services;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
-use InvalidArgumentException;
+use InvalidArgumentException; 
 
 class OpenAi
 {
@@ -25,24 +23,25 @@ class OpenAi
         // }
 
         $input_data = [
-            'temperature'       => 0.7,
-            'max_tokens'        => 4000,
+            'temperature' => 0.7,
+            'max_tokens' => 4000,
             'frequency_penalty' => 1.1,
-            'model'             => 'gpt-3.5-turbo',
-            'messages'          => [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
                 [
-                    'role'    => 'user',
+                    'role' => 'user',
                     'content' => $prompt,
                 ],
             ],
         ];
 
         $response = Http::timeout(1000)
-            ->post('http://localhost:1234/v1/chat/completions', $input_data);
+        ->post('http://localhost:1234/v1/chat/completions', $input_data);
         // withHeaders([
         //     'Authorization' => 'Bearer '.$apiKey,
         //     'Content-Type' => 'application/json',
         // ])
+            
 
         if ($response->failed()) {
             throw new RequestException($response);

@@ -18,7 +18,7 @@ class DashboardTest extends TestCase
     /** @test */
     public function unauthenticated_users_cant_access_admin_dashboard()
     {
-        $this->get('/admin/dashboard')->assertRedirect('/login');
+        $this->get('/dashboard')->assertRedirect('/login');
     }
 
     /** @test */
@@ -26,7 +26,7 @@ class DashboardTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        $response = $this->get('/admin/dashboard');
+        $response = $this->get('/dashboard');
 
         $response->assertStatus(200);
     }
@@ -36,6 +36,6 @@ class DashboardTest extends TestCase
     {
         $this->loginAsAdmin();
 
-        $this->get('/admin/dashboard')->assertOk();
+        $this->get('/dashboard')->assertOk();
     }
 }

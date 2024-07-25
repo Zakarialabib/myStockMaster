@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Currency\Edit;
+use App\Http\Livewire\Currency\Edit;
 use Livewire\Livewire;
 use App\Models\Currency;
 
@@ -25,14 +25,16 @@ it('tests the update currency can component', function () {
     Livewire::test(Edit::class, ['id' => $currency->id])
         ->set('currency.name', 'Us Dollar')
         ->set('currency.code', 'USD')
-        ->set('currency.locale', '$')
+        ->set('currency.symbol', '$')
+        ->set('currency.exchange_rate', '1')
         ->call('update')
         ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
-        'name'   => 'Us Dollar',
-        'code'   => 'USD',
-        'locale' => '$',
+        'name'          => 'Us Dollar',
+        'code'          => 'USD',
+        'symbol'        => '$',
+        'exchange_rate' => '1',
     ]);
 });
 
@@ -45,11 +47,13 @@ it('tests the edit user component validation', function () {
     Livewire::test(Edit::class, ['id' => $currency->id])
         ->set('currency.name', '')
         ->set('currency.code', '')
-        ->set('currency.locale', '')
+        ->set('currency.symbol', '')
+        ->set('currency.exchange_rate', '')
         ->call('update')
         ->assertHasErrors(
             ['currency.name' => 'required'],
-            ['currency.code'   => 'required'],
-            ['currency.locale' => 'required'],
+            ['currency.code'          => 'required'],
+            ['currency.symbol'        => 'required'],
+            ['currency.exchange_rate' => 'required'],
         );
 });

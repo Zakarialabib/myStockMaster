@@ -4,7 +4,8 @@ import '../css/select.css';
 import '../css/theme.css'; 
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import {livewire_hot_reload} from 'virtual:livewire-hot-reload'
+livewire_hot_reload();
 
 import swiper from 'swiper';
 import 'swiper/css/bundle';
@@ -15,6 +16,11 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import flatpickr from "flatpickr";
 import 'flatpickr/dist/flatpickr.min.css';
 window.flatpickr = flatpickr;
+
+import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
+import focus from "@alpinejs/focus";
+import intersect from "@alpinejs/intersect";
 
 import Sortable from 'sortablejs';
 window.Sortable = Sortable;
@@ -46,8 +52,21 @@ Alpine.data("mainState", () => {
         );
     };
 
+    const setTheme = (value) => {
+        window.localStorage.setItem("dark", value);
+    };
+
+    const enableTheme = (value) => {
+        document.body.dir = value ? "rtl" : "ltr";
+    };
+
     return {
         loadingMask,
+        isDarkMode: getTheme(),
+        toggleTheme() {
+            this.isDarkMode = !this.isDarkMode;
+            setTheme(this.isDarkMode);
+        },
         isSidebarOpen: sessionStorage.getItem("sidebarOpen") === "true",
         handleSidebarToggle() {
             this.isSidebarOpen = !this.isSidebarOpen;
@@ -72,5 +91,8 @@ Alpine.data("mainState", () => {
     };
 });
 
+Alpine.plugin(collapse)
 
-Livewire.start();
+window.Alpine = Alpine;
+
+Alpine.start();

@@ -8,7 +8,7 @@
             <div class="mb-5 lg:mb-0">
                 <h2 class="mb-1 text-2xl font-bold">{{ __('Dashboard') }}</h2>
                 <div class="flex items-center">
-                    <a class="flex items-center text-sm text-gray-500" href="{{ route('dashboard') }}">
+                    <a class="flex items-center text-sm text-gray-500" href="{{ route('home') }}">
                         <span class="inline-block mx-2">
                             <svg class="h-4 w-4 text-gray-500" viewBox="0 0 16 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
     <x-card>
         <div class="flex flex-wrap">
             <div class="lg:w-1/2 sm:w-full h-full">
-                <livewire:utils.search-product />
+                <livewire:search-product />
             </div>
             <div class="lg:w-1/2 sm:w-full h-full">
                 <livewire:adjustment.create />

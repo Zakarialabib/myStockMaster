@@ -1,15 +1,12 @@
 <div>
-    @section('title', __('Barcode Generator'))
-    <x-theme.breadcrumb :title="__('Barcode Generator')" :parent="route('products.index')" :parentName="__('Products List')" :childrenName="__('Barcode Generator')" />
-
     <div class="flex flex-row">
         <div class="w-full px-2">
-            <livewire:utils.search-product />
+            <livewire:search-product />
         </div>
 
         <div class="w-full px-2">
             <x-validation-errors class="mb-4" :errors="$errors" />
-            <x-select-list :options="$this->warehouses" wire:model.live="warehouse_id" label="Warehouse" required class="mb-3" />
+            <x-select-list :options="$this->warehouses" wire:model="warehouse_id" label="Warehouse" required class="mb-3" />
             <x-table>
                 <x-slot name="thead">
                     <x-table.th>{{ __('Product Name') }}</x-table.th>
@@ -28,12 +25,12 @@
                                 <x-table.td>{{ $product['name'] }}</x-table.td>
                                 <x-table.td>{{ $product['price'] }}</x-table.td>
                                 <x-table.td style="width: 200px;">
-                                    <x-input wire:model.live="products.{{ $index }}.quantity" type="text"
+                                    <x-input wire:model="products.{{ $index }}.quantity" type="text"
                                         min="0" max="100" required />
                                 </x-table.td>
                                 <x-table.td>
                                     <select name="barcodeSize" id="barcodeSize"
-                                        wire:model.live="products.{{ $index }}.barcodeSize">
+                                        wire:model="products.{{ $index }}.barcodeSize">
                                         <option value="1">{{ __('Small') }}</option>
                                         <option value="2">{{ __('Medium') }}</option>
                                         <option value="3">{{ __('Large') }}</option>
@@ -66,14 +63,13 @@
     <div class="w-full px-2 py-6">
 
         <div wire:loading wire:target="generateBarcodes" class="w-full">
-            <div class="flex justify-center">
+            <div class="flex justify-center">">
                 <x-loading />
             </div>
         </div>
 
         @if (!empty($barcodes))
-            <div class="h-48 flex flex-wrap items-center justify-center border-collapse border border-gray-300 rounded"
-                wire:loading.class="opacity-50">
+            <div class="flex flex-wrap justify-center border-collapse" wire:loading.class="opacity-50">
                 @foreach ($barcodes as $barcode)
                     <div class="lg:w-1/3 md:w-1/4 sm:w-1/2" style="border: 1px solid #ffffff; border-style: dashed;">
                         <p class="text-black font-bold text-lg text-center my-2">

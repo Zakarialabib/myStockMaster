@@ -1,31 +1,7 @@
 <div>
-    @section('title', __('Brands List'))
-
-    <x-theme.breadcrumb :title="__('Brands List')" :parent="route('brands.index')" :parentName="__('Brands')">
-        <x-dropdown align="right" width="48" class="w-auto mr-2">
-            <x-slot name="trigger" class="inline-flex">
-                <x-button secondary type="button" class="text-white flex items-center">
-                    <i class="fas fa-angle-double-down w-4 h-4"></i>
-                </x-button>
-            </x-slot>
-            <x-slot name="content">
-                @can('brand_import')
-                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
-                        {{ __('Import') }}
-                    </x-dropdown-link>
-                @endcan
-            </x-slot>
-        </x-dropdown>
-
-        @can('brand_create')
-            <x-button primary type="button" wire:click="dispatchTo('brands.create', 'createModal')">
-                {{ __('Create Brand') }}
-            </x-button>
-        @endcan
-    </x-theme.breadcrumb>
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
+            <select wire:model="perPage"
                 class="w-20 border border-gray-300 rounded-md shadow-sm py-2 px-4 bg-white text-sm leading-5 font-medium text-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
@@ -49,7 +25,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -57,7 +33,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input wire:model.live="selectPage" type="checkbox" />
+                <input wire:model="selectPage" type="checkbox" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
@@ -74,7 +50,7 @@
             @forelse($brands as $brand)
                 <x-table.tr>
                     <x-table.td>
-                        <input type="checkbox" value="{{ $brand->id }}" wire:model.live="selected">
+                        <input type="checkbox" value="{{ $brand->id }}" wire:model="selected">
                     </x-table.td>
                     <x-table.td>
                         {{ $brand->name }}
@@ -86,15 +62,14 @@
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
                             @can('brand_update')
-                                <x-button primary
-                                    wire:click="dispatchTo('brands.edit','editModal', { id: '{{ $brand->id }}' } )"
-                                    type="button" wire:loading.attr="disabled">
+                                <x-button primary wire:click="$emit('editModal', {{ $brand->id }})" type="button"
+                                    wire:loading.attr="disabled">
                                     <i class="fas fa-edit"></i>
                                 </x-button>
                             @endcan
                             @can('brand_delete')
-                                <x-button danger wire:click="dispatch('deleteModal',{ id: '{{ $brand->id }}'})"
-                                    type="button" wire:loading.attr="disabled">
+                                <x-button danger wire:click="$emit('deleteModal', {{ $brand->id }})" type="button"
+                                    wire:loading.attr="disabled">
                                     <i class="fas fa-trash"></i>
                                 </x-button>
                             @endcan
@@ -117,8 +92,6 @@
         </div>
     </div>
 
-    @livewire('brands.show', ['brand' => $brand])
-
     <!-- Edit Modal -->
     @livewire('brands.edit', ['brand' => $brand])
     <!-- End Edit modal -->
@@ -128,7 +101,7 @@
     <!-- End Create modal -->
 
     <!-- Import modal -->
-    <x-modal wire:model.live="importModal">
+    <x-modal wire:model="importModal">
         <x-slot name="title">
             <div class="flex justify-between items-center">
                 {{ __('Import Excel') }}
@@ -139,13 +112,13 @@
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit="import">
+            <form wire:submit.prevent="import">
                 <div class="mb-4">
                     <div class="my-4">
-                        <x-label for="file" :value="__('Import')" />
-                        <x-input id="file" class="block mt-1 w-full" type="file" name="file"
-                            wire:model="file" />
-                        <x-input-error :messages="$errors->get('file')" for="file" class="mt-2" />
+                        <x-label for="import" :value="__('Import')" />
+                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
+                            wire:model.defer="import" />
+                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
                     </div>
 
                     <div class="w-full flex justify-start">
@@ -158,5 +131,28 @@
         </x-slot>
     </x-modal>
     <!-- End Import modal -->
+
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:load', function() {
+                window.livewire.on('deleteModal', brandId => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.livewire.emit('delete', brandId)
+                        }
+                    })
+                })
+            })
+        </script>
+    @endpush
+
 
 </div>

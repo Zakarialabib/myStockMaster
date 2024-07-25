@@ -7,14 +7,16 @@ namespace App\Models;
 use App\Enums\IntegrationType;
 use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
-use App\Traits\HasUuid;
+use App\Traits\GetModelByUuid;
+use App\Traits\UuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Integration extends Model
 {
     use HasAdvancedFilter;
-    use HasUuid;
+    use GetModelByUuid;
+    use UuidGenerator;
     use HasFactory;
 
     public const ATTRIBUTES = [
@@ -55,6 +57,16 @@ class Integration extends Model
         'status' => Status::class,
         'type'   => IntegrationType::class,
     ];
+
+    public function getTypeName(): string
+    {
+        return match ($this->type) {
+            IntegrationType::CUSTOM      => 'Custom',
+            IntegrationType::WOOCOMMERCE => 'WooCommerce',
+            IntegrationType::SHOPIFY     => 'Shopify',
+            default                      => 'Unknown'
+        };
+    }
 
     public function scopeActive($query)
     {

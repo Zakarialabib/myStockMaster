@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Customers\Index;
+use App\Http\Livewire\Customers\Index;
 
 test('the livewire customers component can be viewed', function () {
     $this->withoutExceptionHandling();

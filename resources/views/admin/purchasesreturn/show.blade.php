@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb border-0 m-0">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Home') }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">Purchase Returns</a></li>
         <li class="breadcrumb-item active">{{ __('Details') }}</li>
     </ol>
@@ -127,7 +127,7 @@
                                     </tr>
                                     <tr>
                                         <td class="left"><strong>{{ __('Tax') }}
-                                                ({{ format_percentage($purchase_return->tax_percentage) }})</strong></td>
+                                                ({{ $purchase_return->tax_percentage }}%)</strong></td>
                                         <td class="right">{{ format_currency($purchase_return->tax_amount) }}</td>
                                     </tr>
                                     <tr>

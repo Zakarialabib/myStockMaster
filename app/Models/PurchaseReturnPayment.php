@@ -21,7 +21,7 @@ class PurchaseReturnPayment extends Model
         'amount',
         'note',
         'purchase_return_id',
-        'payment_id',
+        'payment_method',
         'created_at',
         'updated_at',
     ];
@@ -56,7 +56,7 @@ class PurchaseReturnPayment extends Model
     /**
      * Interact with the expenses amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function amount(): Attribute
     {

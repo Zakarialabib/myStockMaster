@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Product;
+use App\Models\Warehouse;
 
 return new class () extends Migration {
     /**
@@ -17,8 +18,8 @@ return new class () extends Migration {
     {
         Schema::create('price_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Product::class)->nullable()->constrained('products')->cascadeOnDelete();
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Warehouse::class)->constrained()->cascadeOnDelete();
             $table->integer('cost');
             $table->date('effective_date')->nullable();
             $table->date('expiry_date')->nullable();

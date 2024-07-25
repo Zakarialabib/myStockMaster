@@ -1,5 +1,5 @@
 <div
-    x-data="{ value: @entangle($attributes->wire('model')).live, picker: undefined }"
+    x-data="{ value: @entangle($attributes->wire('model')), picker: undefined }"
     x-init="new Pikaday({ field: $refs.input, format: 'MM/DD/YYYY', onOpen() { this.setDate($refs.input.value) } })"
     x-on:change="value = $event.target.value"
     class="flex rounded-md shadow-sm"
@@ -11,7 +11,7 @@
     </span>
 
     <input
-        {{ $attributes->whereDoesntStartWith('wire:model.live') }}
+        {{ $attributes->whereDoesntStartWith('wire:model') }}
         x-ref="input"
         x-bind:value="value"
         class="rounded-none rounded-r-md flex-1 form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"

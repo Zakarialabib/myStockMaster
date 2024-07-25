@@ -42,7 +42,7 @@ class SaleReturnDetail extends Model
     /**
      * get price attribute
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function price(): Attribute
     {
@@ -54,7 +54,7 @@ class SaleReturnDetail extends Model
     /**
      * Interact with unit price
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -66,7 +66,7 @@ class SaleReturnDetail extends Model
     /**
      * get subtotal attribute
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -78,7 +78,7 @@ class SaleReturnDetail extends Model
     /**
      * Interact with shipping amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -90,7 +90,7 @@ class SaleReturnDetail extends Model
     /**
      * Interact with shipping amount
      *
-     * @return Attribute
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function productTaxAmountAttribute(): Attribute
     {
