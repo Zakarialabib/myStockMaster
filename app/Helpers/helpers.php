@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Number;
+
 if ( ! function_exists('settings')) {
     function settings()
     {
         return cache()->rememberForever('settings', function () {
-            return \App\Models\Setting::with('currency')->firstOrFail();
+            if (Schema::hasTable('settings')) {
+                return App\Models\Setting::with('currency')->first();
+            }
+
+            return null;
         });
     }
 }
@@ -19,14 +26,37 @@ if ( ! function_exists('format_currency')) {
         }
 
         $settings = settings();
-        $position = $settings->default_currency_position;
-        $symbol = $settings->currency->symbol;
-        $decimalSeparator = $settings->currency->decimal_separator;
-        $thousandSeparator = $settings->currency->thousand_separator;
+        $currencyCode = $settings->currency->code ?? 'USD'; // Assuming currency code is stored in settings, defaulting to USD if not available
+        $locale = $settings->currency->locale ?? 'en_US';  // Assuming locale is stored or default to 'en_US'
 
-        return $position === 'prefix'
-            ? $symbol.number_format((float) $value, 2, $decimalSeparator, $thousandSeparator)
-            : number_format((float) $value, 2, $decimalSeparator, $thousandSeparator).$symbol;
+        // $value change to type int|float, string given,
+        return Number::currency(
+            intval($value),
+            $currencyCode,
+            $locale
+        );
+    }
+}
+
+// formatPercentage --> Number::percentage(25) // 25%
+
+if ( ! function_exists('format_percentage')) {
+    function format_percentage($value, $decimals = 2)
+    {
+        return Number::percentage($value, $decimals);
+    }
+}
+
+if ( ! function_exists('checkInvoiceControl')) {
+    function checkInvoiceControl($name)
+    {
+        $invoiceControl = settings()->invoice_control;
+
+        foreach ($invoiceControl as $control) {
+            if ($control['name'] === $name) {
+                return $control['status'];
+            }
+        }
     }
 }
 

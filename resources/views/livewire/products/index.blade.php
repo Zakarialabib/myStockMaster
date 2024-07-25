@@ -1,16 +1,49 @@
 <div>
+    @section('title', __('Produtcs'))
+    <x-theme.breadcrumb :title="__('Products List')" :parent="route('products.index')" :parentName="__('Products List')">
+        <x-dropdown align="right" width="48" class="w-auto mr-2">
+            <x-slot name="trigger" class="inline-flex">
+                <x-button secondary type="button" class="text-white flex items-center">
+                    <i class="fas fa-angle-double-down w-4 h-4"></i>
+                </x-button>
+            </x-slot>
+            <x-slot name="content">
+                @can('product_import')
+                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
+                        {{ __('Excel Import') }}
+                    </x-dropdown-link>
+                @endcan
+                @can('product_export')
+                    <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                        {{ __('PDF Export') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                        {{ __('Excel Export') }}
+                    </x-dropdown-link>
+                @endcan
+            </x-slot>
+        </x-dropdown>
+        @can('product_create')
+            <x-button primary type="button" wire:click="dispatchTo('products.create', 'createModal')">
+                {{ __('Create products') }}
+            </x-button>
+        @endcan
+    </x-theme.breadcrumb>
+
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model="perPage"
-                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model.live="perPage"
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
             @if ($selected)
-                <x-button danger type="button" wire:click="deleteSelectedModal" class="ml-3">
-                    <i class="fas fa-trash"></i>
-                </x-button>
+                @can('product_delete')
+                    <x-button danger type="button" wire:click="deleteSelectedModal" class="ml-3">
+                        <i class="fas fa-trash"></i>
+                    </x-button>
+                @endcan
             @endif
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
@@ -20,21 +53,16 @@
                     {{ __('Entries selected') }}
                 </p>
             @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <div class="my-2">
-                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
-            </div>
-        </div>
-        <div class="w-full flex justify-start items-center">
-            <x-label for="category" :value="__('Filter by category')" />
-            <select wire:model="category_id" name="category_id" id="category_id"
-                class="w-full block py-2 px-3 ml-2 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
-                <option value="all"> {{ __('Select all') }} </option>
+            <select wire:model.live="category_id" name="category_id" id="category_id"
+                class="w-36 block py-2 px-3 ml-2 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                <option value=""> {{ __('Select Category') }} </option>
                 @foreach ($this->categories as $index => $category)
                     <option value="{{ $index }}">{{ $category }}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
         </div>
     </div>
 
@@ -69,10 +97,10 @@
             @forelse($products as $product)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $product->id }}">
                     <x-table.td>
-                        <input type="checkbox" value="{{ $product->id }}" wire:model="selected">
+                        <input type="checkbox" value="{{ $product->id }}" wire:model.live="selected">
                     </x-table.td>
                     <x-table.td>
-                        <button type="button" wire:click="$emit('showModal',{{ $product->id }})"
+                        <button type="button" wire:click="dispatchTo('products.show','showModal',{{ $product->id }})"
                             class="whitespace-nowrap hover:text-blue-400 active:text-blue-400">
                             {{ $product->name }} <br>
                             <x-badge type="success">
@@ -109,11 +137,14 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link wire:click="$emit('showModal',{{ $product->id }})"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-eye"></i>
-                                    {{ __('View') }}
-                                </x-dropdown-link>
+                                @can('product_show')
+                                    <x-dropdown-link
+                                        wire:click="dispatchTo('products.show','showModal',{ id :'{{ $product->id }}'})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('View') }}
+                                    </x-dropdown-link>
+                                @endcan
                                 @if (settings()->telegram_channel)
                                     <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
                                         wire:loading.attr="disabled">
@@ -126,16 +157,20 @@
                                     <i class="fas fa-paper-plane"></i>
                                     {{ __('Send to Whatsapp') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link wire:click="$emit('editModal', {{ $product->id }})"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-edit"></i>
-                                    {{ __('Edit') }}
-                                </x-dropdown-link>
-                                <x-dropdown-link wire:click="deleteModal({{ $product->id }})"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-trash"></i>
-                                    {{ __('Delete') }}
-                                </x-dropdown-link>
+                                @can('product_update')
+                                    <x-dropdown-link href="{{ route('product.edit', $product) }}"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                @endcan
+                                @can('product_delete')
+                                    <x-dropdown-link wire:click="deleteModal({{ $product->id }})"
+                                        wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                @endcan
                             </x-slot>
                         </x-dropdown>
 
@@ -166,44 +201,10 @@
     </div>
 
     <!-- Show Modal -->
-    @livewire('products.show', ['product' => $product], key('show-modal-' . $product?->id))
+    @livewire('products.show', ['product' => $this->product], key('show-modal-' . $this->product?->id))
     <!-- End Show Modal -->
-
-    <!-- Edit Modal -->
-    @livewire('products.edit', ['product' => $product], key('edit-modal-' . $product?->id))
-    <!-- End Edit Modal -->
 
     <livewire:products.create />
 
-    {{-- Import modal --}}
-
-    <x-modal wire:model="importModal">
-        <x-slot name="title">
-            <div class="flex justify-between items-center">
-                {{ __('Import Excel') }}
-                <x-button primary wire:click="downloadSample" type="button">
-                    {{ __('Download Sample') }}
-                </x-button>
-            </div>
-        </x-slot>
-
-        <x-slot name="content">
-            <form wire:submit.prevent="import">
-                <div class="space-y-4">
-                    <div class="mt-4">
-                        <x-label for="import" :value="__('Import')" />
-                        <x-input id="import" class="block mt-1 w-full" type="file" name="import"
-                            wire:model.defer="import" />
-                        <x-input-error :messages="$errors->get('import')" for="import" class="mt-2" />
-                    </div>
-
-                    <div class="w-full px-3">
-                        <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
-                            {{ __('Import') }}
-                        </x-button>
-                    </div>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
+    <livewire:products.import />
 </div>

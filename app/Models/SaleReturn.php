@@ -29,8 +29,7 @@ class SaleReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_status',
-        'payment_method',
+        'payment_id',
         'customer_id',
 
     ];
@@ -58,15 +57,14 @@ class SaleReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_status',
-        'payment_method',
+        'payment_id',
         'note',
         'customer_id',
     ];
 
     protected $casts = [
-        'status'         => SaleReturnStatus::class,
-        'payment_status' => PaymentStatus::class,
+        'status' => SaleReturnStatus::class,
+        // 'payment_status' => PaymentStatus::class,
     ];
 
     /** @return HasMany<SaleReturnDetail> */
@@ -84,6 +82,11 @@ class SaleReturn extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
+    }
+
+    public function cashRegister(): BelongsTo
+    {
+        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
     protected static function boot()
@@ -118,7 +121,7 @@ class SaleReturn extends Model
     /**
      * get shipping amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -130,7 +133,7 @@ class SaleReturn extends Model
     /**
      * get paid amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -142,7 +145,7 @@ class SaleReturn extends Model
     /**
      * get total amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -154,7 +157,7 @@ class SaleReturn extends Model
     /**
      * get due amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -166,7 +169,7 @@ class SaleReturn extends Model
     /**
      * get tax amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -178,7 +181,7 @@ class SaleReturn extends Model
     /**
      * get discount amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {

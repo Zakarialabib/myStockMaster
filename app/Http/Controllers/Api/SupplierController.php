@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\BaseController;
@@ -7,30 +9,31 @@ use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class SupplierController extends BaseController
 {
-     /**
+    /**
      * Retrieve a list of suppliers with optional filters and pagination.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      *
      */
     public function index(Request $request)
     {
         try {
             if ($request->get('_end') !== null) {
-                //
                 $limit = $request->get('_end') ? $request->get('_end') : 10;
                 $offset = $request->get('_start') ? $request->get('_start') : 0;
-                //
+
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ?  $request->get('_sort') : 'id';
+                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
                 //Filters
                 $where_raw = ' 1=1 ';
 
-                //capture sort fields 
+                //capture sort fields
                 $sort_array = explode(',', $sort);
+
                 if (count($sort_array) > 0) {
                     // retireve ordered and limit suppliers list
                     $suppliers = Supplier::whereRaw($where_raw)
@@ -49,8 +52,9 @@ class SupplierController extends BaseController
                 // retireve all suppliers
                 $suppliers = Supplier::get();
             }
+
             return $this->sendResponse($suppliers, 'Supplier List');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
@@ -58,19 +62,22 @@ class SupplierController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      *
      */
     public function store(Request $request)
     {
         DB::beginTransaction();
+
         try {
             $input = $request->all();
             $Supplier = Supplier::create($input);
             DB::commit();
+
             return $this->sendResponse($Supplier, 'Supplier created successfully');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
+
             return $this->sendError($e->getMessage());
         }
     }
@@ -85,12 +92,13 @@ class SupplierController extends BaseController
     {
         try {
             $Supplier = Supplier::find($id);
+
             if (is_null($Supplier)) {
                 return $this->sendError('Supplier not found');
             } else {
                 return $this->sendResponse($Supplier, 'Supplier retrieved successfully');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
@@ -98,7 +106,7 @@ class SupplierController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
      *
      */
@@ -121,9 +129,11 @@ class SupplierController extends BaseController
         try {
             $Supplier = Supplier::findOrFail($id);
             $Supplier->delete();
+
             return $this->sendResponse($Supplier, 'Supplier deleted successfully');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
+
             return $this->sendError($e->getMessage());
         }
     }

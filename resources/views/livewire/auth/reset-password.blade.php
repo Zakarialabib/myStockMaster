@@ -1,0 +1,57 @@
+@section('title', 'Reset password')
+
+<div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <a href="/" wire:navigate>
+            <x-theme.logo class="w-auto h-16 mx-auto text-indigo-600" />
+        </a>
+
+        <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 leading-9">
+            Reset password
+        </h2>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
+            <form wire:submit="resetPassword">
+                <input wire:model="token" type="hidden">
+
+                <div>
+                    <x-label for="email" :value="__('Email')" />
+
+                    <x-input wire:model="email" id="email" type="email" required autofocus />
+
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <div class="mt-6">
+                    <x-label for="password" :value="__('Password')" />
+
+                    <x-input wire:model="password" id="password" type="password" required />
+
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                </div>
+
+                <div class="mt-6">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 leading-5">
+                        Confirm Password
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model="passwordConfirmation" id="password_confirmation" type="password" required
+                            class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 appearance-none rounded-md focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <span class="block w-full rounded-md shadow-sm">
+                        <button type="submit"
+                            class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            Reset password
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

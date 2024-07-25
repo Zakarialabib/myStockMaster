@@ -21,7 +21,7 @@ class ExportController extends Controller
      *
      * @param mixed $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function salePos($id): Response
     {

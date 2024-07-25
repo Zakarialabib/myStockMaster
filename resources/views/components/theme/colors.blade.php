@@ -7,6 +7,6 @@
 <div>
     @foreach ($colors as $color)
         <button class="w-6 h-6 rounded-full bg-{{ $color }} cursor-pointer"
-            wire:click="$emit('colorSelected', '{{ $color }}')"></button>
+            wire:click="$dispatch('colorSelected', '{{ $color }}')"></button>
     @endforeach
 </div>

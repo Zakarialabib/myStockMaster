@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Customers\Edit;
+use App\Livewire\Customers\Edit;
 use App\Models\Customer;
 use Livewire\Livewire;
 

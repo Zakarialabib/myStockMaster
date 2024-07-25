@@ -19,7 +19,7 @@ class BrandsImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     /**
      * @param array $row
      *
-     * @return \App\Models\Brand
+     * @return Brand
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)

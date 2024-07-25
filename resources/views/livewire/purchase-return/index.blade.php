@@ -1,8 +1,8 @@
 <div>
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model="perPage"
-                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model.live="perPage"
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -10,7 +10,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -18,7 +18,7 @@
     <x-table>
         <x-slot name="thead">
             <x-table.th>
-                <input type="checkbox" wire:model="selectPage" />
+                <input type="checkbox" wire:model.live="selectPage" />
             </x-table.th>
             <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
                 {{ __('Reference') }}
@@ -43,7 +43,7 @@
             @forelse ($purchasereturns as $purchasereturn)
                 <x-table.tr>
                     <x-table.td class="pr-0">
-                        <input type="checkbox" value="{{ $purchasereturn->id }}" wire:model="selected" />
+                        <input type="checkbox" value="{{ $purchasereturn->id }}" wire:model.live="selected" />
                     </x-table.td>
                     <x-table.td>
                         {{ $purchasereturn->reference }}
@@ -76,15 +76,15 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    @can('access_purchase_payments')
-                                        <x-dropdown-link wire:click="$emit('showPayments', {{ $purchasereturn->id }})"
+                                    @can('purchase_payment_access')
+                                        <x-dropdown-link wire:click="$dispatch('showPayments', {{ $purchasereturn->id }})"
                                             primary wire:loading.attr="disabled">
                                             <i class="fas fa-money-bill-wave"></i>
                                             {{ __('Payments') }}
                                         </x-dropdown-link>
                                     @endcan
 
-                                    @can('access_purchase_payments')
+                                    @can('purchase_payment_access')
                                         @if ($purchasereturn->due_amount > 0)
                                             <x-dropdown-link wire:click="paymentModal({{ $purchasereturn->id }})" primary
                                                 wire:loading.attr="disabled">
@@ -141,7 +141,7 @@
 
 
     {{-- Show PurchaseReturn --}}
-    <x-modal wire:model="showModal">
+    <x-modal wire:model.live="showModal">
         <x-slot name="title">
             <div class="w-full flex">
                 {{ __('Show PurchaseReturn') }} - {{ __('Reference') }}:
@@ -311,7 +311,7 @@
 
     @if (!empty($paymentModal))
         <div>
-            <x-modal wire:model="paymentModal">
+            <x-modal wire:model.live="paymentModal">
                 <x-slot name="title">
                     <h2 class="text-lg font-medium text-gray-900">
                         {{ __('PurchaseReturn Payment') }}
@@ -319,21 +319,21 @@
 
                 </x-slot>
                 <x-slot name="content">
-                    <form wire:submit.prevent="paymentSave">
+                    <form wire:submit="paymentSave">
 
                         <x-validation-errors class="mb-4" :errors="$errors" />
 
-                        <div class="flex flex-wrap -mx-2 mb-3">
+                        <div class="flex flex-wrap mb-3">
 
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="reference" :value="__('Reference')" required />
-                                <x-input type="text" wire:model="reference" id="reference"
+                                <x-input type="text" wire:model.live="reference" id="reference"
                                     class="block w-full mt-1" required />
                                 <x-input-error :messages="$errors->first('reference')" />
                             </div>
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="date" :value="__('Date')" required />
-                                <x-input type="date" wire:model="date" id="date" class="block w-full mt-1"
+                                <x-input type="date" wire:model.live="date" id="date" class="block w-full mt-1"
                                     required />
                                 <x-input-error :messages="$errors->first('date')" />
                             </div>
@@ -341,14 +341,14 @@
 
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="amount" :value="__('Amount')" required />
-                                <x-input type="text" wire:model.defer="amount" id="amount"
+                                <x-input type="text" wire:model="amount" id="amount"
                                     class="block w-full mt-1" required />
                                 <x-input-error :messages="$errors->first('amount')" />
                             </div>
 
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="payment_method" :value="__('Payment Method')" required />
-                                <select wire:model="payment_method"
+                                <select wire:model.live="payment_method"
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="payment_method" id="payment_method" required>
                                     <option value="Cash">{{ __('Cash') }}</option>
@@ -362,7 +362,7 @@
 
                         <div class="mb-4  px-3">
                             <x-label for="note" :value="__('Note')" />
-                            <textarea wire:model="note"
+                            <textarea wire:model.live="note"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 rows="2" name="note">{{ old('note') }}</textarea>
                         </div>
@@ -382,7 +382,7 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('livewire:load', function() {
+        document.addEventListener('livewire:init', function() {
             window.livewire.on('deleteModal', purchaseId => {
                 Swal.fire({
                     title: 'Are you sure?',
@@ -394,7 +394,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.livewire.emit('delete', purchaseId)
+                        window.Livewire.dispatch('delete', purchaseId)
                     }
                 })
             })

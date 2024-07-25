@@ -8,6 +8,6 @@
     $divider = $hasDivider ? $divider : '';
 @endphp
 
-<tr {{ $attributes->merge(['class' => "hover:bg-indigo-50 dark:hover:bg-indigo-500/25 {$divider}"]) }}>
+<tr {{ $attributes->merge(['class' => "hover:bg-indigo-50 {$divider}"]) }}>
     {{ $slot }}
 </tr>

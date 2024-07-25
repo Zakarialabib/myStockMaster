@@ -12,9 +12,9 @@
             {{-- Form File picker --}}
             <input type="file" class="hidden" accept="{{ $rules ?? '' }}" {{ ($multiple ?? false) ? 'multiple':'' }}
                 @if ( $defer ?? true )
-                    wire:model.defer='{{ $name ?? '' }}'
-                @else
                     wire:model='{{ $name ?? '' }}'
+                @else
+                    wire:model.live='{{ $name ?? '' }}'
                 @endif
             />
 

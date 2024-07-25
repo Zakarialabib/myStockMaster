@@ -8,8 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
-use App\Traits\GetModelByUuid;
-use App\Traits\UuidGenerator;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,8 +18,7 @@ class Sale extends Model
 {
     use HasAdvancedFilter;
     use SaleScope;
-    use UuidGenerator;
-    use GetModelByUuid;
+    use HasUuid;
 
     public const ATTRIBUTES = [
         'id',
@@ -38,8 +36,7 @@ class Sale extends Model
         'paid_amount',
         'due_amount',
         'status',
-        'payment_status',
-        'payment_method',
+        'payment_id',
         'shipping_status',
         'created_at',
         'updated_at',
@@ -54,34 +51,16 @@ class Sale extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
-        'uuid',
-        'date',
-        'reference',
-        'customer_id',
-        'user_id',
-        'warehouse_id',
-        'tax_percentage',
-        'tax_amount',
-        'payment_date',
-        'discount_percentage',
-        'discount_amount',
-        'shipping_amount',
-        'total_amount',
-        'paid_amount',
-        'due_amount',
-        'status',
-        'payment_status',
-        'payment_method',
-        'shipping_status',
-        'note',
-        'created_at',
-        'updated_at',
+        'id', 'uuid', 'date', 'reference', 'customer_id', 'user_id', 'warehouse_id',
+        'tax_percentage', 'tax_amount', 'payment_date', 'discount_percentage', 'discount_amount',
+        'shipping_amount', 'total_amount', 'paid_amount', 'cash_register_id', 'due_amount',
+        'status',  'payment_id', 'shipping_status', 'note',
     ];
 
     protected $casts = [
-        'status'         => SaleStatus::class,
-        'payment_status' => PaymentStatus::class,
+        'status' => SaleStatus::class,
+        // 'payment_status' => PaymentStatus::class,
+
     ];
 
     protected static function boot()
@@ -101,11 +80,6 @@ class Sale extends Model
 
             $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
-    }
-
-    public function saleDetails(): HasMany
-    {
-        return $this->hasMany(SaleDetails::class);
     }
 
     public function salePayments(): HasMany
@@ -129,6 +103,21 @@ class Sale extends Model
         );
     }
 
+    public function cashRegister(): BelongsTo
+    {
+        return $this->belongsTo(CashRegister::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function saleDetails(): HasMany
+    {
+        return $this->hasMany(SaleDetails::class);
+    }
+
     /**
      * @param mixed $query
      *
@@ -147,7 +136,7 @@ class Sale extends Model
     /**
      * get shipping amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -159,7 +148,7 @@ class Sale extends Model
     /**
      * get paid amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -171,7 +160,7 @@ class Sale extends Model
     /**
      * get total amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -183,7 +172,7 @@ class Sale extends Model
     /**
      * get due amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -195,7 +184,7 @@ class Sale extends Model
     /**
      * get tax amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -207,7 +196,7 @@ class Sale extends Model
     /**
      * get discount amount
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {

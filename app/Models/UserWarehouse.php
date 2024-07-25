@@ -18,6 +18,7 @@ class UserWarehouse extends Model
      */
     protected $fillable = [
         'user_id', 'warehouse_id',
+        // 'default_id',
     ];
 
     protected $casts = [

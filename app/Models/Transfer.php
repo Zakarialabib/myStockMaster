@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use App\Support\HasAdvancedFilter;
-use App\Traits\GetModelByUuid;
-use App\Traits\UuidGenerator;
+use App\Traits\HasUuid;
 
 class Transfer extends Model
 {
     use HasFactory;
     use HasAdvancedFilter;
-    use UuidGenerator;
-    use GetModelByUuid;
+    use HasUuid;
 
     public const ATTRIBUTES = [
         'id',
@@ -72,5 +70,10 @@ class Transfer extends Model
             related: User::class,
             foreignKey: 'user_id',
         );
+    }
+
+    public function transferDetails()
+    {
+        return $this->hasMany(TransferDetails::class);
     }
 }

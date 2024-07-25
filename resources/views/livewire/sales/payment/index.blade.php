@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="showPayments">
+    <x-modal wire:model.live="showPayments">
         <x-slot name="title">
             <h2 class="text-lg font-medium text-gray-900">
                 {{ __('Sale Payment') }}
@@ -8,7 +8,7 @@
                 @if ($sale?->due_amount > 0)
                     <x-button 
                     x-on:click="$wire.set('showPayments', false)"
-                    wire:click="$emit('paymentModal', {{ $sale->id }})"
+                    wire:click="$dispatch('paymentModal', {{ $sale->id }})"
                         primary type="button">
                         {{ __('Add Payment') }}
                     </x-button>
@@ -38,7 +38,7 @@
                             <x-table.td>{{ $salepayment->payment_method }}</x-table.td>
                             <x-table.td>
                                 {{-- @can('access_sale_payments')
-                                    <x-button wire:click="$emit('paymentModal', {{ $salepayment->id }} )" type="button"
+                                    <x-button wire:click="$dispatch('paymentModal', {{ $salepayment->id }} )" type="button"
                                         primary>
                                         <i class="fa fa-pen"></i>
                                     </x-button>

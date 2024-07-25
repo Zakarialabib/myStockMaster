@@ -57,7 +57,7 @@ class SyncCustomProducts implements ShouldQueue
                 'quantity'          => $this->data['quantity'] ?? 1,
                 'unit'              => 'pc', // change this
                 'stock_alert'       => $this->data['stock_alert'] ?? 10,
-                'order_tax'         => 0, // change this
+                'tax_amount'        => 0, // change this
                 'tax_type'          => 'inclusive', // change this
             ]);
         } else {
@@ -76,7 +76,7 @@ class SyncCustomProducts implements ShouldQueue
                 'quantity'          => $this->data['quantity'] ?? 1,
                 'unit'              => 'pc', // change this
                 'stock_alert'       => $this->data['stock_alert'] ?? 10,
-                'order_tax'         => 0, // change this
+                'tax_amount'        => 0, // change this
                 'tax_type'          => 'inclusive', // change this
             ]);
         }
