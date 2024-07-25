@@ -1,8 +1,8 @@
 <div>
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model="perPage"
-                class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+            <select wire:model.live="perPage"
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -18,7 +18,7 @@
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
-                <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
             @forelse($permissions as $permission)
                 <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $permission->id }}">
                     <x-table.td>
-                        <input type="checkbox" value="{{ $permission->id }}" wire:model="selected">
+                        <input type="checkbox" value="{{ $permission->id }}" wire:model.live="selected">
                     </x-table.td>
                     <x-table.td>
                         {{ $permission->name }}

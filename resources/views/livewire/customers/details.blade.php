@@ -1,56 +1,60 @@
 <div>
+    @section('title', __('Customer Detail') . '-' . $customer?->name)
+    
+    <x-theme.breadcrumb :title="__('Customer Details')" :parent="route('customers.index')" :parentName="__('Customer List')" childName="{{ $customer->name }}" />
+
     <div class="container px-4 mx-auto">
         <div class="w-full">
             <div class="w-full flex flex-wrap align-center mb-4">
                 <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 w-full">
-                    <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                         <div>
-                            <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            <p class="mb-2 text-lg font-medium text-gray-600">
                                 {{ __('Sales Total') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700">
                                 {{ format_currency($this->totalSales) }}
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                         <div>
-                            <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            <p class="mb-2 text-lg font-medium text-gray-600">
                                 {{ __('Total Payments') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700">
                                 {{ format_currency($this->totalPayments) }}
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                         <div>
-                            <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            <p class="mb-2 text-lg font-medium text-gray-600">
                                 {{ __('Total Sale Returns') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700">
                                 {{ format_currency($this->totalSaleReturns) }}
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                         <div>
-                            <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            <p class="mb-2 text-lg font-medium text-gray-600">
                                 {{ __('Total Due') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700">
                                 {{ format_currency($this->totalDue) }}
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center p-4 bg-white dark:bg-dark-bg dark:text-gray-300 rounded-lg shadow-md">
+                    <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
                         <div>
-                            <p class="mb-2 text-lg font-medium text-gray-600 dark:text-gray-300">
+                            <p class="mb-2 text-lg font-medium text-gray-600">
                                 {{ __('Profit') }}
                             </p>
-                            <p class="text-3xl sm:text-lg font-bold text-indigo-700 dark:text-indigo-600">
-                                {{ format_currency($customer->getProfit()) }}
+                            <p class="text-3xl sm:text-lg font-bold text-indigo-700">
+                                {{-- {{ format_currency($customer->getProfit()) }} --}}
                             </p>
                         </div>
                     </div>
@@ -64,16 +68,18 @@
                 </h2>
                 <div class="flex flex-wrap justify-center">
                     <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-                        <select wire:model="perPage"
-                            class="w-20 block p-3 leading-5 bg-white dark:bg-dark-eval-2 text-gray-700 dark:text-gray-300 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                        <select wire:model.live="perPage"
+                            class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                             @foreach ($paginationOptions as $value)
                                 <option value="{{ $value }}">{{ $value }}</option>
                             @endforeach
                         </select>
                         @if ($selected)
-                            <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
+                            @can('customer_delete')
+                                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                                    <i class="fas fa-trash"></i>
+                                </x-button>
+                            @endcan
                         @endif
                         @if ($this->selectedCount)
                             <p class="text-sm leading-5">
@@ -86,7 +92,8 @@
                     </div>
                     <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
                         <div class="my-2">
-                            <x-input wire:model.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                            <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}"
+                                autofocus />
                         </div>
                     </div>
                 </div>
@@ -94,7 +101,7 @@
                     <x-table>
                         <x-slot name="thead">
                             <x-table.th>
-                                <input type="checkbox" wire:model="selectPage" />
+                                <input type="checkbox" wire:model.live="selectPage" />
                             </x-table.th>
                             <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
                                 {{ __('Date') }}
@@ -102,7 +109,7 @@
                             <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                                 {{ __('Customer') }}
                             </x-table.th>
-                            <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+                            <x-table.th sortable wire:click="sortBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
                                 {{ __('Payment status') }}
                             </x-table.th>
                             <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
@@ -117,10 +124,11 @@
                         </x-slot>
 
                         <x-table.tbody>
-                            @forelse ($this->sales as $sale)
+                            {{-- @forelse ($this->sales as $sale)
                                 <x-table.tr wire:loading.class.delay="opacity-50">
                                     <x-table.td>
-                                        <input type="checkbox" value="{{ $sale->id }}" wire:model="selected" />
+                                        <input type="checkbox" value="{{ $sale->id }}"
+                                            wire:model.live="selected" />
                                     </x-table.td>
                                     <x-table.td>
                                         {{ $sale->date }}
@@ -130,9 +138,9 @@
                                     </x-table.td>
                                     <x-table.td>
                                         @php
-                                            $type = $sale->payment_status->getBadgeType();
+                                            $type = $sale->payment_id->getBadgeType();
                                         @endphp
-                                        <x-badge :type="$type">{{ $sale->payment_status->getName() }}</x-badge>
+                                        <x-badge :type="$type">{{ $sale->payment_id->getName() }}</x-badge>
                                     </x-table.td>
                                     <x-table.td>
                                         {{ format_currency($sale->due_amount) }}
@@ -155,18 +163,17 @@
                                 <x-table.tr>
                                     <x-table.td colspan="7">
                                         <div class="flex justify-center items-center">
-                                            <span
-                                                class="text-gray-400 dark:text-gray-300">{{ __('No results found') }}</span>
+                                            <span class="text-gray-400">{{ __('No results found') }}</span>
                                         </div>
                                     </x-table.td>
                                 </x-table.tr>
-                            @endforelse
+                            @endforelse --}}
                         </x-table.tbody>
                     </x-table>
                 </div>
 
                 <div class="px-6 py-3">
-                    {{ $this->sales->links() }}
+                    {{-- {{ $this->sales->links() }} --}}
                 </div>
 
             </div>

@@ -18,10 +18,7 @@ return new class () extends Migration {
             $table->id();
             $table->string('name', 192);
             $table->string('image')->nullable();
-            $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
             $table->string('origin')->nullable();
             $table->foreignId('category_id')->nullable();
             $table->boolean('status')->default(true);

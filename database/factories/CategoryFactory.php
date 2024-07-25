@@ -20,8 +20,13 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'code' => Str::random(5),
+            'name'        => fake()->name(),
+            'code'        => Str::random(5),
+            'description' => fake()->sentence(),
+            'title'       => fake()->sentence(),
+            'image'       => fake()->imageUrl(),
+            'status'      => fake()->boolean(),
+
         ];
     }
 }

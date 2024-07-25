@@ -6,16 +6,18 @@ namespace App\Models;
 
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
-use App\Traits\GetModelByUuid;
-use App\Traits\UuidGenerator;
+use App\Traits\HasUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -23,8 +25,7 @@ class Product extends Model
     use Notifiable;
     use ProductScope;
     use HasFactory;
-    use GetModelByUuid;
-    use UuidGenerator;
+    use HasUuid;
     use SoftDeletes;
 
     public const ATTRIBUTES = [
@@ -54,9 +55,8 @@ class Product extends Model
         'cost',
         'price',
         'unit',
-        'stock_alert',
         'status',
-        'order_tax',
+        'tax_amount',
         'tax_type',
         'note',
     ];
@@ -64,11 +64,30 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-
             'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
-
         ], true);
         parent::__construct($attributes);
+    }
+
+    // 'slug' => Str::slug($attributes['name'] ?? ''),
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($product) {
+            $product->slug = $product->generateSlug($product->name);
+        });
+    }
+
+    /**
+     * Generate a slug from the product name.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function generateSlug($name)
+    {
+        return Str::slug($name, '-');
     }
 
     public function category(): BelongsTo
@@ -86,21 +105,24 @@ class Product extends Model
         return $this->morphMany(Movement::class, 'movable');
     }
 
-    public function warehouses()
-    {
-        return $this->belongsToMany(Warehouse::class)->using(ProductWarehouse::class)
-            ->withPivot('price', 'qty', 'cost');
-    }
-
-    public function priceHistory()
+    public function priceHistory(): HasMany
     {
         return $this->hasMany(PriceHistory::class);
+    }
+
+    public static function ecommerceProducts()
+    {
+        return static::whereHas('warehouses', static function ($query): void {
+            $query->where('is_ecommerce', 1);
+        })->with(['warehouses' => static function ($query): void {
+            $query->select('product_id', 'qty', 'price', 'old_price', 'is_discount', 'discount_date');
+        }]);
     }
 
     /**
      * Interact with product cost
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function productCost(): Attribute
     {
@@ -113,7 +135,7 @@ class Product extends Model
     /**
      * Interact with product price
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return Attribute
      */
     protected function productPrice(): Attribute
     {
@@ -123,17 +145,24 @@ class Product extends Model
         );
     }
 
-    public function getTotalQuantityAttribute()
+    /** @return BelongsToMany<Warehouse> */
+    public function warehouses(): BelongsToMany
+    {
+        return $this->belongsToMany(Warehouse::class)
+            ->withPivot('qty', 'price', 'cost', 'old_price', 'stock_alert', 'is_discount', 'discount_date', 'is_ecommerce');
+    }
+
+    public function getTotalQuantityAttribute(): int|float|null
     {
         return $this->warehouses->sum('pivot.qty');
     }
 
-    public function getAveragePriceAttribute()
+    public function getAveragePriceAttribute(): int|float|null
     {
         return $this->warehouses->avg('pivot.price');
     }
 
-    public function getAverageCostAttribute()
+    public function getAverageCostAttribute(): int|float|null
     {
         return $this->warehouses->avg('pivot.cost');
     }

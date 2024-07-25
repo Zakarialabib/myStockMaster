@@ -29,7 +29,7 @@
         }
         const chart = new ApexCharts(document.getElementById(`{!! $chartId !!}`), options);
         chart.render();
-        document.addEventListener('livewire:load', () => {
+        document.addEventListener('livewire:init', () => {
             @this.on(`refreshChartData-{!! $chartId !!}`, (chartData) => {
                 chart.updateOptions({
                     xaxis: {

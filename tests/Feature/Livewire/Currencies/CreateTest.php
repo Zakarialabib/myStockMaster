@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Livewire\Currency\Create;
+use App\Livewire\Currency\Create;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -22,16 +22,14 @@ it('tests the create currency can create', function () {
     Livewire::test(Create::class)
         ->set('currency.name', 'Us Dollar')
         ->set('currency.code', 'USD')
-        ->set('currency.symbol', '$')
-        ->set('currency.exchange_rate', '1')
+        ->set('currency.locale', '$')
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
-        'name'          => 'Us Dollar',
-        'code'          => 'USD',
-        'symbol'        => '$',
-        'exchange_rate' => '1',
+        'name'   => 'Us Dollar',
+        'code'   => 'MA',
+        'locale' => '$',
     ]);
 });
 
@@ -42,13 +40,11 @@ it('tests the create user component validation', function () {
     Livewire::test(Create::class)
         ->set('currency.name', '')
         ->set('currency.code', '')
-        ->set('currency.symbol', '')
-        ->set('currency.exchange_rate', '')
+        ->set('currency.locale', '')
         ->call('create')
         ->assertHasErrors(
             ['currency.name' => 'required'],
-            ['currency.code'          => 'required'],
-            ['currency.symbol'        => 'required'],
-            ['currency.exchange_rate' => 'required'],
+            ['currency.code'   => 'required'],
+            ['currency.locale' => 'required'],
         );
 });

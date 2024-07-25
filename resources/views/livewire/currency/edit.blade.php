@@ -7,27 +7,22 @@
         <x-slot name="content">
             <!-- Validation Errors -->
             <x-validation-errors class="mb-4" :errors="$errors" />
-            <form wire:submit.prevent="update">
-                <div class="flex flex-col">
-                    <div class="flex flex-col">
-                        <x-label for="currency.name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" required type="text"
-                            wire:model.lazy="currency.name" />
+            <form wire:submit="update">
+                <div class="flex flex-wrap mb-3">
+                    <div class="md:w-1/2 sm:w-full px-3">
+                        <x-label for="name" :value="__('Name')" required />
+                        <x-input id="name" class="block mt-1 w-full" required type="text" wire:model="name" />
+                        <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
                     </div>
-                    <div class="flex flex-col">
-                        <x-label for="currency.code" :value="__('Code')" />
-                        <x-input id="code" class="block mt-1 w-full" type="text"
-                            wire:model.lazy="currency.code" />
+                    <div class="md:w-1/2 sm:w-full px-3">
+                        <x-label for="code" :value="__('Code')" required />
+                        <x-input id="code" class="block mt-1 w-full" type="text" wire:model="code" />
+                        <x-input-error :messages="$errors->get('code')" for="code" class="mt-2" />
                     </div>
-                    <div class="flex flex-col">
-                        <x-label for="currency.symbol" :value="__('Symbol')" />
-                        <x-input id="symbol" class="block mt-1 w-full" type="text"
-                            wire:model.lazy="currency.symbol" />
-                    </div>
-                    <div class="flex flex-col">
-                        <x-label for="currency.exchange_rate" :value="__('Rate')" />
-                        <x-input id="exchange_rate" class="block mt-1 w-full" type="text"
-                            wire:model.lazy="currency.exchange_rate" />
+                    <div class="md:w-1/2 sm:w-full px-3">
+                        <x-label for="locale" :value="__('Locale')" required />
+                        <x-input id="locale" class="block mt-1 w-full" type="text" wire:model="locale" />
+                        <x-input-error :messages="$errors->get('locale')" for="locale" class="mt-2" />
                     </div>
                 </div>
 
