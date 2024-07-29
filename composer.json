@@ -30,7 +30,7 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "socialiteproviders/facebook": "*",
         "socialiteproviders/google": "^4.1",
-        "spatie/laravel-backup": "^8.1",
+        "spatie/laravel-backup": "^9.0",
         "spatie/laravel-permission": "^6.3",
         "zakarialabib/flysystem-google-drive-ext": "^0.0.1",
         "zakarialabib/shoppingcart": "^1.2.0"

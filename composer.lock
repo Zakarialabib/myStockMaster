@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "956c6208d7770133545e7fb639baed71",
+    "content-hash": "4d98a4072b4f3d59bcec63977e55d069",
     "packages": [
         {
             "name": "automattic/woocommerce",
@@ -7283,16 +7283,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "8.8.1",
+            "version": "9.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "a9c2d2f726f4c60c2dc5d7c0c8380f72492638c2"
+                "reference": "9f116d440940f0670016f6f8324a3bf8fd03f9ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/a9c2d2f726f4c60c2dc5d7c0c8380f72492638c2",
-                "reference": "a9c2d2f726f4c60c2dc5d7c0c8380f72492638c2",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/9f116d440940f0670016f6f8324a3bf8fd03f9ef",
+                "reference": "9f116d440940f0670016f6f8324a3bf8fd03f9ef",
                 "shasum": ""
             },
             "require": {
@@ -7304,7 +7304,7 @@
                 "illuminate/notifications": "^10.10.0|^11.0",
                 "illuminate/support": "^10.10.0|^11.0",
                 "league/flysystem": "^3.0",
-                "php": "^8.1",
+                "php": "^8.2",
                 "spatie/db-dumper": "^3.0",
                 "spatie/laravel-package-tools": "^1.6.2",
                 "spatie/laravel-signal-aware-command": "^1.2|^2.0",
@@ -7323,7 +7323,8 @@
                 "pestphp/pest": "^1.20|^2.0",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan-deprecation-rules": "^1.0",
-                "phpstan/phpstan-phpunit": "^1.1"
+                "phpstan/phpstan-phpunit": "^1.1",
+                "rector/rector": "^1.1"
             },
             "suggest": {
                 "laravel/slack-notification-channel": "Required for sending notifications via Slack"
@@ -7366,7 +7367,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-backup/issues",
-                "source": "https://github.com/spatie/laravel-backup/tree/8.8.1"
+                "source": "https://github.com/spatie/laravel-backup/tree/9.0.4"
             },
             "funding": [
                 {
@@ -7378,7 +7379,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-06-04T11:31:33+00:00"
+            "time": "2024-07-15T08:36:14+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
