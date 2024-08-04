@@ -32,7 +32,8 @@
                 <x-sidebar.sublink title="{{ __('All Products') }}" href="{{ route('products.index') }}" :active="request()->routeIs('products.index')" />
             @endcan
             @can('print_barcodes')
-                <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('products.barcode-print') }}" :active="request()->routeIs('products.barcode-print')" />
+                <x-sidebar.sublink title="{{ __('Print Barcode') }}" href="{{ route('products.barcode-print') }}"
+                    :active="request()->routeIs('products.barcode-print')" />
             @endcan
             @can('brand_access')
                 <x-sidebar.sublink title="{{ __('Brands') }}" href="{{ route('brands.index') }}" :active="request()->routeIs('brands.index')" />
@@ -118,6 +119,7 @@
             'payments-report.index',
             'purchases-return-report.index',
             'profit-loss-report.index',
+            'stock-alert-report.index',
         ])">
             <x-slot name="icon">
                 <span class="inline-block mx-4">
@@ -137,6 +139,8 @@
                 href="{{ route('purchases-return-report.index') }}" :active="request()->routeIs('purchases-return-report.index')" />
             <x-sidebar.sublink title="{{ __('Profit Report') }}" href="{{ route('profit-loss-report.index') }}"
                 :active="request()->routeIs('profit-loss-report.index')" />
+            <x-sidebar.sublink title="{{ __('Stock Alert Report') }}" href="{{ route('stock-alert-report.index') }}"
+                :active="request()->routeIs('stock-alert-report.index')" />
 
         </x-sidebar.dropdown>
     @endcan
