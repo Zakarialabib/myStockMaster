@@ -65,6 +65,7 @@ use App\Livewire\Reports\SalesReport;
 use App\Livewire\Reports\PurchasesReport;
 use App\Livewire\Reports\SalesReturnReport;
 use App\Livewire\Reports\PurchasesReturnReport;
+use App\Livewire\Reports\StockAlertReport;
 use Livewire\Livewire;
 
 /*
@@ -173,6 +174,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::get('/purchases-report', PurchasesReport::class)->name('purchases-report.index');
     Route::get('/purchases-return-report', PurchasesReturnReport::class)->name('purchases-return-report.index');
     Route::get('/payments-report', PaymentsReport::class)->name('payments-report.index');
+    Route::get('/stock-alert-report', StockAlertReport::class)->name('stock-alert-report.index');
 
     // Sales
     Route::get('/sales', SalesIndex::class)->name('sales.index');
