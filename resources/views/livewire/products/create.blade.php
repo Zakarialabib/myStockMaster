@@ -160,6 +160,34 @@
                                     </textarea>
                             <x-input-error :messages="$errors->get('usage')" for="usage" class="mt-2" />
                         </div>
+
+                        <div class="w-full px-3 mb-4">
+                            <x-label for="availability" :value="__('Availability')" />
+                            <x-input.checkbox wire:model="availability" id="availability" />
+                            <x-input-error :messages="$errors->get('availability')" class="mt-2" />
+                        </div>
+
+                        <div class="w-full px-3 mb-4">
+                            <x-label for="seasonality" :value="__('Seasonality')" />
+                            <x-input wire:model="seasonality" id="seasonality" type="text" class="block mt-1 w-full" />
+                            <x-input-error :messages="$errors->get('seasonality')" class="mt-2" />
+                        </div>
+
+                        @foreach(ProductAttribute::all() as $attribute)
+                            <div class="w-full px-3 mb-4">
+                                <x-label for="attributes.{{ $attribute->id }}" :value="__($attribute->name)" />
+                                @if($attribute->type === 'text')
+                                    <x-input wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" type="text" class="block mt-1 w-full" />
+                                @elseif($attribute->type === 'number')
+                                    <x-input wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" type="number" class="block mt-1 w-full" />
+                                @elseif($attribute->type === 'boolean')
+                                    <x-input.checkbox wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" />
+                                @elseif($attribute->type === 'date')
+                                    <x-input-date wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" class="block mt-1 w-full" />
+                                @endif
+                                <x-input-error :messages="$errors->get('attributes.' . $attribute->id)" class="mt-2" />
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="w-full my-3">

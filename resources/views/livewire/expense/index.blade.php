@@ -196,6 +196,18 @@
                         {{ $this->expense?->amount }}
                     </div>
                     <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="start_date" :value="__('Start Date')" />
+                        {{ $this->expense?->start_date }}
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="end_date" :value="__('End Date')" />
+                        {{ $this->expense?->end_date }}
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
+                        <x-label for="frequency" :value="__('Frequency')" />
+                        {{ $this->expense?->frequency }}
+                    </div>
+                    <div class="lg:w-1/2 sm:w-full px-2">
                         <x-label for="description" :value="__('Description')" />
                         {{ $this->expense?->description }}
                     </div>
@@ -224,33 +236,6 @@
                         <x-input-error :messages="$errors->get('file')" for="file" class="mt-2" />
                     </div>
 
-                    {{-- <x-table-responsive>
-                        <x-table.tr>
-                            <x-table.th>{{ __('Name') }}</x-table.th>
-                            <x-table.td>{{ __('Required') }}</x-table.td>
-                        </x-table.tr>
-                        <x-table.tr>
-                            <x-table.th>{{ __('Phone') }}</x-table.th>
-                            <x-table.td>{{ __('Required') }}</x-table.td>
-                        </x-table.tr>
-                        <x-table.tr>
-                            <x-table.th>{{ __('Email') }}</x-table.th>
-                            <x-table.td>{{ __('Optional') }}</x-table.td>
-                        </x-table.tr>
-                        <x-table.tr>
-                            <x-table.th>{{ __('Address') }}</x-table.th>
-                            <x-table.td>{{ __('Optional') }}</x-table.td>
-                        </x-table.tr>
-                        <x-table.tr>
-                            <x-table.th>{{ __('City') }}</x-table.th>
-                            <x-table.td>{{ __('Optional') }}</x-table.td>
-                        </x-table.tr>
-                        <x-table.tr>
-                            <x-table.th>{{ __('Tax Number') }}</x-table.th>
-                            <x-table.td>{{ __('Optional') }}</x-table.td>
-                        </x-table.tr>
-                    </x-table-responsive> --}}
-
                     <div class="w-full flex justify-start">
                         <x-button primary type="submit" wire:loading.attr="disabled">
                             {{ __('Import') }}
@@ -260,5 +245,4 @@
             </form>
         </x-slot>
     </x-modal>
-
 </div>

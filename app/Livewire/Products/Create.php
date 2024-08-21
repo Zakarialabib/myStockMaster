@@ -8,6 +8,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
@@ -63,6 +64,12 @@ class Create extends Component
     public $brand_id;
 
     public $options;
+    
+    #[Validate('nullable|boolean')]
+    public $availability;
+
+    #[Validate('nullable|string|max:255')]
+    public $seasonality;
 
     public $productWarehouse = [
         'qty'          => 0,
@@ -72,6 +79,8 @@ class Create extends Component
         'stock_alert'  => 10,
         'is_ecommerce' => false,
     ];
+
+    public $productAttributes = [];
 
     /** @var array */
     protected $rules = [
@@ -84,6 +93,14 @@ class Create extends Component
         'options.*.type'                => '',
         'options.*.value'               => '',
     ];
+
+    #[Computed]
+    public function productAttributes()
+    {
+        return ProductAttribute::all()->mapWithKeys(function ($attr) {
+            return [$attr->id => ''];
+        })->toArray();
+    }
 
     public function render()
     {
@@ -143,6 +160,10 @@ class Create extends Component
             'stock_alert'  => $this->productWarehouse['stock_alert'] ?? 0,
             'is_ecommerce' => $this->productWarehouse['is_ecommerce'] ?? false,
         ]);
+
+        foreach ($this->attributes as $id => $value) {
+            $product->attributes()->attach($id, ['value' => $value]);
+        }
 
         $this->alert('success', __('Product created successfully'));
 

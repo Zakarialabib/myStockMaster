@@ -54,6 +54,8 @@ class Product extends Model
         'quantity',
         'cost',
         'price',
+        'seasonality',
+        'availability',    
         'unit',
         'status',
         'tax_amount',
@@ -177,5 +179,29 @@ class Product extends Model
     public function isBelowStockAlert(): bool
     {
         return $this->quantity <= $this->stock_alert;
+    }
+
+    public function isAvailable()
+    {
+        return $this->productWarehouse->qty > 0;
+    }
+
+    public function getDiscountedPrice()
+    {
+        if ($this->old_price > 0) {
+            return $this->price - (($this->old_price - $this->price) / $this->old_price) * 100;
+        }
+        return $this->price;
+    }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(ProductAttribute::class)->withPivot('value');
+    }
+
+    public function getAttribute($key)
+    {
+        $attribute = $this->attributes()->where('name', $key)->first();
+        return $attribute ? $attribute->pivot->value : parent::getAttribute($key);
     }
 }

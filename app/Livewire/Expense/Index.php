@@ -23,23 +23,14 @@ class Index extends Component
     use LivewireAlert;
     use Datatable;
 
-    /** @var mixed */
     public $expense;
-
     public $showModal = false;
-
     public $showFilters = false;
-
     public $startDate;
-
     public $endDate;
-
     public $filterType;
-
     public $file;
-
     public $importModal = false;
-
     public $model = Expense::class;
 
     public function mount(): void
@@ -54,17 +45,14 @@ class Index extends Component
             case 'day':
                 $this->startDate = now()->startOfDay()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
-
                 break;
             case 'month':
                 $this->startDate = now()->startOfMonth()->format('Y-m-d');
                 $this->endDate = now()->endOfMonth()->format('Y-m-d');
-
                 break;
             case 'year':
                 $this->startDate = now()->startOfYear()->format('Y-m-d');
                 $this->endDate = now()->endOfYear()->format('Y-m-d');
-
                 break;
         }
     }
@@ -97,14 +85,14 @@ class Index extends Component
 
     public function delete(Expense $expense): void
     {
-        // abort_if(Gate::denies('expense_delete'), 403);
+        abort_if(Gate::denies('expense_delete'), 403);
 
         $expense->delete();
     }
 
     public function showModal($id): void
     {
-        // abort_if(Gate::denies('expense_show'), 403);
+        abort_if(Gate::denies('expense_show'), 403);
 
         $this->expense = Expense::find($id);
 
@@ -113,28 +101,28 @@ class Index extends Component
 
     public function downloadSelected(): StreamedResponse|Response
     {
-        // abort_if(Gate::denies('expense download'), 403);
+        abort_if(Gate::denies('expense download'), 403);
 
         return $this->callExport()->forModels($this->selected)->download('expenses.xlsx');
     }
 
     public function downloadAll(): StreamedResponse|Response
     {
-        // abort_if(Gate::denies('expense download'), 403);
+        abort_if(Gate::denies('expense download'), 403);
 
         return $this->callExport()->download('expenses.xlsx');
     }
 
     public function exportSelected(): StreamedResponse|Response
     {
-        // abort_if(Gate::denies('expense download'), 403);
+        abort_if(Gate::denies('expense download'), 403);
 
         return $this->callExport()->forModels($this->selected)->download('expenses.pdf');
     }
 
     public function exportAll(): StreamedResponse|Response
     {
-        // abort_if(Gate::denies('expense download'), 403);
+        abort_if(Gate::denies('expense download'), 403);
 
         return $this->callExport()->download('expenses.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
