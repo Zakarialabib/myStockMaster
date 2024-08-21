@@ -7,11 +7,16 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
-            @if($this->selectedCount)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
+            @if ($this->selectedCount)
+                <x-button danger wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
             @endif
+        </div>
+        <div class="mt-4">
+            <x-button wire:click="testConnection" wire:loading.attr="disabled">
+                {{ __('Test Connection') }}
+            </x-button>
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
@@ -19,10 +24,10 @@
             </div>
         </div>
     </div>
-   
+
     <x-table>
         <x-slot name="thead">
-            <x-table.th >
+            <x-table.th>
                 <x-input type="checkbox" class="rounded-tl rounded-bl" wire:model.live="selectPage" />
             </x-table.th>
             <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
@@ -52,13 +57,16 @@
                         {{ $printer->name }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $printer->connection_type }}
+                        {{ $printer->connection_type_str }}
                     </x-table.td>
                     <x-table.td>
-                        {{ $printer->capability_profile }}
+                        {{ $printer->capability_profile_str }}
                     </x-table.td>
                     <x-table.td>
                         {{ $printer->char_per_line }}
+                    </x-table.td>
+                    <x-table.td>
+                        {{ $printer->ip_address }}:{{ $printer->port }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -66,7 +74,8 @@
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button primary wire:click="editModal({{ $printer->id }})" wire:loading.attr="disabled">
+                            <x-button primary wire:click="dispatch('editPrinter', {{ $printer->id }})"
+                                wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
 
@@ -146,86 +155,15 @@
                         wire:model="printer.path" />
                 </div>
             </div>
+            <div class="mt-4">
+                <x-button wire:click="testConnection" wire:loading.attr="disabled">
+                    {{ __('Test Connection') }}
+                </x-button>
+            </div>
         </x-slot>
     </x-modal>
 
-    <x-modal wire:model="openModal">
-        <x-slot name="title">
-            {{ __('Edit printer') }}
-        </x-slot>
-
-        <x-slot name="content">
-            <!-- Validation Errors -->
-            <x-validation-errors class="mb-4" :errors="$errors" />
-            <form wire:submit="update">
-                <div class="flex flex-wrap mb-3">
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.name" :value="__('Name')" />
-                        <x-input id="name" class="block mt-1 w-full" required type="text"
-                            wire:model="printer.name" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.connection_type" :value="__('Connection type')" />
-                        <x-input id="connection_type" class="block mt-1 w-full" type="text"
-                            wire:model="printer.connection_type" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.capability_profile" :value="__('Capability profile')" />
-                        <x-input id="capability_profile" class="block mt-1 w-full" type="text"
-                            wire:model="printer.capability_profile" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.char_per_line" :value="__('char per line')" />
-                        <x-input id="char_per_line" class="block mt-1 w-full" type="text"
-                            wire:model="printer.char_per_line" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.ip_address" :value="__('Ip address')" />
-                        <x-input id="ip_address" class="block mt-1 w-full" type="text"
-                            wire:model="printer.ip_address" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.port" :value="__('Port')" />
-                        <x-input id="port" class="block mt-1 w-full" type="text" wire:model="printer.port" />
-                    </div>
-                    <div class="md:w-1/2 sm:w-full px-3">
-                        <x-label for="printer.path" :value="__('Path')" />
-                        <x-input id="path" class="block mt-1 w-full" type="text" wire:model="printer.path" />
-                    </div>
-                </div>
-
-                <div class="w-full px-3">
-                    <x-button primary type="submit" class="w-full text-center" 
-                              wire:loading.attr="disabled">
-                        {{ __('Update') }}
-                    </x-button>
-                </div>
-            </form>
-        </x-slot>
-    </x-modal>
+    <livewire:printer.edit :printer="$printer" />
 
     <livewire:printer.create />
 </div>
-
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:init', function() {
-            window.livewire.on('deleteModal', printerId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.Livewire.dispatch('delete', printerId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush

@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\CapabilityProfile;
+use App\Enums\ConnectionType;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Printer extends Model
 {
     use HasAdvancedFilter;
-
-    public const ATTRIBUTES = [
-        'id',
-        'name',
-        'connection_type',
-
-    ];
-
-    public $orderable = self::ATTRIBUTES;
-    public $filterable = self::ATTRIBUTES;
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -31,37 +25,44 @@ class Printer extends Model
         'path',
     ];
 
-    public static function capabilityProfiles()
+    protected $casts = [
+        'connection_type' => ConnectionType::class,
+        'capability_profile' => CapabilityProfile::class,
+    ];
+
+    public $orderable = [
+        'id',
+        'name',
+        'connection_type',
+        'capability_profile',
+        'char_per_line',
+    ];
+
+    public $filterable = [
+        'id',
+        'name',
+        'connection_type',
+        'capability_profile',
+        'char_per_line',
+    ];
+
+    public static function connectionTypes(): array
     {
-        return [
-            'default'  => 'Default',
-            'simple'   => 'Simple',
-            'SP2000'   => 'Star Branded',
-            'TEP-200M' => 'Espon Tep',
-            'P822D'    => 'P822D',
-        ];
+        return array_column(ConnectionType::cases(), 'value', 'name');
     }
 
-    public static function capabilityProfileSrt($profile)
+    public static function capabilityProfiles(): array
     {
-        $profiles = Printer::capabilityProfiles();
-
-        return $profiles[$profile] ?? '';
+        return array_column(CapabilityProfile::cases(), 'value', 'name');
     }
 
-    public static function connectionTypes()
+    public function getConnectionTypeStrAttribute(): string
     {
-        return [
-            'network' => 'Network',
-            'windows' => 'Windows',
-            'linux'   => 'Linux',
-        ];
+        return $this->connection_type->name;
     }
 
-    public static function connectionTypeStr($type)
+    public function getCapabilityProfileStrAttribute(): string
     {
-        $types = Printer::connectionTypes();
-
-        return $types[$type] ?? '';
+        return $this->capability_profile->name;
     }
 }
