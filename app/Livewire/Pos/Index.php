@@ -10,6 +10,7 @@ use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
+use App\Models\Customer;
 use App\Models\Movement;
 use App\Models\Product;
 use App\Models\Sale;
@@ -30,6 +31,8 @@ class Index extends Component
 {
     use LivewireAlert;
     use WithModels;
+
+    public $customers;
 
     public $cart_instance = 'sale';
 
@@ -104,6 +107,7 @@ class Index extends Component
     {
         Cart::instance('sale')->destroy();
 
+        $this->customers = Customer::select(['id','name'])->get();
         $this->global_discount = 0;
         $this->global_tax = 0;
 

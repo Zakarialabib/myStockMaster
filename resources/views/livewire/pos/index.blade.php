@@ -1,11 +1,11 @@
 <div>
     <div class="w-full px-2" dir="ltr">
-        <x-validation-errors class="mb-4" :errors="$errors" />
+        <x-validation-errors class="mb-4" :errors="$errors"/>
         <div class="flex gap-4">
 
             <div class="w-full relative inline-flex">
                 <select required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     {{-- @if (settings()->default_warehouse_id == true)
                         <option value="{{ $default_warehouse?->id }}" selected>{{ $default_warehouse?->name }}
                         </option>
@@ -18,19 +18,20 @@
             </div>
             <div class="w-full relative inline-flex">
                 <select required id="customer_id" name="customer_id" wire:model.live="customer_id"
-                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                     {{-- @if (settings()->default_client_id == true)
                         <option value="{{ $default_client?->id }}" selected>{{ $default_client?->name }}</option>
                     @endif --}}
                     <option value="">{{ __('Select Customer') }}</option>
-                    @foreach ($this->customers as $customer)
+
+                    @foreach ($customers as $customer)
                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-        <livewire:utils.product-cart :cartInstance="'sale'" />
+        <livewire:utils.product-cart :cartInstance="'sale'"/>
 
     </div>
 
@@ -56,21 +57,21 @@
                     <div class="w-1/2 px-2">
                         <div class="flex flex-wrap mb-3">
                             <div class="w-full px-2">
-                                <x-label for="total_amount" :value="__('Total Amount')" required />
+                                <x-label for="total_amount" :value="__('Total Amount')" required/>
                                 <input id="total_amount" type="text" wire:model.live="total_amount"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    name="total_amount" readonly required>
+                                       class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                       name="total_amount" readonly required>
                             </div>
                             <div class="w-full px-2">
-                                <x-label for="paid_amount" :value="__('Paid Amount')" required />
+                                <x-label for="paid_amount" :value="__('Paid Amount')" required/>
                                 <input id="paid_amount" type="text" wire:model.live="paid_amount"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                    name="paid_amount" required>
+                                       class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                                       name="paid_amount" required>
                             </div>
                             <div class="w-full px-2">
-                                <x-label for="payment_method" :value="__('Payment Method')" required />
+                                <x-label for="payment_method" :value="__('Payment Method')" required/>
                                 <select wire:model.live="payment_method" id="payment_method" required
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                     <option value="Cash">{{ __('Cash') }}</option>
                                     <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                                     <option value="Cheque">{{ __('Cheque') }}</option>
@@ -78,9 +79,9 @@
                                 </select>
                             </div>
                             <div class="mb-4 w-full px-2">
-                                <x-label for="note" :value="__('Note')" />
+                                <x-label for="note" :value="__('Note')"/>
                                 <textarea name="note" id="note" rows="5" wire:model.live="note"
-                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
+                                          class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                             </div>
                         </div>
                     </div>
@@ -135,7 +136,7 @@
                 </div>
                 <div class="float-left pb-4 px-2">
                     <x-button secondary type="button"
-                        x-on:click="checkoutModal = false">{{ __('Close') }}</x-button>
+                              x-on:click="checkoutModal = false">{{ __('Close') }}</x-button>
                     <x-button primary type="submit" wire:loading.attr="disabled">{{ __('Submit') }}</x-button>
                 </div>
             </form>
