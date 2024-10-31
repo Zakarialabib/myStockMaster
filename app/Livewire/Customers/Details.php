@@ -31,7 +31,7 @@ class Details extends Component
 
     public function mount($id): void
     {
-        $this->customer = Customer::where('id', $id)->first();
+        $this->customer = Customer::where('id', $id)->firstOrFail();
         $this->customer_id = $this->customer->id;
     }
 
