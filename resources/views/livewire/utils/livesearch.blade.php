@@ -8,11 +8,11 @@
         @if (!empty($searchQuery))
             <div class="absolute top-0 left-0 w-full mt-12 bg-white rounded-md shadow-xl overflow-y-auto max-h-52 z-50">
                 <ul>
-                    @if ($this->product->count())
+                    @if ($products && $products->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Products') }}" shade="dark" color="red" />
                             <div class="flex space-x-4">
-                                @foreach ($this->product as $item)
+                                @foreach ($products as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -33,11 +33,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($this->customer->count())
+                    @if ($customers && $customers->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Customers') }}" shade="dark" color="yellow" />
                             <div class="mx-4 space-y-2">
-                                @foreach ($this->customer as $item)
+                                @foreach ($customers as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -50,7 +50,7 @@
                                         {{ __('Address') }} <br>
                                         {{ $item->address }}
                                     </p>
-                                    <x-button info href="{{ route('customer.details', $item->uuid) }}">
+                                    <x-button info href="{{ route('customer.details', $item->id) }}">
                                         <i class="fas fa-book"></i>
                                         {{ __('Details') }}
                                     </x-button>
@@ -58,11 +58,12 @@
                             </div>
                         </li>
                     @endif
-                    @if ($this->supplier->count())
+
+                    @if ($suppliers && $suppliers->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Suppliers') }}" shade="dark" color="green" />
                             <div class="mx-4 space-y-2">
-                                @foreach ($this->supplier as $item)
+                                @foreach ($suppliers as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -71,7 +72,7 @@
                                         {{ __('Phone') }} <br>
                                         {{ $item->phone }}
                                     </p>
-                                    <x-button info href="{{ route('supplier.details', $item->uuid) }}">
+                                    <x-button info href="{{ route('supplier.details', $item->id) }}">
                                         <i class="fas fa-book"></i>
                                         {{ __('Details') }}
                                     </x-button>
@@ -79,11 +80,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($this->sale->count())
+                    @if ($sales && $sales->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Sales') }}" shade="dark" color="blue" />
                             <div class="mx-4">
-                                @foreach ($this->sale as $item)
+                                @foreach ($sales as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Customer name') }}
@@ -99,11 +100,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($this->purchase->count())
+                    @if ($purchase && $purchase->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Purchases') }}" shade="dark" color="cyan" />
                             <div class="mx-4">
-                                @foreach ($this->purchase as $item)
+                                @foreach ($purchase as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} <br>
                                         {{ $item->date }}
                                     </p>

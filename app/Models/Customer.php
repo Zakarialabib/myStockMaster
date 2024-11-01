@@ -6,9 +6,9 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
@@ -16,9 +16,9 @@ class Customer extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
-    use Notifiable;
-    use HasUuid;
     use HasFactory;
+    use HasUuid;
+    use Notifiable;
 
     protected const ATTRIBUTES = [
         'id',
@@ -85,6 +85,13 @@ class Customer extends Model
     public function scopeActive($query)
     {
         return $query->where('active', true);
+    }
+
+    public function scopeSearchByName($query, $name)
+    {
+        return $query->when( ! empty($name), function ($query) use ($name) {
+            return $query->where('name', 'like', '%'.$name.'%');
+        });
     }
 
     public function getTotalSalesAmount(): float

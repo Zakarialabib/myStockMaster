@@ -13,19 +13,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
     use HasAdvancedFilter;
-    use Notifiable;
-    use ProductScope;
     use HasFactory;
     use HasUuid;
+    use Notifiable;
+    use ProductScope;
     use SoftDeletes;
 
     public const ATTRIBUTES = [
@@ -64,7 +64,7 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -82,7 +82,7 @@ class Product extends Model
     /**
      * Generate a slug from the product name.
      *
-     * @param string $name
+     * @param  string  $name
      * @return string
      */
     public function generateSlug($name)
@@ -121,8 +121,6 @@ class Product extends Model
 
     /**
      * Interact with product cost
-     *
-     * @return Attribute
      */
     protected function productCost(): Attribute
     {
@@ -134,8 +132,6 @@ class Product extends Model
 
     /**
      * Interact with product price
-     *
-     * @return Attribute
      */
     protected function productPrice(): Attribute
     {
@@ -177,5 +173,13 @@ class Product extends Model
     public function isBelowStockAlert(): bool
     {
         return $this->quantity <= $this->stock_alert;
+    }
+
+    public function scopeSearchByNameOrCode($query, $term)
+    {
+        return $query->when( ! empty($term), function ($query) use ($term) {
+            $query->where('name', 'like', '%'.$term.'%')
+                ->orWhere('code', 'like', '%'.$term.'%');
+        });
     }
 }
