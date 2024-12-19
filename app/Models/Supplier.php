@@ -46,7 +46,15 @@ class Supplier extends Model
     /** @return HasOne<Purchase> */
     public function purchases(): HasOne
     {
-        return $this->HasOne(Purchase::class);
+        return $this->hasOne(Purchase::class);
+    }
+
+
+    public function scopeSearchByName($query, $name)
+    {
+        return $query->when( ! empty($name), function ($query) use ($name) {
+            return $query->where('name', 'like', '%'.$name.'%');
+        });
     }
 
     private function supplierSum($column, $model)

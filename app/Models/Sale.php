@@ -204,4 +204,11 @@ class Sale extends Model
             get: fn ($value) => $value / 100,
         );
     }
+
+    public function scopeSearchByReference($query, $term)
+    {
+        return $query->when(!empty($term), function ($query) use ($term) {
+            $query->where('reference', 'like', '%' . $term . '%');
+        });
+    }
 }

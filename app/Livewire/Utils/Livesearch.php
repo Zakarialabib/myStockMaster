@@ -29,23 +29,22 @@ class Livesearch extends Component
         'searchQuery',
     ];
 
-    public function mount(): void
-    {
-        $this->product = Product::query()->where('name', 'LIKE', '%'.$this->searchQuery.'%')->orWhere('code', 'like', '%'.$this->searchQuery.'%')->get();
-
-        $this->customer = Customer::query()->where('name', 'LIKE', '%'.$this->searchQuery.'%')
-            ->with('sales')->get();
-
-        $this->supplier = Supplier::query()->where('name', 'LIKE', '%'.$this->searchQuery.'%')
-            ->with('purchases')->get();
-
-        $this->sale = Sale::query()->where('reference', 'like', '%'.$this->searchQuery.'%')->get();
-
-        $this->purchase = Purchase::query()->where('reference', 'like', '%'.$this->searchQuery.'%')->get();
-    }
+    public function mount(): void {}
 
     public function render()
     {
-        return view('livewire.utils.livesearch');
+        return view('livewire.utils.livesearch', [
+            'products' => Product::query()->searchByNameOrCode($this->searchQuery)->get(),
+
+            'customers' => $this->customer = Customer::query()->searchByName($this->searchQuery)
+                ->with('sales')->get(),
+
+            'suppliers' => Supplier::query()->searchByName($this->searchQuery)
+                ->with('purchases')->get(),
+
+            'sales' => Sale::query()->searchByReference($this->searchQuery)->get(),
+
+            'purchase' => Purchase::query()->searchByReference($this->searchQuery)->get(),
+        ]);
     }
 }
