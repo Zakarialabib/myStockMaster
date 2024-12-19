@@ -69,7 +69,7 @@
                                 </x-table.td>
                                 <x-table.td>
                                     {{ $sale->payment_id}}
-{{-- 
+{{--
                                     @php
                                         $type = $sale->payment_id->getBadgeType();
                                     @endphp
@@ -241,7 +241,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="left"><strong>{{ __('Tax') }}
-                                                            ({{ $sale??->tax_percentage }})</strong></td>
+                                                            ({{ $sale?->tax_percentage }})</strong></td>
                                                     <td class="right">
                                                         {{ format_currency($sale?->tax_amount) }}
                                                     </td>

@@ -42,7 +42,7 @@
                         </div>
                         <div>
                             {{ __('Payment Status') }} :
-                            {{ $sale->payment_id}}
+                            {{ $sale?->payment_id}}}
 
                             {{-- @php
                                 $type = $sale?->payment_id->getBadgeType();
@@ -102,7 +102,7 @@
                             @if (settings()->show_discount == true)
                                 <tr>
                                     <td class="left"><strong>{{ __('Tax') }}
-                                            ({{ $sale??->tax_percentage }})</strong>
+                                            ({{ $sale?->tax_percentage }})</strong>
                                     </td>
                                     <td class="right">
                                         {{ format_currency($sale?->tax_amount) }}
