@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Purchase extends Model
 {
     use HasAdvancedFilter;
-    use SoftDeletes;
     use HasUuid;
+    use SoftDeletes;
 
     public const ATTRIBUTES = [
         'id',
@@ -144,8 +144,6 @@ class Purchase extends Model
 
     /**
      * get shipping amount
-     *
-     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -156,8 +154,6 @@ class Purchase extends Model
 
     /**
      * get paid amount
-     *
-     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -168,8 +164,6 @@ class Purchase extends Model
 
     /**
      * get total amount
-     *
-     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -180,8 +174,6 @@ class Purchase extends Model
 
     /**
      * get due amount
-     *
-     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -192,8 +184,6 @@ class Purchase extends Model
 
     /**
      * get tax amount
-     *
-     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -204,13 +194,18 @@ class Purchase extends Model
 
     /**
      * get discount amount
-     *
-     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
         );
+    }
+
+    public function scopeSearchByReference($query, $term)
+    {
+        return $query->when( ! empty($term), function ($query) use ($term) {
+            $query->where('reference', 'like', '%'.$term.'%');
+        });
     }
 }
