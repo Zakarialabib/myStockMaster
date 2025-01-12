@@ -101,6 +101,9 @@ Route::view('profile', 'profile')
 // });
 
 // admin prefix group
+
+Route::get('/', fn() => redirect()->route('dashboard'));
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
     // Change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
