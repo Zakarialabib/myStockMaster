@@ -13,7 +13,7 @@
         "carlos-meneses/laravel-mpdf": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
-        "jantinnerezo/livewire-alert": "*",
+        "jantinnerezo/livewire-alert": "^3.0",
         "laravel-notification-channels/telegram": "^5.0",
         "laravel/framework": "^11.0",
         "laravel/passport": "^12.0",
