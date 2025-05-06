@@ -2830,16 +2830,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.6.2",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "06c3b0bf2540338094575612f4a1778d0d2d5e94"
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/06c3b0bf2540338094575612f4a1778d0d2d5e94",
-                "reference": "06c3b0bf2540338094575612f4a1778d0d2d5e94",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
                 "shasum": ""
             },
             "require": {
@@ -2876,7 +2876,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.7-dev"
+                    "dev-main": "2.8-dev"
                 }
             },
             "autoload": {
@@ -2933,7 +2933,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-18T21:09:27+00:00"
+            "time": "2025-05-05T12:20:28+00:00"
         },
         {
             "name": "league/config",
@@ -10577,29 +10577,29 @@
         },
         {
             "name": "kkomelin/laravel-translatable-string-exporter",
-            "version": "1.22.0",
+            "version": "1.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kkomelin/laravel-translatable-string-exporter.git",
-                "reference": "0c6dbec4694a7e702830ecfc005d131cd5ffe402"
+                "reference": "5d310214ac647904953b4a830f3990a04e262f06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kkomelin/laravel-translatable-string-exporter/zipball/0c6dbec4694a7e702830ecfc005d131cd5ffe402",
-                "reference": "0c6dbec4694a7e702830ecfc005d131cd5ffe402",
+                "url": "https://api.github.com/repos/kkomelin/laravel-translatable-string-exporter/zipball/5d310214ac647904953b4a830f3990a04e262f06",
+                "reference": "5d310214ac647904953b4a830f3990a04e262f06",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "^8|^9|^10.0|^11.0",
-                "illuminate/translation": "^8|^9|^10.0|^11.0",
+                "illuminate/support": "^8|^9|^10.0|^11.0|^12.0",
+                "illuminate/translation": "^8|^9|^10.0|^11.0|^12.0",
                 "php": "^8.0",
                 "symfony/finder": "^5|^6|^7.0"
             },
             "require-dev": {
-                "nunomaduro/larastan": "^1.0|^2.0",
-                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
-                "phpunit/phpunit": "^9.0|^10.5"
+                "nunomaduro/larastan": "^1.0|^2.0|^3.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.5|^12.0"
             },
             "type": "library",
             "extra": {
@@ -10636,9 +10636,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kkomelin/laravel-translatable-string-exporter/issues",
-                "source": "https://github.com/kkomelin/laravel-translatable-string-exporter/tree/1.22.0"
+                "source": "https://github.com/kkomelin/laravel-translatable-string-exporter/tree/1.23.0"
             },
-            "time": "2024-03-13T13:44:41+00:00"
+            "time": "2025-02-26T12:03:29+00:00"
         },
         {
             "name": "larastan/larastan",
