@@ -13,11 +13,11 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Create extends Component
+class Edit extends Component
 {
     use LivewireAlert;
 
-    public $createModal;
+    public $editModal;
 
     public $printer;
 
@@ -38,21 +38,18 @@ class Create extends Component
         ];
     }
 
-    public function mount(Printer $printer): void
-    {
-        $this->printer = $printer;
-    }
-
     public function render()
     {
-        abort_if(Gate::denies('printer_create'), 403);
+        abort_if(Gate::denies('printer_update'), 403);
 
         return view('livewire.printer.create');
     }
 
-    #[On('createPrinter')]
-    public function createPrinter(): void
+    #[On('editPrinter')]
+    public function editPrinter(Printer $printer): void
     {
+        $this->printer = $printer;
+
         $this->resetErrorBag();
 
         $this->resetValidation();
@@ -60,19 +57,19 @@ class Create extends Component
         $this->capability_profiles = Printer::capabilityProfiles();
         $this->connection_types = Printer::connectionTypes();
 
-        $this->createModal = true;
+        $this->editModal = true;
     }
 
-    public function create(): void
+    public function update(): void
     {
         $this->validate();
 
         $this->printer->save();
 
-        $this->alert('success', __('Printer created successfully.'));
+        $this->alert('success', __('Printer updated successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
-        $this->createModal = false;
+        $this->editModal = false;
     }
 }

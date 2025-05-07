@@ -1,15 +1,13 @@
 <div>
-    <x-modal wire:model="createModal">
+    <x-modal wire:model="editModal">
         <x-slot name="title">
-            {{ __('Create Printer') }}
+            {{ __('Edit printer') }}
         </x-slot>
 
         <x-slot name="content">
-
             <!-- Validation Errors -->
             <x-validation-errors class="mb-4" :errors="$errors" />
-
-            <form wire:submit="create">
+            <form wire:submit="update">
                 <div class="flex flex-wrap mb-3">
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="printer.name" :value="__('Name')" />
@@ -52,9 +50,10 @@
                         <x-input id="path" class="block mt-1 w-full" type="text" wire:model="printer.path" />
                     </div>
                 </div>
+
                 <div class="w-full px-3">
-                    <x-button secondary class="w-full text-center" wire:click="create" wire:loading.attr="disabled">
-                        {{ __('Create') }}
+                    <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                        {{ __('Update') }}
                     </x-button>
                 </div>
             </form>
