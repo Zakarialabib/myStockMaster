@@ -8,14 +8,12 @@ use App\Livewire\Utils\WithModels;
 use App\Models\User;
 use App\Models\UserWarehouse;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $createModal = false;

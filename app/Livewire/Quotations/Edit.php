@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Validate;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $quotation;

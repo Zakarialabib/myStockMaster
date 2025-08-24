@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Auth;
 
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Verify extends Component
 {
-    use LivewireAlert;
+    use WithAlert;
 
     public function sendVerification(): void
     {

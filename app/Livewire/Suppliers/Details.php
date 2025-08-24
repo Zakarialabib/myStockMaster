@@ -12,10 +12,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Details extends Component
 {
+    use WithAlert;
     use Datatable;
 
     #[Locked]

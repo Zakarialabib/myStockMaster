@@ -119,9 +119,7 @@ class Product extends Model
         }]);
     }
 
-    /**
-     * Interact with product cost
-     */
+    /** Interact with product cost */
     protected function productCost(): Attribute
     {
         return Attribute::make(
@@ -130,9 +128,7 @@ class Product extends Model
         );
     }
 
-    /**
-     * Interact with product price
-     */
+    /** Interact with product price */
     protected function productPrice(): Attribute
     {
         return Attribute::make(

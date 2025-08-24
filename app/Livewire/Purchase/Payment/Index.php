@@ -8,13 +8,11 @@ use App\Livewire\Utils\Datatable;
 use App\Models\PurchasePayment;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Index extends Component
 {
-    use LivewireAlert;
     use Datatable;
 
     public $purchase;

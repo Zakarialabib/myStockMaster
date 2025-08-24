@@ -6,8 +6,8 @@ namespace App\Livewire\Warehouses;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Warehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -16,10 +16,9 @@ use Livewire\Attributes\On;
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
     use WithFileUploads;
-    use LivewireAlert;
-
     /** @var mixed */
     public $warehouse;
 

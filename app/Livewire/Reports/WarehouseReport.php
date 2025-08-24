@@ -16,10 +16,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class WarehouseReport extends Component
 {
+    use WithAlert;
     public $warehouses;
 
     public $warehouse_id;

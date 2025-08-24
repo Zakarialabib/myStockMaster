@@ -7,18 +7,17 @@ namespace App\Livewire\Adjustment;
 use App\Livewire\Utils\Datatable;
 use App\Models\Adjustment;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
     use WithFileUploads;
-    use LivewireAlert;
-
     /** @var mixed */
     public $adjustment;
 

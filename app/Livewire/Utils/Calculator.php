@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Livewire\Utils;
 
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Calculator extends Component
 {
+    use WithAlert;
     public $number1 = '';
 
     public $number2 = '';

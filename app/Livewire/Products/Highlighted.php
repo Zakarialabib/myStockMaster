@@ -7,14 +7,13 @@ namespace App\Livewire\Products;
 use App\Models\Product;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Throwable;
+use App\Traits\WithAlert;
 
 class Highlighted extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $product;
 
     public $hot;

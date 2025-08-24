@@ -8,7 +8,6 @@ use App\Jobs\ImportJob;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Category;
@@ -24,7 +23,6 @@ use Throwable;
 
 class Import extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     public $listeners = [

@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\Language;
 
 use App\Models\Language;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public array $languages = [];
 
     public $language;

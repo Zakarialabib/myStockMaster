@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Reset extends Component
 {
+    use WithAlert;
     /** @var string */
     public $token;
 

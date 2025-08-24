@@ -10,7 +10,6 @@ use App\Livewire\Utils\Datatable;
 use App\Models\Expense;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Response;
@@ -20,7 +19,6 @@ use Livewire\Attributes\Layout;
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use Datatable;
 
     /** @var mixed */

@@ -8,16 +8,15 @@ use App\Models\User;
 use App\Rules\MatchCurrentPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Profile extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     /** @var mixed */
     public $user;
 

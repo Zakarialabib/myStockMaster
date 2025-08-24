@@ -10,17 +10,16 @@ use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
     use WithFileUploads;
-    use LivewireAlert;
-
     public $purchasereturn;
 
     public $model = PurchaseReturn::class;

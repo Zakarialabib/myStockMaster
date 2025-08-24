@@ -20,7 +20,6 @@ use App\Models\SalePayment;
 use App\Models\ProductWarehouse;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -31,7 +30,6 @@ use Livewire\Attributes\Validate;
 #[Layout('layouts.app')]
 class Create extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $cart_instance = 'sale';

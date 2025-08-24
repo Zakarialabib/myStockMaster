@@ -6,9 +6,11 @@ namespace App\Livewire\Utils;
 
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
+use App\Traits\WithAlert;
 
 class ColorPicker extends Component
 {
+    use WithAlert;
     #[Modelable]
     public $value = '';
 

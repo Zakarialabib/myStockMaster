@@ -10,9 +10,11 @@ use Google\Service\PeopleService;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Throwable;
+use App\Traits\WithAlert;
 
 class GoogleContact extends Component
 {
+    use WithAlert;
     public $contacts = [];
 
     public $contactService;

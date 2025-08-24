@@ -6,14 +6,13 @@ namespace App\Livewire\Utils;
 
 use App\Models\Product;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\ProductWarehouse;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class ProductCart extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     /** @var array<string> */
     public $listeners = [
         'productSelected',

@@ -9,13 +9,12 @@ use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Sale;
 use Illuminate\Support\Facades\Http;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Messaging extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $botToken;
 
     #[Validate('required|numeric')]

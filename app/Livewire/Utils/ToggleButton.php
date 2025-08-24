@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Utils;
 
 use Illuminate\Database\Eloquent\Model;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class ToggleButton extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public Model $model;
 
     public $field;

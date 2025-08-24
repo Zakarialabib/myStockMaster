@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class ProductTable extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $products;
 
     public $hasAdjustments;

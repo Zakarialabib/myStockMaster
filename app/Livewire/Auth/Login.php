@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 // #[Layout('layouts.guest')]
 class Login extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     #[Validate('required', message: 'Email is required ')]
     #[Validate('email', message: 'Email must be valid')]
     public $email;

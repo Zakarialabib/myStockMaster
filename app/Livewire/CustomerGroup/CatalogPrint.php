@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\CustomerGroup;
 
 use App\Models\Product;
+use App\Traits\WithAlert;
 // use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -12,6 +13,7 @@ use Livewire\Attributes\Layout;
 #[Layout('layouts.template')]
 class CatalogPrint extends Component
 {
+    use WithAlert;
     public $data;
     public $entity = 'Catalogue des produits Tahe Cosmetics';
 

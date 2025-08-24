@@ -12,7 +12,6 @@ use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -21,7 +20,6 @@ use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
     use WithModels;
 

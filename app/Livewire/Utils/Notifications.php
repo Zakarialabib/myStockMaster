@@ -8,9 +8,11 @@ use App\Models\ProductWarehouse;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Traits\WithAlert;
 
 class Notifications extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     public $how_many = 5;

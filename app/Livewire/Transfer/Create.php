@@ -11,7 +11,6 @@ use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Throwable;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -20,7 +19,6 @@ use Livewire\Attributes\Validate;
 #[Layout('layouts.app')]
 class Create extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     #[Validate('required|date')]

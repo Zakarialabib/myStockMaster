@@ -16,9 +16,11 @@ use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use App\Models\Warehouse;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class ProfitLossReport extends Component
 {
+    use WithAlert;
     public $start_date;
     public $end_date;
     public $total_sales = 0;

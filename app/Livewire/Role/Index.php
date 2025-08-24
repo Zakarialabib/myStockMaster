@@ -9,9 +9,11 @@ use App\Models\Role;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
 
     public $model = Role::class;

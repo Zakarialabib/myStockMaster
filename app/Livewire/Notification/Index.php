@@ -8,9 +8,11 @@ use Livewire\Component;
 use App\Models\ProductWarehouse;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     public $low_quantity_products;

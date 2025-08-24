@@ -9,10 +9,12 @@ use Livewire\WithPagination;
 use App\Models\Product;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class StockAlertReport extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     public $thresholds = [];
@@ -27,11 +29,11 @@ class StockAlertReport extends Component
         $query = Product::belowStockAlert();
 
         if ($this->filterName) {
-            $query->where('name', 'like', '%' . $this->filterName . '%');
+            $query->where('name', 'like', '%'.$this->filterName.'%');
         }
 
         if ($this->filterCode) {
-            $query->where('code', 'like', '%' . $this->filterCode . '%');
+            $query->where('code', 'like', '%'.$this->filterCode.'%');
         }
 
         if ($this->filterQuantityMin !== null) {
@@ -48,6 +50,7 @@ class StockAlertReport extends Component
     public function setThreshold($productId, $threshold)
     {
         $product = Product::find($productId);
+
         if ($product) {
             $product->stock_alert = $threshold;
             $product->save();

@@ -6,13 +6,12 @@ namespace App\Livewire\Printer;
 
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     /** @var array<string> */
     public $listeners = ['createPrinter'];
 

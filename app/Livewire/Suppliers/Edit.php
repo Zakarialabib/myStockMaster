@@ -6,7 +6,6 @@ namespace App\Livewire\Suppliers;
 
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -14,7 +13,6 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     public $editModal = false;

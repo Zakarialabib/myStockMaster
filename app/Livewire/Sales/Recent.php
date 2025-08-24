@@ -6,16 +6,16 @@ namespace App\Livewire\Sales;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Sale;
+use App\Traits\WithAlert;
 
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Recent extends Component
 {
+    use WithAlert;
     use WithFileUploads;
-    use LivewireAlert;
     use Datatable;
 
     public $sale;

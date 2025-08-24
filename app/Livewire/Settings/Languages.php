@@ -10,13 +10,12 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Artisan;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Languages extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $languages = [];
 
     protected $listeners = ['sendUpdateLanguageStatus' => 'onUpdateLanguageStatus', 'sync'];

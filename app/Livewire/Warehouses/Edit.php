@@ -6,14 +6,14 @@ namespace App\Livewire\Warehouses;
 
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Edit extends Component
 {
-    use LivewireAlert;
+    use WithAlert;
 
     /** @var bool */
     public $editModal = false;

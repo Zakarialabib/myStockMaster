@@ -10,13 +10,11 @@ use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $editModal = false;

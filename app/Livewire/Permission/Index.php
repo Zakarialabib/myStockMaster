@@ -7,7 +7,6 @@ namespace App\Livewire\Permission;
 use App\Models\Permission;
 use Exception;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Livewire\Utils\Datatable;
@@ -17,7 +16,6 @@ use Livewire\Attributes\Validate;
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use Datatable;
 
     /** @var mixed */

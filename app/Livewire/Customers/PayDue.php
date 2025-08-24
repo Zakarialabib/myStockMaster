@@ -9,13 +9,12 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class PayDue extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $amount;
 
     public $selectedSales;

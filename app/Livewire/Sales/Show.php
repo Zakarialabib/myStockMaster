@@ -8,9 +8,11 @@ use App\Models\Sale;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $sale;
 
     public $showModal = false;

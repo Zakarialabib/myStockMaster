@@ -6,9 +6,12 @@ namespace App\Livewire\Actions;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Traits\WithAlert;
 
 class Logout
 {
+    use WithAlert;
+
     /** Log the current user out of the application. */
     public function __invoke(): void
     {

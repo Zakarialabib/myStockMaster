@@ -6,15 +6,14 @@ namespace App\Livewire\Role;
 
 // use App\Models\Permission;
 use Spatie\Permission\Models\Permission;
+use App\Traits\WithAlert;
 // use App\Models\Role;
 use Spatie\Permission\Models\Role;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
 class Edit extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public Role $role;
 
     public array $permissions = [];

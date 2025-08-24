@@ -12,10 +12,12 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class ResetPassword extends Component
 {
+    use WithAlert;
     #[Locked]
     public string $token = '';
 

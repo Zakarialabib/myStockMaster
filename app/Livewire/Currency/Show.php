@@ -8,9 +8,11 @@ use App\Models\Currency;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $showModal = false;
 
     public $currency;

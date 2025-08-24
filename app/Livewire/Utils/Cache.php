@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Utils;
 
 use Illuminate\Support\Facades\Artisan;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class Cache extends Component
 {
-    use LivewireAlert;
+    use WithAlert;
 
     public function render()
     {

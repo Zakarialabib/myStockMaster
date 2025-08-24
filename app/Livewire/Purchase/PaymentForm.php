@@ -11,13 +11,12 @@ use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Throwable;
+use App\Traits\WithAlert;
 
 class PaymentForm extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $paymentModal = false;
 
     public $purchase;

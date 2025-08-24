@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
+use App\Traits\WithAlert;
 
 class EditorJs extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public $uploads = [];
@@ -45,6 +47,7 @@ class EditorJs extends Component
         $uploadDisk = null,
         $downloadDisk = null
     ): void {
+    use WithAlert;
         if (is_null($uploadDisk)) {
             $uploadDisk = config('livewire-editorjs.default_img_upload_disk');
         }
@@ -75,6 +78,7 @@ class EditorJs extends Component
 
     public function completedImageUpload(string $uploadedFileName, string $eventName, $fileName = null): void
     {
+    use WithAlert;
         /** @var TemporaryUploadedFile $tmpFile */
         $tmpFile = collect($this->uploads)
             ->filter(static fn (TemporaryUploadedFile $item): bool => $item->getFilename() === $uploadedFileName)

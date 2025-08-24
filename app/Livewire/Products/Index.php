@@ -11,7 +11,6 @@ use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Notifications\ProductTelegram;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -23,7 +22,6 @@ use Livewire\Attributes\On;
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
     use Datatable;
 

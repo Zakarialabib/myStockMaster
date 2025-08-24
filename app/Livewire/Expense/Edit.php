@@ -9,14 +9,12 @@ use Livewire\Component;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     /** @var bool */

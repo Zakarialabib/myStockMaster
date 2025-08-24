@@ -10,9 +10,11 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Supplier;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Livesearch extends Component
 {
+    use WithAlert;
     public $searchQuery = '';
 
     public $product;
@@ -29,7 +31,9 @@ class Livesearch extends Component
         'searchQuery',
     ];
 
-    public function mount(): void {}
+    public function mount(): void
+    {
+    }
 
     public function render()
     {

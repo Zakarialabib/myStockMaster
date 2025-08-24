@@ -10,16 +10,15 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Throwable;
+use App\Traits\WithAlert;
 
 class PaymentForm extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $paymentModal = false;
 
     public $sale;

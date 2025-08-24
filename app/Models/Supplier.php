@@ -49,7 +49,6 @@ class Supplier extends Model
         return $this->hasOne(Purchase::class);
     }
 
-
     public function scopeSearchByName($query, $name)
     {
         return $query->when( ! empty($name), function ($query) use ($name) {
