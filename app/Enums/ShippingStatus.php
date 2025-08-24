@@ -6,19 +6,19 @@ namespace App\Enums;
 
 enum ShippingStatus: string
 {
-    case  PENDING = '0';
+    case PENDING = '0';
 
-    case  PREPARING = '1';
+    case PREPARING = '1';
 
     case SUBMITTED = '2';
 
-    case  SHIPPING = '3';
+    case SHIPPING = '3';
 
-    case  DELIVERED = '4';
+    case DELIVERED = '4';
 
-    case  CANCELLED = '5';
+    case CANCELLED = '5';
 
-    case  FAILED = '6';
+    case FAILED = '6';
 
     public function label(): string
     {

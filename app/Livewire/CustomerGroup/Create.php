@@ -6,15 +6,14 @@ namespace App\Livewire\CustomerGroup;
 
 use App\Models\CustomerGroup;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $createModal = false;
 
     public CustomerGroup $customergroup;

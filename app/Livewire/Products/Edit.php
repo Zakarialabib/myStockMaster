@@ -9,19 +9,18 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
-    use LivewireAlert;
-
     public $product;
 
     public $productWarehouses;

@@ -8,15 +8,14 @@ use Livewire\Component;
 use App\Models\Language;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $language;
 
     #[Computed]

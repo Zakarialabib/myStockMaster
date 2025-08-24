@@ -24,7 +24,7 @@ use App\Livewire\CashRegister\Index as CashRegisterIndex;
 use App\Livewire\Currency\Index as CurrencyIndex;
 use App\Livewire\Customers\Index as CustomersIndex;
 use App\Livewire\Customers\Details as CustomerDetails;
-use App\Livewire\CustomerGroup\Index  as CustomerGroupIndex;
+use App\Livewire\CustomerGroup\Index as CustomerGroupIndex;
 use App\Livewire\Email\Index as EmailIndex;
 use App\Livewire\Expense\Index as ExpensesIndex;
 use App\Livewire\ExpenseCategories\Index as ExpenseCategoriesIndex;
@@ -35,8 +35,8 @@ use App\Livewire\Products\Index as ProductsIndex;
 use App\Livewire\Products\Edit as EditProduct;
 use App\Livewire\Products\Barcode as BarcodeIndex;
 use App\Livewire\Role\Index as RolesIndex;
-use App\Livewire\Suppliers\Index  as SuppliersIndex;
-use App\Livewire\Suppliers\Details  as SupplierDetails;
+use App\Livewire\Suppliers\Index as SuppliersIndex;
+use App\Livewire\Suppliers\Details as SupplierDetails;
 use App\Livewire\Warehouses\Index as WarehouseIndex;
 use App\Livewire\Shipping\Index as ShippingIndex;
 use App\Livewire\Users\Index as UsersIndex;
@@ -102,7 +102,7 @@ Route::view('profile', 'profile')
 
 // admin prefix group
 
-Route::get('/', fn() => redirect()->route('dashboard'));
+Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
     // Change lang

@@ -207,8 +207,8 @@ class Sale extends Model
 
     public function scopeSearchByReference($query, $term)
     {
-        return $query->when(!empty($term), function ($query) use ($term) {
-            $query->where('reference', 'like', '%' . $term . '%');
+        return $query->when( ! empty($term), function ($query) use ($term) {
+            $query->where('reference', 'like', '%'.$term.'%');
         });
     }
 }

@@ -12,7 +12,6 @@ use Livewire\Component;
 use App\Models\Sale;
 use App\Models\SaleDetails;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Livewire\Utils\WithModels;
@@ -25,7 +24,6 @@ use Livewire\Attributes\Validate;
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $sale;

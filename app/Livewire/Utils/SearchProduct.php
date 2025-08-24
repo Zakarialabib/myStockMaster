@@ -6,18 +6,17 @@ namespace App\Livewire\Utils;
 
 use App\Models\Category;
 use App\Models\Product;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Traits\WithAlert;
 
 class SearchProduct extends Component
 {
+    use WithAlert;
     use WithPagination;
-    use LivewireAlert;
-
     public $product;
 
     #[Url(as: 'q')]

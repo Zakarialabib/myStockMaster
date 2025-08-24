@@ -8,9 +8,11 @@ use Illuminate\Contracts\View\View;
 use JeroenDesloovere\VCard\VCard;
 use Livewire\Component;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Traits\WithAlert;
 
 class QrGenerator extends Component
 {
+    use WithAlert;
     public $activeTab = 'url';
 
     public $email;
@@ -84,7 +86,7 @@ class QrGenerator extends Component
         $this->company_name = 'Techno Service phone';
         $this->phone = '+212696571641';
         $this->email = 'technoservicephone1@gmail.com';
-        $this->address = '10 BOULEVARD ABDELMOUMEN MAGASIN n°8';
+        $this->address = '10 BOULEVARD ABDELMOUMEN MAGASIN nÂ°8';
         $this->websiteUrl = 'www.technoservicephone.com';
         $this->instagramLink = 'https://www.instagram.com/technoservicephone/';
         $this->facebookLink = 'https://www.facebook.com/profile.php?id=100092743667081&mibextid=ZbWKwL';

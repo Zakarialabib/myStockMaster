@@ -13,10 +13,12 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class PaymentsReport extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     #[Validate('required', message: 'The start date field is required.')]

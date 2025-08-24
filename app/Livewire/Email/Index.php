@@ -11,10 +11,12 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Livewire\Utils\Datatable;
 use Illuminate\Support\Facades\Gate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
 
     public $email;

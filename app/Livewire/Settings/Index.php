@@ -9,17 +9,17 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use WithFileUploads;
-    use LivewireAlert;
     use WithModels;
 
     public $settings;

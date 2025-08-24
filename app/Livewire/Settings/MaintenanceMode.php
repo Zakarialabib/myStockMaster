@@ -9,13 +9,12 @@ use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class MaintenanceMode extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $site_maintenance_message;
 
     public $status;

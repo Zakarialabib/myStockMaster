@@ -7,14 +7,13 @@ namespace App\Livewire\PurchaseReturn;
 use App\Models\PurchaseReturn;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $warehouse_id;
 
     #[Validate('required')]

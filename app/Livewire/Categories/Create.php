@@ -6,7 +6,6 @@ namespace App\Livewire\Categories;
 
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -15,7 +14,6 @@ use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     /** @var bool */

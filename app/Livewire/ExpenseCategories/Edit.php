@@ -6,15 +6,14 @@ namespace App\Livewire\ExpenseCategories;
 
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Edit extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public bool $editModal = false;
 
     public $expenseCategory;

@@ -10,9 +10,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $brand;
 
     public $showModal = false;

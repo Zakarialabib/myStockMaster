@@ -7,7 +7,6 @@ namespace App\Livewire\Email;
 use App\Models\EmailTemplate;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\Gate;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     public $createModal;

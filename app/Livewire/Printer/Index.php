@@ -7,14 +7,12 @@ namespace App\Livewire\Printer;
 use App\Livewire\Utils\Datatable;
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use Datatable;
 
     public $printer;

@@ -13,10 +13,12 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class CustomersReport extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     public $customer_id;

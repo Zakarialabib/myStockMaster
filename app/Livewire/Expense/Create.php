@@ -9,7 +9,6 @@ use App\Models\CashRegister;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
@@ -18,7 +17,6 @@ use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $createModal = false;

@@ -9,15 +9,15 @@ use App\Livewire\Utils\WithModels;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
-    use LivewireAlert;
     use WithModels;
 
     public $showModal = false;

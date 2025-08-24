@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Shipping;
 
 use App\Models\Shipping;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $createModal = false;
 
     public Shipping $shipping;

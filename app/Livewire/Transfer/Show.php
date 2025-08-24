@@ -8,9 +8,11 @@ use App\Models\Transfer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $transfer;
 
     public $showModal = false;

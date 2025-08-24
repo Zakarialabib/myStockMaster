@@ -13,10 +13,12 @@ use Livewire\Component;
 use App\Enums\Status;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Register extends Component
 {
+    use WithAlert;
     #[Validate('required')]
     public $name = '';
 

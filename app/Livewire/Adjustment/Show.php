@@ -7,9 +7,11 @@ namespace App\Livewire\Adjustment;
 use App\Models\Adjustment;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $adjustment;
 
     public $showModal = false;

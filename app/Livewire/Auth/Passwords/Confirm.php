@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Livewire\Auth\Passwords;
 
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Confirm extends Component
 {
+    use WithAlert;
     /** @var string */
     public $password = '';
 

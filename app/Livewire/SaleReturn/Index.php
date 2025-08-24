@@ -9,17 +9,16 @@ use App\Livewire\Utils\Datatable;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
     use WithFileUploads;
-    use LivewireAlert;
-
     public $salereturn;
 
     public $model = SaleReturn::class;

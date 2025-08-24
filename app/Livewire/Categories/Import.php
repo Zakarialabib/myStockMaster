@@ -10,12 +10,10 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 
 class Import extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     public $file;

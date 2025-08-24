@@ -9,9 +9,11 @@ use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class PayDue extends Component
 {
+    use WithAlert;
     public $amount;
 
     public $supplier_id;

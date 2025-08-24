@@ -18,9 +18,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Transactions extends Component
 {
+    use WithAlert;
     public $typeChart = 'monthly';
 
     public $profit;

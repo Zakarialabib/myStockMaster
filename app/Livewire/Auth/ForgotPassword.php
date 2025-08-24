@@ -7,10 +7,12 @@ namespace App\Livewire\Auth;
 use Illuminate\Support\Facades\Password;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class ForgotPassword extends Component
 {
+    use WithAlert;
     public $email = '';
 
     public $emailSentMessage = false;

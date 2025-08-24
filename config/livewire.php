@@ -3,45 +3,44 @@
 return [
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Class Namespace
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | This value sets the root namespace for Livewire component classes in
-    | your application. This value affects component auto-discovery and
-    | any Livewire file helper commands, like `artisan make:livewire`.
-    |
-    | After changing this item, run: `php artisan livewire:discover`.
+    | This value sets the root class namespace for Livewire component classes in
+    | your application. This value will change where component auto-discovery
+    | finds components. It's also referenced by the file creation commands.
     |
     */
 
     'class_namespace' => 'App\\Livewire',
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | View Path
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | This value sets the path for Livewire component views. This affects
-    | file manipulation helper commands like `artisan make:livewire`.
+    | This value is used to specify where Livewire component Blade templates are
+    | stored when running file creation commands like `artisan make:livewire`.
+    | It is also used if you choose to omit a component's render() method.
     |
     */
 
     'view_path' => resource_path('views/livewire'),
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Layout
-    |--------------------------------------------------------------------------
-    | The default layout view that will be used when rendering a component via
-    | Route::get('/some-endpoint', SomeComponent::class);. In this case the
-    | the view returned by SomeComponent will be wrapped in "components.layouts.app"
+    |---------------------------------------------------------------------------
+    | The view that will be used as the layout when rendering a single component
+    | as an entire page via `Route::get('/post/create', CreatePost::class);`.
+    | In this case, the view returned by CreatePost will render into $slot.
     |
     */
 
     'layout' => 'components.layouts.app',
 
-     /*
+    /*
     |---------------------------------------------------------------------------
     | Lazy Loading Placeholder
     |---------------------------------------------------------------------------
@@ -52,7 +51,8 @@ return [
     */
 
     'lazy_placeholder' => null,
-     /*
+
+    /*
     |---------------------------------------------------------------------------
     | Temporary File Uploads
     |---------------------------------------------------------------------------
@@ -74,6 +74,7 @@ return [
             'jpg', 'jpeg', 'mpga', 'webp', 'wma',
         ],
         'max_upload_time' => 5, // Max duration (in minutes) before an upload is invalidated...
+        'cleanup' => true, // Should cleanup temporary uploads older than 24 hrs...
     ],
 
     /*

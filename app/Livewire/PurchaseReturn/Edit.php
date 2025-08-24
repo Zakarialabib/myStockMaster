@@ -7,12 +7,11 @@ namespace App\Livewire\PurchaseReturn;
 use App\Models\PurchaseReturn;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\WithAlert;
 
 class Edit extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $purchasereturn;
 
     public bool $editModal = false;

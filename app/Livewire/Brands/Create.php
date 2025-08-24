@@ -7,7 +7,6 @@ namespace App\Livewire\Brands;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -15,7 +14,6 @@ use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
 
     public $createModal = false;

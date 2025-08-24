@@ -9,19 +9,19 @@ use App\Livewire\Utils\Datatable;
 use App\Imports\SupplierImport;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use WithFileUploads;
-    use LivewireAlert;
     use Datatable;
 
     /** @var mixed */

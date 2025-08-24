@@ -8,10 +8,12 @@ use Livewire\Component;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class ConfirmPassword extends Component
 {
+    use WithAlert;
     #[Validate(['required', 'string'])]
     public string $password = '';
 

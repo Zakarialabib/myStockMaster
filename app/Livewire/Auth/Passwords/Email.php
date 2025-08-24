@@ -6,9 +6,11 @@ namespace App\Livewire\Auth\Passwords;
 
 use Illuminate\Support\Facades\Password;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Email extends Component
 {
+    use WithAlert;
     /** @var string */
     public $email;
 

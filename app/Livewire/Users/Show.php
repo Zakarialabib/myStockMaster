@@ -7,9 +7,11 @@ namespace App\Livewire\Users;
 use Livewire\Component;
 use App\Models\User;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class Show extends Component
 {
+    use WithAlert;
     public $user;
 
     /** @var bool */

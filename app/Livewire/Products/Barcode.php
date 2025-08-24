@@ -6,7 +6,6 @@ namespace App\Livewire\Products;
 
 use App\Livewire\Utils\WithModels;
 use App\Models\ProductWarehouse;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
@@ -16,7 +15,6 @@ use Livewire\Attributes\On;
 #[Layout('layouts.app')]
 class Barcode extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $warehouse_id;
@@ -68,7 +66,7 @@ class Barcode extends Component
 
         $this->barcodes = [];
 
-        foreach ($this->products as  $product) {
+        foreach ($this->products as $product) {
             $quantity = $product['quantity'];
             $name = $product['name'];
             $price = $product['price'];

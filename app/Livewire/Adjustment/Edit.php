@@ -10,14 +10,12 @@ use App\Models\Adjustment;
 use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use LivewireAlert;
     use WithModels;
 
     public $adjustment;

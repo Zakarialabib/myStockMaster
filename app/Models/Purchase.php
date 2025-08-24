@@ -142,9 +142,7 @@ class Purchase extends Model
         return $query->whereMonth('date', now()->month);
     }
 
-    /**
-     * get shipping amount
-     */
+    /** get shipping amount */
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
@@ -152,9 +150,7 @@ class Purchase extends Model
         );
     }
 
-    /**
-     * get paid amount
-     */
+    /** get paid amount */
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
@@ -162,9 +158,7 @@ class Purchase extends Model
         );
     }
 
-    /**
-     * get total amount
-     */
+    /** get total amount */
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
@@ -172,9 +166,7 @@ class Purchase extends Model
         );
     }
 
-    /**
-     * get due amount
-     */
+    /** get due amount */
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
@@ -182,9 +174,7 @@ class Purchase extends Model
         );
     }
 
-    /**
-     * get tax amount
-     */
+    /** get tax amount */
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
@@ -192,9 +182,7 @@ class Purchase extends Model
         );
     }
 
-    /**
-     * get discount amount
-     */
+    /** get discount amount */
     protected function discountAmount(): Attribute
     {
         return Attribute::make(

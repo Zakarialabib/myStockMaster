@@ -6,15 +6,14 @@ namespace App\Livewire\Currency;
 
 use App\Models\Currency;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $createModal = false;
 
     public Currency $currency;

@@ -7,7 +7,6 @@ namespace App\Livewire\ExpenseCategories;
 use App\Livewire\Utils\Datatable;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -15,7 +14,6 @@ use Livewire\Attributes\On;
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use Datatable;
 
     /** @var mixed */

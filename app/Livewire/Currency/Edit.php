@@ -6,15 +6,14 @@ namespace App\Livewire\Currency;
 
 use App\Models\Currency;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Edit extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $editModal = false;
 
     /** @var mixed */

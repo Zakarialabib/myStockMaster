@@ -17,7 +17,6 @@ use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -27,7 +26,6 @@ use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
-    use LivewireAlert;
     use WithModels;
     public $cart_instance = 'purchase';
 

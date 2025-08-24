@@ -20,16 +20,16 @@ use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Validate;
 
 #[Layout('layouts.pos')]
 class Index extends Component
 {
-    use LivewireAlert;
+    use WithAlert;
     use WithModels;
 
     public $customers;
@@ -107,7 +107,7 @@ class Index extends Component
     {
         Cart::instance('sale')->destroy();
 
-        $this->customers = Customer::select(['id','name'])->get();
+        $this->customers = Customer::select(['id', 'name'])->get();
         $this->global_discount = 0;
         $this->global_tax = 0;
 

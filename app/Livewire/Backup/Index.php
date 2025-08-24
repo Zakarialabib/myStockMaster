@@ -6,18 +6,17 @@ namespace App\Livewire\Backup;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\Config;
 use Livewire\Component;
 use Throwable;
+use App\Traits\WithAlert;
 
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public $data = [];
 
     public $backup_status;

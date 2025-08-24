@@ -10,7 +10,6 @@ use App\Imports\CustomerImport;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,12 +18,13 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
-    use LivewireAlert;
     use WithFileUploads;
 
     public $customer;

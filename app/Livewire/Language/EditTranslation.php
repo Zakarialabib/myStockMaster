@@ -6,13 +6,11 @@ namespace App\Livewire\Language;
 
 use Livewire\Component;
 use App\Models\Language;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class EditTranslation extends Component
 {
-    use LivewireAlert;
     public $language;
 
     public $translations;

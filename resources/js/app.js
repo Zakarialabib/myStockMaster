@@ -4,6 +4,7 @@ import "../css/theme.css";
 import "../css/font.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import './alerts';
 
 import swal from 'sweetalert2';
 window.Swal = swal;

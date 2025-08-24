@@ -12,10 +12,12 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Details extends Component
 {
+    use WithAlert;
     use Datatable;
 
     public $model = Customer::class;

@@ -9,7 +9,6 @@ use App\Imports\BrandsImport;
 use App\Livewire\Utils\HasDelete;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,7 +19,6 @@ use Livewire\Attributes\On;
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use LivewireAlert;
     use WithFileUploads;
     use Datatable;
     use HasDelete;

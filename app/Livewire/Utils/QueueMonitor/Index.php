@@ -6,9 +6,11 @@ namespace App\Livewire\Utils\QueueMonitor;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
+    use WithAlert;
     public $search;
     public $sortBy = 'created_at';
     public $sortDirection = 'desc';

@@ -6,9 +6,11 @@ namespace App\Livewire\Settings;
 
 use App\Helpers\GitHandler;
 use Livewire\Component;
+use App\Traits\WithAlert;
 
 class Update extends Component
 {
+    use WithAlert;
     public $message;
 
     public $updateAvailable;

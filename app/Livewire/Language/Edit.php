@@ -9,13 +9,12 @@ use Livewire\Component;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\App;
 use App\Models\Language;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 class Edit extends Component
 {
-    use LivewireAlert;
-
+    use WithAlert;
     public array $languages = [];
 
     public $language;

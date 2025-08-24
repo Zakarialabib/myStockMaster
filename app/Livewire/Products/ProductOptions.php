@@ -6,9 +6,11 @@ namespace App\Livewire\Products;
 
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
+use App\Traits\WithAlert;
 
 class ProductOptions extends Component
 {
+    use WithAlert;
     public $options;
 
     public function updatedOptions($options): void

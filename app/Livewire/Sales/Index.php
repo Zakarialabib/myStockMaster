@@ -7,7 +7,6 @@ namespace App\Livewire\Sales;
 use App\Livewire\Utils\WithModels;
 use App\Models\Sale;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -16,12 +15,13 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use WithFileUploads;
-    use LivewireAlert;
     use Datatable;
     use WithModels;
 

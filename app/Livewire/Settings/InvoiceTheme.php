@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Mpdf\Mpdf;
 use Symfony\Component\HttpFoundation\Response;
+use App\Traits\WithAlert;
 
 class InvoiceTheme extends Component
 {
+    use WithAlert;
     public $templates = [];
 
     public $selectedTemplate = '';
