@@ -61,13 +61,13 @@
     "Average Purchase Return Amount": "Average Purchase Return Amount",
     "Back": "رجوع للوراء",
     "Backup": "نسخ احتياطية",
-    "Backup generated and saved to Google Drive.": "Backup generated and saved to Google Drive.",
+
     "Backup Generated with success.": "تم إضافة النسخ الاحتياطي بنجاح.",
-    "Backup saved to Google Drive successfully!": "Backup saved to Google Drive successfully!",
+
     "Backup Schedule": "Backup Schedule",
     "Backup settings": "Backup settings",
     "Backup status": "Backup status",
-    "Backup to Google Drive": "Backup to Google Drive",
+
     "Band color": "Band color",
     "Bank Transfer": "تحويل بنكي",
     "Barcode Generator": "Barcode Generator",
@@ -329,7 +329,7 @@
     "Go back": "عُد",
     "Go back to Homepage": "العودة الى الصفحة الرئيسية",
     "Go to page :page": ":page العودة الى الصفحة",
-    "Google Drive Configuration": "Google Drive Configuration",
+
     "Grand Total": "المبلغ الإجمالي",
     "Hello": "Hello",
     "Hello!": "Hello!",
@@ -453,7 +453,7 @@
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
     "Open": "Open",
-    "Open backup folder in Google Drive": "Open backup folder in Google Drive",
+
     "Open menu": "فتح القائمة",
     "Open Telegram app and search for \"BotFather\" (username: @BotFather).": "Open Telegram app and search for \"BotFather\" (username: @BotFather).",
     "Optional": "اختياري",

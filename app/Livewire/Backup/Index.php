@@ -25,23 +25,13 @@ class Index extends Component
 
     public $backup_include;
 
-    public $clientId;
 
-    public $clientSecret;
-
-    public $refreshToken;
-
-    public $folderId;
 
     public $settingsModal = false;
 
     protected array $rules = [
         'backup_status'   => 'required',
         'backup_schedule' => 'nullable',
-        'clientId'        => 'required',
-        'clientSecret'    => 'required',
-        'refreshToken'    => 'required',
-        'folderId'        => 'required',
     ];
 
     protected $listeners = [
@@ -57,13 +47,7 @@ class Index extends Component
         $this->settingsModal = true;
     }
 
-    public function saveToDriveManually(string $filename): void
-    {
-        $fileData = Storage::get($filename);
-        Storage::cloud()->put(env('APP_NAME').'/'.$filename, $fileData);
 
-        $this->alert('success', __('Backup saved to Google Drive successfully!'));
-    }
 
     public function syncToLocal(): void
     {
@@ -79,26 +63,7 @@ class Index extends Component
         $this->alert('success', __('Old backup cleaned.'));
     }
 
-    public function backupToDrive(): void
-    {
-        try {
-            // Generate backup file
-            Artisan::call('backup:run --only-db');
 
-            $drive = Storage::disk('google');
-
-            // Get the path to the latest backup
-            $backupPath = Storage::allFiles(env('APP_NAME'));
-            $latestBackup = end($backupPath);
-
-            // Upload the backup file to Google Drive
-            $drive->put($latestBackup, Storage::get($latestBackup));
-
-            $this->alert('success', __('Backup generated and saved to Google Drive.'));
-        } catch (Throwable $throwable) {
-            $this->alert('danger', __('Backup failed: '.$throwable->getMessage()));
-        }
-    }
 
     public function updateSettigns(): void
     {
@@ -109,11 +74,6 @@ class Index extends Component
                 'backup_status'   => $this->backup_status,
                 'backup_schedule' => $this->backup_schedule,
             ]);
-
-            Config::set('filesystems.disks.google.clientId', $this->clientId);
-            Config::set('filesystems.disks.google.clientSecret', $this->clientSecret);
-            Config::set('filesystems.disks.google.refreshToken', $this->refreshToken);
-            Config::set('filesystems.disks.google.folderId', $this->folderId);
 
             $this->alert('success', __('Settings backuped saved.'));
 
@@ -149,12 +109,7 @@ class Index extends Component
         }
     }
 
-    public function getContentsProperty()
-    {
-        $mainDisk = Storage::disk('google');
 
-        return $mainDisk->listContents('', true /* is_recursive */);
-    }
 
     public function render()
     {
