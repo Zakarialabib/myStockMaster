@@ -46,6 +46,16 @@ class Index extends Component
 
     public $model = Product::class;
 
+    // Add these new filters
+    public $filterAvailability = '';
+    public $filterSeasonality = '';
+
+    // protected $queryString = [
+    //     'filterAvailability' => ['except' => ''],
+    //     'filterSeasonality' => ['except' => ''],
+    // ];
+
+
     #[Computed]
     public function categories()
     {
@@ -133,7 +143,13 @@ class Index extends Component
                 's'               => $this->search ?: null,
                 'order_column'    => $this->sortBy,
                 'order_direction' => $this->sortDirection,
-            ]);
+            ])
+            ->when($this->filterAvailability !== '', function ($query) {
+                $query->where('availability', $this->filterAvailability);
+            })
+            ->when($this->filterSeasonality, function ($query) {
+                $query->where('seasonality', 'like', '%' . $this->filterSeasonality . '%');
+            });
 
         $products = $query->paginate($this->perPage);
 

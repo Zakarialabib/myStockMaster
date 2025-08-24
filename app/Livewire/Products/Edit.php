@@ -59,6 +59,14 @@ class Edit extends Component
 
     public $gallery = [];
 
+    public $productAttributes = [];
+
+    #[Validate('nullable|boolean')]
+    public $availability;
+
+    #[Validate('nullable|string|max:255')]
+    public $seasonality;
+
     public bool $best = false;
 
     public bool $hot = false;
@@ -107,12 +115,14 @@ class Edit extends Component
         $this->unit = $this->product->unit;
         $this->barcode_symbology = $this->product->barcode_symbology;
         $this->description = $this->product->description;
+        $this->availability = $this->product->availability;
+        $this->seasonality = $this->product->seasonality;
 
         $this->options = $this->product->options ?? [['type' => '', 'value' => '']];
 
         $this->productWarehouses = $this->product->warehouses;
 
-        $this->productWarehouse = $this->productWarehouses->mapWithKeys(static fn ($warehouse): array => [$warehouse->id => [
+        $this->productWarehouse = $this->productWarehouses->mapWithKeys(static fn($warehouse): array => [$warehouse->id => [
             'price'        => $warehouse->pivot->price,
             'qty'          => $warehouse->pivot->qty,
             'cost'         => $warehouse->pivot->cost,
@@ -120,6 +130,11 @@ class Edit extends Component
             'stock_alert'  => $warehouse->pivot->stock_alert,
             'is_ecommerce' => $warehouse->pivot->is_ecommerce,
         ]])->toArray();
+
+        // Load existing attributes
+        $this->productAttributes = $this->product->attributes->mapWithKeys(function ($attr) {
+            return [$attr->id => $attr->pivot->value];
+        })->toArray();
     }
 
     public function update(): void
@@ -130,10 +145,10 @@ class Edit extends Component
             $this->slug = Str::slug($this->name);
         }
 
-        if ( ! $this->image) {
+        if (! $this->image) {
             $this->image = null;
         } elseif (is_object($this->image) && method_exists($this->image, 'extension')) {
-            $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
+            $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $this->image->extension();
             $this->image->storeAs('products', $imageName, 'local_files');
             $this->image = $imageName;
         }
@@ -142,7 +157,7 @@ class Edit extends Component
             $gallery = [];
 
             foreach ($this->gallery as $value) {
-                $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$value->extension();
+                $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $value->extension();
                 $value->storeAs('products', $imageName, 'local_files');
                 $gallery[] = $imageName;
             }
@@ -161,6 +176,11 @@ class Edit extends Component
                 'stock_alert'  => $warehouse['stock_alert'],
                 'is_ecommerce' => $warehouse['is_ecommerce'],
             ]);
+        }
+
+        // Update attributes
+        foreach ($this->attributes as $id => $value) {
+            $this->product->attributes()->updateExistingPivot($id, ['value' => $value]);
         }
 
         $this->dispatch('refreshIndex')->to(Index::class);

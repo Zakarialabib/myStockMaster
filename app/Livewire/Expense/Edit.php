@@ -17,10 +17,8 @@ class Edit extends Component
 {
     use WithModels;
 
-    /** @var bool */
     public $editModal = false;
 
-    /** @var mixed */
     public $expense;
 
     #[Validate('required|string|max:255')]
@@ -37,6 +35,15 @@ class Edit extends Component
 
     #[Validate('nullable|string|max:255')]
     public $description;
+
+    #[Validate('nullable|date')]
+    public $start_date;
+
+    #[Validate('nullable|date')]
+    public $end_date;
+
+    #[Validate('required|in:none,daily,weekly,monthly,yearly')]
+    public $frequency = 'none';
 
     public $warehouse_id;
 
@@ -57,7 +64,6 @@ class Edit extends Component
         abort_if(Gate::denies('expense_update'), 403);
 
         $this->resetErrorBag();
-
         $this->resetValidation();
 
         $this->expense = Expense::find($id);
@@ -67,6 +73,9 @@ class Edit extends Component
         $this->date = $this->expense->date;
         $this->amount = $this->expense->amount;
         $this->description = $this->expense->description;
+        $this->start_date = $this->expense->start_date;
+        $this->end_date = $this->expense->end_date;
+        $this->frequency = $this->expense->frequency;
         $this->warehouse_id = $this->expense->warehouse_id;
 
         $this->editModal = true;
@@ -82,6 +91,9 @@ class Edit extends Component
             'date'         => $this->date,
             'amount'       => $this->amount,
             'description'  => $this->description,
+            'start_date'   => $this->start_date,
+            'end_date'     => $this->end_date,
+            'frequency'    => $this->frequency,
             'warehouse_id' => $this->warehouse_id,
         ]);
 

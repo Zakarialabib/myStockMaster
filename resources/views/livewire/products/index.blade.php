@@ -66,6 +66,23 @@
         </div>
     </div>
 
+    <div class="flex flex-wrap mb-4">
+        <!-- ... existing filters ... -->
+        <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+            <x-label for="filterAvailability" :value="__('Filter by Availability')" />
+            <select wire:model.live="filterAvailability" id="filterAvailability" class="block w-full mt-1">
+                <option value="">{{ __('All') }}</option>
+                <option value="1">{{ __('Available') }}</option>
+                <option value="0">{{ __('Not Available') }}</option>
+            </select>
+        </div>
+        <div class="w-full md:w-1/2 px-3">
+            <x-label for="filterSeasonality" :value="__('Filter by Seasonality')" />
+            <x-input wire:model.live="filterSeasonality" id="filterSeasonality" type="text" class="block mt-1 w-full"
+                placeholder="{{ __('Enter seasonality') }}" />
+        </div>
+    </div>
+
     <x-table>
         <x-slot name="thead">
             <x-table.th>
@@ -83,6 +100,8 @@
             <x-table.th>
                 {{ __('Cost') }}
             </x-table.th>
+            <x-table.th>{{ __('Discounted Price') }}</x-table.th>
+
             <x-table.th sortable wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null">
                 {{ __('Category') }}
             </x-table.th>
@@ -111,6 +130,8 @@
                     <x-table.td>{{ $product->total_quantity }}</x-table.td>
                     <x-table.td>{{ format_currency($product->average_price) }}</x-table.td>
                     <x-table.td>{{ format_currency($product->average_cost) }}</x-table.td>
+                    <x-table.td>{{ format_currency($product->getDiscountedPrice()) }}</x-table.td>
+
                     <x-table.td>
                         <x-button type="button" warning x-on:click="$wire.category_id = {{ $product->category->id }}">
                             {{ $product->category->name }}

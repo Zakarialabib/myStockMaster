@@ -38,6 +38,15 @@ class Create extends Component
     #[Validate('nullable|min:3')]
     public $description;
 
+    #[Validate('nullable|date')]
+    public $start_date;
+
+    #[Validate('nullable|date')]
+    public $end_date;
+
+    #[Validate('required|in:none,daily,weekly,monthly,yearly')]
+    public $frequency = 'none';
+
     public $user_id;
 
     public $warehouse_id;
@@ -55,11 +64,8 @@ class Create extends Component
     public function openCreateModal(): void
     {
         $this->resetErrorBag();
-
         $this->resetValidation();
-
         $this->date = date('Y-m-d');
-
         $this->user_id = auth()->user()->id;
 
         if (settings()->default_warehouse_id !== null) {
@@ -76,7 +82,6 @@ class Create extends Component
                 $this->cash_register_id = $cashRegister->id;
             } else {
                 $this->dispatch('createModal')->to(CashRegisterCreate::class);
-
                 return;
             }
         }
@@ -98,7 +103,7 @@ class Create extends Component
 
         $this->createModal = false;
 
-        $this->reset(['reference', 'category_id', 'date', 'amount', 'description', 'user_id', 'warehouse_id', 'cash_register_id']);
+        $this->reset(['reference', 'category_id', 'date', 'amount', 'description', 'start_date', 'end_date', 'frequency', 'user_id', 'warehouse_id', 'cash_register_id']);
     }
 
     #[Computed]
