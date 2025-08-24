@@ -61,13 +61,13 @@
     "Average Purchase Return Amount": "Ortalama Satın Alma İade Tutarı",
     "Back": "Geri",
     "Backup": "Yedekleme",
-    "Backup generated and saved to Google Drive.": "Yedek oluşturuldu ve Google Drive'a kaydedildi.",
+
     "Backup Generated with success.": "Yedekleme başarıyla oluşturuldu.",
-    "Backup saved to Google Drive successfully!": "Yedekleme başarıyla Google Drive'a kaydedildi!",
+
     "Backup Schedule": "Yedekleme Takvimi",
     "Backup settings": "Yedekleme Ayarları",
     "Backup status": "Yedekleme Durumu",
-    "Backup to Google Drive": "Google Drive'a Yedekle",
+
     "Band color": "Bant rengi",
     "Bank Transfer": "Banka Havalesi",
     "Barcode Generator": "Barkod Oluşturucu",
@@ -329,7 +329,7 @@
     "Go back": "Geri git",
     "Go back to Homepage": "Ana Sayfaya Dön",
     "Go to page :page": ":page sayfasına git",
-    "Google Drive Configuration": "Google Drive Yapılandırması",
+
     "Grand Total": "Genel Toplam",
     "Hello": "Merhaba",
     "Hello!": "Merhaba!",
@@ -453,7 +453,7 @@
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Hesabınız silindiğinde, tüm kaynaklar ve veriler kalıcı olarak silinecektir. Hesabınızı silmeden önce, saklamak istediğiniz tüm verileri indiriniz.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Hesabınız silindiğinde, tüm kaynaklar ve veriler kalıcı olarak silinecektir. Lütfen hesabınızı kalıcı olarak silmek istediğinizi onaylamak için şifrenizi girin.",
     "Open": "Aç",
-    "Open backup folder in Google Drive": "Google Drive'da yedekleme klasörünü aç",
+
     "Open menu": "Menüyü aç",
     "Open Telegram app and search for \"BotFather\" (username: @BotFather).": "Telegram uygulamasını açın ve \"BotFather\" (kullanıcı adı: @BotFather) arayın.",
     "Optional": "İsteğe Bağlı",

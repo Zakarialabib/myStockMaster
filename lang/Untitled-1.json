@@ -47,13 +47,13 @@
     "Authentication successful !": "Autenticação bem sucedida!",
     "Back": "Voltar",
     "Backup": "Backup",
-    "Backup generated and saved to Google Drive.": "Backup gerado e salvo no Google Drive.",
+
     "Backup Generated with success.": "Backup gerado com sucesso.",
-    "Backup saved to Google Drive successfully!": "Backup salvo no Google Drive com sucesso!",
+
     "Backup Schedule": "Agendamento de backup",
     "Backup settings": "Configurações de backup",
     "Backup status": "Status do backup",
-    "Backup to Google Drive": "Backup para o Google Drive",
+
     "Bank Transfer": "Transferência bancária",
     "Barcode Symbology": "Simbologia de código de barras",
     "Barcodes": "Códigos de barras",
@@ -273,7 +273,7 @@
 "Go back": "Voltar",
 "Go back to Homepage": "Voltar para a página inicial",
 "Go to page :page": "Ir para a página :page",
-"Google Drive Configuration": "Configuração do Google Drive",
+
 "Grand Total": "Total Geral",
 "Hello": "Olá",
 "Here are the steps to follow": "Aqui estão os passos a seguir",
@@ -369,7 +369,7 @@
 "of": "de",
 "Oh no": "Oh não",
 "Old backup cleaned.": "Backup antigo limpo.",
-"Open backup folder in Google Drive": "Abrir pasta de backup no Google Drive",
+
 "Open menu": "Abrir menu",
 "Open Telegram app and search for BotFather (username: @BotFather).": "Abra o aplicativo Telegram e procure por BotFather (nome de usuário: @BotFather).",
 "Optional": "Opcional",
