@@ -1,15 +1,18 @@
 import './bootstrap';
-import '../css/app.css'; 
-import "../css/theme.css";
-import "../css/font.css";
-import "perfect-scrollbar/css/perfect-scrollbar.css";
+
 import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+
+import flatpickr from "flatpickr";
+window.flatpickr = flatpickr;
+
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
+window.PerfectScrollbar = PerfectScrollbar;
+
 import './alerts';
 
 import swal from 'sweetalert2';
 window.Swal = swal;
-
-import "@fortawesome/fontawesome-free/css/all.css";
 
 import ApexCharts from 'apexcharts';
 window.ApexCharts = ApexCharts;
@@ -17,13 +20,34 @@ window.ApexCharts = ApexCharts;
 import Sortable from 'sortablejs';
 window.Sortable = Sortable;
 
-
-import PerfectScrollbar from "perfect-scrollbar";
-window.PerfectScrollbar = PerfectScrollbar;
-
 Alpine.data("mainState", () => {
     
     let lastScrollTop = 0;
+    
+    const toggleFullscreen = (elem) => {
+        elem = elem || document.documentElement;
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    };
     
     const init = function () {
         window.addEventListener("scroll", () => {
@@ -45,9 +69,7 @@ Alpine.data("mainState", () => {
             }
             lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
         });
-    };
-
-    
+    };    
 
     Alpine.data("loadingMask", () => ({
         pageLoaded: false,
@@ -62,10 +84,8 @@ Alpine.data("mainState", () => {
         if (window.localStorage.getItem("dark")) {
             return JSON.parse(window.localStorage.getItem("dark"));
         }
-        return (
-            !!window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-        );
+        // Default to light mode instead of system preference
+        return false;
     };
     const setTheme = (value) => {
         window.localStorage.setItem("dark", value);
@@ -118,6 +138,7 @@ Alpine.data("mainState", () => {
         },
         scrollingDown: false,
         scrollingUp: false,
+        toggleFullscreen,
     };
 });
 

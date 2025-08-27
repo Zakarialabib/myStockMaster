@@ -1,5 +1,5 @@
 .select2 {
-  @apply w-full border-0 placeholder-gray-300 text-gray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring !important;
+  @apply w-full border-0 placeholder-gray-300 text-gray-600 bg-white rounded text-sm shadow-sm focus:outline-none focus:ring !important;
 }
 
 .select2-dropdown {
@@ -13,7 +13,6 @@
 .select2-container--default .select2-selection--multiple {
   @apply border-0 text-sm
 }
-
 
 .select2-container--default.select2-container--focus .select2-selection--single,
 .select2-container--default.select2-container--focus .select2-selection--multiple {
