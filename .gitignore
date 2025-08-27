@@ -24,3 +24,6 @@ yarn-error.log
 public/vendor/*
 docs/.vitepress/dist and  
 docs/.vitepress/cache
+yarn.lock
+package-lock.json
+composer.lock

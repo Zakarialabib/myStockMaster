@@ -30,6 +30,7 @@
         "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.23",
+        "laravel/boost": "^1.0",
         "laravel/breeze": "*",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",

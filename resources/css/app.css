@@ -1,3 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config '../../tailwind.config.js';
+@import 'tailwindcss';
+
+@import '../css/theme.css';
+@import '../css/font.css';
+/* @import '../css/select.css'; */
+@import "@fortawesome/fontawesome-free/css/all.css";
+@custom-variant dark (&:where(.dark, .dark *));
+
