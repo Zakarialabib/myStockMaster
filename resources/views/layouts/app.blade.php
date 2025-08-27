@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ rtl: isRtl }" class="scroll-smooth"
+<html x-data="mainState" :class="{ rtl: isRtl, dark: isDarkMode }" class="scroll-smooth"
     lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -10,7 +10,7 @@
     <meta name="csrf_token" value="{{ csrf_token() }}" />
     <meta name="robots" content="nofollow">
 
-    <title>@yield('title') || {{ settings()->company_name }}</title>
+    <title>@yield('title') ||  {{ settings()->company_name ?? config('app.name') }}</title>
     <!-- Styles -->
 
     <!-- Favicon -->
@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="/images/icon-192x192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="{{ settings()->company_name }}">
+    <meta name="apple-mobile-web-app-title" content=" {{ settings()->company_name ?? config('app.name') }}">
 
     @include('includes.main-css')
     @vite('resources/css/app.css')
