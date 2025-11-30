@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Product;
 use App\Models\Quotation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -21,7 +20,7 @@ class CreateQuotationDetailsTable extends Migration
             $table->id();
 
             $table->foreignIdFor(Quotation::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Product::class)->nullable()->constrained('products')->cascadeOnDelete();
+            $table->foreignUuid('product_id')->nullable()->constrained('products')->cascadeOnDelete();
 
             $table->string('name');
             $table->string('code');

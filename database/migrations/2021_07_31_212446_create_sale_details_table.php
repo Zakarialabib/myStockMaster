@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
@@ -21,7 +20,7 @@ class CreateSaleDetailsTable extends Migration
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Sale::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Product::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name');

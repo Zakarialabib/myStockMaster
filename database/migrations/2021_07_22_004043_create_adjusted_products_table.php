@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\Adjustment;
-use App\Models\Product;
 use App\Models\Warehouse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +21,7 @@ class CreateAdjustedProductsTable extends Migration
             $table->id();
 
             $table->foreignIdFor(Adjustment::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Product::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
 
             $table->integer('quantity');

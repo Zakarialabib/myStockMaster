@@ -11,6 +11,7 @@
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel-notification-channels/telegram": "^6.0",
+        "laravel/boost": "^1.1",
         "laravel/framework": "^12.0",
         "laravel/passport": "^13.1",
         "laravel/reverb": "^1.5",
@@ -19,6 +20,7 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.0",
         "maatwebsite/excel": "^3.1.55",
+        "nativephp/electron": "^1.0@beta",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^1.0|^2.0|^3.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
@@ -30,11 +32,13 @@
         "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.23",
-        "laravel/boost": "^1.0",
+        "larastan/larastan": "^3.6",
         "laravel/breeze": "*",
+        "laravel/dusk": "^8.3",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
+        "nikic/php-parser": "^5.6",
         "nunomaduro/collision": "^8.4",
         "phpunit/phpunit": "^11.4",
         "rector/rector": "^2.1",
@@ -69,6 +73,10 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "native:dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -k -c \"#93c5fd,#c4b5fd\" \"php artisan native:serve --no-interaction\" \"npm run dev\" --names=app,vite"
         ]
     },
     "extra": {
