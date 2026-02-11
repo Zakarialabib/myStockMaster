@@ -217,7 +217,7 @@
         {{-- @push('scripts')
     <script>
         document.addEventListener('livewire:init', function() {
-            window.livewire.on('deleteModal', warehouseId => {
+            Livewire.on('deleteModal', warehouseId => {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

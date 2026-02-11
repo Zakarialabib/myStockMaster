@@ -279,7 +279,7 @@ class DesktopApp {
     showInAppNotification(title, message, type) {
         // Trigger Livewire notification component if available
         if (window.Livewire) {
-            window.Livewire.emit('addNotification', {
+            window.Livewire.dispatch('addNotification', {
                 title: title,
                 message: message,
                 type: type
@@ -581,7 +581,7 @@ class DesktopApp {
 
         // Emit resize event for Livewire components
         if (window.Livewire) {
-            window.Livewire.emit('windowResized', { width, height });
+            window.Livewire.dispatch('windowResized', { width, height });
         }
     }
 

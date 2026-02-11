@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Native\Laravel\Facades\Window;
+use Native\Laravel\Facades\Menu;
 use Native\Laravel\Contracts\ProvidesPhpIni;
 
 class NativeAppServiceProvider implements ProvidesPhpIni
@@ -13,7 +14,19 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open();
+        Menu::create(
+            Menu::app(),
+            Menu::file(),
+            Menu::edit(),
+            Menu::view(),
+            Menu::window(),
+            Menu::help(),
+        );
+
+        Window::open()
+            ->width(1200)
+            ->height(800)
+            ->title('MyStockMaster');
     }
 
     /**

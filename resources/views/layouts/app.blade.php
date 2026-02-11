@@ -82,6 +82,7 @@
                 <!-- Desktop Notifications -->
                 @if(app(\App\Services\EnvironmentService::class)->isDesktop())
                     <livewire:components.desktop-notification />
+                    <livewire:components.sync-status />
                 @endif
 
                 <main class="flex-1">
