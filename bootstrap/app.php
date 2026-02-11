@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Middleware\{
+    CheckInstallation,
     Locale,
     RedirectIfAuthenticated,
     Authenticate
@@ -40,7 +41,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role'               => Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission'         => Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'check.installation' => CheckInstallation::class,
         ]);
+
+        // // Apply installation check to web routes
+        // $middleware->web(append: [
+        //     CheckInstallation::class,
+        // ]);
 
         $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
     })

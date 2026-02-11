@@ -1,46 +1,31 @@
-name: fix-code-style using pint
+name: Fix Code Style
+
 on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
 
 jobs:
   pint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Checking your input
-
-        run: |
-          echo "github.event.pull_request.merged           : $MERGED_RAW"
-          echo "github.event.pull_request.merged == 'true' : $MERGED_TRUE_STR"
-          echo "github.event.pull_request.merged  == true  : $MERGED_TRUE_BOOL"
-        env:
-          MERGED_RAW: ${{ github.event.pull_request.merged }}
-          MERGED_TRUE_STR: ${{ github.event.pull_request.merged == 'true' }}
-          MERGED_TRUE_BOOL: ${{ github.event.pull_request.merged == true }}
-
       - name: Checkout code
-
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Install Composer
-        run: composer install
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Run Laravel Pint
+      - name: Run Pint
         run: ./vendor/bin/pint
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Apply laravel pint formatting
+          commit_message: "style: fix code style issues with Pint"
