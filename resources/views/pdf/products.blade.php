@@ -123,7 +123,7 @@
             </div>
         </div>
         <div class="footer">
-            <strong>{{ settings()->company_name }}</strong><br>
+            <strong> {{ settings()->company_name ?? config('app.name') }}</strong><br>
             @if (settings()->show_address == true)
                 {{ settings()->company_address }}<br>
             @endif

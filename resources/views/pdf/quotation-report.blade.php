@@ -53,7 +53,7 @@
                   <tbody>
                      <tr>
                         <td>
-                           <div id="comp">{{ settings()->company_name }}</div>
+                           <div id="comp"> {{ settings()->company_name ?? config('app.name') }}</div>
                                 <div><strong>{{ __('ICE') }}:</strong> {{ settings()->company_tax }}</div>
                                 <div><strong>{{ __('Address') }}:</strong> {{ settings()->company_address }}</div>
                                 <div><strong>{{ __('Phone') }}:</strong> {{ settings()->company_phone }}</div>
