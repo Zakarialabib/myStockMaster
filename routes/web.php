@@ -11,6 +11,7 @@ use App\Http\Controllers\PurchasesReturnController;
 use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\SendQuotationEmailController;
+use App\Livewire\Installation\StepManager;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Dashboard;
 use App\Livewire\Users\Profile as ProfileIndex;
@@ -66,6 +67,7 @@ use App\Livewire\Reports\PurchasesReport;
 use App\Livewire\Reports\SalesReturnReport;
 use App\Livewire\Reports\PurchasesReturnReport;
 use App\Livewire\Reports\StockAlertReport;
+use App\Livewire\ComponentDocumentation;
 use Livewire\Livewire;
 
 /*
@@ -84,6 +86,8 @@ require __DIR__.'/auth.php';
 Route::view('profile', 'profile')
     ->middleware(['auth.basic'])
     ->name('profile');
+// Component Documentation
+Route::get('/components/documentation', ComponentDocumentation::class)->name('components.documentation');
 
 // Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
 
@@ -102,6 +106,11 @@ Route::view('profile', 'profile')
 
 // admin prefix group
 
+// Installation Routes
+Route::prefix('install')->name('installation.')->group(function () {
+    Route::get('/', StepManager::class)->name('index');
+});
+
 Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
@@ -117,6 +126,26 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::get('/adjustments', AdjustmentIndex::class)->name('adjustments.index');
     Route::get('/adjustment/create', CreateAdjustment::class)->name('adjustments.create');
     Route::get('/adjustment/update/{id}', EditAdjustment::class)->name('adjustments.edit');
+
+    // Database Sync (Desktop Mode)
+    Route::get('/database-sync', \App\Livewire\Admin\DatabaseSync::class)->name('admin.database-sync');
+});
+
+// Desktop-specific routes (only available in desktop mode)
+Route::prefix('desktop')->name('desktop.')->group(function () {
+    Route::post('/shortcut/execute', [App\Http\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcut.execute');
+    Route::get('/shortcuts', [App\Http\Controllers\DesktopController::class, 'getShortcuts'])->name('shortcuts.index');
+    Route::post('/shortcut/check', [App\Http\Controllers\DesktopController::class, 'checkShortcut'])->name('shortcut.check');
+    Route::post('/shortcuts/register', [App\Http\Controllers\DesktopController::class, 'registerShortcuts'])->name('shortcuts.register');
+    Route::get('/status', [App\Http\Controllers\DesktopController::class, 'getDesktopStatus'])->name('status');
+    Route::post('/action', [App\Http\Controllers\DesktopController::class, 'handleAction'])->name('action');
+    
+    // Error logging routes
+    Route::get('/errors', \App\Livewire\Admin\DesktopErrorLog::class)->name('errors.index');
+    Route::post('/errors/js', [App\Http\Controllers\DesktopController::class, 'handleJavaScriptError'])->name('errors.js');
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
 
     // Currencies
     Route::get('/currencies', CurrencyIndex::class)->name('currencies.index');
@@ -154,6 +183,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Purchases
     Route::get('/purchases', PurchasesIndex::class)->name('purchases.index');
     Route::get('/purchase/create', CreatePurchase::class)->name('purchase.create');
+    Route::get('/purchase/edit/{id}', EditPurchase::class)->name('purchase.edit');
     Route::get('/purchase/update/{id}', EditPurchase::class)->name('purchase.edit');
     Route::get('/purchase/print/{id}', PurchaseInvoice::class)->name('purchase.invoice');
     Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('purchases.pdf');
@@ -254,7 +284,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Shipping
     Route::get('/shipping', ShippingIndex::class)->name('shipping.index');
 
-    // Notification
+    // Analytics
+    Route::get('/analytics/dashboard', App\Livewire\Analytics\AnalyticsDashboard::class)->name('analytics.dashboard');
+    Route::get('/analytics/product', App\Livewire\Analytics\ProductAnalytics::class)->name('analytics.product');
+    Route::get('/analytics/revenue', App\Livewire\Analytics\RevenueReports::class)->name('analytics.revenue');
+
+    // Finance
+    Route::get('/finance/dashboard', App\Livewire\Finance\FinancialDashboard::class)->name('finance.dashboard');
+    Route::get('/finance/kpi', App\Livewire\Finance\KpiTracking::class)->name('finance.kpi');
+    Route::get('/finance/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('finance.breakeven');
+
+    // Notifications
+    Route::get('/notifications/bell', App\Livewire\Notifications\NotificationBell::class)->name('notifications.bell');
+    Route::get('/notifications/manager', App\Livewire\Notifications\NotificationManager::class)->name('notifications.manager');
+
+    // Notification (Legacy)
     Route::get('/notification', NotificationIndex::class)->name('notification');
 
     // Email Settings

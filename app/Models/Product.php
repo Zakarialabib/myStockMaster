@@ -47,15 +47,12 @@ class Product extends Model
     protected $fillable = [
         'category_id',
         'featured',
-        'uuid',
+        'id',
         'name',
         'code',
         'barcode_symbology',
-        'quantity',
-        'cost',
-        'price',
         'seasonality',
-        'availability',    
+        'availability',
         'unit',
         'status',
         'tax_amount',
@@ -72,12 +69,12 @@ class Product extends Model
     }
 
     // 'slug' => Str::slug($attributes['name'] ?? ''),
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($product) {
-            $product->slug = $product->generateSlug($product->name);
+            $product->slug = Str::slug($product->name);
         });
     }
 
@@ -148,17 +145,50 @@ class Product extends Model
 
     public function getTotalQuantityAttribute(): int|float|null
     {
-        return $this->warehouses->sum('pivot.qty');
+        // Use database aggregation for better performance
+        $sum = $this->warehouses()->sum('qty');
+
+        if ($sum === null) {
+            return null;
+        }
+
+        return (float) $sum;
     }
 
     public function getAveragePriceAttribute(): int|float|null
     {
-        return $this->warehouses->avg('pivot.price');
+        // Use database aggregation for better performance
+        $avg = $this->warehouses()->avg('price');
+
+        if ($avg === null) {
+            return null;
+        }
+
+        return (float) $avg;
     }
 
     public function getAverageCostAttribute(): int|float|null
     {
-        return $this->warehouses->avg('pivot.cost');
+        // Use database aggregation for better performance
+        $avg = $this->warehouses()->avg('cost');
+
+        if ($avg === null) {
+            return null;
+        }
+
+        return (float) $avg;
+    }
+
+    public function getAverageOldPriceAttribute(): int|float|null
+    {
+        // Add method for average old price used in getDiscountedPrice
+        $avg = $this->warehouses()->avg('old_price');
+
+        if ($avg === null) {
+            return null;
+        }
+
+        return (float) $avg;
     }
 
     // Add scope for stock alerts
@@ -170,7 +200,7 @@ class Product extends Model
     // Add method to check if product is below stock alert
     public function isBelowStockAlert(): bool
     {
-        return $this->quantity <= $this->stock_alert;
+        return $this->total_quantity <= ($this->stock_alert ?? 0);
     }
 
     public function scopeSearchByNameOrCode($query, $term)
@@ -183,25 +213,19 @@ class Product extends Model
 
     public function isAvailable()
     {
-        return $this->productWarehouse->qty > 0;
+        return $this->total_quantity > 0;
     }
 
     public function getDiscountedPrice()
     {
-        if ($this->old_price > 0) {
-            return $this->price - (($this->old_price - $this->price) / $this->old_price) * 100;
+        $averagePrice = $this->average_price;
+        $averageOldPrice = $this->average_old_price;
+
+        if ($averageOldPrice > 0 && $averagePrice > 0) {
+            // If there's an old price, return the current price (which is already discounted)
+            return $averagePrice;
         }
-        return $this->price;
-    }
 
-    public function attributes()
-    {
-        return $this->belongsToMany(ProductAttribute::class)->withPivot('value');
-    }
-
-    public function getAttribute($key)
-    {
-        $attribute = $this->attributes()->where('name', $key)->first();
-        return $attribute ? $attribute->pivot->value : parent::getAttribute($key);
+        return $averagePrice ?? 0;
     }
 }

@@ -4,23 +4,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Gross price as base price
+    | Default Storage Driver
     |--------------------------------------------------------------------------
     |
-    | This default value is used to select the method to calculate prices and taxes
-    | If true the item price is managed as a gross price, so taxes will be calculated by separation/exclusion
+    | This option controls the default storage driver that will be used
+    | to store cart data. Supported drivers: "session", "database", "cache"
     |
     */
 
-    'calculator' => \Gloudemans\Shoppingcart\Calculation\DefaultCalculator::class,
+    'storage' => env('CART_STORAGE', 'session'),
 
     /*
     |--------------------------------------------------------------------------
     | Default tax rate
     |--------------------------------------------------------------------------
     |
-    | This default tax rate will be used when you make a class implement the
-    | Taxable interface and use the HasTax trait.
+    | This default tax rate will be used when calculating taxes for cart items.
     |
     */
 
@@ -28,11 +27,11 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Shoppingcart database settings
+    | Cart database settings
     |--------------------------------------------------------------------------
     |
-    | Here you can set the connection that the shoppingcart should use when
-    | storing and restoring a cart.
+    | Here you can set the connection that the cart should use when
+    | storing and restoring cart data in the database.
     |
     */
 
@@ -40,7 +39,26 @@ return [
 
         'connection' => null,
 
-        'table' => 'shoppingcart',
+        'carts_table' => 'carts',
+
+        'cart_items_table' => 'cart_items',
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache settings
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for cache-based cart storage.
+    |
+    */
+
+    'cache' => [
+
+        'prefix' => 'cart_',
+
+        'ttl' => 60 * 24 * 7, // 7 days in minutes
 
     ],
 

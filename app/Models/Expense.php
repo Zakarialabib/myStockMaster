@@ -43,7 +43,7 @@ class Expense extends Model
         'cash_register_id',
         'start_date',
         'end_date',
-        'frequency',   
+        'frequency',
     ];
 
     protected static function boot()

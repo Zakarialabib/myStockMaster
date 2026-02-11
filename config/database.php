@@ -43,6 +43,14 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'sqlite_desktop' => [
+            'driver' => 'sqlite',
+            'url' => env('DESKTOP_DB_URL'),
+            'database' => env('DESKTOP_DB_DATABASE', storage_path('database/desktop.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),

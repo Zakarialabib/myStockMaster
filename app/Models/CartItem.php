@@ -1,0 +1,194 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
+class CartItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'cart_id',
+        'associable_type',
+        'associable_id',
+        'name',
+        'price',
+        'quantity',
+        'attributes',
+        'conditions',
+    ];
+
+    protected $casts = [
+        'price'      => 'decimal:2',
+        'quantity'   => 'integer',
+        'attributes' => 'array',
+        'conditions' => 'array',
+    ];
+
+    /** Get the cart that owns this item */
+    public function cart(): BelongsTo
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    /** Get the associated model (Product, Service, etc.) */
+    public function associable(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    /** Get the item's subtotal */
+    public function getSubTotalAttribute(): float
+    {
+        return $this->price * $this->quantity;
+    }
+
+    /** Get the item's price with conditions applied */
+    public function getPriceWithConditionsAttribute(): float
+    {
+        $price = $this->price;
+
+        if ( ! empty($this->conditions)) {
+            foreach ($this->conditions as $condition) {
+                $price = $this->applyCondition($price, $condition);
+            }
+        }
+
+        return max(0, $price);
+    }
+
+    /** Get the item's subtotal with conditions applied */
+    public function getSubTotalWithConditionsAttribute(): float
+    {
+        return $this->price_with_conditions * $this->quantity;
+    }
+
+    /** Apply a condition to a price */
+    protected function applyCondition(float $amount, array $condition): float
+    {
+        $value = $condition['value'] ?? 0;
+        $type = $condition['type'] ?? 'fixed';
+
+        if (is_string($value)) {
+            // Handle percentage values (e.g., "10%", "-5%")
+            if (str_ends_with($value, '%')) {
+                $percentage = (float) str_replace('%', '', $value);
+
+                return $amount + ($amount * ($percentage / 100));
+            }
+
+            // Handle fixed values with + or - prefix
+            if (str_starts_with($value, '+') || str_starts_with($value, '-')) {
+                return $amount + (float) $value;
+            }
+
+            // Default to fixed value
+            return $amount + (float) $value;
+        }
+
+        // Handle numeric values based on type
+        switch ($type) {
+            case 'percentage':
+                return $amount + ($amount * ($value / 100));
+            case 'fixed':
+            default:
+                return $amount + $value;
+        }
+    }
+
+    /** Add a condition to this item */
+    public function addCondition(array $condition): self
+    {
+        $conditions = $this->conditions ?? [];
+        $conditions[] = array_merge([
+            'name'  => 'Condition',
+            'type'  => 'fixed',
+            'value' => 0,
+            'order' => 0,
+        ], $condition);
+
+        $this->conditions = $conditions;
+
+        return $this;
+    }
+
+    /** Remove a condition by name */
+    public function removeCondition(string $name): self
+    {
+        $conditions = $this->conditions ?? [];
+        $this->conditions = array_filter($conditions, function ($condition) use ($name) {
+            return ($condition['name'] ?? '') !== $name;
+        });
+
+        return $this;
+    }
+
+    /** Get an attribute value */
+    public function getAttribute(string $key, $default = null)
+    {
+        $attributes = $this->attributes ?? [];
+
+        return $attributes[$key] ?? $default;
+    }
+
+    /** Set an attribute value */
+    public function setAttribute(string $key, $value): self
+    {
+        $attributes = $this->attributes ?? [];
+        $attributes[$key] = $value;
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /** Check if item has an attribute */
+    public function hasAttribute(string $key): bool
+    {
+        $attributes = $this->attributes ?? [];
+
+        return array_key_exists($key, $attributes);
+    }
+
+    /** Get formatted price */
+    public function getFormattedPriceAttribute(): string
+    {
+        return '$'.number_format($this->price, 2);
+    }
+
+    /** Get formatted subtotal */
+    public function getFormattedSubTotalAttribute(): string
+    {
+        return '$'.number_format($this->sub_total, 2);
+    }
+
+    /** Get formatted price with conditions */
+    public function getFormattedPriceWithConditionsAttribute(): string
+    {
+        return '$'.number_format($this->price_with_conditions, 2);
+    }
+
+    /** Get formatted subtotal with conditions */
+    public function getFormattedSubTotalWithConditionsAttribute(): string
+    {
+        return '$'.number_format($this->sub_total_with_conditions, 2);
+    }
+
+    /** Scope to filter by cart */
+    public function scopeForCart($query, string $cartId)
+    {
+        return $query->where('cart_id', $cartId);
+    }
+
+    /** Scope to filter by associable model */
+    public function scopeForModel($query, string $type, int $id)
+    {
+        return $query->where('associable_type', $type)
+            ->where('associable_id', $id);
+    }
+}

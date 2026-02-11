@@ -12,7 +12,8 @@ class Setting extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'analytics_control' => 'array',
+        'analytics_control'      => 'array',
+        'installation_completed' => 'boolean',
     ];
 
     public function currency(): BelongsTo
@@ -38,5 +39,24 @@ class Setting extends Model
     public function setInvoiceControlAttribute($value)
     {
         $this->attributes['invoice_control'] = json_encode($value);
+    }
+
+    /** Set a specific setting value */
+    public static function set(string $key, $value): void
+    {
+        $setting = static::first();
+
+        if ($setting) {
+            $setting->update([$key => $value]);
+            cache()->forget('settings');
+        }
+    }
+
+    /** Get a specific setting value with default fallback */
+    public static function get(string $key, $default = null)
+    {
+        $settings = settings();
+
+        return $settings ? ($settings->{$key} ?? $default) : $default;
     }
 }

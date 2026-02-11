@@ -59,16 +59,16 @@ class AppServiceProvider extends ServiceProvider
 
     private function getLanguages()
     {
-        if ( ! app()->runningInConsole()) {
-            if ( ! Schema::hasTable('languages')) {
-                return;
-            }
-
-            return cache()->rememberForever('languages', function () {
-                return Session::has('language')
-                    ? Language::pluck('name', 'code')->toArray()
-                    : Language::where('is_default', 1)->first();
-            });
+        // if ( ! app()->runningInConsole()) {
+        if ( ! Schema::hasTable('languages')) {
+            return;
         }
+
+        return cache()->rememberForever('languages', function () {
+            return Session::has('language')
+                ? Language::pluck('name', 'code')->toArray()
+                : Language::where('is_default', 1)->first();
+        });
+        // }
     }
 }

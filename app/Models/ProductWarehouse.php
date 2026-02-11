@@ -28,7 +28,7 @@ class ProductWarehouse extends Pivot
     ];
 
     protected $casts = [
-        'product_id'   => 'integer',
+        'product_id'   => 'string',
         'warehouse_id' => 'integer',
     ];
 
@@ -51,6 +51,7 @@ class ProductWarehouse extends Pivot
     {
         return Attribute::make(
             get: static fn ($value): int|float => $value / 100,
+            set: static fn ($value): int => (int) ($value * 100),
         );
     }
 
@@ -58,6 +59,7 @@ class ProductWarehouse extends Pivot
     {
         return Attribute::make(
             get: static fn ($value): int|float => $value / 100,
+            set: static fn ($value): int => (int) ($value * 100),
         );
     }
 
@@ -65,6 +67,7 @@ class ProductWarehouse extends Pivot
     {
         return Attribute::make(
             get: static fn ($value): int|float => $value / 100,
+            set: static fn ($value): int => (int) ($value * 100),
         );
     }
 }

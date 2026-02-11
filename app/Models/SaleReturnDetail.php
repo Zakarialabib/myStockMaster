@@ -48,6 +48,7 @@ class SaleReturnDetail extends Model
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 
@@ -60,6 +61,7 @@ class SaleReturnDetail extends Model
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 
@@ -72,11 +74,12 @@ class SaleReturnDetail extends Model
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 
     /**
-     * Interact with shipping amount
+     * Interact with product discount amount
      *
      * @return Attribute
      */
@@ -84,18 +87,20 @@ class SaleReturnDetail extends Model
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 
     /**
-     * Interact with shipping amount
+     * Interact with product tax amount
      *
      * @return Attribute
      */
-    protected function productTaxAmountAttribute(): Attribute
+    protected function productTaxAmount(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value / 100,
+            set: fn ($value) => $value * 100,
         );
     }
 }
