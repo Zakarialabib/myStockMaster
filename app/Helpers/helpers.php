@@ -6,15 +6,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Number;
 
 if ( ! function_exists('settings')) {
-    function settings()
+    function settings($key = null, $default = null)
     {
-        return cache()->rememberForever('settings', function () {
+        $settings = cache()->rememberForever('settings', function () {
             if (Schema::hasTable('settings')) {
                 return App\Models\Setting::with('currency')->first();
             }
 
             return null;
         });
+
+        if ($key === null) {
+            return $settings;
+        }
+
+        return $settings ? ($settings->{$key} ?? $default) : $default;
     }
 }
 

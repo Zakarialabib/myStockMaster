@@ -10,7 +10,7 @@ trait LazySpinner
     {
         return <<<'HTML'
             <div>
-                <div class="fixed inset-0 z-[100] flex items-center justify-center bg-white dark:gray-900">
+                <div class="fixed inset-0 z-100 flex items-center justify-center bg-white dark:gray-900">
                     <div class="mx-auto my-auto">
                         <svg class="animate-spin inline-block bw-spinner h-16 w-16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
