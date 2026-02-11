@@ -62,7 +62,7 @@ class Create extends Component
     public $brand_id;
 
     public $options;
-    
+
     #[Validate('nullable|boolean')]
     public $availability;
 

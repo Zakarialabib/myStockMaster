@@ -1,12 +1,12 @@
 # Create a sort-field like sort in resources/views/components/table/sort.blade.php:
 # <div class="inline-flex items-center">
-#     <button wire:click="sortBy('{{ $field }}')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+#     <button wire:click="sortBy('{{ $field }}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden">
 #         <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24">
 #             <path class="heroicon-ui"
 #                 d="M7 11l5-5 5 5m-5-5v12" />
 #         </svg>
 #     </button>
-#     <button wire:click="sortBy('{{ $field }}')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+#     <button wire:click="sortBy('{{ $field }}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden">
 #         <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24">
 #             <path class="heroicon-ui" 
 #                 d="M17 13l-5 5-5-5m5 5V6" />

@@ -9,15 +9,36 @@
 --}}
 
 @props([
-    'leadingAddOn' => false,
+    'leadingAddOn' => null,
+    'icon' => null,
+    'size' => 'md',
+    'type' => 'text'
 ])
 
-<div class="flex rounded-md shadow-sm">
+@php
+    $sizeClasses = [
+        'sm' => 'px-3 py-1.5 text-sm',
+        'md' => 'px-3 py-2 text-sm',
+        'lg' => 'px-4 py-3 text-base',
+    ];
+    
+    $baseClasses = 'block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-all duration-200';
+    $iconPadding = $icon ? 'pl-10' : '';
+    $leadingPadding = $leadingAddOn ? 'rounded-l-none' : '';
+    
+    $classes = $baseClasses . ' ' . ($sizeClasses[$size] ?? $sizeClasses['md']) . ' ' . $iconPadding . ' ' . $leadingPadding;
+@endphp
+
+<div class="relative flex">
     @if ($leadingAddOn)
-        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-zinc-300 bg-zinc-50 text-zinc-500 sm:text-sm">
-            {{ $leadingAddOn }}
-        </span>
+        {{ $leadingAddOn }}
+    @endif
+    
+    @if($icon)
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <i class="{{ $icon }} text-gray-400 dark:text-gray-500"></i>
+        </div>
     @endif
 
-    <input {{ $attributes->merge(['class' => 'flex-1 form-input border-cool-zinc-300 block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5' . ($leadingAddOn ? ' rounded-none rounded-r-md' : '')]) }}/>
+    <input type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }} />
 </div>

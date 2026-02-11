@@ -4,7 +4,7 @@
 $isActiveClasses = $active
     ? 'bg-indigo-500 text-white active:bg-indigo-500'
     : 'text-gray-500 font-bold hover:text-gray-700 hover:bg-gray-100';
-$classes = 'flex items-center hover:text-white hover:bg-indigo-500 py-3 pr-4 rounded ' . $isActiveClasses;
+$classes = 'flex items-center hover:text-white hover:bg-indigo-500 py-3 pr-4 rounded-sm ' . $isActiveClasses;
 if ($collapsible) {
     $classes .= ' w-full';
 }

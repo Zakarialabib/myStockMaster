@@ -13,7 +13,7 @@
     <div x-data="{ activeTab: 'local' }">
         <ul class="flex border-b">
             <li class="-mb-px mr-1">
-                <a class="inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-800 font-semibold hover:bg-blue-600 transition duration-300 ease-in-out"
+                <a class="inline-block border-l border-t border-r rounded-t-sm py-2 px-4 text-blue-800 font-semibold hover:bg-blue-600 transition duration-300 ease-in-out"
                     href="#" :class="{ 'border-blue-500 bg-blue-600 text-white': activeTab === 'local' }"
                     x-on:click.prevent="activeTab = 'local'">
                     {{ __('Local') }}

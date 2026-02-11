@@ -145,7 +145,7 @@ class Index extends Component
 
         // Example: save to database or session
         // Example: emit event to update parent component
-        // $this->emit('analyticsControlUpdated', $updatedAnalyticsControl);
+        // $this->dispatch('analyticsControlUpdated', $updatedAnalyticsControl);
     }
 
     public function toggleStatus($index)

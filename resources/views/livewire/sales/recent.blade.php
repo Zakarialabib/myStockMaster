@@ -7,7 +7,7 @@
             <div class="flex flex-wrap justify-center">
                 <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
                     <select wire:model.live="perPage"
-                        class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                        class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                         @foreach ($paginationOptions as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
@@ -59,7 +59,7 @@
                                 </x-table.td>
                                 <x-table.td>
                                     @if ($sale->customer)
-                                        <a href="{{ route('customer.details', $sale->customer->uuid) }}"
+                                        <a href="{{ route('customer.details', $sale->customer->id) }}"
                                             class="text-indigo-500 hover:text-indigo-600">
                                             {{ $sale->customer->name }}
                                         </a>
@@ -68,8 +68,8 @@
                                     @endif
                                 </x-table.td>
                                 <x-table.td>
-                                    {{ $sale->payment_id}}
-{{--
+                                    {{ $sale->payment_id }}
+                                    {{--
                                     @php
                                         $type = $sale->payment_id->getBadgeType();
                                     @endphp
@@ -84,11 +84,12 @@
                                 </x-table.td>
 
                                 <x-table.td>
-                                    @php
+                                    {{-- @php
                                         $badgeType = $sale->status->getBadgeType();
                                     @endphp
 
-                                    <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge>
+                                    <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge> --}}
+                                    {{ $sale->status }}
                                 </x-table.td>
                                 <x-table.td>
                                     <div class="flex justify-start space-x-2">
@@ -121,8 +122,7 @@
                             <x-table.tr>
                                 <x-table.td colspan="9">
                                     <div class="flex justify-center items-center">
-                                        <span
-                                            class="text-gray-400">{{ __('No results found') }}</span>
+                                        <span class="text-gray-400">{{ __('No results found') }}</span>
                                     </div>
                                 </x-table.td>
                             </x-table.tr>
@@ -182,11 +182,12 @@
                                             </div>
                                             <div>
                                                 {{ __('Payment Status') }} :
-                                                @php
+                                                {{-- @php
                                                     $type = $sale?->payment_id->getBadgeType();
                                                 @endphp
                                                 <x-badge
-                                                    :type="$type">{{ $sale?->payment_id->getName() }}</x-badge>
+                                                    :type="$type">{{ $sale?->payment_id->getName() }}</x-badge> --}}
+                                                {{ $sale?->payment_id }}
                                             </div>
                                         </div>
 

@@ -10,7 +10,7 @@
                 <input type="hidden" name="date" x-ref="date" :value="datepickerValue" />
                 <input type="text" x-on:click="initDate(datepickerValue), showDatepicker = !showDatepicker" x-model="datepickerValue"
                     x-on:keydown.escape="showDatepicker = false"
-                    {{-- class="w-full pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-zinc-600 font-medium" --}}
+                    {{-- class="w-full pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-hidden focus:shadow-outline text-zinc-600 font-medium" --}}
                     class="input input-bordered"
                     placeholder="Select date" />
 
@@ -30,7 +30,7 @@
                         </div>
                         <div>
                             <button type="button"
-                                class="inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-none focus:shadow-outline hover:bg-zinc-100"
+                                class="inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-hidden focus:shadow-outline hover:bg-zinc-100"
                                 @click="if (month == 0) {
                                                 year--;
                                                 month = 12;
@@ -42,7 +42,7 @@
                                 </svg>
                             </button>
                             <button type="button"
-                                class="inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-none focus:shadow-outline hover:bg-zinc-100"
+                                class="inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-hidden focus:shadow-outline hover:bg-zinc-100"
                                 @click="if (month == 11) {
                                                 month = 0; 
                                                 year++;

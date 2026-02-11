@@ -1,159 +1,180 @@
 <div>
     @section('title', __('Supplier'))
-    <x-theme.breadcrumb :title="__('Supplier List')" :parent="route('suppliers.index')" :parentName="__('Supplier List')">
-        <x-dropdown align="right" width="48" class="w-auto mr-2">
-            <x-slot name="trigger" class="inline-flex">
-                <x-button secondary type="button" class="text-white flex items-center">
-                    <i class="fas fa-angle-double-down w-4 h-4"></i>
-                </x-button>
-            </x-slot>
-            <x-slot name="content">
-                <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
-                    {{ __('Excel Import') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
-                    {{ __('Export Excel') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
-                    {{ __('Export PDF') }}
-                </x-dropdown-link>
-            </x-slot>
-        </x-dropdown>
-        <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'createModal')">
-            {{ __('Create Supplier') }}
-        </x-button>
-    </x-theme.breadcrumb>
-
-    <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap items-center gap-x-4 my-2">
-            <select wire:model.live="perPage"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            @if ($selected)
-                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                    <i class="fas fa-trash"></i>
-                </x-button>
-                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
-                    {{ __('EXCEL') }}
-                </x-button>
-                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
-                    {{ __('PDF') }}
-                </x-button>
-            @endif
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
-            @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <div class="my-2">
-                <x-input wire:model.live="search" placeholder="{{ __('Search') }}" autofocus />
-            </div>
-        </div>
-    </div>
-
-    <x-table>
-        <x-slot name="thead">
-            <x-table.th>
-                <input type="checkbox" wire:model.live="selectPage" />
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['name'] ?? null" :field="'name'" wire:click="sortingBy('name')">
-                {{ __('Name') }}
-            </x-table.th>
-
-            <x-table.th sortable :direction="$sorts['phone'] ?? null" :field="'phone'" wire:click="sortingBy('phone')">
-                {{ __('Phone') }}
-            </x-table.th>
-
-            <x-table.th sortable :direction="$sorts['address'] ?? null" :field="'address'" wire:click="sortingBy('address')">
-
-                {{ __('Address') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Actions') }}
-            </x-table.th>
+    
+    <x-page-container>
+        <x-slot name="breadcrumbs">
+            <x-breadcrumb :items="[
+                ['label' => __('Dashboard'), 'url' => route('dashboard')],
+                ['label' => __('Supplier List'), 'url' => route('suppliers.index')]
+            ]" />
         </x-slot>
-        <x-table.tbody>
-            @forelse ($suppliers as $supplier)
-                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $supplier->id }}">
-                    <x-table.td class="pr-0">
-                        <input type="checkbox" wire:model.live="selected" value="{{ $supplier->id }}" />
-                    </x-table.td>
-                    <x-table.td>
-                        <button type="button" wire:click="$dispatch('showModal', { id : '{{ $supplier->id }}' })">
-                            {{ $supplier->name }}
-                        </button>
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $supplier->phone }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $supplier->address }}
-                    </x-table.td>
-                    <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                            <x-dropdown align="right" width="56">
-                                <x-slot name="trigger" class="inline-flex">
-                                    <x-button primary type="button" class="text-white flex items-center">
-                                        <i class="fas fa-angle-double-down"></i>
-                                    </x-button>
-                                </x-slot>
-                                <x-slot name="content">
-                                    <x-dropdown-link
-                                        wire:click="dispatchTo('suppliers.show','showModal', { id : '{{ $supplier->id }}' })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-eye"></i>
-                                        {{ __('View') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link href="{{ route('supplier.details', $supplier->id) }}">
-                                        <i class="fas fa-book"></i>
-                                        {{ __('Details') }}
-                                    </x-dropdown-link>
 
-                                    <x-dropdown-link
-                                        wire:click="dispatchTo('suppliers.edit', 'editModal', { id : '{{ $supplier->id }}' })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                        {{ __('Edit') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link
-                                        wire:click="$dispatch('deleteModal', { id :'{{ $supplier->id }}' })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('Delete') }}
-                                    </x-dropdown-link>
-                                </x-slot>
-                            </x-dropdown>
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
-            @empty
-                <x-table.tr>
-                    <x-table.td colspan="12">
-                        <div class="flex justify-center items-center space-x-2">
-                            <i class="fas fa-box-open text-3xl text-gray-400"></i>
-                            <span class="text-gray-400">{{ __('No suppliers found.') }}</span>
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
-            @endforelse
-        </x-table.tbody>
-    </x-table>
+        <x-slot name="actions">
+            <x-dropdown align="right" width="48" class="w-auto mr-2">
+                <x-slot name="trigger" class="inline-flex">
+                    <x-button secondary type="button" class="text-white flex items-center">
+                        <i class="fas fa-angle-double-down w-4 h-4"></i>
+                    </x-button>
+                </x-slot>
+                <x-slot name="content">
+                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
+                        {{ __('Excel Import') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                        {{ __('Export Excel') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                        {{ __('Export PDF') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'createModal')">
+                {{ __('Create Supplier') }}
+            </x-button>
+        </x-slot>
 
-    <div class="px-6 py-3">
-        {{ $suppliers->links() }}
-    </div>
+        <x-slot name="filters">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700">{{ __('Per Page') }}</label>
+                    <select wire:model.live="perPage"
+                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
+                        @foreach ($paginationOptions as $value)
+                            <option value="{{ $value }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="flex-1 max-w-md">
+                    <x-input wire:model.live="search" placeholder="{{ __('Search suppliers...') }}" class="w-full" />
+                </div>
+                
+                @if ($selected)
+                    <div class="flex items-center gap-2">
+                        <x-button danger type="button" wire:click="deleteSelected" size="sm">
+                            <i class="fas fa-trash"></i>
+                        </x-button>
+                        <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled" size="sm">
+                            {{ __('EXCEL') }}
+                        </x-button>
+                        <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled" size="sm">
+                            {{ __('PDF') }}
+                        </x-button>
+                    </div>
+                @endif
+            </div>
+            
+            @if ($this->selectedCount)
+                <div class="flex items-center justify-between mt-3 p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-700">
+                        <span class="font-medium">{{ $this->selectedCount }}</span>
+                        {{ __('suppliers selected') }}
+                    </p>
+                    <button wire:click="resetSelected" wire:loading.attr="disabled"
+                        class="text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
+                        {{ __('Clear Selection') }}
+                    </button>
+                </div>
+            @endif
+        </x-slot>
+
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+            <x-table>
+                <x-slot name="thead">
+                    <x-table.th class="w-12">
+                        <input type="checkbox" wire:model.live="selectPage" 
+                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                    </x-table.th>
+                    <x-table.th sortable :direction="$sorts['name'] ?? null" :field="'name'" wire:click="sortingBy('name')" class="text-left">
+                        {{ __('Name') }}
+                    </x-table.th>
+                    <x-table.th sortable :direction="$sorts['phone'] ?? null" :field="'phone'" wire:click="sortingBy('phone')" class="text-left">
+                        {{ __('Phone') }}
+                    </x-table.th>
+                    <x-table.th sortable :direction="$sorts['address'] ?? null" :field="'address'" wire:click="sortingBy('address')" class="text-left">
+                        {{ __('Address') }}
+                    </x-table.th>
+                    <x-table.th class="w-24 text-center">
+                        {{ __('Actions') }}
+                    </x-table.th>
+                </x-slot>
+                <x-table.tbody>
+                    @forelse ($suppliers as $supplier)
+                        <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $supplier->id }}" class="hover:bg-gray-50 transition-colors">
+                            <x-table.td class="pr-0">
+                                <input type="checkbox" wire:model.live="selected" value="{{ $supplier->id }}" 
+                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                            </x-table.td>
+                            <x-table.td class="font-medium">
+                                <button type="button" wire:click="$dispatch('showModal', { id : '{{ $supplier->id }}' })" 
+                                    class="text-indigo-600 hover:text-indigo-900 transition-colors">
+                                    {{ $supplier->name }}
+                                </button>
+                            </x-table.td>
+                            <x-table.td class="text-gray-600">
+                                {{ $supplier->phone }}
+                            </x-table.td>
+                            <x-table.td class="text-gray-600">
+                                <div class="max-w-xs truncate" title="{{ $supplier->address }}">
+                                    {{ $supplier->address }}
+                                </div>
+                            </x-table.td>
+                            <x-table.td class="text-center">
+                                <x-dropdown align="right" width="56">
+                                    <x-slot name="trigger" class="inline-flex">
+                                        <x-button primary type="button" size="sm" class="text-white flex items-center">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </x-button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        <x-dropdown-link
+                                            wire:click="dispatchTo('suppliers.show','showModal', { id : '{{ $supplier->id }}' })"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-eye mr-2"></i>
+                                            {{ __('View') }}
+                                        </x-dropdown-link>
+                                        <x-dropdown-link href="{{ route('supplier.details', $supplier->id) }}">
+                                            <i class="fas fa-book mr-2"></i>
+                                            {{ __('Details') }}
+                                        </x-dropdown-link>
+                                        <x-dropdown-link
+                                            wire:click="dispatchTo('suppliers.edit', 'editModal', { id : '{{ $supplier->id }}' })"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-edit mr-2"></i>
+                                            {{ __('Edit') }}
+                                        </x-dropdown-link>
+                                        <x-dropdown-link
+                                            wire:click="$dispatch('deleteModal', { id :'{{ $supplier->id }}' })"
+                                            wire:loading.attr="disabled"
+                                            class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash mr-2"></i>
+                                            {{ __('Delete') }}
+                                        </x-dropdown-link>
+                                    </x-slot>
+                                </x-dropdown>
+                            </x-table.td>
+                        </x-table.tr>
+                    @empty
+                        <x-table.tr>
+                            <x-table.td colspan="5" class="text-center py-12">
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <i class="fas fa-users text-4xl text-gray-300"></i>
+                                    <p class="text-gray-500 text-lg font-medium">{{ __('No suppliers found') }}</p>
+                                    <p class="text-gray-400 text-sm">{{ __('Get started by creating your first supplier') }}</p>
+                                </div>
+                            </x-table.td>
+                        </x-table.tr>
+                    @endforelse
+                </x-table.tbody>
+            </x-table>
+            
+            @if($suppliers->hasPages())
+                <div class="px-6 py-4 border-t border-gray-200">
+                    {{ $suppliers->links() }}
+                </div>
+            @endif
+        </div>
+    </x-page-container>
 
 
     <livewire:suppliers.show :supplier="$supplier" />
@@ -162,7 +183,7 @@
 
     <livewire:suppliers.create />
 
-    <x-modal wire:model="importModal">
+    <x-modal wire:model="importModal" name="importModal">
         <x-slot name="title">
             <div class="flex justify-between items-center">
                 {{ __('Import Excel') }}

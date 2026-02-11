@@ -50,7 +50,7 @@
                         </div>
                         <div class="mb-4">
                             <button type="submit"
-                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                                class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm">
                                 <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm"
                                     role="status" aria-hidden="true"></span>
                                 <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
@@ -84,7 +84,7 @@
                                     <x-table.td>{{ format_date($sale->date) }}</x-table.td>
                                     <x-table.td>{{ $sale->reference }}</x-table.td>
                                     <x-table.td>
-                                        <a href="{{ route('customer.details', $sale->customer?->uuid) }}"
+                                        <a href="{{ route('customer.details', $sale->customer?->id) }}"
                                             class="text-indigo-500 hover:text-indigo-600">
                                             {{ $sale->customer->name }}
                                         </a>

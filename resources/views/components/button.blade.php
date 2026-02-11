@@ -1,37 +1,73 @@
 @props([
-    'type' => null, 'href' => '#', 'primary' => false, 
-    'secondary' => false, 'info'=> false, 'alert' => false, 
+    'type' => null, 'href' => '#', 'icon' => null, 'iconPosition' => 'left',
+    'size' => 'md', 'variant' => 'primary', 'outline' => false,
+    'primary' => false, 'secondary' => false, 'info'=> false, 'alert' => false, 
     'success' => false,'danger' => false, 'warning' => false, 
-     'primaryOutline' => false,'secondaryOutline' => false,
+    'primaryOutline' => false,'secondaryOutline' => false,
     'infoOutline' => false,'successOutline' => false,
     'alertOutline' => false,'dangerOutline' => false,
     'warningOutline' => false,
-    ])
+])
 
 @php
-    $classes = 
-        ($primary ? 'bg-indigo-500 border border-transparent text-white hover:bg-indigo-600 focus:ring-indigo-500 active:bg-indigo-900 focus:outline-none focus:border-indigo-900' : '') .
-        ($secondary ? 'bg-gray-500 border border-transparent text-white hover:bg-gray-600 focus:ring-gray-500 active:bg-gray-900 focus:outline-none focus:border-gray-900' : '') .
-        ($info ? 'bg-blue-500 border border-transparent text-white hover:bg-blue-600 focus:ring-blue-500 active:bg-blue-900 focus:outline-none focus:border-blue-900' : '') .
-        ($alert ? 'bg-yellow-500 border border-transparent text-white hover:bg-yellow-600 focus:ring-yellow-500 active:bg-yellow-900 focus:outline-none focus:border-yellow-900' : '') .
-        ($success ? 'bg-green-500 border border-transparent text-white hover:bg-green-600 focus:ring-green-500 active:bg-green-900 focus:outline-none focus:border-green-900' : '') .
-        ($danger ? 'bg-red-500 border border-transparent text-white hover:bg-red-600 focus:ring-red-500 active:bg-red-900 focus:outline-none focus:border-red-900' : '') .
-        ($warning ? 'bg-orange-500 border border-transparent text-white hover:bg-orange-600 focus:ring-orange-500 active:bg-orange-900 focus:outline-none focus:border-orange-900' : '') .
-        ($primaryOutline ? 'bg-transparent border border-indigo-500 text-indigo-500 hover:bg-indigo-500 hover:text-white active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300' : '') .
-        ($secondaryOutline ? 'bg-transparent border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300' : '') .
-        ($infoOutline ? 'bg-transparent border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300' : '') .
-        ($successOutline ? 'bg-transparent border border-green-500 text-green-500 hover:bg-green-500 hover:text-white active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300' : '') .
-        ($alertOutline ? 'bg-transparent border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white active:bg-orange-900 focus:outline-none focus:border-orange-900 focus:ring ring-orange-300' : '') .
-        ($dangerOutline ? 'bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300' : '') .
-        ($warningOutline ? 'bg-transparent border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white active:bg-orange-900 focus:outline-none focus:border-orange-900 focus:ring ring-orange-300' : '');
+    // Size classes
+    $sizeClasses = [
+        'xs' => 'px-2.5 py-1.5 text-xs',
+        'sm' => 'px-3 py-2 text-sm',
+        'md' => 'px-4 py-2 text-sm',
+        'lg' => 'px-4 py-2 text-base',
+        'xl' => 'px-6 py-3 text-base',
+    ];
+    
+    // Determine variant from legacy props
+    if ($primary || $primaryOutline) $variant = 'primary';
+    elseif ($secondary || $secondaryOutline) $variant = 'secondary';
+    elseif ($info || $infoOutline) $variant = 'info';
+    elseif ($success || $successOutline) $variant = 'success';
+    elseif ($danger || $dangerOutline) $variant = 'danger';
+    elseif ($warning || $warningOutline) $variant = 'warning';
+    elseif ($alert || $alertOutline) $variant = 'alert';
+    
+    // Determine outline from legacy props
+    if ($primaryOutline || $secondaryOutline || $infoOutline || $successOutline || $dangerOutline || $warningOutline || $alertOutline) {
+        $outline = true;
+    }
+    
+    // Variant classes
+    $variantClasses = [
+        'primary' => $outline ? 'border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20' : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
+        'secondary' => $outline ? 'border-gray-600 text-gray-600 hover:bg-gray-50 dark:border-gray-400 dark:text-gray-400 dark:hover:bg-gray-800' : 'bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600',
+        'info' => $outline ? 'border-cyan-600 text-cyan-600 hover:bg-cyan-50 dark:border-cyan-400 dark:text-cyan-400 dark:hover:bg-cyan-900/20' : 'bg-cyan-600 text-white hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600',
+        'success' => $outline ? 'border-green-600 text-green-600 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20' : 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600',
+        'danger' => $outline ? 'border-red-600 text-red-600 hover:bg-red-50 dark:border-red-400 dark:text-red-400 dark:hover:bg-red-900/20' : 'bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
+        'warning' => $outline ? 'border-yellow-600 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-400 dark:text-yellow-400 dark:hover:bg-yellow-900/20' : 'bg-yellow-600 text-white hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600',
+        'alert' => $outline ? 'border-orange-600 text-orange-600 hover:bg-orange-50 dark:border-orange-400 dark:text-orange-400 dark:hover:bg-orange-900/20' : 'bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600',
+    ];
+    
+    $baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+    $borderClass = $outline ? 'border-2 bg-transparent' : 'border border-transparent';
+    
+    $classes = $baseClasses . ' ' . $borderClass . ' ' . ($sizeClasses[$size] ?? $sizeClasses['md']) . ' ' . ($variantClasses[$variant] ?? $variantClasses['primary']);
 @endphp
 
 @if ($type == 'submit' || $type == 'button')
-    <button {{ $attributes->merge(['type' => $type, 'class' => 'inline-flex items-center px-4 py-2 rounded-md font-semibold text-xs uppercase tracking-widest disabled:opacity-25 transition ease-in-out duration-150 ' . $classes]) }}>
+    <button {{ $attributes->merge(['type' => $type, 'class' => $classes]) }}>
+        @if($icon && $iconPosition === 'left')
+            <i class="{{ $icon }} {{ $slot->isEmpty() ? '' : 'mr-2' }}"></i>
+        @endif
         {{ $slot }}
+        @if($icon && $iconPosition === 'right')
+            <i class="{{ $icon }} {{ $slot->isEmpty() ? '' : 'ml-2' }}"></i>
+        @endif
     </button>
 @else
-    <a href="{{ $href }}" {{ $attributes->merge(['class' => 'inline-flex items-center px-4 py-2 rounded-md font-semibold text-xs uppercase tracking-widest disabled:opacity-25 transition ease-in-out duration-150 ' . $classes]) }}>
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon && $iconPosition === 'left')
+            <i class="{{ $icon }} {{ $slot->isEmpty() ? '' : 'mr-2' }}"></i>
+        @endif
         {{ $slot }}
+        @if($icon && $iconPosition === 'right')
+            <i class="{{ $icon }} {{ $slot->isEmpty() ? '' : 'ml-2' }}"></i>
+        @endif
     </a>
 @endif

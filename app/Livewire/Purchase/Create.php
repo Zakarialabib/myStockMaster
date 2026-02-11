@@ -15,7 +15,7 @@ use App\Models\ProductWarehouse;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\PurchasePayment;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +27,7 @@ use Livewire\Attributes\Validate;
 class Create extends Component
 {
     use WithModels;
-    public $cart_instance = 'purchase';
+    use LivewireCartTrait;
 
     public $cart_item;
 
@@ -81,7 +81,8 @@ class Create extends Component
 
     public function mount(): void
     {
-        Cart::instance('purchase')->destroy();
+        $this->initializeCart('purchase');
+        $this->clearCart();
 
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
@@ -99,7 +100,7 @@ class Create extends Component
     {
         // abort_if(Gate::denies('purchase_create'), 403);
 
-        $cart_items = Cart::instance($this->cart_instance)->content();
+        $cart_items = $this->cart->content();
 
         return view('livewire.purchase.create', [
             'cart_items' => $cart_items,
@@ -159,11 +160,11 @@ class Create extends Component
                 'payment_status'      => $this->payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => Cart::instance('purchase')->tax() * 100,
-                'discount_amount'     => Cart::instance('purchase')->discount() * 100,
+                'tax_amount'          => $this->cart->tax() * 100,
+                'discount_amount'     => $this->cart->discount() * 100,
             ]);
 
-            foreach (Cart::instance('purchase')->content() as $cart_item) {
+            foreach ($this->cart->content() as $cart_item) {
                 PurchaseDetail::create([
                     'purchase_id'             => $purchase->id,
                     'product_id'              => $cart_item->id,
@@ -189,8 +190,8 @@ class Create extends Component
                     $product_warehouse = new ProductWarehouse([
                         'product_id'   => $cart_item->id,
                         'warehouse_id' => $this->warehouse_id,
-                        'price'        => $cart_item->price * 100,
-                        'cost'         => $cart_item->options->unit_price * 100,
+                        'price'        => $cart_item->price,
+                        'cost'         => $cart_item->options->unit_price,
                         'qty'          => 0,
                     ]);
                 }
@@ -228,7 +229,7 @@ class Create extends Component
 
             $this->alert('success', __('Purchase created successfully!'));
 
-            Cart::instance('purchase')->destroy();
+            $this->clearCart();
 
             return redirect()->route('purchases.index');
         });
@@ -236,12 +237,12 @@ class Create extends Component
 
     public function calculateTotal(): mixed
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
+        return $this->cart->total() + $this->shipping_amount;
     }
 
     public function resetCart(): void
     {
-        Cart::instance($this->cart_instance)->destroy();
+        $this->clearCart();
     }
 
     public function updatedWarehouseId($warehouse_id): void

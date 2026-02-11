@@ -1,166 +1,213 @@
 <div>
     @section('title', __('Categories'))
-    <x-theme.breadcrumb :title="__('Categories List')" :parent="route('product-categories.index')" :parentName="__('Categories List')">
-        @can('category_import')
-            <x-button primary type="button" wire:click="dispatchTo('categories.import', 'importModal')">
-                {{ __('Import Category') }}
-            </x-button>
-        @endcan
-        @can('category_create')
-            <x-button primary type="button" wire:click="dispatchTo('categories.create', 'createModal')">
-                {{ __('Create Category') }}
-            </x-button>
-        @endcan
-    </x-theme.breadcrumb>
-    <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap gap-6 w-full items-center">
-            <select wire:model.live="perPage"
-                class="w-auto shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            @if ($selected)
-                @can('category_delete')
-                    <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                        <i class="fas fa-trash"></i>
-                    </x-button>
-                @endcan
-            @endif
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
-            @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full ">
-            <x-input wire:model.live="search" placeholder="{{ __('Search') }}" autofocus />
-        </div>
-    </div>
 
+    <x-page-container :title="__('Categories List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Categories List')]]" :show-filters="true">
 
-    <x-table>
-        <x-slot name="thead">
-            <x-table.th>
-                <input wire:model.live="selectPage" type="checkbox" />
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['name'] ?? null" field="name" wire:click="sortingBy('name')">
-                {{ __('Name') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Products count') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['status'] ?? null" field="status" wire:click="sortingBy('status')">
-                {{ __('Status') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Actions') }}
-            </x-table.th>
-            </tr>
+        <x-slot name="actions">
+            @can('category_import')
+                <x-button variant="primary" icon="fas fa-upload" wire:click="dispatchTo('categories.import', 'importModal')">
+                    {{ __('Import Category') }}
+                </x-button>
+            @endcan
+            @can('category_create')
+                <x-button variant="primary" icon="fas fa-plus" wire:click="dispatchTo('categories.create', 'createModal')">
+                    {{ __('Create Category') }}
+                </x-button>
+            @endcan
         </x-slot>
-        <x-table.tbody>
+        <x-slot name="filters">
+            <x-datatable.filters 
+                :per-page="$perPage"
+                :pagination-options="$paginationOptions"
+                :selected-count="$this->selectedCount"
+                :search="$search"
+                search-placeholder="{{ __('Search categories...') }}"
+                wire:model.live.perPage="perPage"
+                wire:model.live.search="search"
+                wire:click.deleteSelected="deleteSelected"
+                wire:click.resetSelected="resetSelected"
+                :can-delete="auth()->user()->can('category_delete')"
+            />
+        </x-slot>
+
+
+        <!-- Table Section -->
+        <x-table :headers="[
+            ['key' => 'checkbox', 'label' => '', 'sortable' => false],
+            ['key' => 'name', 'label' => __('Name'), 'sortable' => true, 'icon' => 'fas fa-tag'],
+            ['key' => 'products_count', 'label' => __('Products count'), 'sortable' => false, 'icon' => 'fas fa-boxes'],
+            ['key' => 'status', 'label' => __('Status'), 'sortable' => true, 'icon' => 'fas fa-toggle-on'],
+            ['key' => 'actions', 'label' => __('Actions'), 'sortable' => false, 'icon' => 'fas fa-cogs'],
+        ]" :show-checkbox="true"
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             @forelse($categories as $category)
-                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $category->id }}">
+                <tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $category->id }}"
+                    class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <x-table.td :checkbox="true" :value="$category->id" wire:model.live="selected" />
                     <x-table.td>
-                        <input type="checkbox" value="{{ $category->id }}" wire:model.live="selected">
-                    </x-table.td>
-                    <x-table.td>
-                        <button type="button" wire:click="openShowModal('{{ $category->id }}')">
+                        <button type="button" wire:click="openShowModal('{{ $category->id }}')"
+                            class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
                             {{ $category->name }}
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-badge type="info">
-                            {{ $category->products->count() }}
-                        </x-badge>
+                        <x-status-badge 
+                            status="info" 
+                            :count="$category->products->count()" 
+                            icon="fas fa-boxes"
+                            size="sm"
+                        />
                     </x-table.td>
                     <x-table.td>
-                        <x-badge type="info">
-                            {{ $category->status ? __('Active') : __('Inactive') }}
-                        </x-badge>
+                        <x-status-badge 
+                            :status="$category->status ? 'active' : 'inactive'" 
+                            :text="$category->status ? __('Active') : __('Inactive')"
+                            size="sm"
+                        />
                     </x-table.td>
-                    <x-table.td>
-                        <x-dropdown
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-1">
-                            <x-slot name="trigger">
-                                <button type="button"
-                                    class="px-4 text-base font-semibold text-gray-500 hover:text-sky-800">
-                                    <i class="fas fa-angle-double-down"></i>
-                                </button>
-                            </x-slot>
-                            <x-slot name="content">
-                                <x-dropdown-link wire:click="openShowModal('{{ $category->id }}')"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-eye"></i>
-                                    {{ __('Show') }}
-                                </x-dropdown-link>
-                                @can('category_update')
-                                    <x-dropdown-link
-                                        wire:click="$dispatchTo('categories.edit','editModal', { id :  '{{ $category->id }}'})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                        {{ __('Edit') }}
-                                    </x-dropdown-link>
-                                @endcan
-                                @can('category_delete')
-                                    <x-dropdown-link wire:click="$dispatch('deleteModal',{ id :  '{{ $category->id }}'})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('Delete') }}
-                                    </x-dropdown-link>
-                                @endcan
-                            </x-slot>
-                        </x-dropdown>
+                    <x-table.td :actions="true">
+                        <x-datatable.actions 
+                            :actions="[
+                                [
+                                    'type' => 'dropdown-item',
+                                    'label' => __('Show'),
+                                    'icon' => 'fas fa-eye',
+                                    'color' => 'blue',
+                                    'wire:click' => 'openShowModal(\'' . $category->id . '\')'
+                                ],
+                                [
+                                    'type' => 'dropdown-item',
+                                    'label' => __('Edit'),
+                                    'icon' => 'fas fa-edit',
+                                    'color' => 'green',
+                                    'wire:click' => '$dispatchTo(\'categories.edit\',\'editModal\', { id : \'' . $category->id . '\'})',
+                                    'permission' => 'category_update'
+                                ],
+                                [
+                                    'type' => 'dropdown-item',
+                                    'label' => __('Delete'),
+                                    'icon' => 'fas fa-trash',
+                                    'color' => 'red',
+                                    'wire:click' => '$dispatch(\'deleteModal\',{ id : \'' . $category->id . '\'})',
+                                    'permission' => 'category_delete'
+                                ]
+                            ]"
+                        />
                     </x-table.td>
-                </x-table.tr>
+                </tr>
             @empty
-                <x-table.tr>
-                    <x-table.td colspan="10" class="text-center">
-                        {{ __('No entries found.') }}
-                    </x-table.td>
-                </x-table.tr>
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                                {{ __('No categories found') }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('Get started by creating your first category') }}</p>
+                        </div>
+                    </td>
+                </tr>
             @endforelse
-        </x-table.tbody>
-    </x-table>
+        </x-table>
 
-    <div class="pt-3">
-        {{ $categories->links() }}
-    </div>
-
-
-    <!-- Show Modal -->
-    <x-modal wire:model="showModal">
-        <x-slot name="title">
-            {{ __('Show Category') }} {{ $category?->name }}
-        </x-slot>
-
-        <x-slot name="content">
-            <div class="flex flex-wrap -mx-2 mb-3">
-                <div class="w-full mb-4">
-                    <label for="code">{{ __('Category Code') }}</label>
-                    {{ $category?->code }}
-                </div>
-                <div class="w-full mb-4">
-                    <label for="name">{{ __('Category Name') }}</label>
-                    {{ $category?->name }}
+        <!-- Pagination Section -->
+        <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span
+                                class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $categories->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $categories->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $categories->lastItem() ?? 0 }} {{ __('of') }} {{ $categories->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $categories->links() }}
                 </div>
             </div>
-        </x-slot>
-    </x-modal>
-    <!-- End Show Modal -->
-
-    <livewire:categories.import />
-
-    <livewire:categories.create />
-
-    <livewire:categories.edit :category="$category" />
+        </div>
 
 
+        <!-- Show Modal -->
+        <x-modal wire:model="showModal" class="sm:max-w-lg">
+            <x-slot name="title">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                        <i class="fas fa-tag text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            {{ __('Category Details') }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $category?->name }}</p>
+                    </div>
+                </div>
+            </x-slot>
+
+            <x-slot name="content">
+                <div class="space-y-6">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <i class="fas fa-barcode mr-2 text-gray-400"></i>
+                                    {{ __('Category Code') }}
+                                </label>
+                                <p
+                                    class="text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 px-3 py-2 rounded-md border border-gray-200 dark:border-gray-600">
+                                    {{ $category?->code ?? __('N/A') }}
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <i class="fas fa-tag mr-2 text-gray-400"></i>
+                                    {{ __('Category Name') }}
+                                </label>
+                                <p
+                                    class="text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 px-3 py-2 rounded-md border border-gray-200 dark:border-gray-600">
+                                    {{ $category?->name ?? __('N/A') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($category?->products)
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-boxes text-blue-600 dark:text-blue-400"></i>
+                                <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                    {{ __('Products Information') }}</h4>
+                            </div>
+                            <p class="text-sm text-blue-700 dark:text-blue-300">
+                                {{ __('This category contains') }} <span
+                                    class="font-semibold">{{ $category->products->count() }}</span>
+                                {{ __('products') }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            </x-slot>
+        </x-modal>
+        <!-- End Show Modal -->
+
+        <livewire:categories.import />
+
+        <livewire:categories.create />
+
+        <livewire:categories.edit :category="$category" />
+
+
+        <!-- Modals -->
+        <livewire:categories.import />
+        <livewire:categories.create />
+        <livewire:categories.edit :category="$category" />
+
+    </x-page-container>
 </div>

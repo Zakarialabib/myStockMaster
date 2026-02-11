@@ -20,7 +20,7 @@ $login = function () {
     $this->redirect(route('dashboard'));
 
     // $this->redirectIntended(default: route('dashboard'), navigate: false);
-    
+
 };
 
 $viaRemember = function () {
@@ -33,7 +33,8 @@ $viaRemember = function () {
 ?>
 
 <div>
-    @if (Auth::viaRemember())
+    <div class="px-8 py-8">
+        @if (Auth::viaRemember())
         <div class="mb-4 text-sm text-gray-600">
             {{ __('You are logged in using a "Remember Me" cookie.') }}
         </div>
@@ -43,7 +44,7 @@ $viaRemember = function () {
         </x-button>
 
         <hr class="my-8 border-t border-gray-200">
-    @else
+        @else
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -51,7 +52,7 @@ $viaRemember = function () {
             <!-- Email Address -->
             <div>
                 <x-input-label for="email" :value="__('Email')" />
-                <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email"
+                <x-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email"
                     required autofocus autocomplete="username" />
                 <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
             </div>
@@ -63,9 +64,9 @@ $viaRemember = function () {
                 <div class="relative">
                     <input placeholder="" :type="show ? 'password' : 'text'" name="password" required
                         wire:model="form.password"
-                        class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full">
+                        class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 w-full">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-    
+
                         <svg class="h-6 text-gray-700" fill="none" @click="show = !show"
                             :class="{ 'block': !show, 'hidden': show }" xmlns="http://www.w3.org/2000/svg"
                             viewbox="0 0 576 512">
@@ -73,7 +74,7 @@ $viaRemember = function () {
                                 d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z">
                             </path>
                         </svg>
-    
+
                         <svg class="h-6 text-gray-700" fill="none" @click="show = !show"
                             :class="{ 'hidden': !show, 'block': show }" xmlns="http://www.w3.org/2000/svg"
                             viewbox="0 0 640 512">
@@ -82,7 +83,7 @@ $viaRemember = function () {
                             </path>
                         </svg>
                     </div>
-    
+
                     <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                 </div>
             </div>
@@ -91,17 +92,17 @@ $viaRemember = function () {
             <div class="block mt-4">
                 <label for="remember" class="inline-flex items-center">
                     <input wire:model="form.remember" id="remember" type="checkbox"
-                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
+                        class="rounded-sm border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                     <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        href="{{ route('password.request') }}" wire:navigate>
-                        {{ __('Forgot your password?') }}
-                    </a>
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    href="{{ route('password.request') }}" wire:navigate>
+                    {{ __('Forgot your password?') }}
+                </a>
                 @endif
 
                 <x-button class="ms-3" type="submit" primary>
@@ -109,5 +110,6 @@ $viaRemember = function () {
                 </x-button>
             </div>
         </form>
-    @endif
+        @endif
+    </div>
 </div>

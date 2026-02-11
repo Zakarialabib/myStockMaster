@@ -6,7 +6,6 @@ namespace App\Livewire\Backup;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Config;
 use Livewire\Component;
 use Throwable;
 use App\Traits\WithAlert;
@@ -24,8 +23,6 @@ class Index extends Component
     public $backup_schedule;
 
     public $backup_include;
-
-
 
     public $settingsModal = false;
 
@@ -47,8 +44,6 @@ class Index extends Component
         $this->settingsModal = true;
     }
 
-
-
     public function syncToLocal(): void
     {
         Artisan::call('db:production-sync');
@@ -62,8 +57,6 @@ class Index extends Component
 
         $this->alert('success', __('Old backup cleaned.'));
     }
-
-
 
     public function updateSettigns(): void
     {
@@ -108,8 +101,6 @@ class Index extends Component
             }
         }
     }
-
-
 
     public function render()
     {

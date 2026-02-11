@@ -13,6 +13,7 @@ use App\Traits\WithAlert;
 class Show extends Component
 {
     use WithAlert;
+
     public $product;
 
     public $showModal = false;
@@ -20,7 +21,7 @@ class Show extends Component
     #[On('showModal')]
     public function openModal($id): void
     {
-        $this->product = Product::where('id', $id)->first();
+        $this->product = Product::findOrFail($id);
 
         $this->showModal = true;
     }

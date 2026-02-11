@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="showModal">
+    <x-modal wire:model="showModal" name="showModal">
         <x-slot name="title">
             {{ __('Show Cash Register in ') }} {{ $cashRegister?->warehouse?->name }}
         </x-slot>

@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <input type="text" class="p-3 leading-5 bg-white text-zinc-700 rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500" {{ $attributes }} data-input>
+        <input type="text" class="p-3 leading-5 bg-white text-zinc-700 rounded-sm border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500" {{ $attributes }} data-input>
     </div>
 </div>
 

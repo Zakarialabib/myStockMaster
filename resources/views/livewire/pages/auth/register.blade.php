@@ -63,7 +63,7 @@ $register = function () {
 
             <div class="relative">
                 <input placeholder="" :type="show ? 'password' : 'text'" name="password" required wire:model="password"
-                    class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full">
+                    class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 w-full">
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
 
                     <svg class="h-6 text-gray-700" fill="none" @click="show = !show"
@@ -98,14 +98,14 @@ $register = function () {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 href="{{ route('login') }}" wire:navigate>
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
+            <x-button class="ms-4" primary type="submit">
                 {{ __('Register') }}
-            </x-primary-button>
+            </x-button>
         </div>
     </form>
 </div>

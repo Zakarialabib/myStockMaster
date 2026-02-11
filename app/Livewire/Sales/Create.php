@@ -18,7 +18,7 @@ use App\Models\Sale;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use App\Models\ProductWarehouse;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -31,8 +31,7 @@ use Livewire\Attributes\Validate;
 class Create extends Component
 {
     use WithModels;
-
-    public $cart_instance = 'sale';
+    use LivewireCartTrait;
 
     public $global_discount;
 
@@ -98,7 +97,8 @@ class Create extends Component
     {
         abort_if(Gate::denies('sale_create'), 403);
 
-        Cart::instance('sale')->destroy();
+        $this->initializeCart('sale');
+        $this->clearCart();
 
         // $this->cart_instance = $cartInstance;
         $this->discount_percentage = 0;
@@ -147,7 +147,7 @@ class Create extends Component
 
     public function render()
     {
-        $cart_items = Cart::instance($this->cart_instance)->content();
+        $cart_items = $this->cart->content();
 
         return view('livewire.sales.create', [
             'cart_items' => $cart_items,
@@ -219,12 +219,12 @@ class Create extends Component
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => (int) (Cart::instance('sale')->tax() * 100),
-                'discount_amount'     => (int) (Cart::instance('sale')->discount() * 100),
+                'tax_amount'          => (int) ($this->cart->tax() * 100),
+                'discount_amount'     => (int) ($this->cart->discount() * 100),
             ]);
 
-            // foreach ($this->cart_instance as cart_items) {}
-            foreach (Cart::instance('sale')->content() as $cart_item) {
+            // foreach ($this->cartInstance as cart_items) {}
+            foreach ($this->cart->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
                     'warehouse_id'            => $this->warehouse_id,
@@ -264,7 +264,7 @@ class Create extends Component
                 $movement->save();
             }
 
-            Cart::instance('sale')->destroy();
+            $this->clearCart();
 
             if ($this->paid_amount > 0) {
                 SalePayment::create([
@@ -279,7 +279,7 @@ class Create extends Component
 
             $this->alert('success', __('Sale created successfully!'));
 
-            Cart::instance('sale')->destroy();
+            $this->clearCart();
 
             // dispatch the Send Payment Notification job
             PaymentNotification::dispatch($sale);
@@ -290,12 +290,12 @@ class Create extends Component
 
     public function calculateTotal(): float|int|array
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
+        return $this->cart->total() + $this->shipping_amount;
     }
 
     public function resetCart(): void
     {
-        Cart::instance($this->cart_instance)->destroy();
+        $this->clearCart();
     }
 
     #[Computed]

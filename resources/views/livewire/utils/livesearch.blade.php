@@ -8,11 +8,11 @@
         @if (!empty($searchQuery))
             <div class="absolute top-0 left-0 w-full mt-12 bg-white rounded-md shadow-xl overflow-y-auto max-h-52 z-50">
                 <ul>
-                    @if ($products && $products->isNotEmpty())
+                    @if ($this->products && $this->products->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Products') }}" shade="dark" color="red" />
                             <div class="flex space-x-4">
-                                @foreach ($products as $item)
+                                @foreach ($this->products as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -33,11 +33,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($customers && $customers->isNotEmpty())
+                    @if ($this->customers && $this->customers->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Customers') }}" shade="dark" color="yellow" />
                             <div class="mx-4 space-y-2">
-                                @foreach ($customers as $item)
+                                @foreach ($this->customers as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -59,11 +59,11 @@
                         </li>
                     @endif
 
-                    @if ($suppliers && $suppliers->isNotEmpty())
+                    @if ($this->suppliers && $this->suppliers->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Suppliers') }}" shade="dark" color="green" />
                             <div class="mx-4 space-y-2">
-                                @foreach ($suppliers as $item)
+                                @foreach ($this->suppliers as $item)
                                     <p class="font-semibold text-gray-700">
                                         {{ __('Name') }} <br>
                                         {{ $item->name }}
@@ -80,11 +80,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($sales && $sales->isNotEmpty())
+                    @if ($this->sales && $this->sales->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Sales') }}" shade="dark" color="blue" />
                             <div class="mx-4">
-                                @foreach ($sales as $item)
+                                @foreach ($this->sales as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} :{{ $item->date }}
                                     </p>
                                     <p class="font-semibold text-gray-700">{{ __('Customer name') }}
@@ -100,11 +100,11 @@
                             </div>
                         </li>
                     @endif
-                    @if ($purchase && $purchase->isNotEmpty())
+                    @if ($this->purchases && $this->purchases->isNotEmpty())
                         <li class="flex items-center text-left px-4 py-3 border-b border-gray-100">
                             <x-chips label="{{ __('Purchases') }}" shade="dark" color="cyan" />
                             <div class="mx-4">
-                                @foreach ($purchase as $item)
+                                @foreach ($this->purchases as $item)
                                     <p class="font-semibold text-gray-700">{{ __('Date') }} <br>
                                         {{ $item->date }}
                                     </p>

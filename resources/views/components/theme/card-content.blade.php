@@ -1,5 +1,5 @@
 <!-- resources/views/components/card-content.blade.php -->
-@props(['image', 'title', 'buttonText', 'buttonLink', 'bgColor', 'textColor', 'size', 'rounded'])
+@props(['image', 'title', 'buttonText', 'buttonLink', 'bgColor', 'textColor', 'size', 'rounded-sm'])
 
 <div {{ $attributes->merge(['class' => 'bg-' . $bgColor . ' text-' . $textColor . ' rounded-' . $rounded . ' shadow-lg']) }}>
     

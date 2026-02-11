@@ -48,7 +48,7 @@
                             class="w-full p-2 border rounded-lg">
                     </div>
                     <div class="px-4 pb-2">
-                        <button class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                        <button class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-sm"
                             wire:click="openClientModal">
                             {{ __('Customer Phone') }}
                         </button>
@@ -56,7 +56,7 @@
                 @endif
                 <!-- Button to open the message templates modal -->
                 <div class="px-4 pb-2">
-                    <button class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                    <button class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-sm"
                         wire:click="openTemplate">
                         {{ __('Use Message Templates') }}
                     </button>
@@ -71,7 +71,7 @@
                         <x-input.textarea id="message" wire:model="message" />
                     </div>
                     <div class="px-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm w-full"
                             wire:click="sendMessage">
                             {{ __('Send Message') }}
                         </button>
@@ -92,21 +92,21 @@
                         <li class="flex justify-between items-center py-2 px-3">
                             <span class="font-bold">Product Information</span>
                             <button wire:click="fillMessage('productMessage')"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm">
                                 Use
                             </button>
                         </li>
                         <li class="flex justify-between items-center py-2 px-3">
                             <span class="font-bold">Client Message</span>
                             <button wire:click="fillMessage('clientMessage')"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm">
                                 Use
                             </button>
                         </li>
                         <li class="flex justify-between items-center py-2 px-3">
                             <span class="font-bold">Empty Message</span>
                             <button wire:click="fillMessage('')"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm">
                                 Use
                             </button>
                         </li>
@@ -127,7 +127,7 @@
                         @foreach ($this->products as $product)
                             <li class="flex justify-between items-center py-2 px-3">
                                 <span class="font-bold">{{ $product->name }}</span>
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm"
                                     wire:click="insertProduct({{ $product->id }})">Use</button>
                             </li>
                         @endforeach
@@ -146,7 +146,7 @@
                         @foreach ($this->customers as $customer)
                             <li class="flex justify-between items-center py-2 px-3">
                                 <span class="font-bold">{{ $customer->name }}</span>
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-sm"
                                     wire:click="selectCustomer({{ $customer->id }})">{{__('Select')}}</button>
                             </li>
                         @endforeach

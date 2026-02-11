@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Supplier;
 use Livewire\Component;
+use Livewire\Attributes\Computed;
 use App\Traits\WithAlert;
 
 class Livesearch extends Component
@@ -31,24 +32,40 @@ class Livesearch extends Component
         'searchQuery',
     ];
 
-    public function mount(): void
-    {
-    }
-
     public function render()
     {
-        return view('livewire.utils.livesearch', [
-            'products' => Product::query()->searchByNameOrCode($this->searchQuery)->get(),
+        return view('livewire.utils.livesearch');
+    }
 
-            'customers' => $this->customer = Customer::query()->searchByName($this->searchQuery)
-                ->with('sales')->get(),
+    #[Computed]
+    public function products()
+    {
+        return Product::query()->searchByNameOrCode($this->searchQuery)->get();
+    }
 
-            'suppliers' => Supplier::query()->searchByName($this->searchQuery)
-                ->with('purchases')->get(),
+    #[Computed]
+    public function customers()
+    {
+        return Customer::query()->searchByName($this->searchQuery)
+            ->with('sales')->get();
+    }
 
-            'sales' => Sale::query()->searchByReference($this->searchQuery)->get(),
+    #[Computed]
+    public function suppliers()
+    {
+        return Supplier::query()->searchByName($this->searchQuery)
+            ->with('purchases')->get();
+    }
 
-            'purchase' => Purchase::query()->searchByReference($this->searchQuery)->get(),
-        ]);
+    #[Computed]
+    public function sales()
+    {
+        return Sale::query()->searchByReference($this->searchQuery)->get();
+    }
+
+    #[Computed]
+    public function purchases()
+    {
+        return Purchase::query()->searchByReference($this->searchQuery)->get();
     }
 }

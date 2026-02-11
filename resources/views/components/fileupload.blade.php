@@ -128,7 +128,7 @@ x-cloak>
     @if ($mode === 'attachment')
         {{-- Loading indicator for file remove --}}
         <div wire:loading.delay wire:loading.flex wire:target="removeUpload" wire:loading.class="w-full">
-            <div class="text-sm text-red-500 bg-red-100 flex-1 p-1 text-center rounded">
+            <div class="text-sm text-red-500 bg-red-100 flex-1 p-1 text-center rounded-sm">
                 Removing file...
             </div>
         </div>   
@@ -138,7 +138,7 @@ x-cloak>
             @if(is_array($file) && count($file) > 0)
                 @foreach($file as $key => $f)
                     <div class="py-3 flex {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
-                        <div class="w-16 mr-4 flex-shrink-0 shadow-xs rounded-lg" >
+                        <div class="w-16 mr-4 shrink-0 shadow-xs rounded-lg" >
                             @if(collect(['jpg', 'png', 'jpeg', 'webp'])->contains($f->getClientOriginalExtension()))
                                 <div class="relative pb-16 overflow-hidden rounded-lg border border-gray-100">
                                     <img src="{{ $f->temporaryUrl() }}" class="w-full h-full absolute object-cover rounded-lg">
@@ -178,7 +178,7 @@ x-cloak>
             @else
                 @if($file)
                     <div class="mt-3 flex">
-                        <div class="w-16 mr-4 flex-shrink-0 shadow-xs rounded-lg">
+                        <div class="w-16 mr-4 shrink-0 shadow-xs rounded-lg">
                             @if(collect(['jpg', 'png', 'jpeg', 'webp'])->contains($file->getClientOriginalExtension()))
                                 <div class="relative pb-16 w-full overflow-hidden rounded-lg border border-gray-100">
                                     <img src="{{ $file->temporaryUrl() }}" class="w-full h-full absolute object-cover rounded-lg">

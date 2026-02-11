@@ -1,4 +1,4 @@
-<div class="px-3 flex-shrink-0 lg:hidden">
+<div class="px-3 shrink-0 lg:hidden">
     <x-button 
         type="button" 
         iconOnly 

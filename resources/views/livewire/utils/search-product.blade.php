@@ -3,7 +3,7 @@
         <div class="mb-3 px-2">
             <div class="mb-2 w-full relative text-gray-600 focus-within:text-gray-400">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <a href="#" class="p-1 focus:outline-none focus:shadow-outline" @click="showScan = true">
+                    <a href="#" class="p-1 focus:outline-hidden focus:shadow-outline" @click="showScan = true">
                         <i class="fas fa-camera"></i>
                     </a>
                 </span>
@@ -83,7 +83,7 @@
                             @endif
                         </div>
                     @empty
-                        <div class="col-span-full w-full px-2 py-3 mb-4 border rounded">
+                        <div class="col-span-full w-full px-2 py-3 mb-4 border rounded-sm">
                             <span class="inline-block align-middle mr-8">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"

@@ -68,7 +68,7 @@
                 </div>
                 <div class="mb-4 md:mb-0">
                     <button type="submit"
-                        class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">
+                        class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm">
                         <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm"
                             role="status" aria-hidden="true"></span>
                         <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
@@ -100,7 +100,7 @@
                             <x-table.td>{{ $purchase->reference }}</x-table.td>
                             <x-table.td>
                                 @if ($purchase->supplier)
-                                    <a href="{{ route('supplier.details', $purchase?->supplier?->uuid) }}"
+                                    <a href="{{ route('supplier.details', $purchase?->supplier?->id) }}"
                                         class="text-indigo-500 hover:text-indigo-600 
                                     font-bold tracking-wide">
                                         {{ $purchase->supplier->name }}

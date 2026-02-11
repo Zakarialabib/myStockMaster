@@ -6,6 +6,7 @@ namespace App\Livewire\Products;
 
 use App\Livewire\Utils\WithModels;
 use App\Models\ProductWarehouse;
+use App\Traits\WithAlert;
 use Livewire\Component;
 use Milon\Barcode\Facades\DNS1DFacade;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
@@ -16,6 +17,7 @@ use Livewire\Attributes\On;
 class Barcode extends Component
 {
     use WithModels;
+    use WithAlert;
 
     public $warehouse_id;
 

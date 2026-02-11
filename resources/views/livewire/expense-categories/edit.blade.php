@@ -1,6 +1,6 @@
 <div>
     <!-- Edit Modal -->
-    <x-modal wire:model="editModal">
+    <x-modal wire:model="editModal" name="editModal">
         <x-slot name="title">
             {{ __('Edit Expense Category') }}
         </x-slot>

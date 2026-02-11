@@ -112,7 +112,7 @@
     <div>
         <htmlpageheader name="page-header">
             <div class="centered">
-                <h2 style="margin-bottom: 5px;font-size: 16px;">{{ settings()->company_name }}</h2>
+                <h2 style="margin-bottom: 5px;font-size: 16px;"> {{ settings()->company_name ?? config('app.name') }}</h2>
                 <p>
                     {{ settings()->company_phone }} <br>
                     {{ settings()->company_address }} <br>

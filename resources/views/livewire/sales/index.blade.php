@@ -27,7 +27,7 @@
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -128,7 +128,7 @@
                     <x-table.td>
                         @if ($sale?->customer)
                             <a class="text-blue-400 hover:text-blue-600 focus:text-blue-600"
-                                href="{{ route('customer.details', $sale->customer->uuid) }}">
+                                href="{{ route('customer.details', $sale->customer->id) }}">
                                 {{ $sale?->customer?->name }}
                             </a>
                         @else
@@ -180,7 +180,7 @@
                                         </x-dropdown-link>
                                     @endif
                                     @can('sale_update')
-                                        <x-dropdown-link href="{{ route('sales.edit', $sale->id) }}"
+                                        <x-dropdown-link href="{{ route('sale.edit', $sale->id) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
                                             {{ __('Edit') }}

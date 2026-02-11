@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Throwable;
 use Livewire\Attributes\On;
@@ -198,7 +199,7 @@ class Create extends Component
 
     private function calculatePrices($product, $productWarehouse)
     {
-        $price = $productWarehouse->price * 100;
+        $price = $productWarehouse->price;
         $unit_price = $price;
         $product_tax = 0.00;
         $sub_total = $price;

@@ -18,11 +18,12 @@
         <x-table.tbody>
             @if ($cart_items->isNotEmpty())
                 @foreach ($cart_items as $cart_item)
+                    @if (is_array($cart_item) && isset($cart_item['name']))
                     <x-table.tr>
                         <x-table.td>
-                            {{ $cart_item->name }} <br>
+                            {{ $cart_item['name'] ?? '' }} <br>
                             <span class="badge badge-success">
-                                {{ $cart_item->options->code }}
+                                {{ $cart_item['attributes']['code'] ?? '' }}
                             </span>
                             @include('livewire.includes.product-cart-modal')
                         </x-table.td>
@@ -30,17 +31,17 @@
                         <x-table.td>
                             <div x-data="{ editPrice: false }">
                                 <div x-show="!editPrice">
-                                    {{ format_currency($cart_item->options->unit_price) }}
+                                    {{ format_currency($cart_item['attributes']['unit_price'] ?? 0) }}
                                     <button type="button" x-on:click="editPrice = true" class="ml-2">
                                         <i class="fa fa-pen text-red-500 font-bold"></i>
                                     </button>
                                 </div>
                                 <div x-show="editPrice">
-                                    <div wire:change="updatePrice('{{ $cart_item->rowId }}', '{{ $cart_item->id }}')"
+                                    <div wire:change="updatePrice('{{ $cart_item['rowId'] ?? '' }}', '{{ $cart_item['id'] ?? '' }}')"
                                         class="flex flex-col items-center">
-                                        <x-input type="text" wire:model="price.{{ $cart_item->id }}"
-                                            placeholder="{{ format_currency($cart_item->options->unit_price) }}"
-                                            name="price{{ $cart_item->id }}" />
+                                        <x-input type="text" wire:model="price.{{ $cart_item['id'] ?? '' }}"
+                                            placeholder="{{ format_currency($cart_item['attributes']['unit_price'] ?? 0) }}"
+                                            name="price{{ $cart_item['id'] ?? '' }}" />
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +49,7 @@
 
                         <x-table.td>
                             <span class="badge badge-info">
-                                {{ $cart_item->options->stock . ' ' . $cart_item->options->unit }}
+                                {{ ($cart_item['attributes']['stock'] ?? 0) . ' ' . ($cart_item['attributes']['unit'] ?? '') }}
                             </span>
                         </x-table.td>
 
@@ -57,16 +58,17 @@
                         </x-table.td>
 
                         <x-table.td>
-                            {{ format_currency($cart_item->options->sub_total) }}
+                            {{ format_currency($cart_item['attributes']['sub_total'] ?? 0) }}
                         </x-table.td>
 
                         <x-table.td>
-                            <button wire:click="removeItem('{{ $cart_item->rowId }}')" wire:loading.attr="disabled"
-                                type="button">
+                            <button wire:click="removeItem('{{ $cart_item['rowId'] ?? '' }}')"
+                                wire:loading.attr="disabled" type="button">
                                 <i class="fa fa-trash bg-red-500 text-white rounded-full p-2"></i>
                             </button>
                         </x-table.td>
                     </x-table.tr>
+                    @endif
                 @endforeach
             @else
                 <x-table.tr>
@@ -86,14 +88,14 @@
                     @if (settings()->show_order_tax == true)
                         <x-table.tr>
                             <x-table.th>{{ __('Order Tax') }} ({{ $global_tax }}%)</x-table.th>
-                            <x-table.td>(+) {{ format_currency(Cart::instance($cart_instance)->tax()) }}</x-table.td>
+                            <x-table.td>(+) {{ format_currency($this->cart->tax()) }}</x-table.td>
                         </x-table.tr>
                     @endif
                     @if (settings()->show_discount == true)
                         <x-table.tr>
                             <x-table.th>{{ __('Discount') }} ({{ $global_discount }}%)</x-table.th>
                             <x-table.td>(-)
-                                {{ format_currency(Cart::instance($cart_instance)->discount()) }}</x-table.td>
+                                {{ format_currency($this->cart->discount()) }}</x-table.td>
                         </x-table.tr>
                     @endif
                     <x-table.tr>
@@ -103,7 +105,8 @@
                     <x-table.tr>
                         <x-table.th>{{ __('Grand Total') }}</x-table.th>
                         @php
-                            $total_with_shipping = Cart::instance($cart_instance)->total() + (float) $shipping_amount;
+                            $shipping_amount = $shipping_amount ?? 0;
+                            $total_with_shipping = $this->cart->total() + (float) $shipping_amount;
                         @endphp
                         <x-table.th>
                             (=) {{ format_currency($total_with_shipping) }}

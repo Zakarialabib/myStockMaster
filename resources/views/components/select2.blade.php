@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore class="w-full">
-        <select  {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
+        <select  {{ $attributes->merge(['class' => 'select2 w-full p-3 leading-5 bg-white rounded-sm border border-zinc-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500 ']) }}>
             @foreach ($options as $key => $value)
                 <option value="{{ $key }}">{{ $value['name'] }}</option>
             @endforeach

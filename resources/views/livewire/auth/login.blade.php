@@ -2,13 +2,13 @@
     <!-- Validation Errors -->
     <x-validation-errors class="mb-4" :errors="$errors" />
 
-    <form wire:submit.prevent="authenticate">
+    <form wire:submit="authenticate">
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
 
-            <x-text-input id="email" class="block mt-1 w-full" wire:model.lazy="email" type="email" name="email"
+            <x-input id="email" class="block mt-1 w-full" wire:model.blur="email" type="email" name="email"
                 :value="old('email')" required autofocus />
 
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
@@ -20,8 +20,8 @@
 
             <div class="relative">
                 <input placeholder="" :type="show ? 'password' : 'text'" name="password" required
-                    wire:model.lazy="password"
-                    class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full">
+                    wire:model.blur="password"
+                    class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 w-full">
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
 
                     <svg class="h-6 text-gray-700" fill="none" @click="show = !show"
@@ -60,8 +60,8 @@
 
         <div class="flex items-center justify-between mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" wire:model.lazy="remember"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                <input id="remember_me" type="checkbox" wire:model.blur="remember"
+                    class="rounded-sm border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50"
                     name="remember">
                 <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>

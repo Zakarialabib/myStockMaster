@@ -13,8 +13,14 @@
     </div>
 
     <div class="flex items-center gap-3">
-        <div class="md:flex hidden flex-wrap items-center">
+        <div class="md:flex hidden flex-wrap items-center gap-2">
             <x-button-fullscreen />
+            
+            <!-- Dark Mode Toggle -->
+            <x-button type="button" secondary @click="toggleTheme()">
+                <i x-show="!isDarkMode" class="fas fa-moon w-4 h-4"></i>
+                <i x-show="isDarkMode" class="fas fa-sun w-4 h-4"></i>
+            </x-button>
         </div>
 
         <x-language-dropdown />

@@ -1,107 +1,140 @@
 <div>
-    <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            @if($this->selectedCount)
-            <x-button danger wire:click="deleteSelected" class="ml-3">
-                <i class="fas fa-trash"></i>
-            </x-button>
-            @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
-            </div>
-        </div>
-    </div>
-   
-    <x-table>
-        <x-slot name="thead">
-            <x-table.th >
-                <x-input type="checkbox" class="rounded-tl rounded-bl" wire:model.live="selectPage" />
-            </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
-                {{ __('Name') }}
-            </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('connection_type')" :direction="$sorts['connection_type'] ?? null">
-                {{ __('Connection type') }}
-            </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('capability_profile')" :direction="$sorts['capability_profile'] ?? null">
-                {{ __('Capability profile') }}
-            </x-table.th>
-            <x-table.th sortable multi-column wire:click="sortBy('char_per_line')" :direction="$sorts['char_per_line'] ?? null">
-                {{ __('Char per line') }}
-            </x-table.th>
-            <x-table.th>
-                {{ __('Actions') }}
-            </x-table.th>
+    @section('title', __('Printers'))
+    
+    <x-page-container>
+        <x-slot name="breadcrumbs">
+            <x-breadcrumb :items="[
+                ['label' => __('Dashboard'), 'url' => route('dashboard')],
+                ['label' => __('Printers'), 'url' => route('printers.index')]
+            ]" />
         </x-slot>
-        <x-table.tbody>
-            @forelse ($printers as $printer)
-                <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $printer->id }}">
-                    <x-table.td class="pr-0">
-                        <x-input type="checkbox" class="rounded-tl rounded-bl" value="{{ $printer->id }}"
-                            wire:model.live="selected" />
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $printer->name }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $printer->connection_type }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $printer->capability_profile }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ $printer->char_per_line }}
-                    </x-table.td>
-                    <x-table.td>
-                        <div class="flex justify-start space-x-2">
-                            <x-button alert wire:click="showModal({{ $printer->id }})" wire:loading.attr="disabled">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
 
-                            <x-button primary wire:click="editModal({{ $printer->id }})" wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
+        <x-slot name="actions">
+            <x-button primary type="button" wire:click="$dispatch('createModal')">
+                <i class="fas fa-plus mr-2"></i>
+                {{ __('Create Printer') }}
+            </x-button>
+        </x-slot>
 
-                            <x-button danger wire:click="confirm('delete', {{ $printer->id }})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
-            @empty
-                <x-table.tr>
-                    <x-table.td colspan="8">
-                        <div class="flex items-center justify-center">
-                            <span class="dark:text-gray-300">{{ __('No results found') }}</span>
-                        </div>
-                    </x-table.td>
-                </x-table.tr>
-            @endforelse
-        </x-table.tbody>
-    </x-table>
+        <x-slot name="filters">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <x-label for="perPage" :value="__('Per Page')" class="text-sm font-medium text-gray-700" />
+                    <select wire:model.live="perPage" id="perPage"
+                        class="w-20 block p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        @foreach ($paginationOptions as $value)
+                            <option value="{{ $value }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                @if($this->selectedCount)
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600">
+                            {{ $this->selectedCount }} {{ __('selected') }}
+                        </span>
+                        <x-button danger wire:click="deleteSelected" size="sm">
+                            <i class="fas fa-trash mr-1"></i>
+                            {{ __('Delete Selected') }}
+                        </x-button>
+                    </div>
+                @endif
+                
+                <div class="flex-1 max-w-md">
+                    <x-input wire:model.live.debounce.500ms="search" 
+                             placeholder="{{ __('Search printers...') }}" 
+                             class="w-full" />
+                </div>
+            </div>
+        </x-slot>
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+            <x-table>
+                <x-slot name="thead">
+                    <x-table.th class="w-12 text-center">
+                        <x-input type="checkbox" wire:model.live="selectPage" class="rounded" />
+                    </x-table.th>
+                    <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null" class="text-left">
+                        {{ __('Name') }}
+                    </x-table.th>
+                    <x-table.th sortable multi-column wire:click="sortBy('connection_type')" :direction="$sorts['connection_type'] ?? null" class="text-left">
+                        {{ __('Connection Type') }}
+                    </x-table.th>
+                    <x-table.th sortable multi-column wire:click="sortBy('capability_profile')" :direction="$sorts['capability_profile'] ?? null" class="text-left">
+                        {{ __('Capability Profile') }}
+                    </x-table.th>
+                    <x-table.th sortable multi-column wire:click="sortBy('char_per_line')" :direction="$sorts['char_per_line'] ?? null" class="text-center">
+                        {{ __('Char/Line') }}
+                    </x-table.th>
+                    <x-table.th class="text-center">
+                        {{ __('Actions') }}
+                    </x-table.th>
+                </x-slot>
+                <x-table.tbody>
+                    @forelse ($printers as $printer)
+                        <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $printer->id }}" class="hover:bg-gray-50 transition-colors">
+                            <x-table.td class="text-center">
+                                <x-input type="checkbox" value="{{ $printer->id }}" wire:model.live="selected" class="rounded" />
+                            </x-table.td>
+                            <x-table.td class="font-medium text-gray-900">
+                                <div class="flex items-center">
+                                    <i class="fas fa-print text-gray-400 mr-3"></i>
+                                    <div>
+                                        <div class="font-semibold">{{ $printer->name }}</div>
+                                        @if($printer->ip_address)
+                                            <div class="text-sm text-gray-500">{{ $printer->ip_address }}{{ $printer->port ? ':' . $printer->port : '' }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </x-table.td>
+                            <x-table.td>
+                                <x-badge type="{{ $printer->connection_type === 'network' ? 'primary' : 'secondary' }}">
+                                    <i class="fas fa-{{ $printer->connection_type === 'network' ? 'wifi' : 'usb' }} mr-1"></i>
+                                    {{ ucfirst($printer->connection_type) }}
+                                </x-badge>
+                            </x-table.td>
+                            <x-table.td class="text-gray-600">
+                                {{ $printer->capability_profile }}
+                            </x-table.td>
+                            <x-table.td class="text-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ $printer->char_per_line }}
+                                </span>
+                            </x-table.td>
+                            <x-table.td class="text-center">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <x-button alert wire:click="showModal({{ $printer->id }})" wire:loading.attr="disabled" size="sm">
+                                        <i class="fas fa-eye"></i>
+                                    </x-button>
 
-    <div class="p-4">
-        <div class="pt-3">
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-            @endif
+                                    <x-button primary wire:click="editModal({{ $printer->id }})" wire:loading.attr="disabled" size="sm">
+                                        <i class="fas fa-edit"></i>
+                                    </x-button>
+
+                                    <x-button danger wire:click="confirm('delete', {{ $printer->id }})" wire:loading.attr="disabled" size="sm">
+                                        <i class="fas fa-trash"></i>
+                                    </x-button>
+                                </div>
+                            </x-table.td>
+                        </x-table.tr>
+                    @empty
+                        <x-table.tr>
+                            <x-table.td colspan="6" class="text-center py-12">
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <i class="fas fa-print text-4xl text-gray-300"></i>
+                                    <p class="text-gray-500 text-lg font-medium">{{ __('No printers found') }}</p>
+                                    <p class="text-gray-400 text-sm">{{ __('Get started by adding your first printer') }}</p>
+                                </div>
+                            </x-table.td>
+                        </x-table.tr>
+                    @endforelse
+                </x-table.tbody>
+            </x-table>
+        </div>
+
+        <div class="mt-6">
             {{ $printers->links() }}
         </div>
-    </div>
+    </x-page-container>
 
     <x-modal wire:model.live="showModal">
         <x-slot name="title">

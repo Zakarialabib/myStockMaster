@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="createModal">
+    <x-modal wire:model="createModal" name="createModal">
         <x-slot name="title">
             {{ __('Create Product') }}
         </x-slot>
@@ -172,22 +172,6 @@
                             <x-input wire:model="seasonality" id="seasonality" type="text" class="block mt-1 w-full" />
                             <x-input-error :messages="$errors->get('seasonality')" class="mt-2" />
                         </div>
-
-                        @foreach(ProductAttribute::all() as $attribute)
-                            <div class="w-full px-3 mb-4">
-                                <x-label for="attributes.{{ $attribute->id }}" :value="__($attribute->name)" />
-                                @if($attribute->type === 'text')
-                                    <x-input wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" type="text" class="block mt-1 w-full" />
-                                @elseif($attribute->type === 'number')
-                                    <x-input wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" type="number" class="block mt-1 w-full" />
-                                @elseif($attribute->type === 'boolean')
-                                    <x-input.checkbox wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" />
-                                @elseif($attribute->type === 'date')
-                                    <x-input-date wire:model="attributes.{{ $attribute->id }}" id="attributes.{{ $attribute->id }}" class="block mt-1 w-full" />
-                                @endif
-                                <x-input-error :messages="$errors->get('attributes.' . $attribute->id)" class="mt-2" />
-                            </div>
-                        @endforeach
                     </div>
                 </div>
                 <div class="w-full my-3">

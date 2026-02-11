@@ -108,7 +108,7 @@
                         {{ __('Reset') }}
                     </x-button>
                     <button
-                        class="flex-1 items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
+                        class="flex-1 items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-hidden focus:border-green-900 focus:ring-3 ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
                         type="button" wire:click.throttle="proceed" wire:loading.attr="disabled"
                         {{ $total_amount == 0 ? 'disabled' : '' }}>
                         {{ __('Proceed') }}

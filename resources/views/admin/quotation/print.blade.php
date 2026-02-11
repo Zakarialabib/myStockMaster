@@ -28,7 +28,7 @@
                                 {{ __('Company Info') }}:
                             </div>
                             <div class="panel-body">
-                                <p><strong>{{ settings()->company_name }}</strong></p>
+                                <p><strong> {{ settings()->company_name ?? config('app.name') }}</strong></p>
                                 <p>{{ settings()->company_address }}</p>
                                 @if (settings()->show_email == true)
                                     <p>{{ __('Email') }}: {{ settings()->company_email }}</p>
@@ -161,7 +161,7 @@
 
                 <div class="row" style="margin-top: 25px;">
                     <div class="col-12">
-                        <p style="font-style: italic;text-align: center">{{ settings()->company_name }} &copy;
+                        <p style="font-style: italic;text-align: center"> {{ settings()->company_name ?? config('app.name') }} &copy;
                             {{ date('Y') }}</p>
                     </div>
                 </div>

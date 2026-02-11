@@ -82,6 +82,7 @@ class Create extends Component
                 $this->cash_register_id = $cashRegister->id;
             } else {
                 $this->dispatch('createModal')->to(CashRegisterCreate::class);
+
                 return;
             }
         }

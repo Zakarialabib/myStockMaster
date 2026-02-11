@@ -28,7 +28,7 @@
                         <div class="flex flex-row mb-4">
                             <div class="md-w-1/4 sm:w-full px-2 mb-2">
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                <div><strong>{{ settings()->company_name }}</strong></div>
+                                <div><strong> {{ settings()->company_name ?? config('app.name') }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 @if (settings()->show_email == true)
                                     <div>{{ __('Email') }}: {{ settings()->company_email }}</div>

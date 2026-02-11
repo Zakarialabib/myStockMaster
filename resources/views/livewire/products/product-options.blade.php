@@ -3,7 +3,7 @@
         @foreach ($options as $index => $option)
             <div class="flex flex-row w-full space-x-2">
                 <select wire:model="options.{{ $index }}.type"
-                    class="block w-full bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-500">
+                    class="block w-full bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-500">
                     <option value="">{{ __('Choose an option') }}</option>
                     <option value="color" {{ $option['type'] == 'color' ? 'selected' : '' }}>
                         {{ __('Color') }}

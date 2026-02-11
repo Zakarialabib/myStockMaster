@@ -25,7 +25,7 @@
                         </div>
                         <div class="mt-4">
                             <button wire:click="$refresh"
-                                class="bg-indigo-800 hover:bg-indigo-700 text-white text-xs py-2 px-4 rounded">
+                                class="bg-indigo-800 hover:bg-indigo-700 text-white text-xs py-2 px-4 rounded-sm">
                                 {{ __('Apply Filters') }}
                             </button>
                         </div>
@@ -53,7 +53,7 @@
                                                 class="form-input rounded-md shadow-sm mt-1 block w-full">
                                             <button
                                                 wire:click="setThreshold({{ $product->id }}, thresholds.{{ $product->id }})"
-                                                class="ml-2 bg-indigo-800 hover:bg-indigo-700 text-white text-xs py-2 px-4 rounded">
+                                                class="ml-2 bg-indigo-800 hover:bg-indigo-700 text-white text-xs py-2 px-4 rounded-sm">
                                                 {{ __('Set') }}
                                             </button>
                                         </div>

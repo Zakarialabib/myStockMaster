@@ -55,7 +55,6 @@ class Index extends Component
     //     'filterSeasonality' => ['except' => ''],
     // ];
 
-
     #[Computed]
     public function categories()
     {
@@ -148,7 +147,7 @@ class Index extends Component
                 $query->where('availability', $this->filterAvailability);
             })
             ->when($this->filterSeasonality, function ($query) {
-                $query->where('seasonality', 'like', '%' . $this->filterSeasonality . '%');
+                $query->where('seasonality', 'like', '%'.$this->filterSeasonality.'%');
             });
 
         $products = $query->paginate($this->perPage);

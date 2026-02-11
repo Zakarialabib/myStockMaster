@@ -30,7 +30,7 @@
     <div class="flex flex-wrap justify-center items-center">
         <div class="md:w-1/3 sm:w-full flex flex-wrap space-x-2">
             <select wire:model.live="perPage"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-none focus:shadow-outline-blue transition duration-150 ease-in-out">
+                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -180,7 +180,7 @@
 
     <livewire:customers.create />
 
-    <x-modal wire:model="importModal">
+    <x-modal wire:model="importModal" name="importModal">
         <x-slot name="title">
             <div class="flex justify-between items-center">
                 {{ __('Import Excel') }}

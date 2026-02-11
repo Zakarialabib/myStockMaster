@@ -153,7 +153,7 @@
 
     <htmlpagefooter name="myfooter">
         <div style="text-align:center; font-size:10pt;">
-            {{ settings()->company_name }} &copy;
+             {{ settings()->company_name ?? config('app.name') }} &copy;
             {{ date('Y') }} - {{ __('Page') }} {PAGENO} {{ __('of') }} {nbpg}
             @if(settings()->invoice_footer)
             {{-- {!! File::get(public_path('print/invoice-footer.html')) !!} --}}

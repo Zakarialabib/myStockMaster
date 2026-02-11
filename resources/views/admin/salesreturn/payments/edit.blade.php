@@ -22,7 +22,7 @@
                     @include('utils.alerts')
                     <div class="mb-4">
                         <button
-                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update
+                            class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm">Update
                             Payment <i class="bi bi-check"></i></button>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                                                 value="{{ old('amount') ?? $saleReturnPayment->amount }}">
                                             <div class="input-group-append">
                                                 <button id="getTotalAmount"
-                                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded"
+                                                    class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm"
                                                     type="button">
                                                     <i class="bi bi-check-square"></i>
                                                 </button>

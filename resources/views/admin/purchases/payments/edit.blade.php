@@ -20,7 +20,7 @@
                 <div class="w-full px-4">
                     @include('utils.alerts')
                     <div class="mb-4">
-                        <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded">Update Payment <i class="bi bi-check"></i></button>
+                        <button class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm">Update Payment <i class="bi bi-check"></i></button>
                     </div>
                 </div>
                 <div class="w-full px-4">
@@ -52,7 +52,7 @@
                                         <div class="input-group">
                                             <input id="amount" type="text" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="amount" required value="{{ old('amount') ?? $purchasePayment->amount }}">
                                             <div class="input-group-append">
-                                                <button id="getTotalAmount" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded" type="button">
+                                                <button id="getTotalAmount" class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm" type="button">
                                                     <i class="bi bi-check-square"></i>
                                                 </button>
                                             </div>

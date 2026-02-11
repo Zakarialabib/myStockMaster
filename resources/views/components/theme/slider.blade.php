@@ -72,7 +72,7 @@
                         <img src="{{ $slider->getFirstMediaUrl('local_files') }}"
                             class="block absolute inset-0 w-full h-full object-cover object-center z-0">
                     </picture>
-                    <div class="absolute bottom-0 w-full h-1/2 z-0 bg-gradient-to-t from-black to-transparent"></div>
+                    <div class="absolute bottom-0 w-full h-1/2 z-0 bg-linear-to-t from-black to-transparent"></div>
                     <div
                         class="flex flex-col max-w-[1400px] items-center mx-auto my-auto text-center relative z-10 px-24 sm:px-18 lg:px-24">
                         <div class="my-4 font-bold text-xl text-white leading-[0.95] lg:text-5xl">
@@ -87,7 +87,7 @@
                         </p>
                         @if ($slider->link)
                             <a href="{{ $slider->link }}"
-                                class="uppercase bg-[#fc1b1b] text-white h-12 inline-flex px-12 justify-center items-center text-sm font-oswald tracking-wider outline-none transition-colors hover:bg-[#b00303]">
+                                class="uppercase bg-[#fc1b1b] text-white h-12 inline-flex px-12 justify-center items-center text-sm font-oswald tracking-wider outline-hidden transition-colors hover:bg-[#b00303]">
                                 {{ __('Read More') }}
                             </a>
                         @endif
@@ -98,7 +98,7 @@
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
             @foreach ($sliders as $index => $slider)
                 <div class="w-14 h-1 bg-gray-300 cursor-pointer transition-colors hover:bg-[#b00303] bg-opacity-50"
-                    :class="{ '!bg-[#fc1b1b]': active === {{ $index }} }"
+                    :class="{ 'bg-[#fc1b1b]!': active === {{ $index }} }"
                     @click="goToSlide({{ $index }})"></div>
             @endforeach
         </div>

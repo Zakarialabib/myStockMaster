@@ -6,7 +6,6 @@
         </x-slot>
 
         <x-slot name="content">
-
             <div class="px-4 mx-auto mb-4">
                 @if ($product)
                     @if (settings()->telegram_channel)
@@ -19,15 +18,15 @@
                         </div>
                     @endif
                     <div class="space-y-2 mb-4">
-                        @if ($product->image)
+                        @if ($product?->image)
                             <div class="w-full px-3">
-                                <img src="{{ asset('images/products/' . $product?->image) }}" alt="{{ $product?->name }}"
-                                    class="w-32 h-32 rounded">
+                                <img src="{{ asset('images/products/' . $product?->image) }}"
+                                    alt="{{ $product?->name }}" class="w-32 h-32 rounded-sm">
                             </div>
                         @endif
-                        <div class="flex justify-center w-full px-3 ">
+                        {{-- <div class="flex justify-center w-full px-3 ">
                             {!! \Milon\Barcode\Facades\DNS1DFacade::getBarCodeSVG($product?->code, $product?->barcode_symbology, 2, 110) !!}
-                        </div>
+                        </div> --}}
                     </div>
                 @endif
                 <div x-data="{ activeTabs: 'productDetails' }">
@@ -69,22 +68,22 @@
                                     <x-table.td>
                                         <div class="flex flex-wrap">
                                             @if ($product?->warehouses)
-                                            @forelse ($product->warehouses as $warehouse)
-                                                <div class="mr-4 mb-4">
-                                                    <p class="font-medium">{{ $warehouse->name }}</p>
-                                                    <p class="text-sm">{{ __('Quantity') }}:
-                                                        {{ $warehouse->pivot->qty }} {{ $product->unit }}</p>
-                                                    <p class="text-sm">{{ __('Cost') }}:
-                                                        {{ format_currency($warehouse->pivot->cost) }}</p>
-                                                    <p class="text-sm">{{ __('Price') }}:
-                                                        {{ format_currency($warehouse->pivot->price) }}</p>
-                                                    <p class="text-sm">{{ __('Stock Worth') }}:
-                                                        {{ format_currency($warehouse->pivot->cost * $warehouse->pivot->qty) }}
-                                                    </p>
-                                                </div>
-                                            @empty
-                                                {{ __('No warehouse assigned') }}
-                                            @endforelse
+                                                @forelse ($product?->warehouses as $warehouse)
+                                                    <div class="mr-4 mb-4">
+                                                        <p class="font-medium">{{ $warehouse->name }}</p>
+                                                        <p class="text-sm">{{ __('Quantity') }}:
+                                                            {{ $warehouse->pivot->qty }} {{ $product?->unit }}</p>
+                                                        <p class="text-sm">{{ __('Cost') }}:
+                                                            {{ format_currency($warehouse->pivot->cost) }}</p>
+                                                        <p class="text-sm">{{ __('Price') }}:
+                                                            {{ format_currency($warehouse->pivot->price) }}</p>
+                                                        <p class="text-sm">{{ __('Stock Worth') }}:
+                                                            {{ format_currency($warehouse->pivot->cost * $warehouse->pivot->qty) }}
+                                                        </p>
+                                                    </div>
+                                                @empty
+                                                    {{ __('No warehouse assigned') }}
+                                                @endforelse
                                             @endif
                                         </div>
                                     </x-table.td>
@@ -120,7 +119,7 @@
                         <div role="productMovements" aria-labelledby="tab-0" id="tab-panel-0" tabindex="0">
                             @if ($product)
                                 <ul class="space-y-4">
-                                    @forelse ($product->movements as $movement)
+                                    @forelse ($product?->movements as $movement)
                                         <li class="border p-4 rounded-md shadow-md">
                                             <div class="flex items-center">
                                                 <span class="font-semibold">{{ __('Type') }}:</span>

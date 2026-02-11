@@ -2,7 +2,7 @@
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
             <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
@@ -103,7 +103,7 @@
                                     @endcan
 
                                     @can('purchase_return_update')
-                                        <x-dropdown-link href="{{ route('purchases.edit', $purchasereturn->id) }}"
+                                        <x-dropdown-link href="{{ route('purchase.edit', $purchasereturn->id) }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit"></i>
                                             {{ __('Edit') }}
@@ -166,7 +166,7 @@
                         <div class="flex flex-row mb-4">
                             <div class="w-1/4 mb-3">
                                 <h5 class="mb-2 border-bottom pb-2">{{ __('Company Info') }}:</h5>
-                                <div><strong>{{ settings()->company_name }}</strong></div>
+                                <div><strong> {{ settings()->company_name ?? config('app.name') }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 @if (settings()->show_email == true)
                                     <div>{{ __('Email') }}: {{ settings()->company_email }}</div>

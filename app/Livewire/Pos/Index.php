@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ProductWarehouse;
 use App\Models\SaleDetails;
 use App\Models\SalePayment;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Traits\WithAlert;
+use App\Traits\LivewireCartTrait;
 use Livewire\Attributes\Validate;
 
 #[Layout('layouts.pos')]
@@ -31,10 +31,9 @@ class Index extends Component
 {
     use WithAlert;
     use WithModels;
+    use LivewireCartTrait;
 
     public $customers;
-
-    public $cart_instance = 'sale';
 
     public $discountModal;
 
@@ -105,7 +104,8 @@ class Index extends Component
 
     public function mount(): void
     {
-        Cart::instance('sale')->destroy();
+        // Clear any existing cart content
+        $this->clearCart();
 
         $this->customers = Customer::select(['id', 'name'])->get();
         $this->global_discount = 0;
@@ -147,7 +147,7 @@ class Index extends Component
             }
         }
 
-        $this->total_with_shipping = (float) Cart::instance($this->cart_instance)->total() + (float) $this->shipping_amount;
+        $this->total_with_shipping = (float) $this->cart->total() + (float) $this->shipping_amount;
     }
 
     public function hydrate(): void
@@ -161,7 +161,7 @@ class Index extends Component
 
     public function render()
     {
-        $cart_items = Cart::instance($this->cart_instance)->content();
+        $cart_items = $this->cart->content();
 
         return view('livewire.pos.index', [
             'cart_items' => $cart_items,
@@ -206,12 +206,12 @@ class Index extends Component
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => (int) Cart::instance('sale')->tax() * 100,
-                'discount_amount'     => (int) Cart::instance('sale')->discount() * 100,
+                'tax_amount'          => (int) $this->cart->tax() * 100,
+                'discount_amount'     => (int) $this->cart->discount() * 100,
             ]);
 
             // foreach ($this->cart_instance as cart_items) {}
-            foreach (Cart::instance('sale')->content() as $cart_item) {
+            foreach ($this->cart->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id'                 => $sale->id,
                     'warehouse_id'            => $this->warehouse_id,
@@ -251,7 +251,7 @@ class Index extends Component
                 $movement->save();
             }
 
-            Cart::instance('sale')->destroy();
+            $this->clearCart();
 
             if ($this->paid_amount > 0) {
                 SalePayment::create([
@@ -268,7 +268,7 @@ class Index extends Component
 
             $this->checkoutModal = false;
 
-            Cart::instance('sale')->destroy();
+            // Cart already cleared above
 
             PaymentNotification::dispatch($sale);
 
@@ -280,7 +280,6 @@ class Index extends Component
     {
         if ($this->customer_id !== null) {
             $this->checkoutModal = true;
-            $this->cart_instance = 'sale';
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -288,12 +287,12 @@ class Index extends Component
 
     public function calculateTotal(): mixed
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
+        return $this->cart->total() + $this->shipping_amount;
     }
 
     public function resetCart(): void
     {
-        Cart::instance($this->cart_instance)->destroy();
+        $this->clearCart();
     }
 
     public function updatedWarehouseId($value): void

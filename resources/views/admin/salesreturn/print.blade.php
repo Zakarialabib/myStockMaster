@@ -26,7 +26,7 @@
                             <div class="col-xs-4 mb-3 mb-md-0">
                                 <h4 class="mb-2" style="border-bottom: 1px solid #dddddd;padding-bottom: 10px;">
                                     Company Info:</h4>
-                                <div><strong>{{ settings()->company_name }}</strong></div>
+                                <div><strong> {{ settings()->company_name ?? config('app.name') }}</strong></div>
                                 <div>{{ settings()->company_address }}</div>
                                 @if (settings()->show_email == true)
                                     <div>{{ __('Email') }}: {{ settings()->company_email }}</div>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="row" style="margin-top: 25px;">
                             <div class="col-xs-12">
-                                <p style="font-style: italic;text-align: center">{{ settings()->company_name }} &copy;
+                                <p style="font-style: italic;text-align: center"> {{ settings()->company_name ?? config('app.name') }} &copy;
                                     {{ date('Y') }}.</p>
                             </div>
                         </div>

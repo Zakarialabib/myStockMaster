@@ -7,7 +7,7 @@
 <h3>{{__('Review your receipt in the attachment')}} </h3>
 
 <span>{{__('Regards')}},<span><br>
-{{ settings()->company_name }}
+ {{ settings()->company_name ?? config('app.name') }}
 @endcomponent
 
 

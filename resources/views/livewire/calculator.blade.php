@@ -12,7 +12,7 @@
             </select>
             <x-input type="number" wire:model.live="number2" placeholder="{{__('Number 2')}}" />
             <button wire:click="calculate"
-                class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 disabled:cursor-not-allowed disabled:bg-opacity-90 rounded text-white"
+                class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 disabled:cursor-not-allowed disabled:bg-opacity-90 rounded-sm text-white"
                 {{ $disabled ? ' disabled' : '' }}>=
             </button>
             <p class="text-3xl">{{ $result }}</p>

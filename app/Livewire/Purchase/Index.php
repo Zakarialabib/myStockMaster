@@ -6,11 +6,13 @@ namespace App\Livewire\Purchase;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -65,6 +67,12 @@ class Index extends Component
 
                 break;
         }
+    }
+
+    #[Computed]
+    public function suppliers()
+    {
+        return Supplier::query()->select('id', 'name')->get();
     }
 
     public function mount(): void

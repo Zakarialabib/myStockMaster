@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="showModal">
+    <x-modal wire:model="showModal" name="showModal">
         <x-slot name="title">
             {{ __('Show Sale') }} - {{ __('Reference') }}: <strong>{{ $sale?->reference }}</strong>
 
@@ -38,7 +38,7 @@
                                 $badgeType = $sale?->status->getBadgeType();
                             @endphp
 
-                            <x-badge :type="$badgeType">{{ $sale?->status->label() }}</x-badge>
+                            <x-badge :type="$badgeType">{{ $sale?->status->getName() }}</x-badge>
                         </div>
                         <div>
                             {{ __('Payment Status') }} :

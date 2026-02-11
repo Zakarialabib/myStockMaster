@@ -52,7 +52,7 @@
                             <x-badge :type="$type">
                                 {{ $purchase?->payment_id->getName() }}
                             </x-badge> --}}
-                            {{ $purchase?->payment_id->getName() }}
+                            {{-- {{ $purchase?->payment_id->getName() }} --}}
                         </div>
                     </div>
                 </div>

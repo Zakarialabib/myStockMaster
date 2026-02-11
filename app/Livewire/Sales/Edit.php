@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\Sale;
 use App\Models\SaleDetails;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Traits\LivewireCartTrait;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Livewire\Utils\WithModels;
@@ -25,6 +25,7 @@ use Livewire\Attributes\Validate;
 class Edit extends Component
 {
     use WithModels;
+    use LivewireCartTrait;
 
     public $sale;
 
@@ -85,12 +86,11 @@ class Edit extends Component
 
         $this->sale_details = $this->sale->saleDetails;
 
-        Cart::instance('sale')->destroy();
-
-        $cart = Cart::instance('sale');
+        $this->initializeCart('sale');
+        $this->clearCart();
 
         foreach ($this->sale_details as $sale_detail) {
-            $cart->add([
+            $this->cart->add([
                 'id'      => $sale_detail->product_id,
                 'name'    => $sale_detail->name,
                 'qty'     => $sale_detail->quantity,
@@ -181,11 +181,11 @@ class Edit extends Component
                 'payment_status'      => $payment_status,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => (int) (Cart::instance('sale')->tax() * 100),
-                'discount_amount'     => (int) (Cart::instance('sale')->discount() * 100),
+                'tax_amount'          => (int) ($this->cart->tax() * 100),
+                'discount_amount'     => (int) ($this->cart->discount() * 100),
             ]);
 
-            foreach (Cart::instance('sale')->content() as $cart_item) {
+            foreach ($this->cart->content() as $cart_item) {
                 SaleDetails::create([
                     'sale_id'                 => $this->sale->id,
                     'product_id'              => $cart_item->id,
@@ -225,7 +225,7 @@ class Edit extends Component
                 $movement->save();
             }
 
-            Cart::instance('sale')->destroy();
+            $this->clearCart();
 
             $this->alert('success', __('Sale Updated succesfully !'));
 

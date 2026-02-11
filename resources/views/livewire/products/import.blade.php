@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="importModal">
+    <x-modal wire:model="importModal" name="importModal">
         <x-slot name="title">
             {{ __('Import Excel') }}
         </x-slot>
@@ -7,7 +7,7 @@
         <x-slot name="content">
             <div x-data="{
                 openTab: 1,
-                activeClasses: 'border rounded-t text-purple-500',
+                activeClasses: 'border rounded-t-sm text-purple-500',
                 inactiveClasses: 'text-purple-600 hover:text-purple-800'
             }" class="p-4">
                 <ul class="flex mb-0 list-none flex-wrap pt-3 flex-row border-b">
