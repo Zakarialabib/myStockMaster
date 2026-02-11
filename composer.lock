@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a6e6d50138082050f7fc8314ab531dc",
+    "content-hash": "05dd1d234461098753a9c099682cef6f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3515,16 +3515,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.7.10",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "0dc679eb4c8b4470cb12522b5927ef08ca2358bb"
+                "reference": "7c66e50218be801d6d257714c6642e9024f8a183"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/0dc679eb4c8b4470cb12522b5927ef08ca2358bb",
-                "reference": "0dc679eb4c8b4470cb12522b5927ef08ca2358bb",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/7c66e50218be801d6d257714c6642e9024f8a183",
+                "reference": "7c66e50218be801d6d257714c6642e9024f8a183",
                 "shasum": ""
             },
             "require": {
@@ -3579,7 +3579,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.7.10"
+                "source": "https://github.com/livewire/livewire/tree/v4.0.0"
             },
             "funding": [
                 {
@@ -3587,7 +3587,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-09T22:49:33+00:00"
+            "time": "2026-01-14T10:40:38+00:00"
         },
         {
             "name": "livewire/volt",
@@ -4031,16 +4031,16 @@
         },
         {
             "name": "nativephp/electron",
-            "version": "1.3.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/electron.git",
-                "reference": "1f1267e3a91ddf6fbc7fd667a2de92d300fcdd0a"
+                "reference": "e0624eba8d2994669a90180125a7c0bd8631c51a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/electron/zipball/1f1267e3a91ddf6fbc7fd667a2de92d300fcdd0a",
-                "reference": "1f1267e3a91ddf6fbc7fd667a2de92d300fcdd0a",
+                "url": "https://api.github.com/repos/NativePHP/electron/zipball/e0624eba8d2994669a90180125a7c0bd8631c51a",
+                "reference": "e0624eba8d2994669a90180125a7c0bd8631c51a",
                 "shasum": ""
             },
             "require": {
@@ -4106,7 +4106,7 @@
                 "nativephp"
             ],
             "support": {
-                "source": "https://github.com/NativePHP/electron/tree/1.3.0"
+                "source": "https://github.com/NativePHP/electron/tree/1.0.0"
             },
             "funding": [
                 {
@@ -4118,7 +4118,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-09-04T18:19:22+00:00"
+            "time": "2025-04-07T14:55:46+00:00"
         },
         {
             "name": "nativephp/laravel",

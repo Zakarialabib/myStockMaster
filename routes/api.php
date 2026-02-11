@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ExpenseController as ExpenseApi;
 use App\Http\Controllers\Api\RoleController as RoleApi;
 use App\Http\Controllers\Api\WarehouseController as WarehouseApi;
 use App\Http\Controllers\Api\AuthController as AuthApi;
+use App\Http\Controllers\Api\SyncController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -38,3 +39,9 @@ Route::apiResource('suppliers', SupplierApi::class);
 Route::apiResource('expenses', ExpenseApi::class);
 Route::apiResource('roles', RoleApi::class);
 Route::apiResource('warehouses', WarehouseApi::class);
+
+// Database Synchronization Routes (NativePHP/Desktop)
+Route::prefix('sync')->group(function () {
+    Route::get('pull', [SyncController::class, 'pull']);
+    Route::post('push', [SyncController::class, 'push']);
+});
