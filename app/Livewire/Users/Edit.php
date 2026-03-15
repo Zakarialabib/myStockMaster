@@ -26,7 +26,7 @@ class Edit extends Component
     #[Validate('required|string|max:255')]
     public $name;
 
-    #[Validate('required|email|unique:users,email')]
+    #[Validate('required|email')]
     public $email;
 
     #[Validate('required|string|min:8')]
@@ -79,14 +79,17 @@ class Edit extends Component
         $this->validate();
 
         $this->user->update([
-            'name'     => $this->user->name,
-            'email'    => $this->user->email,
-            'password' => Hash::make('password'),
-            'phone'    => $this->user->phone,
-            'city'     => $this->user->city,
-            'country'  => $this->user->country,
-            'address'  => $this->user->address,
+            'name'     => $this->name,
+            'email'    => $this->email,
+            'phone'    => $this->phone,
+            'city'     => $this->city,
+            'country'  => $this->country,
+            'address'  => $this->address,
         ]);
+
+        if ($this->password && $this->password !== $this->user->password) {
+             $this->user->update(['password' => Hash::make($this->password)]);
+        }
 
         $this->user->warehouses()->sync($this->selectedWarehouses);
 

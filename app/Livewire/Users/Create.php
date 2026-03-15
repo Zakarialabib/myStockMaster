@@ -8,6 +8,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\User;
 use App\Models\UserWarehouse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -65,7 +66,15 @@ class Create extends Component
     {
         $this->validate();
 
-        $this->user = User::create($this->all());
+        $this->user = User::create([
+            'name'     => $this->name,
+            'email'    => $this->email,
+            'password' => Hash::make($this->password),
+            'phone'    => $this->phone,
+            'city'     => $this->city,
+            'country'  => $this->country,
+            'address'  => $this->address,
+        ]);
 
         $this->user->assignRole($this->role);
 

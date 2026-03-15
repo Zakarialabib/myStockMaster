@@ -35,6 +35,8 @@ class Profile extends Component
 
     public function mount(): void
     {
+        $this->authorize('users.profile');
+
         $this->user = User::find(Auth::user()->id);
         $this->name = $this->user->name;
         $this->email = $this->user->email;
@@ -43,8 +45,6 @@ class Profile extends Component
 
     public function render()
     {
-        $this->authorize('users.profile');
-
         return view('livewire.users.profile');
     }
 

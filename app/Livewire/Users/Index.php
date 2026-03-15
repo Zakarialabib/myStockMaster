@@ -14,6 +14,7 @@ use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class Index extends Component
 {
     use WithAlert;
@@ -55,8 +56,13 @@ class Index extends Component
         return view('livewire.users.index', ['users' => $users]);
     }
 
-    // getrolesproperty
-    public function getRolesProperty()
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
+    }
+
+    #[Computed]
+    public function roles()
     {
         return Role::pluck('name', 'id');
     }
