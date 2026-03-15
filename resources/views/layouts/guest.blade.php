@@ -39,17 +39,15 @@
 </head>
 
 <body class="font-sans text-gray-900 antialiased">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-        <div>
+    <x-auth-card>
+        <x-slot:logo>
             <a href="/" wire:navigate>
                 <x-application-logo class="h-20 text-gray-500" />
             </a>
-        </div>
+        </x-slot:logo>
 
-        <div class="w-full max-w-7xl mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            {{ $slot }}
-        </div>
-    </div>
+        {{ $slot }}
+    </x-auth-card>
 </body>
 
 </html>

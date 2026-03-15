@@ -1,44 +1,3 @@
-<?php
-
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-
-use function Livewire\Volt\layout;
-use function Livewire\Volt\rules;
-use function Livewire\Volt\state;
-
-layout('layouts.guest');
-
-state([
-    'name' => '',
-    'email' => '',
-    'password' => '',
-    'password_confirmation' => '',
-]);
-
-rules([
-    'name' => ['required', 'string', 'max:255'],
-    'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-    'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-]);
-
-$register = function () {
-    $validated = $this->validate();
-
-    $validated['password'] = Hash::make($validated['password']);
-
-    event(new Registered(($user = User::create($validated))));
-
-    Auth::login($user);
-
-    $this->redirect(route('dashboard', absolute: false), navigate: false);
-};
-
-?>
-
 <div>
     <form wire:submit="register">
         <!-- Name -->
@@ -57,13 +16,22 @@ $register = function () {
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Phone -->
+        <div class="mt-4">
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input wire:model="phone" id="phone" class="block mt-1 w-full" type="tel" name="phone"
+                autocomplete="tel" />
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4 relative" x-data="{ show: true }">
             <x-input-label for="password" :value="__('Password')" />
 
             <div class="relative">
-                <input placeholder="" :type="show ? 'password' : 'text'" name="password" required wire:model="password"
-                    class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 w-full">
+                <x-input id="password" placeholder="" x-bind:type="show ? 'password' : 'text'" name="password" required
+                    wire:model="password" autocomplete="new-password" class="mt-1 pr-10" />
+
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
 
                     <svg class="h-6 text-gray-700" fill="none" @click="show = !show"

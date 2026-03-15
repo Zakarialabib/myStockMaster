@@ -117,18 +117,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
-    Route::get('/', Dashboard::class)->name('dashboard');
+    Route::livewire('/', Dashboard::class)->name('dashboard');
 
     // POS
-    Route::get('/pos', PosIndex::class)->name('pos.index');
+    Route::livewire('/pos', PosIndex::class)->name('pos.index');
 
     // Product Adjustment
-    Route::get('/adjustments', AdjustmentIndex::class)->name('adjustments.index');
-    Route::get('/adjustment/create', CreateAdjustment::class)->name('adjustments.create');
-    Route::get('/adjustment/update/{id}', EditAdjustment::class)->name('adjustments.edit');
+    Route::livewire('/adjustments', AdjustmentIndex::class)->name('adjustments.index');
+    Route::livewire('/adjustment/create', CreateAdjustment::class)->name('adjustments.create');
+    Route::livewire('/adjustment/update/{id}', EditAdjustment::class)->name('adjustments.edit');
 
     // Database Sync (Desktop Mode)
-    Route::get('/database-sync', \App\Livewire\Admin\DatabaseSync::class)->name('admin.database-sync');
+    Route::livewire('/database-sync', \App\Livewire\Admin\DatabaseSync::class)->name('admin.database-sync');
 });
 
 // Desktop-specific routes (only available in desktop mode)

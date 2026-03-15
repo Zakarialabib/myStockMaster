@@ -8,9 +8,9 @@
     <link rel="preconnect" href="{{ request()->getSchemeAndHttpHost() }}">
     <link rel="prefetch" href="{{ request()->getSchemeAndHttpHost() }}">
     <link rel="prerender" href="{{ request()->getSchemeAndHttpHost() }}">
-    <meta name="csrf_token" value="{{ csrf_token() }}"/>
+    <meta name="csrf_token" value="{{ csrf_token() }}" />
     <!-- Head Tags -->
-    @if ( settings('head_tags') )
+    @if (settings('head_tags'))
         {!! settings('head_tags') !!}
     @endif
 
@@ -36,46 +36,40 @@
     {{-- <link rel="canonical" href="{{ URL::current() }}"> --}}
     <meta name="robots" content="all,follow">
 
-    <link rel="icon" href="{{ asset('images/' . settings('site_favicon') ) }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/' . settings('site_favicon')) }}" type="image/x-icon">
 
     {{-- Styles --}}
     @vite('resources/css/app.css')
 
     @livewireStyles
- 
+
     @stack('styles')
     <style>
         [x-cloak] {
             display: none;
         }
     </style>
-      @vite('resources/js/app.js')
+    @vite('resources/js/app.js')
 
-      @livewireScriptConfig 
-      
-      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      
-  
-        
-      @stack('scripts')
+    @livewireScriptConfig
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @stack('scripts')
 </head>
 
 <body class="antialiased bg-gray-100 text-body font-body" x-data="{ showCart: false }">
     <!-- Body Tags -->
 
-    @if (settings('body_tags') )
-        {!! settings('body_tags')  !!}
+    @if (settings('body_tags'))
+        {!! settings('body_tags') !!}
     @endif
-    
+
     {{-- <x-loading-mask /> --}}
 
     <section class="relative">
 
-        <x-topheader />
-
-        <x-header vertical /> 
-
-        {{-- <x-bottomheader /> --}}
+        {{-- <x-header vertical /> --}}
 
         @yield('content')
 
@@ -85,11 +79,8 @@
 
         <x-theme.footer />
 
-        {{-- <x-whatsapp /> --}}
-
     </section>
 
-  
 </body>
 
 </html>

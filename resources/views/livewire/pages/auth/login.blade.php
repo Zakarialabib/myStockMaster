@@ -1,37 +1,3 @@
-<?php
-
-use App\Livewire\Forms\LoginForm;
-use Illuminate\Support\Facades\Session;
-
-use function Livewire\Volt\form;
-use function Livewire\Volt\layout;
-use Illuminate\Support\Facades\Auth;
-
-layout('layouts.guest');
-
-form(LoginForm::class);
-
-$login = function () {
-    $this->validate();
-
-    $this->form->authenticate();
-
-    // session()->regenerate();
-    $this->redirect(route('dashboard'));
-
-    // $this->redirectIntended(default: route('dashboard'), navigate: false);
-
-};
-
-$viaRemember = function () {
-    if (Auth::viaRemember()) {
-        Auth::login(Auth::user(), true);
-        $this->redirect(route('dashboard'));
-    }
-};
-
-?>
-
 <div>
     <div class="px-8 py-8">
         @if (Auth::viaRemember())
@@ -62,9 +28,8 @@ $viaRemember = function () {
                 <x-input-label for="password" :value="__('Password')" />
 
                 <div class="relative">
-                    <input placeholder="" :type="show ? 'password' : 'text'" name="password" required
-                        wire:model="form.password"
-                        class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring-3 focus:ring-indigo-200 focus:ring-opacity-50 w-full">
+                    <x-input id="password" placeholder="" x-bind:type="show ? 'password' : 'text'" name="password" required
+                        wire:model="form.password" autocomplete="current-password" class="mt-1 pr-10" />
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
 
                         <svg class="h-6 text-gray-700" fill="none" @click="show = !show"
