@@ -18,7 +18,7 @@ class Livesearch extends Component
 {
     use WithAlert;
     #[Url]
-    public $searchQuery = '';
+    public string $searchQuery = '';
 
     public function render()
     {

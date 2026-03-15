@@ -48,7 +48,7 @@
                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                        <div class="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
                             :class="$wire.isOnline ? 'bg-green-100' : 'bg-red-100'">
                             <svg class="h-6 w-6" :class="$wire.isOnline ? 'text-green-600' : 'text-red-600'"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
