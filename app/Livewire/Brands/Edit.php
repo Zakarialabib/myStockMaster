@@ -16,20 +16,19 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
-    /** @var mixed */
-    public $brand;
+    public Brand $brand;
 
     #[Validate('required', message: 'Please provide a name')]
     #[Validate('min:3', message: 'This name is too short')]
     public string $name;
 
-    public $description;
+    public ?string $description = null;
 
     public $image;
 
-    public $origin;
+    public ?string $origin = null;
 
     #[On('editModal')]
     public function openEditModal($id): void

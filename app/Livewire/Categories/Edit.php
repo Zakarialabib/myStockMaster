@@ -17,18 +17,17 @@ class Edit extends Component
     use WithFileUploads;
 
     /** @var bool */
-    public $editModal = false;
+    public bool $editModal = false;
 
-    /** @var mixed */
-    public $category;
+    public Category $category;
 
     #[Validate('required', message: 'Please provide a name')]
     #[Validate('min:3', message: 'This name is too short')]
     public string $name;
 
-    public $description;
+    public ?string $description = null;
 
-    public $code;
+    public ?string $code = null;
 
     public $image;
 

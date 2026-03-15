@@ -15,28 +15,28 @@ class Create extends Component
 {
     use WithAlert;
     /** @var bool */
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Warehouse $warehouse;
 
     #[Validate('required')]
     #[Validate('max:255')]
-    public $name;
+    public string $name;
 
     #[Validate('numeric')]
-    public $phone;
+    public ?string $phone = null;
 
     #[Validate('nullable')]
     #[Validate('max:255')]
-    public $country;
+    public ?string $country = null;
 
     #[Validate('nullable')]
     #[Validate('max:255')]
-    public $city;
+    public ?string $city = null;
 
     #[Validate('email')]
     #[Validate('max:255')]
-    public $email;
+    public ?string $email = null;
 
     public function render()
     {

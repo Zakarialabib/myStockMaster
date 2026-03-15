@@ -17,7 +17,7 @@ class Create extends Component
     use WithFileUploads;
 
     /** @var bool */
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Category $category;
 
@@ -25,7 +25,7 @@ class Create extends Component
     #[Validate('min:3', message: 'This name is too short')]
     public string $name;
 
-    public $description;
+    public ?string $description = null;
 
     public $image;
 

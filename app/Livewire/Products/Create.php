@@ -24,48 +24,47 @@ class Create extends Component
     use WithFileUploads;
     use WithModels;
 
-    /** @var bool */
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Product $product;
 
     public $image;
 
-    public $code;
+    public ?string $code = null;
 
     public $gallery;
 
     #[Validate('required|min:3|max:255')]
     public string $name;
 
-    public $barcode_symbology;
+    public string $barcode_symbology = 'C128';
 
-    public $slug;
+    public ?string $slug = null;
 
-    public $unit;
+    public string $unit = 'pcs';
 
-    public $tax_amount = 9;
+    public int $tax_amount = 9;
 
-    public $description;
+    public ?string $description = null;
 
-    public $tax_type;
+    public ?string $tax_type = null;
 
-    public $usage;
+    public ?string $usage = null;
 
-    public $embeded_video;
+    public ?string $embeded_video = null;
 
     #[Validate('required')]
-    public $category_id;
+    public ?int $category_id = null;
 
-    public $brand_id;
+    public ?int $brand_id = null;
 
     public array $options = [];
 
     #[Validate('nullable|boolean')]
-    public $availability;
+    public ?bool $availability = null;
 
     #[Validate('nullable|string|max:255')]
-    public $seasonality;
+    public ?string $seasonality = null;
 
     #[Validate([
         'productWarehouse.qty'          => 'numeric',
@@ -84,7 +83,7 @@ class Create extends Component
         'is_ecommerce' => false,
     ];
 
-    public $selectedAttributes = [];
+    public array $selectedAttributes = [];
 
     #[Computed]
     public function productAttributes()

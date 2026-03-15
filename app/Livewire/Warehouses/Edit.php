@@ -15,25 +15,24 @@ class Edit extends Component
 {
     use WithAlert;
 
-    /** @var bool */
-    public $editModal = false;
+    public bool $editModal = false;
 
-    public $warehouse;
+    public Warehouse $warehouse;
 
     #[Validate('string|required|max:255')]
-    public $name;
+    public string $name;
 
     #[Validate('numeric|nullable|max:255')]
-    public $phone;
+    public ?string $phone = null;
 
     #[Validate('nullable|max:255')]
-    public $country;
+    public ?string $country = null;
 
     #[Validate('nullable|max:255')]
-    public $city;
+    public ?string $city = null;
 
     #[Validate('nullable|max:255')]
-    public $email;
+    public ?string $email = null;
 
     public function render()
     {

@@ -37,21 +37,21 @@ class Edit extends Component
 
     public string $unit;
 
-    public $tax_amount;
+    public int $tax_amount;
 
-    public $description;
+    public ?string $description = null;
 
-    public $tax_type;
+    public ?string $tax_type = null;
 
     public bool $featured = false;
 
-    public $usage;
+    public ?string $usage = null;
 
-    public $embeded_video;
+    public ?string $embeded_video = null;
 
-    public $category_id;
+    public ?int $category_id = null;
 
-    public $brand_id;
+    public ?int $brand_id = null;
 
     #[Validate('array')]
     public array $options = [];
@@ -60,13 +60,13 @@ class Edit extends Component
 
     public $gallery = [];
 
-    public $selectedAttributes = [];
+    public array $selectedAttributes = [];
 
     #[Validate('nullable|boolean')]
-    public $availability;
+    public ?bool $availability = null;
 
     #[Validate('nullable|string|max:255')]
-    public $seasonality;
+    public ?string $seasonality = null;
 
     public bool $best = false;
 
@@ -82,7 +82,7 @@ class Edit extends Component
         'options.*.type'                  => '',
         'options.*.value'                 => '',
     ])]
-    public $productWarehouse = [];
+    public array $productWarehouse = [];
 
     public function addOption(): void
     {
