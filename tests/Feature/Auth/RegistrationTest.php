@@ -2,37 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Auth;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Event;
 
-class RegistrationTest extends TestCase
-{
-    use RefreshDatabase;
+it('renders the registration screen', function () {
+    Livewire::test('pages.auth.register')
+        ->assertStatus(200);
+});
 
-    public function test_registration_screen_can_be_rendered(): void
-    {
-        $response = $this->get('/register');
+it('registers a new user', function () {
+    Event::fake([Registered::class]);
 
-        $response
-            ->assertOk()
-            ->assertSeeLivewire('pages.auth.register');
-    }
+    Livewire::test('pages.auth.register')
+        ->set('name', 'Test User')
+        ->set('email', 'test@example.com')
+        ->set('phone', '08000000000')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->call('register')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('dashboard', absolute: false));
 
-    public function test_new_users_can_register(): void
-    {
-        $component = Livewire::test('pages.auth.register')
-            ->set('name', 'Test User')
-            ->set('email', 'test@example.com')
-            ->set('password', 'password')
-            ->set('password_confirmation', 'password');
-
-        $component->call('register');
-
-        $component->assertRedirect(route('dashboard', absolute: false));
-
-        $this->assertAuthenticated();
-    }
-}
+    $this->assertAuthenticated();
+    Event::assertDispatched(Registered::class);
+});
