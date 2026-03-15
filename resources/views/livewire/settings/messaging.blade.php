@@ -1,11 +1,12 @@
-`<div>
+<div>
     <div class="flex py-4">
         <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
             <div class="bg-white shadow-md rounded-lg px-2 py-4">
                 <h2 class="text-lg font-medium mb-4">{{ __('Messaging Configuration') }}</h2>
                 <div class="mb-4">
                     <label for="type">{{ __('Message Type') }}:</label>
-                    <select id="type" wire:model="type" class="w-full">
+                    <select id="type" wire:model="type"
+                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         <option value="">{{ __('Select Message Type') }}</option>
                         <option value="whatsapp">WhatsApp</option>
                         <option value="telegram">Telegram</option>
@@ -38,14 +39,12 @@
                     </div>
                     <div class="mb-4">
                         <label for="chat-id" class="block font-medium mb-1">{{ __('Chat ID') }}:</label>
-                        <input type="text" wire:model="chatId" id="chat-id"
-                            class="w-full p-2 border rounded-lg">
+                        <x-input type="text" wire:model="chatId" id="chat-id" />
                     </div>
                 @elseif($type == 'whatsapp')
                     <div class="mb-4">
                         <label for="chat-id" class="block font-medium mb-1">{{ __('Phone') }}:</label>
-                        <input type="text" wire:model="chatId" id="chat-id"
-                            class="w-full p-2 border rounded-lg">
+                        <x-input type="text" wire:model="chatId" id="chat-id" />
                     </div>
                     <div class="px-4 pb-2">
                         <button class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-sm"

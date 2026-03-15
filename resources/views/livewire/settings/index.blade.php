@@ -216,7 +216,7 @@
                 </div>
                 <div x-show="tab === 'invoice'">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4 border-b border-gray-200">
+                        <div class="bg-linear-to-r from-green-600 to-emerald-600 px-6 py-4 border-b border-gray-200">
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-file-invoice text-white text-lg"></i>
                                 <h2 class="text-lg font-semibold text-white">{{ __('Invoice Configuration') }}</h2>
@@ -262,57 +262,49 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
                                         <x-label for="sale_prefix" :value="__('Sale Prefix')" />
-                                        <input wire:model="sale_prefix" type="text" id="sale_prefix"
-                                            name="sale_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="sale_prefix" type="text" id="sale_prefix"
+                                            name="sale_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="saleReturn_prefix" :value="__('Sale Return Prefix')" />
-                                        <input wire:model="saleReturn_prefix" type="text" id="saleReturn_prefix"
-                                            name="saleReturn_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="saleReturn_prefix" type="text" id="saleReturn_prefix"
+                                            name="saleReturn_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="salePayment_prefix" :value="__('Sale Payment Prefix')" />
-                                        <input wire:model="salePayment_prefix" type="text" id="salePayment_prefix"
-                                            name="salePayment_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="salePayment_prefix" type="text"
+                                            id="salePayment_prefix" name="salePayment_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="purchase_prefix" :value="__('Purchase Prefix')" />
-                                        <input wire:model="purchase_prefix" type="text" id="purchase_prefix"
-                                            name="purchase_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="purchase_prefix" type="text" id="purchase_prefix"
+                                            name="purchase_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="purchaseReturn_prefix" :value="__('Purchase Return Prefix')" />
-                                        <input wire:model="purchaseReturn_prefix" type="text"
-                                            id="purchaseReturn_prefix" name="purchaseReturn_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="purchaseReturn_prefix" type="text"
+                                            id="purchaseReturn_prefix" name="purchaseReturn_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="purchasePayment_prefix" :value="__('Purchase Payment Prefix')" />
-                                        <input wire:model="purchasePayment_prefix" type="text"
+                                        <x-input wire:model="purchasePayment_prefix" type="text"
                                             id="purchasePayment_prefix" name="purchasePayment_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                            class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="quotation_prefix" :value="__('Quotation Prefix')" />
-                                        <input wire:model="quotation_prefix" type="text" id="quotation_prefix"
-                                            name="quotation_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="quotation_prefix" type="text" id="quotation_prefix"
+                                            name="quotation_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="expense_prefix" :value="__('Expense Prefix')" />
-                                        <input wire:model="expense_prefix" type="text" id="expense_prefix"
-                                            name="expense_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="expense_prefix" type="text" id="expense_prefix"
+                                            name="expense_prefix" class="mt-1" />
                                     </div>
                                     <div>
                                         <x-label for="delivery_prefix" :value="__('Delivery Prefix')" />
-                                        <input wire:model="delivery_prefix" type="text" id="delivery_prefix"
-                                            name="delivery_prefix"
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" />
+                                        <x-input wire:model="delivery_prefix" type="text" id="delivery_prefix"
+                                            name="delivery_prefix" class="mt-1" />
                                     </div>
                                 </div>
                             </div>
@@ -327,7 +319,7 @@
                 </div>
                 <div x-show="tab === 'siteConfig'">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 border-b border-gray-200">
+                        <div class="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4 border-b border-gray-200">
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-globe text-white text-lg"></i>
                                 <h2 class="text-lg font-semibold text-white">{{ __('Site Configuration') }}</h2>
@@ -410,9 +402,8 @@
                                 </h3>
                                 <div>
                                     <x-label for="whatsapp_custom_message" :value="__('Whatsapp Custom Message')" />
-                                    <textarea
-                                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                        rows="4" id="whatsapp_custom_message" name="whatsapp_custom_message" wire:model="whatsapp_custom_message"></textarea>
+                                    <x-input.textarea rows="4" id="whatsapp_custom_message"
+                                        name="whatsapp_custom_message" wire:model="whatsapp_custom_message" />
                                 </div>
                             </div>
 
@@ -421,17 +412,15 @@
                                 <div class="space-y-6">
                                     <div>
                                         <x-label for="head_tags" :value="__('Custom Head Code')" />
-                                        <textarea
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            rows="4" id="head_tags" name="head_tags" wire:model="head_tags"></textarea>
+                                        <x-input.textarea rows="4" id="head_tags" name="head_tags"
+                                            wire:model="head_tags" />
                                         <small
                                             class="text-red-500">{{ __('Facebook, Google Analytics or other script.') }}</small>
                                     </div>
                                     <div>
                                         <x-label for="body_tags" :value="__('Custom Body Code')" />
-                                        <textarea
-                                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                            rows="4" id="body_tags" name="body_tags" wire:model="body_tags"></textarea>
+                                        <x-input.textarea rows="4" id="body_tags" name="body_tags"
+                                            wire:model="body_tags" />
                                         <small
                                             class="text-red-500">{{ __('Facebook, Google Analytics or other script.') }}</small>
                                     </div>
@@ -449,7 +438,7 @@
                 </form>
                 <div x-show="tab === 'mail'">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 border-b border-gray-200">
+                        <div class="bg-linear-to-r from-purple-600 to-pink-600 px-6 py-4 border-b border-gray-200">
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-envelope text-white text-lg"></i>
                                 <h2 class="text-lg font-semibold text-white">{{ __('Mail Configuration') }}</h2>
@@ -462,7 +451,7 @@
                 </div>
                 <div x-show="tab === 'analyticsConfig'">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-4 border-b border-gray-200">
+                        <div class="bg-linear-to-r from-green-600 to-teal-600 px-6 py-4 border-b border-gray-200">
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-chart-bar text-white text-lg"></i>
                                 <h2 class="text-lg font-semibold text-white">{{ __('Analytics Configuration') }}</h2>
@@ -517,7 +506,7 @@
                 </div>
                 <div x-show="tab === 'messaging'">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="bg-gradient-to-r from-orange-600 to-red-600 px-6 py-4 border-b border-gray-200">
+                        <div class="bg-linear-to-r from-orange-600 to-red-600 px-6 py-4 border-b border-gray-200">
                             <div class="flex items-center space-x-3">
                                 <i class="fas fa-comments text-white text-lg"></i>
                                 <h2 class="text-lg font-semibold text-white">{{ __('Messaging') }}</h2>

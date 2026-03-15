@@ -69,6 +69,7 @@
                                                 {{ __('Download') }}
                                             </x-button>
                                             <x-button danger wire:click="delete('{{ $backup }}')" type="button"
+                                                wire:confirm="{{ __('Are you sure you want to delete this backup?') }}"
                                                 wire:loading.attr="disabled">
                                                 <i class="fas fa-trash"></i>
                                             </x-button>
@@ -96,7 +97,7 @@
         </x-slot>
         <x-slot name="content">
             {{-- error message --}}
-            <form wire:submit="updateSettigns">
+            <form wire:submit="updateSettings">
                 <div class="w-full flex flex-wrap px-2">
                     <div class="w-1/2 px-2 my-4">
                         <label for="backup_status">{{ __('Backup status') }}</label>
@@ -127,24 +128,3 @@
 </div>
 
 
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:init', function() {
-            window.livewire.on('deleteModal', brandId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.Livewire.dispatch('delete', brandId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush
