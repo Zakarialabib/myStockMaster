@@ -22,10 +22,10 @@ class Index extends Component
     use WithFileUploads;
     use WithModels;
 
-    public $settings;
+    public Setting $settings;
 
     /** @var array<string> */
-    public $listeners = ['update'];
+    public array $listeners = ['update'];
 
     public $invoice_header;
 
@@ -54,80 +54,80 @@ class Index extends Component
     public $site_favicon;
 
     #[Validate('required|string|min:1|max:255')]
-    public $company_name;
+    public string $company_name;
 
     #[Validate('required|string|min:1|max:255')]
-    public $company_email;
+    public string $company_email;
 
     #[Validate('required|string|min:1|max:255')]
-    public $company_phone;
+    public string $company_phone;
 
     #[Validate('required|string|min:1|max:255')]
-    public $company_address;
+    public string $company_address;
 
     #[Validate('nullable|string|min:0|max:255')]
-    public $company_tax;
+    public ?string $company_tax = null;
 
     #[Validate('nullable|string|min:0|max:255')]
-    public $telegram_channel;
+    public ?string $telegram_channel = null;
 
     #[Validate('required|integer|min:0|max:192')]
-    public $default_currency_id;
+    public int $default_currency_id;
 
     #[Validate('required|string|min:1|max:255')]
-    public $default_currency_position;
+    public string $default_currency_position;
 
     #[Validate('required|string|min:1|max:255')]
-    public $default_date_format;
+    public string $default_date_format;
 
-    public $default_client_id;
+    public ?int $default_client_id = null;
 
-    public $default_warehouse_id;
+    public ?int $default_warehouse_id = null;
 
     // #[Validate('boolean')]
     // public $multi_language;
 
-    public $invoice_footer_text;
+    public ?string $invoice_footer_text = null;
 
-    public $sale_prefix;
+    public ?string $sale_prefix = null;
 
-    public $saleReturn_prefix;
+    public ?string $saleReturn_prefix = null;
 
-    public $purchase_prefix;
+    public ?string $purchase_prefix = null;
 
-    public $purchaseReturn_prefix;
+    public ?string $purchaseReturn_prefix = null;
 
-    public $quotation_prefix;
+    public ?string $quotation_prefix = null;
 
-    public $salePayment_prefix;
+    public ?string $salePayment_prefix = null;
 
-    public $purchasePayment_prefix;
+    public ?string $purchasePayment_prefix = null;
 
-    public $expense_prefix;
+    public ?string $expense_prefix = null;
 
-    public $delivery_prefix;
+    public ?string $delivery_prefix = null;
 
-    public $is_rtl;
+    public bool $is_rtl = false;
 
-    public $show_email;
+    public bool $show_email = false;
 
-    public $show_address;
+    public bool $show_address = false;
 
-    public $show_order_tax;
+    public bool $show_order_tax = false;
 
-    public $show_discount;
+    public bool $show_discount = false;
 
-    public $show_shipping;
+    public bool $show_shipping = false;
 
-    public $head_tags;
+    public ?string $head_tags = null;
 
-    public $body_tags;
+    public ?string $body_tags = null;
 
-    public $seo_meta_title;
+    public ?string $seo_meta_title = null;
 
-    public $seo_meta_description;
+    public ?string $seo_meta_description = null;
 
-    public $whatsapp_custom_message;
+    public ?string $whatsapp_custom_message = null;
 
     public function render()
     {
@@ -135,7 +135,7 @@ class Index extends Component
     }
 
     public $analyticsControl;
-    public $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
+    public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
     public $invoice_control;
 
     public function save()

@@ -9,31 +9,30 @@ use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use WithAlert;
     use Datatable;
 
+    #[Validate([
+        'printer.name' => 'required|string|min:3|max:255',
+        'printer.connection_type' => 'required|string|max:255',
+        'printer.capability_profile' => 'required|string|max:255',
+        'printer.char_per_line' => 'required',
+        'printer.ip_address' => 'required|string|max:255',
+        'printer.port' => 'required|string|max:255',
+        'printer.path' => 'required|string|max:255',
+    ])]
     public $printer;
-
-    /** @var array<string> */
-    public $listeners = ['showModal', 'openModal', 'refreshIndex'];
 
     public $showModal = false;
 
     public $openModal = false;
-
-    /** @var array */
-    protected $rules = [
-        'printer.name'               => 'required|string|min:3|max:255',
-        'printer.connection_type'    => 'required|string|max:255',
-        'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line'      => 'required',
-        'printer.ip_address'         => 'required|string|max:255',
-        'printer.port'               => 'required|string|max:255',
-        'printer.path'               => 'required|string|max:255',
-    ];
 
     public $model = Printer::class;
 
@@ -52,6 +51,7 @@ class Index extends Component
         return view('livewire.printer.index', ['printers' => $printers]);
     }
 
+    #[On('showModal')]
     public function showModal(Printer $printer): void
     {
         abort_if(Gate::denies('printer_show'), 403);
@@ -74,7 +74,7 @@ class Index extends Component
         $this->openModal = true;
     }
 
-    public function update(Printer $printer): void
+    public function update(): void
     {
         abort_if(Gate::denies('printer_update'), 403);
 

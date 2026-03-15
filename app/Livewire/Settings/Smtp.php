@@ -6,6 +6,7 @@ namespace App\Livewire\Settings;
 
 use Exception;
 use Illuminate\Support\Facades\Artisan;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Traits\WithAlert;
 

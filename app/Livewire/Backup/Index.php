@@ -11,31 +11,23 @@ use Throwable;
 use App\Traits\WithAlert;
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
     use WithAlert;
-    public $data = [];
 
+    #[Validate('required')]
     public $backup_status;
 
+    #[Validate('nullable')]
     public $backup_schedule;
 
     public $backup_include;
 
     public $settingsModal = false;
-
-    protected array $rules = [
-        'backup_status'   => 'required',
-        'backup_schedule' => 'nullable',
-    ];
-
-    protected $listeners = [
-        'deleteModel', 'generate',
-        'refreshTable' => '$refresh',
-        'delete',
-    ];
 
     public function settingsModal(): void
     {
@@ -58,7 +50,7 @@ class Index extends Component
         $this->alert('success', __('Old backup cleaned.'));
     }
 
-    public function updateSettigns(): void
+    public function updateSettings(): void
     {
         try {
             $this->validate();
@@ -72,7 +64,7 @@ class Index extends Component
 
             $this->settingsModal = false;
         } catch (Throwable $throwable) {
-            $this->alert('success', __('Failed.'.$throwable->getMessage()));
+            $this->alert('error', __('Failed.').' '.$throwable->getMessage());
         }
     }
 
@@ -82,24 +74,20 @@ class Index extends Component
             Artisan::call('backup:run --only-db');
             $this->alert('success', __('Backup Generated with success.'));
         } catch (Throwable) {
-            $this->alert('success', __('Database backup failed.'));
+            $this->alert('error', __('Database backup failed.'));
         }
     }
 
-    public function downloadBackup($file)
+    public function downloadBackup(string $file): StreamedResponse
     {
-        return response()->streamDownload($file);
+        return Storage::download($file);
     }
 
-    public function delete($name): void
+    public function delete(string $name): void
     {
-        foreach (glob(storage_path().'/app/*') as $filename) {
-            $path = storage_path().'/app/'.basename((string) $name);
+        Storage::delete($name);
 
-            if (file_exists($path)) {
-                @unlink($path);
-            }
-        }
+        $this->alert('success', __('Backup deleted successfully.'));
     }
 
     public function render()

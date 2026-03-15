@@ -7,32 +7,30 @@ namespace App\Livewire\Printer;
 use App\Models\Printer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
     use WithAlert;
-    /** @var array<string> */
-    public $listeners = ['createPrinter'];
 
-    public $createPrinter;
+    public bool $createPrinter = false;
 
+    #[Validate([
+        'printer.name' => 'required|string|min:3|max:255',
+        'printer.connection_type' => 'required|string|max:255',
+        'printer.capability_profile' => 'required|string|max:255',
+        'printer.char_per_line' => 'required',
+        'printer.ip_address' => 'required|string|max:255',
+        'printer.port' => 'required|string|max:255',
+        'printer.path' => 'required|string|max:255',
+    ])]
     public $printer;
 
-    public $capability_profiles;
+    public array $capability_profiles = [];
 
-    public $connection_types;
-
-    /** @var array */
-    protected $rules = [
-        'printer.name'               => 'required|string|min:3|max:255',
-        'printer.connection_type'    => 'required|string|max:255',
-        'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line'      => 'required',
-        'printer.ip_address'         => 'required|string|max:255',
-        'printer.port'               => 'required|string|max:255',
-        'printer.path'               => 'required|string|max:255',
-    ];
+    public array $connection_types = [];
 
     public function mount(Printer $printer): void
     {
@@ -46,7 +44,8 @@ class Create extends Component
         return view('livewire.printer.create');
     }
 
-    public function createPrinter(): void
+    #[On('createPrinter')]
+    public function openModal(): void
     {
         $this->resetErrorBag();
 
