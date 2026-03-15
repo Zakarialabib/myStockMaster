@@ -19,7 +19,7 @@ trait Datatable
 
     public array $filterable;
 
-    #[Url(keep: true)]
+    #[Url(keep: true, history: true)]
     public string $search = '';
 
     public array $selected = [];
@@ -28,15 +28,11 @@ trait Datatable
 
     public bool $selectPage = false;
 
+    #[Url(history: true)]
     public string $sortBy = '';
 
+    #[Url(history: true)]
     public string $sortDirection = '';
-
-    protected $queryString = [
-        'search',
-        'sortBy',
-        'sortDirection',
-    ];
 
     public function mountDatatable(): void
     {

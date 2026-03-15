@@ -10,27 +10,15 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Supplier;
 use Livewire\Component;
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Computed;
 use App\Traits\WithAlert;
 
 class Livesearch extends Component
 {
     use WithAlert;
+    #[Url]
     public $searchQuery = '';
-
-    public $product;
-
-    public $customer;
-
-    public $supplier;
-
-    public $sale;
-
-    public $purchase;
-
-    protected $queryString = [
-        'searchQuery',
-    ];
 
     public function render()
     {
