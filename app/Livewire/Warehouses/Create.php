@@ -14,7 +14,7 @@ use App\Traits\WithAlert;
 class Create extends Component
 {
     use WithAlert;
-    /** @var bool */
+
     public bool $createModal = false;
 
     public Warehouse $warehouse;

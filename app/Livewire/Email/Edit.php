@@ -17,7 +17,6 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    /** @var bool */
     public bool $openModal = false;
 
     #[Validate([

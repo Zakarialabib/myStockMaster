@@ -17,7 +17,6 @@ class Create extends Component
 {
     use WithFileUploads;
 
-    /** @var bool */
     public bool $createModal = false;
 
     #[Validate([
