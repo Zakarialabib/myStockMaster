@@ -151,7 +151,8 @@
                                     </x-button>
                                 @endcan
                                 @can('user_delete')
-                                    <x-button variant="danger" size="sm" wire:click="$dispatch('deleteModal', { id : '{{ $user->id }}' })" wire:loading.attr="disabled">
+                                    <x-button variant="danger" size="sm" wire:click="delete({{ $user->id }})"
+                                        wire:confirm="{{ __('Are you sure you want to delete this record?') }}" wire:loading.attr="disabled">
                                         <i class="fas fa-trash w-4 h-4"></i>
                                     </x-button>
                                 @endcan

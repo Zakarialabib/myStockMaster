@@ -63,7 +63,8 @@
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
-                            <x-button danger type="button" wire:click="delete({{ $role->id }})" type="button"
+                            <x-button danger type="button" wire:click="delete({{ $role->id }})"
+                                wire:confirm="{{ __('Are you sure you want to delete this role?') }}"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -92,25 +93,3 @@
     @livewire('role.edit', ['role' => $role])
 
 </div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:init', function() {
-            window.livewire.on('deleteModal', roleId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.Livewire.dispatch('delete', roleId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush

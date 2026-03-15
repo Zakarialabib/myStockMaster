@@ -21,11 +21,7 @@ $updateProfileInformation = function () {
         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
     ]);
 
-    $user->fill($validated);
-
-    if ($user->isDirty('email')) {
-        $user->email_verified_at = null;
-    }
+    $user->fill($validated); 
 
     $user->save();
 
