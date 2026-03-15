@@ -44,8 +44,6 @@
                     </x-button>
                 @endcan
 
-                <!-- Button trigger livewire modal -->
-                {{-- <x-button primary  onclick="Livewire.dispatch('createModal')">{{ __('Create') }}</x-button> --}}
             </div>
 
         </div>

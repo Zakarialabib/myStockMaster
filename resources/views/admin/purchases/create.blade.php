@@ -37,10 +37,6 @@
                     </a>
                 </div>
             </div>
-            <div class="float-right">
-                <!-- Button trigger livewire modal -->
-                <x-button primary onclick="Livewire.dispatch('createModal')">{{ __('Create Supplier') }}</x-button>
-            </div>
         </div>
     </section>
 @endsection
