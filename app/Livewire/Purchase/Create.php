@@ -4,23 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
-use App\Enums\MovementType;
-use App\Enums\PaymentStatus;
+use App\Actions\Purchases\StorePurchaseAction;
 use App\Enums\PurchaseStatus;
-use App\Jobs\UpdateProductCostHistory;
 use App\Livewire\Utils\WithModels;
-use App\Models\Movement;
-use App\Models\Product;
-use App\Models\ProductWarehouse;
-use App\Models\Purchase;
-use App\Models\PurchaseDetail;
-use App\Models\PurchasePayment;
 use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 
@@ -77,7 +68,7 @@ class Create extends Component
 
     public $item_discount;
 
-    public $listsForFields = [];
+    public array $listsForFields = [];
 
     public function mount(): void
     {
@@ -129,110 +120,32 @@ class Create extends Component
             return;
         }
 
-        DB::transaction(function () {
-            $this->validate();
+        $this->validate();
 
-            $due_amount = $this->total_amount - $this->paid_amount;
-
-            if ($due_amount === $this->total_amount) {
-                $this->payment_status = PaymentStatus::PENDING;
-                $this->status = PurchaseStatus::PENDING;
-            } elseif ($due_amount > 0) {
-                $this->payment_status = PaymentStatus::PARTIAL;
-                $this->status = PurchaseStatus::PENDING;
-            } else {
-                $this->payment_status = PaymentStatus::PAID;
-                $this->status = PurchaseStatus::COMPLETED;
-            }
-
-            $purchase = Purchase::create([
+        app(StorePurchaseAction::class)(
+            [
                 'date'                => $this->date,
                 'supplier_id'         => $this->supplier_id,
                 'warehouse_id'        => $this->warehouse_id,
-                'user_id'             => Auth::user()->id,
+                'user_id'             => Auth::id(),
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount * 100,
-                'paid_amount'         => $this->paid_amount * 100,
-                'total_amount'        => $this->total_amount * 100,
-                'due_amount'          => $due_amount * 100,
-                'status'              => $this->status,
-                'payment_status'      => $this->payment_status,
+                'shipping_amount'     => $this->shipping_amount,
+                'paid_amount'         => $this->paid_amount,
+                'total_amount'        => $this->total_amount,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => $this->cart->tax() * 100,
-                'discount_amount'     => $this->cart->discount() * 100,
-            ]);
+            ],
+            $this->cart->content(),
+            $this->cart->tax(),
+            $this->cart->discount(),
+        );
 
-            foreach ($this->cart->content() as $cart_item) {
-                PurchaseDetail::create([
-                    'purchase_id'             => $purchase->id,
-                    'product_id'              => $cart_item->id,
-                    'warehouse_id'            => $this->warehouse_id,
-                    'name'                    => $cart_item->name,
-                    'code'                    => $cart_item->options->code,
-                    'quantity'                => $cart_item->qty,
-                    'price'                   => $cart_item->price * 100,
-                    'unit_price'              => $cart_item->options->unit_price * 100,
-                    'sub_total'               => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type'   => $cart_item->options->product_discount_type,
-                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
-                ]);
+        $this->alert('success', __('Purchase created successfully!'));
 
-                // UpdateProductCostHistory::dispatch($cart_item);
-                $product = Product::findOrFail($cart_item->id);
-                $product_warehouse = ProductWarehouse::where('product_id', $product->id)
-                    ->where('warehouse_id', $this->warehouse_id)
-                    ->first();
+        $this->clearCart();
 
-                if ( ! $product_warehouse) {
-                    $product_warehouse = new ProductWarehouse([
-                        'product_id'   => $cart_item->id,
-                        'warehouse_id' => $this->warehouse_id,
-                        'price'        => $cart_item->price,
-                        'cost'         => $cart_item->options->unit_price,
-                        'qty'          => 0,
-                    ]);
-                }
-
-                $new_quantity = $product_warehouse->qty + $cart_item->qty;
-                $new_cost = $product_warehouse->cost;
-
-                $product_warehouse->update([
-                    'qty'  => $new_quantity,
-                    'cost' => $new_cost,
-                ]);
-
-                $movement = new Movement([
-                    'type'         => MovementType::PURCHASE,
-                    'quantity'     => $cart_item->qty,
-                    'price'        => $cart_item->price * 100,
-                    'date'         => date('Y-m-d'),
-                    'movable_type' => $product::class,
-                    'movable_id'   => $product->id,
-                    'user_id'      => Auth::user()->id,
-                ]);
-
-                $movement->save();
-            }
-
-            if ($purchase->paid_amount > 0) {
-                PurchasePayment::create([
-                    'date'           => date('Y-m-d'),
-                    'user_id'        => Auth::user()->id,
-                    'amount'         => $purchase->paid_amount,
-                    'purchase_id'    => $purchase->id,
-                    'payment_method' => $this->payment_method,
-                ]);
-            }
-
-            $this->alert('success', __('Purchase created successfully!'));
-
-            $this->clearCart();
-
-            return redirect()->route('purchases.index');
-        });
+        $this->redirectRoute('purchases.index', navigate: true);
     }
 
     public function calculateTotal(): mixed

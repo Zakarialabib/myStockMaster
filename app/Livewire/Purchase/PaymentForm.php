@@ -13,22 +13,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
 use App\Traits\WithAlert;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 
 class PaymentForm extends Component
 {
     use WithAlert;
-    public $paymentModal = false;
+    public bool $paymentModal = false;
 
-    public $purchase;
+    public Purchase $purchase;
 
     public $purchase_id;
 
-    public $date;
+    #[Validate('required|date')]
+    public string $date;
 
-    // public $reference;
+    #[Validate('required|numeric')]
     public $amount;
 
-    public $payment_method;
+    #[Validate('required|string|max:255')]
+    public string $payment_method;
 
     public $due_amount;
 
@@ -36,19 +40,8 @@ class PaymentForm extends Component
 
     public $paid_amount;
 
+    #[Validate('nullable|string|max:1000')]
     public $note;
-
-    public $listeners = [
-        'paymentModal',
-    ];
-
-    protected $rules = [
-        'date'   => 'required|date',
-        'amount' => 'required|numeric',
-        'note'   => 'nullable|string|max:1000',
-        // 'sale_id' => 'nullable|integer',
-        'payment_method' => 'required|string|max:255',
-    ];
 
     public function render()
     {
@@ -57,7 +50,8 @@ class PaymentForm extends Component
 
     //  Payment modal
 
-    public function paymentModal($id): void
+    #[On('paymentModal')]
+    public function openPaymentModal($id): void
     {
         // abort_if(Gate::denies('purchase payment'), 403);
 

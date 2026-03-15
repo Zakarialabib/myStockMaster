@@ -13,9 +13,9 @@ use App\Traits\WithAlert;
 class Show extends Component
 {
     use WithAlert;
-    public $purchase;
+    public Purchase $purchase;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     #[On('showModal')]
     public function showModal($id): void

@@ -15,10 +15,10 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
     /** @var mixed */
-    public $supplier;
+    public Supplier $supplier;
 
     #[Validate('required|string|min:3|max:255', message: 'The name field is required and must be a string between 3 and 255 characters.')]
     public string $name;

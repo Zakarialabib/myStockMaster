@@ -15,26 +15,26 @@ class Create extends Component
 {
     use WithAlert;
     /** @var bool */
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Supplier $supplier;
 
     #[Validate('required|string|min:3|max:255', message: 'The name field is required and must be a string between 3 and 255 characters.')]
-    public $name;
+    public string $name;
 
     #[Validate('required|numeric', message: 'The phone field is required and must be a numeric value.')]
     public $phone;
 
     #[Validate('nullable|email|max:255', message: 'The email field must be a valid email address with a maximum of 255 characters.')]
-    public $email;
+    public ?string $email;
 
-    public $address;
+    public ?string $address;
 
-    public $city;
+    public ?string $city;
 
-    public $country;
+    public ?string $country;
 
-    public $tax_number;
+    public ?string $tax_number;
 
     public function render()
     {

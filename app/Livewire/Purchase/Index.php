@@ -13,6 +13,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -25,28 +26,9 @@ class Index extends Component
 
     public $model = Purchase::class;
 
-    /** @var array<string> */
-    public $listeners = [
-        'delete',
-    ];
+    public string $startDate;
 
-    public $startDate;
-
-    public $endDate;
-
-    /** @var array */
-    protected $rules = [
-        'supplier_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|max:255',
-        'payment_method'      => 'required|integer|max:255',
-        'note'                => 'nullable|string|max:1000',
-    ];
+    public string $endDate;
 
     public function filterByType($type): void
     {
@@ -105,10 +87,25 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(Purchase $purchase): void
+    public function deleteModal($id): void
+    {
+        $this->confirm(__('Are you sure you want to delete this?'), [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+        $this->purchase = $id;
+    }
+
+    #[On('delete')]
+    public function delete(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
-        $purchase->delete();
+        Purchase::findOrFail($this->purchase)->delete();
+        
+        $this->alert('success', __('Purchase deleted successfully.'));
     }
 }

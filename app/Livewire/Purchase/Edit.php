@@ -36,10 +36,10 @@ class Edit extends Component
     public $supplier_id;
 
     #[Validate('required|integer|min:0|max:100')]
-    public $tax_percentage;
+    public int $tax_percentage;
 
     #[Validate('required|integer|min:0|max:100')]
-    public $discount_percentage;
+    public int $discount_percentage;
 
     #[Validate('required|numeric')]
     public $shipping_amount;
@@ -54,12 +54,12 @@ class Edit extends Component
     public $status;
 
     #[Validate('required|string|max:50')]
-    public $payment_method;
+    public string $payment_method;
 
     #[Validate('nullable|string|max:1000')]
     public $note;
 
-    public $purchase;
+    public Purchase $purchase;
 
     public $products;
 
@@ -79,7 +79,7 @@ class Edit extends Component
 
     public $item_discount;
 
-    public $listsForFields = [];
+    public array $listsForFields = [];
 
     public function mount($id): void
     {

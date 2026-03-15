@@ -7,6 +7,7 @@ namespace App\Livewire\PurchaseReturn;
 use App\Models\PurchaseReturn;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
 
 class Edit extends Component
@@ -14,21 +15,37 @@ class Edit extends Component
     use WithAlert;
     public $purchasereturn;
 
-    public bool $editModal = false;
+    #[Validate('required|numeric')]
+    public $supplier_id;
 
-    /** @var array */
-    protected $rules = [
-        'supplier_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|max:255',
-        'payment_method'      => 'required|integer|max:255',
-        'note'                => 'nullable|string|max:1000',
-    ];
+    #[Validate('required|string|max:255')]
+    public $reference;
+
+    #[Validate('required|integer|min:0|max:100')]
+    public $tax_percentage;
+
+    #[Validate('required|integer|min:0|max:100')]
+    public $discount_percentage;
+
+    #[Validate('required|numeric')]
+    public $shipping_amount;
+
+    #[Validate('required|numeric')]
+    public $total_amount;
+
+    #[Validate('required|numeric')]
+    public $paid_amount;
+
+    #[Validate('required|integer|max:255')]
+    public $status;
+
+    #[Validate('required|integer|max:255')]
+    public $payment_method;
+
+    #[Validate('nullable|string|max:1000')]
+    public $note;
+
+    public bool $editModal = false;
 
     public function editModal($id): void
     {
@@ -40,6 +57,17 @@ class Edit extends Component
 
         $this->purchasereturn = PurchaseReturn::whereId($id)->firstOrFail();
 
+        $this->supplier_id = $this->purchasereturn->supplier_id;
+        $this->reference = $this->purchasereturn->reference;
+        $this->tax_percentage = $this->purchasereturn->tax_percentage;
+        $this->discount_percentage = $this->purchasereturn->discount_percentage;
+        $this->shipping_amount = $this->purchasereturn->shipping_amount;
+        $this->total_amount = $this->purchasereturn->total_amount;
+        $this->paid_amount = $this->purchasereturn->paid_amount;
+        $this->status = $this->purchasereturn->status;
+        $this->payment_method = $this->purchasereturn->payment_method;
+        $this->note = $this->purchasereturn->note;
+
         $this->editModal = true;
     }
 
@@ -47,7 +75,18 @@ class Edit extends Component
     {
         $this->validate();
 
-        $this->purchasereturn->update($this->all());
+        $this->purchasereturn->update([
+             'supplier_id' => $this->supplier_id,
+             'reference' => $this->reference,
+             'tax_percentage' => $this->tax_percentage,
+             'discount_percentage' => $this->discount_percentage,
+             'shipping_amount' => $this->shipping_amount,
+             'total_amount' => $this->total_amount,
+             'paid_amount' => $this->paid_amount,
+             'status' => $this->status,
+             'payment_method' => $this->payment_method,
+             'note' => $this->note,
+        ]);
 
         $this->editModal = false;
 

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
@@ -32,7 +33,7 @@ class Index extends Component
     public $model = Supplier::class;
 
     /** @var bool */
-    public $importModal = false;
+    public bool $importModal = false;
 
     public function render()
     {
@@ -67,6 +68,7 @@ class Index extends Component
         $this->selected = [];
     }
 
+    #[On('importModal')]
     public function importModal(): void
     {
         abort_if(Gate::denies('supplier_import'), 403);
@@ -103,11 +105,12 @@ class Index extends Component
         return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function downloadAll(Supplier $suppliers): StreamedResponse|Response
+    #[On('downloadAll')]
+    public function downloadAll(): StreamedResponse|Response
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function exportSelected(): StreamedResponse|Response
@@ -119,6 +122,7 @@ class Index extends Component
         return $this->callExport()->forModels($this->selected)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
+    #[On('exportAll')]
     public function exportAll(): StreamedResponse|Response
     {
         abort_if(Gate::denies('supplier_access'), 403);
