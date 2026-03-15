@@ -102,7 +102,8 @@
                                 variant="danger" 
                                 icon="fas fa-trash" 
                                 size="sm"
-                                wire:click="$dispatch('deleteModal', {id : {{ $expenseCategory->id }}})" 
+                                wire:click="delete({{ $expenseCategory->id }})" 
+                                wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
                                 wire:loading.attr="disabled" />
                         </div>
                     </x-table.td>
