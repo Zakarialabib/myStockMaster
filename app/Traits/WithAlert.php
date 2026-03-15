@@ -27,6 +27,17 @@ trait WithAlert
         ]);
     }
 
+    /**
+     * Dispatch a confirmation event to the frontend
+     */
+    public function confirm(string $message, array $options = []): void
+    {
+        $this->dispatch('confirm', [
+            'message' => $message,
+            'options' => $options,
+        ]);
+    }
+
     /** Dispatch a success alert */
     public function success(string $message, array $options = []): void
     {

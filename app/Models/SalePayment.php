@@ -36,6 +36,7 @@ class SalePayment extends Model
         'date',
         'reference',
         'amount',
+        'payment_method',
         'note',
         'sale_id',
         'payment_id',

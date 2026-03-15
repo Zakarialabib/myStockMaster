@@ -114,3 +114,26 @@ if ( ! function_exists('array_merge_numeric_values')) {
         return $merged;
     }
 }
+
+if ( ! function_exists('db_date_format')) {
+    /**
+     * Get the database date format string based on the current driver.
+     * Supports MySQL (DATE_FORMAT) and SQLite (strftime).
+     */
+    function db_date_format($column, $format)
+    {
+        $isSqlite = \Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
+
+        if ($isSqlite) {
+            // Simple mapping for common formats
+            $sqliteFormat = str_replace(
+                ['%Y', '%m', '%d', '%H', '%i', '%s', '%W'],
+                ['%Y', '%m', '%d', '%H', '%M', '%S', '%w'],
+                $format
+            );
+            return "strftime('$sqliteFormat', $column)";
+        }
+
+        return "DATE_FORMAT($column, '$format')";
+    }
+}

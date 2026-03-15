@@ -8,6 +8,34 @@ document.addEventListener('DOMContentLoaded', function() {
         const { type, message, options = {} } = event.detail;
         showAlert(type, message, options);
     });
+
+    // Listen for Livewire confirm events
+    window.addEventListener('confirm', function(event) {
+        const { message, options = {} } = event.detail;
+        
+        Swal.fire({
+            title: options.title || 'Are you sure?',
+            text: message,
+            icon: options.icon || 'warning',
+            showCancelButton: true,
+            confirmButtonColor: options.confirmButtonColor || '#3085d6',
+            cancelButtonColor: options.cancelButtonColor || '#d33',
+            confirmButtonText: options.confirmButtonText || 'Yes, delete it!',
+            cancelButtonText: options.cancelButtonText || 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If options.onConfirmed is a string, dispatch it as an event
+                if (typeof options.onConfirmed === 'string') {
+                    // Check if it should be dispatched to component or browser
+                    if (options.to) {
+                        Livewire.dispatchTo(options.to, options.onConfirmed, options.params || {});
+                    } else {
+                        Livewire.dispatch(options.onConfirmed, options.params || {});
+                    }
+                }
+            }
+        });
+    });
 });
 
 /**
