@@ -35,19 +35,13 @@ class Edit extends Component
 
     public $type;
 
+    #[Validate([
+        'products.*.quantity' => 'required|integer|min:1',
+        'products.*.type'     => 'required|in:add,sub',
+    ])]
     public $products;
 
     public $hasAdjustments;
-
-    protected $listeners = [
-        'warehouseSelected' => 'updatedWarehouseId',
-        'productSelected',
-    ];
-
-    protected $rules = [
-        'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type'     => 'required|in:add,sub',
-    ];
 
     public function mount($id): void
     {
@@ -82,6 +76,8 @@ class Edit extends Component
                     'adjustment_id' => $this->adjustment->id,
                     'product_id'    => $product['product_id'],
                     'warehouse_id'  => $product['warehouse_id'],
+                ],
+                [
                     'quantity'      => $product['quantity'],
                     'type'          => $product['type'],
                 ]
@@ -92,19 +88,16 @@ class Edit extends Component
                 ->first();
 
             if ($product['type'] === 'add') {
-                $productWarehouse->update([
-                    'qty' => $productWarehouse->qty + $product['quantity'],
-                ]);
+                $productWarehouse->increment('qty', (int) $product['quantity']);
             } elseif ($product['type'] === 'sub') {
-                $productWarehouse->update([
-                    'qty' => $productWarehouse->qty - $product['quantity'],
-                ]);
+                $productWarehouse->decrement('qty', (int) $product['quantity']);
             }
         }
 
         return redirect()->route('adjustments.index');
     }
 
+    #[On('productSelected')]
     public function productSelected(array $product): void
     {
         switch ($this->hasAdjustments) {
@@ -138,6 +131,7 @@ class Edit extends Component
         unset($this->products[$key]);
     }
 
+    #[On('warehouseSelected')]
     public function updatedWarehouseId($value): void
     {
         $this->warehouse_id = $value;

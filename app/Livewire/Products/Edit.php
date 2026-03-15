@@ -21,7 +21,8 @@ class Edit extends Component
 {
     use WithAlert;
     use WithFileUploads;
-    public $product;
+    
+    public Product $product;
 
     public $productWarehouses;
 
@@ -59,7 +60,7 @@ class Edit extends Component
 
     public $gallery = [];
 
-    public $productAttributes = [];
+    public $selectedAttributes = [];
 
     #[Validate('nullable|boolean')]
     public $availability;
@@ -71,11 +72,8 @@ class Edit extends Component
 
     public bool $hot = false;
 
-    public $productWarehouse = [];
-
-    /** @var array */
-    protected $rules = [
-        'productWarehouse.*.quantity'     => 'numeric',
+    #[Validate([
+        'productWarehouse.*.qty'          => 'numeric',
         'productWarehouse.*.price'        => 'numeric',
         'productWarehouse.*.old_price'    => 'numeric',
         'productWarehouse.*.cost'         => 'numeric',
@@ -83,7 +81,8 @@ class Edit extends Component
         'productWarehouse.*.is_ecommerce' => 'boolean',
         'options.*.type'                  => '',
         'options.*.value'                 => '',
-    ];
+    ])]
+    public $productWarehouse = [];
 
     public function addOption(): void
     {
@@ -132,7 +131,7 @@ class Edit extends Component
         ]])->toArray();
 
         // Load existing attributes
-        $this->productAttributes = $this->product->attributes->mapWithKeys(function ($attr) {
+        $this->selectedAttributes = $this->product->attributes->mapWithKeys(function ($attr) {
             return [$attr->id => $attr->pivot->value];
         })->toArray();
     }
@@ -165,7 +164,25 @@ class Edit extends Component
             $this->gallery = json_encode($gallery, JSON_THROW_ON_ERROR);
         }
 
-        $this->product->update($this->all());
+        $this->product->update([
+            'name'              => $this->name,
+            'code'              => $this->code,
+            'barcode_symbology' => $this->barcode_symbology,
+            'slug'              => $this->slug,
+            'unit'              => $this->unit,
+            'tax_amount'        => $this->tax_amount,
+            'description'       => $this->description,
+            'tax_type'          => $this->tax_type,
+            'category_id'       => $this->category_id,
+            'brand_id'          => $this->brand_id,
+            'availability'      => $this->availability,
+            'seasonality'       => $this->seasonality,
+            'image'             => $this->image,
+            'gallery'           => $this->gallery,
+            'featured'          => $this->featured,
+            'best'              => $this->best,
+            'hot'               => $this->hot,
+        ]);
 
         foreach ($this->productWarehouse as $warehouseId => $warehouse) {
             $this->product->warehouses()->updateExistingPivot($warehouseId, [
@@ -179,7 +196,7 @@ class Edit extends Component
         }
 
         // Update attributes
-        foreach ($this->attributes as $id => $value) {
+        foreach ($this->selectedAttributes as $id => $value) {
             $this->product->attributes()->updateExistingPivot($id, ['value' => $value]);
         }
 

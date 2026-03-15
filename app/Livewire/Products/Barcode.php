@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use App\Actions\Products\GenerateBarcodesAction;
 use App\Livewire\Utils\WithModels;
 use App\Models\ProductWarehouse;
 use App\Traits\WithAlert;
-use Livewire\Component;
-use Milon\Barcode\Facades\DNS1DFacade;
-use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 class Barcode extends Component
@@ -21,16 +23,15 @@ class Barcode extends Component
 
     public $warehouse_id;
 
-    public $products = [];
-
-    public $barcodes = [];
-
-    public $paperSize = 'A4';
-
-    protected $rules = [
-        'products.*.quantity'    => 'required|integer|min:1|max:100',
+    #[Validate([
+        'products.*.quantity' => 'required|integer|min:1|max:100',
         'products.*.barcodeSize' => 'required|in:small,medium,large,extra,huge',
-    ];
+    ])]
+    public array $products = [];
+
+    public array $barcodes = [];
+
+    public string $paperSize = 'A4';
 
     public function updatedWarehouseId($value): void
     {
@@ -53,7 +54,7 @@ class Barcode extends Component
                 'price'             => $productWarehouse->price,
                 'quantity'          => 1,
                 'barcode_symbology' => $productWarehouse->product->barcode_symbology,
-                'barcodeSize'       => 1,
+                'barcodeSize'       => 'medium',
             ];
         }
     }
@@ -66,28 +67,12 @@ class Barcode extends Component
             return;
         }
 
-        $this->barcodes = [];
+        $this->validate();
 
-        foreach ($this->products as $product) {
-            $quantity = $product['quantity'];
-            $name = $product['name'];
-            $price = $product['price'];
-
-            if ($quantity > 100) {
-                $this->alert('error', __('Max quantity is 100 per barcode generation for product :name!', ['name' => $name]));
-
-                continue;
-            }
-
-            for ($i = 0; $i < $quantity; ++$i) {
-                $barcode = DNS1DFacade::getBarCodeSVG($product['code'], $product['barcode_symbology'], $product['barcodeSize'], 60, 'black', false);
-
-                $this->barcodes[] = ['barcode' => $barcode, 'name' => $name, 'price' => $price];
-            }
-        }
+        $this->barcodes = app(GenerateBarcodesAction::class)($this->products);
     }
 
-    public function downloadBarcodes()
+    public function downloadBarcodes(): StreamedResponse
     {
         $data = [
             'barcodes' => $this->barcodes,
@@ -118,9 +103,9 @@ class Barcode extends Component
             }
         }
 
-        if ( ! is_null($index)) {
+        if (! is_null($index)) {
             unset($this->products[$index]);
-            $this->products = array_values($this->products); // Reset array keys
+            $this->products = array_values($this->products);
         }
     }
 

@@ -27,7 +27,6 @@ class Index extends Component
 
     public $file;
 
-    /** @var bool */
     public $showModal = false;
 
     public $model = Category::class;
@@ -59,25 +58,5 @@ class Index extends Component
         $this->category = Category::find($category->id);
 
         $this->showModal = true;
-    }
-
-    public function deleteSelected(): void
-    {
-        abort_if(Gate::denies('category_delete'), 403);
-
-        Category::whereIn('id', $this->selected)->delete();
-
-        $this->resetSelected();
-
-        $this->alert('success', __('Category deleted successfully.'));
-    }
-
-    public function delete(Category $category): void
-    {
-        abort_if(Gate::denies('category_delete'), 403);
-
-        $category->delete();
-
-        $this->alert('success', __('Category deleted successfully.'));
     }
 }

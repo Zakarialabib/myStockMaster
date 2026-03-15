@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use App\Actions\Adjustments\StoreAdjustmentAction;
 use App\Livewire\Utils\WithModels;
-use App\Models\AdjustedProduct;
-use App\Models\Adjustment;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
-use Livewire\Component;
-use Throwable;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Throwable;
 
 #[Layout('layouts.app')]
 class Create extends Component
@@ -43,14 +42,12 @@ class Create extends Component
 
     public $quantity;
 
-    public $products;
-
-    public $hasAdjustments;
-
-    protected $rules = [
+    #[Validate([
         'products.*.quantities' => 'required|integer|min:1',
         'products.*.types'      => 'required|in:add,sub',
-    ];
+    ])]
+
+    public $products = [];
 
     public function mount(): void
     {
@@ -75,7 +72,7 @@ class Create extends Component
         $this->dispatch('warehouseSelected', $this->warehouse_id);
     }
 
-    public function store()
+    public function store(): void
     {
         abort_if(Gate::denies('adjustment_create'), 403);
 
@@ -88,40 +85,19 @@ class Create extends Component
         try {
             $this->validate();
 
-            $adjustment = Adjustment::create([
-                'date'         => $this->date,
-                'note'         => $this->note,
-                'user_id'      => auth()->id(),
-                'warehouse_id' => $this->warehouse_id,
-            ]);
-
-            foreach ($this->products as $product) {
-                AdjustedProduct::create([
-                    'adjustment_id' => $adjustment->id,
-                    'product_id'    => $product['id'],
-                    'warehouse_id'  => $this->warehouse_id,
-                    'quantity'      => $product['quantities'],
-                    'type'          => $product['types'],
-                ]);
-
-                $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
-                    ->where('warehouse_id', $this->warehouse_id)
-                    ->first();
-
-                if ($product['types'] === 'add') {
-                    $productWarehouse->update([
-                        'qty' => $productWarehouse->qty + $product['quantities'],
-                    ]);
-                } elseif ($product['types'] === 'sub') {
-                    $productWarehouse->update([
-                        'qty' => $productWarehouse->qty - $product['quantities'],
-                    ]);
-                }
-            }
+            app(StoreAdjustmentAction::class)(
+                [
+                    'date'         => $this->date,
+                    'note'         => $this->note,
+                    'user_id'      => auth()->id(),
+                    'warehouse_id' => $this->warehouse_id,
+                ],
+                $this->products,
+            );
 
             $this->alert('success', __('Adjustment created successfully'));
 
-            return redirect()->route('adjustments.index');
+            $this->redirectRoute('adjustments.index', navigate: true);
         } catch (Throwable $throwable) {
             $this->alert('error', 'Error Occurred in '.$throwable->getMessage());
         }

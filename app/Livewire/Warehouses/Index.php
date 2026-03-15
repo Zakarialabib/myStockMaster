@@ -22,11 +22,6 @@ class Index extends Component
     /** @var mixed */
     public $warehouse;
 
-    /** @var array<string> */
-    public $listeners = [
-        'delete',
-    ];
-
     /** @var bool */
     public $showModal = false;
 
@@ -55,21 +50,6 @@ class Index extends Component
         $this->warehouse = Warehouse::find($warehouse->id);
 
         $this->showModal = true;
-    }
-
-    public function deleteModal(int $warehouse): void
-    {
-        $confirmationMessage = __('Are you sure you want to delete this warehouse? if something happens you can be recover it.');
-
-        $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
-        ]);
-
-        $this->warehouse = $warehouse;
     }
 
     public function deleteSelectedModal(): void
@@ -104,12 +84,10 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    #[On('delete')]
-    public function delete(): void
+    public function delete(Warehouse $warehouse): void
     {
         abort_if(Gate::denies('warehouse_delete'), 403);
 
-        $warehouse = Warehouse::findOrFail($this->warehouse);
         $warehouse->delete();
 
         $this->alert('success', __('Warehouse deleted successfully!'));

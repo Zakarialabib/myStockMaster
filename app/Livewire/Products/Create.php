@@ -35,10 +35,8 @@ class Create extends Component
 
     public $gallery;
 
-    #[Validate('required')]
-    #[Validate('min:3')]
-    #[Validate('max:255')]
-    public $name;
+    #[Validate('required|min:3|max:255')]
+    public string $name;
 
     public $barcode_symbology;
 
@@ -61,7 +59,7 @@ class Create extends Component
 
     public $brand_id;
 
-    public $options;
+    public array $options = [];
 
     #[Validate('nullable|boolean')]
     public $availability;
@@ -69,7 +67,15 @@ class Create extends Component
     #[Validate('nullable|string|max:255')]
     public $seasonality;
 
-    public $productWarehouse = [
+    #[Validate([
+        'productWarehouse.qty'          => 'numeric',
+        'productWarehouse.price'        => 'numeric',
+        'productWarehouse.old_price'    => 'numeric',
+        'productWarehouse.cost'         => 'numeric',
+        'productWarehouse.stock_alert'  => 'numeric',
+        'productWarehouse.is_ecommerce' => 'boolean',
+    ])]
+    public array $productWarehouse = [
         'qty'          => 0,
         'price'        => 0,
         'cost'         => 0,
@@ -78,19 +84,7 @@ class Create extends Component
         'is_ecommerce' => false,
     ];
 
-    public $productAttributes = [];
-
-    /** @var array */
-    protected $rules = [
-        'productWarehouse.qty'          => 'numeric',
-        'productWarehouse.price'        => 'numeric',
-        'productWarehouse.old_price'    => 'numeric',
-        'productWarehouse.cost'         => 'numeric',
-        'productWarehouse.stock_alert'  => 'numeric',
-        'productWarehouse.is_ecommerce' => 'boolean',
-        'options.*.type'                => '',
-        'options.*.value'               => '',
-    ];
+    public $selectedAttributes = [];
 
     #[Computed]
     public function productAttributes()
@@ -144,9 +138,22 @@ class Create extends Component
 
         $this->description = json_encode($this->description);
 
-        $product = Product::create(
-            $this->all(),
-        );
+        $product = Product::create([
+            'name'              => $this->name,
+            'code'              => $this->code,
+            'barcode_symbology' => $this->barcode_symbology,
+            'slug'              => $this->slug,
+            'unit'              => $this->unit,
+            'tax_amount'        => $this->tax_amount,
+            'description'       => $this->description,
+            'tax_type'          => $this->tax_type,
+            'category_id'       => $this->category_id,
+            'brand_id'          => $this->brand_id,
+            'availability'      => $this->availability,
+            'seasonality'       => $this->seasonality,
+            'image'             => $this->image,
+            'gallery'           => $this->gallery,
+        ]);
 
         ProductWarehouse::create([
             'product_id'   => $product->id,
@@ -159,7 +166,7 @@ class Create extends Component
             'is_ecommerce' => $this->productWarehouse['is_ecommerce'] ?? false,
         ]);
 
-        foreach ($this->attributes as $id => $value) {
+        foreach ($this->selectedAttributes as $id => $value) {
             $product->attributes()->attach($id, ['value' => $value]);
         }
 

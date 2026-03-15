@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -22,6 +23,7 @@ class Index extends Component
     use WithFileUploads;
     use Datatable;
     use HasDelete;
+    use WithAlert;
 
     /** @var mixed */
     public $brand;
@@ -72,40 +74,5 @@ class Index extends Component
         Excel::import(new BrandsImport(), $this->file);
 
         $this->alert('success', __('Brand imported successfully.'));
-    }
-
-    public function deleteSelected(): void
-    {
-        abort_if(Gate::denies('brand_delete'), 403);
-
-        Brand::whereIn('id', $this->selected)->delete();
-
-        $this->resetSelected();
-
-        $this->alert('success', __('Brand deleted successfully.'));
-    }
-
-    public function delete(Brand $brand): void
-    {
-        abort_if(Gate::denies('brand_delete'), 403);
-
-        $brand->delete();
-
-        $this->alert('success', __('Brand deleted successfully.'));
-    }
-
-    public function deleteModal($brand): void
-    {
-        $confirmationMessage = __('Are you sure you want to delete this brand? if something happens you can be recover it.');
-
-        $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
-        ]);
-
-        $this->brand = $brand;
     }
 }

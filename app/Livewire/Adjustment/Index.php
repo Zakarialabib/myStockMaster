@@ -11,13 +11,22 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\On;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class Index extends Component
 {
     use WithAlert;
     use Datatable;
     use WithFileUploads;
+
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
+    }
+    
     /** @var mixed */
     public $adjustment;
 
@@ -50,12 +59,35 @@ class Index extends Component
         $this->alert('success', __('Adjustment deleted successfully.'));
     }
 
-    public function delete(Adjustment $adjustment): void
+    public function deleteModal($adjustment): void
+    {
+        $confirmationMessage = __('Are you sure you want to delete this adjustment?');
+
+        $this->confirm($confirmationMessage, [
+            'toast'             => false,
+            'position'          => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText'  => __('Cancel'),
+            'onConfirmed'       => 'delete',
+        ]);
+
+        $this->adjustment = $adjustment;
+    }
+
+    #[On('delete')]
+    public function delete(): void
     {
         abort_if(Gate::denies('adjustment_delete'), 403);
 
+        $adjustment = Adjustment::findOrFail($this->adjustment);
         $adjustment->delete();
 
-        $this->alert('success', __('Adjustment deleted successfully.'));
+        $this->alert('success', __('Adjustment deleted successfully!'));
+    }
+
+    #[On('refreshIndex')]
+    public function refreshIndex(): void
+    {
+        $this->resetPage();
     }
 }

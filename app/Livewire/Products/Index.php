@@ -16,14 +16,22 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Response;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Url;
+use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class Index extends Component
 {
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
+    }
+    
     use WithFileUploads;
     use Datatable;
+    use WithAlert;
 
     /** @var mixed */
     public $productWarehouse;
@@ -47,13 +55,11 @@ class Index extends Component
     public $model = Product::class;
 
     // Add these new filters
+    #[Url(history: true)]
     public $filterAvailability = '';
-    public $filterSeasonality = '';
 
-    // protected $queryString = [
-    //     'filterAvailability' => ['except' => ''],
-    //     'filterSeasonality' => ['except' => ''],
-    // ];
+    #[Url(history: true)]
+    public $filterSeasonality = '';
 
     #[Computed]
     public function categories()
