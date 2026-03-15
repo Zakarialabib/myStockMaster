@@ -19,35 +19,34 @@ class Edit extends Component
 {
     use WithModels;
 
-    public $transfer;
+    public Transfer $transfer;
 
     public $date;
 
     #[Validate('nullable|string|max:1000')]
-    public $note;
+    public ?string $note = null;
 
     #[Validate('required|string|max:255')]
-    public $reference;
+    public string $reference;
 
     #[Validate('required', message: 'Please provide warehouse')]
-    public $warehouse_id;
+    public ?int $warehouse_id = null;
 
     public $quantity;
 
     public $type;
 
-    public $products;
+    #[Validate([
+        'products.*.quantity' => 'required|integer|min:1',
+        'products.*.type'     => 'required|in:add,sub',
+    ])]
+    public array $products = [];
 
     public $hasTransfers;
 
     protected $listeners = [
         'warehouseSelected' => 'updatedWarehouseId',
         'productSelected',
-    ];
-
-    protected $rules = [
-        'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type'     => 'required|in:add,sub',
     ];
 
     public function mount($id): void
