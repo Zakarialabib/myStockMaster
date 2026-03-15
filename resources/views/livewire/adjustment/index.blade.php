@@ -142,7 +142,7 @@
                         <x-table.td>
                             <div class="flex items-center space-x-2">
                                 @can('adjustment_show')
-                                    <x-button wire:click="showModal({{ $adjustment->id }})" variant="info" size="sm" icon="fas fa-eye">
+                                    <x-button wire:click="$dispatchTo('adjustment.show', 'showModal', { adjustment: {{ $adjustment->id }} })" variant="info" size="sm" icon="fas fa-eye">
                                         <span class="sr-only">{{ __('View') }}</span>
                                     </x-button>
                                 @endcan

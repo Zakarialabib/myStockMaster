@@ -36,11 +36,11 @@
                                     <x-table.td>
                                         <select name="barcodeSize" id="barcodeSize"
                                             wire:model.live="products.{{ $index }}.barcodeSize">
-                                            <option value="1">{{ __('Small') }}</option>
-                                            <option value="2">{{ __('Medium') }}</option>
-                                            <option value="3">{{ __('Large') }}</option>
-                                            <option value="4">{{ __('Extra') }}</option>
-                                            <option value="5">{{ __('Huge') }}</option>
+                                            <option value="small">{{ __('Small') }}</option>
+                                            <option value="medium">{{ __('Medium') }}</option>
+                                            <option value="large">{{ __('Large') }}</option>
+                                            <option value="extra">{{ __('Extra') }}</option>
+                                            <option value="huge">{{ __('Huge') }}</option>
                                         </select>
                                     </x-table.td>
                                     <x-table.td>

@@ -88,7 +88,7 @@
                                     'label' => __('Delete'),
                                     'icon' => 'fas fa-trash',
                                     'color' => 'red',
-                                    'wire:click' => '$dispatch(\'deleteModal\',{ id : \'' . $category->id . '\'})',
+                                    'wire:click' => 'deleteModal(\'' . $category->id . '\')',
                                     'permission' => 'category_delete'
                                 ]
                             ]"
@@ -197,14 +197,6 @@
         </x-modal>
         <!-- End Show Modal -->
 
-        <livewire:categories.import />
-
-        <livewire:categories.create />
-
-        <livewire:categories.edit :category="$category" />
-
-
-        <!-- Modals -->
         <livewire:categories.import />
         <livewire:categories.create />
         <livewire:categories.edit :category="$category" />

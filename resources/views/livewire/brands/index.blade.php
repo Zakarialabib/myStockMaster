@@ -107,13 +107,13 @@
                             <div class="flex items-center space-x-2">
                                 @can('brand_update')
                                     <x-button
-                                        wire:click="dispatchTo('brands.edit','editModal', { id: '{{ $brand->id }}' } )"
+                                        wire:click="$dispatchTo('brands.edit','editModal', { id: '{{ $brand->id }}' } )"
                                         variant="info" size="xs" icon="fas fa-edit">
                                         {{ __('Edit') }}
                                     </x-button>
                                 @endcan
                                 @can('brand_delete')
-                                    <x-button wire:click="dispatch('deleteModal',{ id: '{{ $brand->id }}'})"
+                                    <x-button wire:click="deleteModal('{{ $brand->id }}')"
                                         variant="danger" size="xs" icon="fas fa-trash">
                                         {{ __('Delete') }}
                                     </x-button>
@@ -158,14 +158,8 @@
 
 
     @livewire('brands.show', ['brand' => $brand])
-
-    <!-- Edit Modal -->
     @livewire('brands.edit', ['brand' => $brand])
-    <!-- End Edit modal -->
-
-    <!-- Create modal -->
     <livewire:brands.create />
-    <!-- End Create modal -->
 
     <!-- Import modal -->
     <x-modal wire:model.live="importModal">

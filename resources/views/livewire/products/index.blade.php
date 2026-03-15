@@ -16,7 +16,7 @@
                 </x-button>
             @endcan
             @can('product_create')
-                <x-button wire:click="dispatchTo('products.create', 'createModal')" variant="primary" icon="fas fa-plus">
+                <x-button wire:click="$dispatchTo('products.create', 'createModal')" variant="primary" icon="fas fa-plus">
                     {{ __('Create Product') }}
                 </x-button>
             @endcan
@@ -131,7 +131,7 @@
                             </x-table.td>
                             <x-table.td class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                                 <button type="button"
-                                    wire:click="dispatchTo('products.show','showModal',{{ $product->id }})"
+                                    wire:click="$dispatchTo('products.show','showModal',{{ $product->id }})"
                                     class="group text-left hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2 -m-2 transition-colors">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
@@ -227,7 +227,7 @@
                                     <x-slot name="content">
                                         @can('product_show')
                                             <x-dropdown-link
-                                                wire:click="dispatchTo('products.show','showModal',{ id :'{{ $product->id }}'})"
+                                                wire:click="$dispatchTo('products.show','showModal',{ id :'{{ $product->id }}'})"
                                                 wire:loading.attr="disabled"
                                                 class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                                                 <i class="fas fa-eye w-4 h-4 mr-3 text-blue-500"></i>
