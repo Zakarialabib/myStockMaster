@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Native\Laravel\Facades\Window;
-use Native\Laravel\Facades\Menu;
-use Native\Laravel\Facades\GlobalShortcut;
-use App\Services\EnvironmentService;
 use App\Services\DatabaseSyncService;
 use App\Services\DesktopErrorHandler;
+use App\Services\EnvironmentService;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\ServiceProvider;
+use Native\Desktop\Facades\GlobalShortcut;
+use Native\Desktop\Facades\Menu;
+use Native\Desktop\Facades\Window;
 
 class DesktopServiceProvider extends ServiceProvider
 {
@@ -29,6 +34,11 @@ class DesktopServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set database connection based on mode
+        if (EnvironmentService::isDesktop()) {
+            config(['database.default' => EnvironmentService::getDatabaseConnection()]);
+        }
+
         // Only configure desktop features if we're actually in a desktop environment
         // and the native service is available
         if (EnvironmentService::isDesktop() && $this->isNativeServiceAvailable()) {
@@ -51,7 +61,7 @@ class DesktopServiceProvider extends ServiceProvider
     {
         try {
             // Try to make a simple request to check if the service is running
-            $response = \Illuminate\Support\Facades\Http::timeout(1)->get('http://localhost:4000/api/status');
+            $response = Http::timeout(1)->get('http://localhost:4000/api/status');
             return $response->successful();
         } catch (\Exception $e) {
             return false;
@@ -233,7 +243,7 @@ class DesktopServiceProvider extends ServiceProvider
                 ->event('shortcut:toggle-dev-tools');
         } catch (\Exception $e) {
             // GlobalShortcut might not be available in all environments
-            \Log::info('Desktop shortcuts not available: ' . $e->getMessage());
+            Log::info('Desktop shortcuts not available: ' . $e->getMessage());
         }
     }
 
@@ -274,12 +284,27 @@ class DesktopServiceProvider extends ServiceProvider
      */
     private function toggleOfflineMode(): void
     {
-        $currentMode = EnvironmentService::isOffline();
-        // Toggle offline mode logic here
+        $currentMode = EnvironmentService::isOfflineMode();
+        $newMode = !$currentMode;
+        
+        // Save the new mode to cache
+        Cache::store('file')->forever('desktop_offline_mode', $newMode);
+        
         $this->showNotification(
             'Mode Changed', 
-            $currentMode ? 'Switched to Online Mode' : 'Switched to Offline Mode'
+            $newMode ? 'Switched to Offline Mode' : 'Switched to Online Mode'
         );
+        
+        // Reload window to apply database connection change
+        if (class_exists('\Native\Desktop\Facades\Window')) {
+            try {
+                // Short delay to allow notification to show
+                sleep(1);
+                \Native\Desktop\Facades\Window::current()->reload();
+            } catch (\Exception $e) {
+                Log::warning('Failed to reload window after mode toggle: ' . $e->getMessage());
+            }
+        }
     }
 
     /**
@@ -335,14 +360,14 @@ class DesktopServiceProvider extends ServiceProvider
     private function showNotification(string $title, string $message): void
     {
         try {
-            if (class_exists('\Native\Laravel\Facades\Notification')) {
-                \Native\Laravel\Facades\Notification::title($title)
+            if (class_exists('\Native\Desktop\Facades\Notification')) {
+                \Native\Desktop\Facades\Notification::title($title)
                     ->message($message)
                     ->show();
             }
         } catch (\Exception $e) {
             // Fallback to logging if notifications are not available
-            \Log::info("Desktop Notification: {$title} - {$message}");
+            Log::info("Desktop Notification: {$title} - {$message}");
         }
     }
 

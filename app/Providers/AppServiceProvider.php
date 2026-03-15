@@ -7,18 +7,12 @@ namespace App\Providers;
 use App\Models\Language;
 use App\Models\Setting;
 use App\Observers\SettingsObserver;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Passport\AuthCode;
-use App\Models\Passport\Client;
-use App\Models\Passport\PersonalAccessClient;
-use App\Models\Passport\RefreshToken;
-use App\Models\Passport\Token;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
     }
 
@@ -36,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (config('app.force_https_scheme') || app()->environment('production')) {
             URL::forceScheme('https');

@@ -8,6 +8,5 @@ return [
     App\Providers\CartServiceProvider::class,
     App\Providers\EnvironmentServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
-    App\Providers\VoltServiceProvider::class,
     App\Providers\DesktopServiceProvider::class,
 ];

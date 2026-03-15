@@ -1,18 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 class EnvironmentService
 {
+    protected static ?bool $isDesktop = null;
+
     /**
      * Check if the application is running in desktop mode (NativePHP)
      */
     public static function isDesktop(): bool
     {
-        return config('app.env') === 'desktop' || 
-               env('DESKTOP_MODE', false) || 
-               class_exists('\Native\Laravel\Facades\Window') ||
-               isset($_SERVER['NATIVEPHP_RUNNING']);
+        if (self::$isDesktop !== null) {
+            return self::$isDesktop;
+        }
+
+        return self::$isDesktop = (
+            config('app.env') === 'desktop' || 
+            env('DESKTOP_MODE', false) || 
+            class_exists('\Native\Desktop\Facades\Window') ||
+            isset($_SERVER['NATIVEPHP_RUNNING'])
+        );
     }
 
     /**
@@ -36,7 +46,20 @@ class EnvironmentService
      */
     public static function isOfflineMode(): bool
     {
-        return self::isDesktop() && env('DESKTOP_OFFLINE_MODE', true);
+        if (!self::isDesktop()) {
+            return false;
+        }
+        
+        // Check cache first (for runtime toggling), then fallback to env
+        // Using file cache driver for desktop to ensure persistence across restarts
+        try {
+            return \Illuminate\Support\Facades\Cache::store('file')->get(
+                'desktop_offline_mode', 
+                env('DESKTOP_OFFLINE_MODE', true)
+            );
+        } catch (\Exception $e) {
+            return env('DESKTOP_OFFLINE_MODE', true);
+        }
     }
 
     /**

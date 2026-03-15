@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Services\EnvironmentService;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class EnvironmentServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,9 @@ class EnvironmentServiceProvider extends ServiceProvider
     {
         $this->configureEnvironmentSettings();
         $this->ensureDesktopDirectories();
+
+        // Share desktop status with all views
+        View::share('isDesktop', EnvironmentService::isDesktop());
     }
 
     /**
@@ -52,8 +58,6 @@ class EnvironmentServiceProvider extends ServiceProvider
      */
     protected function configureDesktopSettings(): void
     {
-        $desktopConfig = EnvironmentService::getDesktopConfig();
-
         // Set desktop-specific session configuration
         Config::set('session.files', storage_path('framework/sessions/desktop'));
         Config::set('session.lifetime', 43200); // 12 hours for desktop

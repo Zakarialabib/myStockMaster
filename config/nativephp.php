@@ -77,7 +77,7 @@ return [
     |
     */
     'updater' => [
-        'enabled' => env('NATIVEPHP_UPDATER_ENABLED', false),
+        'enabled' => env('NATIVEPHP_UPDATER_ENABLED', true),
         'default' => env('NATIVEPHP_UPDATER_PROVIDER', 'github'),
         'providers' => [
             'github' => [
