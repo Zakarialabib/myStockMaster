@@ -33,7 +33,7 @@
                 </div>
             @endif
             
-            <x-input.text wire:model.live="search" placeholder="{{ __('Search quotations...') }}" icon="fas fa-search" />
+            <x-input.text wire:model.live.debounce.300ms="search" placeholder="{{ __('Search quotations...') }}" icon="fas fa-search" />
         </x-slot>
 
         <x-table>
@@ -42,16 +42,16 @@
                     <input type="checkbox" wire:model.live="selectPage"
                         class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:checked:bg-blue-600 dark:checked:border-blue-600 dark:focus:ring-blue-500 dark:focus:ring-offset-gray-800" />
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('date')" :direction="($sorts['date'] ?? null) === 'asc' ? 'asc' : (($sorts['date'] ?? null) === 'desc' ? 'desc' : null)">
+                <x-table.th sortable wire:click="sortBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="($sorts['customer_id'] ?? null) === 'asc' ? 'asc' : (($sorts['customer_id'] ?? null) === 'desc' ? 'desc' : null)">
+                <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sortBy === 'customer_id' ? $sortDirection : null">
                     {{ __('Customer') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="($sorts['total_amount'] ?? null) === 'asc' ? 'asc' : (($sorts['total_amount'] ?? null) === 'desc' ? 'desc' : null)">
+                <x-table.th sortable wire:click="sortBy('total_amount')" :direction="$sortBy === 'total_amount' ? $sortDirection : null">
                     {{ __('Total') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('status')" :direction="($sorts['status'] ?? null) === 'asc' ? 'asc' : (($sorts['status'] ?? null) === 'desc' ? 'desc' : null)">
+                <x-table.th sortable wire:click="sortBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
                     {{ __('Status') }}
                 </x-table.th>
                 <x-table.th>
@@ -128,7 +128,7 @@
                                     @endcan
                                     @can('quotation_show')
                                         <x-dropdown-link
-                                            wire:click="dispatch('showModal', { id : {{ $quotation->id }} })"
+                                            wire:click="$dispatchTo('quotations.show', 'showModal', { id : {{ $quotation->id }} })"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-eye mr-2"></i>
                                             {{ __('View') }}
@@ -136,7 +136,7 @@
                                     @endcan
                                     @can('quotation_delete')
                                         <x-dropdown-link type="button"
-                                            wire:click="confirm('delete', {{ $quotation->id }})">
+                                            wire:click="deleteModal({{ $quotation->id }})">
                                             <i class="fas fa-trash mr-2"></i>
                                             {{ __('Delete') }}
                                         </x-dropdown-link>

@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model.live="recentSales" maxWidth="3xl">
+    <x-modal wire:model.live="recentSalesVisible" maxWidth="3xl">
         <x-slot name="title">
             {{ __('Recent Sales') }}
         </x-slot>

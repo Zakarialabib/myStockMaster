@@ -114,7 +114,8 @@
                                 <i class="fas fa-eye"></i>
                             </x-button>
 
-                            <x-button danger wire:click="$dispatch('deleteModal', {{ $cashRegister->id }})"
+                            <x-button danger wire:click="delete({{ $cashRegister->id }})"
+                                wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
                                 type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
