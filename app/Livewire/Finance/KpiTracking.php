@@ -12,33 +12,37 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Exception;
 
 #[Title('KPI Tracking')]
+#[Lazy]
 #[Layout('layouts.app')]
 class KpiTracking extends Component
 {
     use WithPagination;
 
+    #[Validate('required|date')]
     public $dateFrom;
+
+    #[Validate('required|date|after_or_equal:dateFrom')]
     public $dateTo;
+
+    #[Validate('required|in:revenue,profitability,efficiency,growth')]
     public $kpiType = 'revenue';
+
+    #[Validate('required|in:previous,year_ago,custom')]
     public $comparisonPeriod = 'previous';
+
     public $kpiData = [];
     public $comparisonData = [];
     public $loading = false;
     public $autoRefresh = false;
     public $refreshInterval = 60; // seconds
-
-    protected $rules = [
-        'dateFrom'         => 'required|date',
-        'dateTo'           => 'required|date|after_or_equal:dateFrom',
-        'kpiType'          => 'required|in:revenue,profitability,efficiency,growth',
-        'comparisonPeriod' => 'required|in:previous,year_ago,custom',
-    ];
 
     public function mount()
     {

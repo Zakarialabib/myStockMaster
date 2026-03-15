@@ -15,17 +15,29 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Validate;
 use Exception;
 
+#[Lazy]
 class FinancialDashboard extends Component
 {
     use WithPagination;
 
+    #[Validate('required|date')]
     public $dateFrom;
+
+    #[Validate('required|date|after_or_equal:dateFrom')]
     public $dateTo;
+
     public $dateRange = 'month';
+
+    #[Validate('nullable|date')]
     public $startDate;
+
+    #[Validate('nullable|date|after_or_equal:startDate')]
     public $endDate;
+
     public $kpiData = [];
     public $profitLossData = [];
     public $cashFlowData = [];
@@ -35,12 +47,10 @@ class FinancialDashboard extends Component
     public $search = '';
     public $refreshInterval = 300; // 5 minutes
 
-    protected $rules = [
-        'dateFrom'  => 'required|date',
-        'dateTo'    => 'required|date|after_or_equal:dateFrom',
-        'startDate' => 'nullable|date',
-        'endDate'   => 'nullable|date|after_or_equal:startDate',
-    ];
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
+    }
 
     public function mount()
     {

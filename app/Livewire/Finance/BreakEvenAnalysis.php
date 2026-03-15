@@ -12,34 +12,39 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 use Exception;
 
 class BreakEvenAnalysis extends Component
 {
+    #[Validate('required|date')]
     public $dateFrom;
+
+    #[Validate('required|date|after_or_equal:dateFrom')]
     public $dateTo;
+
+    #[Validate('required|in:overall,product,scenario')]
     public $analysisType = 'overall';
+
+    #[Validate('nullable|exists:products,id')]
     public $selectedProduct = null;
+
     public $breakEvenData = [];
     public $scenarioAnalysis = [];
     public $loading = false;
 
     // Scenario planning inputs
+    #[Validate('numeric|min:-100|max:100')]
     public $fixedCostAdjustment = 0;
-    public $variableCostAdjustment = 0;
-    public $priceAdjustment = 0;
-    public $targetProfit = 0;
 
-    protected $rules = [
-        'dateFrom'               => 'required|date',
-        'dateTo'                 => 'required|date|after_or_equal:dateFrom',
-        'analysisType'           => 'required|in:overall,product,scenario',
-        'selectedProduct'        => 'nullable|exists:products,id',
-        'fixedCostAdjustment'    => 'numeric|min:-100|max:100',
-        'variableCostAdjustment' => 'numeric|min:-100|max:100',
-        'priceAdjustment'        => 'numeric|min:-100|max:100',
-        'targetProfit'           => 'numeric|min:0',
-    ];
+    #[Validate('numeric|min:-100|max:100')]
+    public $variableCostAdjustment = 0;
+
+    #[Validate('numeric|min:-100|max:100')]
+    public $priceAdjustment = 0;
+
+    #[Validate('numeric|min:0')]
+    public $targetProfit = 0;
 
     public function mount()
     {

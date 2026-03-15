@@ -131,11 +131,17 @@ class Transactions extends Component
 
     public function chart(): void
     {
+        $monthRaw = db_date_format('date', '%m'); // Cast to integer if needed elsewhere but usually used as string key
+        $yearRaw = db_date_format('date', '%Y');
+
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', static fn ($q) => $q->selectRaw('MONTH(date) as labels, COUNT(*) as sales')
-                ->whereYear('date', '=', date('Y'))
-                ->groupByRaw('MONTH(date)'), static fn ($q) => $q->selectRaw('YEAR(date) as labels, COUNT(*) as sales')
-                ->groupByRaw('YEAR(date)'))
+            ->when($this->typeChart === 'monthly', 
+                static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as sales")
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw("labels"), 
+                static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as sales")
+                    ->groupByRaw("labels")
+            )
             ->get()
             ->toArray();
 
@@ -146,10 +152,13 @@ class Transactions extends Component
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', static fn ($q) => $q->selectRaw('MONTH(date) as labels, COUNT(*) as purchases')
-                ->whereYear('date', '=', date('Y'))
-                ->groupByRaw('MONTH(date)'), static fn ($q) => $q->selectRaw('YEAR(date) as labels, COUNT(*) as purchases')
-                ->groupByRaw('YEAR(date)'))
+            ->when($this->typeChart === 'monthly', 
+                static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as purchases")
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw("labels"), 
+                static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as purchases")
+                    ->groupByRaw("labels")
+            )
             ->get()
             ->toArray();
 
@@ -406,32 +415,34 @@ class Transactions extends Component
 
         $date_range = Carbon::today()->subYear()->format('Y-m-d');
 
+        $monthRaw = db_date_format('date', '%Y-%m');
+
         $sale_payments = SalePayment::where('date', '>=', $date_range)
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as amount")
+            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
         $sale_return_payments = SaleReturnPayment::where('date', '>=', $date_range)
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as amount")
+            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
         $purchase_payments = PurchasePayment::where('date', '>=', $date_range)
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as amount")
+            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
         $purchase_return_payments = PurchaseReturnPayment::where('date', '>=', $date_range)
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as amount")
+            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
         $expenses = Expense::where('date', '>=', $date_range)
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, SUM(amount) as amount")
+            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
             ->groupBy('month')
             ->orderBy('month')
             ->get();

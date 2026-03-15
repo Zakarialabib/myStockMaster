@@ -9,31 +9,38 @@ use App\Actions\Analytics\GenerateProductAnalyticsAction;
 use App\Models\Product;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Exception;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class ProductAnalytics extends Component
 {
     use WithPagination;
 
+    #[Validate('required|exists:products,id')]
     public $productId;
+
+    #[Validate('required|date')]
     public $dateFrom;
+
+    #[Validate('required|date|after_or_equal:dateFrom')]
     public $dateTo;
+
     public $analyticsData = [];
     public $priceTrends = [];
-    public $comparisonProducts = [];
-    public $loading = false;
-    public $showComparison = false;
 
-    protected $rules = [
-        'productId'            => 'required|exists:products,id',
-        'dateFrom'             => 'required|date',
-        'dateTo'               => 'required|date|after_or_equal:dateFrom',
+    #[Validate([
         'comparisonProducts'   => 'array|max:3',
         'comparisonProducts.*' => 'exists:products,id',
-    ];
+    ])]
+    public $comparisonProducts = [];
+
+    public $loading = false;
+    public $showComparison = false;
 
     public function mount($productId = null)
     {

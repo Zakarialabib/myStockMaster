@@ -17,12 +17,18 @@ use App\Models\SaleReturnPayment;
 use App\Models\Warehouse;
 use Livewire\Component;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Validate;
 
 class ProfitLossReport extends Component
 {
     use WithAlert;
+
+    #[Validate('required|date|before:end_date')]
     public $start_date;
+
+    #[Validate('required|date|after:start_date')]
     public $end_date;
+
     public $total_sales = 0;
     public $sales_amount = 0;
     public $total_purchases = 0;
@@ -41,11 +47,6 @@ class ProfitLossReport extends Component
     public $completed_purchases;
     public $pending_purchases;
     public $top_selling_products;
-
-    protected $rules = [
-        'start_date' => 'required|date|before:end_date',
-        'end_date'   => 'required|date|after:start_date',
-    ];
 
     public function mount(): void
     {

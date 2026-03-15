@@ -9,31 +9,41 @@ use App\Models\Product;
 use App\Models\Category;
 use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Validate;
 use Livewire\WithPagination;
 use Exception;
 
+#[Lazy]
 class RevenueReports extends Component
 {
     use WithPagination;
 
+    #[Validate('required|date')]
     public $dateFrom;
+
+    #[Validate('required|date|after_or_equal:dateFrom')]
     public $dateTo;
+
+    #[Validate('required|in:daily,weekly,monthly,yearly')]
     public $reportType = 'daily';
+
+    #[Validate('nullable|exists:categories,id')]
     public $categoryFilter = null;
+
+    #[Validate('nullable|exists:products,id')]
     public $productFilter = null;
+
     public $revenueData = [];
     public $loading = false;
     public $includeProductBreakdown = true;
     public $includeCategoryBreakdown = true;
     public $includeTimeBreakdown = true;
 
-    protected $rules = [
-        'dateFrom'       => 'required|date',
-        'dateTo'         => 'required|date|after_or_equal:dateFrom',
-        'reportType'     => 'required|in:daily,weekly,monthly,yearly',
-        'categoryFilter' => 'nullable|exists:categories,id',
-        'productFilter'  => 'nullable|exists:products,id',
-    ];
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
+    }
 
     public function mount()
     {
