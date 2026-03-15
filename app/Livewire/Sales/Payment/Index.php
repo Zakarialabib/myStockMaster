@@ -11,20 +11,19 @@ use App\Models\SalePayment;
 use App\Models\Sale;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\Attributes\On;
+use App\Traits\WithAlert;
 
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     public $sale;
 
     public $model = SalePayment::class;
 
-    public $listeners = [
-        'showPayments',
-    ];
-
-    public $showPayments;
+    public $showPayments = false;
 
     public $sale_id;
 
@@ -46,15 +45,25 @@ class Index extends Component
         return view('livewire.sales.payment.index', ['salepayments' => $salepayments]);
     }
 
+    #[On('showPayments')]
     public function showPayments($id): void
     {
         abort_if(Gate::denies('sale_access'), 403);
 
         $this->sale = Sale::findOrFail($id);
-
+        $this->sale_id = $this->sale->id;
         $this->showPayments = true;
     }
 
+    public function deleteModal($id): void
+    {
+        $this->confirm(__('Are you sure you want to delete this payment?'), [
+            'onConfirmed' => 'deletePayment',
+            'params' => ['id' => $id]
+        ]);
+    }
+
+    #[On('deletePayment')]
     public function delete($id): void
     {
         abort_if(Gate::denies('sale payment_delete'), 403);
@@ -63,14 +72,11 @@ class Index extends Component
 
         $salepayment->delete();
 
-        // need to change status of sale , if all payment deleted
-
+        // Update sale status
         Sale::where('id', $salepayment->sale_id)->update([
             'status'         => SaleStatus::PENDING,
             'payment_status' => PaymentStatus::PENDING,
         ]);
-
-        $this->dispatch('refreshIndex');
 
         $this->alert('success', __('Sale Payment Deleted Successfully!'));
     }

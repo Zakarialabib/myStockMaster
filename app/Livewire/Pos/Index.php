@@ -4,27 +4,18 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pos;
 
-use App\Enums\MovementType;
-use App\Enums\PaymentStatus;
-use App\Enums\SaleStatus;
+use App\Actions\Sales\StorePosSaleAction;
 use App\Jobs\PaymentNotification;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Customer;
-use App\Models\Movement;
-use App\Models\Product;
-use App\Models\Sale;
-use Illuminate\Support\Facades\DB;
-use App\Models\ProductWarehouse;
-use App\Models\SaleDetails;
-use App\Models\SalePayment;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
-use App\Traits\WithAlert;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.pos')]
 class Index extends Component
@@ -176,21 +167,10 @@ class Index extends Component
             return;
         }
 
-        DB::transaction(function () {
-            $this->validate();
+        $this->validate();
 
-            // Determine payment status
-            $due_amount = $this->total_amount - $this->paid_amount;
-
-            if ($due_amount === $this->total_amount) {
-                $payment_status = PaymentStatus::PENDING;
-            } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::PARTIAL;
-            } else {
-                $payment_status = PaymentStatus::PAID;
-            }
-
-            $sale = Sale::create([
+        $sale = app(StorePosSaleAction::class)(
+            [
                 'date'                => date('Y-m-d'),
                 'customer_id'         => $this->customer_id,
                 'warehouse_id'        => $this->warehouse_id,
@@ -198,82 +178,24 @@ class Index extends Component
                 'cash_register_id'    => $this->cash_register_id,
                 'tax_percentage'      => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount * 100,
-                'paid_amount'         => $this->paid_amount * 100,
-                'total_amount'        => $this->total_amount * 100,
-                'due_amount'          => $due_amount * 100,
-                'status'              => SaleStatus::COMPLETED,
-                'payment_status'      => $payment_status,
+                'shipping_amount'     => $this->shipping_amount,
+                'paid_amount'         => $this->paid_amount,
+                'total_amount'        => $this->total_amount,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
-                'tax_amount'          => (int) $this->cart->tax() * 100,
-                'discount_amount'     => (int) $this->cart->discount() * 100,
-            ]);
+            ],
+            $this->cart->content(),
+            $this->cart->tax(),
+            $this->cart->discount(),
+        );
 
-            // foreach ($this->cart_instance as cart_items) {}
-            foreach ($this->cart->content() as $cart_item) {
-                SaleDetails::create([
-                    'sale_id'                 => $sale->id,
-                    'warehouse_id'            => $this->warehouse_id,
-                    'product_id'              => $cart_item->id,
-                    'name'                    => $cart_item->name,
-                    'code'                    => $cart_item->options->code,
-                    'quantity'                => $cart_item->qty,
-                    'price'                   => $cart_item->price * 100,
-                    'unit_price'              => $cart_item->options->unit_price * 100,
-                    'sub_total'               => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type'   => $cart_item->options->product_discount_type,
-                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
-                ]);
+        $this->clearCart();
+        $this->alert('success', __('Sale created successfully!'));
+        $this->checkoutModal = false;
 
-                $product = Product::findOrFail($cart_item->id);
-                $product_warehouse = ProductWarehouse::where('product_id', $product->id)
-                    ->where('warehouse_id', $this->warehouse_id)
-                    ->first();
+        PaymentNotification::dispatch($sale);
 
-                $new_quantity = $product_warehouse->qty - $cart_item->qty;
-
-                $product_warehouse->update([
-                    'qty' => $new_quantity,
-                ]);
-
-                $movement = new Movement([
-                    'type'         => MovementType::SALE,
-                    'quantity'     => $cart_item->qty,
-                    'price'        => $cart_item->price * 100,
-                    'date'         => date('Y-m-d'),
-                    'movable_type' => $product::class,
-                    'movable_id'   => $product->id,
-                    'user_id'      => Auth::user()->id,
-                ]);
-
-                $movement->save();
-            }
-
-            $this->clearCart();
-
-            if ($this->paid_amount > 0) {
-                SalePayment::create([
-                    'date'             => date('Y-m-d'),
-                    'amount'           => $this->paid_amount,
-                    'cash_register_id' => $this->cash_register_id,
-                    'sale_id'          => $sale->id,
-                    'payment_method'   => $this->payment_method,
-                    'user_id'          => Auth::user()->id,
-                ]);
-            }
-
-            $this->alert('success', __('Sale created successfully!'));
-
-            $this->checkoutModal = false;
-
-            // Cart already cleared above
-
-            PaymentNotification::dispatch($sale);
-
-            return redirect()->route('pos.index');
-        });
+        $this->redirectRoute('pos.index', navigate: true);
     }
 
     public function proceed(): void

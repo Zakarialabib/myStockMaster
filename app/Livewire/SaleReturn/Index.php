@@ -10,6 +10,7 @@ use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
 use Throwable;
 use App\Traits\WithAlert;
@@ -19,16 +20,10 @@ class Index extends Component
     use WithAlert;
     use Datatable;
     use WithFileUploads;
+    
     public $salereturn;
 
     public $model = SaleReturn::class;
-
-    /** @var array<string> */
-    public $listeners = [
-        'showModal',
-        'importModal', 'import',
-        'paymentModal', 'paymentSave',
-    ];
 
     public $showModal = false;
 
@@ -38,13 +33,7 @@ class Index extends Component
 
     public $salereturn_id;
 
-    public $date;
-
     public $reference;
-
-    public $amount;
-
-    public $payment_method;
 
     public $total_amount;
 
@@ -52,19 +41,17 @@ class Index extends Component
 
     public $paid_amount;
 
-    /** @var array */
-    protected $rules = [
-        'customer_id'         => 'required|numeric',
-        'reference'           => 'required|string|max:255',
-        'tax_percentage'      => 'required|integer|min:0|max:100',
-        'discount_percentage' => 'required|integer|min:0|max:100',
-        'shipping_amount'     => 'required|numeric',
-        'total_amount'        => 'required|numeric',
-        'paid_amount'         => 'required|numeric',
-        'status'              => 'required|integer|min:0|max:100',
-        'payment_method'      => 'required|integer|min:0|max:100',
-        'note'                => 'string|nullable|max:1000',
-    ];
+    #[Validate('required|date')]
+    public $date;
+
+    #[Validate('required|numeric')]
+    public $amount;
+
+    #[Validate('required|string|max:255')]
+    public $payment_method;
+
+    #[Validate('nullable|string|max:1000')]
+    public $note = null;
 
     public function render()
     {
@@ -100,11 +87,11 @@ class Index extends Component
         $this->resetSelected();
     }
 
-    public function delete(SaleReturn $product): void
+    public function delete(SaleReturn $saleReturn): void
     {
         abort_if(Gate::denies('sale_delete'), 403);
 
-        $product->delete();
+        $saleReturn->delete();
 
         $this->dispatch('refreshIndex');
 
@@ -119,7 +106,6 @@ class Index extends Component
         $this->date = date('Y-m-d');
         $this->amount = $this->salereturn->due_amount;
         $this->payment_method = 'Cash';
-        // $this->note = '';
         $this->salereturn_id = $salereturn->id;
         $this->paymentModal = true;
     }
@@ -127,15 +113,7 @@ class Index extends Component
     public function paymentSave(): void
     {
         try {
-            $this->validate(
-                [
-                    'date'           => 'required|date',
-                    'amount'         => 'required|numeric',
-                    'payment_method' => 'required|string|max:255',
-                ]
-            );
-
-            $salereturn = SaleReturn::find($this->salereturn_id);
+            $this->validate();
 
             SaleReturnPayment::create([
                 'date'           => $this->date,

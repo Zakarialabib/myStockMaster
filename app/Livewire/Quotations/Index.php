@@ -6,6 +6,7 @@ namespace App\Livewire\Quotations;
 
 use App\Livewire\Utils\WithModels;
 use App\Livewire\Utils\Datatable;
+use App\Livewire\Utils\HasDelete;
 use App\Models\Quotation;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
@@ -20,13 +21,9 @@ class Index extends Component
     use Datatable;
     use WithFileUploads;
     use WithModels;
+    use HasDelete;
 
     public $quotation;
-
-    /** @var array<string> */
-    public $listeners = [
-        'delete',
-    ];
 
     public $model = Quotation::class;
 
@@ -45,21 +42,8 @@ class Index extends Component
         return view('livewire.quotations.index', ['quotations' => $quotations]);
     }
 
-    public function deleteSelected(): void
+    protected function getGateDelete(): string
     {
-        abort_if(Gate::denies('quotation_delete'), 403);
-
-        Quotation::whereIn('id', $this->selected)->delete();
-
-        $this->resetSelected();
-    }
-
-    public function delete(Quotation $product): void
-    {
-        abort_if(Gate::denies('quotation_delete'), 403);
-
-        $product->delete();
-
-        $this->alert('success', __('Quotation deleted successfully.'));
+        return 'quotation_delete';
     }
 }

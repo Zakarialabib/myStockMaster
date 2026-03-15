@@ -7,10 +7,10 @@ namespace App\Livewire\Sales;
 use App\Livewire\Utils\Datatable;
 use App\Models\Sale;
 use App\Traits\WithAlert;
-
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\On;
 
 class Recent extends Component
 {
@@ -20,14 +20,9 @@ class Recent extends Component
 
     public $sale;
 
-    /** @var array<string> */
-    public $listeners = [
-        'recentSales', 'showModal',
-    ];
-
     public $showModal = false;
 
-    public $recentSales;
+    public $recentSalesVisible = false;
 
     public $model = Sale::class;
 
@@ -46,19 +41,21 @@ class Recent extends Component
         return view('livewire.sales.recent', ['sales' => $sales]);
     }
 
+    #[On('showModal')]
     public function showModal($id): void
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $this->sale = Sale::with('saleDetails')->whereId($id)->first();
+        $this->sale = Sale::with('saleDetails')->findOrFail($id);
 
         $this->showModal = true;
     }
 
+    #[On('recentSales')]
     public function recentSales(): void
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $this->recentSales = true;
+        $this->recentSalesVisible = true;
     }
 }

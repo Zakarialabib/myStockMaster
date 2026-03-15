@@ -82,6 +82,7 @@ class Index extends Component
         return view('livewire.sales.index', ['sales' => $sales]);
     }
 
+    #[On('importModal')]
     public function openImportModal(): void
     {
         abort_if(Gate::denies('sale_create'), 403);

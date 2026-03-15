@@ -27,7 +27,7 @@ class Edit extends Component
     use WithModels;
     use LivewireCartTrait;
 
-    public $sale;
+    public Sale $sale;
 
     public $products;
 
@@ -68,7 +68,7 @@ class Edit extends Component
     public $status;
 
     #[Validate('required|string|max:255')]
-    public $payment_method;
+    public string $payment_method;
 
     public $date;
 

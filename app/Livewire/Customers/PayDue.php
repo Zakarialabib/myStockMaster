@@ -8,6 +8,7 @@ use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Traits\WithAlert;
@@ -15,8 +16,11 @@ use App\Traits\WithAlert;
 class PayDue extends Component
 {
     use WithAlert;
+
+    #[Validate('required|numeric|min:0')]
     public $amount;
 
+    #[Validate('required|array')]
     public $selectedSales;
 
     public $due_amount;
@@ -28,11 +32,6 @@ class PayDue extends Component
     public $customer_id;
 
     public $payModal = false;
-
-    protected $rules = [
-        'selectedSales' => 'required|array',
-        'amount'        => 'required|numeric|min:0',
-    ];
 
     public function getSalesCustomerDueProperty()
     {

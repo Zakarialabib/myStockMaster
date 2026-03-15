@@ -21,7 +21,7 @@ class PaymentForm extends Component
     use WithAlert;
     public $paymentModal = false;
 
-    public $sale;
+    public Sale $sale;
 
     public $sale_id;
 
@@ -47,14 +47,6 @@ class PaymentForm extends Component
 
     #[Validate('nullable|string|max:1000')]
     public $note;
-
-    protected $rules = [
-        'date'   => '',
-        'amount' => '',
-        'note'   => 'nullable|string|max:1000',
-        // 'sale_id' => 'nullable|integer',
-        'payment_method' => 'required|string|max:255',
-    ];
 
     //  Payment modal
 
