@@ -20,10 +20,16 @@ window.ApexCharts = ApexCharts;
 import Sortable from 'sortablejs';
 window.Sortable = Sortable;
 
+import appModal from './components/modal';
+Alpine.data('appModal', appModal);
+
+import appDatepicker from './components/datepicker';
+Alpine.data('appDatepicker', appDatepicker);
+
 Alpine.data("mainState", () => {
-    
+
     let lastScrollTop = 0;
-    
+
     const toggleFullscreen = (elem) => {
         elem = elem || document.documentElement;
         if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
@@ -48,7 +54,7 @@ Alpine.data("mainState", () => {
             }
         }
     };
-    
+
     const init = function () {
         window.addEventListener("scroll", () => {
             let st =
@@ -69,7 +75,7 @@ Alpine.data("mainState", () => {
             }
             lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
         });
-    };    
+    };
 
     Alpine.data("loadingMask", () => ({
         pageLoaded: false,
@@ -94,19 +100,19 @@ Alpine.data("mainState", () => {
     const RTL = () => {
         if (window.localStorage.getItem("rtl")) {
             return JSON.parse(window.localStorage.getItem("rtl"));
-          }
-          return false;
+        }
+        return false;
     }
 
     const enableTheme = (isRtl) => {
         if (isRtl) {
-          document.body.dir = "rtl";
+            document.body.dir = "rtl";
         } else {
-          document.body.dir = "ltr";
+            document.body.dir = "ltr";
         }
-      };
-      
-      enableTheme(false); // sets document.body.dir to "ltr"      
+    };
+
+    enableTheme(false); // sets document.body.dir to "ltr"      
 
     return {
         init,
@@ -115,12 +121,12 @@ Alpine.data("mainState", () => {
             this.isDarkMode = !this.isDarkMode;
             setTheme(this.isDarkMode);
         },
-        isRtl : RTL(),
+        isRtl: RTL(),
         toggleRtl() {
             this.isRtl = !this.isRtl;
             enableTheme(this.isRtl);
             window.localStorage.setItem("rtl", this.isRtl);
-       },
+        },
         isSidebarOpen: window.innerWidth > 1024,
         isSidebarHovered: false,
         handleSidebarHover(value) {

@@ -26,7 +26,7 @@
     @vite('resources/css/app.css')
     
     <!-- Desktop-specific styles -->
-    @if(app(\App\Services\EnvironmentService::class)->isDesktop())
+    @if($isDesktop)
         <link rel="stylesheet" href="{{ asset('css/desktop.css') }}">
     @endif
 
@@ -43,7 +43,7 @@
     @vite('resources/js/app.js')
 
     <!-- Desktop-specific JavaScript -->
-    @if(app(\App\Services\EnvironmentService::class)->isDesktop())
+    @if($isDesktop)
         <script src="{{ asset('js/desktop.js') }}"></script>
     @endif
 
@@ -57,7 +57,7 @@
     @stack('scripts')
 </head>
 
-<body class="antialiased bg-gray-50 text-body font-body {{ app(\App\Services\EnvironmentService::class)->isDesktop() ? 'desktop-app' : '' }}" dir="ltr">
+<body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
     <x-loading-mask />
     <div @resize.window="handleWindowResize">
         <div class="min-h-screen">
@@ -75,12 +75,12 @@
                 <x-navbar />
 
                 <!-- Desktop Mode Indicator -->
-                @if(app(\App\Services\EnvironmentService::class)->isDesktop())
+                @if($isDesktop)
                     <livewire:components.desktop-mode-indicator />
                 @endif
 
                 <!-- Desktop Notifications -->
-                @if(app(\App\Services\EnvironmentService::class)->isDesktop())
+                @if($isDesktop)
                     <livewire:components.desktop-notification />
                     <livewire:components.sync-status />
                 @endif

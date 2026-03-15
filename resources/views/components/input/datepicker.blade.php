@@ -1,18 +1,18 @@
-<div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+<div x-data="appDatepicker()" x-init="[initDate(), getNoOfDays()]" x-cloak>
     <div class="container mx-auto">
         <div class="mb-5">
             {{-- <label for="datepicker" class="font-bold mb-1 text-zinc-700 block">Select Date</label> --}}
             <label for="datepicker" class="label">
-                <span class="label-text">Tarikh Mula</span>
+                <span class="label-text">{{ $label }}</span>
             </label>
 
             <div class="relative">
-                <input type="hidden" name="date" x-ref="date" :value="datepickerValue" />
+                <input type="hidden" name="{{ $name }}" x-ref="date" :value="datepickerValue" />
                 <input type="text" x-on:click="initDate(datepickerValue), showDatepicker = !showDatepicker" x-model="datepickerValue"
                     x-on:keydown.escape="showDatepicker = false"
                     {{-- class="w-full pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-hidden focus:shadow-outline text-zinc-600 font-medium" --}}
                     class="input input-bordered"
-                    placeholder="Select date" />
+                    placeholder="{{ $placeholder }}" />
 
                 <div class="absolute top-0 right-0 px-3 h-full flex items-center">
                     <svg class="w-6 h-6 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="flex flex-wrap mb-3 -mx-1">
-                        <template x-for="(day, index) in DAYS" :key="index">
+                        <template x-for="(day, index) in days" :key="index">
                             <div style="width: 14.26%" class="px-0.5">
                                 <div x-text="day" class="text-xs font-medium text-center text-zinc-800"></div>
                             </div>

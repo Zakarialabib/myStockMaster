@@ -31,15 +31,15 @@
                         {{ __('Dashboard') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('createModal')">
+                    <x-dropdown-link wire:click="dispatchTo('products.create', 'createModal')">
                         {{ __('Create Product') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('createCustomer')">
+                    <x-dropdown-link wire:click="dispatchTo('customers.create', 'createModal')">
                         {{ __('Create Customer') }}
                     </x-dropdown-link>
 
-                    <x-dropdown-link onclick="Livewire.dispatch('recentSales')">
+                    <x-dropdown-link wire:click="dispatchTo('sales.recent', 'recentSales')">
                         {{ __('Recent Sales') }}
                     </x-dropdown-link>
                 </x-slot>
