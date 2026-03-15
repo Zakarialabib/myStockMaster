@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Models\Customer;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use App\Models\Product;
-use App\Models\Customer;
-use App\Models\Sale;
 
 class SyncService
 {
@@ -62,7 +63,7 @@ class SyncService
     /**
      * Apply changes received from the cloud.
      */
-    protected function applyRemoteChanges(array $data)
+    protected function applyRemoteChanges(array $data): void
     {
         DB::transaction(function () use ($data) {
             if (isset($data['products'])) {

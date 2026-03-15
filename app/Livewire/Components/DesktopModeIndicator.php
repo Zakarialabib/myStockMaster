@@ -16,7 +16,7 @@ class DesktopModeIndicator extends Component
     public function mount()
     {
         $this->isDesktop = EnvironmentService::isDesktop();
-        $this->isOffline = EnvironmentService::isOffline();
+        $this->isOffline = EnvironmentService::isOfflineMode();
         $this->lastSync = Cache::get('database_sync.last_sync');
     }
 
@@ -47,7 +47,7 @@ class DesktopModeIndicator extends Component
     public function refresh()
     {
         $this->isDesktop = EnvironmentService::isDesktop();
-        $this->isOffline = EnvironmentService::isOffline();
+        $this->isOffline = EnvironmentService::isOfflineMode();
         $this->lastSync = Cache::get('database_sync.last_sync');
     }
 }

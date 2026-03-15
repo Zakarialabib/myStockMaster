@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
 use Exception;
 use Throwable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class DesktopErrorHandler
 {
@@ -129,7 +131,7 @@ class DesktopErrorHandler
     /**
      * Get error history for user
      */
-    public function getErrorHistory(int $userId, int $limit = 20): array
+    public function getErrorHistory(int|string $userId, int $limit = 20): array
     {
         $cacheKey = "desktop_error_history_{$userId}";
         $history = Cache::get($cacheKey, []);
@@ -149,7 +151,7 @@ class DesktopErrorHandler
     /**
      * Clear error history for user
      */
-    public function clearErrorHistory(int $userId): bool
+    public function clearErrorHistory(int|string $userId): bool
     {
         $cacheKey = "desktop_error_history_{$userId}";
         return Cache::forget($cacheKey);
@@ -158,7 +160,7 @@ class DesktopErrorHandler
     /**
      * Get error statistics
      */
-    public function getErrorStatistics(int $userId): array
+    public function getErrorStatistics(int|string $userId): array
     {
         $history = $this->getErrorHistory($userId, self::MAX_ERROR_HISTORY);
         
@@ -340,7 +342,7 @@ class DesktopErrorHandler
     /**
      * Add error to user's error history
      */
-    private function addToErrorHistory(int $userId, array $errorData): void
+    private function addToErrorHistory(int|string $userId, array $errorData): void
     {
         $cacheKey = "desktop_error_history_{$userId}";
         $history = Cache::get($cacheKey, []);

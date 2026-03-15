@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSyncService
 {
-    protected $onlineConnection = 'mysql';
-    protected $offlineConnection = 'sqlite_desktop';
+    protected string $onlineConnection = 'mysql';
+    protected string $offlineConnection = 'sqlite_desktop';
 
     /**
      * Initialize desktop database with schema from online database
@@ -200,20 +202,29 @@ class DatabaseSyncService
     protected function syncTableToOffline(string $table): void
     {
         try {
-            // Clear existing data in offline table
-            DB::connection($this->offlineConnection)->table($table)->truncate();
-
-            // Copy data from online to offline
-            $data = DB::connection($this->onlineConnection)->table($table)->get();
+            // Get last sync time to fetch only modified records
+            $lastSync = $this->getLastSyncTime();
             
-            if ($data->isNotEmpty()) {
-                $chunks = $data->chunk(100);
-                foreach ($chunks as $chunk) {
+            // Get modified records from online database
+            $query = DB::connection($this->onlineConnection)
+                ->table($table)
+                ->where('updated_at', '>', $lastSync);
+                
+            // Use chunking to handle large datasets effectively
+            $query->chunk(100, function ($records) use ($table) {
+                foreach ($records as $record) {
+                    $recordArray = (array) $record;
+                    
+                    // Update or insert record in offline database
                     DB::connection($this->offlineConnection)
                         ->table($table)
-                        ->insert($chunk->toArray());
+                        ->updateOrInsert(
+                            ['id' => $record->id],
+                            $recordArray
+                        );
                 }
-            }
+            });
+            
         } catch (Exception $e) {
             Log::warning("Could not sync table {$table} to offline: " . $e->getMessage());
         }

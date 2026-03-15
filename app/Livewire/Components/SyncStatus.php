@@ -5,6 +5,7 @@ namespace App\Livewire\Components;
 use Livewire\Component;
 use App\Jobs\SyncDatabaseJob;
 use Illuminate\Support\Facades\Cache;
+use App\Services\EnvironmentService;
 
 class SyncStatus extends Component
 {
@@ -22,6 +23,12 @@ class SyncStatus extends Component
 
     public function checkConnection()
     {
+        // If we are in Online Mode (Direct DB), we are considered online
+        if (!EnvironmentService::isOfflineMode()) {
+            $this->isOnline = true;
+            return;
+        }
+
         // Simple check to google or own server
         // In NativePHP, we might have better ways, but this works generally
         $connected = @fsockopen("www.google.com", 80); 
