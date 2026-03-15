@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,24 +17,24 @@ class Create extends Component
 {
     use WithFileUploads;
 
-    public $createModal;
+    /** @var bool */
+    public bool $createModal = false;
 
-    public EmailTemplate $email_setting;
-
-    public $description;
-
-    public $message;
-
-    protected $rules = [
+    #[Validate([
         'email_setting.name'         => ['required', 'max:255'],
-        'description'                => ['required'],
-        'message'                    => ['required'],
         'email_setting.default'      => ['required'],
         'email_setting.placeholders' => ['required'],
         'email_setting.type'         => ['required'],
         'email_setting.subject'      => ['required'],
         'email_setting.status'       => ['required'],
-    ];
+    ])]
+    public EmailTemplate $email_setting;
+
+    #[Validate('required')]
+    public ?string $description = null;
+
+    #[Validate('required')]
+    public ?string $message = null;
 
     public function render(): View|Factory
     {
@@ -47,6 +48,7 @@ class Create extends Component
     {
         $this->resetErrorBag();
         $this->resetValidation();
+        $this->email_setting = new EmailTemplate();
         $this->description = '';
         $this->message = '';
         $this->createModal = true;

@@ -13,6 +13,7 @@ use App\Traits\WithAlert;
 class Smtp extends Component
 {
     use WithAlert;
+    
     public $mail_mailer;
 
     public $mail_host;
