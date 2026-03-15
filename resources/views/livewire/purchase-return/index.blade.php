@@ -111,7 +111,8 @@
                                     @endcan
 
                                     @can('purchase_return_delete')
-                                        <x-dropdown-link wire:click="confirm('delete', {{ $purchasereturn->id }})"
+                                        <x-dropdown-link wire:click="delete({{ $purchasereturn->id }})"
+                                            wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-trash"></i>
                                             {{ __('Delete') }}
@@ -379,25 +380,3 @@
     @endif
 
 </div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:init', function() {
-            window.livewire.on('deleteModal', purchaseId => {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.Livewire.dispatch('delete', purchaseId)
-                    }
-                })
-            })
-        })
-    </script>
-@endpush

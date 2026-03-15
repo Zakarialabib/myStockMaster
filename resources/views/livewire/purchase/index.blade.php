@@ -161,7 +161,7 @@
 
                             <x-slot name="content">
                                 @can('purchase_payment_access')
-                                    <x-dropdown-link wire:click="$dispatch('showPayments', {{ $purchase->id }})"
+                                    <x-dropdown-link wire:click="$dispatchTo('purchase.payment.index', 'showPayments', { id: {{ $purchase->id }} })"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-money-bill-wave"></i>
                                         {{ __('Payments') }}
@@ -170,7 +170,7 @@
 
                                 @can('purchase_payment_access')
                                     @if ($purchase->due_amount > 0)
-                                        <x-dropdown-link wire:click="$dispatch('paymentModal', {{ $purchase->id }})"
+                                        <x-dropdown-link wire:click="$dispatchTo('purchase.payment-form', 'paymentModal', { id: {{ $purchase->id }} })"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-money-bill-wave"></i>
                                             {{ __('Add Payment') }}
@@ -179,7 +179,7 @@
                                 @endcan
 
                                 @can('purchase_access')
-                                    <x-dropdown-link wire:click="$dispatch('showModal', {{ $purchase->id }})"
+                                    <x-dropdown-link wire:click="$dispatchTo('purchase.show', 'showModal', { id: {{ $purchase->id }} })"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-eye"></i>
                                         {{ __('View') }}
@@ -201,7 +201,7 @@
                                 </x-dropdown-link>
 
                                 @can('purchase_delete')
-                                    <x-dropdown-link wire:click="$dispatch('deleteModal', {{ $purchase->id }})"
+                                    <x-dropdown-link wire:click="deleteModal({{ $purchase->id }})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-trash"></i>
                                         {{ __('Delete') }}
@@ -256,25 +256,4 @@
         <livewire:purchase.payment.index :purchase="$purchase" />
       @endif --}}
 
-    @push('scripts')
-        <script>
-            document.addEventListener('livewire:init', function() {
-                window.livewire.on('deleteModal', purchaseId => {
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.Livewire.dispatch('delete', purchaseId)
-                        }
-                    })
-                })
-            })
-        </script>
-    @endpush
 </div>

@@ -144,7 +144,8 @@
                                             {{ __('Edit') }}
                                         </x-dropdown-link>
                                         <x-dropdown-link
-                                            wire:click="$dispatch('deleteModal', { id :'{{ $supplier->id }}' })"
+                                            wire:click="delete({{ $supplier->id }})"
+                                            wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
                                             wire:loading.attr="disabled"
                                             class="text-red-600 hover:text-red-800">
                                             <i class="fas fa-trash mr-2"></i>
@@ -175,7 +176,6 @@
             @endif
         </div>
     </x-page-container>
-
 
     <livewire:suppliers.show :supplier="$supplier" />
 
