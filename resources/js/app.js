@@ -92,7 +92,15 @@ Alpine.data("mainState", () => {
     };
     const setTheme = (value) => {
         window.localStorage.setItem("dark", value);
+        if (value) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
     };
+
+    // Initialize theme on load
+    setTheme(getTheme());
 
     const RTL = () => {
         if (window.localStorage.getItem("rtl")) {

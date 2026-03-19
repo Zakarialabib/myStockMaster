@@ -9,7 +9,8 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="csrf_token" value="{{ csrf_token() }}" />
 
-    <title>@yield('title') || {{ config('app.name') }}</title>
+    <title>{{ $title ?? '' }} ||  {{ settings()->company_name ?? config('app.name') }}</title>
+
     <!-- Styles -->
     <style>
         [x-cloak] {
@@ -25,18 +26,20 @@
     @livewireStyles
 
     @stack('styles')
+
     <style>
         [x-cloak] {
             display: none;
         }
     </style>
+    
     <!-- Scripts -->
     @vite('resources/js/app.js')
 
     @livewireScriptConfig
 </head>
 
-<body class="antialiased bg-gray-50 text-body font-body" dir="ltr">
+<body class="antialiased bg-gray-50 text-gray-900 font-sans dark:bg-gray-900 dark:text-gray-100" dir="ltr">
     <div x-data="mainState" @resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen">
 

@@ -53,7 +53,7 @@
 <body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
 
     <div @resize.window="handleWindowResize">
-        <div class="min-h-screen">
+        {{-- <div class="min-h-screen"> --}}
             <!-- Sidebar -->
             <x-sidebar.sidebar />
             <!-- Page Wrapper -->
@@ -98,7 +98,7 @@
                 <x-footer />
 
             </div>
-        </div>
+        {{-- </div> --}}
     </div>
 
 </body>

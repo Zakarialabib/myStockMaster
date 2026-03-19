@@ -1,5 +1,5 @@
 <div x-data="$store.mainState">
-    <x-button type="button" secondary @click="toggleFullscreen()">
-        <i class="fa fa-expand w-4 h-4"></i>
-    </x-button>
+    <button type="button" class="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors focus:outline-none" @click="toggleFullscreen()">
+        <i class="fas fa-expand text-[20px]"></i>
+    </button>
 </div>

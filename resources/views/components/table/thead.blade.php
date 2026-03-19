@@ -1,5 +1,5 @@
-<thead class="bg-gray-100 text-black">
-    <tr class="text-xs text-gray-500 text-left">
+<thead class="bg-gray-50 dark:bg-gray-800">
+    <tr>
         {{ $slot }}
     </tr>
 </thead>

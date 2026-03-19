@@ -1,10 +1,83 @@
-@config '../../tailwind.config.js';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "@fortawesome/fontawesome-free/css/all.css";
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/forms' {
+    strategy: class;
+}
+
+@theme {
+    --font-sans: 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-headline: 'Inter', sans-serif;
+
+    /* The Precision Architect Design System mapped to standard naming */
+    --color-primary-50: #e3f2fd;
+    --color-primary-100: #bbdefb;
+    --color-primary-200: #90caf9;
+    --color-primary-300: #64b5f6;
+    --color-primary-400: #42a5f5;
+    --color-primary-500: #0061ff; /* primary-container */
+    --color-primary-600: #004bca; /* primary */
+    --color-primary-700: #003ea8; /* on-primary-fixed-variant */
+    --color-primary-800: #00174b; /* on-primary-fixed */
+    --color-primary-900: #00174b;
+
+    --color-secondary-50: #fce4ec;
+    --color-secondary-100: #f8bbd0;
+    --color-secondary-200: #f48fb1;
+    --color-secondary-300: #f06292;
+    --color-secondary-400: #ec407a;
+    --color-secondary-500: #99b1fe; /* secondary-container */
+    --color-secondary-600: #435ba2; /* secondary */
+    --color-secondary-700: #294388; /* on-secondary-fixed-variant */
+    --color-secondary-800: #274187; /* on-secondary-container */
+    --color-secondary-900: #00174b; /* on-secondary-fixed */
+
+    --color-gray-50: #f8f9fb; /* surface-bright */
+    --color-gray-100: #f2f4f6; /* surface-container-low */
+    --color-gray-200: #eceef0; /* surface-container */
+    --color-gray-300: #e6e8ea; /* surface-container-high */
+    --color-gray-400: #e0e3e5; /* surface-container-highest */
+    --color-gray-500: #d8dadc; /* surface-dim */
+    --color-gray-600: #c2c6d9; /* outline-variant */
+    --color-gray-700: #737687; /* outline */
+    --color-gray-800: #424656; /* on-surface-variant */
+    --color-gray-900: #191c1e; /* on-surface */
+    --color-gray-950: #191c1e; /* on-background */
+
+    --color-success-50: #ecfdf5;
+    --color-success-100: #d1fae5;
+    --color-success-500: #10b981;
+    --color-success-700: #047857;
+
+    --color-error-50: #ffdad6; /* error-container */
+    --color-error-100: #ffb4ab;
+    --color-error-500: #ba1a1a; /* error */
+    --color-error-700: #93000a; /* on-error-container */
+
+    --color-warning-50: #ffefeb; /* tertiary-container */
+    --color-warning-100: #ffdbd0; /* tertiary-fixed */
+    --color-warning-500: #c73f00; /* tertiary-container */
+    --color-warning-700: #9d3000; /* tertiary */
+
+    --shadow-soft: 0 4px 12px -2px rgba(0,0,0,0.05);
+}
+
+@layer base {
+    body {
+        font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    input {
+        font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+    }
+}
 
 @import '../css/theme.css';
-@import '../css/font.css';
-/* @import '../css/select.css'; */
-@import "@fortawesome/fontawesome-free/css/all.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Livewire v4 data-loading styles */

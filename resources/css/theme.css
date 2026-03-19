@@ -1,177 +1,121 @@
-/* Primary Color */
-:root {
-  --primary-color: {{ Helpers::settings('primary_color') }};
-}
+@layer components {
+  .flatpickr input[type=text].form-control {
+    @apply border-0 px-3 py-3 pl-10 placeholder-gray-300 text-gray-600 bg-white rounded text-sm focus:outline-none focus:ring;
+  }
 
-.bg-primary {
-  background-color: var(--primary-color);
-}
+  .flatpickr input[type=text].form-control:required {
+    @apply border-0 px-3 py-3 placeholder-gray-300 text-gray-600 bg-white rounded text-sm focus:outline-none focus:ring;
+  }
 
-.text-primary {
-  color: var(--primary-color);
-}
+  .card .card-header {
+    @apply rounded-t bg-white mb-0 px-6 py-6;
+  }
 
-.border-primary {
-  border-color: var(--primary-color);
-}
+  .card .card-header-container {
+    @apply text-center flex justify-between;
+  }
 
-/* Secondary Color */
-:root {
-  --secondary-color: {{ Helpers::settings('secondary_color') }}; /* Fetch the secondary color value from the database */
-}
+  .card .card-title {
+    @apply text-gray-700 text-xl font-bold;
+  }
 
-.bg-secondary {
-  background-color: var(--secondary-color);
-}
+  .card .card-body {
+    @apply flex-auto px-4 lg:px-10 py-10 pt-0;
+  }
 
-.text-secondary {
-  color: var(--secondary-color);
-}
+  .card .card-controls {
+    @apply flex-auto px-4 lg:px-10 py-3; 
+  }
 
-.border-secondary {
-  border-color: var(--secondary-color);
-}
+  .card .card-table {
+    @apply py-3 pt-0;
+  }
 
-.flatpickr input[type=text].form-control {
-@apply border-0 px-3 py-3 pl-10 placeholder-gray-300 text-gray-600 bg-white rounded text-sm focus:outline-none focus:ring;
-}
+  .sidebar-nav-active {
+    @apply text-xs uppercase py-3 font-bold block text-primary-500;
+  }
 
-.flatpickr input[type=text].form-control:required {
-@apply border-0 px-3 py-3 placeholder-gray-300 text-gray-600 bg-white rounded text-sm focus:outline-none focus:ring;
-}
+  .sidebar-nav-active > i {
+    @apply mr-2 text-sm opacity-75;
+  }
 
-h1 { 
-@apply text-4xl font-bold text-center text-gray-800;
-}
+  .sidebar-nav-active:hover {
+    @apply text-primary-600;
+  }
 
-h2 {
-@apply text-2xl font-bold text-center text-gray-800;
-}
+  .sidebar-nav {
+    @apply text-xs uppercase py-3 font-bold block text-gray-800;
+  }
 
-h3 {
-@apply text-xl font-bold text-center text-gray-800;
-}
+  .sidebar-nav > i {
+    @apply mr-2 text-sm text-gray-400;
+  }
 
-h4 {
-@apply text-lg font-bold text-left text-gray-800;
-}
+  .sidebar-nav:hover {
+    @apply text-gray-600;
+  } 
 
-h5 {
-@apply text-base font-bold text-left text-gray-800;
-}
+  .table { 
+    @apply items-center table-auto bg-transparent border-collapse;
+  }
 
-h6 {
-@apply text-sm font-bold text-left text-gray-800;
-}
+  .table th {
+    @apply align-middle border border-solid text-xs uppercase whitespace-nowrap font-semibold text-left text-gray-500;
+  }
 
-.card .card-header {
-  @apply rounded-t bg-white mb-0 px-6 py-6;
-}
+  .table td {
+    @apply border-gray-200;
+  }
 
-.card .card-header-container {
-  @apply text-center flex justify-between;
-}
+  .table.table-index th {
+    @apply px-6 py-3 border-l-0 border-r-0 border-gray-100;
+  }
 
-.card .card-title {
-  @apply text-gray-700 text-xl font-bold;
-}
+  .table.table-index td {
+    @apply px-4 py-2 border-t border-dashed;
+  }
 
-.card .card-body {
-  @apply flex-auto px-4 lg:px-10 py-10 pt-0;
-}
+  .table.table-view th,
+  .table.table-view td {
+    @apply px-6 py-3 border border-solid;
+  }
 
-.card .card-controls {
-  @apply flex-auto px-4 lg:px-10 py-3; 
-}
+  .table.table-index > tbody > tr:hover {
+    @apply bg-gray-50;
+  }
 
-.card .card-table {
-  @apply py-3 pt-0;
-}
+  .form-group .required::after {
+    content: " *";
+    @apply text-error-500;
+  }
 
-.sidebar-nav-active {
-  @apply text-xs uppercase py-3 font-bold block text-blue-500;
-}
+  .help-block {
+    @apply text-gray-600 pt-2 text-sm;
+  }
 
-.sidebar-nav-active > i {
-  @apply mr-2 text-sm opacity-75;
-}
+  .badge-relationship {
+    @apply text-primary-600 bg-primary-200;
+  }
 
-.sidebar-nav-active:hover {
-  @apply text-blue-600;
-}
+  .link-light-blue {
+    @apply text-primary-200 flex items-center hover:underline last:mb-0 mb-1;
+  }
 
-.sidebar-nav {
-  @apply text-xs uppercase py-3 font-bold block text-gray-800;
-}
+  .link-light-blue i {
+    @apply mr-1;
+  }
 
-.sidebar-nav > i {
-  @apply mr-2 text-sm text-gray-400;
-}
+  .link-photo {
+    @apply inline-block last:mr-0 mr-1;
+  }
 
-.sidebar-nav:hover {
-  @apply text-gray-600;
-} 
+  .radio-label {
+    @apply flex items-center last:mb-0 mb-1 cursor-pointer;
+  }
 
-.table { 
-  @apply items-center table-auto bg-transparent border-collapse;
-}
-
-.table th {
-  @apply align-middle border border-solid text-xs uppercase whitespace-nowrap font-semibold text-left text-gray-500;
-}
-
-.table td {
-  @apply border-gray-200;
-}
-
-.table.table-index th {
-  @apply px-6 py-3 border-l-0 border-r-0 border-gray-100;
-}
-
-.table.table-index td {
-  @apply px-4 py-2 border-t border-dashed;
-}
-
-.table.table-view th,
-.table.table-view td {
-  @apply px-6 py-3 border border-solid;
-}
-
-.table.table-index > tbody > tr:hover {
-  @apply bg-gray-50;
-}
-
-.form-group .required::after {
-  content: " *";
-  @apply text-red-500;
-}
-
-.help-block {
-  @apply text-gray-600 pt-2 text-sm;
-}
-
-.badge-relationship {
-  @apply text-indigo-600 bg-indigo-200;
-}
-
-.link-light-blue {
-  @apply text-blue-200 flex items-center hover:underline last:mb-0 mb-1;
-}
-
-.link-light-blue i {
-  @apply mr-1;
-}
-
-.link-photo {
-  @apply inline-block last:mr-0 mr-1;
-}
-
-.radio-label {
-  @apply flex items-center last:mb-0 mb-1 cursor-pointer;
-}
-
-.radio-label input[type=radio] {
-  @apply mr-2;
+  .radio-label input[type=radio] {
+    @apply mr-2;
+  }
 }
 
 .was-validated :invalid ~ .invalid-feedback,
@@ -286,4 +230,3 @@ textarea.form-control.is-invalid {
   width: 500px ;
   min-width: 300px ;
 }
-

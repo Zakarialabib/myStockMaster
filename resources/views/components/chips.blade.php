@@ -1,22 +1,46 @@
 @props([
     'label' => '',
-    'color' => 'blue',
+    'color' => 'primary',
     'class' => '',
-    'shade' => 'faint',
-    'color_weight' => [
-        'faint' => 200,
-        'dark' => 500,
-    ],
-    'text_color_weight' => [
-        'faint' => 500,
-        'dark' => 50,
-    ],
 ])
-<span
-    class="bg-red-200 bg-yellow-200 bg-green-200 bg-pink-200 bg-cyan-200 bg-gray-200 bg-blue-200 bg-purple-200 bg-orange-200"></span>
-<span
-    class="bg-red-300 bg-yellow-300 bg-green-300 bg-pink-300 bg-cyan-300 bg-gray-300 bg-blue-300 bg-purple-300 bg-orange-300 bg-red-500 bg-yellow-500 bg-green-500 bg-pink-500 bg-gray-500 bg-cyan-500 bg-blue-500 bg-gray-500 bg-purple-500 bg-orange-500 text-red-500 text-yellow-500 text-green-500 bg-gray-500 text-pink-500 text-cyan-500 text-purple-500 text-orange-500 text-red-50 text-yellow-50 text-green-50 text-pink-50 text-cyan-50 text-purple-50 text-gray-50 text-blue-50 text-orange-50 bg-red-200 bg-yellow-200 bg-green-200 bg-pink-200 bg-cyan-200 bg-gray-200 bg-blue-200 bg-purple-200 bg-orange-200 border-red-500 border-yellow-500 border-green-500 border-pink-500 border-gray-500 border-cyan-500 border-blue-500 border-gray-500 border-purple-500 border-orange-500"></span>
-<label style="zoom:95%" 
-    class="text-xs uppercase px-[10px] py-[5px] tracking-widest whitespace-nowrap inline-block rounded-md bg-{{ $color }}-{{ $color_weight[$shade] }} text-{{ $color }}-{{ $text_color_weight[$shade] }} {{ $class }}">
+
+@php
+    $colorMap = [
+        'primary' => [
+            'bg' => 'bg-primary-100 dark:bg-primary-900/40',
+            'text' => 'text-primary-700 dark:text-primary-300',
+            'border' => 'border-primary-200 dark:border-primary-800',
+        ],
+        'secondary' => [
+            'bg' => 'bg-gray-100 dark:bg-gray-800',
+            'text' => 'text-gray-700 dark:text-gray-300',
+            'border' => 'border-gray-200 dark:border-gray-700',
+        ],
+        'success' => [
+            'bg' => 'bg-success-100 dark:bg-success-900/40',
+            'text' => 'text-success-700 dark:text-success-300',
+            'border' => 'border-success-200 dark:border-success-800',
+        ],
+        'warning' => [
+            'bg' => 'bg-warning-100 dark:bg-warning-900/40',
+            'text' => 'text-warning-700 dark:text-warning-300',
+            'border' => 'border-warning-200 dark:border-warning-800',
+        ],
+        'error' => [
+            'bg' => 'bg-error-100 dark:bg-error-900/40',
+            'text' => 'text-error-700 dark:text-error-300',
+            'border' => 'border-error-200 dark:border-error-800',
+        ],
+        'info' => [
+            'bg' => 'bg-blue-100 dark:bg-blue-900/40',
+            'text' => 'text-blue-700 dark:text-blue-300',
+            'border' => 'border-blue-200 dark:border-blue-800',
+        ],
+    ];
+
+    $colors = $colorMap[$color] ?? $colorMap['primary'];
+@endphp
+
+<span class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold rounded-lg border {{ $colors['bg'] }} {{ $colors['text'] }} {{ $colors['border'] }} {{ $class }}">
     {{ $label }}
-</label>
+</span>

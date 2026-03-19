@@ -1,89 +1,77 @@
 <nav aria-label="secondary" x-data="{ open: false }"
-    class="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transition-transform duration-500 bg-white"
+    class="sticky top-0 z-20 flex items-center justify-between px-6 py-3 transition-transform duration-500 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 h-16"
     :class="{
         '-translate-y-full': scrollingDown,
         'translate-y-0': scrollingUp,
     }">
 
     <div class="flex items-center gap-3">
-        <x-button type="button" iconOnly secondary srText="Open main menu" @click="isSidebarOpen = !isSidebarOpen">
-            <x-icons.menu x-show="!isSidebarOpen" aria-hidden="true" class="w-5 h-5" />
-            <x-icons.x x-show="isSidebarOpen" aria-hidden="true" class="w-5 h-5" />
-        </x-button>
+        <button type="button" class="p-2 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="isSidebarOpen = !isSidebarOpen">
+            <span class="sr-only">Open main menu</span>
+            <x-icons.menu x-show="!isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
+            <x-icons.x x-show="isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
+        </button>
     </div>
 
-    <div class="flex items-center gap-3">
-        <div class="md:flex hidden flex-wrap items-center gap-2">
+    <div class="flex items-center gap-4">
+        <div class="hidden md:flex items-center gap-2">
             <x-button-fullscreen />
-            
-            <!-- Dark Mode Toggle -->
-            <x-button type="button" secondary @click="toggleTheme()">
-                <i x-show="!isDarkMode" class="fas fa-moon w-4 h-4"></i>
-                <i x-show="isDarkMode" class="fas fa-sun w-4 h-4"></i>
-            </x-button>
         </div>
 
-        <x-language-dropdown />
+        <div class="hidden md:flex items-center gap-2">
+            <button type="button" class="p-2 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="toggleTheme()">
+                <i x-show="!isDarkMode" class="fas fa-moon text-lg"></i>
+                <i x-show="isDarkMode" class="fas fa-sun text-lg"></i>
+            </button>
+        </div>
+
+        <div class="hidden md:flex items-center">
+            <x-language-dropdown />
+        </div>
 
         @can('show_notifications')
-            <div class="md:flex hidden flex-wrap items-center">
-                @livewire('utils.notifications')
+            <div class="hidden md:flex items-center">
+                <livewire:notifications-bell />
             </div>
         @endcan
 
-        <x-button primary :href="route('pos.index')">
-            {{ __('POS') }}
-        </x-button>
+        <a href="{{ route('pos.index') }}" wire:navigate class="flex items-center gap-2 bg-gradient-to-br from-primary-600 to-primary-500 text-white font-bold text-sm px-4 py-2 rounded-xl shadow-soft hover:shadow-lg hover:brightness-110 active:scale-[0.98] transition-all">
+            <i class="fas fa-cash-register text-sm"></i>
+            <span>{{ __('POS') }}</span>
+        </a>
 
-        {{--
-                 <x-button type="button" class="hidden md:inline-flex" iconOnly primary srText="Toggle RTL mode"
-                @click="toggleRtl">
-                <a x-show="!isRtl" aria-hidden="true" class="font-bold text-md"> LTR </a>
-                <a x-show="isRtl" aria-hidden="true" class="font-bold text-md"> RTL </a>
-            </x-button> 
-            --}}
-
-        <ul class="flex-col md:flex-row list-none items-center md:flex">
+        <ul class="flex items-center list-none">
             <x-dropdown align="right" width="56">
                 <x-slot name="trigger">
-                    <x-button type="button" primary>
-                        {{ Auth::user()->name }}
-                    </x-button>
+                    <button type="button" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20">
+                        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center border-2 border-primary-200 dark:border-primary-800 overflow-hidden shadow-sm">
+                            <span class="text-sm font-bold text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                        <span class="hidden md:block text-sm font-bold text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</span>
+                        <i class="fas fa-chevron-down text-xs text-gray-500 dark:text-gray-400"></i>
+                    </button>
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.index')">
-                        {{ __('Profile') }}
+                    <x-dropdown-link :href="route('profile.index')" wire:navigate class="font-medium text-sm text-gray-700 dark:text-gray-300">
+                        <i class="fas fa-user mr-2 text-primary-500"></i> {{ __('Profile') }}
                     </x-dropdown-link>
 
-                    <div class="border-t border-gray-100"></div>
+                    <div class="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
-                    <x-dropdown-link :href="route('settings.index')">
-                        {{ __('Settings') }}
+                    <x-dropdown-link :href="route('settings.index')" wire:navigate class="font-medium text-sm text-gray-700 dark:text-gray-300">
+                        <i class="fas fa-cog mr-2 text-primary-500"></i> {{ __('Settings') }}
                     </x-dropdown-link>
 
-                    <div class="border-t border-gray-100"></div>
+                    <div class="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
-                    <x-dropdown-link>
-                        @livewire('utils.cache')
+                    <x-dropdown-link class="font-medium text-sm text-gray-700 dark:text-gray-300">
+                        <livewire:cache-clear />
                     </x-dropdown-link>
 
+                    <div class="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
-                    {{-- <x-dropdown-link href="{{ route('profile.show') }}">
-                        {{ __('Profile') }}
-                    </x-dropdown-link> --}}
-
-                    <div class="border-t border-gray-100"></div>
-
-                    <!-- Authentication -->
-                    <form method="POST" action="">
-                        @csrf
-                        {{-- <x-dropdown-link :href=""
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();"> --}}
-                            {{ __('Log Out') }}
-                        {{-- </x-dropdown-link>  --}}
-                    </form>
+                    <livewire:layout.navigation />
                 </x-slot>
             </x-dropdown>
         </ul>
