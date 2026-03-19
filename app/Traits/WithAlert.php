@@ -15,27 +15,17 @@ trait WithAlert
      */
     public function alert(string $type, string $message, array $options = []): void
     {
-        // Map 'danger' to 'error' for consistency
         if ($type === 'danger') {
             $type = 'error';
         }
 
-        $this->dispatch('alert', [
-            'type'    => $type,
-            'message' => $message,
-            'options' => $options,
-        ]);
+        $this->dispatch('alert', type: $type, message: $message, options: $options);
     }
 
-    /**
-     * Dispatch a confirmation event to the frontend
-     */
+    /** Dispatch a confirmation event to the frontend */
     public function confirm(string $message, array $options = []): void
     {
-        $this->dispatch('confirm', [
-            'message' => $message,
-            'options' => $options,
-        ]);
+        $this->dispatch('confirm', message: $message, options: $options);
     }
 
     /** Dispatch a success alert */

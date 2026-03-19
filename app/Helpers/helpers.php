@@ -37,7 +37,7 @@ if ( ! function_exists('format_currency')) {
 
         // $value change to type int|float, string given,
         return Number::currency(
-            intval($value),
+            floatval($value),
             $currencyCode,
             $locale
         );
