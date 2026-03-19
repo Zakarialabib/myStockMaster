@@ -94,7 +94,7 @@ function createAlertElement(type, message, options) {
     alertDiv.innerHTML = `
         <div class="d-flex align-items-center">
             <i class="${icon} me-2"></i>
-            <div class="flex-grow-1">${message}</div>
+            <div class="grow">${message}</div>
             ${options.showCloseButton ? '<button type="button" class="btn-close alert-close" aria-label="Close"></button>' : ''}
         </div>
     `;

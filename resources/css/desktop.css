@@ -1,8 +1,12 @@
 /* Desktop-specific styles for MyStockMaster */
+@reference "./app.css";
 
 /* Desktop Mode Indicator Styles */
 .desktop-mode-indicator {
-    @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 shadow-sm;
+    background-image: linear-gradient(to right, #3b82f6, #9333ea);
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     position: sticky;
     top: 0;
     z-index: 40;
@@ -10,7 +14,12 @@
 }
 
 .desktop-mode-indicator .status-badge {
-    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
 .desktop-mode-indicator .status-badge.online {
@@ -22,7 +31,7 @@
 }
 
 .desktop-mode-indicator .sync-button {
-    @apply bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-1 rounded-md text-sm font-medium transition-all duration-200;
+    @apply bg-white text-white px-3 py-1 rounded-md text-sm font-medium transition-all duration-200;
 }
 
 .desktop-mode-indicator .sync-button:hover {
@@ -62,13 +71,13 @@
 
 /* Desktop Modal Enhancements */
 .desktop-modal {
-    @apply rounded-xl shadow-2xl;
+    @apply rounded-xl  ;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .desktop-modal .modal-header {
-    @apply bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl px-6 py-4 border-b;
+    @apply bg-linear-to-r from-gray-50 to-gray-100 rounded-t-xl px-6 py-4 border-b;
 }
 
 .desktop-modal .modal-content {
@@ -94,7 +103,7 @@
 
 /* Desktop Table Enhancements */
 .desktop-table {
-    @apply bg-white rounded-xl shadow-sm overflow-hidden;
+    @apply bg-white rounded-xl overflow-hidden;
     border: 1px solid #e5e7eb;
 }
 
@@ -116,16 +125,15 @@
 
 /* Desktop Card Enhancements */
 .desktop-card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-200;
+    @apply bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-200;
 }
 
 .desktop-card:hover {
-    @apply shadow-md;
     transform: translateY(-2px);
 }
 
 .desktop-card .card-header {
-    @apply bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200;
+    @apply bg-linear-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200;
 }
 
 .desktop-card .card-content {
@@ -134,7 +142,7 @@
 
 /* Desktop Navigation Enhancements */
 .desktop-nav {
-    @apply bg-white shadow-sm border-b border-gray-200;
+    @apply bg-white border-b border-gray-200;
 }
 
 .desktop-nav .nav-item {
@@ -147,7 +155,7 @@
 
 /* Desktop Notification Styles */
 .desktop-notification {
-    @apply fixed top-4 right-4 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm z-50;
+    @apply fixed top-4 right-4 bg-white rounded-lg border border-gray-200 p-4 max-w-sm z-50;
     animation: slideInRight 0.3s ease-out;
 }
 
@@ -221,7 +229,7 @@
 
 /* Dark Mode Support for Desktop */
 .dark .desktop-mode-indicator {
-    @apply bg-gradient-to-r from-gray-800 to-gray-900 border-gray-700;
+    @apply bg-linear-to-r from-gray-800 to-gray-900 border-gray-700;
 }
 
 .dark .desktop-card {
@@ -229,7 +237,7 @@
 }
 
 .dark .desktop-card .card-header {
-    @apply bg-gradient-to-r from-gray-700 to-gray-800 border-gray-600;
+    @apply bg-linear-to-r from-gray-700 to-gray-800 border-gray-600;
 }
 
 .dark .desktop-table {

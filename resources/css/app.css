@@ -7,3 +7,14 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Livewire v4 data-loading styles */
+[data-loading] {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 200ms ease-in-out;
+}
+
+[data-loading] .spinner {
+    display: block !important;
+}
+

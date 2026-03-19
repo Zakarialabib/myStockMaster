@@ -77,7 +77,7 @@ class DesktopApp {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    'X-CSRF-TOKEN': this.getCsrfToken()
                 },
                 body: JSON.stringify(errorData)
             });
@@ -94,13 +94,27 @@ class DesktopApp {
                document.body.classList.contains('desktop-app');
     }
 
+    getCsrfToken() {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta) {
+            return csrfMeta.getAttribute('content') || '';
+        }
+
+        const legacyMeta = document.querySelector('meta[name="csrf_token"]');
+        if (legacyMeta) {
+            return legacyMeta.getAttribute('content') || legacyMeta.getAttribute('value') || '';
+        }
+
+        return '';
+    }
+
     async registerGlobalShortcuts() {
         try {
             const response = await fetch('/desktop/shortcuts/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    'X-CSRF-TOKEN': this.getCsrfToken()
                 }
             });
 
@@ -191,7 +205,7 @@ class DesktopApp {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    'X-CSRF-TOKEN': this.getCsrfToken()
                 },
                 body: JSON.stringify({ shortcut })
             });
@@ -358,7 +372,7 @@ class DesktopApp {
         try {
             if (window.Livewire) {
                 // Trigger Livewire sync if available
-                window.Livewire.emit('syncData');
+                window.Livewire.dispatch('syncData');
             }
             
             this.showNotification('Sync Complete', 'Data synchronized successfully', 'success');
@@ -694,7 +708,7 @@ class DesktopApp {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    'X-CSRF-TOKEN': this.getCsrfToken()
                 },
                 body: JSON.stringify({
                     action: 'handle_file_drop',
