@@ -2,18 +2,18 @@
 
 @php
     $badgeClasses = [
-        'primary' => 'text-white bg-indigo-500 hover:bg-indigo-700 active:bg-indigo-900 focus:outline-hidden focus:border-indigo-900 focus:ring-3 ring-indigo-300',
-        'secondary' => 'text-gray-100 bg-gray-500 hover:bg-gray-700 active:bg-gray-900 focus:outline-hidden focus:border-gray-900 focus:ring-3 ring-gray-300',
-        'info' => 'text-blue-100 bg-blue-500 hover:bg-blue-700 active:bg-blue-900 focus:outline-hidden focus:border-blue-900 focus:ring-3 ring-blue-300',
-        'success' => 'text-green-100 bg-green-500 hover:bg-green-700 active:bg-green-900 focus:outline-hidden focus:border-green-900 focus:ring-3 ring-green-300',
-        'alert' => 'text-yellow-100 bg-yellow-500 hover:bg-yellow-700 active:bg-yellow-900 focus:outline-hidden focus:border-yellow-900 focus:ring-3 ring-yellow-300',
-        'danger' => 'text-red-100 bg-red-500 hover:bg-red-700 active:bg-red-900 focus:outline-hidden focus:border-red-900 focus:ring-3 ring-red-300',
-        'warning' => 'text-orange-100 bg-orange-500 hover:bg-orange-700 active:bg-orange-900 focus:outline-hidden focus:border-orange-900 focus:ring-3 ring-orange-300'
+        'primary' => 'text-primary-700 bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 border border-primary-200 dark:border-primary-800',
+        'secondary' => 'text-gray-700 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700',
+        'info' => 'text-blue-700 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800',
+        'success' => 'text-success-700 bg-success-100 dark:bg-success-900/30 dark:text-success-300 border border-success-200 dark:border-success-800',
+        'alert' => 'text-warning-700 bg-warning-100 dark:bg-warning-900/30 dark:text-warning-300 border border-warning-200 dark:border-warning-800',
+        'danger' => 'text-error-700 bg-error-100 dark:bg-error-900/30 dark:text-error-300 border border-error-200 dark:border-error-800',
+        'warning' => 'text-orange-700 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-300 border border-orange-200 dark:border-orange-800'
     ];
 
     $classes = $badgeClasses[$type] ?? $badgeClasses['secondary'];
 @endphp
 
-<span {{ $attributes->merge(['class' => 'inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none rounded-full ' . $classes]) }}>
+<span {{ $attributes->merge(['class' => 'inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold leading-none rounded-xl ' . $classes]) }}>
     {{ $slot }}
 </span>
