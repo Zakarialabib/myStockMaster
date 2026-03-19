@@ -24,13 +24,15 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+        $name = $this->faker->unique()->words(3, true);
+
         return [
             'id'                => Str::uuid(),
-            'name'              => $this->faker->name,
+            'name'              => $name,
             'code'              => Str::random(5),
             'category_id'       => 1,
             'brand_id'          => null,
-            'slug'              => Str::slug($this->faker->name),
+            'slug'              => Str::slug($name).'-'.Str::lower(Str::random(8)),
             'unit'              => 'pcs',
             'description'       => $this->faker->sentence,
             'image'             => null, // uploadImage('images/products', '1000', '1000'),
