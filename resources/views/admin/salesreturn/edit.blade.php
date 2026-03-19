@@ -47,7 +47,7 @@
             <div class="flex flex-row">
                 <div class="w-full px-4">
 
-                    <livewire:utils.search-product />
+                    <livewire:search-product />
                 </div>
             </div>
 

@@ -9,8 +9,7 @@
     <meta name="csrf_token" value="{{ csrf_token() }}"/>
     <meta name="robots" content="nofollow">
 
-    <title>@yield('title') ||  {{ settings()->company_name ?? config('app.name') }}</title>
-    <!-- Styles -->
+    <title>{{ $title ?? '' }} ||  {{ settings()->company_name ?? config('app.name') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/favicon.png') }}">

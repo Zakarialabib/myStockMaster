@@ -6,11 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-    <meta name="csrf_token" value="{{ csrf_token() }}" />
-    <meta name="csrf_token" value="{{ csrf_token() }}" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="robots" content="nofollow">
 
-    <title>@yield('title') ||  {{ settings()->company_name ?? config('app.name') }}</title>
+    <title>{{ $title ?? '' }} || {{ settings()->company_name ?? config('app.name') }}</title>
     <!-- Styles -->
 
     <!-- Favicon -->
@@ -23,16 +22,10 @@
     <meta name="apple-mobile-web-app-title" content=" {{ settings()->company_name ?? config('app.name') }}">
 
     @include('includes.main-css')
-    @vite('resources/css/app.css')
-    
-    <!-- Desktop-specific styles -->
-    @if($isDesktop)
-        <link rel="stylesheet" href="{{ asset('css/desktop.css') }}">
+
+    @if ($isDesktop)
+        @vite('resources/css/desktop.css')
     @endif
-
-    @livewireStyles
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.css" />
 
     @stack('styles')
     <style>
@@ -40,25 +33,25 @@
             display: none;
         }
     </style>
-    @vite('resources/js/app.js')
 
-    <!-- Desktop-specific JavaScript -->
-    @if($isDesktop)
-        <script src="{{ asset('js/desktop.js') }}"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @livewireStyles
+
+    @if ($isDesktop)
+        @vite('resources/js/desktop.js')
     @endif
-
-    @livewireScriptConfig
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
 
-
-
     @stack('scripts')
+    @livewireScriptConfig
+
 </head>
 
 <body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
-    <x-loading-mask />
+
     <div @resize.window="handleWindowResize">
         <div class="min-h-screen">
             <!-- Sidebar -->
@@ -75,14 +68,14 @@
                 <x-navbar />
 
                 <!-- Desktop Mode Indicator -->
-                @if($isDesktop)
-                    <livewire:components.desktop-mode-indicator />
+                @if ($isDesktop)
+                    <livewire:desktop-mode-indicator />
                 @endif
 
                 <!-- Desktop Notifications -->
-                @if($isDesktop)
-                    <livewire:components.desktop-notification />
-                    <livewire:components.sync-status />
+                @if ($isDesktop)
+                    <livewire:desktop-notification />
+                    <livewire:sync-status />
                 @endif
 
                 <main class="flex-1">
@@ -96,7 +89,8 @@
                             {{ $slot }}
                         @endisset
                     </x-card>
-                    <x-settings-bar />
+
+                    {{-- <x-settings-bar /> --}}
 
                 </main>
 
@@ -106,6 +100,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

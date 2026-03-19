@@ -21,7 +21,6 @@
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
     @vite('resources/css/app.css')
-    @include('includes.main-css')
 
     @livewireStyles
 
@@ -31,8 +30,6 @@
             display: none;
         }
     </style>
-    <!-- Scripts -->
-    @include('includes.main-js')
     <!-- Scripts -->
     @vite('resources/js/app.js')
 
@@ -64,7 +61,6 @@
 
         </div>
     </div>
-
 
 </body>
 

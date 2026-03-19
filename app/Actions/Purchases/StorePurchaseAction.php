@@ -53,44 +53,59 @@ final class StorePurchaseAction
             ]);
 
             foreach ($cartItems as $cartItem) {
+                // Determine structure based on whether it's an object or array
+                // The new CartService trait passes arrays, old format passed objects
+                $isObject = is_object($cartItem);
+
+                $productId = $isObject ? $cartItem->id : $cartItem['id'];
+                $productName = $isObject ? $cartItem->name : $cartItem['name'];
+                $productCode = $isObject ? $cartItem->options->code : $cartItem['attributes']['code'];
+                $quantity = $isObject ? $cartItem->qty : $cartItem['quantity'];
+                $price = $isObject ? $cartItem->price : $cartItem['price'];
+                $unitPrice = $isObject ? $cartItem->options->unit_price : $cartItem['attributes']['unit_price'];
+                $subTotal = $isObject ? $cartItem->options->sub_total : $cartItem['attributes']['sub_total'];
+                $discountAmount = $isObject ? $cartItem->options->product_discount : $cartItem['attributes']['product_discount'];
+                $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
+                $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
+
                 PurchaseDetail::create([
                     'purchase_id'             => $purchase->id,
-                    'product_id'              => $cartItem->id,
+                    'product_id'              => $productId,
                     'warehouse_id'            => $purchaseData['warehouse_id'],
-                    'name'                    => $cartItem->name,
-                    'code'                    => $cartItem->options->code,
-                    'quantity'                => $cartItem->qty,
-                    'price'                   => $cartItem->price * 100,
-                    'unit_price'              => $cartItem->options->unit_price * 100,
-                    'sub_total'               => $cartItem->options->sub_total * 100,
-                    'product_discount_amount' => $cartItem->options->product_discount * 100,
-                    'product_discount_type'   => $cartItem->options->product_discount_type,
-                    'product_tax_amount'      => $cartItem->options->product_tax * 100,
+                    'name'                    => $productName,
+                    'code'                    => $productCode,
+                    'quantity'                => $quantity,
+                    'price'                   => $price * 100,
+                    'unit_price'              => $unitPrice * 100,
+                    'sub_total'               => $subTotal * 100,
+                    'product_discount_amount' => $discountAmount * 100,
+                    'product_discount_type'   => $discountType,
+                    'product_tax_amount'      => $taxAmount * 100,
                 ]);
 
-                $product = Product::findOrFail($cartItem->id);
+                $product = Product::findOrFail($productId);
 
                 $productWarehouse = ProductWarehouse::firstOrNew([
                     'product_id'   => $product->id,
                     'warehouse_id' => $purchaseData['warehouse_id'],
                 ], [
-                    'price' => $cartItem->price,
-                    'cost'  => $cartItem->options->unit_price,
+                    'price' => $price,
+                    'cost'  => $unitPrice,
                     'qty'   => 0,
                 ]);
 
                 $productWarehouse->fill([
-                    'qty'  => $productWarehouse->qty + $cartItem->qty,
+                    'qty'  => $productWarehouse->qty + $quantity,
                     'cost' => $productWarehouse->cost,
                 ]);
                 $productWarehouse->save();
 
                 Movement::create([
                     'type'         => MovementType::PURCHASE,
-                    'quantity'     => $cartItem->qty,
-                    'price'        => $cartItem->price * 100,
+                    'quantity'     => $quantity,
+                    'price'        => $price * 100,
                     'date'         => date('Y-m-d'),
-                    'movable_type' => Product::class,
+                    'movable_type' => get_class($product),
                     'movable_id'   => $product->id,
                     'user_id'      => $purchaseData['user_id'],
                 ]);

@@ -43,7 +43,7 @@
     <x-card>
         <div class="flex flex-wrap">
             <div class="w-full px-4">
-                <livewire:utils.search-product />
+                <livewire:search-product />
             </div>
 
             <div class="w-full px-4">
