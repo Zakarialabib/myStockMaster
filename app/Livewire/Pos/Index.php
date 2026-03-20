@@ -6,6 +6,7 @@ namespace App\Livewire\Pos;
 
 use App\Actions\Sales\StorePosSaleAction;
 use App\Jobs\PaymentNotification;
+use App\Jobs\PrintReceiptJob;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Customer;
@@ -13,105 +14,104 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 #[Layout('layouts.pos')]
+#[Title('Point of Sale')]
 class Index extends Component
 {
     use WithAlert;
     use WithModels;
     use LivewireCartTrait;
 
-    public $customers;
+    public bool $discountModal = false;
 
-    public $discountModal;
+    public float|int $global_discount = 0;
 
-    public $global_discount;
+    public float|int $global_tax = 0;
 
-    public $global_tax;
+    public array $quantity = [];
 
-    public $quantity;
+    public array $check_quantity = [];
 
-    public $check_quantity;
+    public array $price = [];
 
-    public $price;
+    public array $discount_type = [];
 
-    public $discount_type;
+    public array $item_discount = [];
 
-    public $item_discount;
+    public mixed $data = null;
 
-    public $data;
+    public bool $checkoutModal = false;
 
-    public $checkoutModal;
+    public mixed $product = null;
 
-    public $product;
+    public float|int $discount_amount = 0;
 
-    public $discount_amount;
+    public float|int $tax_amount = 0;
 
-    public $tax_amount;
+    public string $payment_method = 'cash';
 
-    public $payment_method;
-
-    public $total_with_shipping;
+    public float|int $total_with_shipping = 0;
 
     #[Validate('required', message: 'Please provide a customer ID')]
-    public $customer_id;
+    public int|string|null $customer_id = null;
 
     #[Validate('required', message: 'Please provide a warehouse ID')]
-    public $warehouse_id;
+    public int|string|null $warehouse_id = null;
 
     #[Validate('required', message: 'Please provide a tax percentage')]
     #[Validate('integer', message: 'The tax percentage must be an integer')]
     #[Validate('min:0', message: 'The tax percentage must be at least 0')]
     #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
-    public $tax_percentage;
+    public int $tax_percentage = 0;
 
     #[Validate('required', message: 'Please provide a discount percentage')]
     #[Validate('integer', message: 'The discount percentage must be an integer')]
     #[Validate('min:0', message: 'The discount percentage must be at least 0')]
     #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
-    public $discount_percentage;
+    public int $discount_percentage = 0;
 
     #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
-    public $shipping_amount;
+    public float|int $shipping_amount = 0;
 
     #[Validate('required', message: 'Please provide a total amount')]
     #[Validate('numeric', message: 'The total amount must be a numeric value')]
-    public $total_amount;
+    public float|int $total_amount = 0;
 
     #[Validate('nullable', message: 'Paid amount must be a numeric value')]
-    public $paid_amount;
+    public float|int $paid_amount = 0;
 
     #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
     #[Validate('string', message: 'Note must be a string')]
     #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
-    public $note;
+    public ?string $note = null;
 
-    public $user_id;
+    public int|string|null $user_id = null;
 
-    public $cash_register_id;
+    public int|string|null $cash_register_id = null;
 
-    public function mount(): void
+    #[On('refreshIndex')]
+    public function refreshCustomers(): void
     {
-        // Clear any existing cart content
-        $this->clearCart();
+        unset($this->customers);
+    }
 
-        $this->customers = Customer::select(['id', 'name'])->get();
-        $this->global_discount = 0;
-        $this->global_tax = 0;
+    #[Computed]
+    public function customers()
+    {
+        return Customer::select(['id', 'name'])->get();
+    }
 
-        $this->check_quantity = [];
-        $this->quantity = [];
-        $this->discount_type = [];
-        $this->item_discount = [];
-        $this->payment_method = 'cash';
-
-        $this->tax_percentage = 0;
-        $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
-        $this->paid_amount = 0;
+    public function mount(string $cartInstance = 'pos'): void
+    {
+        $this->cartInstance = $cartInstance;
+        $this->initializeCart($cartInstance);
 
         if (settings()->default_client_id !== null) {
             $this->customer_id = settings()->default_client_id;
@@ -133,12 +133,10 @@ class Index extends Component
                 $this->cash_register_id = $cashRegister->id;
             } else {
                 $this->dispatch('createModal')->to(CashRegisterCreate::class);
-
-                return;
             }
         }
 
-        $this->total_with_shipping = (float) $this->cart->total() + (float) $this->shipping_amount;
+        $this->total_with_shipping = (float) $this->cartTotal + (float) $this->shipping_amount;
     }
 
     public function hydrate(): void
@@ -152,10 +150,8 @@ class Index extends Component
 
     public function render()
     {
-        $cart_items = $this->cart->content();
-
         return view('livewire.pos.index', [
-            'cart_items' => $cart_items,
+            'cart_items' => $this->cartContent,
         ]);
     }
 
@@ -184,9 +180,9 @@ class Index extends Component
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
             ],
-            $this->cart->content(),
-            $this->cart->tax(),
-            $this->cart->discount(),
+            $this->cartContent,
+            $this->cartTax,
+            $this->cartDiscount,
         );
 
         $this->clearCart();
@@ -195,11 +191,30 @@ class Index extends Component
 
         PaymentNotification::dispatch($sale);
 
+        // Dispatch physical print job if applicable
+        PrintReceiptJob::dispatch($sale->id);
+
+        // Tell browser to open PDF receipt
+        $this->dispatch('open-print-window', url: route('sales.pos.pdf', $sale->id));
+
         $this->redirectRoute('pos.index', navigate: true);
+    }
+
+    #[On('printReceipt')]
+    public function printReceipt(string $saleId): void
+    {
+        PrintReceiptJob::dispatch($saleId);
+        $this->dispatch('open-print-window', url: route('sales.pos.pdf', $saleId));
     }
 
     public function proceed(): void
     {
+        if ($this->cartCount === 0) {
+            $this->alert('error', __('Please add products to cart!'));
+
+            return;
+        }
+
         if ($this->customer_id !== null) {
             $this->checkoutModal = true;
         } else {
@@ -209,7 +224,7 @@ class Index extends Component
 
     public function calculateTotal(): mixed
     {
-        return $this->cart->total() + $this->shipping_amount;
+        return $this->cartTotal + $this->shipping_amount;
     }
 
     public function resetCart(): void
@@ -220,6 +235,6 @@ class Index extends Component
     public function updatedWarehouseId($value): void
     {
         $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->dispatch('warehouseSelected', warehouseId: (int) $value);
     }
 }

@@ -59,7 +59,7 @@ class Index extends Component
     {
         $this->confirm(__('Are you sure you want to delete this payment?'), [
             'onConfirmed' => 'deletePayment',
-            'params' => ['id' => $id]
+            'params'      => ['id' => $id],
         ]);
     }
 

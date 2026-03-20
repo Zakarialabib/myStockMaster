@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Title;
 
 #[Layout('layouts.app')]
+#[Title('Create Sale')]
 class Create extends Component
 {
     use WithModels;
@@ -85,12 +87,12 @@ class Create extends Component
 
     public $user_id;
 
-    public function mount(): void
+    public function mount(string $cartInstance = 'sale', $quotationId = null): void
     {
         abort_if(Gate::denies('sale_create'), 403);
 
-        $this->initializeCart('sale');
-        $this->clearCart();
+        $this->cartInstance = $cartInstance;
+        $this->initializeCart($cartInstance);
 
         // $this->cart_instance = $cartInstance;
         $this->discount_percentage = 0;
@@ -104,12 +106,22 @@ class Create extends Component
         $this->date = date('Y-m-d');
         $this->user_id = Auth::user()->id;
 
-        if (settings()->default_client_id !== null) {
-            $this->customer_id = settings()->default_client_id;
-        }
+        if ($quotationId) {
+            $quotation = \App\Models\Quotation::findOrFail($quotationId);
+            $this->customer_id = $quotation->customer_id;
+            $this->warehouse_id = $quotation->warehouse_id;
+            $this->tax_percentage = $quotation->tax_percentage;
+            $this->discount_percentage = $quotation->discount_percentage;
+            $this->shipping_amount = $quotation->shipping_amount / 100;
+            $this->note = $quotation->note;
+        } else {
+            if (settings()->default_client_id !== null) {
+                $this->customer_id = settings()->default_client_id;
+            }
 
-        if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            if (settings()->default_warehouse_id !== null) {
+                $this->warehouse_id = settings()->default_warehouse_id;
+            }
         }
 
         if ($this->user_id && $this->warehouse_id) {
@@ -139,10 +151,8 @@ class Create extends Component
 
     public function render()
     {
-        $cart_items = $this->cart->content();
-
         return view('livewire.sales.create', [
-            'cart_items' => $cart_items,
+            'cart_items' => $this->cartContent,
         ]);
     }
 
@@ -194,10 +204,12 @@ class Create extends Component
                 'total_amount'        => $this->total_amount,
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
+                'tax_amount'          => (int) ($this->cartTax * 100),
+                'discount_amount'     => (int) ($this->cartDiscount * 100),
             ],
-            $this->cart->content(),
-            $this->cart->tax(),
-            $this->cart->discount(),
+            $this->cartContent->toArray(),
+            $this->cartTax,
+            $this->cartDiscount
         );
 
         $this->alert('success', __('Sale created successfully!'));
@@ -211,7 +223,7 @@ class Create extends Component
 
     public function calculateTotal(): float|int|array
     {
-        return $this->cart->total() + $this->shipping_amount;
+        return $this->cartTotal + $this->shipping_amount;
     }
 
     public function resetCart(): void

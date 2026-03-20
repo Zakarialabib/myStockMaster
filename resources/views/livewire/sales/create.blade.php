@@ -12,7 +12,7 @@
     </x-theme.breadcrumb>
     <div class="mt-2 flex flex-wrap">
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:utils.search-product />
+            <livewire:search-product />
         </div>
         <div class="lg:w-1/2 sm:w-full h-full">
             <x-validation-errors class="mb-4" :errors="$errors" />
