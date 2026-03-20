@@ -20,7 +20,7 @@ class Index extends Component
     use WithAlert;
     use Datatable;
     use WithFileUploads;
-    
+
     public $salereturn;
 
     public $model = SaleReturn::class;

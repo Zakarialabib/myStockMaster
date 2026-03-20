@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Livewire\Quotations;
 
 use App\Livewire\Utils\WithModels;
-use Livewire\Component;
 use App\Models\Product;
 use App\Models\Quotation;
 use App\Models\QuotationDetails;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 
@@ -20,14 +20,13 @@ use Livewire\Attributes\Validate;
 class Edit extends Component
 {
     use WithModels;
+    use LivewireCartTrait;
 
     public $quotation;
 
     public $quotation_details;
 
     public $reference;
-
-    // public $cartItem;
 
     #[Validate('required')]
     public $customer_id;
@@ -55,31 +54,29 @@ class Edit extends Component
     #[Validate('integer|min:0|max:100')]
     public $discount_percentage;
 
-    public function mount($id): void
+    public function mount($id, string $cartInstance = 'quotation'): void
     {
+        $this->cartInstance = $cartInstance;
+        $this->initializeCart($cartInstance);
+
         $this->quotation = Quotation::findOrFail($id);
 
         $this->quotation_details = $this->quotation->quotationDetails;
 
-        Cart::instance('quotation')->destroy();
-
-        $cart = Cart::instance('quotation');
-
         foreach ($this->quotation_details as $quotation_detail) {
-            $cart->add([
-                'id'      => $quotation_detail->product_id,
-                'name'    => $quotation_detail->name,
-                'qty'     => $quotation_detail->quantity,
-                'price'   => $quotation_detail->price,
-                'weight'  => 1,
-                'options' => [
-                    'product_discount'      => $quotation_detail->product_discount_amount,
+            $product = Product::findOrFail($quotation_detail->product_id);
+            $this->addToCart([
+                'id'         => $quotation_detail->product_id,
+                'name'       => $quotation_detail->name,
+                'quantity'   => $quotation_detail->quantity,
+                'price'      => $quotation_detail->price / 100,
+                'attributes' => [
+                    'product_discount'      => $quotation_detail->product_discount_amount / 100,
                     'product_discount_type' => $quotation_detail->product_discount_type,
-                    'sub_total'             => $quotation_detail->sub_total,
+                    'sub_total'             => $quotation_detail->sub_total / 100,
                     'code'                  => $quotation_detail->code,
-                    'stock'                 => Product::findOrFail($quotation_detail->product_id)->quantity,
-                    'product_tax'           => $quotation_detail->product_tax_amount,
-                    'unit_price'            => $quotation_detail->unit_price,
+                    'stock'                 => $product->quantity,
+                    'unit_price'            => $quotation_detail->unit_price / 100,
                 ],
             ]);
         }
@@ -115,11 +112,11 @@ class Edit extends Component
                 'total_amount'        => $this->total_amount * 100,
                 'status'              => $this->status,
                 'note'                => $this->note,
-                'tax_amount'          => Cart::instance('quotation')->tax() * 100,
-                'discount_amount'     => Cart::instance('quotation')->discount() * 100,
+                'tax_amount'          => $this->cartTax * 100,
+                'discount_amount'     => $this->cartDiscount * 100,
             ]);
 
-            foreach (Cart::instance('quotation')->content() as $cart_item) {
+            foreach ($this->cartContent as $cart_item) {
                 QuotationDetails::create([
                     'quotation_id'            => $this->quotation->id,
                     'product_id'              => $cart_item->id,
@@ -135,7 +132,7 @@ class Edit extends Component
                 ]);
             }
 
-            Cart::instance('quotation')->destroy();
+            $this->clearCart();
         });
 
         $this->alert('success', __('Quotation updated Successfully!'));

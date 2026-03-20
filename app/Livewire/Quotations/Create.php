@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Quotations;
 
 use App\Livewire\Utils\WithModels;
-use Livewire\Component;
 use App\Models\Quotation;
 use App\Models\QuotationDetails;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Rule;
+use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 
@@ -20,7 +19,7 @@ use Livewire\Attributes\Validate;
 class Create extends Component
 {
     use WithModels;
-    public $cart_instance = 'quotation';
+    use LivewireCartTrait;
 
     #[Validate('required')]
     public $customer_id;
@@ -28,7 +27,6 @@ class Create extends Component
     #[Validate('required')]
     public $warehouse_id;
 
-    // #[Rule('numeric')]
     public $total_amount;
 
     #[Validate('numeric')]
@@ -57,11 +55,12 @@ class Create extends Component
         }
     }
 
-    public function mount(): void
+    public function mount(string $cartInstance = 'quotation'): void
     {
         abort_if(Gate::denies('quotation_create'), 403);
 
-        Cart::instance('quotation')->destroy();
+        $this->cartInstance = $cartInstance;
+        $this->initializeCart($cartInstance);
 
         $this->discount_percentage = 0;
         $this->tax_percentage = 0;
@@ -100,11 +99,11 @@ class Create extends Component
                 'total_amount'        => $this->total_amount * 100,
                 'status'              => $this->status,
                 'note'                => $this->note,
-                'tax_amount'          => (int) Cart::instance('quotation')->tax() * 100,
-                'discount_amount'     => (int) Cart::instance('quotation')->discount() * 100,
+                'tax_amount'          => (int) $this->cartTax * 100,
+                'discount_amount'     => (int) $this->cartDiscount * 100,
             ]);
 
-            foreach (Cart::instance('quotation')->content() as $cart_item) {
+            foreach ($this->cartContent as $cart_item) {
                 QuotationDetails::create([
                     'quotation_id'            => $quotation->id,
                     'product_id'              => $cart_item->id,
@@ -120,7 +119,7 @@ class Create extends Component
                 ]);
             }
 
-            Cart::instance('quotation')->destroy();
+            $this->clearCart();
         });
 
         $this->alert('success', __('Quotation created successfully!'));
@@ -135,16 +134,14 @@ class Create extends Component
 
     public function calculateTotal(): float|int|array
     {
-        return Cart::instance($this->cart_instance)->total() + $this->shipping_amount;
+        return $this->cartTotal + $this->shipping_amount;
     }
 
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         abort_if(Gate::denies('quotation_create'), 403);
 
-        $cart_items = Cart::instance($this->cart_instance)->content();
-
-        return view('livewire.quotations.create', ['cart_items' => $cart_items]);
+        return view('livewire.quotations.create', ['cart_items' => $this->cartContent]);
     }
 
     public function updatedWarehouseId($value): void
