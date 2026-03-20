@@ -3,13 +3,13 @@
 
     <x-theme.breadcrumb :title="__('Create Purchase')" :parent="route('purchases.index')" :parentName="__('Purchases List')" :childrenName="__('Create Purchase')">
         <x-button primary
-            wire:click="dispatchTo('suppliers.create', 'createModal')">>{{ __('Create Supplier') }}</x-button>
+            wire:click="dispatchTo('suppliers.create', 'createModal')">{{ __('Create Supplier') }}</x-button>
 
     </x-theme.breadcrumb>
     <div class="flex flex-wrap">
 
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:utils.search-product />
+            <livewire:search-product />
         </div>
 
         <div class="lg:w-1/2 sm:w-full h-full">

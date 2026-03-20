@@ -105,7 +105,7 @@ class Index extends Component
         abort_if(Gate::denies('purchase_delete'), 403);
 
         Purchase::findOrFail($this->purchase)->delete();
-        
+
         $this->alert('success', __('Purchase deleted successfully.'));
     }
 }

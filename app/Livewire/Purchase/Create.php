@@ -12,9 +12,10 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 #[Layout('layouts.app')]
-
+#[Title('Create Purchase')]
 class Create extends Component
 {
     use WithModels;
@@ -70,10 +71,10 @@ class Create extends Component
 
     public array $listsForFields = [];
 
-    public function mount(): void
+    public function mount(string $cartInstance = 'purchase'): void
     {
-        $this->initializeCart('purchase');
-        $this->clearCart();
+        $this->cartInstance = $cartInstance;
+        $this->initializeCart($cartInstance);
 
         $this->tax_percentage = 0;
         $this->discount_percentage = 0;
@@ -91,10 +92,8 @@ class Create extends Component
     {
         // abort_if(Gate::denies('purchase_create'), 403);
 
-        $cart_items = $this->cart->content();
-
         return view('livewire.purchase.create', [
-            'cart_items' => $cart_items,
+            'cart_items' => $this->cartContent,
         ]);
     }
 
@@ -136,9 +135,9 @@ class Create extends Component
                 'payment_method'      => $this->payment_method,
                 'note'                => $this->note,
             ],
-            $this->cart->content(),
-            $this->cart->tax(),
-            $this->cart->discount(),
+            $this->cartContent->toArray(),
+            $this->cartTax,
+            $this->cartDiscount,
         );
 
         $this->alert('success', __('Purchase created successfully!'));
@@ -150,7 +149,7 @@ class Create extends Component
 
     public function calculateTotal(): mixed
     {
-        return $this->cart->total() + $this->shipping_amount;
+        return $this->cartTotal + $this->shipping_amount;
     }
 
     public function resetCart(): void

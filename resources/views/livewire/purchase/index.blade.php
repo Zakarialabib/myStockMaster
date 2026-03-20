@@ -101,132 +101,138 @@
                     {{ __('Actions') }}
                 </x-table.th>
             </x-slot>
-            @forelse ($purchases as $purchase)
-                <tr>
-                    <x-table.td>
-                        <input type="checkbox" value="{{ $purchase->id }}" wire:model.live="selected"
-                            class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800">
-                    </x-table.td>
-                    <x-table.td>
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 h-10 w-10">
-                                <div
-                                    class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                    <i class="fas fa-hashtag text-blue-600 dark:text-blue-400"></i>
+            <x-table.tbody>
+                @forelse ($purchases as $purchase)
+                    <x-table.tr data-loading wire:key="row-{{ $purchase->id }}">
+                        <x-table.td>
+                            <input type="checkbox" value="{{ $purchase->id }}" wire:model.live="selected"
+                                class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800">
+                        </x-table.td>
+                        <x-table.td>
+                            <div class="flex items-center">
+                                <div class="shrink-0 h-10 w-10">
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <i class="fas fa-hashtag text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $purchase->reference }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    {{ $purchase->reference }}
-                                </div>
-                            </div>
-                        </div>
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_date($purchase->date) }}
-                    </x-table.td>
-                    <x-table.td>
-                        @if ($purchase->supplier)
-                            <a class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
-                                href="{{ route('supplier.details', $purchase->supplier->id) }}">
-                                {{ $purchase->supplier->name }}
-                            </a>
-                        @else
-                            <span
-                                class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier->name }}</span>
-                        @endif
-                    </x-table.td>
-                    <x-table.td>
-                        {{-- @php
+                        </x-table.td>
+                        <x-table.td>
+                            {{ format_date($purchase->date) }}
+                        </x-table.td>
+                        <x-table.td>
+                            @if ($purchase->supplier)
+                                <a class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
+                                    href="{{ route('supplier.details', $purchase->supplier->id) }}">
+                                    {{ $purchase->supplier->name }}
+                                </a>
+                            @else
+                                <span
+                                    class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier->name }}</span>
+                            @endif
+                        </x-table.td>
+                        <x-table.td>
+                            {{-- @php
                             $badgeType = $purchase->status->getBadgeType();
                         @endphp --}}
-                        {{-- <x-badge :type="$badgeType"> --}}
+                            {{-- <x-badge :type="$badgeType"> --}}
                             {{ $purchase->payment_id }}
                             {{-- {{ \app\Enums\PaymentStatus::getName($purchase->payment_id) }} --}}
-                        {{-- </x-badge> --}}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($purchase->total_amount) }}
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($purchase->due_amount) }}
-                    </x-table.td>
-                    <x-table.td>
-                        <x-dropdown align="right" width="56">
-                            <x-slot name="trigger" class="inline-flex">
-                                <x-button primary type="button" class="text-white flex items-center">
-                                    <i class="fas fa-angle-double-down"></i>
-                                </x-button>
-                            </x-slot>
+                            {{-- </x-badge> --}}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ format_currency($purchase->total_amount) }}
+                        </x-table.td>
+                        <x-table.td>
+                            {{ format_currency($purchase->due_amount) }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-angle-double-down"></i>
+                                    </x-button>
+                                </x-slot>
 
-                            <x-slot name="content">
-                                @can('purchase_payment_access')
-                                    <x-dropdown-link wire:click="$dispatchTo('purchase.payment.index', 'showPayments', { id: {{ $purchase->id }} })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                        {{ __('Payments') }}
-                                    </x-dropdown-link>
-                                @endcan
-
-                                @can('purchase_payment_access')
-                                    @if ($purchase->due_amount > 0)
-                                        <x-dropdown-link wire:click="$dispatchTo('purchase.payment-form', 'paymentModal', { id: {{ $purchase->id }} })"
+                                <x-slot name="content">
+                                    @can('purchase_payment_access')
+                                        <x-dropdown-link
+                                            wire:click="$dispatchTo('purchase.payment.index', 'showPayments', { id: {{ $purchase->id }} })"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-money-bill-wave"></i>
-                                            {{ __('Add Payment') }}
+                                            {{ __('Payments') }}
                                         </x-dropdown-link>
-                                    @endif
-                                @endcan
+                                    @endcan
 
-                                @can('purchase_access')
-                                    <x-dropdown-link wire:click="$dispatchTo('purchase.show', 'showModal', { id: {{ $purchase->id }} })"
+                                    @can('purchase_payment_access')
+                                        @if ($purchase->due_amount > 0)
+                                            <x-dropdown-link
+                                                wire:click="$dispatchTo('purchase.payment-form', 'paymentModal', { id: {{ $purchase->id }} })"
+                                                wire:loading.attr="disabled">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                                {{ __('Add Payment') }}
+                                            </x-dropdown-link>
+                                        @endif
+                                    @endcan
+
+                                    @can('purchase_access')
+                                        <x-dropdown-link
+                                            wire:click="$dispatchTo('purchase.show', 'showModal', { id: {{ $purchase->id }} })"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-eye"></i>
+                                            {{ __('View') }}
+                                        </x-dropdown-link>
+                                    @endcan
+
+                                    @can('purchase_update')
+                                        <x-dropdown-link href="{{ route('purchase.edit', $purchase->id) }}"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-edit"></i>
+                                            {{ __('Edit') }}
+                                        </x-dropdown-link>
+                                    @endcan
+
+                                    <x-dropdown-link target="_blank" href="{{ route('purchases.pdf', $purchase->id) }}"
                                         wire:loading.attr="disabled">
-                                        <i class="fas fa-eye"></i>
-                                        {{ __('View') }}
+                                        <i class="fas fa-print"></i>
+                                        {{ __('Print') }}
                                     </x-dropdown-link>
-                                @endcan
 
-                                @can('purchase_update')
-                                    <x-dropdown-link href="{{ route('purchase.edit', $purchase->id) }}"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                        {{ __('Edit') }}
-                                    </x-dropdown-link>
-                                @endcan
-
-                                <x-dropdown-link target="_blank" href="{{ route('purchases.pdf', $purchase->id) }}"
-                                    wire:loading.attr="disabled">
-                                    <i class="fas fa-print"></i>
-                                    {{ __('Print') }}
-                                </x-dropdown-link>
-
-                                @can('purchase_delete')
-                                    <x-dropdown-link wire:click="deleteModal({{ $purchase->id }})"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('Delete') }}
-                                    </x-dropdown-link>
-                                @endcan
-                            </x-slot>
-                        </x-dropdown>
-                    </x-table.td>
-                </tr>
-            @empty
-                <tr>
-                    <x-table.td colspan="8">
-                        <div class="flex flex-col items-center justify-center py-12">
-                            <div
-                                class="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
-                                <i class="fas fa-shopping-cart text-2xl text-gray-400 dark:text-gray-500"></i>
+                                    @can('purchase_delete')
+                                        <x-dropdown-link wire:click="deleteModal({{ $purchase->id }})"
+                                            wire:loading.attr="disabled">
+                                            <i class="fas fa-trash"></i>
+                                            {{ __('Delete') }}
+                                        </x-dropdown-link>
+                                    @endcan
+                                </x-slot>
+                            </x-dropdown>
+                        </x-table.td>
+                    </x-table.tr>
+                @empty
+                    <tr>
+                        <x-table.td colspan="8">
+                            <div class="flex flex-col items-center justify-center py-12">
+                                <div
+                                    class="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+                                    <i class="fas fa-shopping-cart text-2xl text-gray-400 dark:text-gray-500"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                                    {{ __('No results found') }}</h3>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                                    {{ __('Try adjusting your search or filter to find what you\'re looking for.') }}
+                                </p>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                {{ __('No results found') }}</h3>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">
-                                {{ __('Try adjusting your search or filter to find what you\'re looking for.') }}</p>
-                        </div>
-                    </x-table.td>
-                </tr>
-            @endforelse
+                        </x-table.td>
+                    </tr>
+                @endforelse
+            </x-table.tbody>
         </x-table>
         <x-slot name="pagination">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
@@ -255,5 +261,4 @@
     {{-- @if (empty($showPayments))
         <livewire:purchase.payment.index :purchase="$purchase" />
       @endif --}}
-
 </div>

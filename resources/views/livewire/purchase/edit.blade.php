@@ -8,7 +8,7 @@
     <div class="flex flex-wrap">
 
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:utils.search-product :$warehouse_id="$this->warehouse_id" lazy />
+            <livewire:search-product :$warehouse_id="$this->warehouse_id" lazy />
         </div>
 
         <div class="lg:w-1/2 sm:w-full h-full">
