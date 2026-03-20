@@ -56,9 +56,12 @@ use App\Livewire\Sales\Index as SalesIndex;
 use App\Livewire\Sales\Invoice as SaleInvoice;
 use App\Livewire\Sales\Create as CreateSale;
 use App\Livewire\Sales\Edit as EditSale;
+use App\Livewire\PurchaseReturn\Create as CreatePurchaseReturn;
+use App\Livewire\PurchaseReturn\Edit as EditPurchaseReturn;
+use App\Livewire\SaleReturn\Create as CreateSaleReturn;
+use App\Livewire\SaleReturn\Edit as EditSaleReturn;
 use App\Livewire\Settings\Index as SettingsIndex;
 use App\Livewire\Settings\InvoiceTheme;
-use App\Livewire\Utils\Logs as LogIndex;
 use App\Livewire\Reports\CustomersReport;
 use App\Livewire\Reports\ProfitLossReport;
 use App\Livewire\Reports\PaymentsReport;
@@ -67,7 +70,6 @@ use App\Livewire\Reports\PurchasesReport;
 use App\Livewire\Reports\SalesReturnReport;
 use App\Livewire\Reports\PurchasesReturnReport;
 use App\Livewire\Reports\StockAlertReport;
-use App\Livewire\ComponentDocumentation;
 use Livewire\Livewire;
 
 /*
@@ -86,8 +88,7 @@ require __DIR__.'/auth.php';
 Route::view('profile', 'profile')
     ->middleware(['auth.basic'])
     ->name('profile');
-// Component Documentation
-Route::get('/components/documentation', ComponentDocumentation::class)->name('components.documentation');
+
 
 // Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
 
@@ -104,11 +105,10 @@ Route::get('/components/documentation', ComponentDocumentation::class)->name('co
 //     return File::get(public_path().'/docs/'.$file.'.html');
 // });
 
-// admin prefix group
 
 // Installation Routes
 Route::prefix('install')->name('installation.')->group(function () {
-    Route::get('/', StepManager::class)->name('index');
+    Route::livewire('/', StepManager::class)->name('index');
 });
 
 Route::get('/', fn () => redirect()->route('dashboard'));
@@ -117,7 +117,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Change lang
     Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
-    Route::livewire('/', Dashboard::class)->name('dashboard');
+    Route::livewire('/dashboard', Dashboard::class)->name('dashboard');
 
     // POS
     Route::livewire('/pos', PosIndex::class)->name('pos.index');
@@ -128,27 +128,28 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/adjustment/update/{id}', EditAdjustment::class)->name('adjustments.edit');
 
     // Database Sync (Desktop Mode)
-    Route::livewire('/database-sync', \App\Livewire\Admin\DatabaseSync::class)->name('admin.database-sync');
+    Route::livewire('/database-sync', App\Livewire\Admin\DatabaseSync::class)->name('admin.database-sync');
 });
 
 // Desktop-specific routes (only available in desktop mode)
 Route::prefix('desktop')->name('desktop.')->group(function () {
     Route::post('/shortcut/execute', [App\Http\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcut.execute');
+    Route::post('/shortcuts/execute', [App\Http\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcuts.execute');
     Route::get('/shortcuts', [App\Http\Controllers\DesktopController::class, 'getShortcuts'])->name('shortcuts.index');
     Route::post('/shortcut/check', [App\Http\Controllers\DesktopController::class, 'checkShortcut'])->name('shortcut.check');
     Route::post('/shortcuts/register', [App\Http\Controllers\DesktopController::class, 'registerShortcuts'])->name('shortcuts.register');
     Route::get('/status', [App\Http\Controllers\DesktopController::class, 'getDesktopStatus'])->name('status');
     Route::post('/action', [App\Http\Controllers\DesktopController::class, 'handleAction'])->name('action');
-    
+    Route::post('/actions', [App\Http\Controllers\DesktopController::class, 'handleAction'])->name('actions');
+
     // Error logging routes
-    Route::get('/errors', \App\Livewire\Admin\DesktopErrorLog::class)->name('errors.index');
+    Route::livewire('/errors', App\Livewire\Admin\DesktopErrorLog::class)->name('errors.index');
     Route::post('/errors/js', [App\Http\Controllers\DesktopController::class, 'handleJavaScriptError'])->name('errors.js');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
-
     // Currencies
-    Route::get('/currencies', CurrencyIndex::class)->name('currencies.index');
+    Route::livewire('/currencies', CurrencyIndex::class)->name('currencies.index');
 
     // Charts
     Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
@@ -156,36 +157,36 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::get('/payment-flow/chart-data', [HomeController::class, 'paymentChart'])->name('payment-flow.chart');
 
     // Expense Category
-    Route::get('/expense-categories', ExpenseCategoriesIndex::class)->name('expense-categories.index');
+    Route::livewire('/expense-categories', ExpenseCategoriesIndex::class)->name('expense-categories.index');
 
     // Expense
-    Route::get('/expenses', ExpensesIndex::class)->name('expenses.index');
+    Route::livewire('/expenses', ExpensesIndex::class)->name('expenses.index');
 
     // Customers
-    Route::get('/customers', CustomersIndex::class)->name('customers.index');
-    Route::get('/customer/details/{id}', CustomerDetails::class)->name('customer.details');
-    Route::get('/customergroup', CustomerGroupIndex::class)->name('customer-group.index');
+    Route::livewire('/customers', CustomersIndex::class)->name('customers.index');
+    Route::livewire('/customer/details/{id}', CustomerDetails::class)->name('customer.details');
+    Route::livewire('/customergroup', CustomerGroupIndex::class)->name('customer-group.index');
 
     // Suppliers
-    Route::get('/suppliers', SuppliersIndex::class)->name('suppliers.index');
-    Route::get('/supplier/details/{id}', SupplierDetails::class)->name('supplier.details');
+    Route::livewire('/suppliers', SuppliersIndex::class)->name('suppliers.index');
+    Route::livewire('/supplier/details/{id}', SupplierDetails::class)->name('supplier.details');
 
     // Warehouses
-    Route::get('/warehouses', WarehouseIndex::class)->name('warehouses.index');
+    Route::livewire('/warehouses', WarehouseIndex::class)->name('warehouses.index');
 
     // Quotations
-    Route::get('/quotations', QuotationsIndex::class)->name('quotations.index');
-    Route::get('/quotation/create', CreateQuotation::class)->name('quotation.create');
-    Route::get('/quotation/update/{id}', EditQuotation::class)->name('quotation.edit');
+    Route::livewire('/quotations', QuotationsIndex::class)->name('quotations.index');
+    Route::livewire('/quotation/create', CreateQuotation::class)->name('quotation.create');
+    Route::livewire('/quotation/update/{id}', EditQuotation::class)->name('quotation.edit');
     Route::get('/quotations/pdf/{id}', [ExportController::class, 'quotation'])->name('quotations.pdf');
     Route::get('/quotation/mail/{quotation}', SendQuotationEmailController::class)->name('quotation.email');
 
     // Purchases
-    Route::get('/purchases', PurchasesIndex::class)->name('purchases.index');
-    Route::get('/purchase/create', CreatePurchase::class)->name('purchase.create');
-    Route::get('/purchase/edit/{id}', EditPurchase::class)->name('purchase.edit');
-    Route::get('/purchase/update/{id}', EditPurchase::class)->name('purchase.edit');
-    Route::get('/purchase/print/{id}', PurchaseInvoice::class)->name('purchase.invoice');
+    Route::livewire('/purchases', PurchasesIndex::class)->name('purchases.index');
+    Route::livewire('/purchase/create', CreatePurchase::class)->name('purchase.create');
+    Route::livewire('/purchase/edit/{id}', EditPurchase::class)->name('purchase.edit');
+    Route::livewire('/purchase/update/{id}', EditPurchase::class)->name('purchase.edit');
+    Route::livewire('/purchase/print/{id}', PurchaseInvoice::class)->name('purchase.invoice');
     Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('purchases.pdf');
 
     // Sales Form Quotation
@@ -200,54 +201,54 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'destroy'])->name('purchase-return-payments.destroy');
 
     // Reports
-    Route::get('/customers-report', CustomersReport::class)->name('customers-report.index');
-    Route::get('/profit-loss-report', ProfitLossReport::class)->name('profit-loss-report.index');
-    Route::get('/sales-report', SalesReport::class)->name('sales-report.index');
-    Route::get('/sales-return-report', SalesReturnReport::class)->name('sales-return-report.index');
-    Route::get('/purchases-report', PurchasesReport::class)->name('purchases-report.index');
-    Route::get('/purchases-return-report', PurchasesReturnReport::class)->name('purchases-return-report.index');
-    Route::get('/payments-report', PaymentsReport::class)->name('payments-report.index');
-    Route::get('/stock-alert-report', StockAlertReport::class)->name('stock-alert-report.index');
+    Route::livewire('/customers-report', CustomersReport::class)->name('customers-report.index');
+    Route::livewire('/profit-loss-report', ProfitLossReport::class)->name('profit-loss-report.index');
+    Route::livewire('/sales-report', SalesReport::class)->name('sales-report.index');
+    Route::livewire('/sales-return-report', SalesReturnReport::class)->name('sales-return-report.index');
+    Route::livewire('/purchases-report', PurchasesReport::class)->name('purchases-report.index');
+    Route::livewire('/purchases-return-report', PurchasesReturnReport::class)->name('purchases-return-report.index');
+    Route::livewire('/payments-report', PaymentsReport::class)->name('payments-report.index');
+    Route::livewire('/stock-alert-report', StockAlertReport::class)->name('stock-alert-report.index');
 
     // Sales
-    Route::get('/sales', SalesIndex::class)->name('sales.index');
-    Route::get('/sale/print/{id}', SaleInvoice::class)->name('sale.invoice');
-    Route::get('/sale/create', CreateSale::class)->name('sale.create');
-    Route::get('/sale/update/{id}', EditSale::class)->name('sale.edit');
+    Route::livewire('/sales', SalesIndex::class)->name('sales.index');
+    Route::livewire('/sale/print/{id}', SaleInvoice::class)->name('sale.invoice');
+    Route::livewire('/sale/create', CreateSale::class)->name('sale.create');
+    Route::livewire('/sale/update/{id}', EditSale::class)->name('sale.edit');
     Route::get('/sales/pdf/{id}', [ExportController::class, 'sale'])->name('sales.pdf');
     Route::get('/sales/pos/pdf/{id}', [ExportController::class, 'salePos'])->name('sales.pos.pdf');
 
     // User Profile
-    Route::get('/user/profile', ProfileIndex::class)->name('profile.index');
+    Route::livewire('/user/profile', ProfileIndex::class)->name('profile.index');
 
     // Users
-    Route::get('/users', UsersIndex::class)->name('users.index');
+    Route::livewire('/users', UsersIndex::class)->name('users.index');
 
     // Roles
-    Route::get('/roles', RolesIndex::class)->name('roles.index');
+    Route::livewire('/roles', RolesIndex::class)->name('roles.index');
 
     // Permissions
-    Route::get('/permissions', PermissionsIndex::class)->name('permissions.index');
+    Route::livewire('/permissions', PermissionsIndex::class)->name('permissions.index');
 
     // Logs
-    Route::get('/logs', LogIndex::class)->name('logs.index');
+    Route::livewire('/logs', 'utils.system-logs')->name('logs.index');
 
     // Integrations
     Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 
     // Cash Register
-    Route::get('/cash-registers', CashRegisterIndex::class)->name('cash-register.index');
+    Route::livewire('/cash-registers', CashRegisterIndex::class)->name('cash-register.index');
 
     // Brands
-    Route::get('/brands', BrandIndex::class)->name('brands.index');
+    Route::livewire('/brands', BrandIndex::class)->name('brands.index');
 
     // Product Categories
-    Route::get('/product-categories', CategoryIndex::class)->name('product-categories.index');
+    Route::livewire('/product-categories', CategoryIndex::class)->name('product-categories.index');
 
     // Products
-    Route::get('/products', ProductsIndex::class)->name('products.index');
-    Route::get('/product/edit/{id}', EditProduct::class)->name('product.edit');
-    Route::get('/products/print-barcode', BarcodeIndex::class)->name('products.barcode-print');
+    Route::livewire('/products', ProductsIndex::class)->name('products.index');
+    Route::livewire('/product/edit/{id}', EditProduct::class)->name('product.edit');
+    Route::livewire('/products/print-barcode', BarcodeIndex::class)->name('products.barcode-print');
 
     // Purchase Payments
     Route::get('/purchase-payments/{purchase_id}', [PurchasePaymentsController::class, 'index'])->name('purchase-payments.index');
@@ -258,56 +259,60 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
 
     // Purchase Returns
-    Route::resource('/purchase-returns', PurchasesReturnController::class);
+    Route::livewire('/purchase-returns/create', CreatePurchaseReturn::class)->name('purchase-returns.create');
+    Route::livewire('/purchase-returns/{id}/edit', EditPurchaseReturn::class)->name('purchase-returns.edit');
+    Route::resource('/purchase-returns', PurchasesReturnController::class)->except(['create', 'edit', 'store', 'update']);
     Route::get('/purchase-returns/pdf/{id}', [ExportController::class, 'purchaseReturns'])->name('purchase-returns.pdf');
 
     // Generate Sale Returns PDF
-    Route::resource('/sale-returns', SalesReturnController::class);
+    Route::livewire('/sale-returns/create', CreateSaleReturn::class)->name('sale-returns.create');
+    Route::livewire('/sale-returns/{id}/edit', EditSaleReturn::class)->name('sale-returns.edit');
+    Route::resource('/sale-returns', SalesReturnController::class)->except(['create', 'edit', 'store', 'update']);
     Route::get('/sale-returns/pdf/{id}', [ExportController::class, 'saleReturns'])->name('sale-returns.pdf');
 
     // Transfers
-    Route::get('/transfers', TransferIndex::class)->name('tranfers.index');
+    Route::livewire('/transfers', TransferIndex::class)->name('tranfers.index');
 
     // Language Settings
-    Route::get('/languages', LanguageIndex::class)->name('languages.index');
-    Route::get('/translation/{id}', EditTranslation::class)->name('languages.translation');
+    Route::livewire('/languages', LanguageIndex::class)->name('languages.index');
+    Route::livewire('/translation/{id}', EditTranslation::class)->name('languages.translation');
 
     // General Settings
-    Route::get('/settings', SettingsIndex::class)->name('settings.index');
+    Route::livewire('/settings', SettingsIndex::class)->name('settings.index');
 
     // Invoices Theme
-    Route::get('/invoices-theme', InvoiceTheme::class)->name('invoices.index');
+    Route::livewire('/invoices-theme', InvoiceTheme::class)->name('invoices.index');
 
     // Backup
-    Route::get('/backup', BackupIndex::class)->name('backup.index');
+    Route::livewire('/backup', BackupIndex::class)->name('backup.index');
 
     // Shipping
-    Route::get('/shipping', ShippingIndex::class)->name('shipping.index');
+    Route::livewire('/shipping', ShippingIndex::class)->name('shipping.index');
 
     // Analytics
-    Route::get('/analytics/dashboard', App\Livewire\Analytics\AnalyticsDashboard::class)->name('analytics.dashboard');
-    Route::get('/analytics/product', App\Livewire\Analytics\ProductAnalytics::class)->name('analytics.product');
-    Route::get('/analytics/revenue', App\Livewire\Analytics\RevenueReports::class)->name('analytics.revenue');
+    Route::livewire('/analytics/dashboard', App\Livewire\Analytics\AnalyticsDashboard::class)->name('analytics.dashboard');
+    Route::livewire('/analytics/product', App\Livewire\Analytics\ProductAnalytics::class)->name('analytics.product');
+    Route::livewire('/analytics/revenue', App\Livewire\Analytics\RevenueReports::class)->name('analytics.revenue');
 
     // Finance
-    Route::get('/finance/dashboard', App\Livewire\Finance\FinancialDashboard::class)->name('finance.dashboard');
-    Route::get('/finance/kpi', App\Livewire\Finance\KpiTracking::class)->name('finance.kpi');
-    Route::get('/finance/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('finance.breakeven');
+    Route::livewire('/finance/dashboard', App\Livewire\Finance\FinancialDashboard::class)->name('finance.dashboard');
+    Route::livewire('/finance/kpi', App\Livewire\Finance\KpiTracking::class)->name('finance.kpi');
+    Route::livewire('/finance/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('finance.breakeven');
 
     // Notifications
-    Route::get('/notifications/bell', App\Livewire\Notifications\NotificationBell::class)->name('notifications.bell');
-    Route::get('/notifications/manager', App\Livewire\Notifications\NotificationManager::class)->name('notifications.manager');
+    Route::livewire('/notifications/bell', App\Livewire\Notifications\NotificationBell::class)->name('notifications.bell');
+    Route::livewire('/notifications/manager', App\Livewire\Notifications\NotificationManager::class)->name('notifications.manager');
 
     // Notification (Legacy)
-    Route::get('/notification', NotificationIndex::class)->name('notification');
+    Route::livewire('/notification', NotificationIndex::class)->name('notification');
 
     // Email Settings
-    Route::get('/email-settings', EmailIndex::class)->name('email-settings');
+    Route::livewire('/email-settings', EmailIndex::class)->name('email-settings');
 
     // Printers
-    Route::get('/printers', PrinterIndex::class)->name('printers.index');
+    Route::livewire('/printers', PrinterIndex::class)->name('printers.index');
 });
 
-Livewire::setUpdateRoute(function ($handle) {
-    return Route::post('/livewire/update', $handle);
+Livewire::setUpdateRoute(function ($handle, $path) {
+    return Route::post($path, $handle);
 });
