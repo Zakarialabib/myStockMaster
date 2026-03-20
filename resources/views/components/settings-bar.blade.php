@@ -35,10 +35,12 @@
                         <div class="border-t border-gray-200 py-3 px-4">
                             <div class="grid gap-3 md:grid-col-2 px-3 space-y-2">
                                 <div class="flex items-center space-x-2">
+                                    <x-label for="maintenance_mode" :value="__('Maintenance Mode')" />
+                                    <livewire:toggle-button :model="settings()" field="maintenance_mode" />
+                                </div>
+                                <div class="flex items-center space-x-2">
                                     <x-label for="show_email" :value="__('Show Email')" />
-                                    {{-- <livewire:utils.toggle-button model="setting" field="show_email"
-                                        key="{{ settings()->show_email }}" /> --}}
-
+                                    <livewire:toggle-button :model="settings()" field="show_email" />
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <x-label for="show_address" :value="__('Show Address')" />

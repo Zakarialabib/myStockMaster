@@ -6,22 +6,24 @@
 </{{ $as }}>
 
 <script>
-    const perfectScroll = () => {
-        let ps
-        const update = () => {
-            if (ps) {
-                ps.update()
+    if (typeof perfectScroll === 'undefined') {
+        window.perfectScroll = () => {
+            let ps
+            const update = () => {
+                if (ps) {
+                    ps.update()
+                }
             }
-        }
-        return {
-            init(){
-                ps = new PerfectScrollbar(this.$el, {
-                    wheelSpeed: 2,
-                    wheelPropagation: false,
-                    minScrollbarLength: 20
-                });
-            },
-            update
+            return {
+                init(){
+                    ps = new PerfectScrollbar(this.$el, {
+                        wheelSpeed: 2,
+                        wheelPropagation: false,
+                        minScrollbarLength: 20
+                    });
+                },
+                update
+            }
         }
     }
 </script>
