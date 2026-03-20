@@ -8,11 +8,13 @@ use App\Models\Customer;
 use App\Models\Sale;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class SalesReport extends Component
 {
     use WithAlert;
@@ -44,6 +46,11 @@ class SalesReport extends Component
         $this->customer_id = '';
         $this->sale_status = '';
         $this->payment_status = '';
+    }
+
+    public function placeholder()
+    {
+        return view('livewire.placeholders.skeleton');
     }
 
     public function render()
