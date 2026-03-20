@@ -11,11 +11,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
-use App\Traits\WithAlert;
 
 class LoginForm extends Form
 {
-    use WithAlert;
     #[Validate('required', message: 'Email is required ')]
     #[Validate('email', message: 'Email must be valid')]
     public $email;
@@ -35,7 +33,7 @@ class LoginForm extends Form
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+        if ( ! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

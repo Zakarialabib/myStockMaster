@@ -8,16 +8,16 @@ use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.guest')]
+#[Title('Login')]
 class Login extends Component
 {
     public LoginForm $form;
 
-    /**
-     * Handle an incoming authentication request.
-     */
+    /** Handle an incoming authentication request. */
     public function login(): void
     {
         $this->validate();
@@ -29,9 +29,7 @@ class Login extends Component
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 
-    /**
-     * Handle "Remember Me" login.
-     */
+    /** Handle "Remember Me" login. */
     public function viaRemember(): void
     {
         if (Auth::viaRemember()) {
