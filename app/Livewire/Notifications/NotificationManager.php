@@ -6,6 +6,8 @@ namespace App\Livewire\Notifications;
 
 use App\Models\Notification;
 use App\Services\NotificationService;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Exception;
@@ -14,27 +16,23 @@ class NotificationManager extends Component
 {
     use WithPagination;
 
+    #[Url(except: 'all')]
     public $filterType = 'all';
+
+    #[Url(except: 'all')]
     public $filterRead = 'all';
+
+    #[Url(except: '')]
     public $filterPriority = '';
+
+    #[Url(except: '')]
     public $searchTerm = '';
+
     public $selectedNotifications = [];
     public $selectAll = false;
     public $showFilters = false;
     public $notificationTypes = [];
     public $loading = false;
-
-    protected $queryString = [
-        'filterType'     => ['except' => 'all'],
-        'filterRead'     => ['except' => 'all'],
-        'filterPriority' => ['except' => ''],
-        'searchTerm'     => ['except' => ''],
-    ];
-
-    protected $listeners = [
-        'notificationCreated' => 'refreshNotifications',
-        'notificationUpdated' => 'refreshNotifications',
-    ];
 
     public function mount()
     {
@@ -284,6 +282,8 @@ class NotificationManager extends Component
         $this->resetPage();
     }
 
+    #[On('notificationCreated')]
+    #[On('notificationUpdated')]
     public function refreshNotifications()
     {
         $this->loadNotificationTypes();
