@@ -18,7 +18,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^4.0",
         "maatwebsite/excel": "^3.1.68",
-        "nativephp/desktop": "*",
+        "nativephp/desktop": "^2.1",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^1.0|^2.0|^3.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
