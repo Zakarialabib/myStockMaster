@@ -26,7 +26,7 @@ class Index extends Component
     {
         return view('livewire.placeholders.skeleton');
     }
-    
+
     /** @var mixed */
     public $adjustment;
 

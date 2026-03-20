@@ -12,6 +12,7 @@ use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 #[Layout('layouts.app')]
@@ -43,11 +44,6 @@ class Edit extends Component
     public array $products = [];
 
     public $hasTransfers;
-
-    protected $listeners = [
-        'warehouseSelected' => 'updatedWarehouseId',
-        'productSelected',
-    ];
 
     public function mount($id): void
     {
@@ -105,6 +101,7 @@ class Edit extends Component
         return redirect()->route('transfers.index');
     }
 
+    #[On('productSelected')]
     public function productSelected(array $product): void
     {
         switch ($this->hasTransfers) {
@@ -142,6 +139,7 @@ class Edit extends Component
         unset($this->products[$key]);
     }
 
+    #[On('warehouseSelected')]
     public function updatedWarehouseId($value): void
     {
         $this->warehouse_id = $value;

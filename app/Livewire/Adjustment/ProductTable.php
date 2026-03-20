@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Traits\WithAlert;
 
 class ProductTable extends Component
 {
     use WithAlert;
+
     public $products;
 
     public $hasAdjustments;
-
-    protected $listeners = ['productSelected'];
 
     public function mount($adjustedProducts = null): void
     {
@@ -33,6 +33,7 @@ class ProductTable extends Component
         return view('livewire.adjustment.product-table');
     }
 
+    #[On('productSelected')]
     public function productSelected($product): void
     {
         switch ($this->hasAdjustments) {

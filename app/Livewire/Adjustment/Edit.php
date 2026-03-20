@@ -78,8 +78,8 @@ class Edit extends Component
                     'warehouse_id'  => $product['warehouse_id'],
                 ],
                 [
-                    'quantity'      => $product['quantity'],
-                    'type'          => $product['type'],
+                    'quantity' => $product['quantity'],
+                    'type'     => $product['type'],
                 ]
             );
 
