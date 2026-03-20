@@ -7,22 +7,21 @@ namespace App\Livewire\Products;
 use App\Models\ProductWarehouse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Traits\WithAlert;
 
 class PromoPrices extends Component
 {
     use WithAlert;
+
     public $percentage;
 
     public $copyPriceToOldPrice;
 
     public $promoModal = false;
 
-    protected $listeners = [
-        'promoModal',
-    ];
-
+    #[On('promoModal')]
     public function promoModal(): void
     {
         $this->resetErrorBag();

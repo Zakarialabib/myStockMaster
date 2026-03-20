@@ -16,22 +16,33 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Response;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Url;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 
 #[Layout('layouts.app')]
-#[Lazy]
+#[Title('Products')]
 class Index extends Component
 {
+    use WithFileUploads;
+    use Datatable;
+    use WithAlert;
+
     public function placeholder()
     {
         return view('livewire.placeholders.skeleton');
     }
-    
-    use WithFileUploads;
-    use Datatable;
-    use WithAlert;
+
+    public int $perPage = 25;
+
+    public bool $hasMorePages = true;
+
+    public function loadMore(): void
+    {
+        $this->perPage += 25;
+    }
 
     /** @var mixed */
     public $productWarehouse;
@@ -157,6 +168,8 @@ class Index extends Component
             });
 
         $products = $query->paginate($this->perPage);
+
+        $this->hasMorePages = $products->hasMorePages();
 
         return view('livewire.products.index', ['products' => $products]);
     }

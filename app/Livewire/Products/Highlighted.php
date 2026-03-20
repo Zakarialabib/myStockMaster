@@ -7,6 +7,7 @@ namespace App\Livewire\Products;
 use App\Models\Product;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Throwable;
 use App\Traits\WithAlert;
@@ -36,12 +37,9 @@ class Highlighted extends Component
 
     public $discount_date;
 
-    public $listeners = [
-        'highlightModal',
-    ];
-
     public $highlightModal = false;
 
+    #[On('highlightModal')]
     public function highlightModal($id): void
     {
         $this->resetErrorBag();

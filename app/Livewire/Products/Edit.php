@@ -21,7 +21,7 @@ class Edit extends Component
 {
     use WithAlert;
     use WithFileUploads;
-    
+
     public Product $product;
 
     public $productWarehouses;

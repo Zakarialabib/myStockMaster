@@ -25,11 +25,6 @@ class Import extends Component
 {
     use WithFileUploads;
 
-    public $listeners = [
-        'import',
-        'importUpdates',
-    ];
-
     public $file;
 
     public $sheetLink;
@@ -58,6 +53,7 @@ class Import extends Component
         $this->importModal = true;
     }
 
+    #[On('importUpdates')]
     public function importUpdates(): void
     {
         abort_if(Gate::denies('product_access'), 403);
@@ -76,6 +72,7 @@ class Import extends Component
         $this->importModal = false;
     }
 
+    #[On('import')]
     public function import(): void
     {
         abort_if(Gate::denies('product_access'), 403);

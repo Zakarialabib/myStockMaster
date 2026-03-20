@@ -16,32 +16,46 @@
             @endcan
         </x-slot>
         <x-slot name="filters">
-            <x-datatable.filters 
-                :per-page="$perPage"
-                :pagination-options="$paginationOptions"
-                :selected-count="$this->selectedCount"
-                :search="$search"
-                search-placeholder="{{ __('Search categories...') }}"
-                wire:model.live.perPage="perPage"
-                wire:model.live.search="search"
-                wire:click.deleteSelected="deleteSelected"
-                wire:click.resetSelected="resetSelected"
-                :can-delete="auth()->user()->can('category_delete')"
-            />
+            <x-datatable.filters :per-page="$perPage" :pagination-options="$paginationOptions" :selected-count="$this->selectedCount" :search="$search"
+                search-placeholder="{{ __('Search categories...') }}" wire:model.live.perPage="perPage"
+                wire:model.live.search="search" wire:click.deleteSelected="deleteSelected"
+                wire:click.resetSelected="resetSelected" :can-delete="auth()->user()->can('category_delete')" />
         </x-slot>
 
-
-        <!-- Table Section -->
-        <x-table :headers="[
-            ['key' => 'checkbox', 'label' => '', 'sortable' => false],
-            ['key' => 'name', 'label' => __('Name'), 'sortable' => true, 'icon' => 'fas fa-tag'],
-            ['key' => 'products_count', 'label' => __('Products count'), 'sortable' => false, 'icon' => 'fas fa-boxes'],
-            ['key' => 'status', 'label' => __('Status'), 'sortable' => true, 'icon' => 'fas fa-toggle-on'],
-            ['key' => 'actions', 'label' => __('Actions'), 'sortable' => false, 'icon' => 'fas fa-cogs'],
-        ]" :show-checkbox="true"
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            @forelse($categories as $category)
-                <tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $category->id }}"
+        <x-table class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <x-slot name="thead">
+                <x-table.th class="w-12">
+                    <input type="checkbox" wire:model.live="selectPage"
+                        class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700" />
+                </x-table.th>
+                <x-table.th sortable wire:click="sortBy('name')" :direction="$sortBy === 'name' ? $sortDirection : null">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-tag mr-2 text-gray-400"></i>
+                        <span>{{ __('Name') }}</span>
+                    </div>
+                </x-table.th>
+                <x-table.th>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-boxes mr-2 text-gray-400"></i>
+                        <span>{{ __('Products count') }}</span>
+                    </div>
+                </x-table.th>
+                <x-table.th sortable wire:click="sortBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-toggle-on mr-2 text-gray-400"></i>
+                        <span>{{ __('Status') }}</span>
+                    </div>
+                </x-table.th>
+                <x-table.th class="text-right">
+                    <div class="flex items-center justify-end space-x-2">
+                        <i class="fas fa-cogs mr-2 text-gray-400"></i>
+                        <span>{{ __('Actions') }}</span>
+                    </div>
+                </x-table.th>
+            </x-slot>
+            <x-table.tbody>
+                @forelse($categories as $category)
+                <x-table.tr data-loading wire:key="row-{{ $category->id }}"
                     class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <x-table.td :checkbox="true" :value="$category->id" wire:model.live="selected" />
                     <x-table.td>
@@ -51,53 +65,29 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-status-badge 
-                            status="info" 
-                            :count="$category->products->count()" 
-                            icon="fas fa-boxes"
-                            size="sm"
-                        />
+                        <x-status-badge status="info" :count="$category->products_count" icon="fas fa-boxes" size="sm" />
                     </x-table.td>
                     <x-table.td>
-                        <x-status-badge 
-                            :status="$category->status ? 'active' : 'inactive'" 
-                            :text="$category->status ? __('Active') : __('Inactive')"
-                            size="sm"
-                        />
+                        <x-status-badge :status="$category->status ? 'active' : 'inactive'" :text="$category->status ? __('Active') : __('Inactive')" size="sm" />
                     </x-table.td>
-                    <x-table.td :actions="true">
-                        <x-datatable.actions 
-                            :actions="[
-                                [
-                                    'type' => 'dropdown-item',
-                                    'label' => __('Show'),
-                                    'icon' => 'fas fa-eye',
-                                    'color' => 'blue',
-                                    'wire:click' => 'openShowModal(\'' . $category->id . '\')'
-                                ],
-                                [
-                                    'type' => 'dropdown-item',
-                                    'label' => __('Edit'),
-                                    'icon' => 'fas fa-edit',
-                                    'color' => 'green',
-                                    'wire:click' => '$dispatchTo(\'categories.edit\',\'editModal\', { id : \'' . $category->id . '\'})',
-                                    'permission' => 'category_update'
-                                ],
-                                [
-                                    'type' => 'dropdown-item',
-                                    'label' => __('Delete'),
-                                    'icon' => 'fas fa-trash',
-                                    'color' => 'red',
-                                    'wire:click' => 'deleteModal(\'' . $category->id . '\')',
-                                    'permission' => 'category_delete'
-                                ]
-                            ]"
-                        />
+                    <x-table.td class="text-right">
+                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                            wire:click="openShowModal('{{ $category->id }}')">
+                            <i class="fas fa-eye"></i>
+                        </x-button>
+                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                            wire:click="openEditModal('{{ $category->id }}')">
+                            <i class="fas fa-edit"></i>
+                        </x-button>
+                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                            wire:click="openDeleteModal('{{ $category->id }}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </x-button>
                     </x-table.td>
-                </tr>
+                </x-table.tr>
             @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-12 text-center">
+                <x-table.tr>
+                    <x-table.td colspan="5" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center">
                             <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
                             <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
@@ -105,9 +95,10 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 {{ __('Get started by creating your first category') }}</p>
                         </div>
-                    </td>
-                </tr>
+                    </x-table.td>
+                </x-table.tr>
             @endforelse
+            </x-table.tbody>
         </x-table>
 
         <!-- Pagination Section -->
@@ -135,7 +126,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Show Modal -->
         <x-modal wire:model="showModal" class="sm:max-w-lg">
@@ -187,7 +177,7 @@
                             </div>
                             <p class="text-sm text-blue-700 dark:text-blue-300">
                                 {{ __('This category contains') }} <span
-                                    class="font-semibold">{{ $category->products->count() }}</span>
+                                    class="font-semibold">{{ $category->products_count }}</span>
                                 {{ __('products') }}
                             </p>
                         </div>

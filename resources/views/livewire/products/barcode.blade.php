@@ -5,7 +5,7 @@
         </x-slot>
         <x-slot name="filters">
             <div class="w-full px-2">
-                <livewire:utils.search-product />
+                <livewire:search-product />
             </div>
 
             <div class="w-full px-2">

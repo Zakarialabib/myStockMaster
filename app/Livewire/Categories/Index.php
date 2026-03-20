@@ -12,9 +12,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
+#[Title('Categories')]
 class Index extends Component
 {
     use WithAlert;
@@ -31,11 +33,18 @@ class Index extends Component
 
     public $model = Category::class;
 
+    public function mount(): void
+    {
+        $this->mountDatatable();
+        $this->sortBy = 'id';
+        $this->sortDirection = 'asc';
+    }
+
     public function render(): mixed
     {
         abort_if(Gate::denies('category_access'), 403);
 
-        $query = Category::with('products')->advancedFilter([
+        $query = Category::withCount('products')->advancedFilter([
             's'               => $this->search ?: null,
             'order_column'    => $this->sortBy,
             'order_direction' => $this->sortDirection,

@@ -24,7 +24,7 @@ class Barcode extends Component
     public $warehouse_id;
 
     #[Validate([
-        'products.*.quantity' => 'required|integer|min:1|max:100',
+        'products.*.quantity'    => 'required|integer|min:1|max:100',
         'products.*.barcodeSize' => 'required|in:small,medium,large,extra,huge',
     ])]
     public array $products = [];
@@ -103,7 +103,7 @@ class Barcode extends Component
             }
         }
 
-        if (! is_null($index)) {
+        if ( ! is_null($index)) {
             unset($this->products[$index]);
             $this->products = array_values($this->products);
         }

@@ -1,44 +1,42 @@
 <div>
-    @section('title', __('Products'))
+
     <x-page-container title="{{ __('Products') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Products')]]" :show-filters="true">
         <x-slot name="actions">
             @can('product_import')
-                <x-button wire:click="importModal" variant="secondary" icon="fas fa-upload">
+                <x-button wire:click="importModal" secondary icon="fas fa-upload">
                     {{ __('Excel Import') }}
                 </x-button>
             @endcan
             @can('product_export')
-                <x-button wire:click="exportAll" variant="success" icon="fas fa-download">
+                <x-button wire:click="exportAll" secondary icon="fas fa-download">
                     {{ __('PDF Export') }}
                 </x-button>
-                <x-button wire:click="downloadAll" variant="success" icon="fas fa-download">
+                <x-button wire:click="downloadAll" secondary icon="fas fa-download">
                     {{ __('Excel Export') }}
                 </x-button>
             @endcan
             @can('product_create')
-                <x-button wire:click="$dispatchTo('products.create', 'createModal')" variant="primary" icon="fas fa-plus">
+                <x-button wire:click="$dispatchTo('products.create', 'createModal')" primary icon="fas fa-plus">
                     {{ __('Create Product') }}
                 </x-button>
             @endcan
         </x-slot>
 
         <x-slot name="filters">
-            <x-datatable.product-filters 
-                :per-page="$perPage"
-                :pagination-options="$paginationOptions"
-                :search="$search"
-                :category-id="$category_id"
-                :categories="$this->categories"
-                :filter-availability="$filterAvailability"
-                :filter-seasonality="$filterSeasonality"
-                :selected-count="$this->selectedCount ?? count($selected ?? [])"
-                :can-delete="auth()->user()->can('product_delete')"
-                search-placeholder="{{ __('Search products...') }}"
-            />
+            <x-datatable.product-filters :per-page="$perPage" :pagination-options="$paginationOptions" :search="$search" :category-id="$category_id"
+                :categories="$this->categories" :filter-availability="$filterAvailability" :filter-seasonality="$filterSeasonality" :selected-count="$this->selectedCount ?? count($selected ?? [])" :can-delete="auth()->user()->can('product_delete')"
+                search-placeholder="{{ __('Search products...') }}" />
         </x-slot>
 
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden relative">
+
+            {{-- <div wire:loading.delay class="absolute inset-0 bg-white/50 dark:bg-gray-800/50 z-10 flex items-center justify-center">
+                <div class="flex flex-col items-center">
+                    <div class="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                    <span class="mt-2 text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Updating...') }}</span>
+                </div>
+            </div> --}}
 
             <x-table>
                 <x-slot name="thead">
@@ -120,7 +118,7 @@
                 </x-slot>
                 <x-table.tbody>
                     @forelse($products as $product)
-                        <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $product->id }}"
+                        <x-table.tr data-loading wire:key="row-{{ $product->id }}"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <x-table.td
                                 class="px-6 py-4 whitespace-nowrap border-b border-gray-200 dark:border-gray-700">
@@ -134,7 +132,7 @@
                                     wire:click="$dispatchTo('products.show','showModal',{{ $product->id }})"
                                     class="group text-left hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2 -m-2 transition-colors">
                                     <div class="flex items-start space-x-3">
-                                        <div class="flex-shrink-0">
+                                        <div class="shrink-0">
                                             <div
                                                 class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                                                 <i class="fas fa-box text-blue-600 dark:text-blue-400 w-4 h-4"></i>
@@ -289,6 +287,14 @@
                     @endforelse
                 </x-table.tbody>
             </x-table>
+
+            @if ($hasMorePages)
+                <div wire:intersect="loadMore" class="py-12 flex justify-center items-center">
+                    <div class="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                    <span
+                        class="ml-3 text-gray-600 dark:text-gray-400 font-medium">{{ __('Loading more products...') }}</span>
+                </div>
+            @endif
 
             <div class="mt-6">
                 <div
