@@ -1,51 +1,64 @@
 <div>
-    <!-- Button trigger Discount Modal -->
-    <button type="button" wire:click="discountModal('{{ $cart_item['id'] }}', '{{ $cart_item['rowId'] }}')"
-        class="border border-red-500 text-red-500 hover:text-reg-800">
-        <i class="bi bi-percent text-black"></i>
+    <button type="button" wire:click="discountModal('{{ $item->id }}', '{{ $item->rowId }}')"
+        class="border border-red-500 text-red-500 hover:text-red-700 px-2 py-1 rounded text-xs transition-colors"
+        title="{{ __('Apply Discount') }}">
+        <i class="fa-solid fa-percent"></i>
     </button>
-    <!-- Discount Modal -->
-    <x-modal wire:model.live="discountModal">
-        <x-slot name="title">
-            <div class="text-center text-xl">
-                {{ $cart_item['name'] }}
-                <x-badge type="success">
-                    {{ $cart_item['attributes']['code'] }}
-                </x-badge>
+
+    <x-modal wire:model="discountModal">
+        <div class="flex items-center justify-center gap-3">
+            <span class="text-xl font-bold">{{ $item->name }}</span>
+            <x-badge type="info">{{ $item->attributes['code'] ?? '' }}</x-badge>
+        </div>
+
+        <form wire:submit="productDiscount('{{ $item->rowId }}', '{{ $item->id }}')">
+            <x-validation-errors class="mb-4" :errors="$errors" />
+
+            <div class="grid grid-cols-2 gap-4 my-4">
+                <div>
+                    <x-label for="discount_type_{{ $item->id }}" :value="__('Discount Type')" />
+                    <select wire:model.blur="discount_type.{{ $item->id }}" id="discount_type_{{ $item->id }}"
+                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        required>
+                        <option value="fixed">{{ __('Fixed Amount') }}</option>
+                        <option value="percentage">{{ __('Percentage') }}</option>
+                    </select>
+                </div>
+                <div>
+                    <x-label for="item_discount_{{ $item->id }}" :value="__('Discount Value')" />
+                    @if (($discount_type[$item->id] ?? 'fixed') === 'percentage')
+                        <x-input wire:model.blur="item_discount.{{ $item->id }}"
+                            id="item_discount_{{ $item->id }}" type="number" step="0.01" min="0"
+                            max="100" class="mt-1 block w-full" />
+                    @else
+                        <x-input wire:model.blur="item_discount.{{ $item->id }}"
+                            id="item_discount_{{ $item->id }}" type="number" step="0.01" min="0"
+                            class="mt-1 block w-full" />
+                    @endif
+                </div>
             </div>
-        </x-slot>
-        <x-slot name="content">
-            <form wire:submit="productDiscount('{{ $cart_item['rowId'] }}', '{{ $cart_item['id'] }}')">
-                <!-- Validation Errors -->
-                <x-validation-errors class="mb-4" :errors="$errors" />
-                <div class="grid grid-cols-2 gap-4 my-4">
-                    <div>
-                        <label>{{ __('Discount Type') }}<span class="text-red-500">*</span></label>
-                        <select wire:model.live="discount_type.{{ $cart_item['id'] }}"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required>
-                            <option value="fixed">{{ __('Fixed') }}</option>
-                            <option value="percentage">{{ __('Percentage') }}</option>
-                        </select>
-                    </div>
-                    <div>
-                        @if ($discount_type[$cart_item['id']] == 'percentage')
-                            <label>{{ __('Discount(%)') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="item_discount.{{ $cart_item['id'] }}" type="text"
-                                value="{{ $item_discount[$cart_item['id']] }}" min="0" max="100" />
-                        @elseif($discount_type[$cart_item['id']] == 'fixed')
-                            <label>{{ __('Discount') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="item_discount.{{ $cart_item['id'] }}" type="text"
-                                value="{{ $item_discount[$cart_item['id']] }}" />
+
+            <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                <div class="flex justify-between text-sm">
+                    <span>{{ __('Current Price') }}:</span>
+                    <span class="font-semibold">{{ format_currency($item->attributes['unit_price'] ?? 0) }}</span>
+                </div>
+                <div class="flex justify-between text-sm mt-1">
+                    <span>{{ __('Current Discount') }}:</span>
+                    <span class="font-semibold text-red-500">
+                        @if (($discount_type[$item->id] ?? 'fixed') === 'percentage')
+                            {{ $item->attributes['product_discount'] ?? 0 }}%
+                        @else
+                            {{ format_currency($item->attributes['product_discount'] ?? 0) }}
                         @endif
-                    </div>
+                    </span>
                 </div>
-                <div class="w-full">
-                    <x-button primary type="submit" class="w-full text-center">
-                        {{ __('Save changes') }}
-                    </x-button>
-                </div>
-            </form>
-        </x-slot>
+            </div>
+
+            <x-button type="submit" class="w-full justify-center" primary>
+                <i class="fas fa-save mr-2"></i>
+                {{ __('Save Discount') }}
+            </x-button>
+        </form>
     </x-modal>
 </div>

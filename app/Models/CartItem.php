@@ -129,42 +129,16 @@ class CartItem extends Model
         return $this;
     }
 
-    /** Get an attribute value */
-    public function getAttribute(string $key, $default = null)
-    {
-        $attributes = $this->attributes ?? [];
-
-        return $attributes[$key] ?? $default;
-    }
-
-    /** Set an attribute value */
-    public function setAttribute(string $key, $value): self
-    {
-        $attributes = $this->attributes ?? [];
-        $attributes[$key] = $value;
-        $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    /** Check if item has an attribute */
-    public function hasAttribute(string $key): bool
-    {
-        $attributes = $this->attributes ?? [];
-
-        return array_key_exists($key, $attributes);
-    }
-
     /** Get formatted price */
     public function getFormattedPriceAttribute(): string
     {
-        return '$'.number_format($this->price, 2);
+        return '$'.number_format((float) $this->price, 2);
     }
 
     /** Get formatted subtotal */
     public function getFormattedSubTotalAttribute(): string
     {
-        return '$'.number_format($this->sub_total, 2);
+        return '$'.number_format((float) $this->sub_total, 2);
     }
 
     /** Get formatted price with conditions */

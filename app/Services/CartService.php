@@ -469,7 +469,7 @@ class CartService
     }
 
     /** Validate quantity */
-    protected function validateQuantity(int $quantity): void
+    protected function validateQuantity($quantity): void
     {
         if ($quantity <= 0) {
             throw new InvalidQuantityException($quantity, 'Quantity must be greater than zero');
@@ -520,7 +520,7 @@ class CartService
     }
 
     /** Log cart operations */
-    protected function logCartOperation(string $operation, $productId, int $quantity, array $context = []): void
+    protected function logCartOperation(string $operation, $productId, $quantity, array $context = []): void
     {
         Log::info('Cart operation performed', array_merge([
             'operation'   => $operation,

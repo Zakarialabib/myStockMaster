@@ -29,7 +29,6 @@ class CartServiceProvider extends ServiceProvider
     /** Bootstrap services. */
     public function boot(): void
     {
-
     }
 
     /** Get the services provided by the provider. */
