@@ -6,14 +6,13 @@ namespace App\Livewire\Settings;
 
 use Exception;
 use Illuminate\Support\Facades\Artisan;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Traits\WithAlert;
 
 class Smtp extends Component
 {
     use WithAlert;
-    
+
     public $mail_mailer;
 
     public $mail_host;

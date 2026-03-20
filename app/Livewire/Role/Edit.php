@@ -9,11 +9,18 @@ use Spatie\Permission\Models\Permission;
 use App\Traits\WithAlert;
 // use App\Models\Role;
 use Spatie\Permission\Models\Role;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
 {
     use WithAlert;
+
+    #[Validate([
+        'role.title'    => 'required|string',
+        'permissions'   => 'required|array',
+        'permissions.*' => 'integer|exists:permissions,id',
+    ])]
     public Role $role;
 
     public array $permissions = [];
@@ -42,24 +49,6 @@ class Edit extends Component
         // $this->alert('success', __('Role updated successfully!') );
 
         return redirect()->route('roles.index');
-    }
-
-    protected function rules(): array
-    {
-        return [
-            'role.title' => [
-                'string',
-                'required',
-            ],
-            'permissions' => [
-                'required',
-                'array',
-            ],
-            'permissions.*.id' => [
-                'integer',
-                'exists:permissions,id',
-            ],
-        ];
     }
 
     protected function initListsForFields(): void

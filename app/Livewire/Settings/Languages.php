@@ -16,9 +16,8 @@ use App\Traits\WithAlert;
 class Languages extends Component
 {
     use WithAlert;
-    public $languages = [];
 
-    protected $listeners = ['sendUpdateLanguageStatus' => 'onUpdateLanguageStatus', 'sync'];
+    public $languages = [];
 
     public function mount(): void
     {

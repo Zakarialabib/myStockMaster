@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
 
@@ -23,9 +24,6 @@ class Index extends Component
     use WithModels;
 
     public Setting $settings;
-
-    /** @var array<string> */
-    public array $listeners = ['update'];
 
     public $invoice_header;
 
@@ -210,7 +208,7 @@ class Index extends Component
         $this->purchasePayment_prefix = settings()->purchasePayment_prefix;
         $this->expense_prefix = settings()->expense_prefix;
         $this->delivery_prefix = settings()->delivery_prefix;
-        $this->is_rtl = settings()->is_rtl;
+        $this->is_rtl = (bool) settings()->is_rtl;
 
         $this->social_facebook = settings()->social_facebook;
         $this->social_twitter = settings()->social_twitter;
@@ -255,6 +253,7 @@ class Index extends Component
         }
     }
 
+    #[On('update')]
     public function update(): void
     {
         $this->validate();

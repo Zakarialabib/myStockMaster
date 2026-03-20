@@ -79,16 +79,16 @@ class Edit extends Component
         $this->validate();
 
         $this->user->update([
-            'name'     => $this->name,
-            'email'    => $this->email,
-            'phone'    => $this->phone,
-            'city'     => $this->city,
-            'country'  => $this->country,
-            'address'  => $this->address,
+            'name'    => $this->name,
+            'email'   => $this->email,
+            'phone'   => $this->phone,
+            'city'    => $this->city,
+            'country' => $this->country,
+            'address' => $this->address,
         ]);
 
         if ($this->password && $this->password !== $this->user->password) {
-             $this->user->update(['password' => Hash::make($this->password)]);
+            $this->user->update(['password' => Hash::make($this->password)]);
         }
 
         $this->user->warehouses()->sync($this->selectedWarehouses);

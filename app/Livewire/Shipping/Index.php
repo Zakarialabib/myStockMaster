@@ -8,6 +8,7 @@ use App\Models\Shipping;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
 use App\Livewire\Utils\Datatable;
 use Illuminate\Support\Facades\Gate;
@@ -18,9 +19,6 @@ class Index extends Component
 {
     use WithAlert;
     use Datatable;
-    public $listeners = [
-        'delete',
-    ];
 
     public $shipping;
 
@@ -58,6 +56,7 @@ class Index extends Component
         $this->shipping = $shipping;
     }
 
+    #[On('delete')]
     public function delete(): void
     {
         abort_if(Gate::denies('shipping_delete'), 403);

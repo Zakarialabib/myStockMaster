@@ -7,17 +7,17 @@ namespace App\Livewire\Language;
 use Livewire\Component;
 use App\Models\Language;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 
 #[Layout('layouts.app')]
 class EditTranslation extends Component
 {
     public $language;
 
-    public $translations;
-
-    public $rules = [
+    #[Validate([
         'translations.*.value' => 'required',
-    ];
+    ])]
+    public $translations;
 
     public function mount($id): void
     {
