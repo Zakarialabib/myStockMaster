@@ -58,11 +58,11 @@ class Create extends Component
     {
         $this->validate();
 
-        Customer::create($this->all());
+        $customer = Customer::create($this->all());
 
         $this->alert('success', __('Customer created successfully'));
 
-        $this->dispatch('refreshIndex')->to(Index::class);
+        $this->dispatch('refreshIndex');
 
         $this->createModal = false;
     }

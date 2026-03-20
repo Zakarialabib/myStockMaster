@@ -85,13 +85,13 @@
                         <input type="checkbox" wire:model.live="selectPage" 
                             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                     </x-table.th>
-                    <x-table.th sortable :direction="$sorts['name'] ?? null" :field="'name'" wire:click="sortingBy('name')" class="text-left">
+                    <x-table.th wire:sort="name" :direction="$sortBy === 'name' ? $sortDirection : null" class="text-left">
                         {{ __('Name') }}
                     </x-table.th>
-                    <x-table.th sortable :direction="$sorts['phone'] ?? null" :field="'phone'" wire:click="sortingBy('phone')" class="text-left">
+                    <x-table.th wire:sort="phone" :direction="$sortBy === 'phone' ? $sortDirection : null" class="text-left">
                         {{ __('Phone') }}
                     </x-table.th>
-                    <x-table.th sortable :direction="$sorts['address'] ?? null" :field="'address'" wire:click="sortingBy('address')" class="text-left">
+                    <x-table.th wire:sort="address" :direction="$sortBy === 'address' ? $sortDirection : null" class="text-left">
                         {{ __('Address') }}
                     </x-table.th>
                     <x-table.th class="w-24 text-center">
@@ -100,7 +100,7 @@
                 </x-slot>
                 <x-table.tbody>
                     @forelse ($suppliers as $supplier)
-                        <x-table.tr wire:loading.class.delay="opacity-50" wire:key="row-{{ $supplier->id }}" class="hover:bg-gray-50 transition-colors">
+                        <x-table.tr data-loading wire:key="row-{{ $supplier->id }}" class="hover:bg-gray-50 transition-colors">
                             <x-table.td class="pr-0">
                                 <input type="checkbox" wire:model.live="selected" value="{{ $supplier->id }}" 
                                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />

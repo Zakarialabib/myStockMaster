@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Async;
 use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
@@ -96,6 +97,7 @@ class Index extends Component
         $this->importModal = false;
     }
 
+    #[Async]
     public function downloadSelected(): StreamedResponse|Response
     {
         abort_if(Gate::denies('supplier_access'), 403);

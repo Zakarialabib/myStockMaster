@@ -22,7 +22,7 @@ class Show extends Component
     {
         abort_if(Gate::denies('supplier_show'), 403);
 
-        $this->supplier = Supplier::find($id);
+        $this->supplier = Supplier::findOrFail($id);
 
         $this->resetErrorBag();
 
