@@ -16,15 +16,13 @@ class ConfirmPassword extends Component
     #[Validate('required|string')]
     public string $password = '';
 
-    /**
-     * Confirm the current user's password.
-     */
+    /** Confirm the current user's password. */
     public function confirmPassword(): void
     {
         $this->validate();
 
-        if (! Auth::guard('web')->validate([
-            'email' => Auth::user()->email,
+        if ( ! Auth::guard('web')->validate([
+            'email'    => Auth::user()->email,
             'password' => $this->password,
         ])) {
             throw ValidationException::withMessages([

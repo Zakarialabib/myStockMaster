@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
@@ -34,23 +33,21 @@ class ResetPassword extends Component
         $this->email = request()->string('email')->value() ?? '';
     }
 
-    /**
-     * Reset the user's password.
-     */
+    /** Reset the user's password. */
     public function resetPassword(): void
     {
         $this->validate();
 
         $status = Password::reset(
             [
-                'email' => $this->email,
-                'password' => $this->password,
+                'email'                 => $this->email,
+                'password'              => $this->password,
                 'password_confirmation' => $this->password_confirmation,
-                'token' => $this->token,
+                'token'                 => $this->token,
             ],
             function ($user) {
                 $user->forceFill([
-                    'password' => Hash::make($this->password),
+                    'password'       => Hash::make($this->password),
                     'remember_token' => Str::random(60),
                 ])->save();
 

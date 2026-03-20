@@ -13,9 +13,7 @@ use Livewire\Component;
 #[Layout('layouts.guest')]
 class VerifyEmail extends Component
 {
-    /**
-     * Send a new verification email.
-     */
+    /** Send a new verification email. */
     public function sendVerification(): void
     {
         if (Auth::user()->hasVerifiedEmail()) {
@@ -29,9 +27,7 @@ class VerifyEmail extends Component
         Session::flash('status', 'verification-link-sent');
     }
 
-    /**
-     * Log the current user out of the application.
-     */
+    /** Log the current user out of the application. */
     public function logout(Logout $logout): void
     {
         $logout();

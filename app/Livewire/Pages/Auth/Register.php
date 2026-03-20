@@ -9,11 +9,13 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Spatie\Permission\Models\Role;
 
 #[Layout('layouts.guest')]
+#[Title('Register')]
 class Register extends Component
 {
     #[Validate('required|string|max:255')]
@@ -30,19 +32,17 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
+    /** Handle an incoming registration request. */
     public function register(): void
     {
         $this->validate();
 
         $user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone !== '' ? $this->phone : null,
+            'name'     => $this->name,
+            'email'    => $this->email,
+            'phone'    => $this->phone !== '' ? $this->phone : null,
             'password' => Hash::make($this->password),
-            'status' => 1,
+            'status'   => 1,
         ]);
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
@@ -51,6 +51,7 @@ class Register extends Component
         event(new Registered($user));
 
         Auth::login($user);
+        session()->regenerate();
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
