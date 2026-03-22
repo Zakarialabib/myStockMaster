@@ -23,11 +23,7 @@ class Movement extends Model
         'user_id',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -35,7 +31,7 @@ class Movement extends Model
     protected function casts(): array
     {
         return [
-            'type' => MovementType::class
+            'type' => MovementType::class,
         ];
     }
 

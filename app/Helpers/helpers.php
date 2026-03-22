@@ -122,7 +122,7 @@ if ( ! function_exists('db_date_format')) {
      */
     function db_date_format($column, $format)
     {
-        $isSqlite = \Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
+        $isSqlite = Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
 
         if ($isSqlite) {
             // Simple mapping for common formats
@@ -131,6 +131,7 @@ if ( ! function_exists('db_date_format')) {
                 ['%Y', '%m', '%d', '%H', '%M', '%S', '%w'],
                 $format
             );
+
             return "strftime('$sqliteFormat', $column)";
         }
 

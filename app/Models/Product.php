@@ -65,10 +65,6 @@ class Product extends Model
      *
      * @return array<string, string>
      */
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -168,6 +164,7 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $sum = $this->warehouses()->sum('qty');
+
                 return $sum !== null ? (float) $sum : null;
             }
         );
@@ -178,6 +175,7 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $avg = $this->warehouses()->avg('price');
+
                 return $avg !== null ? (float) $avg : null;
             }
         );
@@ -188,6 +186,7 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $avg = $this->warehouses()->avg('cost');
+
                 return $avg !== null ? (float) $avg : null;
             }
         );
@@ -198,6 +197,7 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $avg = $this->warehouses()->avg('old_price');
+
                 return $avg !== null ? (float) $avg : null;
             }
         );

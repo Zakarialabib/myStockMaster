@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
 use App\Traits\HasUuid;
@@ -70,11 +69,7 @@ class Purchase extends Model
         'updated_at',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

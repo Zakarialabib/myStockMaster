@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
+namespace Tests\Feature\Livewire\Products;
+
 use App\Livewire\Products\Index;
 use Livewire\Livewire;
+use Tests\TestCase;
 
-it('the component can render', function () {
-    $this->withoutExceptionHandling();
+class IndexTest extends TestCase
+{
+    /** @test */
+    public function the_component_can_render()
+    {
+        $this->withoutExceptionHandling();
 
-    $this->loginAsAdmin();
+        $this->loginAsAdmin();
 
-    Livewire::test(Index::class)
-        ->assertSuccessful()
-        ->assertViewIs('livewire.products.index');
-});
+        Livewire::test(Index::class)
+            ->assertStatus(200)
+            ->assertViewIs('livewire.products.index');
+    }
+}

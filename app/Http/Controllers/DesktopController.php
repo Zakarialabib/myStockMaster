@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Services\DesktopShortcutService;
@@ -7,6 +9,8 @@ use App\Services\EnvironmentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Exception;
+use InvalidArgumentException;
 
 class DesktopController extends Controller
 {
@@ -15,23 +19,21 @@ class DesktopController extends Controller
     public function __construct(DesktopShortcutService $shortcutService)
     {
         $this->shortcutService = $shortcutService;
-        
+
         // Ensure this controller only works in desktop mode
         $this->middleware(function ($request, $next) {
-            if (!EnvironmentService::isDesktop()) {
+            if ( ! EnvironmentService::isDesktop()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Desktop features are only available in desktop mode'
+                    'message' => 'Desktop features are only available in desktop mode',
                 ], 403);
             }
-            
+
             return $next($request);
         });
     }
 
-    /**
-     * Execute a keyboard shortcut
-     */
+    /** Execute a keyboard shortcut */
     public function executeShortcut(Request $request): JsonResponse
     {
         $request->validate([
@@ -39,11 +41,11 @@ class DesktopController extends Controller
         ]);
 
         $shortcut = $request->input('shortcut');
-        
+
         Log::info('Desktop shortcut executed', [
-            'shortcut' => $shortcut,
-            'user_id' => auth()->id(),
-            'timestamp' => now()
+            'shortcut'  => $shortcut,
+            'user_id'   => auth()->id(),
+            'timestamp' => now(),
         ]);
 
         $result = $this->shortcutService->executeShortcut($shortcut);
@@ -51,23 +53,19 @@ class DesktopController extends Controller
         return response()->json($result);
     }
 
-    /**
-     * Get all available shortcuts
-     */
+    /** Get all available shortcuts */
     public function getShortcuts(): JsonResponse
     {
         $shortcuts = $this->shortcutService->getShortcuts();
 
         return response()->json([
-            'success' => true,
+            'success'   => true,
             'shortcuts' => $shortcuts,
-            'total' => collect($shortcuts)->flatten()->count()
+            'total'     => collect($shortcuts)->flatten()->count(),
         ]);
     }
 
-    /**
-     * Check if a shortcut is available
-     */
+    /** Check if a shortcut is available */
     public function checkShortcut(Request $request): JsonResponse
     {
         $request->validate([
@@ -79,16 +77,14 @@ class DesktopController extends Controller
         $description = $this->shortcutService->getShortcutDescription($shortcut);
 
         return response()->json([
-            'success' => true,
-            'shortcut' => $shortcut,
-            'available' => $available,
-            'description' => $description
+            'success'     => true,
+            'shortcut'    => $shortcut,
+            'available'   => $available,
+            'description' => $description,
         ]);
     }
 
-    /**
-     * Register all shortcuts with the desktop environment
-     */
+    /** Register all shortcuts with the desktop environment */
     public function registerShortcuts(): JsonResponse
     {
         try {
@@ -96,46 +92,42 @@ class DesktopController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Desktop shortcuts registered successfully'
+                'message' => 'Desktop shortcuts registered successfully',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to register desktop shortcuts', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to register shortcuts: ' . $e->getMessage()
+                'message' => 'Failed to register shortcuts: '.$e->getMessage(),
             ], 500);
         }
     }
 
-    /**
-     * Get desktop environment status
-     */
+    /** Get desktop environment status */
     public function getDesktopStatus(): JsonResponse
     {
         return response()->json([
-            'success' => true,
-            'desktop_mode' => EnvironmentService::isDesktop(),
-            'platform' => EnvironmentService::getPlatform(),
-            'version' => config('app.version', '1.0.0'),
+            'success'              => true,
+            'desktop_mode'         => EnvironmentService::isDesktop(),
+            'platform'             => EnvironmentService::getPlatform(),
+            'version'              => config('app.version', '1.0.0'),
             'shortcuts_registered' => true, // This would check actual registration status
-            'features' => [
+            'features'             => [
                 'keyboard_shortcuts' => true,
-                'native_menus' => true,
-                'notifications' => true,
-                'window_management' => true,
-                'data_sync' => true,
-                'offline_mode' => true,
-            ]
+                'native_menus'       => true,
+                'notifications'      => true,
+                'window_management'  => true,
+                'data_sync'          => true,
+                'offline_mode'       => true,
+            ],
         ]);
     }
 
-    /**
-     * Handle desktop-specific actions
-     */
+    /** Handle desktop-specific actions */
     public function handleAction(Request $request): JsonResponse
     {
         $request->validate([
@@ -150,52 +142,48 @@ class DesktopController extends Controller
             $result = $this->executeDesktopAction($action, $params);
 
             return response()->json($result);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Desktop action failed', [
                 'action' => $action,
                 'params' => $params,
-                'error' => $e->getMessage()
+                'error'  => $e->getMessage(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Action failed: ' . $e->getMessage()
+                'message' => 'Action failed: '.$e->getMessage(),
             ], 500);
         }
     }
 
-    /**
-     * Execute a desktop-specific action
-     */
+    /** Execute a desktop-specific action */
     protected function executeDesktopAction(string $action, array $params = []): array
     {
         switch ($action) {
             case 'show_notification':
                 return $this->showNotification($params);
-                
+
             case 'update_window_title':
                 return $this->updateWindowTitle($params);
-                
+
             case 'set_window_size':
                 return $this->setWindowSize($params);
-                
+
             case 'toggle_always_on_top':
                 return $this->toggleAlwaysOnTop($params);
-                
+
             case 'show_context_menu':
                 return $this->showContextMenu($params);
-                
+
             case 'handle_file_drop':
                 return $this->handleFileDrop($params);
-                
+
             default:
-                throw new \InvalidArgumentException("Unknown desktop action: {$action}");
+                throw new InvalidArgumentException("Unknown desktop action: {$action}");
         }
     }
 
-    /**
-     * Show a desktop notification
-     */
+    /** Show a desktop notification */
     protected function showNotification(array $params): array
     {
         $title = $params['title'] ?? 'MyStockMaster';
@@ -204,21 +192,19 @@ class DesktopController extends Controller
 
         // This would integrate with NativePHP's notification system
         Log::info('Desktop notification shown', [
-            'title' => $title,
+            'title'   => $title,
             'message' => $message,
-            'type' => $type
+            'type'    => $type,
         ]);
 
         return [
             'success' => true,
-            'action' => 'notification_shown',
-            'message' => 'Notification displayed successfully'
+            'action'  => 'notification_shown',
+            'message' => 'Notification displayed successfully',
         ];
     }
 
-    /**
-     * Update window title
-     */
+    /** Update window title */
     protected function updateWindowTitle(array $params): array
     {
         $title = $params['title'] ?? 'MyStockMaster';
@@ -228,14 +214,12 @@ class DesktopController extends Controller
 
         return [
             'success' => true,
-            'action' => 'window_title_updated',
-            'title' => $title
+            'action'  => 'window_title_updated',
+            'title'   => $title,
         ];
     }
 
-    /**
-     * Set window size
-     */
+    /** Set window size */
     protected function setWindowSize(array $params): array
     {
         $width = $params['width'] ?? 1200;
@@ -246,15 +230,13 @@ class DesktopController extends Controller
 
         return [
             'success' => true,
-            'action' => 'window_size_updated',
-            'width' => $width,
-            'height' => $height
+            'action'  => 'window_size_updated',
+            'width'   => $width,
+            'height'  => $height,
         ];
     }
 
-    /**
-     * Toggle always on top
-     */
+    /** Toggle always on top */
     protected function toggleAlwaysOnTop(array $params): array
     {
         $alwaysOnTop = $params['always_on_top'] ?? false;
@@ -263,15 +245,13 @@ class DesktopController extends Controller
         Log::info('Always on top toggled', ['always_on_top' => $alwaysOnTop]);
 
         return [
-            'success' => true,
-            'action' => 'always_on_top_toggled',
-            'always_on_top' => $alwaysOnTop
+            'success'       => true,
+            'action'        => 'always_on_top_toggled',
+            'always_on_top' => $alwaysOnTop,
         ];
     }
 
-    /**
-     * Show context menu
-     */
+    /** Show context menu */
     protected function showContextMenu(array $params): array
     {
         $items = $params['items'] ?? [];
@@ -283,27 +263,26 @@ class DesktopController extends Controller
 
         return [
             'success' => true,
-            'action' => 'context_menu_shown',
-            'items' => count($items)
+            'action'  => 'context_menu_shown',
+            'items'   => count($items),
         ];
     }
 
-    /**
-     * Handle file drop
-     */
+    /** Handle file drop */
     protected function handleFileDrop(array $params): array
     {
         $files = $params['files'] ?? [];
 
         // Process dropped files
         $processedFiles = [];
+
         foreach ($files as $file) {
             // This would handle file processing based on type
             $processedFiles[] = [
-                'name' => $file['name'] ?? 'unknown',
-                'size' => $file['size'] ?? 0,
-                'type' => $file['type'] ?? 'unknown',
-                'processed' => true
+                'name'      => $file['name'] ?? 'unknown',
+                'size'      => $file['size'] ?? 0,
+                'type'      => $file['type'] ?? 'unknown',
+                'processed' => true,
             ];
         }
 
@@ -311,24 +290,22 @@ class DesktopController extends Controller
 
         return [
             'success' => true,
-            'action' => 'files_processed',
-            'files' => $processedFiles
+            'action'  => 'files_processed',
+            'files'   => $processedFiles,
         ];
     }
 
-    /**
-     * Handle JavaScript errors from desktop app
-     */
+    /** Handle JavaScript errors from desktop app */
     public function handleJavaScriptError(Request $request): JsonResponse
     {
         $request->validate([
-            'message' => 'required|string',
-            'source' => 'sometimes|string',
-            'line' => 'sometimes|integer',
-            'column' => 'sometimes|integer',
-            'stack' => 'sometimes|string',
+            'message'   => 'required|string',
+            'source'    => 'sometimes|string',
+            'line'      => 'sometimes|integer',
+            'column'    => 'sometimes|integer',
+            'stack'     => 'sometimes|string',
             'userAgent' => 'sometimes|string',
-            'url' => 'sometimes|string'
+            'url'       => 'sometimes|string',
         ]);
 
         try {
@@ -336,19 +313,19 @@ class DesktopController extends Controller
             $result = $errorHandler->handleJavaScriptError($request->all());
 
             return response()->json([
-                'success' => true,
+                'success'  => true,
                 'error_id' => $result['error_id'],
-                'message' => 'JavaScript error logged successfully'
+                'message'  => 'JavaScript error logged successfully',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to handle JavaScript error', [
-                'error' => $e->getMessage(),
-                'request_data' => $request->all()
+                'error'        => $e->getMessage(),
+                'request_data' => $request->all(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to log JavaScript error'
+                'message' => 'Failed to log JavaScript error',
             ], 500);
         }
     }

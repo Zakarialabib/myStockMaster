@@ -28,10 +28,6 @@ class Cart extends Model
      *
      * @return array<string, string>
      */
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -67,6 +63,7 @@ class Cart extends Model
         return Attribute::make(
             get: function () {
                 $subtotal = $this->items->sum('sub_total');
+
                 return $this->applyConditionsToAmount($subtotal, 'subtotal');
             }
         );
@@ -105,6 +102,7 @@ class Cart extends Model
         return Attribute::make(
             get: function () {
                 $total = $this->sub_total_with_conditions + $this->tax;
+
                 return $this->applyConditionsToAmount($total, 'total');
             }
         );

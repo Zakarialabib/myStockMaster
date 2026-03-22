@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
 it('renders the forgot password screen', function () {
-    $this->get('/forgot-password')->assertSuccessful();
+    $this->get('/forgot-password')->assertOk();
 
     Livewire::test('pages.auth.forgot-password')
-        ->assertSuccessful();
+        ->assertStatus(200);
 });
 
 it('requests a reset password link', function () {
@@ -35,10 +35,10 @@ it('renders the reset password screen from token', function () {
         ->call('sendPasswordResetLink');
 
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-        $this->get('/reset-password/'.$notification->token)->assertSuccessful();
+        $this->get('/reset-password/'.$notification->token)->assertOk();
 
         Livewire::test('pages.auth.reset-password', ['token' => $notification->token])
-            ->assertSuccessful();
+            ->assertStatus(200);
 
         return true;
     });

@@ -9,10 +9,10 @@ it('renders the confirm password screen', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $this->get('/confirm-password')->assertSuccessful();
+    $this->get('/confirm-password')->assertOk();
 
     Livewire::test('pages.auth.confirm-password')
-        ->assertSuccessful();
+        ->assertStatus(200);
 });
 
 it('confirms password with valid credentials', function () {

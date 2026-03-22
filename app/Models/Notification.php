@@ -21,11 +21,7 @@ class Notification extends Model
         'read_at',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -34,7 +30,7 @@ class Notification extends Model
     {
         return [
             'data'    => 'array',
-            'read_at' => 'datetime'
+            'read_at' => 'datetime',
         ];
     }
 

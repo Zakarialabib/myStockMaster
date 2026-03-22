@@ -6,10 +6,10 @@ use App\Models\User;
 use Livewire\Livewire;
 
 it('renders the login screen', function () {
-    $this->get('/login')->assertSuccessful();
+    $this->get('/login')->assertOk();
 
     Livewire::test('pages.auth.login')
-        ->assertSuccessful();
+        ->assertStatus(200);
 });
 
 it('authenticates users from the login screen', function () {

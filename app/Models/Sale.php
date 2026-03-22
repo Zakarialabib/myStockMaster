@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
@@ -57,11 +56,7 @@ class Sale extends Model
         'status',  'payment_id', 'shipping_status', 'note',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

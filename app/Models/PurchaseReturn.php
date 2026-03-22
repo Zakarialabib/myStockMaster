@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\PurchaseReturnStatus;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -61,11 +60,7 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -135,9 +130,11 @@ class PurchaseReturn extends Model
      *
      * @return int|float
      */
-    public function getDiscountAmountAttribute($value)
+    protected function discountAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
