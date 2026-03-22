@@ -100,7 +100,7 @@
         </x-slot>
         <x-table.tbody>
             @forelse ($customers as $customer)
-                <x-table.tr data-loading wire:key="row-{{ $customer->id }}">
+                <x-table.tr wire:key="row-{{ $customer->id }}">
                     <x-table.td class="pr-0">
                         <input type="checkbox" value="{{ $customer->id }}" wire:model.live="selected" />
                     </x-table.td>

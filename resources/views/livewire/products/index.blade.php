@@ -118,7 +118,7 @@
                 </x-slot>
                 <x-table.tbody>
                     @forelse($products as $product)
-                        <x-table.tr data-loading wire:key="row-{{ $product->id }}"
+                        <x-table.tr wire:key="row-{{ $product->id }}"
                             class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                             <x-table.td
                                 class="px-6 py-4 whitespace-nowrap border-b border-gray-200 dark:border-gray-700">
