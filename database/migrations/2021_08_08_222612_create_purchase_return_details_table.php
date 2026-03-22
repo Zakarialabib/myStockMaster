@@ -7,8 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurchaseReturnDetailsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -45,4 +44,4 @@ class CreatePurchaseReturnDetailsTable extends Migration
     {
         Schema::dropIfExists('purchase_return_details');
     }
-}
+};

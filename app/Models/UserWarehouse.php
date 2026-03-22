@@ -17,14 +17,23 @@ class UserWarehouse extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', 'warehouse_id',
+        'user_id',
+        'warehouse_id',
         // 'default_id',
     ];
 
-    protected $casts = [
-        'user_id'      => 'integer',
-        'warehouse_id' => 'integer',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'user_id'      => 'integer',
+            'warehouse_id' => 'integer',
+        ];
+    }
 
     /** @return HasMany<Warehouse> */
     public function assignedWarehouses(): HasMany

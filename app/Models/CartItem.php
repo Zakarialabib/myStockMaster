@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,12 +25,20 @@ class CartItem extends Model
         'conditions',
     ];
 
-    protected $casts = [
-        'price'      => 'decimal:2',
-        'quantity'   => 'integer',
-        'attributes' => 'array',
-        'conditions' => 'array',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'price'      => 'decimal:2',
+            'quantity'   => 'integer',
+            'attributes' => 'array',
+            'conditions' => 'array',
+        ];
+    }
 
     /** Get the cart that owns this item */
     public function cart(): BelongsTo
@@ -44,29 +53,37 @@ class CartItem extends Model
     }
 
     /** Get the item's subtotal */
-    public function getSubTotalAttribute(): float
+    protected function subTotal(): Attribute
     {
-        return $this->price * $this->quantity;
+        return Attribute::make(
+            get: fn () => $this->price * $this->quantity,
+        );
     }
 
     /** Get the item's price with conditions applied */
-    public function getPriceWithConditionsAttribute(): float
+    protected function priceWithConditions(): Attribute
     {
-        $price = $this->price;
+        return Attribute::make(
+            get: function () {
+                $price = $this->price;
 
-        if ( ! empty($this->conditions)) {
-            foreach ($this->conditions as $condition) {
-                $price = $this->applyCondition($price, $condition);
+                if ( ! empty($this->conditions)) {
+                    foreach ($this->conditions as $condition) {
+                        $price = $this->applyCondition($price, $condition);
+                    }
+                }
+
+                return max(0, $price);
             }
-        }
-
-        return max(0, $price);
+        );
     }
 
     /** Get the item's subtotal with conditions applied */
-    public function getSubTotalWithConditionsAttribute(): float
+    protected function subTotalWithConditions(): Attribute
     {
-        return $this->price_with_conditions * $this->quantity;
+        return Attribute::make(
+            get: fn () => $this->price_with_conditions * $this->quantity,
+        );
     }
 
     /** Apply a condition to a price */
@@ -130,27 +147,35 @@ class CartItem extends Model
     }
 
     /** Get formatted price */
-    public function getFormattedPriceAttribute(): string
+    protected function formattedPrice(): Attribute
     {
-        return '$'.number_format((float) $this->price, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format((float) $this->price, 2),
+        );
     }
 
     /** Get formatted subtotal */
-    public function getFormattedSubTotalAttribute(): string
+    protected function formattedSubTotal(): Attribute
     {
-        return '$'.number_format((float) $this->sub_total, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format((float) $this->sub_total, 2),
+        );
     }
 
     /** Get formatted price with conditions */
-    public function getFormattedPriceWithConditionsAttribute(): string
+    protected function formattedPriceWithConditions(): Attribute
     {
-        return '$'.number_format($this->price_with_conditions, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->price_with_conditions, 2),
+        );
     }
 
     /** Get formatted subtotal with conditions */
-    public function getFormattedSubTotalWithConditionsAttribute(): string
+    protected function formattedSubTotalWithConditions(): Attribute
     {
-        return '$'.number_format($this->sub_total_with_conditions, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->sub_total_with_conditions, 2),
+        );
     }
 
     /** Scope to filter by cart */

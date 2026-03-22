@@ -22,6 +22,7 @@ class Language extends Model
 
     public $orderable = self::ATTRIBUTES;
     public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,7 +35,15 @@ class Language extends Model
         'is_default',
     ];
 
-    protected $casts = [
-        'status' => Status::class,
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => Status::class,
+        ];
+    }
 }

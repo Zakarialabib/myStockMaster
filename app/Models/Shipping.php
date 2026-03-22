@@ -16,7 +16,12 @@ class Shipping extends Model
     use HasAdvancedFilter;
 
     protected const ATTRIBUTES = [
-        'id', 'is_pickup', 'title', 'subtitle', 'cost', 'status',
+        'id',
+        'is_pickup',
+        'title',
+        'subtitle',
+        'cost',
+        'status',
     ];
 
     public $orderable = self::ATTRIBUTES;
@@ -32,9 +37,17 @@ class Shipping extends Model
     ];
 
     /** Attributes that should be cast to their respective types (Eloquent). */
-    protected $casts = [
-        'cost' => 'float',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'cost' => 'float',
+        ];
+    }
 
     /** Get the relationship with orders that use this shipping. */
     public function sales()

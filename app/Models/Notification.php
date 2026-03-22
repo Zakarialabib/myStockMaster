@@ -21,10 +21,18 @@ class Notification extends Model
         'read_at',
     ];
 
-    protected $casts = [
-        'data'    => 'array',
-        'read_at' => 'datetime',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'data'    => 'array',
+            'read_at' => 'datetime',
+        ];
+    }
 
     protected $keyType = 'string';
 

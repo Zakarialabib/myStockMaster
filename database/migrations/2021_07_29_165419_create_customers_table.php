@@ -7,8 +7,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\CustomerGroup;
 
-class CreateCustomersTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -42,4 +41,4 @@ class CreateCustomersTable extends Migration
     {
         Schema::dropIfExists('customers');
     }
-}
+};

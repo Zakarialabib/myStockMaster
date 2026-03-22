@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +16,6 @@ use Illuminate\Notifications\Notifiable;
 class Customer extends Model
 {
     use HasAdvancedFilter;
-    use HasFactory;
     use HasFactory;
     use HasUuid;
     use Notifiable;
@@ -48,9 +48,17 @@ class Customer extends Model
         'customer_group_id', 'user_id',
     ];
 
-    protected $casts = [
-        'status' => Status::class,
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => Status::class,
+        ];
+    }
 
     public function sales(): HasMany
     {
@@ -72,14 +80,18 @@ class Customer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getFullNameAttribute(): string
+    protected function fullName(): Attribute
     {
-        return $this->attributes['first_name'].' '.$this->attributes['last_name'];
+        return Attribute::make(
+            get: fn () => ($this->first_name ?? '').' '.($this->last_name ?? ''),
+        );
     }
 
-    public function setPhoneAttribute($value)
+    protected function phone(): Attribute
     {
-        $this->attributes['phone'] = preg_replace('/[^0-9]/', '', $value);
+        return Attribute::make(
+            set: fn ($value) => preg_replace('/[^0-9]/', '', $value),
+        );
     }
 
     public function scopeActive($query)

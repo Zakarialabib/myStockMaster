@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
 use App\Support\HasAdvancedFilter;
 use App\Traits\HasUuid;
@@ -70,10 +69,17 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    protected $casts = [
-        'status' => PurchaseStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => PurchaseStatus::class,
+        ];
+    }
 
     public function purchaseDetails(): HasMany
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\SaleReturnStatus;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -62,10 +61,17 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    protected $casts = [
-        'status' => SaleReturnStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => SaleReturnStatus::class,
+        ];
+    }
 
     /** @return HasMany<SaleReturnDetail> */
     public function saleReturnDetails(): HasMany
