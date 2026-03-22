@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Livewire\Installation\StepManager;
-use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;

@@ -14,16 +14,16 @@ final class SessionDriver implements CartDriver
 
     public function get(string $instance): Collection
     {
-        return collect(Session::get($this->prefix . $instance, []));
+        return collect(Session::get($this->prefix.$instance, []));
     }
 
     public function put(string $instance, Collection $content): void
     {
-        Session::put($this->prefix . $instance, $content->toArray());
+        Session::put($this->prefix.$instance, $content->toArray());
     }
 
     public function forget(string $instance): void
     {
-        Session::forget($this->prefix . $instance);
+        Session::forget($this->prefix.$instance);
     }
 }

@@ -31,9 +31,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->title('MyStockMaster');
     }
 
-    /**
-     * Return an array of php.ini directives to be set.
-     */
+    /** Return an array of php.ini directives to be set. */
     public function phpIni(): array
     {
         return [
