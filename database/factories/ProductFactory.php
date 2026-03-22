@@ -32,7 +32,7 @@ class ProductFactory extends Factory
             'code'              => Str::random(5),
             'category_id'       => 1,
             'brand_id'          => null,
-            'slug'              => Str::slug($name).'-'.Str::lower(Str::random(8)),
+            'slug'              => Str::slug($name).'-'.Str::uuid()->toString(),
             'unit'              => 'pcs',
             'description'       => $this->faker->sentence,
             'image'             => null, // uploadImage('images/products', '1000', '1000'),
@@ -53,7 +53,7 @@ class ProductFactory extends Factory
     /**
      * Indicate that the product is featured.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     * @return Factory<Product>
      */
     public function featured(): static
     {
@@ -65,7 +65,7 @@ class ProductFactory extends Factory
     /**
      * Indicate that the product is inactive.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     * @return Factory<Product>
      */
     public function inactive(): static
     {
