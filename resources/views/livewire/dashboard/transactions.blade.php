@@ -409,7 +409,7 @@
                                 <td class="px-8 py-4 whitespace-nowrap">
                                     <x-badge type="danger"
                                         class="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-bold">
-                                        {{ $customer->warehouse->name }}
+                                        {{ $customer->warehouse_name ?? 'N/A' }}
                                     </x-badge>
                                 </td>
                                 <td
