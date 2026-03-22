@@ -21,10 +21,22 @@ class UserWarehouse extends Model
         // 'default_id',
     ];
 
-    protected $casts = [
-        'user_id'      => 'integer',
-        'warehouse_id' => 'integer',
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'user_id'      => 'integer',
+            'warehouse_id' => 'integer'
+        ];
+    }
 
     /** @return HasMany<Warehouse> */
     public function assignedWarehouses(): HasMany

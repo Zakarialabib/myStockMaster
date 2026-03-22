@@ -27,10 +27,22 @@ class ProductWarehouse extends Pivot
         'is_discount', 'discount_date', 'is_ecommerce',
     ];
 
-    protected $casts = [
-        'product_id'   => 'string',
-        'warehouse_id' => 'integer',
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'product_id'   => 'string',
+            'warehouse_id' => 'integer'
+        ];
+    }
 
     public function product(): BelongsTo
     {

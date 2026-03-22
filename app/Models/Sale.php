@@ -57,11 +57,21 @@ class Sale extends Model
         'status',  'payment_id', 'shipping_status', 'note',
     ];
 
-    protected $casts = [
-        'status' => SaleStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => SaleStatus::class,
+        ];
+    }
 
     protected static function boot()
     {

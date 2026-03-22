@@ -23,9 +23,21 @@ class Movement extends Model
         'user_id',
     ];
 
-    protected $casts = [
-        'type' => MovementType::class,
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type' => MovementType::class
+        ];
+    }
 
     public function movable()
     {

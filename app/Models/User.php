@@ -57,13 +57,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'status'            => Status::class,
-    ];
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status'            => Status::class,
+            'is_all_warehouses' => 'boolean',
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+        ];
+    }
 
     /** @return mixed */
     public function scopeIsActive(Builder $builder)

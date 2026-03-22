@@ -11,10 +11,22 @@ class Setting extends Model
 {
     protected $guarded = [];
 
-    protected $casts = [
-        'analytics_control'      => 'array',
-        'installation_completed' => 'boolean',
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'analytics_control'      => 'array',
+            'installation_completed' => 'boolean'
+        ];
+    }
 
     public function currency(): BelongsTo
     {

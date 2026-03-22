@@ -62,10 +62,21 @@ class SaleReturn extends Model
         'customer_id',
     ];
 
-    protected $casts = [
-        'status' => SaleReturnStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => SaleReturnStatus::class,
+        ];
+    }
 
     /** @return HasMany<SaleReturnDetail> */
     public function saleReturnDetails(): HasMany

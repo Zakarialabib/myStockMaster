@@ -50,10 +50,34 @@ class ProductFactory extends Factory
         ];
     }
 
+    /**
+     * Indicate that the product is featured.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     */
+    public function featured(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'featured' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the product is inactive.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => false,
+        ]);
+    }
+
     public function configure()
     {
         return $this->afterCreating(function (Product $product) {
-            $warehouses = Warehouse::inRandomOrder()->limit(2)->get();
+            $warehouses = Warehouse::inRandomOrder()->limit(1)->get();
 
             foreach ($warehouses as $warehouse) {
                 ProductWarehouse::create([

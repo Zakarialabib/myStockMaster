@@ -32,9 +32,21 @@ class Shipping extends Model
     ];
 
     /** Attributes that should be cast to their respective types (Eloquent). */
-    protected $casts = [
-        'cost' => 'float',
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'cost' => 'float'
+        ];
+    }
 
     /** Get the relationship with orders that use this shipping. */
     public function sales()

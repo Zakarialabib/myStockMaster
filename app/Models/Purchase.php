@@ -70,10 +70,21 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    protected $casts = [
-        'status' => PurchaseStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => PurchaseStatus::class,
+        ];
+    }
 
     public function purchaseDetails(): HasMany
     {
