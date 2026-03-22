@@ -17,15 +17,12 @@ class UserWarehouse extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', 'warehouse_id',
+        'user_id',
+        'warehouse_id',
         // 'default_id',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -34,7 +31,7 @@ class UserWarehouse extends Model
     {
         return [
             'user_id'      => 'integer',
-            'warehouse_id' => 'integer'
+            'warehouse_id' => 'integer',
         ];
     }
 

@@ -27,11 +27,7 @@ class ProductWarehouse extends Pivot
         'is_discount', 'discount_date', 'is_ecommerce',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -40,7 +36,7 @@ class ProductWarehouse extends Pivot
     {
         return [
             'product_id'   => 'string',
-            'warehouse_id' => 'integer'
+            'warehouse_id' => 'integer',
         ];
     }
 

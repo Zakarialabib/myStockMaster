@@ -30,10 +30,6 @@ class CartItem extends Model
      *
      * @return array<string, string>
      */
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -71,7 +67,7 @@ class CartItem extends Model
             get: function () {
                 $price = $this->price;
 
-                if (! empty($this->conditions)) {
+                if ( ! empty($this->conditions)) {
                     foreach ($this->conditions as $condition) {
                         $price = $this->applyCondition($price, $condition);
                     }

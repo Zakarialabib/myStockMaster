@@ -11,11 +11,7 @@ class Setting extends Model
 {
     protected $guarded = [];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -24,7 +20,7 @@ class Setting extends Model
     {
         return [
             'analytics_control'      => 'array',
-            'installation_completed' => 'boolean'
+            'installation_completed' => 'boolean',
         ];
     }
 

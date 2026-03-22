@@ -53,10 +53,6 @@ class Customer extends Model
      *
      * @return array<string, string>
      */
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -105,7 +101,7 @@ class Customer extends Model
 
     public function scopeSearchByName($query, $name)
     {
-        return $query->when(! empty($name), function ($query) use ($name) {
+        return $query->when( ! empty($name), function ($query) use ($name) {
             return $query->where('name', 'like', '%'.$name.'%');
         });
     }

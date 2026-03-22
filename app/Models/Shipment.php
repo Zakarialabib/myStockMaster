@@ -12,7 +12,12 @@ class Shipment extends Model
 {
     use HasAdvancedFilter;
     public const ATTRIBUTES = [
-        'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'status',
+        'user_id',
+        'date',
+        'Ref',
+        'sale_id',
+        'delivered_to',
+        'status',
 
     ];
 
@@ -25,14 +30,17 @@ class Shipment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', 'date', 'Ref', 'sale_id', 'delivered_to', 'shipping_address', 'status', 'shipping_details',
+        'user_id',
+        'date',
+        'Ref',
+        'sale_id',
+        'delivered_to',
+        'shipping_address',
+        'status',
+        'shipping_details',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -41,7 +49,7 @@ class Shipment extends Model
     {
         return [
             'user_id' => 'integer',
-            'sale_id' => 'integer'
+            'sale_id' => 'integer',
         ];
     }
 

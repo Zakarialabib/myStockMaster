@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Scopes\SaleScope;
 use App\Support\HasAdvancedFilter;
@@ -51,17 +50,30 @@ class Sale extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'id', 'uuid', 'date', 'reference', 'customer_id', 'user_id', 'warehouse_id',
-        'tax_percentage', 'tax_amount', 'payment_date', 'discount_percentage', 'discount_amount',
-        'shipping_amount', 'total_amount', 'paid_amount', 'cash_register_id', 'due_amount',
-        'status',  'payment_id', 'shipping_status', 'note',
+        'id',
+        'uuid',
+        'date',
+        'reference',
+        'customer_id',
+        'user_id',
+        'warehouse_id',
+        'tax_percentage',
+        'tax_amount',
+        'payment_date',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'cash_register_id',
+        'due_amount',
+        'status',
+        'payment_id',
+        'shipping_status',
+        'note',
     ];
 
-        /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
