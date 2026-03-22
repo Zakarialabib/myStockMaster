@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\Language;
 use App\Models\Setting;
 use App\Observers\SettingsObserver;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
@@ -41,28 +42,22 @@ class AppServiceProvider extends ServiceProvider
         Setting::observe(SettingsObserver::class);
 
         JsonResource::withoutWrapping();
-
-        // Model::shouldBeStrict( ! $this->app->isProduction());
-
-        // Passport::useTokenModel(Token::class);
-        // Passport::useRefreshTokenModel(RefreshToken::class);
-        // Passport::useAuthCodeModel(AuthCode::class);
-        // Passport::useClientModel(Client::class);
-        // Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
     }
 
     private function getLanguages()
     {
-        // if ( ! app()->runningInConsole()) {
-        if ( ! Schema::hasTable('languages')) {
-            return;
-        }
+        try {
+            if (!Schema::hasTable('languages')) {
+                return [];
+            }
 
-        return cache()->rememberForever('languages', function () {
-            return Session::has('language')
-                ? Language::pluck('name', 'code')->toArray()
-                : Language::where('is_default', 1)->first();
-        });
-        // }
+            return cache()->rememberForever('languages', function () {
+                return Session::has('language')
+                    ? Language::pluck('name', 'code')->toArray()
+                    : Language::where('is_default', 1)->first();
+            });
+        } catch (Exception $e) {
+            return [];
+        }
     }
 }

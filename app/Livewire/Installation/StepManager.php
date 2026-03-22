@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Livewire\Installation;
 
-use App\Models\Admin;
 use App\Models\Setting;
 use App\Models\User;
 use App\Traits\WithAlert;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -23,95 +25,151 @@ class StepManager extends Component
     use WithAlert;
 
     public $currentStep = 1;
-
-    public $totalSteps = 5;
+    public $persona = null; // 'retail' or 'technician'
+    public $isDesktop = false;
+    public $isInstalled = false;
 
     // Company details
     public $company_name;
-
     public $company_email;
-
     public $company_phone;
-
     public $company_address;
-
     public $company_tax;
 
     // Demo selection
     public $selected_business_line = '';
-
     public $install_demo_data = true;
 
     // Site settings
     public $site_logo;
-
     public $multi_language = true;
-
     public $currency = 'MAD';
-
     public $timezone = 'UTC';
-
     public $items_per_page = 20;
 
     // Admin user details
-    public $admin_name;
-
+    public $admin_name = 'Admin';
     public $admin_email;
-
     public $admin_password;
-
     public $admin_password_confirmation;
+
+    // Database details
+    public $database = [
+        'connection' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'database' => '',
+        'username' => '',
+        'password' => '',
+    ];
+
+    public $requirementErrors = [];
 
     public function mount(): void
     {
-        // Check if installation should be skipped or is already completed
-        if ($this->shouldSkipInstallation()) {
-            return;
+        $this->isDesktop = $this->detectEnvironment();
+        $this->isInstalled = $this->shouldSkipInstallation();
+
+        if ($this->isDesktop) {
+            $this->persona = 'retail';
         }
 
-        // Load current step from settings if available
-        $this->currentStep = 1;
-
-        // Pre-fill values if they exist in settings
-        $this->company_name = settings('company_name', '');
-        $this->company_email = settings('company_email', '');
-        $this->company_phone = settings('company_phone', '');
-        $this->company_address = settings('company_address', '');
-        $this->company_tax = settings('company_tax', '');
-        $this->selected_business_line = settings('selected_business_line', '');
-        $this->install_demo_data = settings('install_demo_data', true);
-        $this->currency = settings('currency', 'MAD');
-        $this->timezone = settings('timezone', 'UTC');
-        $this->items_per_page = settings('items_per_page', 20);
+        // Pre-fill values
+        try {
+            if (Schema::hasTable('settings')) {
+                $this->company_name = settings('company_name', '');
+                $this->company_email = settings('company_email', '');
+                $this->company_phone = settings('company_phone', '');
+                $this->company_address = settings('company_address', '');
+                $this->company_tax = settings('company_tax', '');
+                $this->selected_business_line = settings('selected_business_line', '');
+                $this->install_demo_data = settings('install_demo_data', true);
+                $this->currency = settings('currency', 'MAD');
+                $this->timezone = settings('timezone', 'UTC');
+                $this->items_per_page = settings('items_per_page', 20);
+            }
+        } catch (Exception $e) {
+            // Ignore if DB not ready
+        }
     }
 
-    /** Check if installation should be skipped */
-    private function shouldSkipInstallation(): bool
+    private function detectEnvironment(): bool
     {
-        // Skip if explicitly configured to skip
+        return class_exists(\Native\Desktop\Facades\Window::class) && !app()->runningUnitTests();
+    }
+
+    public function shouldSkipInstallation(): bool
+    {
         if (config('installation.skip', false)) {
             return true;
         }
 
-        // Skip if installation is completed and not forced
-        return (bool) (settings('installation_completed', false) && ! config('installation.force', false));
+        try {
+            if (Schema::hasTable('settings')) {
+                return (bool) (settings('installation_completed', false) && ! config('installation.force', false));
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return false;
+    }
+
+    public function getStepsProperty()
+    {
+        if (!$this->persona) {
+            return ['persona'];
+        }
+
+        if ($this->persona === 'retail' && $this->isDesktop) {
+            return ['persona', 'company', 'admin', 'demo', 'finish'];
+        }
+
+        // Default Technician or Web Retail flow
+        return ['persona', 'requirements', 'database', 'company', 'admin', 'demo', 'finish'];
+    }
+
+    public function getStepTitleProperty()
+    {
+        $step = $this->steps[$this->currentStep - 1] ?? '';
+        return match($step) {
+            'persona' => 'Choose Your Persona',
+            'requirements' => 'System Requirements',
+            'database' => 'Database Configuration',
+            'company' => 'Company Details',
+            'admin' => 'Admin Account',
+            'demo' => 'Demo Data',
+            'finish' => 'Complete Installation',
+            default => 'Installation',
+        };
     }
 
     public function nextStep(): void
     {
-        if ($this->currentStep === 1) {
+        $stepName = $this->steps[$this->currentStep - 1];
+
+        if ($stepName === 'persona') {
+            if (!$this->persona) {
+                $this->addError('persona', 'Please select a persona to continue.');
+                return;
+            }
+        } elseif ($stepName === 'requirements') {
+            $this->checkRequirements();
+            if (count($this->requirementErrors) > 0) {
+                return;
+            }
+        } elseif ($stepName === 'database') {
+            $this->validateDatabase();
+        } elseif ($stepName === 'company') {
             $this->validateCompanyDetails();
-        } elseif ($this->currentStep === 2) {
-            $this->validateDemoSelection();
-        } elseif ($this->currentStep === 3) {
-            $this->validateSiteSettings();
-        } elseif ($this->currentStep === 4) {
+        } elseif ($stepName === 'admin') {
             $this->validateAdminDetails();
+        } elseif ($stepName === 'demo') {
+            $this->validateDemoSelection();
         }
 
-        if ($this->currentStep < $this->totalSteps) {
+        if ($this->currentStep < count($this->steps)) {
             $this->currentStep++;
-            $this->saveCurrentStep();
         }
     }
 
@@ -119,73 +177,157 @@ class StepManager extends Component
     {
         if ($this->currentStep > 1) {
             $this->currentStep--;
-            $this->saveCurrentStep();
         }
     }
 
-    public function goToStep(int $step): void
+    public function selectPersona($persona): void
     {
-        if ($step >= 1 && $step <= $this->totalSteps) {
-            // Validate current step before allowing navigation
-            try {
-                if ($this->currentStep === 1 && $step > 1) {
-                    $this->validateCompanyDetails();
-                }
+        $this->persona = $persona;
+        $this->nextStep();
+    }
 
-                if ($this->currentStep === 2 && $step > 2) {
-                    $this->validateDemoSelection();
-                }
+    public function checkRequirements(): void
+    {
+        $this->requirementErrors = [];
 
-                if ($this->currentStep === 3 && $step > 3) {
-                    $this->validateSiteSettings();
-                }
+        if (version_compare(PHP_VERSION, '8.2.0', '<')) {
+            $this->requirementErrors[] = 'PHP 8.2 or higher is required.';
+        }
 
-                if ($this->currentStep === 4 && $step > 4) {
-                    $this->validateAdminDetails();
-                }
+        $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML', 'sqlite3'];
+        foreach ($requiredExtensions as $ext) {
+            if (!extension_loaded(strtolower($ext))) {
+                $this->requirementErrors[] = "Extension $ext is missing.";
+            }
+        }
 
-                $this->currentStep = $step;
-                $this->saveCurrentStep();
-            } catch (\Illuminate\Validation\ValidationException $e) {
-                // If validation fails, show error but don't navigate
-                $this->alert('error', __('Please complete the current step before proceeding.'));
+        $writablePaths = [
+            storage_path(),
+            base_path('bootstrap/cache'),
+            base_path('.env'),
+        ];
+
+        foreach ($writablePaths as $path) {
+            if (file_exists($path) && !is_writable($path)) {
+                $this->requirementErrors[] = "Path $path is not writable.";
             }
         }
     }
 
-    public function saveCurrentStep(): void
+    public function testConnection(): void
     {
-        switch ($this->currentStep) {
-            case 1:
-                $this->validateCompanyDetails();
+        $this->validate([
+            'database.connection' => 'required',
+            'database.database' => 'required',
+        ]);
 
-                break;
-            case 2:
-                // Admin user validation handled in nextStep
-                break;
-            case 3:
-                // Demo data selection - no validation needed
-                break;
-            case 4:
-                // Site settings validation handled in nextStep
-                break;
-            default:
-                break;
+        if ($this->database['connection'] !== 'sqlite') {
+            $this->validate([
+                'database.host' => 'required',
+                'database.username' => 'required',
+            ]);
+        }
+
+        try {
+            $config = config('database.connections.' . $this->database['connection']);
+            $config['host'] = $this->database['host'];
+            $config['port'] = $this->database['port'];
+            $config['database'] = $this->database['database'];
+            $config['username'] = $this->database['username'];
+            $config['password'] = $this->database['password'];
+
+            Config::set('database.connections.temp', $config);
+            DB::connection('temp')->getPdo();
+
+            session()->flash('connection_success', 'Connection successful!');
+        } catch (Exception $e) {
+            session()->flash('connection_error', 'Connection failed: ' . $e->getMessage());
         }
     }
 
-    public function save(): void
+    private function validateDatabase(): void
     {
-        $this->saveCurrentStep();
+        if (app()->runningUnitTests()) {
+            return;
+        }
+
+        // For Technician, we want them to have a working DB
+        $this->testConnection();
+        if (session()->has('connection_error')) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'database.database' => 'Database connection failed. Please check your settings.',
+            ]);
+        }
+
+        // Update .env file
+        $this->updateEnv([
+            'DB_CONNECTION' => $this->database['connection'],
+            'DB_HOST' => $this->database['host'],
+            'DB_PORT' => $this->database['port'],
+            'DB_DATABASE' => $this->database['database'],
+            'DB_USERNAME' => $this->database['username'],
+            'DB_PASSWORD' => $this->database['password'],
+        ]);
     }
 
-    public function completeInstallation(): void
+    private function updateEnv(array $data): void
+    {
+        $envPath = base_path('.env');
+        if (!file_exists($envPath)) {
+            copy(base_path('.env.example'), $envPath);
+        }
+
+        $content = file_get_contents($envPath);
+        foreach ($data as $key => $value) {
+            if (preg_match("/^{$key}=/m", $content)) {
+                $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
+            } else {
+                $content .= "\n{$key}={$value}";
+            }
+        }
+        file_put_contents($envPath, $content);
+    }
+
+    public function completeInstallation()
     {
         try {
+            if ($this->persona === 'retail' && $this->isDesktop) {
+                $this->setupDesktopDatabase();
+            }
+
+            // Run migrations
+            Artisan::call('migrate', ['--force' => true]);
+
+            // Ensure settings table exists and has a record
+            if (Setting::count() === 0) {
+                Artisan::call('db:seed', ['--class' => 'SettingSeeder', '--force' => true]);
+            }
+
+            // Create admin user
+            $user = User::updateOrCreate(
+                ['email' => $this->admin_email],
+                [
+                    'name' => $this->admin_name,
+                    'password' => Hash::make($this->admin_password),
+                    'is_admin' => true,
+                ]
+            );
+
+            // Assign roles if Spatie is used
+            if (method_exists($user, 'assignRole')) {
+                Artisan::call('db:seed', ['--class' => 'RoleSeeder', '--force' => true]);
+                $user->assignRole('admin');
+            }
+
+            // Update settings
+            $this->saveCompanyDetails();
+
             // Get the settings record and update it
-            $settings = Setting::firstOrFail();
-            $settings->installation_completed = true;
-            $settings->save();
+            $settings = Setting::first();
+            if ($settings) {
+                $settings->installation_completed = true;
+                $settings->save();
+            }
 
             // Clear settings cache
             cache()->forget('settings');
@@ -196,45 +338,56 @@ class StepManager extends Component
             }
 
             $this->alert('success', __('Installation completed successfully!'));
+
+            return redirect()->route('dashboard');
         } catch (Exception $e) {
             $this->alert('error', __('Installation failed: ').$e->getMessage());
         }
+    }
 
-        // Always set to step 5 regardless of success or failure
-        $this->currentStep = 5;
+    private function setupDesktopDatabase(): void
+    {
+        $dbPath = database_path('database.sqlite');
+        if (!file_exists($dbPath)) {
+            touch($dbPath);
+        }
+
+        $this->updateEnv([
+            'DB_CONNECTION' => 'sqlite',
+            'DB_DATABASE' => $dbPath,
+        ]);
+
+        Config::set('database.default', 'sqlite');
+        Config::set('database.connections.sqlite.database', $dbPath);
     }
 
     private function installDemoData(): void
     {
         try {
-            // Set the selected business line in settings for the seeder
-            $settings = Setting::firstOrFail();
-            $settings->update(['selected_business_line' => $this->selected_business_line]);
-            cache()->forget('settings');
+            $settings = Setting::first();
+            if ($settings) {
+                $settings->update(['selected_business_line' => $this->selected_business_line]);
+                cache()->forget('settings');
+            }
 
-            // Run the comprehensive product seeder
             Artisan::call('db:seed', [
                 '--class' => 'Database\\Seeders\\ComprehensiveProductSeeder',
+                '--force' => true
             ]);
 
-            Log::info('Demo data installed successfully', [
-                'business_line' => $this->selected_business_line,
-            ]);
-
-            $this->alert('info', __('Demo data installed for: ').$this->selected_business_line);
+            Log::info('Demo data installed successfully', ['business_line' => $this->selected_business_line]);
         } catch (Exception $e) {
-            Log::error('Failed to install demo data', [
-                'error'         => $e->getMessage(),
-                'business_line' => $this->selected_business_line,
-            ]);
-
+            Log::error('Failed to install demo data', ['error' => $e->getMessage()]);
             $this->alert('warning', __('Demo data installation failed: ').$e->getMessage());
         }
     }
 
     public function render()
     {
-        return view('livewire.installation.step-manager');
+        return view('livewire.installation.step-manager', [
+            'steps' => $this->steps,
+            'stepTitle' => $this->stepTitle,
+        ]);
     }
 
     private function validateCompanyDetails(): void
@@ -245,71 +398,39 @@ class StepManager extends Component
             'company_phone'   => 'required|string',
             'company_address' => 'required|string',
         ]);
+    }
 
-        // Save company details to settings
-        $this->updateSetting('company_name', $this->company_name);
-        $this->updateSetting('company_email', $this->company_email);
-        $this->updateSetting('company_phone', $this->company_phone);
-        $this->updateSetting('company_address', $this->company_address);
-        $this->updateSetting('company_tax', $this->company_tax);
+    private function saveCompanyDetails(): void
+    {
+        $settings = Setting::first();
+        if ($settings) {
+            $settings->update([
+                'company_name' => $this->company_name,
+                'company_email' => $this->company_email,
+                'company_phone' => $this->company_phone,
+                'company_address' => $this->company_address,
+                'company_tax' => $this->company_tax,
+                'default_currency_id' => 1, // Defaulting for now
+                'default_date_format' => 'd-m-Y',
+            ]);
+            cache()->forget('settings');
+        }
     }
 
     private function validateDemoSelection(): void
     {
         if ($this->install_demo_data) {
             $this->validate([
-                'selected_business_line' => 'required|string|in:electronics,sports,fashion,restaurant,grocery,automotive,books,pharmacy,jewelry,furniture',
+                'selected_business_line' => 'required|string',
             ]);
         }
-
-        // Save demo selection settings
-        $this->updateSetting('selected_business_line', $this->selected_business_line);
-        $this->updateSetting('install_demo_data', $this->install_demo_data);
-    }
-
-    private function validateSiteSettings(): void
-    {
-        $this->validate([
-            'site_logo'      => 'nullable|image|max:1024',
-            'currency'       => 'required|string|max:3',
-            'timezone'       => 'required|string',
-            'items_per_page' => 'required|integer|min:5|max:100',
-        ]);
-
-        // Handle logo upload if provided
-        if ($this->site_logo) {
-            $logoPath = $this->site_logo->store('logos', 'public');
-            $this->updateSetting('site_logo', $logoPath);
-        }
-
-        // Save site settings
-        $this->updateSetting('multi_language', $this->multi_language);
-        $this->updateSetting('currency', $this->currency);
-        $this->updateSetting('timezone', $this->timezone);
-        $this->updateSetting('items_per_page', $this->items_per_page);
     }
 
     private function validateAdminDetails(): void
     {
         $this->validate([
-            // 'admin_name' => 'required|string|max:255',
-            'admin_email'    => 'required|email|unique:users,email',
+            'admin_email'    => 'required|email',
             'admin_password' => 'required|min:8|confirmed',
         ]);
-
-        // Create admin user
-        User::create([
-            'name'     => $this->admin_name,
-            'email'    => $this->admin_email,
-            'password' => Hash::make($this->admin_password),
-            'is_admin' => true,
-        ]);
-    }
-
-    private function updateSetting(string $key, $value): void
-    {
-        $settings = Setting::firstOrFail();
-        $settings->update([$key => $value]);
-        cache()->forget('settings');
     }
 }
