@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -14,13 +16,13 @@ class SyncController extends Controller
         $lastSyncedAt = $request->input('last_synced_at');
 
         $query = function ($model) use ($lastSyncedAt) {
-            return $lastSyncedAt 
-                ? $model::where('updated_at', '>', $lastSyncedAt)->get() 
+            return $lastSyncedAt
+                ? $model::where('updated_at', '>', $lastSyncedAt)->get()
                 : $model::all();
         };
 
         return response()->json([
-            'products' => $query(Product::class),
+            'products'  => $query(Product::class),
             'customers' => $query(Customer::class),
             // Add other models here
             'server_time' => now()->toIso8601String(),

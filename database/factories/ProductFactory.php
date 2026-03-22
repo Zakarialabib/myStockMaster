@@ -53,7 +53,7 @@ class ProductFactory extends Factory
     /**
      * Indicate that the product is featured.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     * @return Factory<Product>
      */
     public function featured(): static
     {
@@ -65,7 +65,7 @@ class ProductFactory extends Factory
     /**
      * Indicate that the product is inactive.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+     * @return Factory<Product>
      */
     public function inactive(): static
     {

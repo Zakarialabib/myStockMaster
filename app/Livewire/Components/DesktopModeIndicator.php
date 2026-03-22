@@ -27,25 +27,19 @@ class DesktopModeIndicator extends Component
         return view('livewire.components.desktop-mode-indicator');
     }
 
-    /**
-     * Toggle details visibility.
-     */
+    /** Toggle details visibility. */
     public function toggleDetails()
     {
-        $this->showDetails = !$this->showDetails;
+        $this->showDetails = ! $this->showDetails;
     }
 
-    /**
-     * Navigate to database sync page.
-     */
+    /** Navigate to database sync page. */
     public function goToSync()
     {
         return redirect()->route('admin.database-sync');
     }
 
-    /**
-     * Refresh the component data.
-     */
+    /** Refresh the component data. */
     public function refresh()
     {
         $this->isDesktop = EnvironmentService::isDesktop();
