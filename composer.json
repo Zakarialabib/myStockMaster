@@ -63,6 +63,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
+            "@php artisan install:doctor",
             "@php artisan migrate --force",
             "npm install",
             "npm run build"
