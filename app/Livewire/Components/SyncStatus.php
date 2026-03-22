@@ -26,15 +26,17 @@ class SyncStatus extends Component
     public function checkConnection()
     {
         // If we are in Online Mode (Direct DB), we are considered online
-        if (!EnvironmentService::isOfflineMode()) {
+        if ( ! EnvironmentService::isOfflineMode()) {
             $this->isOnline = true;
+
             return;
         }
 
         // Simple check to google or own server
         // In NativePHP, we might have better ways, but this works generally
-        $connected = @fsockopen("www.google.com", 80); 
-        if ($connected){
+        $connected = @fsockopen('www.google.com', 80);
+
+        if ($connected) {
             $this->isOnline = true;
             fclose($connected);
         } else {
@@ -44,25 +46,26 @@ class SyncStatus extends Component
 
     public function triggerSync()
     {
-        if (!$this->isOnline) {
-            $this->syncMessage = "Cannot sync while offline.";
+        if ( ! $this->isOnline) {
+            $this->syncMessage = 'Cannot sync while offline.';
+
             return;
         }
 
         $this->isSyncing = true;
-        $this->syncMessage = "Sync started...";
+        $this->syncMessage = 'Sync started...';
 
         // Dispatch the job
         SyncDatabaseJob::dispatch();
-        
+
         // In a real app, we'd listen for Echo events or poll a job status
         // For MVP, we simulate a delay then update
         // We'll just update the timestamp assuming it works
         $this->lastSyncedAt = now()->toIso8601String();
         Cache::put('last_synced_at', $this->lastSyncedAt);
-        
+
         $this->isSyncing = false;
-        $this->syncMessage = "Sync completed successfully.";
+        $this->syncMessage = 'Sync completed successfully.';
     }
 
     public function render()

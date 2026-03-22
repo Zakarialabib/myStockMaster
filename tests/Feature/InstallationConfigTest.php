@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use Tests\TestCase;
@@ -13,7 +15,7 @@ class InstallationConfigTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Clear any cached settings
         cache()->forget('settings');
     }

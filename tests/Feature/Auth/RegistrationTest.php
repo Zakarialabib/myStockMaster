@@ -34,11 +34,11 @@ it('validates registration input', function (string $field, string $value, strin
         ->call('register')
         ->assertHasErrors([$field => $rule]);
 })->with([
-    'name required' => ['name', '', 'required'],
-    'email required' => ['email', '', 'required'],
-    'email invalid' => ['email', 'not-an-email', 'email'],
-    'phone required' => ['phone', '', 'required'],
-    'password required' => ['password', '', 'required'],
-    'password too short' => ['password', '123', 'min'],
+    'name required'         => ['name', '', 'required'],
+    'email required'        => ['email', '', 'required'],
+    'email invalid'         => ['email', 'not-an-email', 'email'],
+    'phone required'        => ['phone', '', 'required'],
+    'password required'     => ['password', '', 'required'],
+    'password too short'    => ['password', '123', 'min'],
     'password confirmation' => ['password_confirmation', 'mismatch', 'same'],
 ]);

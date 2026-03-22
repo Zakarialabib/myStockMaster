@@ -135,12 +135,13 @@ class Transactions extends Component
         $yearRaw = db_date_format('date', '%Y');
 
         $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', 
+            ->when(
+                $this->typeChart === 'monthly',
                 static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as sales")
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw("labels"), 
+                    ->groupByRaw('labels'),
                 static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as sales")
-                    ->groupByRaw("labels")
+                    ->groupByRaw('labels')
             )
             ->get()
             ->toArray();
@@ -152,12 +153,13 @@ class Transactions extends Component
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
-            ->when($this->typeChart === 'monthly', 
+            ->when(
+                $this->typeChart === 'monthly',
                 static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as purchases")
                     ->whereYear('date', '=', date('Y'))
-                    ->groupByRaw("labels"), 
+                    ->groupByRaw('labels'),
                 static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as purchases")
-                    ->groupByRaw("labels")
+                    ->groupByRaw('labels')
             )
             ->get()
             ->toArray();

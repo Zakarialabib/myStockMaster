@@ -62,7 +62,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'status'            => Status::class,
+        'status' => Status::class,
     ];
 
     /** @return mixed */

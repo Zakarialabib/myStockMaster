@@ -4,95 +4,89 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Services\EnvironmentService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class DesktopShortcutService
 {
-    /**
-     * Available keyboard shortcuts for desktop mode
-     */
+    /** Available keyboard shortcuts for desktop mode */
     public const SHORTCUTS = [
         // Navigation shortcuts
         'ctrl+shift+d' => 'toggleDevTools',
-        'ctrl+r' => 'refreshPage',
-        'f5' => 'refreshPage',
+        'ctrl+r'       => 'refreshPage',
+        'f5'           => 'refreshPage',
         'ctrl+shift+r' => 'hardRefresh',
-        'f11' => 'toggleFullscreen',
-        'alt+f4' => 'closeWindow',
-        'ctrl+m' => 'minimizeWindow',
+        'f11'          => 'toggleFullscreen',
+        'alt+f4'       => 'closeWindow',
+        'ctrl+m'       => 'minimizeWindow',
         'ctrl+shift+m' => 'maximizeWindow',
-        
+
         // Application shortcuts
         'ctrl+shift+s' => 'syncData',
         'ctrl+shift+o' => 'toggleOfflineMode',
         'ctrl+shift+n' => 'showNotifications',
         'ctrl+shift+c' => 'clearCache',
         'ctrl+shift+l' => 'showLogs',
-        
+
         // POS shortcuts
         'ctrl+shift+p' => 'openPOS',
         'ctrl+shift+i' => 'addProduct',
         'ctrl+shift+u' => 'showUsers',
         'ctrl+shift+w' => 'showWarehouses',
-        
+
         // Quick actions
-        'ctrl+n' => 'newSale',
+        'ctrl+n'       => 'newSale',
         'ctrl+shift+q' => 'newQuotation',
         'ctrl+shift+b' => 'showBarcode',
         'ctrl+shift+e' => 'exportData',
-        
+
         // System shortcuts
         'ctrl+shift+?' => 'showHelp',
         'ctrl+shift+a' => 'showAbout',
         'ctrl+shift+u' => 'checkUpdates',
-        'escape' => 'closeModal',
+        'escape'       => 'closeModal',
     ];
 
-    /**
-     * Execute a shortcut action
-     */
+    /** Execute a shortcut action */
     public function executeShortcut(string $shortcut): array
     {
-        if (!EnvironmentService::isDesktop()) {
+        if ( ! EnvironmentService::isDesktop()) {
             return ['success' => false, 'message' => 'Desktop shortcuts only available in desktop mode'];
         }
 
         $action = self::SHORTCUTS[$shortcut] ?? null;
-        
-        if (!$action) {
-            return ['success' => false, 'message' => 'Unknown shortcut: ' . $shortcut];
+
+        if ( ! $action) {
+            return ['success' => false, 'message' => 'Unknown shortcut: '.$shortcut];
         }
 
         try {
             return $this->$action();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Desktop shortcut error', [
                 'shortcut' => $shortcut,
-                'action' => $action,
-                'error' => $e->getMessage()
+                'action'   => $action,
+                'error'    => $e->getMessage(),
             ]);
 
-            return ['success' => false, 'message' => 'Failed to execute shortcut: ' . $e->getMessage()];
+            return ['success' => false, 'message' => 'Failed to execute shortcut: '.$e->getMessage()];
         }
     }
 
-    /**
-     * Get all available shortcuts with descriptions
-     */
+    /** Get all available shortcuts with descriptions */
     public function getShortcuts(): array
     {
         return [
             'Navigation' => [
                 'ctrl+shift+d' => 'Toggle Developer Tools',
-                'ctrl+r' => 'Refresh Page',
-                'f5' => 'Refresh Page',
+                'ctrl+r'       => 'Refresh Page',
+                'f5'           => 'Refresh Page',
                 'ctrl+shift+r' => 'Hard Refresh (Clear Cache)',
-                'f11' => 'Toggle Fullscreen',
-                'alt+f4' => 'Close Window',
-                'ctrl+m' => 'Minimize Window',
+                'f11'          => 'Toggle Fullscreen',
+                'alt+f4'       => 'Close Window',
+                'ctrl+m'       => 'Minimize Window',
                 'ctrl+shift+m' => 'Maximize Window',
             ],
             'Application' => [
@@ -105,7 +99,7 @@ class DesktopShortcutService
             'POS & Inventory' => [
                 'ctrl+shift+p' => 'Open POS',
                 'ctrl+shift+i' => 'Add Product',
-                'ctrl+n' => 'New Sale',
+                'ctrl+n'       => 'New Sale',
                 'ctrl+shift+q' => 'New Quotation',
                 'ctrl+shift+b' => 'Show Barcode Generator',
             ],
@@ -118,7 +112,7 @@ class DesktopShortcutService
                 'ctrl+shift+?' => 'Show Help',
                 'ctrl+shift+a' => 'Show About',
                 'ctrl+shift+u' => 'Check for Updates',
-                'escape' => 'Close Modal/Dialog',
+                'escape'       => 'Close Modal/Dialog',
             ],
         ];
     }
@@ -137,6 +131,7 @@ class DesktopShortcutService
     protected function hardRefresh(): array
     {
         Cache::flush();
+
         return ['success' => true, 'action' => 'hardRefresh', 'message' => 'Hard refresh completed'];
     }
 
@@ -165,37 +160,37 @@ class DesktopShortcutService
     {
         try {
             $syncService = app(DatabaseSyncService::class);
-            
-            if (!$syncService->isOnline()) {
+
+            if ( ! $syncService->isOnline()) {
                 return ['success' => false, 'message' => 'Cannot sync: No internet connection'];
             }
 
             // Perform bidirectional sync
             $result = $syncService->syncBidirectional();
-            
+
             return [
-                'success' => true, 
-                'action' => 'syncData', 
+                'success' => true,
+                'action'  => 'syncData',
                 'message' => 'Data synchronization completed',
-                'data' => $result
+                'data'    => $result,
             ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Sync failed: ' . $e->getMessage()];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Sync failed: '.$e->getMessage()];
         }
     }
 
     protected function toggleOfflineMode(): array
     {
         $currentMode = Cache::get('desktop_offline_mode', false);
-        $newMode = !$currentMode;
-        
+        $newMode = ! $currentMode;
+
         Cache::put('desktop_offline_mode', $newMode, now()->addDays(30));
-        
+
         return [
-            'success' => true, 
-            'action' => 'toggleOfflineMode', 
-            'message' => $newMode ? 'Switched to offline mode' : 'Switched to online mode',
-            'offline_mode' => $newMode
+            'success'      => true,
+            'action'       => 'toggleOfflineMode',
+            'message'      => $newMode ? 'Switched to offline mode' : 'Switched to online mode',
+            'offline_mode' => $newMode,
         ];
     }
 
@@ -211,10 +206,10 @@ class DesktopShortcutService
             Artisan::call('config:clear');
             Artisan::call('view:clear');
             Artisan::call('route:clear');
-            
+
             return ['success' => true, 'action' => 'clearCache', 'message' => 'All caches cleared successfully'];
-        } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Failed to clear cache: ' . $e->getMessage()];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Failed to clear cache: '.$e->getMessage()];
         }
     }
 
@@ -286,12 +281,10 @@ class DesktopShortcutService
         return ['success' => true, 'action' => 'closeModal', 'message' => 'Modal closed'];
     }
 
-    /**
-     * Register shortcuts with the desktop environment
-     */
+    /** Register shortcuts with the desktop environment */
     public function registerShortcuts(): void
     {
-        if (!EnvironmentService::isDesktop()) {
+        if ( ! EnvironmentService::isDesktop()) {
             return;
         }
 
@@ -299,31 +292,27 @@ class DesktopShortcutService
         // For now, we'll log the registration
         Log::info('Desktop shortcuts registered', [
             'shortcuts' => array_keys(self::SHORTCUTS),
-            'count' => count(self::SHORTCUTS)
+            'count'     => count(self::SHORTCUTS),
         ]);
     }
 
-    /**
-     * Check if a shortcut is available
-     */
+    /** Check if a shortcut is available */
     public function isShortcutAvailable(string $shortcut): bool
     {
         return isset(self::SHORTCUTS[$shortcut]);
     }
 
-    /**
-     * Get shortcut description
-     */
+    /** Get shortcut description */
     public function getShortcutDescription(string $shortcut): ?string
     {
         $shortcuts = $this->getShortcuts();
-        
+
         foreach ($shortcuts as $category => $categoryShortcuts) {
             if (isset($categoryShortcuts[$shortcut])) {
                 return $categoryShortcuts[$shortcut];
             }
         }
-        
+
         return null;
     }
 }

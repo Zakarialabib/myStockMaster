@@ -7,7 +7,6 @@ use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
-use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
