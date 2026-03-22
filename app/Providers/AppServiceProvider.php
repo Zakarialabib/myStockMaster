@@ -24,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton('cart', function ($app) {
+            return new \App\Support\Cart\CartManager($app);
+        });
+
+        $this->app->alias('cart', \App\Support\Cart\CartManager::class);
     }
 
     /**
