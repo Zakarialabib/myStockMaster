@@ -61,10 +61,21 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-    protected $casts = [
-        'status' => PurchaseReturnStatus::class,
-        // 'payment_status' => PaymentStatus::class,
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => PurchaseReturnStatus::class,
+        ];
+    }
 
     /** @return HasMany<PurchaseReturnDetail> */
     public function purchaseReturnDetails(): HasMany

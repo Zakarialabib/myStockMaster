@@ -56,9 +56,21 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    protected $casts = [
-        'status' => QuotationStatus::class,
-    ];
+        /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => QuotationStatus::class
+        ];
+    }
 
     public function quotationDetails(): HasMany
     {

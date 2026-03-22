@@ -60,6 +60,26 @@ class Product extends Model
         'note',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'featured' => 'boolean',
+            'status'   => 'boolean',
+            'hot'      => 'boolean',
+            'best'     => 'boolean',
+            'options'  => 'array',
+        ];
+    }
+
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
@@ -143,52 +163,44 @@ class Product extends Model
             ->withPivot('qty', 'price', 'cost', 'old_price', 'stock_alert', 'is_discount', 'discount_date', 'is_ecommerce');
     }
 
-    public function getTotalQuantityAttribute(): int|float|null
+    protected function totalQuantity(): Attribute
     {
-        // Use database aggregation for better performance
-        $sum = $this->warehouses()->sum('qty');
-
-        if ($sum === null) {
-            return null;
-        }
-
-        return (float) $sum;
+        return Attribute::make(
+            get: function () {
+                $sum = $this->warehouses()->sum('qty');
+                return $sum !== null ? (float) $sum : null;
+            }
+        );
     }
 
-    public function getAveragePriceAttribute(): int|float|null
+    protected function averagePrice(): Attribute
     {
-        // Use database aggregation for better performance
-        $avg = $this->warehouses()->avg('price');
-
-        if ($avg === null) {
-            return null;
-        }
-
-        return (float) $avg;
+        return Attribute::make(
+            get: function () {
+                $avg = $this->warehouses()->avg('price');
+                return $avg !== null ? (float) $avg : null;
+            }
+        );
     }
 
-    public function getAverageCostAttribute(): int|float|null
+    protected function averageCost(): Attribute
     {
-        // Use database aggregation for better performance
-        $avg = $this->warehouses()->avg('cost');
-
-        if ($avg === null) {
-            return null;
-        }
-
-        return (float) $avg;
+        return Attribute::make(
+            get: function () {
+                $avg = $this->warehouses()->avg('cost');
+                return $avg !== null ? (float) $avg : null;
+            }
+        );
     }
 
-    public function getAverageOldPriceAttribute(): int|float|null
+    protected function averageOldPrice(): Attribute
     {
-        // Add method for average old price used in getDiscountedPrice
-        $avg = $this->warehouses()->avg('old_price');
-
-        if ($avg === null) {
-            return null;
-        }
-
-        return (float) $avg;
+        return Attribute::make(
+            get: function () {
+                $avg = $this->warehouses()->avg('old_price');
+                return $avg !== null ? (float) $avg : null;
+            }
+        );
     }
 
     // Add scope for stock alerts

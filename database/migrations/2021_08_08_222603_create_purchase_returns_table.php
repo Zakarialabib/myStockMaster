@@ -10,8 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurchaseReturnsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -54,4 +53,4 @@ class CreatePurchaseReturnsTable extends Migration
     {
         Schema::dropIfExists('purchase_returns');
     }
-}
+};

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,11 +23,23 @@ class Cart extends Model
         'expires_at',
     ];
 
-    protected $casts = [
-        'conditions' => 'array',
-        'tax_rate'   => 'decimal:2',
-        'expires_at' => 'datetime',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'conditions' => 'array',
+            'tax_rate'   => 'decimal:2',
+            'expires_at' => 'datetime',
+        ];
+    }
 
     /** Get the user that owns this cart */
     public function user(): BelongsTo
@@ -41,76 +54,96 @@ class Cart extends Model
     }
 
     /** Get the cart's subtotal */
-    public function getSubTotalAttribute(): float
+    protected function subTotal(): Attribute
     {
-        return $this->items->sum('sub_total');
+        return Attribute::make(
+            get: fn () => $this->items->sum('sub_total'),
+        );
     }
 
     /** Get the cart's subtotal with conditions */
-    public function getSubTotalWithConditionsAttribute(): float
+    protected function subTotalWithConditions(): Attribute
     {
-        $subtotal = $this->items->sum('sub_total');
-
-        return $this->applyConditionsToAmount($subtotal, 'subtotal');
+        return Attribute::make(
+            get: function () {
+                $subtotal = $this->items->sum('sub_total');
+                return $this->applyConditionsToAmount($subtotal, 'subtotal');
+            }
+        );
     }
 
     /** Get the cart's tax amount */
-    public function getTaxAttribute(): float
+    protected function tax(): Attribute
     {
-        if ($this->tax_rate <= 0) {
-            return 0.0;
-        }
+        return Attribute::make(
+            get: function () {
+                if ($this->tax_rate <= 0) {
+                    return 0.0;
+                }
 
-        $taxableAmount = $this->items->sum(function ($item) {
-            // Check if item is tax exempt
-            $attributes = $item->attributes ?? [];
+                $taxableAmount = $this->items->sum(function ($item) {
+                    // Check if item is tax exempt
+                    $attributes = $item->attributes ?? [];
 
-            if (isset($attributes['tax_exempt']) && $attributes['tax_exempt']) {
-                return 0;
+                    if (isset($attributes['tax_exempt']) && $attributes['tax_exempt']) {
+                        return 0;
+                    }
+
+                    return $item->sub_total_with_conditions;
+                });
+
+                $tax = $taxableAmount * ($this->tax_rate / 100);
+
+                return $this->applyConditionsToAmount($tax, 'tax');
             }
-
-            return $item->sub_total_with_conditions;
-        });
-
-        $tax = $taxableAmount * ($this->tax_rate / 100);
-
-        return $this->applyConditionsToAmount($tax, 'tax');
+        );
     }
 
     /** Get the cart's total */
-    public function getTotalAttribute(): float
+    protected function total(): Attribute
     {
-        $total = $this->sub_total_with_conditions + $this->tax;
-
-        return $this->applyConditionsToAmount($total, 'total');
+        return Attribute::make(
+            get: function () {
+                $total = $this->sub_total_with_conditions + $this->tax;
+                return $this->applyConditionsToAmount($total, 'total');
+            }
+        );
     }
 
     /** Get the cart's item count */
-    public function getItemCountAttribute(): int
+    protected function itemCount(): Attribute
     {
-        return $this->items->count();
+        return Attribute::make(
+            get: fn () => $this->items->count(),
+        );
     }
 
     /** Get the cart's total quantity */
-    public function getQuantityCountAttribute(): int
+    protected function quantityCount(): Attribute
     {
-        return $this->items->sum('quantity');
+        return Attribute::make(
+            get: fn () => $this->items->sum('quantity'),
+        );
     }
 
     /** Get discount amount */
-    public function getDiscountAttribute(): float
+    protected function discount(): Attribute
     {
-        $discountConditions = $this->getConditionsByType('discount');
-        $subtotal = $this->sub_total;
+        return Attribute::make(
+            get: function () {
+                $discountConditions = $this->getConditionsByType('discount');
+                $subtotal = $this->sub_total;
 
-        $totalDiscount = 0;
+                $totalDiscount = 0;
 
-        foreach ($discountConditions as $condition) {
-            $discount = $this->applyCondition($subtotal, $condition) - $subtotal;
-            $totalDiscount += abs($discount); // Make positive for display
-        }
+                foreach ($discountConditions as $condition) {
+                    $discount = $this->applyCondition($subtotal, $condition) - $subtotal;
+                    $totalDiscount += abs($discount); // Make positive for display
+                }
 
-        return $totalDiscount;
+                return $totalDiscount;
+            }
+        );
     }
 
     /** Apply conditions to an amount */
@@ -233,27 +266,35 @@ class Cart extends Model
     }
 
     /** Get formatted subtotal */
-    public function getFormattedSubTotalAttribute(): string
+    protected function formattedSubTotal(): Attribute
     {
-        return '$'.number_format($this->sub_total_with_conditions, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->sub_total_with_conditions, 2),
+        );
     }
 
     /** Get formatted tax */
-    public function getFormattedTaxAttribute(): string
+    protected function formattedTax(): Attribute
     {
-        return '$'.number_format($this->tax, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->tax, 2),
+        );
     }
 
     /** Get formatted total */
-    public function getFormattedTotalAttribute(): string
+    protected function formattedTotal(): Attribute
     {
-        return '$'.number_format($this->total, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->total, 2),
+        );
     }
 
     /** Get formatted discount */
-    public function getFormattedDiscountAttribute(): string
+    protected function formattedDiscount(): Attribute
     {
-        return '$'.number_format($this->discount, 2);
+        return Attribute::make(
+            get: fn () => '$'.number_format($this->discount, 2),
+        );
     }
 
     /** Check if cart is empty */

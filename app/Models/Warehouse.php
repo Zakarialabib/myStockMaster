@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
@@ -54,14 +55,18 @@ class Warehouse extends Model
         return $this->hasMany(ProductWarehouse::class, 'warehouse_id');
     }
 
-    public function getTotalQuantityAttribute()
+    protected function totalQuantity(): Attribute
     {
-        return $this->productWarehouse()->sum('qty');
+        return Attribute::make(
+            get: fn () => $this->productWarehouse()->sum('qty'),
+        );
     }
 
-    public function getStockValueAttribute(): float
+    protected function stockValue(): Attribute
     {
-        return $this->productWarehouse()->sum(DB::raw('qty * cost')) / 100;
+        return Attribute::make(
+            get: fn () => $this->productWarehouse()->sum(DB::raw('qty * cost')) / 100,
+        );
     }
 
     public function assignedUsers()
