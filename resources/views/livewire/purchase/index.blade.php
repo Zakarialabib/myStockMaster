@@ -103,7 +103,7 @@
             </x-slot>
             <x-table.tbody>
                 @forelse ($purchases as $purchase)
-                    <x-table.tr data-loading wire:key="row-{{ $purchase->id }}">
+                    <x-table.tr wire:key="row-{{ $purchase->id }}">
                         <x-table.td>
                             <input type="checkbox" value="{{ $purchase->id }}" wire:model.live="selected"
                                 class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800">

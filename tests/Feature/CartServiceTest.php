@@ -17,7 +17,9 @@ class CartServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // \App\Support\Cart\Facades\Cart::forget('test');
         $this->cartService = new CartService('test');
+        $this->cartService->clear();
     }
 
     /** @test */

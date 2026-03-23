@@ -80,7 +80,7 @@
             </x-slot>
             <x-slot name="tbody">
                 @forelse($brands as $brand)
-                    <x-table.tr data-loading>
+                    <x-table.tr>
                         <x-table.td>
                             <input type="checkbox" value="{{ $brand->id }}" wire:model.live="selected"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2">

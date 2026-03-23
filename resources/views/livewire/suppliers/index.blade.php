@@ -100,7 +100,7 @@
                 </x-slot>
                 <x-table.tbody>
                     @forelse ($suppliers as $supplier)
-                        <x-table.tr data-loading wire:key="row-{{ $supplier->id }}" class="hover:bg-gray-50 transition-colors">
+                        <x-table.tr wire:key="row-{{ $supplier->id }}" class="hover:bg-gray-50 transition-colors">
                             <x-table.td class="pr-0">
                                 <input type="checkbox" wire:model.live="selected" value="{{ $supplier->id }}" 
                                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />

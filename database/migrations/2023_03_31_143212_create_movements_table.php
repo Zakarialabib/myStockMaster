@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->decimal('price', 10, 2);
             $table->dateTime('date');
             $table->morphs('movable');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

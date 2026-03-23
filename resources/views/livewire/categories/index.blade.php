@@ -55,7 +55,7 @@
             </x-slot>
             <x-table.tbody>
                 @forelse($categories as $category)
-                <x-table.tr data-loading wire:key="row-{{ $category->id }}"
+                <x-table.tr wire:key="row-{{ $category->id }}"
                     class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <x-table.td :checkbox="true" :value="$category->id" wire:model.live="selected" />
                     <x-table.td>
@@ -68,6 +68,7 @@
                         <x-status-badge status="info" :count="$category->products_count" icon="fas fa-boxes" size="sm" />
                     </x-table.td>
                     <x-table.td>
+                        <!-- {{ $category->status }} 1 0  -->
                         <x-status-badge :status="$category->status ? 'active' : 'inactive'" :text="$category->status ? __('Active') : __('Inactive')" size="sm" />
                     </x-table.td>
                     <x-table.td class="text-right">

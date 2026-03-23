@@ -6,9 +6,15 @@
     "description": "mystockmaster",
     "author": "zakarialabib",
     "license": "Apache-2.0",
+    "packageManager": "npm@10.9.2",
+    "engines": {
+        "node": ">=22.21.1",
+        "npm": ">=10.9.2"
+    },
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "node --enable-source-maps --max-old-space-size=4096 ./node_modules/vite/bin/vite.js",
+        "build": "node --max-old-space-size=8192 ./node_modules/vite/bin/vite.js build",
+        "preview": "node ./node_modules/vite/bin/vite.js preview",
         "docs:dev": "vitepress dev docs",
         "docs:build": "vitepress build docs",
         "docs:preview": "vitepress preview docs"
@@ -40,9 +46,7 @@
         "perfect-scrollbar": "^1.5.5",
         "ponyfill": "^0.0.1",
         "quagga": "^0.12.1",
-        "select2": "^4.1.0-rc.0",
         "sortablejs": "^1.15.0",
-        "trix": "^2.0.7",
         "vitepress": "^1.6.4",
         "vue": "^3.3.8"
     }

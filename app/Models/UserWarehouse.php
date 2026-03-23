@@ -17,7 +17,8 @@ class UserWarehouse extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id', 'warehouse_id',
+        'user_id',
+        'warehouse_id',
         // 'default_id',
     ];
 

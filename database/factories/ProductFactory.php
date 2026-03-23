@@ -32,7 +32,7 @@ class ProductFactory extends Factory
             'code'              => Str::random(5),
             'category_id'       => 1,
             'brand_id'          => null,
-            'slug'              => Str::slug($name).'-'.Str::lower(Str::random(8)),
+            'slug'              => Str::slug($name).'-'.Str::uuid()->toString(),
             'unit'              => 'pcs',
             'description'       => $this->faker->sentence,
             'image'             => null, // uploadImage('images/products', '1000', '1000'),

@@ -76,7 +76,7 @@
             </x-slot>
             <x-table.tbody>
                 @forelse($adjustments as $adjustment)
-                    <x-table.tr data-loading class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                    <x-table.tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                         <x-table.td>
                             <div class="flex items-center">
                                 <input type="checkbox" value="{{ $adjustment->id }}" wire:model.live="selected"

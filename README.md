@@ -37,23 +37,26 @@ Offering a user-friendly dashboard, intuitive reports, and an array of features,
 - **Send product promotions to Telegram:**  Engage with your customers directly by sending promotional messages via Telegram.
 
 
-## Demo
-
-You can check the demo here: 
-[https://test.hotechserver.com](https://test.hotechserver.com)
-
-
 ## Login with the following credentials
     -   Email: `admin@gmail.com`
     -   Password: `password`
 
 ## Requirements
 
--   PHP >= 8.0 (or higher)
--   Composer
--   Node.js
--   NPM
+-   PHP >= 8.3
+-   Composer >= 2.9.3
+-   Node.js >= 22.21.1
+-   npm >= 10.9.2 (Corepack recommended)
 -   MySQL
+
+## Compatibility Notes
+
+- This project enforces PHP compatibility via Composer (`composer.json` requires PHP `^8.3`). If your PHP version is older, `composer install` will fail by design.
+- Node/npm versions are enforced softly via `package.json` engines. If you use older Node/npm, installs may still run but you can hit build/runtime issues.
+
+Upgrade hints:
+- Composer: `composer self-update`
+- Node/npm: use Corepack (`corepack enable`) and follow the pinned version in `package.json`
 
 ## Installation
 
@@ -62,29 +65,46 @@ You can check the demo here:
    git clone <https://github.com/Zakarialabib/myStockMaster.git>
    cd mystockmaster
    ```
-2. **Install PHP Dependencies:** Navigate to the project directory and install the required PHP packages using Composer:
+2. **Configure Environment:**
+   *   Copy the `.env.example` file to `.env`.
+   *   Update the database connection details (DB_DATABASE, DB_USERNAME, DB_PASSWORD) to match your MySQL configuration.
+3. **Install PHP Dependencies:**
    ```bash
-   composer install
+   composer install --no-interaction --prefer-dist
    ```
-3. **Install Node.js Dependencies:** Install the necessary JavaScript packages using npm:
+   Optional (prints environment info if you hit issues):
    ```bash
-   npm install
+   composer run doctor
    ```
-4. **Compile Assets:** Compile the application's assets (CSS and JavaScript) using Laravel Mix:
+4. **Generate App Key:**
    ```bash
-   npm run build
+   php artisan key:generate
    ```
-5. **Configure Database:**
-   *   Create a new MySQL database for MystockMaster.
-   *   Copy the `.env.example` file to `.env` and update the database connection details (DB_DATABASE, DB_USERNAME, DB_PASSWORD) to match your database configuration.
-6. **Run Database Migrations and Seeders:** Set up the database tables and seed initial data:
+5. **Run Database Migrations and Seeders:**
    ```bash
    php artisan migrate --seed
    ```
-7. **Login:** Access the application in your web browser, and log in with the following credentials:
+6. **Pin npm with Corepack (recommended):**
+   ```bash
+   corepack enable
+   corepack prepare npm@10.9.2 --activate
+   ```
+7. **Install Node.js Dependencies:**
+   ```bash
+   npm install
+   ```
+8. **Start dev server (recommended for development):**
+   ```bash
+   npm run dev
+   ```
+9. **Compile Assets (production build):**
+   ```bash
+   npm run build
+   ```
+10. **Login:** Access the application in your web browser, and log in with the following credentials:
     - Email: `admin@gmail.com`
     - Password: `password`
-8. **Enjoy!** You are now ready to start using MystockMaster to manage your inventory.
+11. **Enjoy!** You are now ready to start using MystockMaster to manage your inventory.
 
 ## License
 

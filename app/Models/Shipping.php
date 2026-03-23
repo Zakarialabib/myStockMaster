@@ -16,7 +16,12 @@ class Shipping extends Model
     use HasAdvancedFilter;
 
     protected const ATTRIBUTES = [
-        'id', 'is_pickup', 'title', 'subtitle', 'cost', 'status',
+        'id',
+        'is_pickup',
+        'title',
+        'subtitle',
+        'cost',
+        'status',
     ];
 
     public $orderable = self::ATTRIBUTES;
