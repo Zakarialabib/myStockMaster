@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Exception;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
     {
         try {
             if ( ! Schema::hasTable('languages')) {
-                return [];
+                return;
             }
 
             return cache()->rememberForever('languages', function () {
@@ -62,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                     : Language::where('is_default', 1)->first();
             });
         } catch (Exception $e) {
-            return [];
+            return;
         }
     }
 }

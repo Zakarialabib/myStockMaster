@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Event;
 
 it('renders the registration screen', function () {
     Livewire::test('pages.auth.register')
-        ->assertSuccessful();
+        ->assertStatus(200);
 });
 
 it('registers a new user', function () {

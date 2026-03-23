@@ -130,9 +130,11 @@ class PurchaseReturn extends Model
      *
      * @return int|float
      */
-    public function getDiscountAmountAttribute($value)
+    protected function discountAmount(): Attribute
     {
-        return $value / 100;
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+        );
     }
 
     /**
