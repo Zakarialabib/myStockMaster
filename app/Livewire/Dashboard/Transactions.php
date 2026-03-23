@@ -196,17 +196,19 @@ class Transactions extends Component
     #[Computed]
     public function topCustomers()
     {
-        return Sale::with(['saleDetails.sale.customer'])
+        return Sale::query()
             ->selectRaw('
                 SUM(sales.total_amount) as totalSalesAmount,
                 customers.name as name,
                 customers.id as id,
                 sales.id,
-                sales.warehouse_id
+                sales.warehouse_id,
+                warehouses.name as warehouse_name
             ')
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
+            ->leftJoin('warehouses', 'warehouses.id', '=', 'sales.warehouse_id')
             ->whereMonth('sales.created_at', Carbon::now()->startOfMonth())
-            ->groupBy(['sales.id', 'sales.customer_id', 'customers.name', 'customers.id', 'sales.warehouse_id'])
+            ->groupBy(['sales.id', 'sales.customer_id', 'customers.name', 'customers.id', 'sales.warehouse_id', 'warehouses.name'])
             ->orderByDesc('totalSalesAmount')
             ->limit(5)
             ->get();

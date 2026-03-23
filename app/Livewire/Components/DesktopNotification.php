@@ -13,15 +13,15 @@ class DesktopNotification extends Component
     public $maxNotifications = 5;
 
     protected $listeners = [
-        'showNotification' => 'addNotification',
+        'showNotification'   => 'addNotification',
         'clearNotifications' => 'clearAll',
-        'removeNotification' => 'removeNotification'
+        'removeNotification' => 'removeNotification',
     ];
 
     public function mount()
     {
         // Only initialize if in desktop mode
-        if (!EnvironmentService::isDesktop()) {
+        if ( ! EnvironmentService::isDesktop()) {
             return;
         }
 
@@ -31,19 +31,19 @@ class DesktopNotification extends Component
 
     public function addNotification($title, $message, $type = 'info', $persistent = false, $duration = 5000)
     {
-        if (!EnvironmentService::isDesktop()) {
+        if ( ! EnvironmentService::isDesktop()) {
             return;
         }
 
         $notification = [
-            'id' => uniqid(),
-            'title' => $title,
-            'message' => $message,
-            'type' => $type, // success, error, warning, info
+            'id'         => uniqid(),
+            'title'      => $title,
+            'message'    => $message,
+            'type'       => $type, // success, error, warning, info
             'persistent' => $persistent,
-            'duration' => $duration,
-            'timestamp' => now(),
-            'read' => false
+            'duration'   => $duration,
+            'timestamp'  => now(),
+            'read'       => false,
         ];
 
         // Add to the beginning of the array
@@ -60,10 +60,10 @@ class DesktopNotification extends Component
         }
 
         // Auto-remove non-persistent notifications
-        if (!$persistent && $duration > 0) {
+        if ( ! $persistent && $duration > 0) {
             $this->dispatch('auto-remove-notification', [
-                'id' => $notification['id'],
-                'duration' => $duration
+                'id'       => $notification['id'],
+                'duration' => $duration,
             ]);
         }
 
@@ -90,6 +90,7 @@ class DesktopNotification extends Component
         foreach ($this->notifications as &$notification) {
             if ($notification['id'] === $notificationId) {
                 $notification['read'] = true;
+
                 break;
             }
         }
@@ -107,7 +108,7 @@ class DesktopNotification extends Component
     public function getUnreadCount()
     {
         return count(array_filter($this->notifications, function ($notification) {
-            return !$notification['read'];
+            return ! $notification['read'];
         }));
     }
 
@@ -121,17 +122,17 @@ class DesktopNotification extends Component
     private function loadPersistedNotifications()
     {
         $persistedFile = storage_path('app/desktop/notifications.json');
-        
+
         if (file_exists($persistedFile)) {
             $persisted = json_decode(file_get_contents($persistedFile), true);
-            
+
             if (is_array($persisted)) {
                 // Filter out old notifications (older than 24 hours)
                 $cutoff = now()->subHours(24);
-                
+
                 $this->notifications = array_filter($persisted, function ($notification) use ($cutoff) {
-                    return $notification['persistent'] && 
-                           isset($notification['timestamp']) && 
+                    return $notification['persistent'] &&
+                           isset($notification['timestamp']) &&
                            \Carbon\Carbon::parse($notification['timestamp'])->isAfter($cutoff);
                 });
             }
@@ -143,11 +144,12 @@ class DesktopNotification extends Component
         $persistedFile = storage_path('app/desktop/notifications.json');
         $directory = dirname($persistedFile);
 
-        if (!is_dir($directory)) {
+        if ( ! is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
         $existing = [];
+
         if (file_exists($persistedFile)) {
             $existing = json_decode(file_get_contents($persistedFile), true) ?: [];
         }
@@ -165,10 +167,10 @@ class DesktopNotification extends Component
     private function removePersistedNotification($notificationId)
     {
         $persistedFile = storage_path('app/desktop/notifications.json');
-        
+
         if (file_exists($persistedFile)) {
             $existing = json_decode(file_get_contents($persistedFile), true) ?: [];
-            
+
             $existing = array_filter($existing, function ($notification) use ($notificationId) {
                 return $notification['id'] !== $notificationId;
             });
@@ -180,13 +182,14 @@ class DesktopNotification extends Component
     private function updatePersistedNotification($notificationId, $updates)
     {
         $persistedFile = storage_path('app/desktop/notifications.json');
-        
+
         if (file_exists($persistedFile)) {
             $existing = json_decode(file_get_contents($persistedFile), true) ?: [];
-            
+
             foreach ($existing as &$notification) {
                 if ($notification['id'] === $notificationId) {
                     $notification = array_merge($notification, $updates);
+
                     break;
                 }
             }
@@ -198,7 +201,7 @@ class DesktopNotification extends Component
     private function clearPersistedNotifications()
     {
         $persistedFile = storage_path('app/desktop/notifications.json');
-        
+
         if (file_exists($persistedFile)) {
             unlink($persistedFile);
         }

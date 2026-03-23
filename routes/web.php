@@ -89,7 +89,6 @@ Route::view('profile', 'profile')
     ->middleware(['auth.basic'])
     ->name('profile');
 
-
 // Route::get('/docs/{file?}', [DocsController::class, 'index'])->name('docs.index');
 
 // Route::get('/docs', function() {
@@ -104,7 +103,6 @@ Route::view('profile', 'profile')
 
 //     return File::get(public_path().'/docs/'.$file.'.html');
 // });
-
 
 // Installation Routes
 Route::prefix('install')->name('installation.')->group(function () {

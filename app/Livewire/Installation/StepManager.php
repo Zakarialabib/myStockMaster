@@ -56,11 +56,11 @@ class StepManager extends Component
     // Database details
     public $database = [
         'connection' => 'mysql',
-        'host' => '127.0.0.1',
-        'port' => '3306',
-        'database' => '',
-        'username' => '',
-        'password' => '',
+        'host'       => '127.0.0.1',
+        'port'       => '3306',
+        'database'   => '',
+        'username'   => '',
+        'password'   => '',
     ];
 
     public $requirementErrors = [];
@@ -95,7 +95,7 @@ class StepManager extends Component
 
     private function detectEnvironment(): bool
     {
-        return class_exists(\Native\Desktop\Facades\Window::class) && !app()->runningUnitTests();
+        return class_exists(\Native\Desktop\Facades\Window::class) && ! app()->runningUnitTests();
     }
 
     public function shouldSkipInstallation(): bool
@@ -117,7 +117,7 @@ class StepManager extends Component
 
     public function getStepsProperty()
     {
-        if (!$this->persona) {
+        if ( ! $this->persona) {
             return ['persona'];
         }
 
@@ -132,15 +132,16 @@ class StepManager extends Component
     public function getStepTitleProperty()
     {
         $step = $this->steps[$this->currentStep - 1] ?? '';
-        return match($step) {
-            'persona' => 'Choose Your Persona',
+
+        return match ($step) {
+            'persona'      => 'Choose Your Persona',
             'requirements' => 'System Requirements',
-            'database' => 'Database Configuration',
-            'company' => 'Company Details',
-            'admin' => 'Admin Account',
-            'demo' => 'Demo Data',
-            'finish' => 'Complete Installation',
-            default => 'Installation',
+            'database'     => 'Database Configuration',
+            'company'      => 'Company Details',
+            'admin'        => 'Admin Account',
+            'demo'         => 'Demo Data',
+            'finish'       => 'Complete Installation',
+            default        => 'Installation',
         };
     }
 
@@ -149,12 +150,14 @@ class StepManager extends Component
         $stepName = $this->steps[$this->currentStep - 1];
 
         if ($stepName === 'persona') {
-            if (!$this->persona) {
+            if ( ! $this->persona) {
                 $this->addError('persona', 'Please select a persona to continue.');
+
                 return;
             }
         } elseif ($stepName === 'requirements') {
             $this->checkRequirements();
+
             if (count($this->requirementErrors) > 0) {
                 return;
             }
@@ -195,8 +198,9 @@ class StepManager extends Component
         }
 
         $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML', 'sqlite3'];
+
         foreach ($requiredExtensions as $ext) {
-            if (!extension_loaded(strtolower($ext))) {
+            if ( ! extension_loaded(strtolower($ext))) {
                 $this->requirementErrors[] = "Extension $ext is missing.";
             }
         }
@@ -208,7 +212,7 @@ class StepManager extends Component
         ];
 
         foreach ($writablePaths as $path) {
-            if (file_exists($path) && !is_writable($path)) {
+            if (file_exists($path) && ! is_writable($path)) {
                 $this->requirementErrors[] = "Path $path is not writable.";
             }
         }
@@ -218,18 +222,18 @@ class StepManager extends Component
     {
         $this->validate([
             'database.connection' => 'required',
-            'database.database' => 'required',
+            'database.database'   => 'required',
         ]);
 
         if ($this->database['connection'] !== 'sqlite') {
             $this->validate([
-                'database.host' => 'required',
+                'database.host'     => 'required',
                 'database.username' => 'required',
             ]);
         }
 
         try {
-            $config = config('database.connections.' . $this->database['connection']);
+            $config = config('database.connections.'.$this->database['connection']);
             $config['host'] = $this->database['host'];
             $config['port'] = $this->database['port'];
             $config['database'] = $this->database['database'];
@@ -241,7 +245,7 @@ class StepManager extends Component
 
             session()->flash('connection_success', 'Connection successful!');
         } catch (Exception $e) {
-            session()->flash('connection_error', 'Connection failed: ' . $e->getMessage());
+            session()->flash('connection_error', 'Connection failed: '.$e->getMessage());
         }
     }
 
@@ -253,6 +257,7 @@ class StepManager extends Component
 
         // For Technician, we want them to have a working DB
         $this->testConnection();
+
         if (session()->has('connection_error')) {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'database.database' => 'Database connection failed. Please check your settings.',
@@ -262,22 +267,24 @@ class StepManager extends Component
         // Update .env file
         $this->updateEnv([
             'DB_CONNECTION' => $this->database['connection'],
-            'DB_HOST' => $this->database['host'],
-            'DB_PORT' => $this->database['port'],
-            'DB_DATABASE' => $this->database['database'],
-            'DB_USERNAME' => $this->database['username'],
-            'DB_PASSWORD' => $this->database['password'],
+            'DB_HOST'       => $this->database['host'],
+            'DB_PORT'       => $this->database['port'],
+            'DB_DATABASE'   => $this->database['database'],
+            'DB_USERNAME'   => $this->database['username'],
+            'DB_PASSWORD'   => $this->database['password'],
         ]);
     }
 
     private function updateEnv(array $data): void
     {
         $envPath = base_path('.env');
-        if (!file_exists($envPath)) {
+
+        if ( ! file_exists($envPath)) {
             copy(base_path('.env.example'), $envPath);
         }
 
         $content = file_get_contents($envPath);
+
         foreach ($data as $key => $value) {
             if (preg_match("/^{$key}=/m", $content)) {
                 $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
@@ -307,7 +314,7 @@ class StepManager extends Component
             $user = User::updateOrCreate(
                 ['email' => $this->admin_email],
                 [
-                    'name' => $this->admin_name,
+                    'name'     => $this->admin_name,
                     'password' => Hash::make($this->admin_password),
                     'is_admin' => true,
                 ]
@@ -324,6 +331,7 @@ class StepManager extends Component
 
             // Get the settings record and update it
             $settings = Setting::first();
+
             if ($settings) {
                 $settings->installation_completed = true;
                 $settings->save();
@@ -348,13 +356,14 @@ class StepManager extends Component
     private function setupDesktopDatabase(): void
     {
         $dbPath = database_path('database.sqlite');
-        if (!file_exists($dbPath)) {
+
+        if ( ! file_exists($dbPath)) {
             touch($dbPath);
         }
 
         $this->updateEnv([
             'DB_CONNECTION' => 'sqlite',
-            'DB_DATABASE' => $dbPath,
+            'DB_DATABASE'   => $dbPath,
         ]);
 
         Config::set('database.default', 'sqlite');
@@ -365,6 +374,7 @@ class StepManager extends Component
     {
         try {
             $settings = Setting::first();
+
             if ($settings) {
                 $settings->update(['selected_business_line' => $this->selected_business_line]);
                 cache()->forget('settings');
@@ -372,7 +382,7 @@ class StepManager extends Component
 
             Artisan::call('db:seed', [
                 '--class' => 'Database\\Seeders\\ComprehensiveProductSeeder',
-                '--force' => true
+                '--force' => true,
             ]);
 
             Log::info('Demo data installed successfully', ['business_line' => $this->selected_business_line]);
@@ -385,7 +395,7 @@ class StepManager extends Component
     public function render()
     {
         return view('livewire.installation.step-manager', [
-            'steps' => $this->steps,
+            'steps'     => $this->steps,
             'stepTitle' => $this->stepTitle,
         ]);
     }
@@ -403,13 +413,14 @@ class StepManager extends Component
     private function saveCompanyDetails(): void
     {
         $settings = Setting::first();
+
         if ($settings) {
             $settings->update([
-                'company_name' => $this->company_name,
-                'company_email' => $this->company_email,
-                'company_phone' => $this->company_phone,
-                'company_address' => $this->company_address,
-                'company_tax' => $this->company_tax,
+                'company_name'        => $this->company_name,
+                'company_email'       => $this->company_email,
+                'company_phone'       => $this->company_phone,
+                'company_address'     => $this->company_address,
+                'company_tax'         => $this->company_tax,
                 'default_currency_id' => 1, // Defaulting for now
                 'default_date_format' => 'd-m-Y',
             ]);

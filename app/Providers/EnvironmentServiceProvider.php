@@ -11,17 +11,13 @@ use Illuminate\Support\ServiceProvider;
 
 class EnvironmentServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
+    /** Register services. */
     public function register(): void
     {
         $this->app->singleton(EnvironmentService::class);
     }
 
-    /**
-     * Bootstrap services.
-     */
+    /** Bootstrap services. */
     public function boot(): void
     {
         $this->configureEnvironmentSettings();
@@ -31,9 +27,7 @@ class EnvironmentServiceProvider extends ServiceProvider
         View::share('isDesktop', EnvironmentService::isDesktop());
     }
 
-    /**
-     * Configure environment-specific settings
-     */
+    /** Configure environment-specific settings */
     protected function configureEnvironmentSettings(): void
     {
         // Configure database connection based on environment
@@ -53,9 +47,7 @@ class EnvironmentServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Configure desktop-specific settings
-     */
+    /** Configure desktop-specific settings */
     protected function configureDesktopSettings(): void
     {
         // Set desktop-specific session configuration
@@ -69,19 +61,17 @@ class EnvironmentServiceProvider extends ServiceProvider
         // Set desktop-specific logging
         Config::set('logging.channels.desktop', [
             'driver' => 'single',
-            'path' => storage_path('logs/desktop.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
+            'path'   => storage_path('logs/desktop.log'),
+            'level'  => env('LOG_LEVEL', 'debug'),
         ]);
 
         // Add desktop environment variables
-        if (!env('DESKTOP_MODE')) {
+        if ( ! env('DESKTOP_MODE')) {
             putenv('DESKTOP_MODE=true');
         }
     }
 
-    /**
-     * Ensure desktop-specific directories exist
-     */
+    /** Ensure desktop-specific directories exist */
     protected function ensureDesktopDirectories(): void
     {
         if (EnvironmentService::isDesktop()) {
@@ -93,14 +83,15 @@ class EnvironmentServiceProvider extends ServiceProvider
             ];
 
             foreach ($directories as $directory) {
-                if (!is_dir($directory)) {
+                if ( ! is_dir($directory)) {
                     mkdir($directory, 0755, true);
                 }
             }
 
             // Create desktop SQLite database if it doesn't exist
             $dbPath = storage_path('database/desktop.sqlite');
-            if (!file_exists($dbPath)) {
+
+            if ( ! file_exists($dbPath)) {
                 touch($dbPath);
             }
         }
