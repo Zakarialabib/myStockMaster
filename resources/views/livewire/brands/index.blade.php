@@ -68,7 +68,7 @@
                     <input wire:model.live="selectPage" type="checkbox"
                         class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2" />
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null" icon="fas fa-tag">
+                <x-table.th sortable wire:click="sortingBy('name')" :direction="$sorts['name'] ?? null" icon="fas fa-tag">
                     {{ __('Name') }}
                 </x-table.th>
                 <x-table.th icon="fas fa-align-left">

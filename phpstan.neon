@@ -1,22 +1,30 @@
 includes:
     - vendor/larastan/larastan/extension.neon
     - vendor/nesbot/carbon/extension.neon
-    
-parameters:
 
+parameters:
     paths:
-#        - app
-        
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
     # Level 9 is the highest level
     level: 5
 
-    checkMissingIterableValueType: false
-
-    checkGenericClassInNonGenericObjectType: false
+    checkUninitializedProperties: true
+    checkModelProperties: true
 
     ignoreErrors:
         - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
+        - '#Access to undefined constant#'
+        - '#Call to an undefined method#'
+        - '#Unsafe usage of new static#'
+
+    excludePaths:
+        - ./*/*/FileToBeExcluded.php
+
+    universalObjectCratesClasses:
+        - Illuminate\Support\Fluent
+        - Illuminate\Database\Eloquent\Model

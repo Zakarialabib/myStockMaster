@@ -20,19 +20,19 @@
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('reference')" :direction="$sorts['reference'] ?? null">
                 {{ __('Reference') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('date')" :direction="$sorts['date'] ?? null">
                 {{ __('Date') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('supplier_id')" :direction="$sorts['supplier_id'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('supplier_id')" :direction="$sorts['supplier_id'] ?? null">
                 {{ __('Supplier') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('email')" :direction="$sorts['email'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('email')" :direction="$sorts['email'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
             <x-table.th>

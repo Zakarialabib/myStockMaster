@@ -1,518 +1,133 @@
-# MyStockMaster Desktop Application Transformation Plan
-## NativePHP Integration & Deployment Strategy
-
-### Table of Contents
-1. [Project Overview](#project-overview)
-2. [Current State Analysis](#current-state-analysis)
-3. [NativePHP Integration Roadmap](#nativephp-integration-roadmap)
-4. [Installation & Setup Procedures](#installation--setup-procedures)
-5. [Configuration Modifications](#configuration-modifications)
-6. [Automation Script Development](#automation-script-development)
-7. [Testing Methodology](#testing-methodology)
-8. [Packaging & Deployment Strategy](#packaging--deployment-strategy)
-9. [Launch Preparation](#launch-preparation)
-10. [Troubleshooting & Support](#troubleshooting--support)
-
----
-
-## Project Overview
-
-**MyStockMaster** is a comprehensive Laravel 12-based inventory management system featuring:
-- **Backend**: Laravel 12.25.0 with PHP 8.2.10+
-- **Frontend**: Livewire 3.6.4 + Alpine.js 3.14.9
-- **UI Framework**: Tailwind CSS 4.1.12
-- **Database**: MySQL
-- **Additional Features**: POS system, analytics, multi-language support
-
-**Transformation Goal**: Convert the web-based application into a native desktop application using NativePHP while maintaining all existing functionality and adding desktop-specific features.
-
----
-
-## Current State Analysis
-
-### ✅ Compatibility Assessment
-
-**Strengths for Desktop Conversion:**
-- Laravel 12 framework (fully compatible with NativePHP)
-- Modern PHP 8.2+ (meets NativePHP requirements)
-- Livewire-based architecture (excellent for desktop UI)
-- Alpine.js for client-side interactions
-- Well-structured MVC architecture
-- Comprehensive feature set ready for desktop deployment
-
-**Current Dependencies Analysis:**
-```json
-Core Dependencies:
-- Laravel Framework: ^12.0 ✅
-- Livewire: ^3.6 ✅
-- PHP: ^8.2 ✅
-- Node.js: Required for NativePHP ⚠️
-- Electron: Will be added via NativePHP ⚠️
-```
-
-**Potential Challenges:**
-- Web-specific routes may need desktop adaptation
-- Authentication flows might require modification
-- File system access patterns need review
-- Database connections for desktop environment
-
----
-
-## NativePHP Integration Roadmap
-
-### Phase 1: Environment Preparation (Week 1)
-- [ ] Check if Node.js and install misssing npm dependencies
-- [ ] Verify PHP and Laravel compatibility
-- [ ] Backup current project state
-- [ ] Set up development environment for desktop testing
-
-### Phase 2: NativePHP Installation (Week 1-2)
-- [ ] Install NativePHP Electron package
-- [ ] Run NativePHP installer
-- [ ] Configure desktop-specific settings
-- [ ] Test basic desktop functionality
-
-### Phase 3: Configuration & Optimization (Week 2-3)
-- [ ] Modify routes for desktop context
-- [ ] Update authentication mechanisms
-- [ ] Configure database for desktop deployment
-- [ ] Implement desktop-specific features
-
-### Phase 4: Testing & Validation (Week 3-4)
-- [ ] Unit testing for desktop compatibility
-- [ ] Integration testing with NativePHP
-- [ ] User acceptance testing
-- [ ] Performance optimization
-
-### Phase 5: Packaging & Deployment (Week 4-5)
-- [ ] Create distribution packages
-- [ ] Set up code signing
-- [ ] Prepare installation procedures
-- [ ] Documentation and user guides
-
----
-
-## Installation & Setup Procedures
-
-### Prerequisites Checklist
-
-**System Requirements:**
-- [ ] Windows 10/11 (64-bit)
-- [ ] PHP 8.2.10+ installed
-- [ ] Composer 2.0+
-- [ ] Node.js 18+ and npm
-- [ ] Git for version control
-- [ ] Visual Studio Code (recommended)
-
-**Laravel Environment:**
-- [ ] Laravel 12.25.0 confirmed
-- [ ] All current dependencies installed
-- [ ] Database connection verified
-- [ ] Application key generated
-- [ ] Environment variables configured
-
-### Step-by-Step Installation
-
-#### 1. Node.js Setup
-```bash
-# Download and install Node.js 18+ from nodejs.org
-# Verify installation
-node --version
-npm --version
-```
-
-#### 2. NativePHP Installation
-```bash
-# Navigate to project directory
-cd c:\laragon\www\myStockMaster
-
-# Install NativePHP Electron package
-composer require nativephp/electron
-
-# Run NativePHP installer
-php artisan native:install
-```
-
-#### 3. Configuration Publishing
-```bash
-# Publish NativePHP configuration
-php artisan vendor:publish --tag=nativephp-config
-
-# Install Node.js dependencies
-npm install
-```
-
-#### 4. Development Server Setup
-```bash
-# Start Laravel development server
-php artisan serve
-
-# In another terminal, start NativePHP development
-php artisan native:serve
-```
-
----
-
-## Configuration Modifications
-
-### 1. NativePHP Configuration (`config/nativephp.php`)
-
-```php
-<?php
-
-return [
-    'app_id' => env('NATIVEPHP_APP_ID', 'com.mystockmaster.app'),
-    'app_name' => env('NATIVEPHP_APP_NAME', 'MyStockMaster'),
-    'app_version' => env('NATIVEPHP_APP_VERSION', '1.0.0'),
-    
-    'window' => [
-        'width' => 1200,
-        'height' => 800,
-        'min_width' => 800,
-        'min_height' => 600,
-        'resizable' => true,
-        'fullscreen' => false,
-        'show' => true,
-        'frame' => true,
-        'transparent' => false,
-    ],
-    
-    'menu' => [
-        'enabled' => true,
-        'custom' => true,
-    ],
-    
-    'updater' => [
-        'enabled' => true,
-        'url' => env('NATIVEPHP_UPDATER_URL'),
-    ],
-];
-```
-
-### 2. Environment Variables (`.env`)
-
-```env
-# NativePHP Configuration
-NATIVEPHP_APP_ID=com.mystockmaster.app
-NATIVEPHP_APP_NAME="MyStockMaster Desktop"
-NATIVEPHP_APP_VERSION=1.0.0
-NATIVEPHP_UPDATER_URL=https://updates.mystockmaster.com
-
-# Desktop-specific Database
-DB_CONNECTION=sqlite
-DB_DATABASE=database/mystockmaster.sqlite
-
-# Disable web-specific features in desktop mode
-DESKTOP_MODE=true
-WEB_ROUTES_DISABLED=true
-```
-
-### 3. Route Modifications (`routes/web.php`)
-
-```php
-<?php
-
-use Illuminate\Support\Facades\Route;
-use Native\Laravel\Facades\Window;
-
-// Desktop-specific routes
-if (env('DESKTOP_MODE', false)) {
-    Route::get('/', function () {
-        return view('desktop.dashboard');
-    })->name('desktop.home');
-    
-    // Disable web authentication routes
-    Route::redirect('/login', '/');
-    Route::redirect('/register', '/');
-} else {
-    // Standard web routes
-    require __DIR__.'/auth.php';
-}
-
-// Common routes for both web and desktop
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('products', ProductController::class);
-    Route::resource('sales', SaleController::class);
-    // ... other routes
-});
-```
-
-### 4. Desktop-Specific Service Provider
-
-```php
-<?php
-
-namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
-use Native\Laravel\Facades\Window;
-use Native\Laravel\Facades\Menu;
-
-class DesktopServiceProvider extends ServiceProvider
-{
-    public function boot()
-    {
-        if (env('DESKTOP_MODE', false)) {
-            $this->configureDesktopWindow();
-            $this->configureDesktopMenu();
-        }
-    }
-    
-    private function configureDesktopWindow()
-    {
-        Window::open()
-            ->title('MyStockMaster')
-            ->width(1200)
-            ->height(800)
-            ->minWidth(800)
-            ->minHeight(600)
-            ->resizable()
-            ->showDevTools(env('APP_DEBUG', false));
-    }
-    
-    private function configureDesktopMenu()
-    {
-        Menu::new()
-            ->label('File')
-            ->submenu([
-                Menu::new()->label('New Sale')->accelerator('CmdOrCtrl+N'),
-                Menu::new()->label('Import Products')->accelerator('CmdOrCtrl+I'),
-                Menu::separator(),
-                Menu::new()->label('Exit')->role('quit'),
-            ]);
-    }
-}
-```
-
-## Testing Methodology
-
-### 1. Unit Testing Strategy
-
-**Desktop-Specific Tests:**
-```php
-<?php
-
-namespace Tests\Feature\Desktop;
-
-use Tests\TestCase;
-use Native\Laravel\Facades\Window;
-
-class DesktopFunctionalityTest extends TestCase
-{
-    public function test_desktop_window_configuration()
-    {
-        $this->artisan('native:serve')
-             ->assertExitCode(0);
-    }
-    
-    public function test_desktop_routes_accessibility()
-    {
-        $response = $this->get('/');
-        $response->assertStatus(200);
-    }
-    
-    public function test_database_connectivity_desktop_mode()
-    {
-        config(['database.default' => 'sqlite']);
-        
-        $this->assertDatabaseHas('users', [
-            'email' => 'admin@mystockmaster.com'
-        ]);
-    }
-}
-```
-
-### 2. Integration Testing
-
-**Test Scenarios:**
-- [ ] Application startup and window creation
-- [ ] Database operations in desktop context
-- [ ] File system access and permissions
-- [ ] Menu functionality and shortcuts
-- [ ] Auto-updater mechanism
-- [ ] Cross-platform compatibility
-
-### 3. User Acceptance Testing
-
-**Test Cases:**
-- [ ] POS system functionality in desktop mode
-- [ ] Product management operations
-- [ ] Sales reporting and analytics
-- [ ] Multi-language support
-- [ ] Printing capabilities
-- [ ] Data import/export features
-
-### 4. Performance Testing
-
-**Metrics to Monitor:**
-- Application startup time
-- Memory usage patterns
-- Database query performance
-- UI responsiveness
-- File I/O operations
-
----
-
-## Packaging & Deployment Strategy
-
-### 1. Build Configuration
-
-**Production Build Process:**
-```bash
-# Optimize Laravel for production
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Build assets
-npm run build
-
-# Create desktop application build
-php artisan native:build
-```
-
-### 2. Code Signing Setup
-
-**Windows Code Signing:**
-```powershell
-# Install Windows SDK for signtool
-# Obtain code signing certificate
-# Configure signing in NativePHP
-
-# Sign the executable
-signtool sign /f "certificate.p12" /p "password" /t "http://timestamp.digicert.com" "MyStockMaster.exe"
-```
-
-### 3. Distribution Packages
-
-**Package Types:**
-- **Windows**: `.exe` installer with NSIS
-- **macOS**: `.dmg` disk image
-- **Linux**: `.AppImage` or `.deb` package
-
-### 4. Auto-Update System
-
-**Update Configuration:**
-```php
-// config/nativephp.php
-'updater' => [
-    'enabled' => true,
-    'url' => 'https://updates.mystockmaster.com',
-    'check_interval' => 3600, // 1 hour
-    'auto_download' => true,
-    'auto_install' => false,
-],
-```
-
----
-
-## Launch Preparation
-
-### 1. Pre-Launch Checklist
-
-**Technical Preparation:**
-- [ ] All tests passing (unit, integration, UAT)
-- [ ] Performance benchmarks met
-- [ ] Security audit completed
-- [ ] Code signing certificates obtained
-- [ ] Update server configured
-- [ ] Documentation completed
-
-**Distribution Preparation:**
-- [ ] Installation packages created
-- [ ] Digital signatures applied
-- [ ] Distribution channels prepared
-- [ ] Support documentation ready
-- [ ] User training materials created
-
-### 2. Deployment Environments
-
-**Development Environment:**
-```bash
-# Start development server
-php artisan serve
-
-# Start desktop development
-php artisan native:serve --dev
-```
-
-**Production Environment:**
-```bash
-# Build production package
-php artisan native:build --production
-
-# Create installer
-php artisan native:installer
-```
-
-### 3. Monitoring & Analytics
-
-**Application Monitoring:**
-- Error tracking and reporting
-- Usage analytics
-- Performance monitoring
-- Update success rates
-- User feedback collection
-
----
-
-## Troubleshooting & Support
-
-### Common Issues & Solutions
-
-**1. Node.js Version Conflicts**
-```bash
-# Use Node Version Manager
-nvm install 18
-nvm use 18
-```
-
-**2. Electron Build Failures**
-```bash
-# Clear npm cache
-npm cache clean --force
-
-# Reinstall dependencies
-rm -rf node_modules
-npm install
-```
-
-**3. Database Connection Issues**
-```php
-// Use SQLite for desktop deployment
-DB_CONNECTION=sqlite
-DB_DATABASE=database/mystockmaster.sqlite
-```
-
-**4. Permission Errors**
-```bash
-# Run as administrator on Windows
-# Check file permissions on Linux/macOS
-chmod +x artisan
-```
-
-### Support Resources
-
-- **NativePHP Documentation**: https://nativephp.com/docs
-- **Laravel Documentation**: https://laravel.com/docs
-- **Community Support**: GitHub Issues, Discord
-- **Professional Support**: Available for enterprise deployments
-
----
-
-## Conclusion
-
-This comprehensive transformation plan provides a structured approach to converting MyStockMaster from a web application to a native desktop application using NativePHP. The plan includes detailed installation procedures, configuration modifications, automation scripts, and deployment strategies to ensure a successful transformation while maintaining all existing functionality.
-
-The automation script handles the technical complexity, while the testing methodology ensures reliability and performance. The packaging and deployment strategy provides a professional distribution approach suitable for both development and production environments.
-
-**Estimated Timeline**: 4-5 weeks for complete transformation
-**Resource Requirements**: 1-2 developers with Laravel and desktop application experience
-**Success Metrics**: Functional desktop application with all web features intact and enhanced desktop-specific capabilities
-
----
-
-*Document Version: 1.0*  
-*Last Updated: $(Get-Date -Format 'yyyy-MM-dd')*  
-*Author: AI Assistant*
+# MyStockMaster NativePHP Desktop v2 Compatibility Tracker
+
+This file tracks what is done vs what is left for a NativePHP Desktop v2 compatible desktop build in this repository.
+
+Last reviewed: 2026-03-22
+
+## Completed Since Streamlining-Installation Plan
+
+- [x] Added `EnvironmentService::getPlatform()` used by desktop status response:
+  - [EnvironmentService.php](file:///c:/laragon/www/myStockMaster/app/Services/EnvironmentService.php#L50-L67)
+- [x] Aligned desktop route compatibility with test expectations by supporting both singular and plural endpoints:
+  - [web.php](file:///c:/laragon/www/myStockMaster/routes/web.php#L135-L147)
+- [x] Fixed desktop shortcut sync call to use the correct online check method:
+  - [DesktopShortcutService.php](file:///c:/laragon/www/myStockMaster/app/Services/DesktopShortcutService.php)
+- [x] Updated desktop error handling payload to include `notification` key expected by tests:
+  - [DesktopErrorHandler.php](file:///c:/laragon/www/myStockMaster/app/Services/DesktopErrorHandler.php#L56-L66)
+- [x] Aligned desktop error log access check with centralized desktop environment detection:
+  - [DesktopErrorLog.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Admin/DesktopErrorLog.php#L188-L191)
+- [x] Stabilized desktop feature tests and confirmed all desktop functionality tests pass:
+  - [DesktopFunctionalityTest.php](file:///c:/laragon/www/myStockMaster/tests/Feature/DesktopFunctionalityTest.php)
+- [x] Implemented persona-aware installation flow scaffolding (web vs desktop defaults):
+  - [StepManager.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Installation/StepManager.php#L18-L120)
+- [x] Added web preflight checks (PHP/extensions/permissions/.env) used by installer and CLI doctor:
+  - [StepManager.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Installation/StepManager.php#L213-L287)
+  - [InstallDoctorCommand.php](file:///c:/laragon/www/myStockMaster/app/Console/Commands/InstallDoctorCommand.php)
+- [x] Added installer database connection test flow (web mode):
+  - [StepManager.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Installation/StepManager.php#L288-L367)
+- [x] Added desktop first-run auto-initialize (ensure SQLite + migrate + seed essentials):
+  - [EnvironmentServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/EnvironmentServiceProvider.php#L76-L140)
+- [x] Documented and automated “one command” bootstrap via composer script:
+  - [composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L61-L104)
+
+## Current Versions (codebase)
+
+- PHP: `^8.3` ([composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L10-L28))
+- Laravel: `^12.0` ([composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L10-L28)) / installed `12.55.1`
+- Livewire: `^4.0` ([composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L10-L28)) / installed `4.2.1`
+- NativePHP Desktop: `^2.1` ([composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L10-L28))
+
+## Verified NativePHP Desktop Baseline (Done)
+
+- [x] NativePHP Desktop v2 dependency is installed (composer):
+  - [composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L10-L28)
+- [x] NativePHP Desktop config exists (single source currently in repo):
+  - [nativephp.php](file:///c:/laragon/www/myStockMaster/config/nativephp.php)
+- [x] NativePHP Desktop service provider exists:
+  - [NativeAppServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/NativeAppServiceProvider.php)
+- [x] Desktop environment detection exists ([EnvironmentService.php](file:///c:/laragon/www/myStockMaster/app/Services/EnvironmentService.php)).
+- [x] Desktop-specific runtime configuration exists and is bootstrapped globally:
+  - [EnvironmentServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/EnvironmentServiceProvider.php)
+  - [bootstrap/providers.php](file:///c:/laragon/www/myStockMaster/bootstrap/providers.php)
+- [x] Offline-first database connection exists:
+  - `sqlite_desktop` connection points to `storage/database/desktop.sqlite` ([database.php](file:///c:/laragon/www/myStockMaster/config/database.php))
+  - Desktop directories + sqlite file are auto-created when in desktop mode ([EnvironmentServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/EnvironmentServiceProvider.php))
+- [x] Desktop routes exist for shortcuts/actions/status and error logging:
+  - [web.php](file:///c:/laragon/www/myStockMaster/routes/web.php#L134-L146)
+- [x] Desktop-facing UI elements exist (mode indicator + sync/status widgets):
+  - [desktop-mode-indicator.blade.php](file:///c:/laragon/www/myStockMaster/resources/views/components/desktop-mode-indicator.blade.php)
+  - [sync-status.blade.php](file:///c:/laragon/www/myStockMaster/resources/views/components/sync-status.blade.php)
+- [x] Background sync job exists (DB-to-DB sync through `DatabaseSyncService`):
+  - [SyncDatabaseJob.php](file:///c:/laragon/www/myStockMaster/app/Jobs/SyncDatabaseJob.php)
+  - [DatabaseSyncService.php](file:///c:/laragon/www/myStockMaster/app/Services/DatabaseSyncService.php)
+- [x] NativePHP dev script exists (NativePHP run + Vite dev):
+  - [composer.json](file:///c:/laragon/www/myStockMaster/composer.json#L100-L103)
+
+## Major Gaps / Breakers (Fix Before “Compatible” Claim)
+
+- [x] DesktopController calls missing methods:
+  - `EnvironmentService::getPlatform()` is referenced but not implemented ([DesktopController.php](file:///c:/laragon/www/myStockMaster/app/Http/Controllers/DesktopController.php))
+- [x] Desktop route naming/paths do not match tests:
+  - Routes include `/desktop/shortcut/execute` and `/desktop/action`
+  - Tests call `/desktop/shortcuts/execute` and `/desktop/actions` ([DesktopFunctionalityTest.php](file:///c:/laragon/www/myStockMaster/tests/Feature/DesktopFunctionalityTest.php))
+- [x] NativePHP Desktop provider is not registered for runtime boot lifecycle (currently commented):
+  - [providers.php](file:///c:/laragon/www/myStockMaster/bootstrap/providers.php#L5-L13)
+- [x] DesktopServiceProvider assumes a local “native service” HTTP API at `http://localhost:4000/api/status` (not guaranteed by NativePHP v2) ([DesktopServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/DesktopServiceProvider.php))
+- [x] Desktop menu callbacks use `redirect()->route(...)` inside native menu click handlers (not a reliable NativePHP navigation pattern):
+  - [DesktopServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/DesktopServiceProvider.php#L86-L221)
+- [x] Desktop detection is duplicated and inconsistent (central `EnvironmentService` vs installer `class_exists(Window::class)`):
+  - [EnvironmentService.php](file:///c:/laragon/www/myStockMaster/app/Services/EnvironmentService.php#L13-L44)
+  - [StepManager.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Installation/StepManager.php#L72-L105)
+- [x] Installer desktop DB setup currently targets `database/database.sqlite` (sqlite), while desktop runtime uses `sqlite_desktop` (storage/database/desktop.sqlite):
+  - [StepManager.php](file:///c:/laragon/www/myStockMaster/app/Livewire/Installation/StepManager.php#L505-L521)
+  - [database.php](file:///c:/laragon/www/myStockMaster/config/database.php#L46-L53)
+
+## Remaining NativePHP Desktop Work (Left)
+
+### Priority A — Align with MyStockMaster “Boost” desktop architecture
+
+- [x] Move desktop/native shell logic into `app/Native/` (currently spread across providers/controllers/services):
+  - [DesktopServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/DesktopServiceProvider.php)
+  - [NativeAppServiceProvider.php](file:///c:/laragon/www/myStockMaster/app/Providers/NativeAppServiceProvider.php)
+  - [DesktopController.php](file:///c:/laragon/www/myStockMaster/app/Http/Controllers/DesktopController.php)
+  - Desktop services in [app/Services](file:///c:/laragon/www/myStockMaster/app/Services)
+
+### Priority B — Offline database + sync correctness
+
+- [x] Standardize the desktop SQLite location to the project standard (`database/desktop.sqlite`) and update connection paths accordingly.
+- [x] Choose one sync architecture and remove runtime divergence:
+  - DB-to-DB sync: [DatabaseSyncService.php](file:///c:/laragon/www/myStockMaster/app/Services/DatabaseSyncService.php)
+  - API-based sync: [SyncService.php](file:///c:/laragon/www/myStockMaster/app/Services/SyncService.php)
+- [ ] Implement conflict resolution strategy (timestamp/last-write-wins) and document it.
+- [x] Validate sync table/model mapping:
+  - `DatabaseSyncService` references tables like `sale_items`, `purchase_items`, `stock_movements` that do not match the current migration naming (e.g. `sale_details`, `purchase_details`, `movements`).
+
+### Priority C — Native shell behavior (windows/menus/shortcuts)
+
+- [x] Consolidate window/menu configuration to a single source-of-truth:
+  - Define how [nativephp.php](file:///c:/laragon/www/myStockMaster/config/nativephp.php) maps to providers and runtime usage.
+- [x] Replace provider menu callbacks that use `redirect()->route(...)` with an approach that works reliably in NativePHP Desktop.
+- [x] Ensure window management is defined in one place and is compatible with NativePHP Desktop v2.
+
+### Priority D — Testing + quality gates
+
+- [x] Make desktop feature tests meaningful and passing (align routes + implement missing functions):
+  - [DesktopFunctionalityTest.php](file:///c:/laragon/www/myStockMaster/tests/Feature/DesktopFunctionalityTest.php)
+- [ ] Add coverage for:
+  - Desktop-mode detection and offline toggle persistence
+  - Sync job execution and failure handling
+  - Desktop error logging routes and storage
+
+## Desktop Compatibility Definition of Done
+
+- [x] Desktop mode boots without fatal errors (provider/controller references are valid).
+- [x] Desktop SQLite exists, migrations or schema initialization is deterministic, and offline mode works.
+- [x] Sync has a single architecture, a conflict strategy, and passes tests.
+- [x] Window/menu/shortcut behavior is implemented in NativePHP-compatible APIs.
+- [x] No secrets are bundled into production builds (env cleanup aligns with NativePHP best practices).
+
+## NativePHP Desktop v2 Alignment Notes (Reference)
+
+- Installer: NativePHP Desktop v2 uses `nativephp/desktop` and recommends running `php artisan native:install` on new machines / CI.
+- Development migrations: in development you may need `php artisan native:migrate` (NativePHP-managed database), separate from `php artisan migrate`.
+- App versioning: bump `config/nativephp.php` app version for builds; user-machine migrations only run if the version reference changes.

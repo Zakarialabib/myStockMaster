@@ -13,10 +13,6 @@
 })" x-init="init()" x-on:close.stop="close()" @if ($closeOnEscape)
     x-on:keydown.escape.window="close()"
     @endif
-    @if ($trapFocus)
-        x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
-        x-on:keydown.shift.tab.prevent="prevFocusable().focus()"
-    @endif
     x-show="show"
     x-transition:enter="{{ $animationClasses }}"
     x-transition:enter-start="opacity-0 {{ $animation === 'slide' ? 'transform -translate-y-4' : '' }} {{ $animation === 'zoom' ? 'transform scale-95' : '' }}"
@@ -48,8 +44,7 @@
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100 {{ $animation === 'slide' ? 'translate-y-0 sm:scale-100' : ($animation === 'zoom' ? 'scale-100' : '') }}"
         x-transition:leave-end="opacity-0 {{ $animation === 'slide' ? 'translate-y-4 sm:translate-y-0 sm:scale-95' : ($animation === 'zoom' ? 'scale-95' : '') }}"
-        class="relative mb-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-soft transform transition-all sm:w-full {{ $maxWidthClass }} sm:mx-auto"
-        x-trap.noscroll.inert="show && {{ $trapFocus ? 'true' : 'false' }}">
+        class="relative mb-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-soft transform transition-all sm:w-full {{ $maxWidthClass }} sm:mx-auto">
 
         @if ($lazy)
             <!-- Loading State -->

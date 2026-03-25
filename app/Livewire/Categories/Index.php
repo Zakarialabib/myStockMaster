@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace App\Livewire\Categories;
 
-use App\Livewire\Utils\HasDelete;
 use App\Livewire\Utils\Datatable;
+use App\Livewire\Utils\HasDelete;
 use App\Models\Category;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Title;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 #[Title('Categories')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
-    use WithFileUploads;
     use HasDelete;
+    use WithAlert;
+    use WithFileUploads;
 
     /** @var mixed */
     public $category;
@@ -45,8 +44,8 @@ class Index extends Component
         abort_if(Gate::denies('category_access'), 403);
 
         $query = Category::withCount('products')->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -55,7 +54,6 @@ class Index extends Component
         return view('livewire.categories.index', ['categories' => $categories]);
     }
 
-    #[On('showModal')]
     public function openShowModal(Category $category): void
     {
         abort_if(Gate::denies('category_access'), 403);

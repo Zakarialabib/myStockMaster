@@ -25,22 +25,22 @@
                         <x-table.th>
                             <input type="checkbox" wire:model.live="selectPage" />
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('date')" :direction="$sorts['date'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('date')" :direction="$sorts['date'] ?? null">
                             {{ __('Date') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                             {{ __('Customer') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
                             {{ __('Payment status') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                             {{ __('Due Amount') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('total')" :direction="$sorts['total'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('total')" :direction="$sorts['total'] ?? null">
                             {{ __('Total') }}
                         </x-table.th>
-                        <x-table.th sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null">
+                        <x-table.th sortable multi-column wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
                             {{ __('Status') }}
                         </x-table.th>
                         <x-table.th>

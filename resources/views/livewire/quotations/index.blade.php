@@ -42,16 +42,16 @@
                     <input type="checkbox" wire:model.live="selectPage"
                         class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700 dark:checked:bg-blue-600 dark:checked:border-blue-600 dark:focus:ring-blue-500 dark:focus:ring-offset-gray-800" />
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('customer_id')" :direction="$sortBy === 'customer_id' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="$sortBy === 'customer_id' ? $sortDirection : null">
                     {{ __('Customer') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('total_amount')" :direction="$sortBy === 'total_amount' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="$sortBy === 'total_amount' ? $sortDirection : null">
                     {{ __('Total') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
                     {{ __('Status') }}
                 </x-table.th>
                 <x-table.th>

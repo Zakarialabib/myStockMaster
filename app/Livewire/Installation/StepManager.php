@@ -21,56 +21,75 @@ use Livewire\WithFileUploads;
 #[Layout('layouts.guest')]
 class StepManager extends Component
 {
-    use WithFileUploads;
     use WithAlert;
+    use WithFileUploads;
 
-    public $currentStep = 1;
-    public $persona = null; // 'retail' or 'technician'
-    public $isDesktop = false;
-    public $isInstalled = false;
+    public int $currentStep = 1;
 
-    // Company details
-    public $company_name;
-    public $company_email;
-    public $company_phone;
-    public $company_address;
-    public $company_tax;
+    public ?string $persona = null; // 'retail' or 'technician'
 
-    // Demo selection
-    public $selected_business_line = '';
-    public $install_demo_data = true;
+    public bool $isDesktopMode = false;
 
-    // Site settings
-    public $site_logo;
-    public $multi_language = true;
-    public $currency = 'MAD';
-    public $timezone = 'UTC';
-    public $items_per_page = 20;
+    public bool $isInstalled = false;
 
-    // Admin user details
-    public $admin_name = 'Admin';
-    public $admin_email;
-    public $admin_password;
-    public $admin_password_confirmation;
+    // ── Preflight (web only) ──
+    public array $preflightResults = [];
 
-    // Database details
-    public $database = [
+    public array $requirementErrors = [];
+
+    public bool $preflightPassed = false;
+
+    // ── Database (web only) ──
+    public array $database = [
         'connection' => 'mysql',
-        'host'       => '127.0.0.1',
-        'port'       => '3306',
-        'database'   => '',
-        'username'   => '',
-        'password'   => '',
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'database' => '',
+        'username' => 'root',
+        'password' => '',
     ];
 
-    public $requirementErrors = [];
+    public bool $connectionTested = false;
+
+    public bool $connectionSuccess = false;
+
+    public string $connectionMessage = '';
+
+    public bool $migrationsDone = false;
+
+    // ── Company details ──
+    public $company_name;
+
+    public $company_email;
+
+    public $company_phone;
+
+    public $company_address;
+
+    public $company_tax;
+
+    // ── Demo selection ──
+    public $selected_business_line = '';
+
+    public $install_demo_data = true;
+
+    public bool $retailQuickStart = false;
+
+    // ── Admin user details ──
+    public $admin_name;
+
+    public $admin_email;
+
+    public $admin_password;
+
+    public $admin_password_confirmation;
 
     public function mount(): void
     {
-        $this->isDesktop = $this->detectEnvironment();
+        $this->isDesktopMode = \App\Services\EnvironmentService::isDesktop() && ! app()->runningUnitTests();
         $this->isInstalled = $this->shouldSkipInstallation();
 
-        if ($this->isDesktop) {
+        if ($this->isDesktopMode) {
             $this->persona = 'retail';
         }
 
@@ -84,18 +103,20 @@ class StepManager extends Component
                 $this->company_tax = settings('company_tax', '');
                 $this->selected_business_line = settings('selected_business_line', '');
                 $this->install_demo_data = settings('install_demo_data', true);
-                $this->currency = settings('currency', 'MAD');
-                $this->timezone = settings('timezone', 'UTC');
-                $this->items_per_page = settings('items_per_page', 20);
             }
         } catch (Exception $e) {
             // Ignore if DB not ready
         }
-    }
 
-    private function detectEnvironment(): bool
-    {
-        return class_exists(\Native\Desktop\Facades\Window::class) && ! app()->runningUnitTests();
+        // Setup initial config if not desktop
+        if (! $this->isDesktopMode) {
+            $this->database['connection'] = env('DB_CONNECTION', 'mysql');
+            $this->database['host'] = env('DB_HOST', '127.0.0.1');
+            $this->database['port'] = env('DB_PORT', '3306');
+            $this->database['database'] = env('DB_DATABASE', '');
+            $this->database['username'] = env('DB_USERNAME', 'root');
+            $this->runPreflightChecks();
+        }
     }
 
     public function shouldSkipInstallation(): bool
@@ -115,13 +136,13 @@ class StepManager extends Component
         return false;
     }
 
-    public function getStepsProperty()
+    public function getStepsProperty(): array
     {
-        if ( ! $this->persona) {
+        if (! $this->persona) {
             return ['persona'];
         }
 
-        if ($this->persona === 'retail' && $this->isDesktop) {
+        if ($this->persona === 'retail' && $this->isDesktopMode) {
             return ['persona', 'company', 'admin', 'demo', 'finish'];
         }
 
@@ -129,47 +150,31 @@ class StepManager extends Component
         return ['persona', 'requirements', 'database', 'company', 'admin', 'demo', 'finish'];
     }
 
-    public function getStepTitleProperty()
+    public function getStepTitleProperty(): string
     {
         $step = $this->steps[$this->currentStep - 1] ?? '';
 
         return match ($step) {
-            'persona'      => 'Choose Your Persona',
-            'requirements' => 'System Requirements',
-            'database'     => 'Database Configuration',
-            'company'      => 'Company Details',
-            'admin'        => 'Admin Account',
-            'demo'         => 'Demo Data',
-            'finish'       => 'Complete Installation',
-            default        => 'Installation',
+            'persona' => __('Choose Your Persona'),
+            'requirements' => __('System Requirements'),
+            'database' => __('Database Configuration'),
+            'company' => __('Company Details'),
+            'admin' => __('Admin Account'),
+            'demo' => __('Demo Data'),
+            'finish' => __('Complete Installation'),
+            default => __('Installation'),
         };
+    }
+
+    public function selectPersona(string $persona): void
+    {
+        $this->persona = $persona;
+        $this->nextStep();
     }
 
     public function nextStep(): void
     {
-        $stepName = $this->steps[$this->currentStep - 1];
-
-        if ($stepName === 'persona') {
-            if ( ! $this->persona) {
-                $this->addError('persona', 'Please select a persona to continue.');
-
-                return;
-            }
-        } elseif ($stepName === 'requirements') {
-            $this->checkRequirements();
-
-            if (count($this->requirementErrors) > 0) {
-                return;
-            }
-        } elseif ($stepName === 'database') {
-            $this->validateDatabase();
-        } elseif ($stepName === 'company') {
-            $this->validateCompanyDetails();
-        } elseif ($stepName === 'admin') {
-            $this->validateAdminDetails();
-        } elseif ($stepName === 'demo') {
-            $this->validateDemoSelection();
-        }
+        $this->validateCurrentStep();
 
         if ($this->currentStep < count($this->steps)) {
             $this->currentStep++;
@@ -183,69 +188,173 @@ class StepManager extends Component
         }
     }
 
-    public function selectPersona($persona): void
+    public function goToStep(int $step): void
     {
-        $this->persona = $persona;
-        $this->nextStep();
+        if ($step >= 1 && $step <= count($this->steps)) {
+            try {
+                // Only validate if going forward
+                if ($step > $this->currentStep) {
+                    $this->validateCurrentStep();
+                }
+
+                $this->currentStep = $step;
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                $this->alert('error', __('Please complete the current step before proceeding.'));
+            }
+        }
     }
 
-    public function checkRequirements(): void
+    private function validateCurrentStep(): void
     {
+        $stepName = $this->steps[$this->currentStep - 1] ?? '';
+
+        match ($stepName) {
+            'persona' => $this->validatePersona(),
+            'requirements' => $this->validatePreflight(),
+            'database' => $this->validateDatabase(),
+            'company' => $this->validateCompanyDetails(),
+            'admin' => $this->validateAdminDetails(),
+            'demo' => $this->validateDemoSelection(),
+            default => null,
+        };
+    }
+
+    private function validatePersona(): void
+    {
+        $this->validate([
+            'persona' => 'required|in:retail,technician',
+        ]);
+    }
+
+    private function validatePreflight(): void
+    {
+        $this->runPreflightChecks();
+
+        if (! $this->preflightPassed) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'preflight' => __('Some system requirements are not met. Please fix them before continuing.'),
+            ]);
+        }
+    }
+
+    public function runPreflightChecks(): void
+    {
+        $this->preflightResults = [];
         $this->requirementErrors = [];
 
-        if (version_compare(PHP_VERSION, '8.2.0', '<')) {
-            $this->requirementErrors[] = 'PHP 8.2 or higher is required.';
+        // PHP version
+        $phpOk = version_compare(PHP_VERSION, '8.2.0', '>=');
+        $this->preflightResults['php_version'] = [
+            'label' => 'PHP Version (≥ 8.2)',
+            'value' => PHP_VERSION,
+            'passed' => $phpOk,
+        ];
+
+        if (! $phpOk) {
+            $this->requirementErrors[] = 'PHP 8.2 or higher is required. Current: ' . PHP_VERSION;
         }
 
+        // Extensions
         $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML', 'sqlite3'];
 
         foreach ($requiredExtensions as $ext) {
-            if ( ! extension_loaded(strtolower($ext))) {
-                $this->requirementErrors[] = "Extension $ext is missing.";
+            $loaded = extension_loaded(strtolower($ext));
+            $this->preflightResults['ext_' . strtolower($ext)] = [
+                'label' => "{$ext} Extension",
+                'passed' => $loaded,
+            ];
+
+            if (! $loaded) {
+                $this->requirementErrors[] = "PHP extension '{$ext}' is required but not loaded.";
             }
         }
 
-        $writablePaths = [
-            storage_path(),
-            base_path('bootstrap/cache'),
-            base_path('.env'),
+        // Directory permissions
+        $writableDirs = [
+            storage_path() => 'storage',
+            storage_path('app') => 'storage/app',
+            storage_path('framework') => 'storage/framework',
+            storage_path('logs') => 'storage/logs',
+            base_path('bootstrap/cache') => 'bootstrap/cache',
         ];
 
-        foreach ($writablePaths as $path) {
-            if (file_exists($path) && ! is_writable($path)) {
-                $this->requirementErrors[] = "Path $path is not writable.";
+        foreach ($writableDirs as $path => $label) {
+            $writable = is_writable($path);
+            $this->preflightResults['dir_' . str_replace('/', '_', $label)] = [
+                'label' => "Directory: {$label}",
+                'passed' => $writable,
+            ];
+
+            if (! $writable) {
+                $this->requirementErrors[] = "Directory '{$label}' is not writable.";
             }
         }
+
+        // .env file
+        $envExists = file_exists(base_path('.env'));
+        $this->preflightResults['env_file'] = [
+            'label' => '.env file exists',
+            'passed' => $envExists,
+            'hint' => $envExists ? null : 'Run: cp .env.example .env && php artisan key:generate',
+        ];
+
+        if (! $envExists) {
+            $this->requirementErrors[] = '.env file not found. Copy .env.example to .env and run php artisan key:generate.';
+        }
+
+        $this->preflightPassed = count($this->requirementErrors) === 0;
     }
 
     public function testConnection(): void
     {
         $this->validate([
             'database.connection' => 'required',
-            'database.database'   => 'required',
+            'database.database' => 'required',
         ]);
 
         if ($this->database['connection'] !== 'sqlite') {
             $this->validate([
-                'database.host'     => 'required',
+                'database.host' => 'required',
                 'database.username' => 'required',
             ]);
         }
 
+        $this->connectionTested = true;
+
         try {
-            $config = config('database.connections.'.$this->database['connection']);
+            $config = config('database.connections.' . $this->database['connection'], []);
+            $config['driver'] = $this->database['connection'];
             $config['host'] = $this->database['host'];
             $config['port'] = $this->database['port'];
             $config['database'] = $this->database['database'];
             $config['username'] = $this->database['username'];
             $config['password'] = $this->database['password'];
 
-            Config::set('database.connections.temp', $config);
-            DB::connection('temp')->getPdo();
+            if ($this->database['connection'] === 'sqlite') {
+                $dbPath = $this->database['database'] ?: database_path('database.sqlite');
 
-            session()->flash('connection_success', 'Connection successful!');
+                if (! file_exists($dbPath)) {
+                    touch($dbPath);
+                }
+                $config['database'] = $dbPath;
+            }
+
+            Config::set('database.connections._install_test', $config);
+            DB::connection('_install_test')->getPdo();
+            DB::disconnect('_install_test');
+
+            $this->connectionSuccess = true;
+            $this->connectionMessage = __('Database connection successful!');
+
+            // Clean flash session so an old error doesn't block validation
+            session()->forget('connection_error');
+            $this->alert('success', $this->connectionMessage);
         } catch (Exception $e) {
-            session()->flash('connection_error', 'Connection failed: '.$e->getMessage());
+            $this->connectionSuccess = false;
+            $this->connectionMessage = __('Connection failed: ') . $e->getMessage();
+            session()->flash('connection_error', $this->connectionMessage);
+            $this->alert('error', $this->connectionMessage);
+            Log::warning('Installation DB test failed', ['error' => $e->getMessage()]);
         }
     }
 
@@ -255,23 +364,25 @@ class StepManager extends Component
             return;
         }
 
-        // For Technician, we want them to have a working DB
-        $this->testConnection();
+        // Attempt connection test if not passed
+        if (! $this->connectionSuccess) {
+            $this->testConnection();
+        }
 
-        if (session()->has('connection_error')) {
+        if (session()->has('connection_error') || ! $this->connectionSuccess) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'database.database' => 'Database connection failed. Please check your settings.',
+                'database.database' => 'Database connection failed. Please check your settings and test the connection.',
             ]);
         }
 
         // Update .env file
         $this->updateEnv([
             'DB_CONNECTION' => $this->database['connection'],
-            'DB_HOST'       => $this->database['host'],
-            'DB_PORT'       => $this->database['port'],
-            'DB_DATABASE'   => $this->database['database'],
-            'DB_USERNAME'   => $this->database['username'],
-            'DB_PASSWORD'   => $this->database['password'],
+            'DB_HOST' => $this->database['host'],
+            'DB_PORT' => $this->database['port'],
+            'DB_DATABASE' => $this->database['database'],
+            'DB_USERNAME' => $this->database['username'],
+            'DB_PASSWORD' => $this->database['password'],
         ]);
     }
 
@@ -279,42 +390,90 @@ class StepManager extends Component
     {
         $envPath = base_path('.env');
 
-        if ( ! file_exists($envPath)) {
+        if (! file_exists($envPath)) {
             copy(base_path('.env.example'), $envPath);
         }
 
         $content = file_get_contents($envPath);
 
         foreach ($data as $key => $value) {
-            if (preg_match("/^{$key}=/m", $content)) {
+            if (preg_match("/^{$key}=.*/m", $content)) {
                 $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
             } else {
                 $content .= "\n{$key}={$value}";
             }
         }
         file_put_contents($envPath, $content);
+        Artisan::call('config:clear');
+    }
+
+    private function validateCompanyDetails(): void
+    {
+        $this->validate([
+            'company_name' => 'required|string|max:255',
+            'company_email' => 'required|email',
+            'company_phone' => 'required|string',
+            'company_address' => 'required|string',
+        ]);
+    }
+
+    private function validateAdminDetails(): void
+    {
+        $this->validate([
+            'admin_email' => 'required|email' . (Schema::hasTable('users') ? '|unique:users,email' : ''),
+            'admin_password' => 'required|min:8|confirmed',
+        ]);
+    }
+
+    private function validateDemoSelection(): void
+    {
+        if ($this->install_demo_data) {
+            $this->validate([
+                'selected_business_line' => 'required|string|in:electronics,sports,fashion,restaurant,grocery,automotive,books,pharmacy,jewelry,furniture',
+            ]);
+        }
     }
 
     public function completeInstallation()
     {
         try {
-            if ($this->persona === 'retail' && $this->isDesktop) {
+            if ($this->persona === 'retail' && $this->isDesktopMode) {
                 $this->setupDesktopDatabase();
             }
 
             // Run migrations
-            Artisan::call('migrate', ['--force' => true]);
+            $migrateExitCode = Artisan::call('migrate', ['--force' => true]);
+
+            if ($migrateExitCode !== 0) {
+                $output = Artisan::output();
+
+                throw new Exception('Database migration failed. Details in logs.');
+                // Note: The specific output can be too large or contain sensitive info, better to log it and show a generic message or just the last error line
+            }
 
             // Ensure settings table exists and has a record
             if (Setting::count() === 0) {
-                Artisan::call('db:seed', ['--class' => 'SettingSeeder', '--force' => true]);
+                $seeders = [
+                    'Database\\Seeders\\RolesAndPermissionsSeeder',
+                    'Database\\Seeders\\CurrencySeeder',
+                    'Database\\Seeders\\SettingsSeeder',
+                    'Database\\Seeders\\LanguagesSeeder',
+                ];
+
+                foreach ($seeders as $seeder) {
+                    $exitCode = Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
+
+                    if ($exitCode !== 0) {
+                        throw new Exception("Core data insertion failed for {$seeder}.");
+                    }
+                }
             }
 
             // Create admin user
             $user = User::updateOrCreate(
                 ['email' => $this->admin_email],
                 [
-                    'name'     => $this->admin_name,
+                    'name' => $this->admin_name ?? explode('@', $this->admin_email ?? '')[0],
                     'password' => Hash::make($this->admin_password),
                     'is_admin' => true,
                 ]
@@ -322,7 +481,7 @@ class StepManager extends Component
 
             // Assign roles if Spatie is used
             if (method_exists($user, 'assignRole')) {
-                Artisan::call('db:seed', ['--class' => 'RoleSeeder', '--force' => true]);
+                // Ensure role seeder has run
                 $user->assignRole('admin');
             }
 
@@ -349,65 +508,9 @@ class StepManager extends Component
 
             return redirect()->route('dashboard');
         } catch (Exception $e) {
-            $this->alert('error', __('Installation failed: ').$e->getMessage());
+            $this->alert('error', __('Installation failed: ') . $e->getMessage());
+            Log::error('Installation completion failed', ['error' => $e->getMessage()]);
         }
-    }
-
-    private function setupDesktopDatabase(): void
-    {
-        $dbPath = database_path('database.sqlite');
-
-        if ( ! file_exists($dbPath)) {
-            touch($dbPath);
-        }
-
-        $this->updateEnv([
-            'DB_CONNECTION' => 'sqlite',
-            'DB_DATABASE'   => $dbPath,
-        ]);
-
-        Config::set('database.default', 'sqlite');
-        Config::set('database.connections.sqlite.database', $dbPath);
-    }
-
-    private function installDemoData(): void
-    {
-        try {
-            $settings = Setting::first();
-
-            if ($settings) {
-                $settings->update(['selected_business_line' => $this->selected_business_line]);
-                cache()->forget('settings');
-            }
-
-            Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\ComprehensiveProductSeeder',
-                '--force' => true,
-            ]);
-
-            Log::info('Demo data installed successfully', ['business_line' => $this->selected_business_line]);
-        } catch (Exception $e) {
-            Log::error('Failed to install demo data', ['error' => $e->getMessage()]);
-            $this->alert('warning', __('Demo data installation failed: ').$e->getMessage());
-        }
-    }
-
-    public function render()
-    {
-        return view('livewire.installation.step-manager', [
-            'steps'     => $this->steps,
-            'stepTitle' => $this->stepTitle,
-        ]);
-    }
-
-    private function validateCompanyDetails(): void
-    {
-        $this->validate([
-            'company_name'    => 'required|string|max:255',
-            'company_email'   => 'required|email',
-            'company_phone'   => 'required|string',
-            'company_address' => 'required|string',
-        ]);
     }
 
     private function saveCompanyDetails(): void
@@ -416,32 +519,54 @@ class StepManager extends Component
 
         if ($settings) {
             $settings->update([
-                'company_name'        => $this->company_name,
-                'company_email'       => $this->company_email,
-                'company_phone'       => $this->company_phone,
-                'company_address'     => $this->company_address,
-                'company_tax'         => $this->company_tax,
-                'default_currency_id' => 1, // Defaulting for now
-                'default_date_format' => 'd-m-Y',
-            ]);
-            cache()->forget('settings');
-        }
-    }
-
-    private function validateDemoSelection(): void
-    {
-        if ($this->install_demo_data) {
-            $this->validate([
-                'selected_business_line' => 'required|string',
+                'company_name' => $this->company_name,
+                'company_email' => $this->company_email,
+                'company_phone' => $this->company_phone,
+                'company_address' => $this->company_address,
+                'company_tax' => $this->company_tax,
+                'install_demo_data' => $this->install_demo_data,
+                'selected_business_line' => $this->selected_business_line,
             ]);
         }
     }
 
-    private function validateAdminDetails(): void
+    private function setupDesktopDatabase(): void
     {
-        $this->validate([
-            'admin_email'    => 'required|email',
-            'admin_password' => 'required|min:8|confirmed',
+        $dbPath = storage_path('database/desktop.sqlite');
+
+        if (! file_exists(dirname($dbPath))) {
+            mkdir(dirname($dbPath), 0755, true);
+        }
+
+        if (! file_exists($dbPath)) {
+            touch($dbPath);
+        }
+
+        $this->updateEnv([
+            'DB_CONNECTION' => 'sqlite',
+            'DB_DATABASE' => $dbPath,
+            'DESKTOP_DB_URL' => '',
+            'DESKTOP_DB_DATABASE' => $dbPath,
         ]);
+
+        Config::set('database.default', 'sqlite_desktop');
+        Config::set('database.connections.sqlite_desktop.database', $dbPath);
+        DB::purge('sqlite_desktop');
+        DB::reconnect('sqlite_desktop');
+    }
+
+    private function installDemoData(): void
+    {
+        try {
+            Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\ComprehensiveDataSeeder',
+                '--force' => true,
+            ]);
+
+            Log::info('Demo data installed successfully', ['business_line' => $this->selected_business_line]);
+        } catch (Exception $e) {
+            Log::error('Failed to install demo data', ['error' => $e->getMessage()]);
+            $this->alert('warning', __('Demo data installation failed: ') . $e->getMessage());
+        }
     }
 }

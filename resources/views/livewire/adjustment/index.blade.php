@@ -55,10 +55,10 @@
                             class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" />
                     </div>
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('date')" :direction="$sorts['date'] ?? null" class="min-w-32">
+                <x-table.th sortable wire:click="sortingBy('date')" :direction="$sorts['date'] ?? null" class="min-w-32">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('reference')" :direction="$sorts['reference'] ?? null" class="min-w-40">
+                <x-table.th sortable wire:click="sortingBy('reference')" :direction="$sorts['reference'] ?? null" class="min-w-40">
                     {{ __('Reference') }}
                 </x-table.th>
                 <x-table.th class="min-w-32">

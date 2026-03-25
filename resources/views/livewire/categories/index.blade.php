@@ -28,7 +28,7 @@
                     <input type="checkbox" wire:model.live="selectPage"
                         class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500 dark:bg-gray-700" />
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('name')" :direction="$sortBy === 'name' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('name')" :direction="$sortBy === 'name' ? $sortDirection : null">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-tag mr-2 text-gray-400"></i>
                         <span>{{ __('Name') }}</span>
@@ -40,7 +40,7 @@
                         <span>{{ __('Products count') }}</span>
                     </div>
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-toggle-on mr-2 text-gray-400"></i>
                         <span>{{ __('Status') }}</span>
@@ -65,23 +65,27 @@
                         </button>
                     </x-table.td>
                     <x-table.td>
-                        <x-status-badge status="info" :count="$category->products_count" icon="fas fa-boxes" size="sm" />
+                        <x-badge type="info">
+                            <i class="fas fa-boxes mr-1"></i>
+                            {{ $category->products_count }}
+                        </x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <!-- {{ $category->status }} 1 0  -->
-                        <x-status-badge :status="$category->status ? 'active' : 'inactive'" :text="$category->status ? __('Active') : __('Inactive')" size="sm" />
+                        <x-badge :type="$category->status ? 'success' : 'secondary'">
+                            {{ $category->status ? __('Active') : __('Inactive') }}
+                        </x-badge>
                     </x-table.td>
                     <x-table.td class="text-right">
-                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                        <x-button variant="info" type="button" class="w-8 h-8 inline-flex items-center justify-center"
                             wire:click="openShowModal('{{ $category->id }}')">
                             <i class="fas fa-eye"></i>
                         </x-button>
-                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
-                            wire:click="openEditModal('{{ $category->id }}')">
+                        <x-button variant="warning" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                            wire:click="dispatch('openEditModal', '{{ $category->id }}')">
                             <i class="fas fa-edit"></i>
                         </x-button>
-                        <x-button variant="primary" type="button" class="w-8 h-8 inline-flex items-center justify-center"
-                            wire:click="openDeleteModal('{{ $category->id }}')">
+                        <x-button variant="danger" type="button" class="w-8 h-8 inline-flex items-center justify-center"
+                            wire:click="deleteModal('{{ $category->id }}')">
                             <i class="fas fa-trash-alt"></i>
                         </x-button>
                     </x-table.td>

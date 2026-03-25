@@ -316,6 +316,5 @@ new class extends Component
             });
         </script>
         @endscript
-
     </div>
 </div>

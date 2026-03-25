@@ -41,6 +41,7 @@ return [
     |
     */
     'window' => [
+        'title' => env('app_name', 'MyStockMaster'),
         'width' => 1200,
         'height' => 800,
         'min_width' => 800,
@@ -117,5 +118,23 @@ return [
         'icon' => 'resources/images/icon.png',
         'output_dir' => 'dist',
         'compression' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cleanup Environment Keys
+    |--------------------------------------------------------------------------
+    |
+    | Define the keys from your .env file that should be removed from the
+    | production build to prevent sensitive information from leaking.
+    |
+    */
+    'cleanup_env_keys' => [
+        'APP_KEY',
+        'DB_PASSWORD',
+        'MAIL_PASSWORD',
+        'AWS_SECRET_ACCESS_KEY',
+        'PUSHER_APP_SECRET',
+        'STRIPE_SECRET',
     ],
 ];

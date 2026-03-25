@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Artisan;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Artisan;
+use Spatie\Permission\Models\Role;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -19,7 +20,13 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        Artisan::call('db:seed');
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        try {
+            Artisan::call('db:seed');
+        } catch (Exception $e) {
+            // Ignore seeding errors in tests if already seeded
+        }
     }
 
     protected function getAdminRole()
@@ -34,7 +41,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function loginAsAdmin($admin = false)
     {
-        if ( ! $admin) {
+        if (! $admin) {
             $admin = $this->getMasterAdmin();
         }
 

@@ -19,7 +19,7 @@ class PendingApproval extends Component
 
             // Redirect based on user role
             if ($user->hasRole('admin') || $user->hasRole('manager') || $user->hasRole('staff')) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('dashboard');
             }
 
             if ($user->hasRole('customer')) {
@@ -29,7 +29,7 @@ class PendingApproval extends Component
 
         // Check if admin is authenticated
         if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('dashboard');
         }
 
         return null;

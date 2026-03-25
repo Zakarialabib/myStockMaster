@@ -52,18 +52,18 @@
                     <x-table.th class="w-12 text-center">
                         <x-input type="checkbox" wire:model.live="selectPage" class="rounded" />
                     </x-table.th>
-                    <x-table.th sortable multi-column wire:click="sortBy('name')" :direction="$sorts['name'] ?? null" class="text-left">
+                    <x-table.th sortable multi-column wire:click="sortingBy('name')" :direction="$sorts['name'] ?? null" class="text-left">
                         {{ __('Name') }}
                     </x-table.th>
-                    <x-table.th sortable multi-column wire:click="sortBy('connection_type')" :direction="$sorts['connection_type'] ?? null"
+                    <x-table.th sortable multi-column wire:click="sortingBy('connection_type')" :direction="$sorts['connection_type'] ?? null"
                         class="text-left">
                         {{ __('Connection Type') }}
                     </x-table.th>
-                    <x-table.th sortable multi-column wire:click="sortBy('capability_profile')" :direction="$sorts['capability_profile'] ?? null"
+                    <x-table.th sortable multi-column wire:click="sortingBy('capability_profile')" :direction="$sorts['capability_profile'] ?? null"
                         class="text-left">
                         {{ __('Capability Profile') }}
                     </x-table.th>
-                    <x-table.th sortable multi-column wire:click="sortBy('char_per_line')" :direction="$sorts['char_per_line'] ?? null"
+                    <x-table.th sortable multi-column wire:click="sortingBy('char_per_line')" :direction="$sorts['char_per_line'] ?? null"
                         class="text-center">
                         {{ __('Char/Line') }}
                     </x-table.th>

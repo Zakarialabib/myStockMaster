@@ -11,65 +11,65 @@ use App\Http\Controllers\PurchasesReturnController;
 use App\Http\Controllers\QuotationSalesController;
 use App\Http\Controllers\SalesReturnController;
 use App\Http\Controllers\SendQuotationEmailController;
-use App\Livewire\Installation\StepManager;
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Dashboard;
-use App\Livewire\Users\Profile as ProfileIndex;
-use App\Livewire\Adjustment\Index as AdjustmentIndex;
 use App\Livewire\Adjustment\Create as CreateAdjustment;
 use App\Livewire\Adjustment\Edit as EditAdjustment;
+use App\Livewire\Adjustment\Index as AdjustmentIndex;
 use App\Livewire\Backup\Index as BackupIndex;
 use App\Livewire\Brands\Index as BrandIndex;
-use App\Livewire\Categories\Index as CategoryIndex;
 use App\Livewire\CashRegister\Index as CashRegisterIndex;
+use App\Livewire\Categories\Index as CategoryIndex;
 use App\Livewire\Currency\Index as CurrencyIndex;
-use App\Livewire\Customers\Index as CustomersIndex;
-use App\Livewire\Customers\Details as CustomerDetails;
 use App\Livewire\CustomerGroup\Index as CustomerGroupIndex;
+use App\Livewire\Customers\Details as CustomerDetails;
+use App\Livewire\Customers\Index as CustomersIndex;
+use App\Livewire\Dashboard;
 use App\Livewire\Email\Index as EmailIndex;
 use App\Livewire\Expense\Index as ExpensesIndex;
 use App\Livewire\ExpenseCategories\Index as ExpenseCategoriesIndex;
-use App\Livewire\Language\Index as LanguageIndex;
+use App\Livewire\Installation\StepManager;
 use App\Livewire\Language\EditTranslation;
-use App\Livewire\Permission\Index as PermissionsIndex;
-use App\Livewire\Products\Index as ProductsIndex;
-use App\Livewire\Products\Edit as EditProduct;
-use App\Livewire\Products\Barcode as BarcodeIndex;
-use App\Livewire\Role\Index as RolesIndex;
-use App\Livewire\Suppliers\Index as SuppliersIndex;
-use App\Livewire\Suppliers\Details as SupplierDetails;
-use App\Livewire\Warehouses\Index as WarehouseIndex;
-use App\Livewire\Shipping\Index as ShippingIndex;
-use App\Livewire\Users\Index as UsersIndex;
+use App\Livewire\Language\Index as LanguageIndex;
 use App\Livewire\Notification\Index as NotificationIndex;
+use App\Livewire\Permission\Index as PermissionsIndex;
 use App\Livewire\Pos\Index as PosIndex;
 use App\Livewire\Printer\Index as PrinterIndex;
-use App\Livewire\Purchase\Index as PurchasesIndex;
+use App\Livewire\Products\Barcode as BarcodeIndex;
+use App\Livewire\Products\Edit as EditProduct;
+use App\Livewire\Products\Index as ProductsIndex;
 use App\Livewire\Purchase\Create as CreatePurchase;
 use App\Livewire\Purchase\Edit as EditPurchase;
+use App\Livewire\Purchase\Index as PurchasesIndex;
 use App\Livewire\Purchase\Invoice as PurchaseInvoice;
-use App\Livewire\Quotations\Index as QuotationsIndex;
-use App\Livewire\Quotations\Create as CreateQuotation;
-use App\Livewire\Quotations\Edit as EditQuotation;
-use App\Livewire\Transfer\Index as TransferIndex;
-use App\Livewire\Sales\Index as SalesIndex;
-use App\Livewire\Sales\Invoice as SaleInvoice;
-use App\Livewire\Sales\Create as CreateSale;
-use App\Livewire\Sales\Edit as EditSale;
 use App\Livewire\PurchaseReturn\Create as CreatePurchaseReturn;
 use App\Livewire\PurchaseReturn\Edit as EditPurchaseReturn;
+use App\Livewire\Quotations\Create as CreateQuotation;
+use App\Livewire\Quotations\Edit as EditQuotation;
+use App\Livewire\Quotations\Index as QuotationsIndex;
+use App\Livewire\Reports\CustomersReport;
+use App\Livewire\Reports\PaymentsReport;
+use App\Livewire\Reports\ProfitLossReport;
+use App\Livewire\Reports\PurchasesReport;
+use App\Livewire\Reports\PurchasesReturnReport;
+use App\Livewire\Reports\SalesReport;
+use App\Livewire\Reports\SalesReturnReport;
+use App\Livewire\Reports\StockAlertReport;
+use App\Livewire\Role\Index as RolesIndex;
 use App\Livewire\SaleReturn\Create as CreateSaleReturn;
 use App\Livewire\SaleReturn\Edit as EditSaleReturn;
+use App\Livewire\Sales\Create as CreateSale;
+use App\Livewire\Sales\Edit as EditSale;
+use App\Livewire\Sales\Index as SalesIndex;
+use App\Livewire\Sales\Invoice as SaleInvoice;
 use App\Livewire\Settings\Index as SettingsIndex;
 use App\Livewire\Settings\InvoiceTheme;
-use App\Livewire\Reports\CustomersReport;
-use App\Livewire\Reports\ProfitLossReport;
-use App\Livewire\Reports\PaymentsReport;
-use App\Livewire\Reports\SalesReport;
-use App\Livewire\Reports\PurchasesReport;
-use App\Livewire\Reports\SalesReturnReport;
-use App\Livewire\Reports\PurchasesReturnReport;
-use App\Livewire\Reports\StockAlertReport;
+use App\Livewire\Shipping\Index as ShippingIndex;
+use App\Livewire\Suppliers\Details as SupplierDetails;
+use App\Livewire\Suppliers\Index as SuppliersIndex;
+use App\Livewire\Transfer\Index as TransferIndex;
+use App\Livewire\Users\Index as UsersIndex;
+use App\Livewire\Users\Profile as ProfileIndex;
+use App\Livewire\Warehouses\Index as WarehouseIndex;
+use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 /*
@@ -83,7 +83,7 @@ use Livewire\Livewire;
 |
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::view('profile', 'profile')
     ->middleware(['auth.basic'])
@@ -131,18 +131,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
 // Desktop-specific routes (only available in desktop mode)
 Route::prefix('desktop')->name('desktop.')->group(function () {
-    Route::post('/shortcut/execute', [App\Http\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcut.execute');
-    Route::post('/shortcuts/execute', [App\Http\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcuts.execute');
-    Route::get('/shortcuts', [App\Http\Controllers\DesktopController::class, 'getShortcuts'])->name('shortcuts.index');
-    Route::post('/shortcut/check', [App\Http\Controllers\DesktopController::class, 'checkShortcut'])->name('shortcut.check');
-    Route::post('/shortcuts/register', [App\Http\Controllers\DesktopController::class, 'registerShortcuts'])->name('shortcuts.register');
-    Route::get('/status', [App\Http\Controllers\DesktopController::class, 'getDesktopStatus'])->name('status');
-    Route::post('/action', [App\Http\Controllers\DesktopController::class, 'handleAction'])->name('action');
-    Route::post('/actions', [App\Http\Controllers\DesktopController::class, 'handleAction'])->name('actions');
+    Route::post('/shortcut/execute', [App\Native\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcut.execute');
+    Route::post('/shortcuts/execute', [App\Native\Controllers\DesktopController::class, 'executeShortcut'])->name('shortcuts.execute');
+    Route::get('/shortcuts', [App\Native\Controllers\DesktopController::class, 'getShortcuts'])->name('shortcuts.index');
+    Route::post('/shortcut/check', [App\Native\Controllers\DesktopController::class, 'checkShortcut'])->name('shortcut.check');
+    Route::post('/shortcuts/register', [App\Native\Controllers\DesktopController::class, 'registerShortcuts'])->name('shortcuts.register');
+    Route::get('/status', [App\Native\Controllers\DesktopController::class, 'getDesktopStatus'])->name('status');
+    Route::post('/action', [App\Native\Controllers\DesktopController::class, 'handleAction'])->name('action');
+    Route::post('/actions', [App\Native\Controllers\DesktopController::class, 'handleAction'])->name('actions');
 
     // Error logging routes
     Route::livewire('/errors', App\Livewire\Admin\DesktopErrorLog::class)->name('errors.index');
-    Route::post('/errors/js', [App\Http\Controllers\DesktopController::class, 'handleJavaScriptError'])->name('errors.js');
+    Route::post('/errors/js', [App\Native\Controllers\DesktopController::class, 'handleJavaScriptError'])->name('errors.js');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
@@ -191,12 +191,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::get('/quotation-sales/{quotation}', QuotationSalesController::class)->name('quotation-sales.create');
 
     // Purchase Returns Payments
-    Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
-    Route::get('/purchase-return-payments/{purchase_return_id}/create', [PurchaseReturnPaymentsController::class, 'create'])->name('purchase-return-payments.create');
-    Route::post('/purchase-return-payments/store', [PurchaseReturnPaymentsController::class, 'store'])->name('purchase-return-payments.store');
-    Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'edit'])->name('purchase-return-payments.edit');
-    Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'update'])->name('purchase-return-payments.update');
-    Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'destroy'])->name('purchase-return-payments.destroy');
+    // Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
+    // Route::get('/purchase-return-payments/{purchase_return_id}/create', [PurchaseReturnPaymentsController::class, 'create'])->name('purchase-return-payments.create');
+    // Route::post('/purchase-return-payments/store', [PurchaseReturnPaymentsController::class, 'store'])->name('purchase-return-payments.store');
+    // Route::get('/purchase-return-payments/{purchase_return_id}/edit/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'edit'])->name('purchase-return-payments.edit');
+    // Route::patch('/purchase-return-payments/update/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'update'])->name('purchase-return-payments.update');
+    // Route::delete('/purchase-return-payments/destroy/{purchaseReturnPayment}', [PurchaseReturnPaymentsController::class, 'destroy'])->name('purchase-return-payments.destroy');
 
     // Reports
     Route::livewire('/customers-report', CustomersReport::class)->name('customers-report.index');
@@ -229,7 +229,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/permissions', PermissionsIndex::class)->name('permissions.index');
 
     // Logs
-    Route::livewire('/logs', 'utils.system-logs')->name('logs.index');
+    // Route::livewire('/logs', 'utils.system-logs')->name('logs.index');
 
     // Integrations
     Route::get('/integrations', IntegrationController::class)->name('integrations.index');
@@ -249,12 +249,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/products/print-barcode', BarcodeIndex::class)->name('products.barcode-print');
 
     // Purchase Payments
-    Route::get('/purchase-payments/{purchase_id}', [PurchasePaymentsController::class, 'index'])->name('purchase-payments.index');
-    Route::get('/purchase-payments/{purchase_id}/create', [PurchasePaymentsController::class, 'create'])->name('purchase-payments.create');
-    Route::post('/purchase-payments/{purchase_id}', [PurchasePaymentsController::class, 'store'])->name('purchase-payments.store');
-    Route::get('/purchase-payments/{purchase_id}/edit/{purchasePayment}', [PurchasePaymentsController::class, 'edit'])->name('purchase-payments.edit');
-    Route::patch('/purchase-payments/update/{purchasePayment}', [PurchasePaymentsController::class, 'update'])->name('purchase-payments.update');
-    Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
+    // Route::get('/purchase-payments/{purchase_id}', [PurchasePaymentsController::class, 'index'])->name('purchase-payments.index');
+    // Route::get('/purchase-payments/{purchase_id}/create', [PurchasePaymentsController::class, 'create'])->name('purchase-payments.create');
+    // Route::post('/purchase-payments/{purchase_id}', [PurchasePaymentsController::class, 'store'])->name('purchase-payments.store');
+    // Route::get('/purchase-payments/{purchase_id}/edit/{purchasePayment}', [PurchasePaymentsController::class, 'edit'])->name('purchase-payments.edit');
+    // Route::patch('/purchase-payments/update/{purchasePayment}', [PurchasePaymentsController::class, 'update'])->name('purchase-payments.update');
+    // Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
 
     // Purchase Returns
     Route::livewire('/purchase-returns/create', CreatePurchaseReturn::class)->name('purchase-returns.create');

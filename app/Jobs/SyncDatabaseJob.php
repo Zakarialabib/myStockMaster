@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Services\SyncService;
+use App\Services\DatabaseSyncService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,9 +18,23 @@ class SyncDatabaseJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /** Execute the job. */
-    public function handle(SyncService $syncService): void
+    public function __construct(public string $direction = 'both') {}
+
+    public function handle(DatabaseSyncService $syncService): void
     {
-        $syncService->sync();
+        if ($this->direction === 'to-offline') {
+            $syncService->syncToOffline();
+
+            return;
+        }
+
+        if ($this->direction === 'to-online') {
+            $syncService->syncToOnline();
+
+            return;
+        }
+
+        $syncService->syncToOffline();
+        $syncService->syncToOnline();
     }
 }

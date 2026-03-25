@@ -6,47 +6,57 @@ namespace App\Livewire\Admin;
 
 use App\Services\DatabaseSyncService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Exception;
 
 class DatabaseSync extends Component
 {
-    public $isOnline = false;
-    public $lastSync = null;
-    public $syncLog = [];
+    public bool $isOnline = false;
 
-    protected $syncService;
+    public ?Carbon $lastSync = null;
 
-    public function mount()
+    public array $syncLog = [];
+
+    protected DatabaseSyncService $syncService;
+
+    public function mount(): void
     {
         $this->syncService = app(DatabaseSyncService::class);
         $this->checkOnlineStatus();
         $this->loadSyncHistory();
     }
 
-    public function render()
+    public function render(): mixed
     {
-        return view('livewire.admin.database-sync')
-            ->layout('layouts.app');
+        return view('livewire.admin.database-sync');
     }
 
     /** Check if the online database is available. */
-    public function checkOnlineStatus()
+    public function checkOnlineStatus(): void
     {
         try {
             $this->isOnline = $this->syncService->isOnlineAvailable();
         } catch (Exception $e) {
             $this->isOnline = false;
-            Log::error('Failed to check online status: '.$e->getMessage());
+            Log::error('Failed to check online status: ' . $e->getMessage());
         }
     }
 
     /** Load sync history from cache. */
-    private function loadSyncHistory()
+    private function loadSyncHistory(): void
     {
-        $this->lastSync = Cache::get('database_sync.last_sync');
+        $rawLastSync = Cache::get('database_sync.last_sync');
+
+        if ($rawLastSync instanceof Carbon) {
+            $this->lastSync = $rawLastSync;
+        } elseif (is_string($rawLastSync) && $rawLastSync !== '') {
+            $this->lastSync = Carbon::parse($rawLastSync);
+        } else {
+            $this->lastSync = null;
+        }
+
         $this->syncLog = Cache::get('database_sync.log', []);
 
         // Keep only the last 20 log entries
@@ -54,9 +64,9 @@ class DatabaseSync extends Component
     }
 
     /** Sync data from online to offline database. */
-    public function syncToOffline()
+    public function syncToOffline(): void
     {
-        if ( ! $this->isOnline) {
+        if (! $this->isOnline) {
             $this->addToLog('error', 'Cannot sync to offline: Online database is not available');
 
             return;
@@ -73,32 +83,32 @@ class DatabaseSync extends Component
 
                 // Show success notification
                 $this->dispatch('notify', [
-                    'type'    => 'success',
+                    'type' => 'success',
                     'message' => __('admin.database_sync.messages.sync_to_offline_success'),
                 ]);
             } else {
                 $this->addToLog('error', 'Failed to sync data to offline database');
 
                 $this->dispatch('notify', [
-                    'type'    => 'error',
+                    'type' => 'error',
                     'message' => __('admin.database_sync.messages.sync_to_offline_failed'),
                 ]);
             }
         } catch (Exception $e) {
-            $this->addToLog('error', 'Sync to offline failed: '.$e->getMessage());
+            $this->addToLog('error', 'Sync to offline failed: ' . $e->getMessage());
             Log::error('Sync to offline failed', ['error' => $e->getMessage()]);
 
             $this->dispatch('notify', [
-                'type'    => 'error',
+                'type' => 'error',
                 'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
             ]);
         }
     }
 
     /** Sync data from offline to online database. */
-    public function syncToOnline()
+    public function syncToOnline(): void
     {
-        if ( ! $this->isOnline) {
+        if (! $this->isOnline) {
             $this->addToLog('error', 'Cannot sync to online: Online database is not available');
 
             return;
@@ -115,32 +125,32 @@ class DatabaseSync extends Component
 
                 // Show success notification
                 $this->dispatch('notify', [
-                    'type'    => 'success',
+                    'type' => 'success',
                     'message' => __('admin.database_sync.messages.sync_to_online_success'),
                 ]);
             } else {
                 $this->addToLog('error', 'Failed to sync data to online database');
 
                 $this->dispatch('notify', [
-                    'type'    => 'error',
+                    'type' => 'error',
                     'message' => __('admin.database_sync.messages.sync_to_online_failed'),
                 ]);
             }
         } catch (Exception $e) {
-            $this->addToLog('error', 'Sync to online failed: '.$e->getMessage());
+            $this->addToLog('error', 'Sync to online failed: ' . $e->getMessage());
             Log::error('Sync to online failed', ['error' => $e->getMessage()]);
 
             $this->dispatch('notify', [
-                'type'    => 'error',
+                'type' => 'error',
                 'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
             ]);
         }
     }
 
     /** Perform bidirectional sync. */
-    public function syncBidirectional()
+    public function syncBidirectional(): void
     {
-        if ( ! $this->isOnline) {
+        if (! $this->isOnline) {
             $this->addToLog('error', 'Cannot perform bidirectional sync: Online database is not available');
 
             return;
@@ -164,7 +174,7 @@ class DatabaseSync extends Component
                     $this->updateLastSync();
 
                     $this->dispatch('notify', [
-                        'type'    => 'success',
+                        'type' => 'success',
                         'message' => __('admin.database_sync.messages.bidirectional_sync_success'),
                     ]);
                 } else {
@@ -174,34 +184,34 @@ class DatabaseSync extends Component
                 $this->addToLog('error', 'Phase 1: Failed to sync from online to offline');
             }
         } catch (Exception $e) {
-            $this->addToLog('error', 'Bidirectional sync failed: '.$e->getMessage());
+            $this->addToLog('error', 'Bidirectional sync failed: ' . $e->getMessage());
             Log::error('Bidirectional sync failed', ['error' => $e->getMessage()]);
 
             $this->dispatch('notify', [
-                'type'    => 'error',
+                'type' => 'error',
                 'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
             ]);
         }
     }
 
     /** Clear sync log. */
-    public function clearLog()
+    public function clearLog(): void
     {
         $this->syncLog = [];
         Cache::forget('database_sync.log');
 
         $this->dispatch('notify', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => __('admin.database_sync.messages.log_cleared'),
         ]);
     }
 
     /** Add entry to sync log. */
-    private function addToLog(string $type, string $message)
+    private function addToLog(string $type, string $message): void
     {
         $entry = [
-            'type'      => $type,
-            'message'   => $message,
+            'type' => $type,
+            'message' => $message,
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
         ];
 
@@ -215,20 +225,20 @@ class DatabaseSync extends Component
     }
 
     /** Update last sync timestamp. */
-    private function updateLastSync()
+    private function updateLastSync(): void
     {
         $this->lastSync = Carbon::now();
-        Cache::put('database_sync.last_sync', $this->lastSync, now()->addDays(30));
+        Cache::put('database_sync.last_sync', $this->lastSync->toDateTimeString(), now()->addDays(30));
     }
 
     /** Refresh the component data. */
-    public function refresh()
+    public function refresh(): void
     {
         $this->checkOnlineStatus();
         $this->loadSyncHistory();
 
         $this->dispatch('notify', [
-            'type'    => 'info',
+            'type' => 'info',
             'message' => __('admin.database_sync.messages.refreshed'),
         ]);
     }

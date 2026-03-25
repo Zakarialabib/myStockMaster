@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Native\Services\DesktopErrorHandler;
 use App\Services\DatabaseSyncService;
-use App\Services\DesktopErrorHandler;
 use App\Services\EnvironmentService;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Native\Desktop\Facades\GlobalShortcut;
-use Native\Desktop\Facades\Menu;
 use Native\Desktop\Facades\Window;
-use Exception;
 
 class DesktopServiceProvider extends ServiceProvider
 {
@@ -24,25 +21,26 @@ class DesktopServiceProvider extends ServiceProvider
     {
         // Register desktop error handler as singleton
         $this->app->singleton(DesktopErrorHandler::class, function ($app) {
-            return new DesktopErrorHandler();
+            return new DesktopErrorHandler;
         });
     }
 
     /** Bootstrap services. */
     public function boot(): void
     {
-        // Set database connection based on mode
+        // Set database connection and broadcasting based on mode
         if (EnvironmentService::isDesktop()) {
             config(['database.default' => EnvironmentService::getDatabaseConnection()]);
+            config(['broadcasting.default' => 'null']);
         }
 
         // Only configure desktop features if we're actually in a desktop environment
-        // and the native service is available
-        if (EnvironmentService::isDesktop() && $this->isNativeServiceAvailable()) {
-            $this->configureDesktopWindow();
-            $this->configureDesktopMenu();
-            $this->configureDesktopShortcuts();
-            $this->configureDesktopEvents();
+        if (EnvironmentService::isDesktop() && ! app()->runningInConsole() && ! app()->runningUnitTests()) {
+            try {
+                $this->configureDesktopEvents();
+            } catch (Exception $e) {
+                Log::warning('Failed to configure NativePHP desktop features: ' . $e->getMessage());
+            }
         }
 
         // Always setup error handling if in desktop mode (even without native service)
@@ -51,197 +49,24 @@ class DesktopServiceProvider extends ServiceProvider
         }
     }
 
-    /** Check if the native service is available */
-    private function isNativeServiceAvailable(): bool
-    {
-        try {
-            // Try to make a simple request to check if the service is running
-            $response = Http::timeout(1)->get('http://localhost:4000/api/status');
-
-            return $response->successful();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    /** Configure the desktop application window. */
-    private function configureDesktopWindow(): void
-    {
-        Window::open()
-            ->title(config('native.app_name', 'MyStockMaster'))
-            ->width(config('native.window.width', 1200))
-            ->height(config('native.window.height', 800))
-            ->minWidth(config('native.window.min_width', 800))
-            ->minHeight(config('native.window.min_height', 600))
-            ->resizable(config('native.window.resizable', true))
-            ->maximizable(true)
-            ->minimizable(true)
-            ->closable(true)
-            ->alwaysOnTop(config('native.window.always_on_top', false))
-            ->skipTaskbar(config('native.window.skip_taskbar', false))
-            ->showDevTools(config('native.development.show_dev_tools', false))
-            ->titleBarStyle(config('native.window.title_bar_style', 'default'));
-    }
-
-    /** Configure the desktop application menu. */
-    private function configureDesktopMenu(): void
-    {
-        if (config('native.menu.enabled', true)) {
-            // File Menu
-            Menu::new()
-                ->label('File')
-                ->submenu([
-                    Menu::new()
-                        ->label('New Sale')
-                        ->accelerator('CmdOrCtrl+N')
-                        ->click(fn () => redirect()->route('sales.create')),
-
-                    Menu::new()
-                        ->label('New Product')
-                        ->accelerator('CmdOrCtrl+P')
-                        ->click(fn () => redirect()->route('products.create')),
-
-                    Menu::separator(),
-
-                    Menu::new()
-                        ->label('Import Products')
-                        ->accelerator('CmdOrCtrl+I')
-                        ->click(fn () => redirect()->route('products.import')),
-
-                    Menu::new()
-                        ->label('Export Data')
-                        ->accelerator('CmdOrCtrl+E')
-                        ->click(fn () => redirect()->route('exports.index')),
-
-                    Menu::separator(),
-
-                    Menu::new()
-                        ->label('Sync with Online')
-                        ->accelerator('CmdOrCtrl+S')
-                        ->click(fn () => $this->syncWithOnline()),
-
-                    Menu::separator(),
-
-                    Menu::new()
-                        ->label('Exit')
-                        ->role('quit'),
-                ]);
-
-            // View Menu
-            Menu::new()
-                ->label('View')
-                ->submenu([
-                    Menu::new()
-                        ->label('Dashboard')
-                        ->accelerator('CmdOrCtrl+1')
-                        ->click(fn () => redirect()->route('dashboard')),
-
-                    Menu::new()
-                        ->label('Products')
-                        ->accelerator('CmdOrCtrl+2')
-                        ->click(fn () => redirect()->route('products.index')),
-
-                    Menu::new()
-                        ->label('Sales')
-                        ->accelerator('CmdOrCtrl+3')
-                        ->click(fn () => redirect()->route('sales.index')),
-
-                    Menu::new()
-                        ->label('POS')
-                        ->accelerator('CmdOrCtrl+4')
-                        ->click(fn () => redirect()->route('pos.index')),
-
-                    Menu::new()
-                        ->label('Reports')
-                        ->accelerator('CmdOrCtrl+5')
-                        ->click(fn () => redirect()->route('reports.index')),
-
-                    Menu::separator(),
-
-                    Menu::new()
-                        ->label('Toggle Fullscreen')
-                        ->accelerator('F11')
-                        ->click(fn () => Window::current()->toggleFullscreen()),
-
-                    Menu::new()
-                        ->label('Reload')
-                        ->accelerator('CmdOrCtrl+R')
-                        ->role('reload'),
-
-                    Menu::new()
-                        ->label('Toggle Developer Tools')
-                        ->accelerator('F12')
-                        ->click(fn () => Window::current()->toggleDevTools()),
-                ]);
-
-            // Tools Menu
-            Menu::new()
-                ->label('Tools')
-                ->submenu([
-                    Menu::new()
-                        ->label('Settings')
-                        ->accelerator('CmdOrCtrl+,')
-                        ->click(fn () => redirect()->route('settings.index')),
-
-                    Menu::new()
-                        ->label('Database Sync')
-                        ->click(fn () => $this->showDatabaseSyncDialog()),
-
-                    Menu::new()
-                        ->label('Offline Mode')
-                        ->click(fn () => $this->toggleOfflineMode()),
-
-                    Menu::separator(),
-
-                    Menu::new()
-                        ->label('Clear Cache')
-                        ->click(fn () => $this->clearCache()),
-                ]);
-
-            // Help Menu
-            Menu::new()
-                ->label('Help')
-                ->submenu([
-                    Menu::new()
-                        ->label('About MyStockMaster')
-                        ->click(fn () => $this->showAboutDialog()),
-
-                    Menu::new()
-                        ->label('Documentation')
-                        ->click(fn () => redirect()->route('help')),
-
-                    Menu::new()
-                        ->label('Check for Updates')
-                        ->click(fn () => $this->checkForUpdates()),
-
-                    Menu::new()
-                        ->label('Report Issue')
-                        ->click(fn () => $this->reportIssue()),
-                ]);
-        }
-    }
-
-    /** Configure desktop keyboard shortcuts. */
-    private function configureDesktopShortcuts(): void
-    {
-        try {
-            // Global shortcuts that work even when app is not focused
-            GlobalShortcut::key('CmdOrCtrl+Shift+M')
-                ->event('shortcut:show-main-window');
-
-            GlobalShortcut::key('CmdOrCtrl+Shift+D')
-                ->event('shortcut:toggle-dev-tools');
-        } catch (Exception $e) {
-            // GlobalShortcut might not be available in all environments
-            Log::info('Desktop shortcuts not available: '.$e->getMessage());
-        }
-    }
-
     /** Configure desktop-specific events. */
     private function configureDesktopEvents(): void
     {
-        // Register event listeners for desktop-specific events
-        // This can be expanded based on specific needs
+        \Illuminate\Support\Facades\Event::listen('native.sync.online', function () {
+            $this->syncWithOnline();
+        });
+
+        \Illuminate\Support\Facades\Event::listen('native.toggle.offline', function () {
+            $this->toggleOfflineMode();
+        });
+
+        \Illuminate\Support\Facades\Event::listen('native.cache.clear', function () {
+            $this->clearCache();
+        });
+
+        \Illuminate\Support\Facades\Event::listen('native.check.updates', function () {
+            $this->checkForUpdates();
+        });
     }
 
     /** Sync data with online database. */
@@ -252,7 +77,7 @@ class DesktopServiceProvider extends ServiceProvider
             $syncService->syncToOnline();
             $this->showNotification('Sync Complete', 'Data synchronized with online database successfully.');
         } catch (Exception $e) {
-            $this->showNotification('Sync Failed', 'Failed to sync with online database: '.$e->getMessage());
+            $this->showNotification('Sync Failed', 'Failed to sync with online database: ' . $e->getMessage());
         }
     }
 
@@ -284,7 +109,7 @@ class DesktopServiceProvider extends ServiceProvider
                 sleep(1);
                 Window::current()->reload();
             } catch (Exception $e) {
-                Log::warning('Failed to reload window after mode toggle: '.$e->getMessage());
+                Log::warning('Failed to reload window after mode toggle: ' . $e->getMessage());
             }
         }
     }
@@ -298,7 +123,7 @@ class DesktopServiceProvider extends ServiceProvider
             Artisan::call('view:clear');
             $this->showNotification('Cache Cleared', 'Application cache cleared successfully.');
         } catch (Exception $e) {
-            $this->showNotification('Cache Clear Failed', 'Failed to clear cache: '.$e->getMessage());
+            $this->showNotification('Cache Clear Failed', 'Failed to clear cache: ' . $e->getMessage());
         }
     }
 
@@ -324,7 +149,7 @@ class DesktopServiceProvider extends ServiceProvider
             $this->showNotification('Update Check', 'Checking for updates...');
             // This would typically involve calling an update service
         } catch (Exception $e) {
-            $this->showNotification('Update Check Failed', 'Failed to check for updates: '.$e->getMessage());
+            $this->showNotification('Update Check Failed', 'Failed to check for updates: ' . $e->getMessage());
         }
     }
 
@@ -348,6 +173,19 @@ class DesktopServiceProvider extends ServiceProvider
     {
         // Register custom error handler
         set_error_handler(function ($severity, $message, $file, $line) {
+            $isLivewireDiscoveryIncludeWarning = $severity === E_WARNING
+                && str_contains((string) $message, 'Failed opening')
+                && str_contains((string) $file, 'vendor\\composer\\ClassLoader.php')
+                && (str_contains((string) $message, 'app/Livewire/')
+                    || str_contains((string) $message, 'app\\Livewire\\'));
+
+            $isDomDocumentWarning = $severity === E_WARNING
+                && str_contains((string) $message, 'DOMDocument::loadHTML()');
+
+            if ($isLivewireDiscoveryIncludeWarning || $isDomDocumentWarning) {
+                return false;
+            }
+
             $errorHandler = app(DesktopErrorHandler::class);
             $errorHandler->handlePhpError($severity, $message, $file, $line);
 
@@ -362,9 +200,9 @@ class DesktopServiceProvider extends ServiceProvider
 
             Log::error('Uncaught exception in desktop mode', [
                 'exception' => $exception->getMessage(),
-                'file'      => $exception->getFile(),
-                'line'      => $exception->getLine(),
-                'trace'     => $exception->getTraceAsString(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTraceAsString(),
             ]);
         });
     }

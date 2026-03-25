@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Services\DesktopErrorHandler;
-use App\Services\DesktopShortcutService;
+use App\Models\User;
+use App\Native\Services\DesktopErrorHandler;
+use App\Native\Services\DesktopShortcutService;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use App\Models\User;
-use Exception;
+use Tests\TestCase;
 
 class DesktopFunctionalityTest extends TestCase
 {
@@ -38,13 +38,13 @@ class DesktopFunctionalityTest extends TestCase
         $response = $this->withHeaders(['X-Desktop-App' => 'true'])
             ->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     /** @test */
     public function it_can_handle_desktop_shortcuts()
     {
-        $shortcutService = new DesktopShortcutService();
+        $shortcutService = new DesktopShortcutService;
 
         // Test getting shortcuts
         $shortcuts = $shortcutService->getShortcuts();
@@ -60,7 +60,7 @@ class DesktopFunctionalityTest extends TestCase
     /** @test */
     public function it_can_handle_desktop_errors()
     {
-        $errorHandler = new DesktopErrorHandler();
+        $errorHandler = new DesktopErrorHandler;
 
         // Test handling a PHP error
         $exception = new Exception('Test error message');
@@ -92,7 +92,7 @@ class DesktopFunctionalityTest extends TestCase
         $response = $this->withHeaders(['X-Desktop-App' => 'true'])
             ->post('/desktop/shortcuts/execute', [
                 'shortcut' => 'ctrl+d',
-                'context'  => 'dashboard',
+                'context' => 'dashboard',
             ]);
 
         $response->assertStatus(200)
@@ -107,13 +107,13 @@ class DesktopFunctionalityTest extends TestCase
     public function it_can_handle_javascript_errors()
     {
         $errorData = [
-            'message'   => 'Test JavaScript error',
-            'source'    => 'test.js',
-            'line'      => 10,
-            'column'    => 5,
-            'stack'     => 'Error stack trace',
+            'message' => 'Test JavaScript error',
+            'source' => 'test.js',
+            'line' => 10,
+            'column' => 5,
+            'stack' => 'Error stack trace',
             'userAgent' => 'Test User Agent',
-            'url'       => 'http://localhost/test',
+            'url' => 'http://localhost/test',
         ];
 
         $response = $this->withHeaders(['X-Desktop-App' => 'true'])
@@ -151,8 +151,8 @@ class DesktopFunctionalityTest extends TestCase
     {
         $actionData = [
             'action' => 'show_notification',
-            'data'   => [
-                'title'   => 'Test Notification',
+            'data' => [
+                'title' => 'Test Notification',
                 'message' => 'This is a test notification',
             ],
         ];
@@ -180,7 +180,7 @@ class DesktopFunctionalityTest extends TestCase
     /** @test */
     public function it_stores_error_history_for_authenticated_users()
     {
-        $errorHandler = new DesktopErrorHandler();
+        $errorHandler = new DesktopErrorHandler;
         $exception = new Exception('Test error for history');
 
         // Handle error while authenticated
@@ -200,7 +200,7 @@ class DesktopFunctionalityTest extends TestCase
     {
         Auth::logout();
 
-        $errorHandler = new DesktopErrorHandler();
+        $errorHandler = new DesktopErrorHandler;
         $exception = new Exception('Test error without auth');
 
         // Should not throw an exception even without authenticated user

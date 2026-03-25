@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire\Utils;
 
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\WithPagination;
 
 trait Datatable
@@ -19,7 +19,7 @@ trait Datatable
 
     public array $filterable;
 
-    #[Url(keep: true, history: true)]
+    #[Url(keep: true, history: false)]
     public string $search = '';
 
     public array $selected = [];
@@ -39,18 +39,19 @@ trait Datatable
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->paginationOptions = [25, 50, 100];
-        $this->orderable = (new $this->model())->orderable;
-        $this->filterable = (new $this->model())->filterable;
+        $this->orderable = (new $this->model)->orderable;
+        $this->filterable = (new $this->model)->filterable;
     }
 
-    public function sortingBy($field, $direction): void
+    public function sortingBy($field): void
     {
         if ($field !== $this->sortBy) {
             $this->sortDirection = 'asc';
+        } else {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
         }
 
         $this->sortBy = $field;
-        $this->sortDirection = $direction;
     }
 
     #[Computed]

@@ -42,9 +42,6 @@
         @vite('resources/js/desktop.js')
     @endif
 
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
-
     @stack('scripts')
     @livewireScriptConfig
 

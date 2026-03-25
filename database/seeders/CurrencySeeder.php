@@ -17,10 +17,36 @@ class CurrencySeeder extends Seeder
      */
     public function run()
     {
-        Currency::create([
-            'name'   => 'Dirham Marocain',
-            'code'   => Str::upper('ma'),
-            'locale' => 'fr_MA',
-        ]);
+        $currencies = [
+            [
+                'name' => 'Dirham Marocain',
+                'code' => Str::upper('MAD'),
+                'locale' => 'fr_MA',
+            ],
+            [
+                'name' => 'Euro',
+                'code' => Str::upper('EUR'),
+                'locale' => 'fr_FR',
+            ],
+            [
+                'name' => 'Dollar',
+                'code' => Str::upper('USD'),
+                'locale' => 'en_US',
+            ],
+            [
+                'name' => 'Pound',
+                'code' => Str::upper('GBP'),
+                'locale' => 'en_GB',
+            ],
+            [
+                'name' => 'Turkish Lira',
+                'code' => Str::upper('TRY'),
+                'locale' => 'tr_TR',
+            ],
+        ];
+
+        foreach ($currencies as $currency) {
+            Currency::create($currency);
+        }
     }
 }

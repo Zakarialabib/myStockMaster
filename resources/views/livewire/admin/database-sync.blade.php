@@ -3,10 +3,10 @@
         <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    {{ __('admin.database_sync.title') }}
+                    {{ __('Database sync') }}
                 </h2>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('admin.database_sync.description') }}
+                    {{ __('Database sync status') }}
                 </p>
             </div>
 
@@ -25,7 +25,7 @@
                                         <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ __('admin.database_sync.status.online') }}
+                                        {{ __('Online') }}
                                     </span>
                                 @else
                                     <span
@@ -33,17 +33,17 @@
                                         <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ __('admin.database_sync.status.offline') }}
+                                        {{ __('Offline') }}
                                     </span>
                                 @endif
                             </p>
                         </div>
                         <div class="text-right">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                {{ __('admin.database_sync.last_sync') }}
+                                {{ __('Last sync') }}
                             </p>
                             <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                {{ $lastSync ? $lastSync->format('M j, Y g:i A') : __('admin.database_sync.never') }}
+                                {{ $lastSync ? $lastSync->format('M j, Y g:i A') : __('Never') }}
                             </p>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 max-h-64 overflow-y-auto">
                             @foreach ($syncLog as $entry)
                                 <div class="flex items-start space-x-3 mb-2 last:mb-0">
-                                    <div class="flex-shrink-0">
+                                    <div class="shrink-0">
                                         @if ($entry['type'] === 'success')
                                             <svg class="w-4 h-4 text-green-500 mt-0.5" fill="currentColor"
                                                 viewBox="0 0 20 20">

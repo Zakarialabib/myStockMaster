@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Livewire\Categories;
 
 use App\Models\Category;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\On;
-use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Create extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
-    /** @var bool */
     public bool $createModal = false;
 
     public Category $category;
@@ -45,8 +46,9 @@ class Create extends Component
     {
         $this->validate();
 
-        if ($this->image) {
-            $imageName = Str::slug($this->name).'-'.Str::random(3).'.'.$this->image->extension();
+        if ($this->image && ! is_string($this->image)) {
+            // Call to a member function extension() on string
+            $imageName = Str::slug($this->name) . '-' . Str::random(3) . '.' . $this->image->extension();
             $this->image->storeAs('categories', $imageName);
             $this->image = $imageName;
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +13,14 @@ use Illuminate\Support\Facades\Schema;
 class DatabaseSyncService
 {
     protected string $onlineConnection = 'mysql';
+
     protected string $offlineConnection = 'sqlite_desktop';
 
     /** Initialize desktop database with schema from online database */
     public function initializeDesktopDatabase(): bool
     {
         try {
-            if ( ! EnvironmentService::isDesktop()) {
+            if (! EnvironmentService::isDesktop()) {
                 return false;
             }
 
@@ -33,7 +35,7 @@ class DatabaseSyncService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Failed to initialize desktop database: '.$e->getMessage());
+            Log::error('Failed to initialize desktop database: ' . $e->getMessage());
 
             return false;
         }
@@ -43,7 +45,7 @@ class DatabaseSyncService
     public function syncToOffline(): bool
     {
         try {
-            if ( ! EnvironmentService::isDesktop() || ! EnvironmentService::needsDataSync()) {
+            if (! EnvironmentService::isDesktop() || ! $this->isOnlineAvailable()) {
                 return false;
             }
 
@@ -58,7 +60,7 @@ class DatabaseSyncService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Failed to sync to offline database: '.$e->getMessage());
+            Log::error('Failed to sync to offline database: ' . $e->getMessage());
 
             return false;
         }
@@ -68,7 +70,7 @@ class DatabaseSyncService
     public function syncToOnline(): bool
     {
         try {
-            if ( ! EnvironmentService::isDesktop() || ! EnvironmentService::needsDataSync()) {
+            if (! EnvironmentService::isDesktop() || ! $this->isOnlineAvailable()) {
                 return false;
             }
 
@@ -82,7 +84,7 @@ class DatabaseSyncService
 
             return true;
         } catch (Exception $e) {
-            Log::error('Failed to sync to online database: '.$e->getMessage());
+            Log::error('Failed to sync to online database: ' . $e->getMessage());
 
             return false;
         }
@@ -92,17 +94,27 @@ class DatabaseSyncService
     protected function getSyncableTables(): array
     {
         return [
-            'products',
+            'brands',
             'categories',
-            'warehouses',
             'customers',
-            'suppliers',
-            'sales',
-            'sale_items',
+            'movements',
+            'products',
+            'purchase_details',
+            'purchase_payments',
+            'purchase_return_details',
+            'purchase_return_payments',
+            'purchase_returns',
             'purchases',
-            'purchase_items',
-            'stock_movements',
+            'sale_details',
+            'sale_payments',
+            'sale_return_details',
+            'sale_return_payments',
+            'sale_returns',
+            'sales',
             'settings',
+            'suppliers',
+            'transfers',
+            'warehouses',
         ];
     }
 
@@ -110,9 +122,9 @@ class DatabaseSyncService
     protected function getOnlineTables(): array
     {
         try {
-            return DB::connection($this->onlineConnection)
-                ->getDoctrineSchemaManager()
-                ->listTableNames();
+            $tables = Schema::connection($this->onlineConnection)->getTables();
+
+            return array_column($tables, 'name');
         } catch (Exception $e) {
             // Fallback to basic table list if online is not available
             return $this->getSyncableTables();
@@ -129,29 +141,31 @@ class DatabaseSyncService
             }
 
             // Get table schema from online database
-            $columns = DB::connection($this->onlineConnection)
-                ->getDoctrineSchemaManager()
-                ->listTableColumns($table);
+            $columns = Schema::connection($this->onlineConnection)->getColumns($table);
 
             // Create table in desktop database
             Schema::connection($this->offlineConnection)->create($table, function ($tableBuilder) use ($columns) {
                 foreach ($columns as $column) {
-                    $this->addColumnToTable($tableBuilder, $column);
+                    $this->addColumnToTable($tableBuilder, (object) $column);
                 }
             });
         } catch (Exception $e) {
-            Log::warning("Could not create table {$table} in desktop database: ".$e->getMessage());
+            if (app()->runningUnitTests()) {
+                dump("Could not create table {$table} in desktop database: " . $e->getMessage());
+            }
+            Log::warning("Could not create table {$table} in desktop database: " . $e->getMessage());
         }
     }
 
     /** Add column to table builder based on doctrine column */
     protected function addColumnToTable($tableBuilder, $column): void
     {
-        $name = $column->getName();
-        $type = $column->getType()->getName();
+        $name = $column->name;
+        $type = strtolower($column->type_name);
 
         switch ($type) {
             case 'integer':
+            case 'int':
                 $col = $tableBuilder->integer($name);
 
                 break;
@@ -159,19 +173,21 @@ class DatabaseSyncService
                 $col = $tableBuilder->bigInteger($name);
 
                 break;
+            case 'varchar':
             case 'string':
-                $col = $tableBuilder->string($name, $column->getLength() ?? 255);
-
+                // Laravel 11 Schema::getColumns doesn't always expose length directly, default to 255
+                $col = $tableBuilder->string($name);
                 break;
             case 'text':
                 $col = $tableBuilder->text($name);
 
                 break;
             case 'decimal':
-                $col = $tableBuilder->decimal($name, $column->getPrecision() ?? 8, $column->getScale() ?? 2);
-
+            case 'numeric':
+                $col = $tableBuilder->decimal($name, 8, 2);
                 break;
             case 'datetime':
+            case 'timestamp':
                 $col = $tableBuilder->dateTime($name);
 
                 break;
@@ -180,6 +196,7 @@ class DatabaseSyncService
 
                 break;
             case 'boolean':
+            case 'tinyint':
                 $col = $tableBuilder->boolean($name);
 
                 break;
@@ -187,11 +204,11 @@ class DatabaseSyncService
                 $col = $tableBuilder->string($name);
         }
 
-        if ( ! $column->getNotnull()) {
+        if ($column->nullable) {
             $col->nullable();
         }
 
-        if ($column->getAutoincrement()) {
+        if ($column->auto_increment) {
             $col->autoIncrement();
         }
     }
@@ -200,30 +217,70 @@ class DatabaseSyncService
     protected function syncTableToOffline(string $table): void
     {
         try {
-            // Get last sync time to fetch only modified records
+            if (! Schema::connection($this->onlineConnection)->hasTable($table)
+                || ! Schema::connection($this->offlineConnection)->hasTable($table)) {
+                return;
+            }
+
             $lastSync = $this->getLastSyncTime();
+            $query = DB::connection($this->onlineConnection)->table($table);
+            $hasUpdatedAt = Schema::connection($this->onlineConnection)->hasColumn($table, 'updated_at');
 
-            // Get modified records from online database
-            $query = DB::connection($this->onlineConnection)
-                ->table($table)
-                ->where('updated_at', '>', $lastSync);
+            if ($hasUpdatedAt && $lastSync) {
+                $query->where('updated_at', '>', $lastSync);
+            }
 
-            // Use chunking to handle large datasets effectively
-            $query->chunk(100, function ($records) use ($table) {
+            if (app()->runningUnitTests() && $table === 'categories') {
+                dump('Online categories count: ' . $query->count());
+            }
+
+            $query->chunk(100, function ($records) use ($table, $hasUpdatedAt) {
                 foreach ($records as $record) {
                     $recordArray = (array) $record;
+                    $id = $recordArray['id'] ?? null;
 
-                    // Update or insert record in offline database
-                    DB::connection($this->offlineConnection)
-                        ->table($table)
-                        ->updateOrInsert(
-                            ['id' => $record->id],
-                            $recordArray
-                        );
+                    if ($id === null) {
+                        continue;
+                    }
+
+                    // Conflict resolution: Last-Write-Wins based on updated_at
+                    if ($hasUpdatedAt) {
+                        $existingOffline = DB::connection($this->offlineConnection)
+                            ->table($table)
+                            ->where('id', $id)
+                            ->first();
+
+                        if ($existingOffline && isset($existingOffline->updated_at)) {
+                            $offlineTime = strtotime($existingOffline->updated_at);
+                            $onlineTime = strtotime($recordArray['updated_at']);
+
+                            // If offline is newer, skip overwriting from online
+                            if ($offlineTime > $onlineTime) {
+                                continue;
+                            }
+                        }
+                    }
+
+                    try {
+                        DB::connection($this->offlineConnection)
+                            ->table($table)
+                            ->updateOrInsert(
+                                ['id' => $id],
+                                $recordArray
+                            );
+                    } catch (Exception $e) {
+                        if (app()->runningUnitTests()) {
+                            dump('Error inserting: ' . $e->getMessage());
+                        }
+                        throw $e;
+                    }
                 }
             });
         } catch (Exception $e) {
-            Log::warning("Could not sync table {$table} to offline: ".$e->getMessage());
+            if (app()->runningUnitTests()) {
+                dump('Outer exception: ' . $e->getMessage());
+            }
+            Log::warning("Could not sync table {$table} to offline: " . $e->getMessage());
         }
     }
 
@@ -231,38 +288,69 @@ class DatabaseSyncService
     protected function syncTableToOnline(string $table): void
     {
         try {
-            // Get modified records from offline database
-            $offlineData = DB::connection($this->offlineConnection)
-                ->table($table)
-                ->where('updated_at', '>', $this->getLastSyncTime())
-                ->get();
+            if (! Schema::connection($this->onlineConnection)->hasTable($table)
+                || ! Schema::connection($this->offlineConnection)->hasTable($table)) {
+                return;
+            }
+
+            $lastSync = $this->getLastSyncTime();
+            $query = DB::connection($this->offlineConnection)->table($table);
+            $hasUpdatedAt = Schema::connection($this->offlineConnection)->hasColumn($table, 'updated_at');
+
+            if ($hasUpdatedAt && $lastSync) {
+                $query->where('updated_at', '>', $lastSync);
+            }
+
+            $offlineData = $query->get();
 
             foreach ($offlineData as $record) {
                 $recordArray = (array) $record;
+                $id = $recordArray['id'] ?? null;
 
-                // Try to update existing record, or insert if not exists
+                if ($id === null) {
+                    continue;
+                }
+
+                // Conflict resolution: Last-Write-Wins based on updated_at
+                if ($hasUpdatedAt) {
+                    $existingOnline = DB::connection($this->onlineConnection)
+                        ->table($table)
+                        ->where('id', $id)
+                        ->first();
+
+                    if ($existingOnline && isset($existingOnline->updated_at)) {
+                        $onlineTime = strtotime($existingOnline->updated_at);
+                        $offlineTime = strtotime($recordArray['updated_at']);
+
+                        // If online is newer, skip overwriting from offline
+                        if ($onlineTime > $offlineTime) {
+                            continue;
+                        }
+                    }
+                }
+
                 DB::connection($this->onlineConnection)
                     ->table($table)
                     ->updateOrInsert(
-                        ['id' => $record->id ?? null],
+                        ['id' => $id],
                         $recordArray
                     );
             }
         } catch (Exception $e) {
-            Log::warning("Could not sync table {$table} to online: ".$e->getMessage());
+            Log::warning("Could not sync table {$table} to online: " . $e->getMessage());
         }
     }
 
     /** Get last sync time */
     protected function getLastSyncTime(): string
     {
-        return cache('desktop_last_sync', now()->subDays(7)->toDateTimeString());
+        return (string) Cache::get('database_sync.last_sync', now()->subDays(7)->toDateTimeString());
     }
 
     /** Update last sync time */
     protected function updateLastSyncTime(): void
     {
-        cache(['desktop_last_sync' => now()->toDateTimeString()], now()->addDays(30));
+        Cache::put('database_sync.last_sync', now()->toDateTimeString(), now()->addDays(30));
     }
 
     /** Check if online database is available */
@@ -282,10 +370,10 @@ class DatabaseSyncService
     {
         return [
             'online_available' => $this->isOnlineAvailable(),
-            'last_sync'        => $this->getLastSyncTime(),
-            'desktop_mode'     => EnvironmentService::isDesktop(),
-            'offline_mode'     => EnvironmentService::isOfflineMode(),
-            'sync_needed'      => EnvironmentService::needsDataSync(),
+            'last_sync' => $this->getLastSyncTime(),
+            'desktop_mode' => EnvironmentService::isDesktop(),
+            'offline_mode' => EnvironmentService::isOfflineMode(),
+            'sync_needed' => EnvironmentService::needsDataSync(),
         ];
     }
 }

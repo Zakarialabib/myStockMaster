@@ -79,22 +79,22 @@
                     <input type="checkbox" wire:model.live="selectPage"
                         class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:focus:ring-blue-600 dark:focus:ring-opacity-50">
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('reference')" :direction="$sortBy === 'reference' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('reference')" :direction="$sortBy === 'reference' ? $sortDirection : null">
                     {{ __('Reference') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('supplier_id')" :direction="$sortBy === 'supplier_id' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('supplier_id')" :direction="$sortBy === 'supplier_id' ? $sortDirection : null">
                     {{ __('Supplier') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('payment_status')" :direction="$sortBy === 'payment_status' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('payment_status')" :direction="$sortBy === 'payment_status' ? $sortDirection : null">
                     {{ __('Payment status') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('total_amount')" :direction="$sortBy === 'total_amount' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="$sortBy === 'total_amount' ? $sortDirection : null">
                     {{ __('Total') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortBy('due_amount')" :direction="$sortBy === 'due_amount' ? $sortDirection : null">
+                <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sortBy === 'due_amount' ? $sortDirection : null">
                     {{ __('Due amount') }}
                 </x-table.th>
                 <x-table.th>

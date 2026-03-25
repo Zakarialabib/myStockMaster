@@ -7,9 +7,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class SuperUserSeeder extends Seeder
 {
@@ -21,17 +20,16 @@ class SuperUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'id'                => Str::uuid(),
-            'name'              => 'Admin',
-            'email'             => 'admin@gmail.com',
-            'password'          => Hash::make('password'),
-            'avatar'            => 'avatar.png',
-            'phone'             => '0123456789',
-            'role_id'           => 1,
-            'status'            => 1,
-            'is_all_warehouses' => 1,
-            'remember_token'    => null,
-            'created_at'        => now(),
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+            'avatar' => 'avatar.png',
+            'phone' => '0123456789',
+            'role_id' => 1,
+            'status' => \App\Enums\Status::ACTIVE,
+            'is_all_warehouses' => true,
+            'remember_token' => null,
+            'created_at' => now(),
         ]);
 
         $role = Role::where('name', 'admin')->first();

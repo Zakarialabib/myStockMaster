@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Native\Desktop\Contracts\ProvidesPhpIni;
-use Native\Desktop\Facades\Menu;
 use Native\Desktop\Facades\Window;
 
 class NativeAppServiceProvider implements ProvidesPhpIni
@@ -16,19 +15,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Menu::create(
-            Menu::app(),
-            Menu::file(),
-            Menu::edit(),
-            Menu::view(),
-            Menu::window(),
-            Menu::help(),
-        );
-
-        Window::open()
-            ->width(1200)
-            ->height(800)
-            ->title('MyStockMaster');
+        Window::open();
     }
 
     /** Return an array of php.ini directives to be set. */

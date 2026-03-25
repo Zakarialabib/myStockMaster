@@ -8,5 +8,6 @@ return [
     App\Providers\CartServiceProvider::class,
     App\Providers\EnvironmentServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
-    App\Providers\DesktopServiceProvider::class,
+    App\Native\Providers\DesktopServiceProvider::class,
+    App\Native\Providers\NativeAppServiceProvider::class,
 ];

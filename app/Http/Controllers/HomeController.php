@@ -7,14 +7,11 @@ namespace App\Http\Controllers;
 use App\Enums\PurchaseStatus;
 use App\Enums\SaleStatus;
 use App\Models\Expense;
-use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
-use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnPayment;
 use App\Models\Sale;
 use App\Models\SalePayment;
-use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
@@ -22,54 +19,9 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-        $sales = Sale::completed()->sum('total_amount');
-        $sale_returns = SaleReturn::completed()->sum('total_amount');
-        $purchase_returns = PurchaseReturn::completed()->sum('total_amount');
-
-        $product_costs = 0;
-
-        foreach (Sale::completed()->with('saleDetails.product')->get() as $sale) {
-            foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product?->cost;
-            }
-        }
-
-        $revenue = ($sales - $sale_returns) / 100;
-        $profit = $revenue - $product_costs;
-
-        $data = [
-            'today' => [
-                'salesTotal' => Sale::salesTotal(Carbon::now()),
-                // 'stockValue' => Product::stockValue(Carbon::now()),
-            ],
-            'month' => [
-                'salesTotal' => Sale::salesTotal(Carbon::now()->subMonth()),
-                // 'stockValue' => Product::stockValue(Carbon::now()->subMonth()),
-            ],
-            'semi' => [
-                'salesTotal' => Sale::salesTotal(Carbon::now()->subMonths(6)),
-                // 'stockValue' => Product::stockValue(Carbon::now()->subMonths(6)),
-            ],
-            'year' => [
-                'salesTotal' => Sale::salesTotal(Carbon::now()->subYear()),
-                // 'stockValue' => Product::stockValue(Carbon::now()->subYear()),
-            ],
-        ];
-
-        return view('admin.home', [
-            'revenue'          => $revenue,
-            'sale_returns'     => $sale_returns / 100,
-            'purchase_returns' => $purchase_returns / 100,
-            'profit'           => $profit,
-            'data'             => $data,
-        ]);
-    }
-
     public function currentMonthChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $currentMonthSales = Sale::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
@@ -82,15 +34,15 @@ class HomeController extends Controller
             ->sum('amount') / 100;
 
         return response()->json([
-            'sales'     => $currentMonthSales,
+            'sales' => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
-            'expenses'  => $currentMonthExpenses,
+            'expenses' => $currentMonthExpenses,
         ]);
     }
 
     public function salesPurchasesChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $sales = $this->salesChartData();
         $purchases = $this->purchasesChartData();
@@ -100,7 +52,7 @@ class HomeController extends Controller
 
     public function paymentChart()
     {
-        abort_if( ! request()->ajax(), 404);
+        abort_if(! request()->ajax(), 404);
 
         $dates = collect();
 
@@ -171,9 +123,9 @@ class HomeController extends Controller
         }
 
         return response()->json([
-            'payment_sent'     => $sent_payments,
+            'payment_sent' => $sent_payments,
             'payment_received' => $received_payments,
-            'months'           => $months,
+            'months' => $months,
         ]);
     }
 

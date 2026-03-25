@@ -3,7 +3,7 @@
         @if(!isset($attributes['required']))
             <div class="absolute inset-y-0 left-0 flex items-center">
                 <button id="clear-{{ $attributes['id'] }}" type="button" class="text-rose-600 w-10 h-full" data-clear>
-                    <i class="far fa-times-circle"></i>
+                    <i class="fas fa-times-circle"></i>
                 </button>
             </div>
         @endif

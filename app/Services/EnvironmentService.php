@@ -13,16 +13,30 @@ class EnvironmentService
     /** Check if the application is running in desktop mode (NativePHP) */
     public static function isDesktop(): bool
     {
+        if (request()->header('X-Desktop-App') === 'true') {
+            return true;
+        }
+
+        if (app()->runningUnitTests()) {
+            return env('DESKTOP_MODE', false) || isset($_SERVER['NATIVEPHP_RUNNING']);
+        }
+
         if (self::$isDesktop !== null) {
             return self::$isDesktop;
         }
 
-        return self::$isDesktop = (
+        self::$isDesktop = (
             config('app.env') === 'desktop' ||
             env('DESKTOP_MODE', false) ||
-            class_exists('\Native\Desktop\Facades\Window') ||
             isset($_SERVER['NATIVEPHP_RUNNING'])
         );
+
+        return self::$isDesktop;
+    }
+
+    public static function clearDesktopCache(): void
+    {
+        self::$isDesktop = null;
     }
 
     /** Check if the application is running in web mode */
@@ -37,10 +51,29 @@ class EnvironmentService
         return self::isDesktop() ? 'desktop' : 'web';
     }
 
+    public static function getPlatform(): string
+    {
+        $platform = PHP_OS_FAMILY;
+
+        if ($platform === 'Darwin') {
+            return 'macos';
+        }
+
+        if ($platform === 'Windows') {
+            return 'windows';
+        }
+
+        if ($platform === 'Linux') {
+            return 'linux';
+        }
+
+        return strtolower($platform);
+    }
+
     /** Check if offline mode is enabled for desktop */
     public static function isOfflineMode(): bool
     {
-        if ( ! self::isDesktop()) {
+        if (! self::isDesktop()) {
             return false;
         }
 
@@ -99,17 +132,17 @@ class EnvironmentService
     {
         return [
             'window' => [
-                'width'      => env('DESKTOP_WINDOW_WIDTH', 1200),
-                'height'     => env('DESKTOP_WINDOW_HEIGHT', 800),
-                'resizable'  => env('DESKTOP_WINDOW_RESIZABLE', true),
+                'width' => env('DESKTOP_WINDOW_WIDTH', 1200),
+                'height' => env('DESKTOP_WINDOW_HEIGHT', 800),
+                'resizable' => env('DESKTOP_WINDOW_RESIZABLE', true),
                 'fullscreen' => env('DESKTOP_WINDOW_FULLSCREEN', false),
             ],
             'database' => [
-                'path'        => storage_path('database/desktop.sqlite'),
+                'path' => storage_path('database/desktop.sqlite'),
                 'backup_path' => storage_path('database/desktop_backup.sqlite'),
             ],
             'sync' => [
-                'interval'  => env('DESKTOP_SYNC_INTERVAL', 300), // 5 minutes
+                'interval' => env('DESKTOP_SYNC_INTERVAL', 300), // 5 minutes
                 'auto_sync' => env('DESKTOP_AUTO_SYNC', true),
             ],
         ];

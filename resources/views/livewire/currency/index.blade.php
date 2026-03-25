@@ -42,13 +42,13 @@
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('name')" :direction="$sorts['name'] ?? null">
                 {{ __('Name') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('code')" :direction="$sorts['code'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('code')" :direction="$sorts['code'] ?? null">
                 {{ __('Code') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortBy('symbol')" :direction="$sorts['symbol'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('symbol')" :direction="$sorts['symbol'] ?? null">
                 {{ __('Symbol') }}
             </x-table.th>
             <x-table.th>

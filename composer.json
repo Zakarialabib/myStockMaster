@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "doctrine/dbal": "^4.4",
         "guzzlehttp/guzzle": "^7.2",
         "laravel-notification-channels/telegram": "^6.0",
         "laravel/framework": "^12.0",
@@ -41,6 +42,7 @@
         "pestphp/pest": "^3.8",
         "pestphp/pest-plugin-laravel": "^3.2",
         "rector/rector": "^2.1",
+        "rector/rector-laravel": "^2.2",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -100,6 +102,11 @@
         "native:dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -k -c \"#93c5fd,#c4b5fd\" \"php artisan native:run --no-interaction\" \"npm run dev\" --names=app,vite"
+        ],
+        "native:setup": [
+            "@composer setup",
+            "php artisan native:install --no-interaction",
+            "php artisan install:doctor"
         ]
     },
     "extra": {

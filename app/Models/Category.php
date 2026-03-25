@@ -14,11 +14,13 @@ class Category extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
+
     public const ATTRIBUTES = [
         'id', 'code', 'name',
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -48,5 +50,10 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');
+    }
+
+    public function getProductsCountAttribute(): int
+    {
+        return $this->products()->count();
     }
 }

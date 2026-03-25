@@ -16,28 +16,32 @@ class LanguagesSeeder extends Seeder
      */
     public function run()
     {
-        Language::insert([
+        $languages = [
             [
-                'id'         => 1,
-                'name'       => 'English',
-                'code'       => 'en',
-                'status'     => 1,
+                'id' => 1,
+                'name' => 'English',
+                'code' => 'en',
+                'status' => \App\Enums\Status::ACTIVE,
                 'is_default' => false,
             ],
             [
-                'id'         => 2,
-                'name'       => 'Arabic',
-                'code'       => 'ar',
-                'status'     => 1,
+                'id' => 2,
+                'name' => 'Arabic',
+                'code' => 'ar',
+                'status' => \App\Enums\Status::ACTIVE,
                 'is_default' => false,
             ],
             [
-                'id'         => 3,
-                'name'       => 'French',
-                'code'       => 'fr',
-                'status'     => 1,
+                'id' => 3,
+                'name' => 'French',
+                'code' => 'fr',
+                'status' => \App\Enums\Status::ACTIVE,
                 'is_default' => true,
             ],
-        ]);
+        ];
+
+        foreach ($languages as $language) {
+            Language::create($language);
+        }
     }
 }

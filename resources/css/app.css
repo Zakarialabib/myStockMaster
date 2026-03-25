@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import "@fortawesome/fontawesome-free/css/all.css";
+@import "@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "@fortawesome/fontawesome-free/css/solid.css";
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms' {
@@ -50,17 +51,25 @@
     --color-success-50: #ecfdf5;
     --color-success-100: #d1fae5;
     --color-success-500: #10b981;
+    --color-success-600: #059669;
     --color-success-700: #047857;
 
     --color-error-50: #ffdad6; /* error-container */
     --color-error-100: #ffb4ab;
     --color-error-500: #ba1a1a; /* error */
+    --color-error-600: #9c1515;
     --color-error-700: #93000a; /* on-error-container */
 
     --color-warning-50: #ffefeb; /* tertiary-container */
     --color-warning-100: #ffdbd0; /* tertiary-fixed */
     --color-warning-500: #c73f00; /* tertiary-container */
+    --color-warning-600: #b03800;
     --color-warning-700: #9d3000; /* tertiary */
+
+    --color-orange-50: #fff7ed;
+    --color-orange-100: #ffedd5;
+    --color-orange-600: #ea580c;
+    --color-orange-700: #c2410c;
 
     --shadow-soft: 0 4px 12px -2px rgba(0,0,0,0.05);
 }

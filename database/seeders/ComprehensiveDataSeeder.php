@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use Exception;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Exception;
 
 class ComprehensiveDataSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Run the comprehensive database seeds.
      *
@@ -35,7 +32,7 @@ class ComprehensiveDataSeeder extends Seeder
 
             $this->command->info('Comprehensive data seeding completed successfully!');
         } catch (Exception $e) {
-            $this->command->error('Error during seeding: '.$e->getMessage());
+            $this->command->error('Error during seeding: ' . $e->getMessage());
 
             throw $e;
         } finally {
@@ -97,12 +94,12 @@ class ComprehensiveDataSeeder extends Seeder
     public function getStatistics()
     {
         $stats = [
-            'categories'                  => DB::table('categories')->count(),
-            'brands'                      => DB::table('brands')->count(),
-            'products'                    => DB::table('products')->count(),
-            'customers'                   => DB::table('customers')->count(),
-            'suppliers'                   => DB::table('suppliers')->count(),
-            'warehouses'                  => DB::table('warehouses')->count(),
+            'categories' => DB::table('categories')->count(),
+            'brands' => DB::table('brands')->count(),
+            'products' => DB::table('products')->count(),
+            'customers' => DB::table('customers')->count(),
+            'suppliers' => DB::table('suppliers')->count(),
+            'warehouses' => DB::table('warehouses')->count(),
             'product_warehouse_relations' => DB::table('product_warehouse')->count(),
         ];
 

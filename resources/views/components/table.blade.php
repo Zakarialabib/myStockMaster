@@ -6,9 +6,6 @@
     'sortable' => true,
     'loading' => false,
     'emptyMessage' => 'No data available',
-    'virtualScroll' => false,
-    'rowHeight' => 60,
-    'maxRows' => 1000,
 ])
 
 @php
@@ -24,33 +21,6 @@
     sortDirection: 'asc',
     selectedRows: [],
     selectAll: false,
-    virtualScroll: @js($virtualScroll),
-    rowHeight: @js($rowHeight),
-    maxRows: @js($maxRows),
-    visibleStart: 0,
-    visibleEnd: 50,
-
-    init() {
-        if (this.virtualScroll) {
-            this.setupVirtualScroll();
-        }
-    },
-
-    setupVirtualScroll() {
-        const container = this.$refs.scrollContainer;
-        if (container) {
-            container.addEventListener('scroll', this.handleScroll.bind(this));
-        }
-    },
-
-    handleScroll(e) {
-        const scrollTop = e.target.scrollTop;
-        const containerHeight = e.target.clientHeight;
-        const itemsPerView = Math.ceil(containerHeight / this.rowHeight);
-
-        this.visibleStart = Math.floor(scrollTop / this.rowHeight);
-        this.visibleEnd = Math.min(this.visibleStart + itemsPerView + 5, this.maxRows);
-    },
 
     sort(field) {
         if (this.sortBy === field) {
@@ -81,7 +51,7 @@
     }
 }">
 
-    <div x-ref="scrollContainer"
+    <div
         class="overflow-x-auto overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800"
         @if ($heightStyle) style="{{ $heightStyle }}" @endif>
         <table class="{{ $tableClasses }}" wire:loading.class="opacity-50">

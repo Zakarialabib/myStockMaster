@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\EnvironmentService;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 class EnvironmentServiceProvider extends ServiceProvider
 {
@@ -61,12 +64,12 @@ class EnvironmentServiceProvider extends ServiceProvider
         // Set desktop-specific logging
         Config::set('logging.channels.desktop', [
             'driver' => 'single',
-            'path'   => storage_path('logs/desktop.log'),
-            'level'  => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/desktop.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
         ]);
 
         // Add desktop environment variables
-        if ( ! env('DESKTOP_MODE')) {
+        if (! env('DESKTOP_MODE')) {
             putenv('DESKTOP_MODE=true');
         }
     }
@@ -83,7 +86,7 @@ class EnvironmentServiceProvider extends ServiceProvider
             ];
 
             foreach ($directories as $directory) {
-                if ( ! is_dir($directory)) {
+                if (! is_dir($directory)) {
                     mkdir($directory, 0755, true);
                 }
             }
@@ -91,9 +94,49 @@ class EnvironmentServiceProvider extends ServiceProvider
             // Create desktop SQLite database if it doesn't exist
             $dbPath = storage_path('database/desktop.sqlite');
 
-            if ( ! file_exists($dbPath)) {
+            if (! file_exists($dbPath)) {
                 touch($dbPath);
             }
+
+            // Auto-run migrations and seed on first desktop launch
+            $this->bootDesktopFirstRun($dbPath);
+        }
+    }
+
+    /**
+     * Run first-launch setup for desktop: migrate + seed essentials.
+     * This ensures the SQLite DB is fully ready before the install wizard even loads.
+     */
+    protected function bootDesktopFirstRun(string $dbPath): void
+    {
+        try {
+            $tableExists = \Illuminate\Support\Facades\DB::connection('sqlite_desktop')
+                ->getPdo()
+                ->query("SELECT name FROM sqlite_master WHERE type='table' LIMIT 1")
+                ->fetchColumn() !== false;
+
+            if ($tableExists) {
+                return;
+            }
+        } catch (Throwable) {
+            return;
+        }
+
+        try {
+            Artisan::call('migrate', ['--database' => 'sqlite_desktop', '--force' => true]);
+
+            $seeders = [
+                'Database\\Seeders\\RolesAndPermissionsSeeder',
+                'Database\\Seeders\\CurrencySeeder',
+                'Database\\Seeders\\SettingsSeeder',
+                'Database\\Seeders\\LanguagesSeeder',
+            ];
+
+            foreach ($seeders as $seeder) {
+                Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
+            }
+        } catch (Throwable $e) {
+            Log::warning('Desktop first-run setup failed: ' . $e->getMessage());
         }
     }
 }

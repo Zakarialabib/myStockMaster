@@ -43,10 +43,18 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'nativephp' => [
+            'driver' => 'sqlite',
+            'url' => env('DESKTOP_DB_URL'),
+            'database' => database_path('nativephp.sqlite'),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+
         'sqlite_desktop' => [
             'driver' => 'sqlite',
             'url' => env('DESKTOP_DB_URL'),
-            'database' => env('DESKTOP_DB_DATABASE', storage_path('database/desktop.sqlite')),
+            'database' => env('DESKTOP_DB_DATABASE', database_path('desktop.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
