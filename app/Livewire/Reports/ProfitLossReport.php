@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Reports;
 
 use App\Models\Expense;
-use App\Models\ProductWarehouse;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
@@ -148,30 +147,19 @@ class ProfitLossReport extends Component
     {
         $revenue = $this->sales_amount - $this->sale_returns_amount;
 
-        $sales = Sale::completed()
-            ->whereBetween('date', [$this->start_date, $this->end_date])
-            ->with('saleDetails.product') // Ensure you load related models
-            ->get();
-
-        $productCosts = 0;
-
-        foreach ($sales as $sale) {
-            foreach ($sale->saleDetails as $saleDetail) {
-                $productCosts += $this->getProductCost($saleDetail->product_id, $saleDetail->warehouse_id) * $saleDetail->quantity;
-            }
-        }
+        // Calculate product costs in a single query by joining product_warehouse
+        $productCosts = \App\Models\SaleDetails::query()
+            ->whereHas('sale', function ($query) {
+                $query->completed()
+                    ->whereBetween('date', [$this->start_date, $this->end_date]);
+            })
+            ->join('product_warehouse', function ($join) {
+                $join->on('sale_details.product_id', '=', 'product_warehouse.product_id')
+                    ->on('sale_details.warehouse_id', '=', 'product_warehouse.warehouse_id');
+            })
+            ->sum(\Illuminate\Support\Facades\DB::raw('product_warehouse.cost * sale_details.quantity')) / 100;
 
         return $revenue - $productCosts;
-    }
-
-    private function getProductCost($productId, $warehouseId): float
-    {
-        // Retrieve the product cost from the ProductWarehouse pivot table
-        $productWarehouse = ProductWarehouse::where('product_id', $productId)
-            ->where('warehouse_id', $warehouseId)
-            ->first();
-
-        return $productWarehouse ? $productWarehouse->cost : 0;
     }
 
     public function calculatePaymentsReceived(): float
