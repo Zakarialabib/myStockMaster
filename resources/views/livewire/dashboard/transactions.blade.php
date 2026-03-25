@@ -83,7 +83,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-                    @forelse ($lastSales as $sale)
+                    @forelse ($this->lastSales as $sale)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                             <td class="px-8 py-4 whitespace-nowrap">
                                 <div>
@@ -162,7 +162,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-                    @forelse ($lastPurchases as $purchase)
+                    @forelse ($this->lastPurchases as $purchase)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                             <td class="px-8 py-4 whitespace-nowrap">
                                 <div>
@@ -247,7 +247,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-                        @forelse ($bestSales as $sale)
+                        @forelse ($this->bestSales as $sale)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                                 wire:key="{{ $sale->id }}">
                                 <td
