@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Sales;
 
 use App\Models\Sale;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $sale;
 
     public $showModal = false;

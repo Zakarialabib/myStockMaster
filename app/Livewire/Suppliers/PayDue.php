@@ -7,13 +7,14 @@ namespace App\Livewire\Suppliers;
 use App\Enums\PaymentStatus;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class PayDue extends Component
 {
     use WithAlert;
+
     public $amount;
 
     public $supplier_id;
@@ -37,7 +38,7 @@ class PayDue extends Component
     {
         $this->validate([
             'selectedPurchases' => 'required|array',
-            'amount'            => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0',
         ]);
 
         foreach ($this->selectedPurchases as $purchaseId) {
@@ -46,16 +47,16 @@ class PayDue extends Component
             $paidAmount = min($this->amount, $dueAmount);
 
             PurchasePayment::create([
-                'date'           => date('Y-m-d'),
-                'amount'         => $paidAmount,
-                'purchase_id'    => $purchase->id,
+                'date' => date('Y-m-d'),
+                'amount' => $paidAmount,
+                'purchase_id' => $purchase->id,
                 'payment_method' => $this->payment_method,
-                'user_id'        => Auth::user()->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             $purchase->update([
-                'paid_amount'    => ($purchase->paid_amount + $paidAmount) * 100,
-                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
+                'paid_amount' => ($purchase->paid_amount + $paidAmount) * 100,
+                'due_amount' => max(0, $dueAmount - $paidAmount) * 100,
                 'payment_status' => max(0, $dueAmount - $paidAmount) === 0 ? PaymentStatus::PAID : PaymentStatus::PARTIAL,
             ]);
 

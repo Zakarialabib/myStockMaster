@@ -33,8 +33,8 @@ class CartItem extends Model
     protected function casts(): array
     {
         return [
-            'price'      => 'decimal:2',
-            'quantity'   => 'integer',
+            'price' => 'decimal:2',
+            'quantity' => 'integer',
             'attributes' => 'array',
             'conditions' => 'array',
         ];
@@ -67,7 +67,7 @@ class CartItem extends Model
             get: function () {
                 $price = $this->price;
 
-                if ( ! empty($this->conditions)) {
+                if (! empty($this->conditions)) {
                     foreach ($this->conditions as $condition) {
                         $price = $this->applyCondition($price, $condition);
                     }
@@ -124,8 +124,8 @@ class CartItem extends Model
     {
         $conditions = $this->conditions ?? [];
         $conditions[] = array_merge([
-            'name'  => 'Condition',
-            'type'  => 'fixed',
+            'name' => 'Condition',
+            'type' => 'fixed',
             'value' => 0,
             'order' => 0,
         ], $condition);
@@ -150,7 +150,7 @@ class CartItem extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format((float) $this->price, 2),
+            get: fn () => '$' . number_format((float) $this->price, 2),
         );
     }
 
@@ -158,7 +158,7 @@ class CartItem extends Model
     protected function formattedSubTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format((float) $this->sub_total, 2),
+            get: fn () => '$' . number_format((float) $this->sub_total, 2),
         );
     }
 
@@ -166,7 +166,7 @@ class CartItem extends Model
     protected function formattedPriceWithConditions(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->price_with_conditions, 2),
+            get: fn () => '$' . number_format($this->price_with_conditions, 2),
         );
     }
 
@@ -174,7 +174,7 @@ class CartItem extends Model
     protected function formattedSubTotalWithConditions(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->sub_total_with_conditions, 2),
+            get: fn () => '$' . number_format($this->sub_total_with_conditions, 2),
         );
     }
 

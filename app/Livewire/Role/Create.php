@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Livewire\Role;
 
 // use App\Models\Permission;
-use Spatie\Permission\Models\Permission;
 use App\Traits\WithAlert;
-// use App\Models\Role;
-use Spatie\Permission\Models\Role;
 use Livewire\Attributes\Validate;
+// use App\Models\Role;
 use Livewire\Component;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class Create extends Component
 {
     use WithAlert;
 
     #[Validate([
-        'role.title'    => 'required|string',
-        'permissions'   => 'required|array',
+        'role.title' => 'required|string',
+        'permissions' => 'required|array',
         'permissions.*' => 'integer|exists:permissions,id',
     ])]
     public Role $role;
@@ -29,7 +29,7 @@ class Create extends Component
 
     public function mount(): void
     {
-        $this->role = new Role();
+        $this->role = new Role;
         $this->initListsForFields();
     }
 

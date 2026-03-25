@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Livewire\Currency\Edit;
-use Livewire\Livewire;
 use App\Models\Currency;
+use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -30,8 +30,8 @@ it('tests the update currency can component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
-        'name'   => 'Us Dollar',
-        'code'   => 'USD',
+        'name' => 'Us Dollar',
+        'code' => 'USD',
         'locale' => '$',
     ]);
 });
@@ -49,7 +49,7 @@ it('tests the edit user component validation', function () {
         ->call('update')
         ->assertHasErrors(
             ['currency.name' => 'required'],
-            ['currency.code'   => 'required'],
+            ['currency.code' => 'required'],
             ['currency.locale' => 'required'],
         );
 });

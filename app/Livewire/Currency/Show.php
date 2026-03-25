@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Currency;
 
 use App\Models\Currency;
-use Livewire\Component;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $showModal = false;
 
     public $currency;

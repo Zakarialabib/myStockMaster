@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
-use Livewire\Component;
 use App\Models\User;
-use Livewire\Attributes\On;
 use App\Traits\WithAlert;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $user;
 
     /** @var bool */

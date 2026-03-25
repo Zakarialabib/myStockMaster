@@ -6,10 +6,10 @@ namespace Tests\Feature;
 
 use App\Livewire\Sales\Create;
 use App\Livewire\Sales\Edit;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
-use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -19,7 +19,9 @@ class SalesCartTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Product $product;
+
     protected Customer $customer;
 
     protected function setUp(): void
@@ -29,10 +31,10 @@ class SalesCartTest extends TestCase
         $this->user = User::factory()->create();
         $this->customer = Customer::factory()->create();
         $this->product = Product::factory()->create([
-            'name'     => 'Test Product',
-            'price'    => 15.00,
+            'name' => 'Test Product',
+            'price' => 15.00,
             'quantity' => 50,
-            'code'     => 'SALE001',
+            'code' => 'SALE001',
         ]);
 
         $this->actingAs($this->user);
@@ -123,14 +125,14 @@ class SalesCartTest extends TestCase
             ->assertRedirect(route('sales.index'));
 
         $this->assertDatabaseHas('sales', [
-            'customer_id'    => $this->customer->id,
-            'total_amount'   => 30.00,
+            'customer_id' => $this->customer->id,
+            'total_amount' => 30.00,
             'payment_status' => 'paid',
         ]);
 
         $this->assertDatabaseHas('sale_details', [
             'product_id' => $this->product->id,
-            'quantity'   => 2,
+            'quantity' => 2,
             'unit_price' => 15.00,
         ]);
     }
@@ -141,7 +143,7 @@ class SalesCartTest extends TestCase
         Livewire::test(Create::class)
             ->call('store')
             ->assertHasErrors([
-                'customer_id'    => 'required',
+                'customer_id' => 'required',
                 'payment_status' => 'required',
             ]);
     }
@@ -160,17 +162,17 @@ class SalesCartTest extends TestCase
     public function it_can_edit_existing_sale_cart()
     {
         $sale = Sale::factory()->create([
-            'customer_id'    => $this->customer->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 30.00,
+            'customer_id' => $this->customer->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 30.00,
             'payment_status' => 'paid',
         ]);
 
         $sale->saleDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 2,
+            'quantity' => 2,
             'unit_price' => 15.00,
-            'total'      => 30.00,
+            'total' => 30.00,
         ]);
 
         Livewire::test(Edit::class, ['sale' => $sale])
@@ -184,17 +186,17 @@ class SalesCartTest extends TestCase
     public function it_can_update_existing_sale_cart_items()
     {
         $sale = Sale::factory()->create([
-            'customer_id'    => $this->customer->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 30.00,
+            'customer_id' => $this->customer->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 30.00,
             'payment_status' => 'paid',
         ]);
 
         $sale->saleDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 2,
+            'quantity' => 2,
             'unit_price' => 15.00,
-            'total'      => 30.00,
+            'total' => 30.00,
         ]);
 
         Livewire::test(Edit::class, ['sale' => $sale])
@@ -209,23 +211,23 @@ class SalesCartTest extends TestCase
     public function it_can_add_new_items_to_existing_sale()
     {
         $product2 = Product::factory()->create([
-            'name'     => 'Second Product',
-            'price'    => 20.00,
+            'name' => 'Second Product',
+            'price' => 20.00,
             'quantity' => 30,
         ]);
 
         $sale = Sale::factory()->create([
-            'customer_id'    => $this->customer->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 30.00,
+            'customer_id' => $this->customer->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 30.00,
             'payment_status' => 'paid',
         ]);
 
         $sale->saleDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 2,
+            'quantity' => 2,
             'unit_price' => 15.00,
-            'total'      => 30.00,
+            'total' => 30.00,
         ]);
 
         Livewire::test(Edit::class, ['sale' => $sale])
@@ -261,8 +263,8 @@ class SalesCartTest extends TestCase
     public function it_prevents_overselling_products()
     {
         $lowStockProduct = Product::factory()->create([
-            'name'     => 'Low Stock Product',
-            'price'    => 25.00,
+            'name' => 'Low Stock Product',
+            'price' => 25.00,
             'quantity' => 3,
         ]);
 

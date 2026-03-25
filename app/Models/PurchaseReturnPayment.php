@@ -27,6 +27,7 @@ class PurchaseReturnPayment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
@@ -68,8 +69,6 @@ class PurchaseReturnPayment extends Model
 
     /**
      * Interact with the expenses amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {

@@ -7,9 +7,9 @@ namespace App\Livewire\ExpenseCategories;
 use App\Livewire\Utils\Datatable;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -26,8 +26,8 @@ class Index extends Component
         abort_if(Gate::denies('expense_categories_access'), 403);
 
         $query = ExpenseCategory::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

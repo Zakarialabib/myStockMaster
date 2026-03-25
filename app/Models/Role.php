@@ -19,6 +19,7 @@ class Role extends SpatieRole
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**

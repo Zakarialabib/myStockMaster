@@ -6,11 +6,11 @@ namespace App\Livewire\Reports;
 
 use App\Models\Purchase;
 use App\Models\Supplier;
-use Livewire\Component;
-use Livewire\WithPagination;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class SuppliersReport extends Component

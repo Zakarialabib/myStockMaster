@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Http\Middleware\CheckInstallation;
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
+use Tests\TestCase;
 
 class CheckInstallationMiddlewareTest extends TestCase
 {
@@ -28,7 +28,7 @@ class CheckInstallationMiddlewareTest extends TestCase
     /** @test */
     public function it_allows_installation_routes_to_pass_through()
     {
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/install', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -41,7 +41,7 @@ class CheckInstallationMiddlewareTest extends TestCase
     /** @test */
     public function it_allows_api_routes_to_pass_through()
     {
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/api/test', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -56,7 +56,7 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         Config::set('installation.skip', true);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -71,7 +71,7 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         Config::set('installation.force', true);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -90,7 +90,7 @@ class CheckInstallationMiddlewareTest extends TestCase
             ->with('settings')
             ->andReturn(false);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -106,18 +106,18 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         // Create settings table and data
         Setting::create([
-            'company_logo'              => 'test-logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@example.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test Street',
-            'default_currency_id'       => 1,
+            'company_logo' => 'test-logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@example.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test Street',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'installation_completed'    => false,
+            'default_date_format' => 'Y-m-d',
+            'installation_completed' => false,
         ]);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -133,14 +133,14 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         // Create settings table and record
         $setting = Setting::create([
-            'company_logo'              => 'test-logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@example.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test Street',
-            'default_currency_id'       => 1,
+            'company_logo' => 'test-logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@example.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test Street',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
+            'default_date_format' => 'Y-m-d',
         ]);
 
         // Use the set method to update installation_completed
@@ -155,7 +155,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $installationCompleted = settings('installation_completed', false);
         $this->assertTrue($installationCompleted, 'Settings helper should return true for installation_completed');
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -173,18 +173,18 @@ class CheckInstallationMiddlewareTest extends TestCase
 
         // Create settings table with incomplete installation
         Setting::create([
-            'company_logo'              => 'test-logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@example.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test Street',
-            'default_currency_id'       => 1,
+            'company_logo' => 'test-logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@example.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test Street',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'installation_completed'    => false,
+            'default_date_format' => 'Y-m-d',
+            'installation_completed' => false,
         ]);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -201,18 +201,18 @@ class CheckInstallationMiddlewareTest extends TestCase
 
         // Create settings table with completed installation
         Setting::create([
-            'company_logo'              => 'test-logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@example.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test Street',
-            'default_currency_id'       => 1,
+            'company_logo' => 'test-logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@example.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test Street',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'installation_completed'    => true,
+            'default_date_format' => 'Y-m-d',
+            'installation_completed' => true,
         ]);
 
-        $middleware = new CheckInstallation();
+        $middleware = new CheckInstallation;
         $request = Request::create('/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {

@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Livewire\Email;
 
+use App\Livewire\Utils\Datatable;
 use App\Models\EmailTemplate;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use App\Livewire\Utils\Datatable;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\WithAlert;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
 
     public $email;
 
@@ -28,8 +28,8 @@ class Index extends Component
         abort_if(Gate::denies('email_access'), 403);
 
         $query = EmailTemplate::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

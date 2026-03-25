@@ -25,6 +25,7 @@ class PurchasePayment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
@@ -49,14 +50,12 @@ class PurchasePayment extends Model
                 $number = 1;
             }
 
-            $purchasePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchasePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
     /**
      * Get ajustement date.
-     *
-     * @return Attribute
      */
     public function date(): Attribute
     {

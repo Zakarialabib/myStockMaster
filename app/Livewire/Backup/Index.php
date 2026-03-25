@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Backup;
 
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
-use Throwable;
-use App\Traits\WithAlert;
-
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -56,7 +55,7 @@ class Index extends Component
             $this->validate();
 
             settings()->update([
-                'backup_status'   => $this->backup_status,
+                'backup_status' => $this->backup_status,
                 'backup_schedule' => $this->backup_schedule,
             ]);
 
@@ -64,7 +63,7 @@ class Index extends Component
 
             $this->settingsModal = false;
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Failed.').' '.$throwable->getMessage());
+            $this->alert('error', __('Failed.') . ' ' . $throwable->getMessage());
         }
     }
 

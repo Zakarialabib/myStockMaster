@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Status;
 use App\Support\HasAdvancedFilter;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,18 +13,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
-use App\Enums\Status;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasRoles;
-    use Notifiable;
     use HasAdvancedFilter;
-    use HasFactory;
-    use HasUuid;
     use HasApiTokens;
+    use HasFactory;
+    use HasRoles;
+    use HasUuid;
+    use Notifiable;
 
     protected const ATTRIBUTES = [
         'id', 'name', 'email', 'password', 'avatar',
@@ -64,10 +64,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'status'            => Status::class,
+            'status' => Status::class,
             'is_all_warehouses' => 'boolean',
-            'created_at'        => 'datetime',
-            'updated_at'        => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

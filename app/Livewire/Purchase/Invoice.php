@@ -7,14 +7,16 @@ namespace App\Livewire\Purchase;
 use App\Models\Purchase;
 use App\Traits\WithAlert;
 // use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.template')]
 class Invoice extends Component
 {
     use WithAlert;
+
     public $data;
+
     public $entity = 'Supplier';
 
     public function mount($id)
@@ -26,6 +28,6 @@ class Invoice extends Component
     {
         // abort_if(Gate::denies('purchase_show'), 403);
 
-        return view('invoice.'.settings()->invoice_template);
+        return view('invoice.' . settings()->invoice_template);
     }
 }

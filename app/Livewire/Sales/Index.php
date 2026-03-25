@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
+use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\WithModels;
 use App\Models\Sale;
+use App\Traits\WithAlert;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
-use App\Livewire\Utils\Datatable;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use Illuminate\Http\Response;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use Datatable;
     use WithAlert;
     use WithFileUploads;
-    use Datatable;
     use WithModels;
 
     /** @var Sale|null */
@@ -73,8 +73,8 @@ class Index extends Component
             ->withSum('saleDetails', 'quantity')
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -120,11 +120,11 @@ class Index extends Component
     public function deleteModal($id): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
         $this->sale = $id;
     }
@@ -145,7 +145,7 @@ class Index extends Component
         }
 
         // Add the country code to the beginning of the phone number.
-        $phone = '+212'.$phone;
+        $phone = '+212' . $phone;
 
         $greeting = __('Hello');
 

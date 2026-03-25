@@ -9,17 +9,17 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\SaleReturn;
 use App\Traits\LivewireCartTrait;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use WithAlert;
     use LivewireCartTrait;
+    use WithAlert;
 
     public $salereturn;
 
@@ -80,18 +80,18 @@ class Edit extends Component
         foreach ($this->salereturn->saleReturnDetails as $detail) {
             $product = Product::findOrFail($detail->product_id);
             $this->addToCart([
-                'id'         => $detail->product_id,
-                'name'       => $detail->name,
-                'quantity'   => $detail->quantity,
-                'price'      => $detail->price / 100,
+                'id' => $detail->product_id,
+                'name' => $detail->name,
+                'quantity' => $detail->quantity,
+                'price' => $detail->price / 100,
                 'attributes' => [
-                    'product_discount'      => $detail->discount_amount / 100,
+                    'product_discount' => $detail->discount_amount / 100,
                     'product_discount_type' => $detail->discount_type,
-                    'sub_total'             => $detail->sub_total / 100,
-                    'code'                  => $detail->code,
-                    'stock'                 => $product->quantity,
-                    'product_tax'           => $detail->tax_amount / 100,
-                    'unit_price'            => $detail->unit_price / 100,
+                    'sub_total' => $detail->sub_total / 100,
+                    'code' => $detail->code,
+                    'stock' => $product->quantity,
+                    'product_tax' => $detail->tax_amount / 100,
+                    'unit_price' => $detail->unit_price / 100,
                 ],
             ]);
         }
@@ -125,17 +125,17 @@ class Edit extends Component
         app(UpdateSaleReturnAction::class)(
             $this->salereturn,
             [
-                'date'                => $this->date,
-                'reference'           => $this->reference,
-                'customer_id'         => $this->customer_id,
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'customer_id' => $this->customer_id,
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount,
-                'paid_amount'         => $this->paid_amount,
-                'total_amount'        => $this->total_amount,
-                'status'              => $this->status,
-                'payment_method'      => $this->payment_method,
-                'note'                => $this->note,
+                'shipping_amount' => $this->shipping_amount,
+                'paid_amount' => $this->paid_amount,
+                'total_amount' => $this->total_amount,
+                'status' => $this->status,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -154,7 +154,7 @@ class Edit extends Component
 
         return view('livewire.sale-return.edit', [
             'cart_items' => $this->cartContent,
-            'customers'  => $customers,
+            'customers' => $customers,
         ]);
     }
 }

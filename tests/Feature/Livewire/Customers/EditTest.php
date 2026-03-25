@@ -29,7 +29,7 @@ it('tests the update customer component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('customers', [
-        'name'  => 'John doe',
+        'name' => 'John doe',
         'phone' => '00000000000',
     ]);
 });

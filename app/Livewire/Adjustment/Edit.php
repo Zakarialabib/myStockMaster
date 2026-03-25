@@ -9,9 +9,9 @@ use App\Models\AdjustedProduct;
 use App\Models\Adjustment;
 use App\Models\ProductWarehouse;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
@@ -37,7 +37,7 @@ class Edit extends Component
 
     #[Validate([
         'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type'     => 'required|in:add,sub',
+        'products.*.type' => 'required|in:add,sub',
     ])]
     public $products;
 
@@ -63,10 +63,10 @@ class Edit extends Component
         $this->validate();
 
         $this->adjustment->update([
-            'reference'    => $this->reference,
-            'note'         => $this->note,
-            'date'         => $this->date,
-            'user_id'      => auth()->id(),
+            'reference' => $this->reference,
+            'note' => $this->note,
+            'date' => $this->date,
+            'user_id' => auth()->id(),
             'warehouse_id' => $this->warehouse_id,
         ]);
 
@@ -74,12 +74,12 @@ class Edit extends Component
             AdjustedProduct::updateOrCreate(
                 [
                     'adjustment_id' => $this->adjustment->id,
-                    'product_id'    => $product['product_id'],
-                    'warehouse_id'  => $product['warehouse_id'],
+                    'product_id' => $product['product_id'],
+                    'warehouse_id' => $product['warehouse_id'],
                 ],
                 [
                     'quantity' => $product['quantity'],
-                    'type'     => $product['type'],
+                    'type' => $product['type'],
                 ]
             );
 

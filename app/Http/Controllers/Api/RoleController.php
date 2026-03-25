@@ -7,23 +7,17 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class RoleController extends BaseController
 {
     /**
      * Retrieve a list of Role with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     /**
      * Retrieve a list of roles with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     public function index(Request $request)
     {
@@ -34,15 +28,15 @@ class RoleController extends BaseController
 
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
                 $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                //Filters
+                // Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
+                // capture brand_id filter
                 // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
                 // if ($brand_id !== '') {
                 //     $where_raw .= " AND (brand_id =  $brand_id)";
                 // }
-                //capture sort fields
+                // capture sort fields
                 $sort_array = explode(',', $sort);
 
                 if (count($sort_array) > 0) {
@@ -72,9 +66,6 @@ class RoleController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     *
      */
     public function store(Request $request)
     {
@@ -96,8 +87,7 @@ class RoleController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function show($id)
     {
@@ -117,9 +107,7 @@ class RoleController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function update(Request $request, $id)
     {
@@ -132,8 +120,7 @@ class RoleController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function destroy($id)
     {

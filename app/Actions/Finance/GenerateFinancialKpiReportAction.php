@@ -24,8 +24,7 @@ final class GenerateFinancialKpiReportAction
         private CalculateNetMarginAction $netMarginAction,
         private CalculateCashFlowAction $cashFlowAction,
         private CalculateBreakEvenAction $breakEvenAction
-    ) {
-    }
+    ) {}
 
     public function __invoke(
         Carbon $dateFrom,
@@ -52,19 +51,19 @@ final class GenerateFinancialKpiReportAction
 
         // Generate overall financial health score
         $healthScore = $this->calculateFinancialHealthScore([
-            'gross_margin'    => $grossMargin,
-            'net_margin'      => $netMargin,
-            'cash_flow'       => $cashFlow,
-            'break_even'      => $breakEven,
+            'gross_margin' => $grossMargin,
+            'net_margin' => $netMargin,
+            'cash_flow' => $cashFlow,
+            'break_even' => $breakEven,
             'additional_kpis' => $additionalKpis,
         ]);
 
         // Generate actionable recommendations
         $recommendations = $this->generateRecommendations([
             'gross_margin' => $grossMargin,
-            'net_margin'   => $netMargin,
-            'cash_flow'    => $cashFlow,
-            'break_even'   => $breakEven,
+            'net_margin' => $netMargin,
+            'cash_flow' => $cashFlow,
+            'break_even' => $breakEven,
             'health_score' => $healthScore,
         ]);
 
@@ -72,31 +71,31 @@ final class GenerateFinancialKpiReportAction
             'summary' => [
                 'period' => [
                     'from' => $dateFrom->toDateString(),
-                    'to'   => $dateTo->toDateString(),
+                    'to' => $dateTo->toDateString(),
                     'days' => $dateTo->diffInDays($dateFrom) + 1,
                 ],
                 'financial_health_score' => $healthScore,
-                'overall_status'         => $this->determineOverallStatus($healthScore['score']),
-                'key_metrics'            => [
+                'overall_status' => $this->determineOverallStatus($healthScore['score']),
+                'key_metrics' => [
                     'gross_margin_percentage' => $grossMargin['gross_margin_percentage'],
-                    'net_margin_percentage'   => $netMargin['net_margin_percentage'],
-                    'net_cash_flow'           => $cashFlow['net_cash_flow'],
-                    'break_even_status'       => $breakEven['current_performance']['status'] ?? 'unknown',
+                    'net_margin_percentage' => $netMargin['net_margin_percentage'],
+                    'net_cash_flow' => $cashFlow['net_cash_flow'],
+                    'break_even_status' => $breakEven['current_performance']['status'] ?? 'unknown',
                 ],
             ],
             'kpis' => [
-                'gross_margin'    => $grossMargin,
-                'net_margin'      => $netMargin,
-                'cash_flow'       => $cashFlow,
-                'break_even'      => $breakEven,
+                'gross_margin' => $grossMargin,
+                'net_margin' => $netMargin,
+                'cash_flow' => $cashFlow,
+                'break_even' => $breakEven,
                 'additional_kpis' => $additionalKpis,
             ],
             'recommendations' => $recommendations,
-            'alerts'          => $this->generateAlerts([
+            'alerts' => $this->generateAlerts([
                 'gross_margin' => $grossMargin,
-                'net_margin'   => $netMargin,
-                'cash_flow'    => $cashFlow,
-                'break_even'   => $breakEven,
+                'net_margin' => $netMargin,
+                'cash_flow' => $cashFlow,
+                'break_even' => $breakEven,
             ]),
             'generated_at' => now()->toISOString(),
         ];
@@ -128,22 +127,22 @@ final class GenerateFinancialKpiReportAction
         return [
             'labor_cost_ratio' => [
                 'percentage' => round($laborCostRatio, 2),
-                'amount'     => round($laborCosts, 2),
+                'amount' => round($laborCosts, 2),
                 'target_min' => 20.0,
                 'target_max' => 30.0,
-                'status'     => $this->determineRatioStatus($laborCostRatio, 20, 30),
+                'status' => $this->determineRatioStatus($laborCostRatio, 20, 30),
             ],
             'food_cost_ratio' => [
                 'percentage' => round($foodCostRatio, 2),
-                'amount'     => round($foodCosts, 2),
+                'amount' => round($foodCosts, 2),
                 'target_min' => 25.0,
                 'target_max' => 35.0,
-                'status'     => $this->determineRatioStatus($foodCostRatio, 25, 35),
+                'status' => $this->determineRatioStatus($foodCostRatio, 25, 35),
             ],
             'average_order_value' => [
-                'amount'           => round($averageSaleValue, 2),
+                'amount' => round($averageSaleValue, 2),
                 'estimated_orders' => $estimatedSales,
-                'total_revenue'    => round($totalRevenue, 2),
+                'total_revenue' => round($totalRevenue, 2),
             ],
         ];
     }
@@ -152,9 +151,9 @@ final class GenerateFinancialKpiReportAction
     {
         return match (true) {
             $ratio <= $targetMax && $ratio >= $targetMin => 'good',
-            $ratio < $targetMin                          => 'excellent',
-            $ratio <= $targetMax + 5                     => 'warning',
-            default                                      => 'critical'
+            $ratio < $targetMin => 'excellent',
+            $ratio <= $targetMax + 5 => 'warning',
+            default => 'critical'
         };
     }
 
@@ -204,12 +203,12 @@ final class GenerateFinancialKpiReportAction
 
         if (isset($kpis['break_even']['current_performance']['status'])) {
             $breakEvenScore = match ($kpis['break_even']['current_performance']['status']) {
-                'excellent'        => 100,
-                'good'             => 85,
-                'marginal'         => 70,
-                'break_even'       => 60,
+                'excellent' => 100,
+                'good' => 85,
+                'marginal' => 70,
+                'break_even' => 60,
                 'below_break_even' => 30,
-                default            => 50
+                default => 50
             };
         }
         $scores['break_even'] = $breakEvenScore;
@@ -223,10 +222,10 @@ final class GenerateFinancialKpiReportAction
         }
 
         return [
-            'score'     => round($totalScore, 1),
-            'grade'     => $this->getHealthGrade($totalScore),
+            'score' => round($totalScore, 1),
+            'grade' => $this->getHealthGrade($totalScore),
             'breakdown' => $scores,
-            'weights'   => $weights,
+            'weights' => $weights,
         ];
     }
 
@@ -254,7 +253,7 @@ final class GenerateFinancialKpiReportAction
             $score >= 80 => 'B',
             $score >= 70 => 'C',
             $score >= 60 => 'D',
-            default      => 'F'
+            default => 'F'
         };
     }
 
@@ -264,7 +263,7 @@ final class GenerateFinancialKpiReportAction
             $score >= 85 => 'excellent',
             $score >= 70 => 'good',
             $score >= 55 => 'warning',
-            default      => 'critical'
+            default => 'critical'
         };
     }
 
@@ -277,8 +276,8 @@ final class GenerateFinancialKpiReportAction
             $recommendations[] = [
                 'priority' => 'critical',
                 'category' => 'overall',
-                'message'  => __('Financial health is critical. Immediate comprehensive review required.'),
-                'actions'  => [
+                'message' => __('Financial health is critical. Immediate comprehensive review required.'),
+                'actions' => [
                     __('Schedule emergency financial review meeting'),
                     __('Implement cost reduction measures'),
                     __('Review pricing strategy'),
@@ -291,8 +290,8 @@ final class GenerateFinancialKpiReportAction
             $recommendations[] = [
                 'priority' => 'high',
                 'category' => 'gross_margin',
-                'message'  => $data['gross_margin']['recommendation'],
-                'actions'  => [
+                'message' => $data['gross_margin']['recommendation'],
+                'actions' => [
                     __('Review supplier contracts and negotiate better rates'),
                     __('Analyze menu pricing strategy'),
                     __('Implement portion control measures'),
@@ -304,8 +303,8 @@ final class GenerateFinancialKpiReportAction
             $recommendations[] = [
                 'priority' => 'critical',
                 'category' => 'cash_flow',
-                'message'  => __('Critical cash position requires immediate attention'),
-                'actions'  => [
+                'message' => __('Critical cash position requires immediate attention'),
+                'actions' => [
                     __('Accelerate accounts receivable collection'),
                     __('Negotiate extended payment terms with suppliers'),
                     __('Consider short-term financing options'),
@@ -323,26 +322,26 @@ final class GenerateFinancialKpiReportAction
         // Critical alerts
         if ($kpis['cash_flow']['net_cash_flow'] < 0) {
             $alerts[] = [
-                'level'   => 'critical',
+                'level' => 'critical',
                 'message' => __('Negative cash flow detected'),
-                'metric'  => 'cash_flow',
+                'metric' => 'cash_flow',
             ];
         }
 
         if ($kpis['gross_margin']['gross_margin_percentage'] < 50) {
             $alerts[] = [
-                'level'   => 'critical',
+                'level' => 'critical',
                 'message' => __('Gross margin below 50%'),
-                'metric'  => 'gross_margin',
+                'metric' => 'gross_margin',
             ];
         }
 
         // Warning alerts
         if ($kpis['net_margin']['net_margin_percentage'] < 10) {
             $alerts[] = [
-                'level'   => 'warning',
+                'level' => 'warning',
                 'message' => __('Net margin below 10%'),
-                'metric'  => 'net_margin',
+                'metric' => 'net_margin',
             ];
         }
 
@@ -351,11 +350,11 @@ final class GenerateFinancialKpiReportAction
 
     private function generateCacheKey(Carbon $dateFrom, Carbon $dateTo, array $expenses, array $fixedCosts, float $currentCashBalance): string
     {
-        return 'financial_kpi_report_'.md5(
-            $dateFrom->toDateString().
-            $dateTo->toDateString().
-            serialize($expenses).
-            serialize($fixedCosts).
+        return 'financial_kpi_report_' . md5(
+            $dateFrom->toDateString() .
+            $dateTo->toDateString() .
+            serialize($expenses) .
+            serialize($fixedCosts) .
             $currentCashBalance
         );
     }

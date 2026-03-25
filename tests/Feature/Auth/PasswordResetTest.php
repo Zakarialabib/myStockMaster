@@ -35,7 +35,7 @@ it('renders the reset password screen from token', function () {
         ->call('sendPasswordResetLink');
 
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-        $this->get('/reset-password/'.$notification->token)->assertOk();
+        $this->get('/reset-password/' . $notification->token)->assertOk();
 
         Livewire::test('pages.auth.reset-password', ['token' => $notification->token])
             ->assertStatus(200);

@@ -14,12 +14,13 @@ final class AnalyzePriceTrendsAction
     /**
      * Analyze price trends for a product.
      *
-     * @param  Product  $model  The model to analyze
-     * @param  int  $days  Number of days to analyze (default: 30)
-     * @param  bool  $useCache  Whether to use cached results
-     * @return array Price trend analysis
+     * @param Product $model    The model to analyze
+     * @param int     $days     Number of days to analyze (default: 30)
+     * @param bool    $useCache Whether to use cached results
      *
      * @throws InvalidArgumentException
+     *
+     * @return array Price trend analysis
      */
     public function __invoke($model, int $days = 30, bool $useCache = true): array
     {
@@ -44,7 +45,8 @@ final class AnalyzePriceTrendsAction
     /**
      * Get price history for a model.
      *
-     * @param  Product  $model  The model to get history for
+     * @param Product $model The model to get history for
+     *
      * @return Collection Price history collection
      */
     public function getPriceHistory($model): Collection
@@ -55,22 +57,23 @@ final class AnalyzePriceTrendsAction
             ->orderByDesc('effective_date')
             ->get()
             ->map(fn (PriceHistory $priceHistory): array => [
-                'price'          => $priceHistory->price,
-                'cost'           => $priceHistory->cost,
+                'price' => $priceHistory->price,
+                'cost' => $priceHistory->cost,
                 'previous_price' => null, // PriceHistory model doesn't have this field
-                'previous_cost'  => null, // PriceHistory model doesn't have this field
-                'reason'         => null, // PriceHistory model doesn't have this field
-                'entry_date'     => $priceHistory->effective_date,
-                'metadata'       => null, // PriceHistory model doesn't have this field
-                'profit_margin'  => $priceHistory->price > 0 ? (($priceHistory->price - $priceHistory->cost) / $priceHistory->price) * 100 : 0,
+                'previous_cost' => null, // PriceHistory model doesn't have this field
+                'reason' => null, // PriceHistory model doesn't have this field
+                'entry_date' => $priceHistory->effective_date,
+                'metadata' => null, // PriceHistory model doesn't have this field
+                'profit_margin' => $priceHistory->price > 0 ? (($priceHistory->price - $priceHistory->cost) / $priceHistory->price) * 100 : 0,
             ]);
     }
 
     /**
      * Compare price trends between multiple models.
      *
-     * @param  array  $models  Array of Product  models
-     * @param  int  $days  Number of days to analyze
+     * @param array $models Array of Product  models
+     * @param int   $days   Number of days to analyze
+     *
      * @return array Comparative analysis
      */
     public function compareModels(array $models, int $days = 30): array
@@ -78,8 +81,8 @@ final class AnalyzePriceTrendsAction
         $this->validateDays($days);
         $comparisons = [];
         $overallStats = [
-            'most_volatile'    => null,
-            'most_stable'      => null,
+            'most_volatile' => null,
+            'most_stable' => null,
             'highest_increase' => null,
             'highest_decrease' => null,
         ];
@@ -92,10 +95,10 @@ final class AnalyzePriceTrendsAction
             $analysis = $this->performAnalysis($model, $days);
 
             $modelData = [
-                'model_id'   => $model->id,
+                'model_id' => $model->id,
                 'model_name' => $model->name,
                 'model_type' => class_basename($model),
-                'analysis'   => $analysis,
+                'analysis' => $analysis,
             ];
 
             $comparisons[] = $modelData;
@@ -104,27 +107,27 @@ final class AnalyzePriceTrendsAction
         }
 
         // Find extremes
-        if ( ! empty($volatilities)) {
+        if (! empty($volatilities)) {
             $mostVolatileId = array_keys($volatilities, max($volatilities))[0];
             $mostStableId = array_keys($volatilities, min($volatilities))[0];
             $highestIncreaseId = array_keys($priceChanges, max($priceChanges))[0];
             $highestDecreaseId = array_keys($priceChanges, min($priceChanges))[0];
 
             $overallStats = [
-                'most_volatile'        => $this->findModelInComparisons($comparisons, $mostVolatileId),
-                'most_stable'          => $this->findModelInComparisons($comparisons, $mostStableId),
-                'highest_increase'     => $this->findModelInComparisons($comparisons, $highestIncreaseId),
-                'highest_decrease'     => $this->findModelInComparisons($comparisons, $highestDecreaseId),
-                'average_volatility'   => array_sum($volatilities) / count($volatilities),
+                'most_volatile' => $this->findModelInComparisons($comparisons, $mostVolatileId),
+                'most_stable' => $this->findModelInComparisons($comparisons, $mostStableId),
+                'highest_increase' => $this->findModelInComparisons($comparisons, $highestIncreaseId),
+                'highest_decrease' => $this->findModelInComparisons($comparisons, $highestDecreaseId),
+                'average_volatility' => array_sum($volatilities) / count($volatilities),
                 'average_price_change' => array_sum($priceChanges) / count($priceChanges),
             ];
         }
 
         return [
-            'comparisons'     => $comparisons,
-            'overall_stats'   => $overallStats,
+            'comparisons' => $comparisons,
+            'overall_stats' => $overallStats,
             'analysis_period' => $days,
-            'analyzed_at'     => now(),
+            'analyzed_at' => now(),
         ];
     }
 
@@ -137,17 +140,17 @@ final class AnalyzePriceTrendsAction
 
         if ($prices->isEmpty()) {
             return [
-                'trend_direction'         => 'stable',
-                'volatility'              => 0,
-                'average_price'           => $model->price,
-                'average_cost'            => $model->cost ?? 0,
-                'price_change'            => 0,
+                'trend_direction' => 'stable',
+                'volatility' => 0,
+                'average_price' => $model->price,
+                'average_cost' => $model->cost ?? 0,
+                'price_change' => 0,
                 'price_change_percentage' => 0,
-                'cost_change'             => 0,
-                'cost_change_percentage'  => 0,
-                'profit_margin_change'    => 0,
-                'data_points'             => 0,
-                'analysis_period'         => $days,
+                'cost_change' => 0,
+                'cost_change_percentage' => 0,
+                'profit_margin_change' => 0,
+                'data_points' => 0,
+                'analysis_period' => $days,
             ];
         }
 
@@ -179,21 +182,21 @@ final class AnalyzePriceTrendsAction
         $profitMarginChange = $lastMargin - $firstMargin;
 
         return [
-            'trend_direction'         => $trendDirection,
-            'volatility'              => $volatility,
-            'average_price'           => $averagePrice,
-            'average_cost'            => $averageCost,
-            'price_change'            => $priceChange,
+            'trend_direction' => $trendDirection,
+            'volatility' => $volatility,
+            'average_price' => $averagePrice,
+            'average_cost' => $averageCost,
+            'price_change' => $priceChange,
             'price_change_percentage' => $priceChangePercentage,
-            'cost_change'             => $costChange,
-            'cost_change_percentage'  => $costChangePercentage,
-            'profit_margin_change'    => $profitMarginChange,
-            'first_price'             => $firstPrice,
-            'last_price'              => $lastPrice,
-            'first_cost'              => $firstCost,
-            'last_cost'               => $lastCost,
-            'data_points'             => $prices->count(),
-            'analysis_period'         => $days,
+            'cost_change' => $costChange,
+            'cost_change_percentage' => $costChangePercentage,
+            'profit_margin_change' => $profitMarginChange,
+            'first_price' => $firstPrice,
+            'last_price' => $lastPrice,
+            'first_cost' => $firstCost,
+            'last_cost' => $lastCost,
+            'data_points' => $prices->count(),
+            'analysis_period' => $days,
         ];
     }
 
@@ -218,7 +221,7 @@ final class AnalyzePriceTrendsAction
         $priceChange = $lastPrice - $firstPrice;
         $significantChange = abs($priceChange) > $volatility;
 
-        if ( ! $significantChange) {
+        if (! $significantChange) {
             return 'stable';
         }
 
@@ -227,7 +230,7 @@ final class AnalyzePriceTrendsAction
 
     private function validateModel($model): void
     {
-        if ( ! ($model instanceof Product)) {
+        if (! ($model instanceof Product)) {
             throw new InvalidArgumentException('Model must be an instance of Product');
         }
     }

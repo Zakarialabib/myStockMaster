@@ -11,7 +11,8 @@ class WarehouseResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \App\Models\Warehouse $resource
+     * @param \App\Models\Warehouse $resource
+     *
      * @return array
      */
     public function toArray($request)
@@ -21,13 +22,13 @@ class WarehouseResource extends JsonResource
         $data['user'] = $this->resource->user ? (object) [$this->resource->user->name] : null;
 
         return $data + [
-            'id'         => $this->resource->id,
-            'name'       => $this->resource->name,
-            'city'       => $this->resource->city,
-            'address'    => $this->resource->address,
-            'phone'      => $this->resource->phone,
-            'email'      => $this->resource->email,
-            'country'    => $this->resource->country,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'city' => $this->resource->city,
+            'address' => $this->resource->address,
+            'phone' => $this->resource->phone,
+            'email' => $this->resource->email,
+            'country' => $this->resource->country,
             'deleted_at' => $this->resource->deleted_at ? $this->resource->deleted_at->format('Y-m-d H:i:s') : null,
             'created_at' => $this->resource->created_at->format('Y-m-d H:i:s'),
         ];

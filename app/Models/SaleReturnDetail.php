@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SaleReturnDetail extends Model
 {
     use HasAdvancedFilter;
+
     public const ATTRIBUTES = [
         'id',
         'sale_return_id',
@@ -25,6 +26,7 @@ class SaleReturnDetail extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
@@ -41,8 +43,6 @@ class SaleReturnDetail extends Model
 
     /**
      * get price attribute
-     *
-     * @return Attribute
      */
     protected function price(): Attribute
     {
@@ -54,8 +54,6 @@ class SaleReturnDetail extends Model
 
     /**
      * Interact with unit price
-     *
-     * @return Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -67,8 +65,6 @@ class SaleReturnDetail extends Model
 
     /**
      * get subtotal attribute
-     *
-     * @return Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -80,8 +76,6 @@ class SaleReturnDetail extends Model
 
     /**
      * Interact with product discount amount
-     *
-     * @return Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -93,8 +87,6 @@ class SaleReturnDetail extends Model
 
     /**
      * Interact with product tax amount
-     *
-     * @return Attribute
      */
     protected function productTaxAmount(): Attribute
     {

@@ -27,22 +27,22 @@ final class StoreSaleReturnAction
             }
 
             $saleReturn = SaleReturn::create([
-                'date'                => $data['date'],
-                'reference'           => $data['reference'] ?? 'SLRN-'.date('YmdHis'),
-                'customer_id'         => $data['customer_id'],
-                'user_id'             => $data['user_id'],
-                'tax_percentage'      => $data['tax_percentage'],
+                'date' => $data['date'],
+                'reference' => $data['reference'] ?? 'SLRN-' . date('YmdHis'),
+                'customer_id' => $data['customer_id'],
+                'user_id' => $data['user_id'],
+                'tax_percentage' => $data['tax_percentage'],
                 'discount_percentage' => $data['discount_percentage'],
-                'shipping_amount'     => $data['shipping_amount'] * 100,
-                'paid_amount'         => $data['paid_amount'] * 100,
-                'total_amount'        => $data['total_amount'] * 100,
-                'due_amount'          => $dueAmount * 100,
-                'status'              => $data['status'],
-                'payment_status'      => $paymentStatus,
-                'payment_method'      => $data['payment_method'],
-                'note'                => $data['note'],
-                'tax_amount'          => (int) ($cartTax * 100),
-                'discount_amount'     => (int) ($cartDiscount * 100),
+                'shipping_amount' => $data['shipping_amount'] * 100,
+                'paid_amount' => $data['paid_amount'] * 100,
+                'total_amount' => $data['total_amount'] * 100,
+                'due_amount' => $dueAmount * 100,
+                'status' => $data['status'],
+                'payment_status' => $paymentStatus,
+                'payment_method' => $data['payment_method'],
+                'note' => $data['note'],
+                'tax_amount' => (int) ($cartTax * 100),
+                'discount_amount' => (int) ($cartDiscount * 100),
             ]);
 
             foreach ($cartItems as $cartItem) {
@@ -60,17 +60,17 @@ final class StoreSaleReturnAction
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
                 SaleReturnDetail::create([
-                    'sale_return_id'  => $saleReturn->id,
-                    'product_id'      => $productId,
-                    'name'            => $productName,
-                    'code'            => $productCode,
-                    'quantity'        => $quantity,
-                    'price'           => $price * 100,
-                    'unit_price'      => $unitPrice * 100,
-                    'sub_total'       => $subTotal * 100,
+                    'sale_return_id' => $saleReturn->id,
+                    'product_id' => $productId,
+                    'name' => $productName,
+                    'code' => $productCode,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'unit_price' => $unitPrice * 100,
+                    'sub_total' => $subTotal * 100,
                     'discount_amount' => $discountAmount * 100,
-                    'discount_type'   => $discountType,
-                    'tax_amount'      => $taxAmount * 100,
+                    'discount_type' => $discountType,
+                    'tax_amount' => $taxAmount * 100,
                 ]);
 
                 if ($data['status'] === 'Completed') {
@@ -83,9 +83,9 @@ final class StoreSaleReturnAction
 
             if ($data['paid_amount'] > 0) {
                 SaleReturnPayment::create([
-                    'date'           => $data['date'],
-                    'reference'      => 'INV/'.$saleReturn->reference,
-                    'amount'         => $data['paid_amount'] * 100,
+                    'date' => $data['date'],
+                    'reference' => 'INV/' . $saleReturn->reference,
+                    'amount' => $data['paid_amount'] * 100,
                     'sale_return_id' => $saleReturn->id,
                     'payment_method' => $data['payment_method'],
                 ]);

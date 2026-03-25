@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\CustomerGroup;
 
 use App\Models\CustomerGroup;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Create extends Component
 {
     use WithAlert;
+
     public $createModal = false;
 
     public CustomerGroup $customergroup;
@@ -48,7 +49,7 @@ class Create extends Component
         $this->validate();
 
         CustomerGroup::create([
-            'name'       => $this->name,
+            'name' => $this->name,
             'percentage' => $this->percentage,
         ]);
 

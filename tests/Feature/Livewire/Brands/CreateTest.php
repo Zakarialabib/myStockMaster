@@ -27,7 +27,7 @@ it('tests the brand create component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('brands', [
-        'name'        => 'apple',
+        'name' => 'apple',
         'description' => 'some description',
     ]);
 });

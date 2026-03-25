@@ -34,6 +34,7 @@ class SaleReturn extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -110,7 +111,7 @@ class SaleReturn extends Model
                 $number = 1;
             }
 
-            $saleReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
@@ -126,8 +127,6 @@ class SaleReturn extends Model
 
     /**
      * get shipping amount
-     *
-     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -138,8 +137,6 @@ class SaleReturn extends Model
 
     /**
      * get paid amount
-     *
-     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -150,8 +147,6 @@ class SaleReturn extends Model
 
     /**
      * get total amount
-     *
-     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -162,8 +157,6 @@ class SaleReturn extends Model
 
     /**
      * get due amount
-     *
-     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -174,8 +167,6 @@ class SaleReturn extends Model
 
     /**
      * get tax amount
-     *
-     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -186,8 +177,6 @@ class SaleReturn extends Model
 
     /**
      * get discount amount
-     *
-     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {

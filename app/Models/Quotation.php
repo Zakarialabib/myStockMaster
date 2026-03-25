@@ -31,6 +31,7 @@ class Quotation extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -80,8 +81,6 @@ class Quotation extends Model
 
     /**
      * Get ajustement date.
-     *
-     * @return Attribute
      */
     public function date(): Attribute
     {
@@ -105,14 +104,12 @@ class Quotation extends Model
                 $number = 1;
             }
 
-            $quotation->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
     /**
      * get shipping amount
-     *
-     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -123,8 +120,6 @@ class Quotation extends Model
 
     /**
      * get paid amount
-     *
-     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -135,8 +130,6 @@ class Quotation extends Model
 
     /**
      * get total amount
-     *
-     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -147,8 +140,6 @@ class Quotation extends Model
 
     /**
      * get due amount
-     *
-     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -159,8 +150,6 @@ class Quotation extends Model
 
     /**
      * get tax amount
-     *
-     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -171,8 +160,6 @@ class Quotation extends Model
 
     /**
      * get discount amount
-     *
-     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {

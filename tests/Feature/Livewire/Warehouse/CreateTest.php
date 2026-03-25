@@ -25,7 +25,7 @@ it('tests the create warehouse validation rules', function () {
         ->call('create');
 
     assertDatabaseHas('warehouses', [
-        'name'  => 'apple',
+        'name' => 'apple',
         'phone' => '00000000000',
     ]);
 });

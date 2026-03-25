@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
-use Livewire\Component;
 use App\Models\Language;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
     use WithAlert;
+
     public $language;
 
     #[Computed]

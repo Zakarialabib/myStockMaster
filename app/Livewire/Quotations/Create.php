@@ -11,15 +11,15 @@ use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Create extends Component
 {
-    use WithModels;
     use LivewireCartTrait;
+    use WithModels;
 
     #[Validate('required')]
     public $customer_id;
@@ -79,7 +79,7 @@ class Create extends Component
 
     public function store()
     {
-        if ( ! $this->warehouse_id) {
+        if (! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -89,33 +89,33 @@ class Create extends Component
             $this->validate();
 
             $quotation = Quotation::create([
-                'date'                => $this->date,
-                'customer_id'         => $this->customer_id,
-                'warehouse_id'        => $this->warehouse_id,
-                'user_id'             => Auth::user()->id,
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'customer_id' => $this->customer_id,
+                'warehouse_id' => $this->warehouse_id,
+                'user_id' => Auth::user()->id,
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount * 100,
-                'total_amount'        => $this->total_amount * 100,
-                'status'              => $this->status,
-                'note'                => $this->note,
-                'tax_amount'          => (int) $this->cartTax * 100,
-                'discount_amount'     => (int) $this->cartDiscount * 100,
+                'shipping_amount' => $this->shipping_amount * 100,
+                'total_amount' => $this->total_amount * 100,
+                'status' => $this->status,
+                'note' => $this->note,
+                'tax_amount' => (int) $this->cartTax * 100,
+                'discount_amount' => (int) $this->cartDiscount * 100,
             ]);
 
             foreach ($this->cartContent as $cart_item) {
                 QuotationDetails::create([
-                    'quotation_id'            => $quotation->id,
-                    'product_id'              => $cart_item->id,
-                    'name'                    => $cart_item->name,
-                    'code'                    => $cart_item->options->code,
-                    'quantity'                => $cart_item->qty,
-                    'price'                   => $cart_item->price * 100,
-                    'unit_price'              => $cart_item->options->unit_price * 100,
-                    'sub_total'               => $cart_item->options->sub_total * 100,
+                    'quotation_id' => $quotation->id,
+                    'product_id' => $cart_item->id,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
+                    'quantity' => $cart_item->qty,
+                    'price' => $cart_item->price * 100,
+                    'unit_price' => $cart_item->options->unit_price * 100,
+                    'sub_total' => $cart_item->options->sub_total * 100,
                     'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type'   => $cart_item->options->product_discount_type,
-                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
+                    'product_discount_type' => $cart_item->options->product_discount_type,
+                    'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
             }
 

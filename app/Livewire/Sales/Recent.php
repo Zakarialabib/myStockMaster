@@ -8,15 +8,15 @@ use App\Livewire\Utils\Datatable;
 use App\Models\Sale;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\On;
 
 class Recent extends Component
 {
+    use Datatable;
     use WithAlert;
     use WithFileUploads;
-    use Datatable;
 
     public $sale;
 
@@ -31,8 +31,8 @@ class Recent extends Component
         abort_if(Gate::denies('sale_access'), 403);
 
         $query = Sale::with('customer', 'saleDetails')->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

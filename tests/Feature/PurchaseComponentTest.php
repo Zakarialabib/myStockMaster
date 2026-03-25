@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Supplier;
-use App\Models\Warehouse;
+use App\Livewire\Purchase\Create as CreatePurchase;
+use App\Livewire\Purchase\Edit as EditPurchase;
+use App\Livewire\Purchase\Index as PurchaseIndex;
 use App\Models\Purchase;
+use App\Models\Supplier;
+use App\Models\User;
+use App\Models\Warehouse;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use App\Livewire\Purchase\Index as PurchaseIndex;
-use App\Livewire\Purchase\Create as CreatePurchase;
-use App\Livewire\Purchase\Edit as EditPurchase;
-use Exception;
 
 class PurchaseComponentTest extends TestCase
 {
     use RefreshDatabase;
 
     protected User $user;
+
     protected Supplier $supplier;
+
     protected Warehouse $warehouse;
+
     protected Purchase $purchase;
 
     protected function setUp(): void
@@ -34,9 +37,9 @@ class PurchaseComponentTest extends TestCase
         $this->warehouse = Warehouse::factory()->create();
 
         $this->purchase = Purchase::factory()->create([
-            'supplier_id'  => $this->supplier->id,
+            'supplier_id' => $this->supplier->id,
             'warehouse_id' => $this->warehouse->id,
-            'user_id'      => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
     }
 

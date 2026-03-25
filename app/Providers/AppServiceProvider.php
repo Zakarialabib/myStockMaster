@@ -19,8 +19,6 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -33,8 +31,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -52,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
     private function getLanguages()
     {
         try {
-            if ( ! Schema::hasTable('languages')) {
+            if (! Schema::hasTable('languages')) {
                 return;
             }
 

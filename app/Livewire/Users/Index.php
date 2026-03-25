@@ -8,17 +8,17 @@ use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\WithModels;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 #[Lazy]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
     use WithModels;
 
     public $showModal = false;
@@ -46,8 +46,8 @@ class Index extends Component
         $query = User::when($this->warehouse_id, function ($query): void {
             $query->where('warehouse_id', $this->warehouse_id);
         })->with('roles')->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

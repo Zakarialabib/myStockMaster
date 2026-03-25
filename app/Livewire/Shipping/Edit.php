@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Livewire\Shipping;
 
 use App\Models\Shipping;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Edit extends Component
 {
     use WithAlert;
+
     public $shipping;
 
     public $editModal = false;

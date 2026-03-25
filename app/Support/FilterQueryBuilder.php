@@ -48,7 +48,7 @@ class FilterQueryBuilder
     {
         $filter['query_1'] = addslashes($filter['query_1']);
 
-        return $query->where($filter['column'], 'like', '%'.$filter['query_1'].'%', $filter['match']);
+        return $query->where($filter['column'], 'like', '%' . $filter['query_1'] . '%', $filter['match']);
     }
 
     /**
@@ -68,7 +68,7 @@ class FilterQueryBuilder
             $relatedTable = $relatedModel->getTable();
             $as = "prefix_{$relatedTable}";
 
-            if ( ! $belongs instanceof BelongsTo) {
+            if (! $belongs instanceof BelongsTo) {
                 return;
             }
 

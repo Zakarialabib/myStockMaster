@@ -22,6 +22,7 @@ class ExpenseCategory extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**

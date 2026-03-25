@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Adjustment;
 
 use App\Models\Adjustment;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $adjustment;
 
     public $showModal = false;

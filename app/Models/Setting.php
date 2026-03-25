@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,7 +20,7 @@ class Setting extends Model
     protected function casts(): array
     {
         return [
-            'analytics_control'      => 'array',
+            'analytics_control' => 'array',
             'installation_completed' => 'boolean',
         ];
     }

@@ -3,10 +3,11 @@
 declare(strict_types=1);
 use App\Livewire\Role\Create;
 use Livewire\Livewire;
-use Spatie\Permission\Models\Role;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
+
+use Spatie\Permission\Models\Role;
 
 test('the livewire form can be viewed', function () {
     $this->loginAsAdmin();

@@ -27,11 +27,11 @@ class WarehouseFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'      => $this->faker->unique()->numberBetween(1, 1000),
-            'name'    => $this->faker->company.' Warehouse',
-            'city'    => $this->faker->city,
-            'phone'   => $this->faker->phoneNumber,
-            'email'   => $this->faker->unique()->safeEmail,
+            'id' => $this->faker->unique()->numberBetween(1, 1000),
+            'name' => $this->faker->company . ' Warehouse',
+            'city' => $this->faker->city,
+            'phone' => $this->faker->phoneNumber,
+            'email' => $this->faker->unique()->safeEmail,
             'country' => $this->faker->country,
         ];
     }

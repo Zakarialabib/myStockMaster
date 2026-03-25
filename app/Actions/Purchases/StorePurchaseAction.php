@@ -34,22 +34,22 @@ final class StorePurchaseAction
             }
 
             $purchase = Purchase::create([
-                'date'                => $purchaseData['date'],
-                'supplier_id'         => $purchaseData['supplier_id'],
-                'warehouse_id'        => $purchaseData['warehouse_id'],
-                'user_id'             => $purchaseData['user_id'],
-                'tax_percentage'      => $purchaseData['tax_percentage'],
+                'date' => $purchaseData['date'],
+                'supplier_id' => $purchaseData['supplier_id'],
+                'warehouse_id' => $purchaseData['warehouse_id'],
+                'user_id' => $purchaseData['user_id'],
+                'tax_percentage' => $purchaseData['tax_percentage'],
                 'discount_percentage' => $purchaseData['discount_percentage'],
-                'shipping_amount'     => $purchaseData['shipping_amount'] * 100,
-                'paid_amount'         => $purchaseData['paid_amount'] * 100,
-                'total_amount'        => $purchaseData['total_amount'] * 100,
-                'due_amount'          => $dueAmount * 100,
-                'status'              => $status,
-                'payment_status'      => $paymentStatus,
-                'payment_method'      => $purchaseData['payment_method'],
-                'note'                => $purchaseData['note'],
-                'tax_amount'          => (int) ($cartTax * 100),
-                'discount_amount'     => (int) ($cartDiscount * 100),
+                'shipping_amount' => $purchaseData['shipping_amount'] * 100,
+                'paid_amount' => $purchaseData['paid_amount'] * 100,
+                'total_amount' => $purchaseData['total_amount'] * 100,
+                'due_amount' => $dueAmount * 100,
+                'status' => $status,
+                'payment_status' => $paymentStatus,
+                'payment_method' => $purchaseData['payment_method'],
+                'note' => $purchaseData['note'],
+                'tax_amount' => (int) ($cartTax * 100),
+                'discount_amount' => (int) ($cartDiscount * 100),
             ]);
 
             foreach ($cartItems as $cartItem) {
@@ -69,54 +69,54 @@ final class StorePurchaseAction
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
                 PurchaseDetail::create([
-                    'purchase_id'             => $purchase->id,
-                    'product_id'              => $productId,
-                    'warehouse_id'            => $purchaseData['warehouse_id'],
-                    'name'                    => $productName,
-                    'code'                    => $productCode,
-                    'quantity'                => $quantity,
-                    'price'                   => $price * 100,
-                    'unit_price'              => $unitPrice * 100,
-                    'sub_total'               => $subTotal * 100,
+                    'purchase_id' => $purchase->id,
+                    'product_id' => $productId,
+                    'warehouse_id' => $purchaseData['warehouse_id'],
+                    'name' => $productName,
+                    'code' => $productCode,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'unit_price' => $unitPrice * 100,
+                    'sub_total' => $subTotal * 100,
                     'product_discount_amount' => $discountAmount * 100,
-                    'product_discount_type'   => $discountType,
-                    'product_tax_amount'      => $taxAmount * 100,
+                    'product_discount_type' => $discountType,
+                    'product_tax_amount' => $taxAmount * 100,
                 ]);
 
                 $product = Product::findOrFail($productId);
 
                 $productWarehouse = ProductWarehouse::firstOrNew([
-                    'product_id'   => $product->id,
+                    'product_id' => $product->id,
                     'warehouse_id' => $purchaseData['warehouse_id'],
                 ], [
                     'price' => $price,
-                    'cost'  => $unitPrice,
-                    'qty'   => 0,
+                    'cost' => $unitPrice,
+                    'qty' => 0,
                 ]);
 
                 $productWarehouse->fill([
-                    'qty'  => $productWarehouse->qty + $quantity,
+                    'qty' => $productWarehouse->qty + $quantity,
                     'cost' => $productWarehouse->cost,
                 ]);
                 $productWarehouse->save();
 
                 Movement::create([
-                    'type'         => MovementType::PURCHASE,
-                    'quantity'     => $quantity,
-                    'price'        => $price * 100,
-                    'date'         => date('Y-m-d'),
+                    'type' => MovementType::PURCHASE,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'date' => date('Y-m-d'),
                     'movable_type' => get_class($product),
-                    'movable_id'   => $product->id,
-                    'user_id'      => $purchaseData['user_id'],
+                    'movable_id' => $product->id,
+                    'user_id' => $purchaseData['user_id'],
                 ]);
             }
 
             if ($purchaseData['paid_amount'] > 0) {
                 PurchasePayment::create([
-                    'date'           => date('Y-m-d'),
-                    'user_id'        => $purchaseData['user_id'],
-                    'amount'         => $purchase->paid_amount,
-                    'purchase_id'    => $purchase->id,
+                    'date' => date('Y-m-d'),
+                    'user_id' => $purchaseData['user_id'],
+                    'amount' => $purchase->paid_amount,
+                    'purchase_id' => $purchase->id,
                     'payment_method' => $purchaseData['payment_method'],
                 ]);
             }

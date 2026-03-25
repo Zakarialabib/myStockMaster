@@ -26,7 +26,9 @@ class SalePayment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,8 +53,6 @@ class SalePayment extends Model
 
     /**
      * Get ajustement date.
-     *
-     * @return Attribute
      */
     public function date(): Attribute
     {
@@ -76,7 +76,7 @@ class SalePayment extends Model
                 $number = 1;
             }
 
-            $salePayment->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $salePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
@@ -92,8 +92,6 @@ class SalePayment extends Model
 
     /**
      * Interact with the expenses amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {

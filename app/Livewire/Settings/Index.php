@@ -6,15 +6,15 @@ namespace App\Livewire\Settings;
 
 use App\Livewire\Utils\WithModels;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Gate;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -133,7 +133,9 @@ class Index extends Component
     }
 
     public $analyticsControl;
+
     public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
+
     public $invoice_control;
 
     public function save()
@@ -272,7 +274,7 @@ class Index extends Component
             $this->invoice_footer = $imageName;
         }
 
-        if ( ! $this->site_logo) {
+        if (! $this->site_logo) {
             $imageName = 'logo';
             $this->site_logo->storeAs('images', $imageName, 'local_files');
             $this->site_logo = $imageName;
@@ -287,49 +289,49 @@ class Index extends Component
         $this->settings = Setting::firstOrFail(); // Retrieve the existing settings object
 
         $this->settings->update([
-            'site_logo'                 => $this->site_logo,
-            'site_title'                => $this->site_title,
-            'site_favicon'              => $this->site_favicon,
-            'company_name'              => $this->company_name,
-            'company_email'             => $this->company_email,
-            'company_phone'             => $this->company_phone,
-            'company_address'           => $this->company_address,
-            'company_tax'               => $this->company_tax,
-            'telegram_channel'          => $this->telegram_channel,
-            'default_currency_id'       => $this->default_currency_id,
+            'site_logo' => $this->site_logo,
+            'site_title' => $this->site_title,
+            'site_favicon' => $this->site_favicon,
+            'company_name' => $this->company_name,
+            'company_email' => $this->company_email,
+            'company_phone' => $this->company_phone,
+            'company_address' => $this->company_address,
+            'company_tax' => $this->company_tax,
+            'telegram_channel' => $this->telegram_channel,
+            'default_currency_id' => $this->default_currency_id,
             'default_currency_position' => $this->default_currency_position,
-            'default_date_format'       => $this->default_date_format,
-            'default_client_id'         => $this->default_client_id,
-            'default_warehouse_id'      => $this->default_warehouse_id,
+            'default_date_format' => $this->default_date_format,
+            'default_client_id' => $this->default_client_id,
+            'default_warehouse_id' => $this->default_warehouse_id,
             // 'multi_language'            => $this->multi_language,
-            'invoice_footer_text'     => $this->invoice_footer_text,
-            'sale_prefix'             => $this->sale_prefix,
-            'saleReturn_prefix'       => $this->saleReturn_prefix,
-            'purchase_prefix'         => $this->purchase_prefix,
-            'purchaseReturn_prefix'   => $this->purchaseReturn_prefix,
-            'quotation_prefix'        => $this->quotation_prefix,
-            'salePayment_prefix'      => $this->salePayment_prefix,
-            'purchasePayment_prefix'  => $this->purchasePayment_prefix,
-            'expense_prefix'          => $this->expense_prefix,
-            'delivery_prefix'         => $this->delivery_prefix,
-            'is_rtl'                  => $this->is_rtl,
-            'show_email'              => $this->show_email,
-            'show_address'            => $this->show_address,
-            'show_order_tax'          => $this->show_order_tax,
-            'show_discount'           => $this->show_discount,
-            'show_shipping'           => $this->show_shipping,
-            'social_facebook'         => $this->social_facebook,
-            'social_twitter'          => $this->social_twitter,
-            'social_instagram'        => $this->social_instagram,
-            'social_linkedin'         => $this->social_linkedin,
-            'social_whatsapp'         => $this->social_whatsapp,
-            'social_tiktok'           => $this->social_tiktok,
-            'head_tags'               => $this->head_tags,
-            'body_tags'               => $this->body_tags,
-            'seo_meta_title'          => $this->seo_meta_title,
-            'seo_meta_description'    => $this->seo_meta_description,
+            'invoice_footer_text' => $this->invoice_footer_text,
+            'sale_prefix' => $this->sale_prefix,
+            'saleReturn_prefix' => $this->saleReturn_prefix,
+            'purchase_prefix' => $this->purchase_prefix,
+            'purchaseReturn_prefix' => $this->purchaseReturn_prefix,
+            'quotation_prefix' => $this->quotation_prefix,
+            'salePayment_prefix' => $this->salePayment_prefix,
+            'purchasePayment_prefix' => $this->purchasePayment_prefix,
+            'expense_prefix' => $this->expense_prefix,
+            'delivery_prefix' => $this->delivery_prefix,
+            'is_rtl' => $this->is_rtl,
+            'show_email' => $this->show_email,
+            'show_address' => $this->show_address,
+            'show_order_tax' => $this->show_order_tax,
+            'show_discount' => $this->show_discount,
+            'show_shipping' => $this->show_shipping,
+            'social_facebook' => $this->social_facebook,
+            'social_twitter' => $this->social_twitter,
+            'social_instagram' => $this->social_instagram,
+            'social_linkedin' => $this->social_linkedin,
+            'social_whatsapp' => $this->social_whatsapp,
+            'social_tiktok' => $this->social_tiktok,
+            'head_tags' => $this->head_tags,
+            'body_tags' => $this->body_tags,
+            'seo_meta_title' => $this->seo_meta_title,
+            'seo_meta_description' => $this->seo_meta_description,
             'whatsapp_custom_message' => $this->whatsapp_custom_message,
-            'invoice_template'        => $this->invoice_template,
+            'invoice_template' => $this->invoice_template,
         ]);
 
         $this->settings->save();
@@ -343,14 +345,14 @@ class Index extends Component
     {
         $extension = $file->extension();
         $data = File::get($file->getRealPath());
-        $base64 = 'data:image/'.$extension.';base64,'.base64_encode($data);
+        $base64 = 'data:image/' . $extension . ';base64,' . base64_encode($data);
 
         $html = sprintf(
             '<div><img style="width: 100%%; display: block;" src="%s"></div>',
             $base64
         );
 
-        $path = public_path('print/'.$name.'.html');
+        $path = public_path('print/' . $name . '.html');
         File::put($path, $html);
 
         return $base64;

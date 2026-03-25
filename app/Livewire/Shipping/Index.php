@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Livewire\Shipping;
 
+use App\Livewire\Utils\Datatable;
 use App\Models\Shipping;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Livewire\Component;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Layout;
-use App\Livewire\Utils\Datatable;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\WithAlert;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
 
     public $shipping;
 
@@ -34,8 +34,8 @@ class Index extends Component
         abort_if(Gate::denies('shipping_access'), 403);
 
         $query = Shipping::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -47,11 +47,11 @@ class Index extends Component
     public function deleteModal($shipping): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
         $this->shipping = $shipping;
     }

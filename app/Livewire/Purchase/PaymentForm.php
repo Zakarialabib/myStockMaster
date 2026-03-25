@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
-use Livewire\Component;
-use App\Models\Purchase;
-use App\Models\PurchasePayment;
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Models\Purchase;
+use App\Models\PurchasePayment;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Throwable;
-use App\Traits\WithAlert;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Throwable;
 
 class PaymentForm extends Component
 {
     use WithAlert;
+
     public bool $paymentModal = false;
 
     public Purchase $purchase;
@@ -73,11 +74,11 @@ class PaymentForm extends Component
             $this->validate();
 
             PurchasePayment::create([
-                'date'           => $this->date,
-                'user_id'        => Auth::user()->id,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'purchase_id'    => $this->purchase_id,
+                'date' => $this->date,
+                'user_id' => Auth::user()->id,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'purchase_id' => $this->purchase_id,
                 'payment_method' => $this->payment_method,
             ]);
 
@@ -97,10 +98,10 @@ class PaymentForm extends Component
             }
 
             $purchase->update([
-                'paid_amount'    => ($purchase->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($purchase->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
-                'status'         => $status,
+                'status' => $status,
             ]);
 
             $this->alert('success', __('Purchase Payment created successfully.'));
@@ -109,7 +110,7 @@ class PaymentForm extends Component
 
             $this->dispatch('refreshIndex')->to(Index::class);
         } catch (Throwable $throwable) {
-            $this->alert('error', 'Error'.$throwable->getMessage());
+            $this->alert('error', 'Error' . $throwable->getMessage());
         }
     }
 }

@@ -6,10 +6,11 @@ namespace App\Livewire\Finance;
 
 use App\Actions\Finance\CalculateGrossMarginAction;
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
-use App\Models\Product;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
@@ -17,7 +18,6 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Exception;
 
 #[Title('KPI Tracking')]
 #[Lazy]
@@ -39,9 +39,13 @@ class KpiTracking extends Component
     public $comparisonPeriod = 'previous';
 
     public $kpiData = [];
+
     public $comparisonData = [];
+
     public $loading = false;
+
     public $autoRefresh = false;
+
     public $refreshInterval = 60; // seconds
 
     public function mount()
@@ -105,7 +109,7 @@ class KpiTracking extends Component
             // Load comparison data
             $this->loadComparisonData($dateFrom, $dateTo);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to load KPI data: '.$e->getMessage());
+            session()->flash('error', 'Failed to load KPI data: ' . $e->getMessage());
         } finally {
             $this->loading = false;
         }
@@ -140,18 +144,18 @@ class KpiTracking extends Component
             ->get();
 
         return [
-            'total_revenue'         => $totalRevenue,
-            'total_sales'           => $totalSales,
-            'average_order_value'   => $averageOrderValue,
+            'total_revenue' => $totalRevenue,
+            'total_sales' => $totalSales,
+            'average_order_value' => $averageOrderValue,
             'average_daily_revenue' => $averageDailyRevenue,
-            'daily_breakdown'       => $dailyRevenue,
-            'top_products'          => $topProducts,
+            'daily_breakdown' => $dailyRevenue,
+            'top_products' => $topProducts,
         ];
     }
 
     private function calculateProfitabilityKpis($dateFrom, $dateTo)
     {
-        $grossMarginAction = new CalculateGrossMarginAction();
+        $grossMarginAction = new CalculateGrossMarginAction;
         $grossMarginData = $grossMarginAction($dateFrom, $dateTo);
 
         $totalRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
@@ -173,14 +177,14 @@ class KpiTracking extends Component
         $ebitdaMargin = $totalRevenue > 0 ? ($ebitda / $totalRevenue) * 100 : 0;
 
         return [
-            'gross_margin'            => $grossMarginData['gross_margin'] ?? 0,
+            'gross_margin' => $grossMarginData['gross_margin'] ?? 0,
             'gross_margin_percentage' => $grossMarginData['gross_margin_percentage'] ?? 0,
-            'net_profit'              => $netProfit,
-            'net_profit_margin'       => $netProfitMargin,
-            'ebitda'                  => $ebitda,
-            'ebitda_margin'           => $ebitdaMargin,
-            'total_revenue'           => $totalRevenue,
-            'total_expenses'          => $totalExpenses,
+            'net_profit' => $netProfit,
+            'net_profit_margin' => $netProfitMargin,
+            'ebitda' => $ebitda,
+            'ebitda_margin' => $ebitdaMargin,
+            'total_revenue' => $totalRevenue,
+            'total_expenses' => $totalExpenses,
         ];
     }
 
@@ -211,12 +215,12 @@ class KpiTracking extends Component
         $salesPerDay = $daysDiff > 0 ? $totalSales / $daysDiff : 0;
 
         return [
-            'total_sales'             => $totalSales,
-            'active_products'         => $activeSoldProducts,
-            'total_products'          => $totalProducts,
-            'product_turnover_rate'   => $productTurnoverRate,
-            'inventory_turnover'      => $inventoryTurnover,
-            'sales_per_day'           => $salesPerDay,
+            'total_sales' => $totalSales,
+            'active_products' => $activeSoldProducts,
+            'total_products' => $totalProducts,
+            'product_turnover_rate' => $productTurnoverRate,
+            'inventory_turnover' => $inventoryTurnover,
+            'sales_per_day' => $salesPerDay,
             'average_inventory_value' => $averageInventoryValue,
         ];
     }
@@ -268,16 +272,16 @@ class KpiTracking extends Component
             : 0;
 
         return [
-            'current_revenue'               => $currentRevenue,
-            'previous_revenue'              => $previousRevenue,
-            'year_ago_revenue'              => $yearAgoRevenue,
-            'revenue_growth'                => $revenueGrowth,
+            'current_revenue' => $currentRevenue,
+            'previous_revenue' => $previousRevenue,
+            'year_ago_revenue' => $yearAgoRevenue,
+            'revenue_growth' => $revenueGrowth,
             'year_over_year_revenue_growth' => $yearOverYearRevenueGrowth,
-            'current_sales'                 => $currentSales,
-            'previous_sales'                => $previousSales,
-            'year_ago_sales'                => $yearAgoSales,
-            'sales_growth'                  => $salesGrowth,
-            'year_over_year_sales_growth'   => $yearOverYearSalesGrowth,
+            'current_sales' => $currentSales,
+            'previous_sales' => $previousSales,
+            'year_ago_sales' => $yearAgoSales,
+            'sales_growth' => $salesGrowth,
+            'year_over_year_sales_growth' => $yearOverYearSalesGrowth,
         ];
     }
 
@@ -340,25 +344,25 @@ class KpiTracking extends Component
     public function exportKpiData()
     {
         try {
-            $filename = 'kpi_'.$this->kpiType.'_'.now()->format('Y-m-d_H-i-s').'.json';
+            $filename = 'kpi_' . $this->kpiType . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             return response()->streamDownload(function () {
                 echo json_encode([
-                    'kpi_type'   => $this->kpiType,
+                    'kpi_type' => $this->kpiType,
                     'date_range' => [
                         'from' => $this->dateFrom,
-                        'to'   => $this->dateTo,
+                        'to' => $this->dateTo,
                     ],
                     'comparison_period' => $this->comparisonPeriod,
-                    'current_data'      => $this->kpiData,
-                    'comparison_data'   => $this->comparisonData,
-                    'generated_at'      => now()->toISOString(),
+                    'current_data' => $this->kpiData,
+                    'comparison_data' => $this->comparisonData,
+                    'generated_at' => now()->toISOString(),
                 ], JSON_PRETTY_PRINT);
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export KPI data: '.$e->getMessage());
+            session()->flash('error', 'Failed to export KPI data: ' . $e->getMessage());
         }
     }
 

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Livewire\Products;
 
 use App\Models\Product;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Show extends Component
 {

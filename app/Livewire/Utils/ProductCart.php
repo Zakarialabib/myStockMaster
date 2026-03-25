@@ -13,20 +13,31 @@ use Livewire\Component;
 
 class ProductCart extends Component
 {
-    use WithAlert;
     use LivewireCartTrait;
+    use WithAlert;
 
     public float|int $global_discount = 0;
+
     public float|int $global_tax = 0;
+
     public bool $discountModal = false;
+
     public float|int $shipping_amount = 0;
+
     public array $quantity = [];
+
     public array $price = [];
+
     public array $check_quantity = [];
+
     public int|string|null $warehouse_id = null;
+
     public array $discount_type = [];
+
     public array $item_discount = [];
+
     public mixed $data = null;
+
     public float|int $total_with_shipping = 0;
 
     public function mount(string $cartInstance, int|string|null $warehouseId = null, mixed $data = null): void
@@ -90,18 +101,18 @@ class ProductCart extends Component
         $calculation = $this->calculatePrices($product, $productWarehouse);
 
         return [
-            'id'         => $product->id,
-            'name'       => $product->name,
-            'quantity'   => 1,
-            'price'      => $productWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
+            'id' => $product->id,
+            'name' => $product->name,
+            'quantity' => 1,
+            'price' => $productWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
             'attributes' => array_merge($calculation, [
-                'product_discount'      => 0.00,
+                'product_discount' => 0.00,
                 'product_discount_type' => 'fixed',
-                'code'                  => $product->code,
-                'image'                 => $product->image,
-                'stock'                 => $productWarehouse ? $productWarehouse->qty : 0,
-                'unit'                  => $product->unit,
-                'weight'                => 1,
+                'code' => $product->code,
+                'image' => $product->image,
+                'stock' => $productWarehouse ? $productWarehouse->qty : 0,
+                'unit' => $product->unit,
+                'weight' => 1,
             ]),
         ];
     }
@@ -125,10 +136,10 @@ class ProductCart extends Component
         }
 
         return [
-            'price'       => $price,
-            'unit_price'  => $unit_price,
+            'price' => $price,
+            'unit_price' => $unit_price,
             'product_tax' => $product_tax,
-            'sub_total'   => $sub_total,
+            'sub_total' => $sub_total,
         ];
     }
 
@@ -144,7 +155,7 @@ class ProductCart extends Component
         if ($rowId === null) {
             $cartItem = $this->getCart()->search(fn ($item) => $item->id == $productId)->first();
 
-            if ( ! $cartItem) {
+            if (! $cartItem) {
                 $this->alert('error', 'Product not found in cart!');
 
                 return;
@@ -161,16 +172,16 @@ class ProductCart extends Component
 
         $this->updateCartItem($rowId, [
             'attributes' => [
-                'sub_total'             => $cart_item['price'] * $cart_item['quantity'],
-                'code'                  => $cart_item['attributes']['code'],
-                'stock'                 => $cart_item['attributes']['stock'],
-                'unit'                  => $cart_item['attributes']['unit'],
-                'product_tax'           => $cart_item['attributes']['product_tax'],
-                'unit_price'            => $cart_item['price'],
-                'product_discount'      => $cart_item['attributes']['product_discount'],
+                'sub_total' => $cart_item['price'] * $cart_item['quantity'],
+                'code' => $cart_item['attributes']['code'],
+                'stock' => $cart_item['attributes']['stock'],
+                'unit' => $cart_item['attributes']['unit'],
+                'product_tax' => $cart_item['attributes']['product_tax'],
+                'unit_price' => $cart_item['price'],
+                'product_discount' => $cart_item['attributes']['product_discount'],
                 'product_discount_type' => $cart_item['attributes']['product_discount_type'],
-                'image'                 => $cart_item['attributes']['image'] ?? null,
-                'weight'                => $cart_item['attributes']['weight'] ?? 1,
+                'image' => $cart_item['attributes']['image'] ?? null,
+                'weight' => $cart_item['attributes']['weight'] ?? 1,
             ],
         ]);
     }
@@ -206,7 +217,7 @@ class ProductCart extends Component
         if ($rowId === null) {
             $cartItem = $this->getCart()->search(fn ($item) => $item->id == $productId)->first();
 
-            if ( ! $cartItem) {
+            if (! $cartItem) {
                 $this->alert('error', 'Product not found in cart!');
 
                 return;
@@ -227,16 +238,16 @@ class ProductCart extends Component
 
         $this->updateCartItem($rowId, [
             'attributes' => [
-                'sub_total'             => $cart_item['price'] * $cart_item['quantity'],
-                'code'                  => $cart_item['attributes']['code'],
-                'stock'                 => $cart_item['attributes']['stock'],
-                'unit'                  => $cart_item['attributes']['unit'],
-                'product_tax'           => $cart_item['attributes']['product_tax'],
-                'unit_price'            => $cart_item['price'],
-                'product_discount'      => $cart_item['attributes']['product_discount'],
+                'sub_total' => $cart_item['price'] * $cart_item['quantity'],
+                'code' => $cart_item['attributes']['code'],
+                'stock' => $cart_item['attributes']['stock'],
+                'unit' => $cart_item['attributes']['unit'],
+                'product_tax' => $cart_item['attributes']['product_tax'],
+                'unit_price' => $cart_item['price'],
+                'product_discount' => $cart_item['attributes']['product_discount'],
                 'product_discount_type' => $cart_item['attributes']['product_discount_type'],
-                'image'                 => $cart_item['attributes']['image'] ?? null,
-                'weight'                => $cart_item['attributes']['weight'] ?? 1,
+                'image' => $cart_item['attributes']['image'] ?? null,
+                'weight' => $cart_item['attributes']['weight'] ?? 1,
             ],
         ]);
     }
@@ -281,16 +292,16 @@ class ProductCart extends Component
     {
         $this->updateCartItem($rowId, [
             'attributes' => [
-                'sub_total'             => $cartItem['price'] * $cartItem['quantity'],
-                'code'                  => $cartItem['attributes']['code'],
-                'stock'                 => $cartItem['attributes']['stock'],
-                'unit'                  => $cartItem['attributes']['unit'],
-                'product_tax'           => $cartItem['attributes']['product_tax'],
-                'unit_price'            => $cartItem['price'],
-                'product_discount'      => $discountAmount,
+                'sub_total' => $cartItem['price'] * $cartItem['quantity'],
+                'code' => $cartItem['attributes']['code'],
+                'stock' => $cartItem['attributes']['stock'],
+                'unit' => $cartItem['attributes']['unit'],
+                'product_tax' => $cartItem['attributes']['product_tax'],
+                'unit_price' => $cartItem['price'],
+                'product_discount' => $discountAmount,
                 'product_discount_type' => $cartItem['attributes']['product_discount_type'],
-                'image'                 => $cartItem['attributes']['image'] ?? null,
-                'weight'                => $cartItem['attributes']['weight'] ?? 1,
+                'image' => $cartItem['attributes']['image'] ?? null,
+                'weight' => $cartItem['attributes']['weight'] ?? 1,
             ],
         ]);
     }

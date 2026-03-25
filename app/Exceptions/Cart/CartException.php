@@ -9,6 +9,7 @@ use Exception;
 class CartException extends Exception
 {
     protected $errorCode;
+
     protected $context;
 
     public function __construct(string $message = '', int $code = 0, ?Exception $previous = null, array $context = [])

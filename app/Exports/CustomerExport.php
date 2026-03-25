@@ -17,10 +17,7 @@ class CustomerExport implements FromView
     /** @var mixed */
     protected $models;
 
-    /**  */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function query()
     {

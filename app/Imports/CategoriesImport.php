@@ -10,12 +10,9 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
+class CategoriesImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
-    /**  */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function uniqueBy()
     {
@@ -28,8 +25,6 @@ class CategoriesImport implements ToModel, WithHeadingRow, SkipsEmptyRows
     }
 
     /**
-     * @param array $row
-     *
      * @return Category
      * @return \Illuminate\Database\Eloquent\Model|null
      */

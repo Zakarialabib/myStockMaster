@@ -43,17 +43,17 @@ final class CalculateGrossMarginAction
         $status = $this->determineMarginStatus($grossMarginPercentage);
 
         return [
-            'total_revenue'           => round($totalRevenue, 2),
-            'total_cogs'              => round($totalCogs, 2),
-            'gross_profit'            => round($grossProfit, 2),
+            'total_revenue' => round($totalRevenue, 2),
+            'total_cogs' => round($totalCogs, 2),
+            'gross_profit' => round($grossProfit, 2),
             'gross_margin_percentage' => round($grossMarginPercentage, 2),
-            'target_min'              => 60.0,
-            'target_max'              => 70.0,
-            'status'                  => $status,
-            'recommendation'          => $this->getRecommendation($grossMarginPercentage),
-            'period'                  => [
+            'target_min' => 60.0,
+            'target_max' => 70.0,
+            'status' => $status,
+            'recommendation' => $this->getRecommendation($grossMarginPercentage),
+            'period' => [
                 'from' => $dateFrom->toDateString(),
-                'to'   => $dateTo->toDateString(),
+                'to' => $dateTo->toDateString(),
                 'days' => $dateTo->diffInDays($dateFrom) + 1,
             ],
             'calculated_at' => now()->toISOString(),
@@ -66,7 +66,7 @@ final class CalculateGrossMarginAction
             $marginPercentage >= 70 => 'excellent',
             $marginPercentage >= 60 => 'good',
             $marginPercentage >= 50 => 'warning',
-            default                 => 'critical'
+            default => 'critical'
         };
     }
 
@@ -77,7 +77,7 @@ final class CalculateGrossMarginAction
             $marginPercentage >= 60 => __('Good margin within target range. Monitor for consistency.'),
             $marginPercentage >= 50 => __('Below target. Review menu pricing or negotiate better supplier rates.'),
             $marginPercentage >= 30 => __('Critical margin. Immediate action required: increase prices or reduce COGS.'),
-            default                 => __('Unsustainable margin. Emergency review of pricing strategy and cost structure needed.')
+            default => __('Unsustainable margin. Emergency review of pricing strategy and cost structure needed.')
         };
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Product;
+use Illuminate\Http\Request;
 
 class SyncController extends Controller
 {
@@ -22,7 +22,7 @@ class SyncController extends Controller
         };
 
         return response()->json([
-            'products'  => $query(Product::class),
+            'products' => $query(Product::class),
             'customers' => $query(Customer::class),
             // Add other models here
             'server_time' => now()->toIso8601String(),

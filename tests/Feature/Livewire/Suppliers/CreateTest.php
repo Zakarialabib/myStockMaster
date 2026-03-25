@@ -29,10 +29,10 @@ it('tests the create supplier component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('suppliers', [
-        'name'  => 'John doe',
+        'name' => 'John doe',
         'phone' => '00000000000',
         'email' => 'supplier@gmail.com',
-        'city'  => 'casablanca',
+        'city' => 'casablanca',
     ]);
 });
 

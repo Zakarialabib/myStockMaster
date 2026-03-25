@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sale extends Model
 {
     use HasAdvancedFilter;
-    use SaleScope;
     use HasUuid;
+    use SaleScope;
 
     public const ATTRIBUTES = [
         'id',
@@ -43,7 +43,9 @@ class Sale extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -100,7 +102,7 @@ class Sale extends Model
                 $number = 1;
             }
 
-            $sale->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $sale->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
@@ -157,8 +159,6 @@ class Sale extends Model
 
     /**
      * get shipping amount
-     *
-     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -169,8 +169,6 @@ class Sale extends Model
 
     /**
      * get paid amount
-     *
-     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -181,8 +179,6 @@ class Sale extends Model
 
     /**
      * get total amount
-     *
-     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -193,8 +189,6 @@ class Sale extends Model
 
     /**
      * get due amount
-     *
-     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {
@@ -205,8 +199,6 @@ class Sale extends Model
 
     /**
      * get tax amount
-     *
-     * @return Attribute
      */
     protected function taxAmount(): Attribute
     {
@@ -217,8 +209,6 @@ class Sale extends Model
 
     /**
      * get discount amount
-     *
-     * @return Attribute
      */
     protected function discountAmount(): Attribute
     {
@@ -229,8 +219,8 @@ class Sale extends Model
 
     public function scopeSearchByReference($query, $term)
     {
-        return $query->when( ! empty($term), function ($query) use ($term) {
-            $query->where('reference', 'like', '%'.$term.'%');
+        return $query->when(! empty($term), function ($query) use ($term) {
+            $query->where('reference', 'like', '%' . $term . '%');
         });
     }
 }

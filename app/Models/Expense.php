@@ -54,7 +54,7 @@ class Expense extends Model
             $prefix = settings()->expense_prefix;
             $latestExpense = self::latest()->first();
             $number = $latestExpense ? (int) substr((string) $latestExpense->reference, -3) + 1 : 1;
-            $expense->reference = $prefix.str_pad((string) $number, 3, '0', STR_PAD_LEFT);
+            $expense->reference = $prefix . str_pad((string) $number, 3, '0', STR_PAD_LEFT);
         });
     }
 

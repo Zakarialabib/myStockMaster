@@ -47,19 +47,19 @@ final class CalculateNetMarginAction
         $status = $this->determineMarginStatus($netMarginPercentage);
 
         return [
-            'total_revenue'         => round($totalRevenue, 2),
-            'total_cogs'            => round($totalCogs, 2),
-            'gross_profit'          => round($grossProfit, 2),
-            'operating_expenses'    => $operatingExpenses,
-            'net_profit'            => round($netProfit, 2),
+            'total_revenue' => round($totalRevenue, 2),
+            'total_cogs' => round($totalCogs, 2),
+            'gross_profit' => round($grossProfit, 2),
+            'operating_expenses' => $operatingExpenses,
+            'net_profit' => round($netProfit, 2),
             'net_margin_percentage' => round($netMarginPercentage, 2),
-            'target_min'            => 15.0,
-            'target_max'            => 25.0,
-            'status'                => $status,
-            'recommendation'        => $this->getRecommendation($netMarginPercentage),
-            'period'                => [
+            'target_min' => 15.0,
+            'target_max' => 25.0,
+            'status' => $status,
+            'recommendation' => $this->getRecommendation($netMarginPercentage),
+            'period' => [
                 'from' => $dateFrom->toDateString(),
-                'to'   => $dateTo->toDateString(),
+                'to' => $dateTo->toDateString(),
                 'days' => $dateTo->diffInDays($dateFrom) + 1,
             ],
             'calculated_at' => now()->toISOString(),
@@ -73,19 +73,19 @@ final class CalculateNetMarginAction
         // Default expense categories with estimated percentages of revenue
         $defaultExpenses = [
             'labor_costs' => $expenses['labor_costs'] ?? 0,
-            'rent'        => $expenses['rent'] ?? 0,
-            'utilities'   => $expenses['utilities'] ?? 0,
-            'marketing'   => $expenses['marketing'] ?? 0,
-            'insurance'   => $expenses['insurance'] ?? 0,
+            'rent' => $expenses['rent'] ?? 0,
+            'utilities' => $expenses['utilities'] ?? 0,
+            'marketing' => $expenses['marketing'] ?? 0,
+            'insurance' => $expenses['insurance'] ?? 0,
             'maintenance' => $expenses['maintenance'] ?? 0,
-            'other'       => $expenses['other'] ?? 0,
+            'other' => $expenses['other'] ?? 0,
         ];
 
         $total = array_sum($defaultExpenses);
 
         return [
-            'breakdown'     => $defaultExpenses,
-            'total'         => round($total, 2),
+            'breakdown' => $defaultExpenses,
+            'total' => round($total, 2),
             'daily_average' => round($total / $daysDiff, 2),
         ];
     }
@@ -96,8 +96,8 @@ final class CalculateNetMarginAction
             $marginPercentage >= 25 => 'excellent',
             $marginPercentage >= 15 => 'good',
             $marginPercentage >= 10 => 'warning',
-            $marginPercentage >= 0  => 'critical',
-            default                 => 'loss'
+            $marginPercentage >= 0 => 'critical',
+            default => 'loss'
         };
     }
 
@@ -107,8 +107,8 @@ final class CalculateNetMarginAction
             $marginPercentage >= 25 => __('Excellent net margin! Consider expansion opportunities.'),
             $marginPercentage >= 15 => __('Good net margin within target range. Maintain current operations.'),
             $marginPercentage >= 10 => __('Below target. Review operating expenses and optimize efficiency.'),
-            $marginPercentage >= 0  => __('Critical margin. Immediate cost reduction or revenue increase needed.'),
-            default                 => __('Operating at a loss. Emergency financial restructuring required.')
+            $marginPercentage >= 0 => __('Critical margin. Immediate cost reduction or revenue increase needed.'),
+            default => __('Operating at a loss. Emergency financial restructuring required.')
         };
     }
 }

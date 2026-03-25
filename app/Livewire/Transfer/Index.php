@@ -6,19 +6,20 @@ namespace App\Livewire\Transfer;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Transfer;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
     use WithFileUploads;
+
     public $transfer;
 
     public $model = Transfer::class;
@@ -29,8 +30,8 @@ class Index extends Component
 
         $query = Transfer::with('transferDetails')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

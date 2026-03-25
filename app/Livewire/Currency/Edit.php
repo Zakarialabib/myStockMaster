@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\Currency;
 
 use App\Models\Currency;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Edit extends Component
 {
     use WithAlert;
+
     public $editModal = false;
 
     /** @var mixed */

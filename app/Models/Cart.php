@@ -7,8 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cart extends Model
 {
@@ -32,7 +32,7 @@ class Cart extends Model
     {
         return [
             'conditions' => 'array',
-            'tax_rate'   => 'decimal:2',
+            'tax_rate' => 'decimal:2',
             'expires_at' => 'datetime',
         ];
     }
@@ -202,11 +202,11 @@ class Cart extends Model
     {
         $conditions = $this->conditions ?? [];
         $conditions[] = array_merge([
-            'name'       => 'Condition',
-            'type'       => 'fixed',
-            'target'     => 'subtotal',
-            'value'      => 0,
-            'order'      => 0,
+            'name' => 'Condition',
+            'type' => 'fixed',
+            'target' => 'subtotal',
+            'value' => 0,
+            'order' => 0,
             'attributes' => [],
         ], $condition);
 
@@ -254,11 +254,11 @@ class Cart extends Model
     public function getSummary(): array
     {
         return [
-            'subtotal'       => $this->sub_total_with_conditions,
-            'tax'            => $this->tax,
-            'discount'       => $this->discount,
-            'total'          => $this->total,
-            'item_count'     => $this->item_count,
+            'subtotal' => $this->sub_total_with_conditions,
+            'tax' => $this->tax,
+            'discount' => $this->discount,
+            'total' => $this->total,
+            'item_count' => $this->item_count,
             'quantity_count' => $this->quantity_count,
         ];
     }
@@ -267,7 +267,7 @@ class Cart extends Model
     protected function formattedSubTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->sub_total_with_conditions, 2),
+            get: fn () => '$' . number_format($this->sub_total_with_conditions, 2),
         );
     }
 
@@ -275,7 +275,7 @@ class Cart extends Model
     protected function formattedTax(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->tax, 2),
+            get: fn () => '$' . number_format($this->tax, 2),
         );
     }
 
@@ -283,7 +283,7 @@ class Cart extends Model
     protected function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->total, 2),
+            get: fn () => '$' . number_format($this->total, 2),
         );
     }
 
@@ -291,7 +291,7 @@ class Cart extends Model
     protected function formattedDiscount(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$'.number_format($this->discount, 2),
+            get: fn () => '$' . number_format($this->discount, 2),
         );
     }
 

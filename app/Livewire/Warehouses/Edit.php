@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Livewire\Warehouses;
 
 use App\Models\Warehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 class Edit extends Component
 {

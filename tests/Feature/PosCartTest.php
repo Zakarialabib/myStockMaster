@@ -16,6 +16,7 @@ class PosCartTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Product $product;
 
     protected function setUp(): void
@@ -24,9 +25,9 @@ class PosCartTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->product = Product::factory()->create([
-            'name'     => 'Test Product',
+            'name' => 'Test Product',
             'quantity' => 100,
-            'code'     => 'TEST001',
+            'code' => 'TEST001',
         ]);
 
         $this->actingAs($this->user);
@@ -45,7 +46,7 @@ class PosCartTest extends TestCase
     {
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $this->product->id)
-            ->set('quantity.'.$this->product->id, 3)
+            ->set('quantity.' . $this->product->id, 3)
             ->call('updateQuantity', $this->product->id)
             ->assertHasNoErrors();
     }
@@ -63,7 +64,7 @@ class PosCartTest extends TestCase
     public function it_can_clear_entire_cart()
     {
         $product2 = Product::factory()->create([
-            'name'     => 'Test Product 2',
+            'name' => 'Test Product 2',
             'quantity' => 50,
         ]);
 
@@ -78,14 +79,14 @@ class PosCartTest extends TestCase
     public function it_calculates_cart_total_correctly()
     {
         $product2 = Product::factory()->create([
-            'name'     => 'Test Product 2',
+            'name' => 'Test Product 2',
             'quantity' => 50,
         ]);
 
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $this->product->id)
             ->call('productSelected', $product2->id)
-            ->set('quantity.'.$this->product->id, 2)
+            ->set('quantity.' . $this->product->id, 2)
             ->call('updateQuantity', $this->product->id)
             ->assertHasNoErrors();
     }
@@ -112,7 +113,7 @@ class PosCartTest extends TestCase
     public function it_prevents_adding_out_of_stock_products()
     {
         $outOfStockProduct = Product::factory()->create([
-            'name'     => 'Out of Stock Product',
+            'name' => 'Out of Stock Product',
             'quantity' => 0,
         ]);
 
@@ -125,13 +126,13 @@ class PosCartTest extends TestCase
     public function it_prevents_adding_more_than_available_quantity()
     {
         $limitedProduct = Product::factory()->create([
-            'name'     => 'Limited Product',
+            'name' => 'Limited Product',
             'quantity' => 5,
         ]);
 
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $limitedProduct->id)
-            ->set('quantity.'.$limitedProduct->id, 10)
+            ->set('quantity.' . $limitedProduct->id, 10)
             ->call('updateQuantity', $limitedProduct->id)
             ->assertHasNoErrors(); // Component should handle quantity limits gracefully
     }
@@ -140,8 +141,8 @@ class PosCartTest extends TestCase
     public function it_can_search_products_for_pos()
     {
         $searchableProduct = Product::factory()->create([
-            'name'     => 'Searchable Product',
-            'code'     => 'SEARCH001',
+            'name' => 'Searchable Product',
+            'code' => 'SEARCH001',
             'quantity' => 20,
         ]);
 
@@ -153,8 +154,8 @@ class PosCartTest extends TestCase
     public function it_can_scan_barcode_to_add_product()
     {
         $barcodeProduct = Product::factory()->create([
-            'name'     => 'Barcode Product',
-            'code'     => 'BARCODE123',
+            'name' => 'Barcode Product',
+            'code' => 'BARCODE123',
             'quantity' => 30,
         ]);
 
@@ -175,7 +176,7 @@ class PosCartTest extends TestCase
     {
         $component = Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $this->product->id)
-            ->set('quantity.'.$this->product->id, 3)
+            ->set('quantity.' . $this->product->id, 3)
             ->call('updateQuantity', $this->product->id);
 
         // Simulate component refresh/update

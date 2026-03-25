@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\Suppliers;
 
 use App\Models\Supplier;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Create extends Component
 {
     use WithAlert;
-    /** @var bool */
+
     public bool $createModal = false;
 
     public Supplier $supplier;

@@ -6,14 +6,15 @@ namespace App\Services;
 
 use App\Models\Customer;
 use App\Models\Product;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class SyncService
 {
     protected string $cloudUrl;
+
     protected string $apiToken;
 
     public function __construct()
@@ -34,7 +35,7 @@ class SyncService
             // 1. Pull Changes from Cloud
             if ($this->cloudUrl && $this->apiToken) {
                 $response = Http::withToken($this->apiToken)
-                    ->get($this->cloudUrl.'/api/sync/pull', [
+                    ->get($this->cloudUrl . '/api/sync/pull', [
                         'last_synced_at' => $lastSyncedAt,
                     ]);
 
@@ -55,7 +56,7 @@ class SyncService
 
             return ['status' => 'success', 'message' => 'Sync completed successfully.'];
         } catch (Exception $e) {
-            Log::error('Sync Exception: '.$e->getMessage());
+            Log::error('Sync Exception: ' . $e->getMessage());
 
             return ['status' => 'error', 'message' => $e->getMessage()];
         }

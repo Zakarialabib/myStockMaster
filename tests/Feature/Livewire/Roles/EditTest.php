@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Livewire\Livewire;
 use App\Livewire\Role\Edit;
-use Spatie\Permission\Models\Role;
+use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
+
+use Spatie\Permission\Models\Role;
 
 test('a new role can be update', function () {
     $this->loginAsAdmin();

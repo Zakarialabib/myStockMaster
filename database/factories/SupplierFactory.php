@@ -19,11 +19,11 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            'name'    => fake()->name(),
-            'id'      => fake()->uuid(),
-            'email'   => fake()->unique()->safeEmail(),
-            'phone'   => fake()->phoneNumber(),
-            'city'    => fake()->city(),
+            'name' => fake()->name(),
+            'id' => fake()->uuid(),
+            'email' => fake()->unique()->safeEmail(),
+            'phone' => fake()->phoneNumber(),
+            'city' => fake()->city(),
             'country' => fake()->country(),
             'address' => fake()->address(),
         ];

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Finance;
 
-use App\Models\Sale;
 use App\Models\Expense;
+use App\Models\Sale;
 use Carbon\Carbon;
 
 class ManageCostTrackingAction
@@ -22,19 +22,19 @@ class ManageCostTrackingAction
 
         return [
             'period' => [
-                'start_date'     => $startDate->format('Y-m-d'),
-                'end_date'       => $endDate->format('Y-m-d'),
+                'start_date' => $startDate->format('Y-m-d'),
+                'end_date' => $endDate->format('Y-m-d'),
                 'days_in_period' => $startDate->diffInDays($endDate) + 1,
             ],
-            'cogs_analysis'                   => $this->calculateCogsAnalysis($startDate, $endDate),
-            'wastage_tracking'                => $this->calculateWastageMetrics($startDate, $endDate),
-            'marketing_spend_analysis'        => $this->calculateMarketingSpend($startDate, $endDate),
-            'cost_ratios'                     => $this->calculateCostRatios($startDate, $endDate),
-            'cost_trends'                     => $this->analyzeCostTrends($startDate, $endDate),
+            'cogs_analysis' => $this->calculateCogsAnalysis($startDate, $endDate),
+            'wastage_tracking' => $this->calculateWastageMetrics($startDate, $endDate),
+            'marketing_spend_analysis' => $this->calculateMarketingSpend($startDate, $endDate),
+            'cost_ratios' => $this->calculateCostRatios($startDate, $endDate),
+            'cost_trends' => $this->analyzeCostTrends($startDate, $endDate),
             'cost_optimization_opportunities' => $this->identifyCostOptimizations($startDate, $endDate),
-            'projections'                     => $includeProjections ? $this->generateCostProjections($startDate, $endDate) : null,
-            'alerts'                          => $this->generateCostAlerts($startDate, $endDate),
-            'recommendations'                 => $this->generateCostRecommendations($startDate, $endDate),
+            'projections' => $includeProjections ? $this->generateCostProjections($startDate, $endDate) : null,
+            'alerts' => $this->generateCostAlerts($startDate, $endDate),
+            'recommendations' => $this->generateCostRecommendations($startDate, $endDate),
         ];
     }
 
@@ -62,15 +62,15 @@ class ManageCostTrackingAction
             return $sale->items->map(function ($item) {
                 return [
                     'category' => $item->menuItem->category ?? 'uncategorized',
-                    'cost'     => ($item->menuItem->cost_price ?? 0) * $item->quantity,
-                    'revenue'  => $item->price * $item->quantity,
+                    'cost' => ($item->menuItem->cost_price ?? 0) * $item->quantity,
+                    'revenue' => $item->price * $item->quantity,
                 ];
             });
         })->groupBy('category')->map(function ($items, $category) {
             return [
-                'category'        => $category,
-                'total_cost'      => $items->sum('cost'),
-                'total_revenue'   => $items->sum('revenue'),
+                'category' => $category,
+                'total_cost' => $items->sum('cost'),
+                'total_revenue' => $items->sum('revenue'),
                 'cost_percentage' => $items->sum('revenue') > 0
                     ? ($items->sum('cost') / $items->sum('revenue')) * 100
                     : 0,
@@ -80,14 +80,14 @@ class ManageCostTrackingAction
         $cogsPercentage = $totalRevenue > 0 ? ($totalCogs / $totalRevenue) * 100 : 0;
 
         return [
-            'total_cogs'           => $totalCogs,
-            'total_revenue'        => $totalRevenue,
-            'cogs_percentage'      => $cogsPercentage,
-            'target_range'         => ['min' => 25, 'max' => 35],
-            'status'               => $this->getCostStatus($cogsPercentage, 25, 35, 'lower_better'),
+            'total_cogs' => $totalCogs,
+            'total_revenue' => $totalRevenue,
+            'cogs_percentage' => $cogsPercentage,
+            'target_range' => ['min' => 25, 'max' => 35],
+            'status' => $this->getCostStatus($cogsPercentage, 25, 35, 'lower_better'),
             'variance_from_target' => $cogsPercentage - 30, // 30% is middle of target range
-            'cogs_by_category'     => $cogsByCategory,
-            'daily_average_cogs'   => $totalCogs / max(1, $startDate->diffInDays($endDate) + 1),
+            'cogs_by_category' => $cogsByCategory,
+            'daily_average_cogs' => $totalCogs / max(1, $startDate->diffInDays($endDate) + 1),
         ];
     }
 
@@ -114,18 +114,18 @@ class ManageCostTrackingAction
             return [
                 'reason' => $reason ?: 'unspecified',
                 'amount' => $expenses->sum('amount'),
-                'count'  => $expenses->count(),
+                'count' => $expenses->count(),
             ];
         })->values();
 
         return [
-            'total_wastage'                 => $totalWastage,
+            'total_wastage' => $totalWastage,
             'wastage_percentage_of_revenue' => $wastagePercentage,
-            'target_percentage'             => 2.0, // Target: <2% of revenue
-            'status'                        => $wastagePercentage <= 2.0 ? 'good' : ($wastagePercentage <= 4.0 ? 'warning' : 'critical'),
-            'wastage_by_reason'             => $wastageByReason,
-            'daily_average_wastage'         => $totalWastage / max(1, $startDate->diffInDays($endDate) + 1),
-            'potential_profit_impact'       => $totalWastage * 0.7, // Assuming 70% of wastage could have been profit
+            'target_percentage' => 2.0, // Target: <2% of revenue
+            'status' => $wastagePercentage <= 2.0 ? 'good' : ($wastagePercentage <= 4.0 ? 'warning' : 'critical'),
+            'wastage_by_reason' => $wastageByReason,
+            'daily_average_wastage' => $totalWastage / max(1, $startDate->diffInDays($endDate) + 1),
+            'potential_profit_impact' => $totalWastage * 0.7, // Assuming 70% of wastage could have been profit
         ];
     }
 
@@ -150,8 +150,8 @@ class ManageCostTrackingAction
         // Marketing spend by channel
         $marketingByChannel = $marketingExpenses->groupBy('subcategory')->map(function ($expenses, $channel) use ($totalMarketingSpend) {
             return [
-                'channel'                 => $channel ?: 'general',
-                'amount'                  => $expenses->sum('amount'),
+                'channel' => $channel ?: 'general',
+                'amount' => $expenses->sum('amount'),
                 'percentage_of_marketing' => $totalMarketingSpend > 0
                     ? ($expenses->sum('amount') / $totalMarketingSpend) * 100
                     : 0,
@@ -169,16 +169,16 @@ class ManageCostTrackingAction
         $customerAcquisitionCost = $newCustomers > 0 ? $totalMarketingSpend / $newCustomers : 0;
 
         return [
-            'total_marketing_spend'           => $totalMarketingSpend,
+            'total_marketing_spend' => $totalMarketingSpend,
             'marketing_percentage_of_revenue' => $marketingPercentage,
-            'target_percentage'               => 5.0, // Target: ~5% of revenue
-            'status'                          => $marketingPercentage <= 5.0 ? 'good' : ($marketingPercentage <= 8.0 ? 'warning' : 'critical'),
-            'marketing_by_channel'            => $marketingByChannel,
-            'roi_metrics'                     => [
-                'new_customers_acquired'       => $newCustomers,
-                'customer_acquisition_cost'    => $customerAcquisitionCost,
+            'target_percentage' => 5.0, // Target: ~5% of revenue
+            'status' => $marketingPercentage <= 5.0 ? 'good' : ($marketingPercentage <= 8.0 ? 'warning' : 'critical'),
+            'marketing_by_channel' => $marketingByChannel,
+            'roi_metrics' => [
+                'new_customers_acquired' => $newCustomers,
+                'customer_acquisition_cost' => $customerAcquisitionCost,
                 'revenue_per_marketing_dollar' => $totalMarketingSpend > 0 ? $totalRevenue / $totalMarketingSpend : 0,
-                'estimated_roi_percentage'     => $totalMarketingSpend > 0 ? (($totalRevenue - $totalMarketingSpend) / $totalMarketingSpend) * 100 : 0,
+                'estimated_roi_percentage' => $totalMarketingSpend > 0 ? (($totalRevenue - $totalMarketingSpend) / $totalMarketingSpend) * 100 : 0,
             ],
             'daily_average_marketing_spend' => $totalMarketingSpend / max(1, $startDate->diffInDays($endDate) + 1),
         ];
@@ -195,10 +195,10 @@ class ManageCostTrackingAction
             ->sum('amount');
 
         return [
-            'total_revenue'         => $totalRevenue,
-            'total_expenses'        => $totalExpenses,
-            'expense_ratio'         => $totalRevenue > 0 ? ($totalExpenses / $totalRevenue) * 100 : 0,
-            'profit_margin'         => $totalRevenue > 0 ? (($totalRevenue - $totalExpenses) / $totalRevenue) * 100 : 0,
+            'total_revenue' => $totalRevenue,
+            'total_expenses' => $totalExpenses,
+            'expense_ratio' => $totalRevenue > 0 ? ($totalExpenses / $totalRevenue) * 100 : 0,
+            'profit_margin' => $totalRevenue > 0 ? (($totalRevenue - $totalExpenses) / $totalRevenue) * 100 : 0,
             'cost_efficiency_score' => $this->calculateCostEfficiencyScore($startDate, $endDate),
         ];
     }
@@ -215,10 +215,10 @@ class ManageCostTrackingAction
         $costChange = $previousCosts > 0 ? (($currentCosts - $previousCosts) / $previousCosts) * 100 : 0;
 
         return [
-            'current_period_costs'   => $currentCosts,
-            'previous_period_costs'  => $previousCosts,
+            'current_period_costs' => $currentCosts,
+            'previous_period_costs' => $previousCosts,
             'cost_change_percentage' => $costChange,
-            'trend_direction'        => $costChange > 5 ? 'increasing' : ($costChange < -5 ? 'decreasing' : 'stable'),
+            'trend_direction' => $costChange > 5 ? 'increasing' : ($costChange < -5 ? 'decreasing' : 'stable'),
         ];
     }
 
@@ -232,9 +232,9 @@ class ManageCostTrackingAction
 
         if ($cogsAnalysis['cogs_percentage'] > 35) {
             $opportunities[] = [
-                'type'              => 'cogs_reduction',
-                'priority'          => 'high',
-                'description'       => 'COGS is above target range (35%). Consider supplier negotiation or menu optimization.',
+                'type' => 'cogs_reduction',
+                'priority' => 'high',
+                'description' => 'COGS is above target range (35%). Consider supplier negotiation or menu optimization.',
                 'potential_savings' => ($cogsAnalysis['cogs_percentage'] - 30) / 100 * $cogsAnalysis['total_revenue'],
             ];
         }
@@ -244,9 +244,9 @@ class ManageCostTrackingAction
 
         if ($wastageAnalysis['wastage_percentage_of_revenue'] > 2) {
             $opportunities[] = [
-                'type'              => 'wastage_reduction',
-                'priority'          => 'medium',
-                'description'       => 'Food wastage exceeds 2% of revenue. Implement better inventory management.',
+                'type' => 'wastage_reduction',
+                'priority' => 'medium',
+                'description' => 'Food wastage exceeds 2% of revenue. Implement better inventory management.',
                 'potential_savings' => $wastageAnalysis['total_wastage'] * 0.5, // Assume 50% reduction possible
             ];
         }
@@ -266,9 +266,9 @@ class ManageCostTrackingAction
 
         return [
             'projection_period_days' => $nextPeriodDays,
-            'daily_average_costs'    => $dailyAverageCosts,
-            'projected_total_costs'  => $projectedCosts,
-            'confidence_level'       => 'medium', // Based on historical data availability
+            'daily_average_costs' => $dailyAverageCosts,
+            'projected_total_costs' => $projectedCosts,
+            'confidence_level' => 'medium', // Based on historical data availability
         ];
     }
 
@@ -281,10 +281,10 @@ class ManageCostTrackingAction
 
         if ($cogsAnalysis['cogs_percentage'] > 40) {
             $alerts[] = [
-                'level'   => 'critical',
-                'type'    => 'cogs',
+                'level' => 'critical',
+                'type' => 'cogs',
                 'message' => 'COGS exceeds 40% - immediate action required',
-                'action'  => 'Review supplier contracts and menu pricing',
+                'action' => 'Review supplier contracts and menu pricing',
             ];
         }
 
@@ -292,10 +292,10 @@ class ManageCostTrackingAction
 
         if ($wastageAnalysis['wastage_percentage_of_revenue'] > 5) {
             $alerts[] = [
-                'level'   => 'warning',
-                'type'    => 'wastage',
+                'level' => 'warning',
+                'type' => 'wastage',
                 'message' => 'Food wastage exceeds 5% of revenue',
-                'action'  => 'Implement inventory management improvements',
+                'action' => 'Implement inventory management improvements',
             ];
         }
 

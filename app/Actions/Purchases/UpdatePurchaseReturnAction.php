@@ -37,21 +37,21 @@ final class UpdatePurchaseReturnAction
             }
 
             $purchaseReturn->update([
-                'date'                => $data['date'],
-                'reference'           => $data['reference'],
-                'supplier_id'         => $data['supplier_id'],
-                'tax_percentage'      => $data['tax_percentage'],
+                'date' => $data['date'],
+                'reference' => $data['reference'],
+                'supplier_id' => $data['supplier_id'],
+                'tax_percentage' => $data['tax_percentage'],
                 'discount_percentage' => $data['discount_percentage'],
-                'shipping_amount'     => $data['shipping_amount'] * 100,
-                'paid_amount'         => $data['paid_amount'] * 100,
-                'total_amount'        => $data['total_amount'] * 100,
-                'due_amount'          => $dueAmount * 100,
-                'status'              => $data['status'],
-                'payment_status'      => $paymentStatus,
-                'payment_method'      => $data['payment_method'],
-                'note'                => $data['note'],
-                'tax_amount'          => (int) ($cartTax * 100),
-                'discount_amount'     => (int) ($cartDiscount * 100),
+                'shipping_amount' => $data['shipping_amount'] * 100,
+                'paid_amount' => $data['paid_amount'] * 100,
+                'total_amount' => $data['total_amount'] * 100,
+                'due_amount' => $dueAmount * 100,
+                'status' => $data['status'],
+                'payment_status' => $paymentStatus,
+                'payment_method' => $data['payment_method'],
+                'note' => $data['note'],
+                'tax_amount' => (int) ($cartTax * 100),
+                'discount_amount' => (int) ($cartDiscount * 100),
             ]);
 
             foreach ($cartItems as $cartItem) {
@@ -69,17 +69,17 @@ final class UpdatePurchaseReturnAction
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
                 PurchaseReturnDetail::create([
-                    'purchase_return_id'      => $purchaseReturn->id,
-                    'product_id'              => $productId,
-                    'name'                    => $productName,
-                    'code'                    => $productCode,
-                    'quantity'                => $quantity,
-                    'price'                   => $price * 100,
-                    'unit_price'              => $unitPrice * 100,
-                    'sub_total'               => $subTotal * 100,
+                    'purchase_return_id' => $purchaseReturn->id,
+                    'product_id' => $productId,
+                    'name' => $productName,
+                    'code' => $productCode,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'unit_price' => $unitPrice * 100,
+                    'sub_total' => $subTotal * 100,
                     'product_discount_amount' => $discountAmount * 100,
-                    'product_discount_type'   => $discountType,
-                    'product_tax_amount'      => $taxAmount * 100,
+                    'product_discount_type' => $discountType,
+                    'product_tax_amount' => $taxAmount * 100,
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {

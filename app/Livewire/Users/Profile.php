@@ -6,22 +6,22 @@ namespace App\Livewire\Users;
 
 use App\Models\User;
 use App\Rules\MatchCurrentPassword;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Profile extends Component
 {
     use WithAlert;
+
     /** @var mixed */
     public $user;
 
     #[Validate('required|string|max:255')]
-
     public $name;
 
     #[Validate('required|email|unique:users,email')]
@@ -60,8 +60,8 @@ class Profile extends Component
     public function updatePassword(): void
     {
         $this->validate([
-            'current_password' => ['required', 'max:255', new MatchCurrentPassword()],
-            'password'         => 'required|min:8|max:255|confirmed',
+            'current_password' => ['required', 'max:255', new MatchCurrentPassword],
+            'password' => 'required|min:8|max:255|confirmed',
         ]);
 
         $this->user->update([

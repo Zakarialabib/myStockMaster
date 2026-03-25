@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Traits\WithAlert;
+use Livewire\Component;
 
 class Calculator extends Component
 {
     use WithAlert;
+
     public $number1 = '';
 
     public $number2 = '';

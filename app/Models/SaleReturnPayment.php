@@ -25,10 +25,11 @@ class SaleReturnPayment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
+
     protected $guarded = [];
 
-    /** @return BelongsTo */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturn::class, 'sale_return_id', 'id');
@@ -36,8 +37,6 @@ class SaleReturnPayment extends Model
 
     /**
      * Get ajustement date.
-     *
-     * @return Attribute
      */
     public function date(): Attribute
     {
@@ -58,8 +57,6 @@ class SaleReturnPayment extends Model
 
     /**
      * Interact with the expenses amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {

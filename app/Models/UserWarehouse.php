@@ -30,7 +30,7 @@ class UserWarehouse extends Model
     protected function casts(): array
     {
         return [
-            'user_id'      => 'integer',
+            'user_id' => 'integer',
             'warehouse_id' => 'integer',
         ];
     }

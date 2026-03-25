@@ -8,17 +8,18 @@ use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Throwable;
-use App\Traits\WithAlert;
 
 class PaymentForm extends Component
 {
     use WithAlert;
+
     public $paymentModal = false;
 
     public Sale $sale;
@@ -73,12 +74,12 @@ class PaymentForm extends Component
             $this->validate();
 
             SalePayment::create([
-                'date'           => $this->date,
-                'amount'         => $this->amount,
-                'note'           => $this->note,
-                'sale_id'        => $this->sale_id,
+                'date' => $this->date,
+                'amount' => $this->amount,
+                'note' => $this->note,
+                'sale_id' => $this->sale_id,
                 'payment_method' => $this->payment_method,
-                'user_id'        => Auth::user()->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             $sale = Sale::findOrFail($this->sale_id);
@@ -97,10 +98,10 @@ class PaymentForm extends Component
             }
 
             $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($sale->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
-                'status'         => $status,
+                'status' => $status,
             ]);
 
             $this->alert('success', __('Sale Payment created successfully.'));
@@ -109,7 +110,7 @@ class PaymentForm extends Component
 
             $this->dispatch('refreshIndex')->to(Index::class);
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Error.').$throwable->getMessage());
+            $this->alert('error', __('Error.') . $throwable->getMessage());
         }
     }
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Finance;
 
-use App\Models\Sale;
 use App\Models\Expense;
+use App\Models\Sale;
 use App\Models\Table;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -19,16 +19,16 @@ class CalculateExpansionReadinessAction
         $endDate = now();
 
         return [
-            'readiness_score'           => $this->calculateReadinessScore($startDate, $endDate),
-            'utilization_metrics'       => $this->getUtilizationMetrics($startDate, $endDate),
-            'profitability_metrics'     => $this->getProfitabilityMetrics($startDate, $endDate),
-            'financial_health'          => $this->getFinancialHealth($startDate, $endDate),
-            'operational_metrics'       => $this->getOperationalMetrics($startDate, $endDate),
+            'readiness_score' => $this->calculateReadinessScore($startDate, $endDate),
+            'utilization_metrics' => $this->getUtilizationMetrics($startDate, $endDate),
+            'profitability_metrics' => $this->getProfitabilityMetrics($startDate, $endDate),
+            'financial_health' => $this->getFinancialHealth($startDate, $endDate),
+            'operational_metrics' => $this->getOperationalMetrics($startDate, $endDate),
             'expansion_recommendations' => $this->getExpansionRecommendations($startDate, $endDate),
-            'risk_factors'              => $this->getRiskFactors($startDate, $endDate),
-            'investment_requirements'   => $this->getInvestmentRequirements(),
-            'timeline_projections'      => $this->getTimelineProjections($startDate, $endDate),
-            'market_analysis'           => $this->getMarketAnalysis($startDate, $endDate),
+            'risk_factors' => $this->getRiskFactors($startDate, $endDate),
+            'investment_requirements' => $this->getInvestmentRequirements(),
+            'timeline_projections' => $this->getTimelineProjections($startDate, $endDate),
+            'market_analysis' => $this->getMarketAnalysis($startDate, $endDate),
         ];
     }
 
@@ -49,14 +49,14 @@ class CalculateExpansionReadinessAction
         );
 
         return [
-            'total_score'      => round($totalScore, 1),
-            'readiness_level'  => $this->getReadinessLevel($totalScore),
+            'total_score' => round($totalScore, 1),
+            'readiness_level' => $this->getReadinessLevel($totalScore),
             'component_scores' => [
-                'utilization'      => $utilizationScore,
-                'profitability'    => $profitabilityScore,
+                'utilization' => $utilizationScore,
+                'profitability' => $profitabilityScore,
                 'financial_health' => $financialHealthScore,
-                'operational'      => $operationalScore,
-                'market'           => $marketScore,
+                'operational' => $operationalScore,
+                'market' => $marketScore,
             ],
             'recommendation' => $this->getOverallRecommendation($totalScore),
         ];
@@ -78,14 +78,14 @@ class CalculateExpansionReadinessAction
         $capacityUtilization = $this->calculateCapacityUtilization($sales, $totalCapacity, $startDate, $endDate);
 
         return [
-            'table_utilization_rate'    => round($tableUtilization, 2),
+            'table_utilization_rate' => round($tableUtilization, 2),
             'capacity_utilization_rate' => round($capacityUtilization, 2),
-            'peak_hours_utilization'    => $peakHours,
-            'average_sales_per_day'     => round($totalSales / max(1, $startDate->diffInDays($endDate)), 2),
-            'total_sales'               => $totalSales,
-            'average_sale_value'        => round($averageSaleValue, 2),
-            'utilization_trend'         => $this->getUtilizationTrend($startDate, $endDate),
-            'bottlenecks'               => $this->identifyBottlenecks($sales, $totalTables, $totalCapacity),
+            'peak_hours_utilization' => $peakHours,
+            'average_sales_per_day' => round($totalSales / max(1, $startDate->diffInDays($endDate)), 2),
+            'total_sales' => $totalSales,
+            'average_sale_value' => round($averageSaleValue, 2),
+            'utilization_trend' => $this->getUtilizationTrend($startDate, $endDate),
+            'bottlenecks' => $this->identifyBottlenecks($sales, $totalTables, $totalCapacity),
         ];
     }
 
@@ -107,16 +107,16 @@ class CalculateExpansionReadinessAction
         $revenueGrowth = $this->calculateRevenueGrowth($monthlyRevenue);
 
         return [
-            'total_revenue'       => round($revenue, 2),
-            'total_expenses'      => round($expenses, 2),
-            'net_profit'          => round($profit, 2),
-            'profit_margin'       => round($profitMargin, 2),
-            'gross_profit'        => round($grossProfit, 2),
-            'gross_margin'        => round($grossMargin, 2),
+            'total_revenue' => round($revenue, 2),
+            'total_expenses' => round($expenses, 2),
+            'net_profit' => round($profit, 2),
+            'profit_margin' => round($profitMargin, 2),
+            'gross_profit' => round($grossProfit, 2),
+            'gross_margin' => round($grossMargin, 2),
             'revenue_growth_rate' => round($revenueGrowth, 2),
-            'break_even_point'    => $this->calculateBreakEvenPoint($expenses, $grossMargin),
+            'break_even_point' => $this->calculateBreakEvenPoint($expenses, $grossMargin),
             'profitability_trend' => $this->getProfitabilityTrend($startDate, $endDate),
-            'roi_projection'      => $this->calculateROIProjection($profit, $revenue),
+            'roi_projection' => $this->calculateROIProjection($profit, $revenue),
         ];
     }
 
@@ -131,14 +131,14 @@ class CalculateExpansionReadinessAction
         $quickRatio = $this->calculateQuickRatio();
 
         return [
-            'cash_position'             => round($currentCash, 2),
-            'cash_runway_months'        => round($cashRunway, 1),
-            'debt_to_equity_ratio'      => round($debtToEquity, 2),
-            'current_ratio'             => round($currentRatio, 2),
-            'quick_ratio'               => round($quickRatio, 2),
-            'working_capital'           => $this->calculateWorkingCapital(),
+            'cash_position' => round($currentCash, 2),
+            'cash_runway_months' => round($cashRunway, 1),
+            'debt_to_equity_ratio' => round($debtToEquity, 2),
+            'current_ratio' => round($currentRatio, 2),
+            'quick_ratio' => round($quickRatio, 2),
+            'working_capital' => $this->calculateWorkingCapital(),
             'financial_stability_score' => $this->calculateFinancialStabilityScore($cashRunway, $debtToEquity, $currentRatio),
-            'credit_worthiness'         => $this->assessCreditWorthiness($cashRunway, $debtToEquity),
+            'credit_worthiness' => $this->assessCreditWorthiness($cashRunway, $debtToEquity),
         ];
     }
 
@@ -153,11 +153,11 @@ class CalculateExpansionReadinessAction
         $inventoryTurnover = $this->calculateInventoryTurnover($startDate, $endDate);
 
         return [
-            'average_service_time'         => round($averageServiceTime, 2),
-            'customer_satisfaction_score'  => round($customerSatisfaction, 2),
-            'inventory_turnover_rate'      => round($inventoryTurnover, 2),
+            'average_service_time' => round($averageServiceTime, 2),
+            'customer_satisfaction_score' => round($customerSatisfaction, 2),
+            'inventory_turnover_rate' => round($inventoryTurnover, 2),
             'operational_efficiency_score' => $this->calculateOperationalEfficiencyScore($averageServiceTime, $customerSatisfaction),
-            'scalability_readiness'        => $this->assessScalabilityReadiness($sales, $startDate, $endDate),
+            'scalability_readiness' => $this->assessScalabilityReadiness($sales, $startDate, $endDate),
         ];
     }
 
@@ -172,44 +172,44 @@ class CalculateExpansionReadinessAction
         // High utilization recommendations
         if ($utilizationMetrics['table_utilization_rate'] > 85) {
             $recommendations[] = [
-                'type'        => 'expansion_ready',
-                'priority'    => 'high',
-                'title'       => 'High Table Utilization Detected',
+                'type' => 'expansion_ready',
+                'priority' => 'high',
+                'title' => 'High Table Utilization Detected',
                 'description' => 'Your table utilization is above 85%, indicating strong demand for expansion.',
-                'action'      => 'Consider expanding seating capacity or opening a second location.',
+                'action' => 'Consider expanding seating capacity or opening a second location.',
             ];
         }
 
         // Profitability recommendations
         if ($profitabilityMetrics['profit_margin'] > 15) {
             $recommendations[] = [
-                'type'        => 'financial_ready',
-                'priority'    => 'high',
-                'title'       => 'Strong Profit Margins',
-                'description' => 'Your profit margin of '.$profitabilityMetrics['profit_margin'].'% indicates financial readiness for expansion.',
-                'action'      => 'Leverage strong profitability to fund expansion initiatives.',
+                'type' => 'financial_ready',
+                'priority' => 'high',
+                'title' => 'Strong Profit Margins',
+                'description' => 'Your profit margin of ' . $profitabilityMetrics['profit_margin'] . '% indicates financial readiness for expansion.',
+                'action' => 'Leverage strong profitability to fund expansion initiatives.',
             ];
         }
 
         // Growth recommendations
         if ($profitabilityMetrics['revenue_growth_rate'] > 20) {
             $recommendations[] = [
-                'type'        => 'growth_momentum',
-                'priority'    => 'medium',
-                'title'       => 'Strong Revenue Growth',
-                'description' => 'Revenue growth of '.$profitabilityMetrics['revenue_growth_rate'].'% shows positive market momentum.',
-                'action'      => 'Capitalize on growth momentum with strategic expansion.',
+                'type' => 'growth_momentum',
+                'priority' => 'medium',
+                'title' => 'Strong Revenue Growth',
+                'description' => 'Revenue growth of ' . $profitabilityMetrics['revenue_growth_rate'] . '% shows positive market momentum.',
+                'action' => 'Capitalize on growth momentum with strategic expansion.',
             ];
         }
 
         // Risk mitigation recommendations
         if ($readinessScore['total_score'] < 70) {
             $recommendations[] = [
-                'type'        => 'improvement_needed',
-                'priority'    => 'high',
-                'title'       => 'Expansion Readiness Below Threshold',
-                'description' => 'Current readiness score of '.$readinessScore['total_score'].' indicates areas for improvement.',
-                'action'      => 'Focus on improving weak areas before considering expansion.',
+                'type' => 'improvement_needed',
+                'priority' => 'high',
+                'title' => 'Expansion Readiness Below Threshold',
+                'description' => 'Current readiness score of ' . $readinessScore['total_score'] . ' indicates areas for improvement.',
+                'action' => 'Focus on improving weak areas before considering expansion.',
             ];
         }
 
@@ -224,11 +224,11 @@ class CalculateExpansionReadinessAction
 
         if ($cashRunway < 6) {
             $risks[] = [
-                'type'        => 'financial',
-                'severity'    => 'high',
-                'title'       => 'Low Cash Runway',
-                'description' => 'Cash runway of '.round($cashRunway, 1).' months is below recommended 6+ months.',
-                'mitigation'  => 'Secure additional funding or improve cash flow before expansion.',
+                'type' => 'financial',
+                'severity' => 'high',
+                'title' => 'Low Cash Runway',
+                'description' => 'Cash runway of ' . round($cashRunway, 1) . ' months is below recommended 6+ months.',
+                'mitigation' => 'Secure additional funding or improve cash flow before expansion.',
             ];
         }
 
@@ -236,11 +236,11 @@ class CalculateExpansionReadinessAction
 
         if ($profitMargin < 10) {
             $risks[] = [
-                'type'        => 'profitability',
-                'severity'    => 'medium',
-                'title'       => 'Low Profit Margins',
-                'description' => 'Profit margin of '.round($profitMargin, 1).'% may not support expansion costs.',
-                'mitigation'  => 'Improve operational efficiency and cost management.',
+                'type' => 'profitability',
+                'severity' => 'medium',
+                'title' => 'Low Profit Margins',
+                'description' => 'Profit margin of ' . round($profitMargin, 1) . '% may not support expansion costs.',
+                'mitigation' => 'Improve operational efficiency and cost management.',
             ];
         }
 
@@ -248,11 +248,11 @@ class CalculateExpansionReadinessAction
 
         if ($utilizationRate < 60) {
             $risks[] = [
-                'type'        => 'operational',
-                'severity'    => 'medium',
-                'title'       => 'Low Utilization Rate',
-                'description' => 'Table utilization of '.round($utilizationRate, 1).'% indicates underutilized capacity.',
-                'mitigation'  => 'Focus on marketing and customer acquisition before expansion.',
+                'type' => 'operational',
+                'severity' => 'medium',
+                'title' => 'Low Utilization Rate',
+                'description' => 'Table utilization of ' . round($utilizationRate, 1) . '% indicates underutilized capacity.',
+                'mitigation' => 'Focus on marketing and customer acquisition before expansion.',
             ];
         }
 
@@ -263,21 +263,21 @@ class CalculateExpansionReadinessAction
     {
         return [
             'initial_investment' => [
-                'equipment'       => 150000,
-                'renovation'      => 100000,
-                'inventory'       => 25000,
-                'marketing'       => 15000,
+                'equipment' => 150000,
+                'renovation' => 100000,
+                'inventory' => 25000,
+                'marketing' => 15000,
                 'working_capital' => 50000,
-                'total'           => 340000,
+                'total' => 340000,
             ],
             'ongoing_costs' => [
-                'rent'          => 8000,
-                'utilities'     => 2000,
-                'insurance'     => 1500,
+                'rent' => 8000,
+                'utilities' => 2000,
+                'insurance' => 1500,
                 'total_monthly' => 26500,
             ],
             'break_even_timeline' => '12-18 months',
-            'roi_projection'      => '18-24 months',
+            'roi_projection' => '18-24 months',
         ];
     }
 
@@ -287,23 +287,23 @@ class CalculateExpansionReadinessAction
 
         return [
             'preparation_phase' => [
-                'duration'       => '3-6 months',
-                'activities'     => ['Site selection', 'Permits and licensing', 'Design and planning', 'Financing'],
+                'duration' => '3-6 months',
+                'activities' => ['Site selection', 'Permits and licensing', 'Design and planning', 'Financing'],
                 'estimated_cost' => 25000,
             ],
             'construction_phase' => [
-                'duration'       => '2-4 months',
-                'activities'     => ['Renovation', 'Equipment installation', 'Staff hiring', 'Training'],
+                'duration' => '2-4 months',
+                'activities' => ['Renovation', 'Equipment installation', 'Staff hiring', 'Training'],
                 'estimated_cost' => 275000,
             ],
             'launch_phase' => [
-                'duration'       => '1-2 months',
-                'activities'     => ['Soft opening', 'Marketing campaign', 'Operations optimization'],
+                'duration' => '1-2 months',
+                'activities' => ['Soft opening', 'Marketing campaign', 'Operations optimization'],
                 'estimated_cost' => 40000,
             ],
             'stabilization_phase' => [
-                'duration'          => '6-12 months',
-                'activities'        => ['Customer base building', 'Process refinement', 'Profitability achievement'],
+                'duration' => '6-12 months',
+                'activities' => ['Customer base building', 'Process refinement', 'Profitability achievement'],
                 'projected_revenue' => $currentMetrics['total_revenue'] * 0.7, // Conservative estimate
             ],
         ];
@@ -315,11 +315,11 @@ class CalculateExpansionReadinessAction
         $customerGrowth = $this->calculateCustomerGrowth($startDate, $endDate);
 
         return [
-            'market_demand'          => $this->assessMarketDemand($revenueGrowth, $customerGrowth),
-            'competition_analysis'   => $this->getCompetitionAnalysis(),
+            'market_demand' => $this->assessMarketDemand($revenueGrowth, $customerGrowth),
+            'competition_analysis' => $this->getCompetitionAnalysis(),
             'location_opportunities' => $this->getLocationOpportunities(),
-            'customer_demographics'  => $this->getCustomerDemographics($startDate, $endDate),
-            'market_saturation'      => $this->assessMarketSaturation(),
+            'customer_demographics' => $this->getCustomerDemographics($startDate, $endDate),
+            'market_saturation' => $this->assessMarketSaturation(),
         ];
     }
 
@@ -327,10 +327,10 @@ class CalculateExpansionReadinessAction
     private function getStartDate(string $period): Carbon
     {
         return match ($period) {
-            'weekly'    => now()->subWeeks(12),
-            'monthly'   => now()->subMonths(12),
+            'weekly' => now()->subWeeks(12),
+            'monthly' => now()->subMonths(12),
             'quarterly' => now()->subMonths(24),
-            default     => now()->subMonths(6)
+            default => now()->subMonths(6)
         };
     }
 
@@ -378,7 +378,7 @@ class CalculateExpansionReadinessAction
             $score >= 85 => 'excellent',
             $score >= 70 => 'good',
             $score >= 55 => 'fair',
-            default      => 'poor'
+            default => 'poor'
         };
     }
 
@@ -388,7 +388,7 @@ class CalculateExpansionReadinessAction
             $score >= 85 => 'Highly recommended for expansion. All metrics indicate strong readiness.',
             $score >= 70 => 'Recommended for expansion with minor improvements in weak areas.',
             $score >= 55 => 'Consider expansion after addressing key improvement areas.',
-            default      => 'Not recommended for expansion. Focus on improving current operations first.'
+            default => 'Not recommended for expansion. Focus on improving current operations first.'
         };
     }
 
@@ -418,8 +418,8 @@ class CalculateExpansionReadinessAction
         })->map->count()->sortDesc();
 
         return [
-            'peak_hour'               => $hourlySales->keys()->first() ?? '12',
-            'peak_sales'              => $hourlySales->first() ?? 0,
+            'peak_hour' => $hourlySales->keys()->first() ?? '12',
+            'peak_sales' => $hourlySales->first() ?? 0,
             'utilization_during_peak' => min(100, ($hourlySales->first() ?? 0) / 10 * 100),
         ];
     }
@@ -490,7 +490,7 @@ class CalculateExpansionReadinessAction
         $breakEvenRevenue = $grossMargin > 0 ? $fixedCosts / ($grossMargin / 100) : 0;
 
         return [
-            'revenue_required'   => round($breakEvenRevenue, 2),
+            'revenue_required' => round($breakEvenRevenue, 2),
             'days_to_break_even' => $breakEvenRevenue > 0 ? round($breakEvenRevenue / ($expenses / 30), 0) : 0,
         ];
     }
@@ -616,8 +616,8 @@ class CalculateExpansionReadinessAction
         $growth = $this->getUtilizationTrend($startDate, $endDate);
 
         return [
-            'consistency_score'  => $consistency,
-            'growth_trend'       => $growth,
+            'consistency_score' => $consistency,
+            'growth_trend' => $growth,
             'scalability_rating' => $consistency > 80 && $growth === 'increasing' ? 'high' : 'medium',
         ];
     }
@@ -663,8 +663,8 @@ class CalculateExpansionReadinessAction
     private function getCompetitionAnalysis(): array
     {
         return [
-            'competitive_density'       => 'medium',
-            'market_share_opportunity'  => 'good',
+            'competitive_density' => 'medium',
+            'market_share_opportunity' => 'good',
             'differentiation_potential' => 'high',
         ];
     }
@@ -673,8 +673,8 @@ class CalculateExpansionReadinessAction
     {
         return [
             'high_potential_areas' => ['Downtown', 'Shopping District', 'Business Park'],
-            'demographic_match'    => 'excellent',
-            'accessibility_score'  => 85,
+            'demographic_match' => 'excellent',
+            'accessibility_score' => 85,
         ];
     }
 
@@ -682,17 +682,17 @@ class CalculateExpansionReadinessAction
     {
         return [
             'primary_age_group' => '25-45',
-            'income_level'      => 'middle_to_upper',
-            'dining_frequency'  => 'regular',
-            'loyalty_score'     => 72,
+            'income_level' => 'middle_to_upper',
+            'dining_frequency' => 'regular',
+            'loyalty_score' => 72,
         ];
     }
 
     private function assessMarketSaturation(): array
     {
         return [
-            'saturation_level'     => 'moderate',
-            'growth_potential'     => 'good',
+            'saturation_level' => 'moderate',
+            'growth_potential' => 'good',
             'recommended_strategy' => 'differentiation',
         ];
     }

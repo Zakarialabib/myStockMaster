@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\ExpenseCategories;
 
 use App\Models\ExpenseCategory;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Edit extends Component
 {
     use WithAlert;
+
     public bool $editModal = false;
 
     public $expenseCategory;

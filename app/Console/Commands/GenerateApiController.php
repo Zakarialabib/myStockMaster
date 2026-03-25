@@ -52,8 +52,8 @@ class GenerateApiController extends Command
         $controllerName = $this->argument('controller') ?: $this->ask('Enter controller name (e.g., ProductController)');
 
         // Add the default namespace if not provided
-        if ( ! Str::contains($controllerName, '\\')) {
-            $controllerName = 'Http\Controllers\\Api\\'.$controllerName;
+        if (! Str::contains($controllerName, '\\')) {
+            $controllerName = 'Http\Controllers\\Api\\' . $controllerName;
         }
 
         return $controllerName;
@@ -90,17 +90,17 @@ class GenerateApiController extends Command
         $stubPath = base_path('stubs/Api.controller.stub');
         $namespace = $this->getNamespace($this->controller);
         $className = class_basename($this->controller);
-        $path = app_path(str_replace('\\', '/', $this->controller).'.php');
+        $path = app_path(str_replace('\\', '/', $this->controller) . '.php');
 
         // Create the directory if it doesn't exist
         $this->createDirectoryIfNeeded(dirname($path));
 
         // Initialize the $file property
-        $file = new Filesystem();
+        $file = new Filesystem;
 
         // Check if the class file already exists
         if ($file->exists($path)) {
-            $this->info('Class file already exists: '.$this->controller);
+            $this->info('Class file already exists: ' . $this->controller);
             $this->info('Skipping class file creation.');
 
             return;
@@ -118,18 +118,19 @@ class GenerateApiController extends Command
         // Write the API Controller class file
         $file->put($path, $stubContents);
 
-        $this->info('API Controller class file generated successfully: '.$path);
+        $this->info('API Controller class file generated successfully: ' . $path);
     }
 
     /**
      * Creates a directory if it doesn't exist.
      *
      * @param string $directory
+     *
      * @return void
      */
     protected function createDirectoryIfNeeded($directory)
     {
-        if ( ! is_dir($directory)) {
+        if (! is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
     }
@@ -138,6 +139,7 @@ class GenerateApiController extends Command
      * Gets the namespace from a fully qualified class name.
      *
      * @param string $controller
+     *
      * @return string
      */
     protected function getNamespace($controller)

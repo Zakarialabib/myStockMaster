@@ -19,7 +19,7 @@ class SyncDesktopDatabase extends Command
     /** Execute the console command. */
     public function handle(DatabaseSyncService $syncService): int
     {
-        if ( ! EnvironmentService::isDesktop()) {
+        if (! EnvironmentService::isDesktop()) {
             $this->error('This command can only be run in desktop mode.');
 
             return self::FAILURE;
@@ -27,14 +27,14 @@ class SyncDesktopDatabase extends Command
 
         $direction = $this->argument('direction');
 
-        if ( ! in_array($direction, ['to-offline', 'to-online', 'both'])) {
+        if (! in_array($direction, ['to-offline', 'to-online', 'both'])) {
             $this->error('Invalid direction. Use: to-offline, to-online, or both');
 
             return self::FAILURE;
         }
 
         // Check online availability
-        if ( ! $syncService->isOnlineAvailable()) {
+        if (! $syncService->isOnlineAvailable()) {
             $this->error('Online database is not available. Cannot perform sync.');
 
             return self::FAILURE;

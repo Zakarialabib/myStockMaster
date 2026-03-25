@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PurchaseExport implements FromQuery, WithMapping, WithHeadings
+class PurchaseExport implements FromQuery, WithHeadings, WithMapping
 {
     use Exportable;
     use ForModelsTrait;
@@ -28,9 +28,7 @@ class PurchaseExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param  Purchase  $row
-     *
-     * @return array
+     * @param Purchase $row
      */
     public function map($row): array
     {

@@ -6,17 +6,18 @@ namespace App\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\CustomerGroup;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Computed;
-use Livewire\Component;
 use App\Models\Role;
-use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Create extends Component
 {
     use WithAlert;
+
     public $createModal = false;
 
     public Customer $customer;

@@ -6,12 +6,12 @@ namespace App\Livewire\Users;
 
 use App\Livewire\Utils\WithModels;
 use App\Models\User;
-use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Edit extends Component
 {
@@ -79,10 +79,10 @@ class Edit extends Component
         $this->validate();
 
         $this->user->update([
-            'name'    => $this->name,
-            'email'   => $this->email,
-            'phone'   => $this->phone,
-            'city'    => $this->city,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'city' => $this->city,
             'country' => $this->country,
             'address' => $this->address,
         ]);

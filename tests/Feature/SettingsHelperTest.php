@@ -18,8 +18,8 @@ describe('Settings Helper Function', function () {
         // Create settings table and data
         $this->artisan('migrate');
         Setting::create([
-            'company_name'           => 'Test Company',
-            'site_title'             => 'Test Site',
+            'company_name' => 'Test Company',
+            'site_title' => 'Test Site',
             'installation_completed' => true,
         ]);
 
@@ -34,8 +34,8 @@ describe('Settings Helper Function', function () {
         // Create settings table and data
         $this->artisan('migrate');
         Setting::create([
-            'company_name'           => 'Test Company',
-            'site_title'             => 'Test Site',
+            'company_name' => 'Test Company',
+            'site_title' => 'Test Site',
             'installation_completed' => true,
         ]);
 
@@ -60,7 +60,7 @@ describe('Settings Helper Function', function () {
         $this->artisan('migrate');
         Setting::create([
             'company_name' => 'Test Company',
-            'site_title'   => 'Test Site',
+            'site_title' => 'Test Site',
         ]);
 
         // First call should cache the settings
@@ -105,7 +105,7 @@ describe('Setting Model Static Methods', function () {
         $this->artisan('migrate');
         Setting::create([
             'company_name' => 'Test Company',
-            'site_title'   => 'Test Site',
+            'site_title' => 'Test Site',
         ]);
 
         expect(Setting::get('company_name'))->toBe('Test Company');

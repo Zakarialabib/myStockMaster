@@ -19,7 +19,7 @@ class InitializeDesktopDatabase extends Command
     /** Execute the console command. */
     public function handle(DatabaseSyncService $syncService): int
     {
-        if ( ! EnvironmentService::isDesktop()) {
+        if (! EnvironmentService::isDesktop()) {
             $this->error('This command can only be run in desktop mode.');
 
             return self::FAILURE;
@@ -31,7 +31,7 @@ class InitializeDesktopDatabase extends Command
         $dbPath = storage_path('database/desktop.sqlite');
 
         if (file_exists($dbPath) && ! $this->option('force')) {
-            if ( ! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
+            if (! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
                 $this->info('Database initialization cancelled.');
 
                 return self::SUCCESS;
@@ -39,10 +39,10 @@ class InitializeDesktopDatabase extends Command
         }
 
         // Create database file if it doesn't exist
-        if ( ! file_exists($dbPath)) {
+        if (! file_exists($dbPath)) {
             $this->info('Creating desktop database file...');
 
-            if ( ! is_dir(dirname($dbPath))) {
+            if (! is_dir(dirname($dbPath))) {
                 mkdir(dirname($dbPath), 0755, true);
             }
             touch($dbPath);

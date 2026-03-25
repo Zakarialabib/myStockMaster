@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Settings;
 
 use App\Models\Language;
+use App\Traits\WithAlert;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Languages extends Component
 {
@@ -35,7 +35,7 @@ class Languages extends Component
             Language::where('is_default', '=', true)->update(['is_default' => false]);
             $trans = Language::findOrFail($id);
             $trans->is_default = true;
-            $trans->updated_at = new DateTime();
+            $trans->updated_at = new DateTime;
             $trans->save();
 
             $this->alert('success', __('Language updated successfully!'));

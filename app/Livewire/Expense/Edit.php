@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Expense;
 
 use App\Livewire\Utils\WithModels;
-use Livewire\Component;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Edit extends Component
 {
@@ -86,14 +86,14 @@ class Edit extends Component
         $this->validate();
 
         $this->expense->update([
-            'reference'    => $this->reference,
-            'category_id'  => $this->category_id,
-            'date'         => $this->date,
-            'amount'       => $this->amount,
-            'description'  => $this->description,
-            'start_date'   => $this->start_date,
-            'end_date'     => $this->end_date,
-            'frequency'    => $this->frequency,
+            'reference' => $this->reference,
+            'category_id' => $this->category_id,
+            'date' => $this->date,
+            'amount' => $this->amount,
+            'description' => $this->description,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'frequency' => $this->frequency,
             'warehouse_id' => $this->warehouse_id,
         ]);
 

@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\Transfer;
 
 use App\Livewire\Utils\WithModels;
-use App\Models\TransferDetails;
-use App\Models\Transfer;
 use App\Models\ProductWarehouse;
+use App\Models\Transfer;
+use App\Models\TransferDetails;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Livewire\Component;
-use Throwable;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Throwable;
 
 #[Layout('layouts.app')]
 class Create extends Component
@@ -52,7 +52,7 @@ class Create extends Component
     {
         $this->products = [];
 
-        $this->reference = 'Adj-'.Str::random(5);
+        $this->reference = 'Adj-' . Str::random(5);
         $this->date = date('Y-m-d');
 
         if (settings()->default_warehouse_id !== null) {
@@ -75,7 +75,7 @@ class Create extends Component
     {
         abort_if(Gate::denies('transfer_create'), 403);
 
-        if ( ! $this->from_warehouse_id) {
+        if (! $this->from_warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -85,25 +85,25 @@ class Create extends Component
             $this->validate();
 
             $transfer = Transfer::create([
-                'reference'         => $this->reference,
-                'date'              => $this->date,
-                'user_id'           => auth()->id(),
+                'reference' => $this->reference,
+                'date' => $this->date,
+                'user_id' => auth()->id(),
                 'from_warehouse_id' => $this->from_warehouse_id,
-                'total_qty'         => $this->total_qty,
-                'total_cost'        => $this->total_cost,
-                'total_amount'      => $this->total_amount,
-                'shipping_amount'   => $this->shipping_amount,
-                'document'          => $this->document,
-                'status'            => true,
-                'note'              => $this->note,
+                'total_qty' => $this->total_qty,
+                'total_cost' => $this->total_cost,
+                'total_amount' => $this->total_amount,
+                'shipping_amount' => $this->shipping_amount,
+                'document' => $this->document,
+                'status' => true,
+                'note' => $this->note,
             ]);
 
             foreach ($this->products as $product) {
                 TransferDetails::create([
-                    'transfer_id'  => $transfer->id,
-                    'product_id'   => $product['id'],
+                    'transfer_id' => $transfer->id,
+                    'product_id' => $product['id'],
                     'warehouse_id' => $this->to_warehouse_id,
-                    'quantity'     => $product['quantities'],
+                    'quantity' => $product['quantities'],
                 ]);
 
                 $productWarehouse = ProductWarehouse::where('product_id', $product['id'])
@@ -122,7 +122,7 @@ class Create extends Component
 
             return redirect()->route('transfers.index');
         } catch (Throwable $throwable) {
-            $this->alert('error', 'Error Occurred in '.$throwable->getMessage());
+            $this->alert('error', 'Error Occurred in ' . $throwable->getMessage());
         }
     }
 

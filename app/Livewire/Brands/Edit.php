@@ -7,10 +7,10 @@ namespace App\Livewire\Brands;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
@@ -52,7 +52,7 @@ class Edit extends Component
         $this->validate();
 
         if ($this->image) {
-            $imageName = Str::slug($this->name).'-'.$this->image->extension();
+            $imageName = Str::slug($this->name) . '-' . $this->image->extension();
             $this->image->storeAs('brands', $imageName);
             $this->image = $imageName;
         }

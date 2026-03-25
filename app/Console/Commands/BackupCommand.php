@@ -46,17 +46,17 @@ class BackupCommand extends Command
             $artisan_command = '';
 
             switch (settings()->backup_content) {
-                case 'db': {
+                case 'db':
                     $artisan_command = 'backup:run & --only-db';
 
                     break;
-                }
-                case 'all': {
+
+                case 'all':
                     config(['backup.source.files.include' => base_path()]);
                     $artisan_command = 'backup:run';
 
                     break;
-                }
+
             }
 
             $command = explode('&', $artisan_command);
@@ -72,13 +72,13 @@ class BackupCommand extends Command
                         preg_match('/Backup failed because(.*?)$/ms', $output, $match);
                         // $message .= "Backup Manager -- backup process failed because ";
                         // $message .= isset($match[1]) ? $match[1] : '';
-                        Log::error('Backup Manager -- backup process failed because'.PHP_EOL.$output);
+                        Log::error('Backup Manager -- backup process failed because' . PHP_EOL . $output);
                     } else {
                         Log::info('Backup Manager -- backup process has started');
                     }
                 }
             } catch (Exception $e) {
-                Log::info('backup update failed - '.$e->getMessage());
+                Log::info('backup update failed - ' . $e->getMessage());
             }
         }
     }

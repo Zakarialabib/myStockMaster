@@ -10,25 +10,25 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Notifications\ProductTelegram;
+use App\Traits\WithAlert;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Http\Response;
-use Livewire\Attributes\Url;
-use App\Traits\WithAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 #[Title('Products')]
 class Index extends Component
 {
-    use WithFileUploads;
     use Datatable;
     use WithAlert;
+    use WithFileUploads;
 
     public function placeholder()
     {
@@ -83,11 +83,11 @@ class Index extends Component
         $confirmationMessage = __('Are you sure you want to delete this product? if something happens you can be recover it.');
 
         $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
 
         $this->product = $product;
@@ -98,11 +98,11 @@ class Index extends Component
         $confirmationMessage = __('Are you sure you want to delete the selected products? items can be recovered.');
 
         $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'deleteSelected',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'deleteSelected',
         ]);
     }
 
@@ -156,15 +156,15 @@ class Index extends Component
                 'movements',
             ])->select('products.*')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ])
             ->when($this->filterAvailability !== '', function ($query) {
                 $query->where('availability', $this->filterAvailability);
             })
             ->when($this->filterSeasonality, function ($query) {
-                $query->where('seasonality', 'like', '%'.$this->filterSeasonality.'%');
+                $query->where('seasonality', 'like', '%' . $this->filterSeasonality . '%');
             });
 
         $products = $query->paginate($this->perPage);
@@ -216,7 +216,7 @@ class Index extends Component
 
     private function callExport(): ProductExport
     {
-        return new ProductExport();
+        return new ProductExport;
     }
 
     public function downloadSelected()

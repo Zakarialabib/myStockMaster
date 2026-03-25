@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Reports;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Product;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class StockAlertReport extends Component
@@ -18,9 +18,13 @@ class StockAlertReport extends Component
     use WithPagination;
 
     public $thresholds = [];
+
     public $filterName = '';
+
     public $filterCode = '';
+
     public $filterQuantityMin = null;
+
     public $filterQuantityMax = null;
 
     #[Computed]
@@ -29,11 +33,11 @@ class StockAlertReport extends Component
         $query = Product::belowStockAlert();
 
         if ($this->filterName) {
-            $query->where('name', 'like', '%'.$this->filterName.'%');
+            $query->where('name', 'like', '%' . $this->filterName . '%');
         }
 
         if ($this->filterCode) {
-            $query->where('code', 'like', '%'.$this->filterCode.'%');
+            $query->where('code', 'like', '%' . $this->filterCode . '%');
         }
 
         if ($this->filterQuantityMin !== null) {

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\Transfer;
 
 use App\Livewire\Utils\WithModels;
-use App\Models\TransferDetails;
-use App\Models\Transfer;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
+use App\Models\Transfer;
+use App\Models\TransferDetails;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
@@ -39,7 +39,7 @@ class Edit extends Component
 
     #[Validate([
         'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type'     => 'required|in:add,sub',
+        'products.*.type' => 'required|in:add,sub',
     ])]
     public array $products = [];
 
@@ -65,21 +65,21 @@ class Edit extends Component
         $this->validate();
 
         $this->transfer->update([
-            'reference'    => $this->reference,
-            'note'         => $this->note,
-            'date'         => $this->date,
-            'user_id'      => auth()->id(),
+            'reference' => $this->reference,
+            'note' => $this->note,
+            'date' => $this->date,
+            'user_id' => auth()->id(),
             'warehouse_id' => $this->warehouse_id,
         ]);
 
         foreach ($this->products as $product) {
             TransferDetails::updateOrCreate(
                 [
-                    'transfer_id'  => $this->transfer->id,
-                    'product_id'   => $product['product_id'],
+                    'transfer_id' => $this->transfer->id,
+                    'product_id' => $product['product_id'],
                     'warehouse_id' => $product['warehouse_id'],
-                    'quantity'     => $product['quantity'],
-                    'type'         => $product['type'],
+                    'quantity' => $product['quantity'],
+                    'type' => $product['type'],
                 ]
             );
 

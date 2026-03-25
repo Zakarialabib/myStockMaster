@@ -7,8 +7,8 @@ namespace App\Livewire\CashRegister;
 use App\Livewire\Utils\Datatable;
 use App\Models\CashRegister;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -62,8 +62,8 @@ class Index extends Component
         $query = CashRegister::with(['user', 'warehouse'])
             ->whereBetween('created_at', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

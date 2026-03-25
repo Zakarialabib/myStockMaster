@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Services\CartService;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -14,7 +14,9 @@ use Livewire\Component;
 trait LivewireCartTrait
 {
     protected ?CartService $cart = null;
+
     public string $cartInstance = 'default';
+
     public array $cartConfig = [];
 
     /** Initialize cart for Livewire component */
@@ -98,14 +100,10 @@ trait LivewireCartTrait
     }
 
     /** Sync component state with cart - override in component if needed */
-    protected function syncCartState(): void
-    {
-    }
+    protected function syncCartState(): void {}
 
     /** Persist cart state - override in component if needed */
-    protected function persistCartState(): void
-    {
-    }
+    protected function persistCartState(): void {}
 
     #[Computed]
     public function cartContent(): Collection
@@ -166,9 +164,9 @@ trait LivewireCartTrait
 
         $this->dispatch('cart-updated', [
             'instance' => $this->cartInstance,
-            'action'   => 'add',
-            'rowId'    => $rowId,
-            'item'     => $item,
+            'action' => 'add',
+            'rowId' => $rowId,
+            'item' => $item,
         ]);
 
         $this->syncCartState();
@@ -183,9 +181,9 @@ trait LivewireCartTrait
 
         $this->dispatch('cart-updated', [
             'instance' => $this->cartInstance,
-            'action'   => 'update',
-            'rowId'    => $rowId,
-            'data'     => $data,
+            'action' => 'update',
+            'rowId' => $rowId,
+            'data' => $data,
         ]);
 
         $this->syncCartState();
@@ -198,8 +196,8 @@ trait LivewireCartTrait
 
         $this->dispatch('cart-updated', [
             'instance' => $this->cartInstance,
-            'action'   => 'remove',
-            'rowId'    => $rowId,
+            'action' => 'remove',
+            'rowId' => $rowId,
         ]);
 
         $this->syncCartState();
@@ -212,7 +210,7 @@ trait LivewireCartTrait
 
         $this->dispatch('cart-updated', [
             'instance' => $this->cartInstance,
-            'action'   => 'clear',
+            'action' => 'clear',
         ]);
 
         $this->syncCartState();

@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use App\Imports\ProductImport;
 use App\Jobs\ImportJob;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Brand;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\ProductImport;
 use Throwable;
 
 class Import extends Component
@@ -59,14 +59,14 @@ class Import extends Component
         abort_if(Gate::denies('product_access'), 403);
 
         if ($this->file->extension() === 'xlsx' || $this->file->extension() === 'xls') {
-            $filename = time().'-product.'.$this->file->getClientOriginalExtension();
+            $filename = time() . '-product.' . $this->file->getClientOriginalExtension();
             $this->file->storeAs('products', $filename);
 
             ImportJob::dispatch($filename);
 
             $this->alert('success', __('Product imported successfully!'));
         } else {
-            $this->alert('error', __('File is a '.$this->file->extension().' file.!! Please upload a valid xls/csv file..!!'));
+            $this->alert('error', __('File is a ' . $this->file->extension() . ' file.!! Please upload a valid xls/csv file..!!'));
         }
 
         $this->importModal = false;
@@ -82,7 +82,7 @@ class Import extends Component
                 'file' => 'required|mimes:xls,xlsx',
             ]);
 
-            Excel::import(new ProductImport(), $this->file);
+            Excel::import(new ProductImport, $this->file);
 
             $this->alert('success', __('Product imported successfully!'));
 
@@ -106,31 +106,31 @@ class Import extends Component
 
             if ($product === null) {
                 $product = Product::create([
-                    'name'        => $row['name'],
+                    'name' => $row['name'],
                     'description' => $row['description'],
-                    'slug'        => Str::slug($row['name'], '-').'-'.Str::random(5),
-                    'code'        => $row['code'] ?? Str::random(10),
+                    'slug' => Str::slug($row['name'], '-') . '-' . Str::random(5),
+                    'code' => $row['code'] ?? Str::random(10),
                     'category_id' => Category::where('name', $row['category'])->first()->id ?? null,
-                    'brand_id'    => Brand::where('name', $row['brand'])->first()->id ?? null,
-                    'image'       => '',
+                    'brand_id' => Brand::where('name', $row['brand'])->first()->id ?? null,
+                    'image' => '',
                     // 'gallery' => getGalleryFromUrl($row[7]) ?? null,
                     'status' => 0,
                 ]);
                 $product->warehouses()->attach($row['warehouse'], [
-                    'qty'         => $row['quantity'],
-                    'price'       => $row['price'],
-                    'cost'        => $row['cost'],
-                    'old_price'   => $row['old_price'] ?? null,
+                    'qty' => $row['quantity'],
+                    'price' => $row['price'],
+                    'cost' => $row['cost'],
+                    'old_price' => $row['old_price'] ?? null,
                     'stock_alert' => $row['stock_alert'] ?? null,
                     // ... other product warehouse attributes ...
                 ]);
             }
 
             $warehouseData = [
-                'qty'         => $row['quantity'],
-                'price'       => $row['price'],
-                'cost'        => $row['cost'],
-                'old_price'   => $row['old_price'] ?? null,
+                'qty' => $row['quantity'],
+                'price' => $row['price'],
+                'cost' => $row['cost'],
+                'old_price' => $row['old_price'] ?? null,
                 'stock_alert' => $row['stock_alert'] ?? null,
                 // ... other product warehouse attributes ...
             ];

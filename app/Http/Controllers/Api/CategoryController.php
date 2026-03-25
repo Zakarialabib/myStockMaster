@@ -6,17 +6,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class CategoryController extends BaseController
 {
     /**
      * Retrieve a list of categories with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     public function index(Request $request)
     {
@@ -27,15 +24,15 @@ class CategoryController extends BaseController
 
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
                 $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                //Filters
+                // Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
+                // capture brand_id filter
                 // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
                 // if ($brand_id !== '') {
                 //     $where_raw .= " AND (brand_id =  $brand_id)";
                 // }
-                //capture sort fields
+                // capture sort fields
                 $sort_array = explode(',', $sort);
 
                 if (count($sort_array) > 0) {
@@ -65,9 +62,6 @@ class CategoryController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     *
      */
     public function store(Request $request)
     {
@@ -89,8 +83,7 @@ class CategoryController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function show($id)
     {
@@ -110,9 +103,7 @@ class CategoryController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function update(Request $request, $id)
     {
@@ -125,8 +116,7 @@ class CategoryController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function destroy($id)
     {

@@ -15,23 +15,23 @@ it('creates an adjustment', function () {
     $note = 'This is an adjustment note.';
     $products = [
         [
-            'id'         => 1,
+            'id' => 1,
             'quantities' => 10,
-            'types'      => 'add',
+            'types' => 'add',
         ],
         [
-            'id'         => 2,
+            'id' => 2,
             'quantities' => 20,
-            'types'      => 'sub',
+            'types' => 'sub',
         ],
     ];
 
     // When
     livewire('adjustment.create', [
         'reference' => $reference,
-        'date'      => $date,
-        'note'      => $note,
-        'products'  => $products,
+        'date' => $date,
+        'note' => $note,
+        'products' => $products,
     ]);
 
     // Then

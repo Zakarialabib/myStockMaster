@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  */
 final class CalculateBreakEvenAction
 {
-    public function __invoke(array $fixedCosts, Carbon $analysisDate = null): array
+    public function __invoke(array $fixedCosts, ?Carbon $analysisDate = null): array
     {
         $analysisDate ??= now();
 
@@ -42,13 +42,13 @@ final class CalculateBreakEvenAction
         );
 
         return [
-            'fixed_costs'         => $monthlyFixedCosts,
-            'sale_metrics'        => $saleMetrics,
+            'fixed_costs' => $monthlyFixedCosts,
+            'sale_metrics' => $saleMetrics,
             'break_even_analysis' => $breakEvenAnalysis,
             'current_performance' => $currentPerformance,
-            'recommendations'     => $this->getRecommendations($breakEvenAnalysis, $currentPerformance),
-            'analysis_date'       => $analysisDate->toDateString(),
-            'calculated_at'       => now()->toISOString(),
+            'recommendations' => $this->getRecommendations($breakEvenAnalysis, $currentPerformance),
+            'analysis_date' => $analysisDate->toDateString(),
+            'calculated_at' => now()->toISOString(),
         ];
     }
 
@@ -64,12 +64,12 @@ final class CalculateBreakEvenAction
 
         if ($sales->isEmpty()) {
             return [
-                'total_sales'                    => 0,
-                'average_sale_value'             => 0,
+                'total_sales' => 0,
+                'average_sale_value' => 0,
                 'average_variable_cost_per_sale' => 0,
-                'contribution_margin_per_sale'   => 0,
-                'daily_average_sales'            => 0,
-                'monthly_projected_sales'        => 0,
+                'contribution_margin_per_sale' => 0,
+                'daily_average_sales' => 0,
+                'monthly_projected_sales' => 0,
             ];
         }
 
@@ -88,35 +88,35 @@ final class CalculateBreakEvenAction
         $monthlyProjectedSales = $dailyAverageSales * 30;
 
         return [
-            'total_sales'                    => $totalSales,
-            'average_sale_value'             => round($averageSaleValue, 2),
+            'total_sales' => $totalSales,
+            'average_sale_value' => round($averageSaleValue, 2),
             'average_variable_cost_per_sale' => round($averageVariableCostPerSale, 2),
-            'contribution_margin_per_sale'   => round($contributionMarginPerSale, 2),
+            'contribution_margin_per_sale' => round($contributionMarginPerSale, 2),
             'contribution_margin_percentage' => round(($contributionMarginPerSale / $averageSaleValue) * 100, 2),
-            'daily_average_sales'            => round($dailyAverageSales, 1),
-            'monthly_projected_sales'        => round($monthlyProjectedSales, 0),
+            'daily_average_sales' => round($dailyAverageSales, 1),
+            'monthly_projected_sales' => round($monthlyProjectedSales, 0),
         ];
     }
 
     private function calculateMonthlyFixedCosts(array $fixedCosts): array
     {
         $costCategories = [
-            'rent'                   => $fixedCosts['rent'] ?? 0,
-            'salaries'               => $fixedCosts['salaries'] ?? 0,
-            'insurance'              => $fixedCosts['insurance'] ?? 0,
-            'utilities_fixed'        => $fixedCosts['utilities_fixed'] ?? 0,
-            'equipment_lease'        => $fixedCosts['equipment_lease'] ?? 0,
+            'rent' => $fixedCosts['rent'] ?? 0,
+            'salaries' => $fixedCosts['salaries'] ?? 0,
+            'insurance' => $fixedCosts['insurance'] ?? 0,
+            'utilities_fixed' => $fixedCosts['utilities_fixed'] ?? 0,
+            'equipment_lease' => $fixedCosts['equipment_lease'] ?? 0,
             'software_subscriptions' => $fixedCosts['software_subscriptions'] ?? 0,
-            'marketing_fixed'        => $fixedCosts['marketing_fixed'] ?? 0,
-            'other_fixed'            => $fixedCosts['other_fixed'] ?? 0,
+            'marketing_fixed' => $fixedCosts['marketing_fixed'] ?? 0,
+            'other_fixed' => $fixedCosts['other_fixed'] ?? 0,
         ];
 
         $totalFixedCosts = array_sum($costCategories);
 
         return [
             'breakdown' => $costCategories,
-            'total'     => round($totalFixedCosts, 2),
-            'daily'     => round($totalFixedCosts / 30, 2),
+            'total' => round($totalFixedCosts, 2),
+            'daily' => round($totalFixedCosts / 30, 2),
         ];
     }
 
@@ -126,13 +126,13 @@ final class CalculateBreakEvenAction
 
         if ($contributionMargin <= 0) {
             return [
-                'break_even_sales_monthly'   => null,
-                'break_even_sales_daily'     => null,
+                'break_even_sales_monthly' => null,
+                'break_even_sales_daily' => null,
                 'break_even_revenue_monthly' => null,
-                'break_even_revenue_daily'   => null,
-                'contribution_margin'        => round($contributionMargin, 2),
-                'status'                     => 'impossible',
-                'message'                    => __('Break-even impossible: Variable costs exceed selling price'),
+                'break_even_revenue_daily' => null,
+                'contribution_margin' => round($contributionMargin, 2),
+                'status' => 'impossible',
+                'message' => __('Break-even impossible: Variable costs exceed selling price'),
             ];
         }
 
@@ -142,13 +142,13 @@ final class CalculateBreakEvenAction
         $breakEvenRevenueDaily = $breakEvenSalesDaily * $averageSaleValue;
 
         return [
-            'break_even_sales_monthly'       => round($breakEvenSalesMonthly, 0),
-            'break_even_sales_daily'         => round($breakEvenSalesDaily, 1),
-            'break_even_revenue_monthly'     => round($breakEvenRevenueMonthly, 2),
-            'break_even_revenue_daily'       => round($breakEvenRevenueDaily, 2),
-            'contribution_margin'            => round($contributionMargin, 2),
+            'break_even_sales_monthly' => round($breakEvenSalesMonthly, 0),
+            'break_even_sales_daily' => round($breakEvenSalesDaily, 1),
+            'break_even_revenue_monthly' => round($breakEvenRevenueMonthly, 2),
+            'break_even_revenue_daily' => round($breakEvenRevenueDaily, 2),
+            'contribution_margin' => round($contributionMargin, 2),
             'contribution_margin_percentage' => round(($contributionMargin / $averageSaleValue) * 100, 2),
-            'status'                         => 'calculable',
+            'status' => 'calculable',
         ];
     }
 
@@ -156,7 +156,7 @@ final class CalculateBreakEvenAction
     {
         if ($breakEvenAnalysis['status'] === 'impossible') {
             return [
-                'status'  => 'critical',
+                'status' => 'critical',
                 'message' => __('Unable to break even with current pricing structure'),
             ];
         }
@@ -172,20 +172,20 @@ final class CalculateBreakEvenAction
             $breakEvenRatio >= 1.5 => 'good',
             $breakEvenRatio >= 1.1 => 'marginal',
             $breakEvenRatio >= 1.0 => 'break_even',
-            default                => 'below_break_even'
+            default => 'below_break_even'
         };
 
         // Calculate safety margin
         $safetyMargin = (($currentMonthlySales - $breakEvenMonthlySales) / $currentMonthlySales) * 100;
 
         return [
-            'current_monthly_sales'    => $currentMonthlySales,
+            'current_monthly_sales' => $currentMonthlySales,
             'break_even_monthly_sales' => $breakEvenMonthlySales,
-            'sales_above_break_even'   => round($salesAboveBreakEven, 0),
-            'break_even_ratio'         => round($breakEvenRatio, 2),
+            'sales_above_break_even' => round($salesAboveBreakEven, 0),
+            'break_even_ratio' => round($breakEvenRatio, 2),
             'safety_margin_percentage' => round($safetyMargin, 2),
-            'status'                   => $status,
-            'days_to_break_even'       => $breakEvenAnalysis['break_even_sales_daily'] > 0
+            'status' => $status,
+            'days_to_break_even' => $breakEvenAnalysis['break_even_sales_daily'] > 0
                 ? round($breakEvenAnalysis['break_even_sales_monthly'] / $saleMetrics['daily_average_sales'], 1)
                 : null,
         ];

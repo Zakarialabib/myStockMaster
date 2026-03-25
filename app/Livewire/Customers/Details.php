@@ -8,17 +8,17 @@ use App\Livewire\Utils\Datatable;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleReturn;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Details extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
 
     public $model = Customer::class;
 
@@ -43,8 +43,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('customer')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -57,8 +57,8 @@ class Details extends Component
         $query = Sale::where('customer_id', $this->customer_id)
             ->with('salepayments.sale')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 

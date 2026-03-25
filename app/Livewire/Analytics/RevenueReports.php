@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Livewire\Analytics;
 
 use App\Actions\Analytics\GenerateRevenueReportAction;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Carbon\Carbon;
-use Livewire\Component;
+use Exception;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Livewire\WithPagination;
-use Exception;
 
 #[Lazy]
 class RevenueReports extends Component
@@ -35,9 +35,13 @@ class RevenueReports extends Component
     public $productFilter = null;
 
     public $revenueData = [];
+
     public $loading = false;
+
     public $includeProductBreakdown = true;
+
     public $includeCategoryBreakdown = true;
+
     public $includeTimeBreakdown = true;
 
     public function placeholder()
@@ -104,10 +108,10 @@ class RevenueReports extends Component
             $dateTo = Carbon::parse($this->dateTo);
 
             $options = [
-                'time_breakdown'             => $this->reportType,
-                'include_product_breakdown'  => $this->includeProductBreakdown,
+                'time_breakdown' => $this->reportType,
+                'include_product_breakdown' => $this->includeProductBreakdown,
                 'include_category_breakdown' => $this->includeCategoryBreakdown,
-                'include_time_breakdown'     => $this->includeTimeBreakdown,
+                'include_time_breakdown' => $this->includeTimeBreakdown,
             ];
 
             // Add filters if specified
@@ -119,14 +123,14 @@ class RevenueReports extends Component
                 $options['product_filter'] = $this->productFilter;
             }
 
-            $revenueAction = new GenerateRevenueReportAction();
+            $revenueAction = new GenerateRevenueReportAction;
             $options = array_merge([
                 'date_from' => $dateFrom,
-                'date_to'   => $dateTo,
+                'date_to' => $dateTo,
             ], $options);
             $this->revenueData = $revenueAction($options);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to load revenue report: '.$e->getMessage());
+            session()->flash('error', 'Failed to load revenue report: ' . $e->getMessage());
             $this->revenueData = [];
         } finally {
             $this->loading = false;
@@ -146,7 +150,7 @@ class RevenueReports extends Component
     public function exportReport($format = 'json')
     {
         try {
-            $filename = 'revenue_report_'.$this->reportType.'_'.now()->format('Y-m-d_H-i-s');
+            $filename = 'revenue_report_' . $this->reportType . '_' . now()->format('Y-m-d_H-i-s');
 
             switch ($format) {
                 case 'csv':
@@ -156,7 +160,7 @@ class RevenueReports extends Component
                     return $this->exportJSON($filename);
             }
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export report: '.$e->getMessage());
+            session()->flash('error', 'Failed to export report: ' . $e->getMessage());
         }
     }
 
@@ -165,23 +169,23 @@ class RevenueReports extends Component
         return response()->streamDownload(function () {
             echo json_encode([
                 'report_type' => $this->reportType,
-                'date_range'  => [
+                'date_range' => [
                     'from' => $this->dateFrom,
-                    'to'   => $this->dateTo,
+                    'to' => $this->dateTo,
                 ],
                 'filters' => [
                     'category' => $this->categoryFilter,
-                    'product'  => $this->productFilter,
+                    'product' => $this->productFilter,
                 ],
                 'options' => [
-                    'include_product_breakdown'  => $this->includeProductBreakdown,
+                    'include_product_breakdown' => $this->includeProductBreakdown,
                     'include_category_breakdown' => $this->includeCategoryBreakdown,
-                    'include_time_breakdown'     => $this->includeTimeBreakdown,
+                    'include_time_breakdown' => $this->includeTimeBreakdown,
                 ],
-                'data'         => $this->revenueData,
+                'data' => $this->revenueData,
                 'generated_at' => now()->toISOString(),
             ], JSON_PRETTY_PRINT);
-        }, $filename.'.json', [
+        }, $filename . '.json', [
             'Content-Type' => 'application/json',
         ]);
     }
@@ -207,14 +211,14 @@ class RevenueReports extends Component
             }
 
             fclose($output);
-        }, $filename.'.csv', [
+        }, $filename . '.csv', [
             'Content-Type' => 'text/csv',
         ]);
     }
 
     public function getChartData()
     {
-        if ( ! isset($this->revenueData['time_breakdown'])) {
+        if (! isset($this->revenueData['time_breakdown'])) {
             return [];
         }
 
@@ -229,20 +233,20 @@ class RevenueReports extends Component
         }
 
         return [
-            'labels'   => $labels,
+            'labels' => $labels,
             'datasets' => [
                 [
-                    'label'           => 'Revenue',
-                    'data'            => $revenues,
-                    'borderColor'     => 'rgb(59, 130, 246)',
+                    'label' => 'Revenue',
+                    'data' => $revenues,
+                    'borderColor' => 'rgb(59, 130, 246)',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
                 ],
                 [
-                    'label'           => 'Sales Count',
-                    'data'            => $sales,
-                    'borderColor'     => 'rgb(16, 185, 129)',
+                    'label' => 'Sales Count',
+                    'data' => $sales,
+                    'borderColor' => 'rgb(16, 185, 129)',
                     'backgroundColor' => 'rgba(16, 185, 129, 0.1)',
-                    'yAxisID'         => 'y1',
+                    'yAxisID' => 'y1',
                 ],
             ],
         ];
@@ -260,8 +264,8 @@ class RevenueReports extends Component
 
         return view('livewire.analytics.revenue-reports', [
             'categories' => $categories,
-            'products'   => $products,
-            'chartData'  => $this->getChartData(),
+            'products' => $products,
+            'chartData' => $this->getChartData(),
         ]);
     }
 }

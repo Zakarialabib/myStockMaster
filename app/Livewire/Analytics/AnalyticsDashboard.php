@@ -10,11 +10,11 @@ use App\Actions\Analytics\GenerateRevenueReportAction;
 use App\Models\Product;
 use App\Traits\WithAlert;
 use Carbon\Carbon;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\WithPagination;
 use Throwable;
 
 #[Lazy]
@@ -35,10 +35,15 @@ class AnalyticsDashboard extends Component
     public $dateTo = '';
 
     public $selectedProduct = null;
+
     public $analyticsData = [];
+
     public $revenueData = [];
+
     public $priceTrends = [];
+
     public $loading = false;
+
     public $search = '';
 
     public function mount(): void
@@ -74,9 +79,9 @@ class AnalyticsDashboard extends Component
             $dateTo = Carbon::parse($this->dateTo);
 
             $this->revenueData = app(GenerateRevenueReportAction::class)([
-                'date_from'          => $dateFrom,
-                'date_to'            => $dateTo,
-                'include_products'   => true,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'include_products' => true,
                 'include_categories' => true,
             ]);
 
@@ -90,7 +95,7 @@ class AnalyticsDashboard extends Component
                 }
             }
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Failed to load analytics.').' '.$throwable->getMessage());
+            $this->alert('error', __('Failed to load analytics.') . ' ' . $throwable->getMessage());
         } finally {
             $this->loading = false;
         }
@@ -99,7 +104,7 @@ class AnalyticsDashboard extends Component
     public function exportReport(string $type = 'revenue')
     {
         try {
-            $filename = $type.'_report_'.now()->format('Y-m-d_H-i-s').'.json';
+            $filename = $type . '_report_' . now()->format('Y-m-d_H-i-s') . '.json';
             $data = $type === 'revenue' ? $this->revenueData : $this->analyticsData;
 
             return response()->streamDownload(function () use ($data) {
@@ -108,7 +113,7 @@ class AnalyticsDashboard extends Component
                 'Content-Type' => 'application/json',
             ]);
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Failed to export report.').' '.$throwable->getMessage());
+            $this->alert('error', __('Failed to export report.') . ' ' . $throwable->getMessage());
         }
     }
 
@@ -117,8 +122,8 @@ class AnalyticsDashboard extends Component
     {
         return Product::query()
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%'.$this->search.'%')
-                    ->orWhere('code', 'like', '%'.$this->search.'%');
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('code', 'like', '%' . $this->search . '%');
             })
             ->orderBy('name')
             ->get();

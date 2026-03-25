@@ -39,7 +39,9 @@ class Purchase extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -127,7 +129,7 @@ class Purchase extends Model
                 $number = 1;
             }
 
-            $purchase->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
@@ -198,8 +200,8 @@ class Purchase extends Model
 
     public function scopeSearchByReference($query, $term)
     {
-        return $query->when( ! empty($term), function ($query) use ($term) {
-            $query->where('reference', 'like', '%'.$term.'%');
+        return $query->when(! empty($term), function ($query) use ($term) {
+            $query->where('reference', 'like', '%' . $term . '%');
         });
     }
 }

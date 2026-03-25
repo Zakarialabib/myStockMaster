@@ -7,18 +7,18 @@ namespace App\Livewire\PurchaseReturn;
 use App\Actions\Purchases\StorePurchaseReturnAction;
 use App\Models\Supplier;
 use App\Traits\LivewireCartTrait;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Create extends Component
 {
-    use WithAlert;
     use LivewireCartTrait;
+    use WithAlert;
 
     public $warehouse_id;
 
@@ -100,18 +100,18 @@ class Create extends Component
 
         app(StorePurchaseReturnAction::class)(
             [
-                'date'                => $this->date,
-                'reference'           => $this->reference,
-                'supplier_id'         => $this->supplier_id,
-                'user_id'             => Auth::id(),
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'supplier_id' => $this->supplier_id,
+                'user_id' => Auth::id(),
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount,
-                'paid_amount'         => $this->paid_amount,
-                'total_amount'        => $this->total_amount,
-                'status'              => $this->status,
-                'payment_method'      => $this->payment_method,
-                'note'                => $this->note,
+                'shipping_amount' => $this->shipping_amount,
+                'paid_amount' => $this->paid_amount,
+                'total_amount' => $this->total_amount,
+                'status' => $this->status,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -130,7 +130,7 @@ class Create extends Component
 
         return view('livewire.purchase-return.create', [
             'cart_items' => $this->cartContent,
-            'suppliers'  => $suppliers,
+            'suppliers' => $suppliers,
         ]);
     }
 }

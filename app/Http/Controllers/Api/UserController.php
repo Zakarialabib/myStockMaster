@@ -7,23 +7,17 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class UserController extends BaseController
 {
     /**
      * Retrieve a list of User with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     /**
      * Retrieve a list of expenses with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     public function index(Request $request)
     {
@@ -34,16 +28,16 @@ class UserController extends BaseController
 
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
                 $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                //Filters
+                // Filters
                 $where_raw = ' 1=1 ';
 
-                //capture category_id filter
+                // capture category_id filter
                 $category_id = $request->get('category_id') ? $request->get('category_id') : '';
 
                 if ($category_id !== '') {
                     $where_raw .= " AND (category_id =  $category_id)";
                 }
-                //capture sort fields
+                // capture sort fields
                 $sort_array = explode(',', $sort);
 
                 if (count($sort_array) > 0) {
@@ -73,9 +67,6 @@ class UserController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     *
      */
     public function store(Request $request)
     {
@@ -97,8 +88,7 @@ class UserController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function show($id)
     {
@@ -118,9 +108,7 @@ class UserController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function update(Request $request, $id)
     {
@@ -133,8 +121,7 @@ class UserController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function destroy($id)
     {

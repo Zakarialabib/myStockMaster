@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 class Permission extends SpatiePermission
 {
     use HasAdvancedFilter;
+
     public const ATTRIBUTES = [
         'id',
         'name',
@@ -17,6 +18,7 @@ class Permission extends SpatiePermission
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -29,7 +31,7 @@ class Permission extends SpatiePermission
     /**
      * Determine if the permission belongs to the role.
      *
-     * @param  mixed  $role
+     * @param mixed $role
      *
      * @return bool
      */

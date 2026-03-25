@@ -7,17 +7,14 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class CustomerController extends BaseController
 {
     /**
      * Retrieve a list of Customer with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     public function index(Request $request)
     {
@@ -28,15 +25,15 @@ class CustomerController extends BaseController
 
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
                 $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                //Filters
+                // Filters
                 $where_raw = ' 1=1 ';
 
-                //capture brand_id filter
+                // capture brand_id filter
                 // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
                 // if ($brand_id !== '') {
                 //     $where_raw .= " AND (brand_id =  $brand_id)";
                 // }
-                //capture sort fields
+                // capture sort fields
                 $sort_array = explode(',', $sort);
 
                 if (count($sort_array) > 0) {
@@ -66,9 +63,6 @@ class CustomerController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     *
      */
     public function store(Request $request)
     {
@@ -90,8 +84,7 @@ class CustomerController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function show($id)
     {
@@ -111,9 +104,7 @@ class CustomerController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function update(Request $request, $id)
     {
@@ -126,8 +117,7 @@ class CustomerController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function destroy($id)
     {

@@ -6,12 +6,12 @@ namespace App\Livewire\Reports;
 
 use App\Models\Customer;
 use App\Models\Sale;
+use App\Traits\WithAlert;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Lazy;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 #[Lazy]

@@ -8,12 +8,12 @@ use App\Actions\Analytics\AnalyzePriceTrendsAction;
 use App\Actions\Analytics\GenerateProductAnalyticsAction;
 use App\Models\Product;
 use Carbon\Carbon;
+use Exception;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Exception;
 
 #[Layout('layouts.app')]
 #[Lazy]
@@ -31,15 +31,17 @@ class ProductAnalytics extends Component
     public $dateTo;
 
     public $analyticsData = [];
+
     public $priceTrends = [];
 
     #[Validate([
-        'comparisonProducts'   => 'array|max:3',
+        'comparisonProducts' => 'array|max:3',
         'comparisonProducts.*' => 'exists:products,id',
     ])]
     public $comparisonProducts = [];
 
     public $loading = false;
+
     public $showComparison = false;
 
     public function mount($productId = null)
@@ -79,7 +81,7 @@ class ProductAnalytics extends Component
 
     public function loadProductAnalytics()
     {
-        if ( ! $this->productId) {
+        if (! $this->productId) {
             return;
         }
 
@@ -91,22 +93,22 @@ class ProductAnalytics extends Component
             $dateTo = Carbon::parse($this->dateTo);
 
             // Generate product analytics
-            $analyticsAction = new GenerateProductAnalyticsAction();
+            $analyticsAction = new GenerateProductAnalyticsAction;
             $this->analyticsData = $analyticsAction($product, [
                 'date_from' => $dateFrom,
-                'date_to'   => $dateTo,
+                'date_to' => $dateTo,
             ]);
 
             // Get price trends
-            $priceTrendsAction = new AnalyzePriceTrendsAction();
+            $priceTrendsAction = new AnalyzePriceTrendsAction;
             $this->priceTrends = $priceTrendsAction->getPriceHistory($product);
 
             // Load comparison data if products are selected
-            if ( ! empty($this->comparisonProducts)) {
+            if (! empty($this->comparisonProducts)) {
                 $this->loadComparisonData($dateFrom, $dateTo);
             }
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to load product analytics: '.$e->getMessage());
+            session()->flash('error', 'Failed to load product analytics: ' . $e->getMessage());
         } finally {
             $this->loading = false;
         }
@@ -114,7 +116,7 @@ class ProductAnalytics extends Component
 
     public function addComparisonProduct($productId)
     {
-        if ( ! in_array($productId, $this->comparisonProducts) && count($this->comparisonProducts) < 3) {
+        if (! in_array($productId, $this->comparisonProducts) && count($this->comparisonProducts) < 3) {
             $this->comparisonProducts[] = $productId;
             $this->showComparison = true;
             $this->loadProductAnalytics();
@@ -138,15 +140,15 @@ class ProductAnalytics extends Component
     {
         $this->showComparison = ! $this->showComparison;
 
-        if ( ! $this->showComparison) {
+        if (! $this->showComparison) {
             $this->comparisonProducts = [];
         }
     }
 
     private function loadComparisonData($dateFrom, $dateTo)
     {
-        $analyticsAction = new GenerateProductAnalyticsAction();
-        $priceTrendsAction = new AnalyzePriceTrendsAction();
+        $analyticsAction = new GenerateProductAnalyticsAction;
+        $priceTrendsAction = new AnalyzePriceTrendsAction;
 
         $this->analyticsData['comparison'] = [];
 
@@ -155,10 +157,10 @@ class ProductAnalytics extends Component
 
             if ($product) {
                 $this->analyticsData['comparison'][$productId] = [
-                    'product'   => $product,
+                    'product' => $product,
                     'analytics' => $analyticsAction($product, [
                         'date_from' => $dateFrom,
-                        'date_to'   => $dateTo,
+                        'date_to' => $dateTo,
                     ]),
                     'price_trends' => $priceTrendsAction->getPriceHistory($product),
                 ];
@@ -170,23 +172,23 @@ class ProductAnalytics extends Component
     {
         try {
             $product = Product::find($this->productId);
-            $filename = 'product_analytics_'.$product->code.'_'.now()->format('Y-m-d_H-i-s').'.json';
+            $filename = 'product_analytics_' . $product->code . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             return response()->streamDownload(function () {
                 echo json_encode([
                     'product_id' => $this->productId,
                     'date_range' => [
                         'from' => $this->dateFrom,
-                        'to'   => $this->dateTo,
+                        'to' => $this->dateTo,
                     ],
-                    'analytics'    => $this->analyticsData,
+                    'analytics' => $this->analyticsData,
                     'price_trends' => $this->priceTrends,
                 ], JSON_PRETTY_PRINT);
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export analytics: '.$e->getMessage());
+            session()->flash('error', 'Failed to export analytics: ' . $e->getMessage());
         }
     }
 
@@ -199,7 +201,7 @@ class ProductAnalytics extends Component
         $selectedProduct = $this->productId ? Product::find($this->productId) : null;
 
         return view('livewire.analytics.product-analytics', [
-            'products'        => $products,
+            'products' => $products,
             'selectedProduct' => $selectedProduct,
         ]);
     }

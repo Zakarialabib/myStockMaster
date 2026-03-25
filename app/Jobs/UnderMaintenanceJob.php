@@ -18,9 +18,7 @@ class UnderMaintenanceJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public function __construct(private $secret = null, private $refresh = false)
-    {
-    }
+    public function __construct(private $secret = null, private $refresh = false) {}
 
     public function handle(): void
     {
@@ -28,7 +26,7 @@ class UnderMaintenanceJob implements ShouldQueue
             Artisan::call('up');
         } else {
             Artisan::call('down', [
-                '--secret'  => $this->secret,
+                '--secret' => $this->secret,
                 '--refresh' => $this->refresh,
             ]);
         }

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Utils;
 
-use Livewire\Component;
-use Livewire\Attributes\Modelable;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Modelable;
+use Livewire\Component;
 
 class ColorPicker extends Component
 {
     use WithAlert;
+
     #[Modelable]
     public $value = '';
 

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Support\HasAdvancedFilter;
 
 class Shipment extends Model
 {
     use HasAdvancedFilter;
+
     public const ATTRIBUTES = [
         'user_id',
         'date',
@@ -22,6 +23,7 @@ class Shipment extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**

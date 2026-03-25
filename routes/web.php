@@ -121,7 +121,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/pos', PosIndex::class)->name('pos.index');
 
     // Product Adjustment
-    Route::prefix('adjustments')->name('adjustments.')->group(function(){
+    Route::prefix('adjustments')->name('adjustments.')->group(function () {
         Route::livewire('/', AdjustmentIndex::class)->name('index');
         Route::livewire('/create', CreateAdjustment::class)->name('create');
         Route::livewire('/update/{id}', EditAdjustment::class)->name('edit');
@@ -133,11 +133,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
 // Desktop-specific routes (only available in desktop mode)
 Route::prefix('desktop')->name('desktop.')->group(function () {
-    Route::prefix('shortcut')->name('shortcut.')->group(function(){
+    Route::prefix('shortcut')->name('shortcut.')->group(function () {
         Route::post('/execute', [App\Native\Controllers\DesktopController::class, 'executeShortcut'])->name('execute');
         Route::post('/check', [App\Native\Controllers\DesktopController::class, 'checkShortcut'])->name('check');
     });
-    Route::prefix('shortcuts')->name('shortcuts.')->group(function(){
+    Route::prefix('shortcuts')->name('shortcuts.')->group(function () {
         Route::get('/', [App\Native\Controllers\DesktopController::class, 'getShortcuts'])->name('index');
         Route::post('/execute', [App\Native\Controllers\DesktopController::class, 'executeShortcut'])->name('execute');
         Route::post('/register', [App\Native\Controllers\DesktopController::class, 'registerShortcuts'])->name('register');
@@ -179,22 +179,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/warehouses', WarehouseIndex::class)->name('warehouses.index');
 
     // Quotations
-    Route::prefix('quotations')->name('quotations.')->group(function(){
+    Route::prefix('quotations')->name('quotations.')->group(function () {
         Route::livewire('/', QuotationsIndex::class)->name('index');
         Route::get('/pdf/{id}', [ExportController::class, 'quotation'])->name('pdf');
     });
-     Route::prefix('quotation')->name('quotation.')->group(function(){
+    Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::livewire('/create', CreateQuotation::class)->name('create');
         Route::livewire('/update/{id}', EditQuotation::class)->name('edit');
         Route::get('/mail/{quotation}', SendQuotationEmailController::class)->name('email');
     });
 
     // Purchases
-    Route::prefix('purchases')->name('purchases.')->group(function(){
+    Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::livewire('/purchases', PurchasesIndex::class)->name('index');
         Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('pdf');
-    }); 
-    Route::prefix('purchase')->name('purchase.')->group(function(){
+    });
+    Route::prefix('purchase')->name('purchase.')->group(function () {
         Route::livewire('/purchase/create', CreatePurchase::class)->name('create');
         Route::livewire('/purchase/edit/{id}', EditPurchase::class)->name('edit');
         Route::livewire('/purchase/update/{id}', EditPurchase::class)->name('edit');
@@ -223,13 +223,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/stock-alert-report', StockAlertReport::class)->name('stock-alert-report.index');
 
     // Sales
-    Route::prefix('sales')->name('sales.')->group(function(){
+    Route::prefix('sales')->name('sales.')->group(function () {
         Route::livewire('/', SalesIndex::class)->name('index');
         Route::get('/pdf/{id}', [ExportController::class, 'sale'])->name('pdf');
         Route::get('/pos/pdf/{id}', [ExportController::class, 'salePos'])->name('pos.pdf');
     });
 
-    Route::prefix('sale')->name('sale.')->group(function(){
+    Route::prefix('sale')->name('sale.')->group(function () {
         Route::livewire('/print/{id}', SaleInvoice::class)->name('invoice');
         Route::livewire('/create', CreateSale::class)->name('create');
         Route::livewire('/update/{id}', EditSale::class)->name('edit');
@@ -263,7 +263,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/product-categories', CategoryIndex::class)->name('product-categories.index');
 
     // Products
-    Route::prefix('products')->name('products.')->group(function(){
+    Route::prefix('products')->name('products.')->group(function () {
         Route::livewire('/', ProductsIndex::class)->name('index');
         Route::livewire('/print-barcode', BarcodeIndex::class)->name('barcode-print');
     });
@@ -278,20 +278,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Route::delete('/purchase-payments/destroy/{purchasePayment}', [PurchasePaymentsController::class, 'destroy'])->name('purchase-payments.destroy');
 
     // Purchase Returns
-    Route::prefix('purchase-returns')->name('purchase-returns.')->group(function(){
+    Route::prefix('purchase-returns')->name('purchase-returns.')->group(function () {
         Route::resource('/', PurchasesReturnController::class)->except(['create', 'edit', 'store', 'update']);
         Route::livewire('/create', CreatePurchaseReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditPurchaseReturn::class)->name('edit');
         Route::get('/pdf/{id}', [ExportController::class, 'purchaseReturns'])->name('pdf');
-    });    
+    });
 
     // Generate Sale Returns PDF
-    Route::prefix('sale-returns')->name('sale-returns.')->group(function(){
+    Route::prefix('sale-returns')->name('sale-returns.')->group(function () {
         Route::resource('/', SalesReturnController::class)->except(['create', 'edit', 'store', 'update']);
         Route::livewire('/create', CreateSaleReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditSaleReturn::class)->name('edit');
         Route::get('/pdf/{id}', [ExportController::class, 'saleReturns'])->name('pdf');
-    });  
+    });
 
     // Transfers
     Route::livewire('/transfers', TransferIndex::class)->name('tranfers.index');
@@ -313,21 +313,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/shipping', ShippingIndex::class)->name('shipping.index');
 
     // Analytics
-    Route::prefix('analytics')->name('analytics.')->group(function(){
+    Route::prefix('analytics')->name('analytics.')->group(function () {
         Route::livewire('/dashboard', App\Livewire\Analytics\AnalyticsDashboard::class)->name('dashboard');
         Route::livewire('/product', App\Livewire\Analytics\ProductAnalytics::class)->name('product');
         Route::livewire('/revenue', App\Livewire\Analytics\RevenueReports::class)->name('revenue');
     });
 
     // Finance
-    Route::prefix('finance')->name('finance.')->group(function(){
+    Route::prefix('finance')->name('finance.')->group(function () {
         Route::livewire('/dashboard', App\Livewire\Finance\FinancialDashboard::class)->name('dashboard');
         Route::livewire('/kpi', App\Livewire\Finance\KpiTracking::class)->name('kpi');
         Route::livewire('/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('breakeven');
     });
 
     // Notifications
-    Route::prefix('notifications')->name('notifications.')->group(function(){
+    Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::livewire('/bell', App\Livewire\Notifications\NotificationBell::class)->name('bell');
         Route::livewire('/manager', App\Livewire\Notifications\NotificationManager::class)->name('manager');
     });

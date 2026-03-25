@@ -8,13 +8,13 @@ use App\Exports\ExpenseExport;
 use App\Imports\ExpenseImport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Expense;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Http\Response;
-use Maatwebsite\Excel\Facades\Excel;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -22,13 +22,21 @@ class Index extends Component
     use Datatable;
 
     public $expense;
+
     public $showModal = false;
+
     public $showFilters = false;
+
     public $startDate;
+
     public $endDate;
+
     public $filterType;
+
     public $file;
+
     public $importModal = false;
+
     public $model = Expense::class;
 
     public function mount(): void
@@ -65,8 +73,8 @@ class Index extends Component
         $query = Expense::with(['category', 'user', 'warehouse'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -130,7 +138,7 @@ class Index extends Component
 
     private function callExport(): ExpenseExport
     {
-        return new ExpenseExport();
+        return new ExpenseExport;
     }
 
     public function importExcel(): void
@@ -141,7 +149,7 @@ class Index extends Component
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
-        Excel::import(new ExpenseImport(), $this->file);
+        Excel::import(new ExpenseImport, $this->file);
 
         $this->importModal = false;
 
@@ -158,11 +166,11 @@ class Index extends Component
         $confirmationMessage = __('Are you sure you want to delete this expense? if something happens you can be recover it.');
 
         $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
 
         $this->expense = $expense;

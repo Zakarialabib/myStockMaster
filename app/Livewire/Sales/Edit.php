@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace App\Livewire\Sales;
 
 use App\Enums\MovementType;
-use App\Models\Movement;
-use App\Models\ProductWarehouse;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use App\Models\Sale;
-use App\Models\SaleDetails;
-use App\Traits\LivewireCartTrait;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Livewire\Utils\WithModels;
+use App\Models\Movement;
 use App\Models\Product;
+use App\Models\ProductWarehouse;
+use App\Models\Sale;
+use App\Models\SaleDetails;
+use App\Traits\LivewireCartTrait;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use WithModels;
     use LivewireCartTrait;
+    use WithModels;
 
     public Sale $sale;
 
@@ -92,18 +92,18 @@ class Edit extends Component
         foreach ($this->sale_details as $sale_detail) {
             $product = Product::findOrFail($sale_detail->product_id);
             $this->addToCart([
-                'id'         => $sale_detail->product_id,
-                'name'       => $sale_detail->name,
-                'quantity'   => $sale_detail->quantity,
-                'price'      => $sale_detail->price / 100,
+                'id' => $sale_detail->product_id,
+                'name' => $sale_detail->name,
+                'quantity' => $sale_detail->quantity,
+                'price' => $sale_detail->price / 100,
                 'attributes' => [
-                    'product_discount'      => $sale_detail->product_discount_amount / 100,
+                    'product_discount' => $sale_detail->product_discount_amount / 100,
                     'product_discount_type' => $sale_detail->product_discount_type,
-                    'sub_total'             => $sale_detail->sub_total / 100,
-                    'code'                  => $sale_detail->code,
-                    'stock'                 => $product->quantity,
-                    'product_tax'           => $sale_detail->product_tax_amount / 100,
-                    'unit_price'            => $sale_detail->unit_price / 100,
+                    'sub_total' => $sale_detail->sub_total / 100,
+                    'code' => $sale_detail->code,
+                    'stock' => $product->quantity,
+                    'product_tax' => $sale_detail->product_tax_amount / 100,
+                    'unit_price' => $sale_detail->unit_price / 100,
                 ],
             ]);
         }
@@ -133,7 +133,7 @@ class Edit extends Component
 
     public function update(): void
     {
-        if ( ! $this->warehouse_id) {
+        if (! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -168,37 +168,37 @@ class Edit extends Component
             }
 
             $this->sale->update([
-                'date'                => $this->date,
-                'reference'           => $this->reference,
-                'customer_id'         => $this->customer_id,
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'customer_id' => $this->customer_id,
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount * 100,
-                'paid_amount'         => $this->paid_amount * 100,
-                'total_amount'        => $this->total_amount * 100,
-                'due_amount'          => $due_amount * 100,
-                'status'              => $this->status,
-                'payment_status'      => $payment_status,
-                'payment_method'      => $this->payment_method,
-                'note'                => $this->note,
-                'tax_amount'          => (int) ($this->cartTax * 100),
-                'discount_amount'     => (int) ($this->cartDiscount * 100),
+                'shipping_amount' => $this->shipping_amount * 100,
+                'paid_amount' => $this->paid_amount * 100,
+                'total_amount' => $this->total_amount * 100,
+                'due_amount' => $due_amount * 100,
+                'status' => $this->status,
+                'payment_status' => $payment_status,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
+                'tax_amount' => (int) ($this->cartTax * 100),
+                'discount_amount' => (int) ($this->cartDiscount * 100),
             ]);
 
             foreach ($this->cartContent as $cart_item) {
                 SaleDetails::create([
-                    'sale_id'                 => $this->sale->id,
-                    'product_id'              => $cart_item['id'],
-                    'warehouse_id'            => $this->warehouse_id,
-                    'name'                    => $cart_item['name'],
-                    'code'                    => $cart_item['attributes']['code'],
-                    'quantity'                => $cart_item['quantity'],
-                    'price'                   => $cart_item['price'] * 100,
-                    'unit_price'              => $cart_item['attributes']['unit_price'] * 100,
-                    'sub_total'               => $cart_item['attributes']['sub_total'] * 100,
+                    'sale_id' => $this->sale->id,
+                    'product_id' => $cart_item['id'],
+                    'warehouse_id' => $this->warehouse_id,
+                    'name' => $cart_item['name'],
+                    'code' => $cart_item['attributes']['code'],
+                    'quantity' => $cart_item['quantity'],
+                    'price' => $cart_item['price'] * 100,
+                    'unit_price' => $cart_item['attributes']['unit_price'] * 100,
+                    'sub_total' => $cart_item['attributes']['sub_total'] * 100,
                     'product_discount_amount' => $cart_item['attributes']['product_discount'] * 100,
-                    'product_discount_type'   => $cart_item['attributes']['product_discount_type'],
-                    'product_tax_amount'      => $cart_item['attributes']['product_tax'] * 100,
+                    'product_discount_type' => $cart_item['attributes']['product_discount_type'],
+                    'product_tax_amount' => $cart_item['attributes']['product_tax'] * 100,
                 ]);
 
                 $product = Product::findOrFail($cart_item['id']);
@@ -213,13 +213,13 @@ class Edit extends Component
                 ]);
 
                 $movement = new Movement([
-                    'type'         => MovementType::PURCHASE,
-                    'quantity'     => $cart_item['quantity'],
-                    'price'        => $cart_item['price'] * 100,
-                    'date'         => date('Y-m-d'),
+                    'type' => MovementType::PURCHASE,
+                    'quantity' => $cart_item['quantity'],
+                    'price' => $cart_item['price'] * 100,
+                    'date' => date('Y-m-d'),
                     'movable_type' => $product::class,
-                    'movable_id'   => $product->id,
-                    'user_id'      => Auth::user()->id,
+                    'movable_id' => $product->id,
+                    'user_id' => Auth::user()->id,
                 ]);
 
                 $movement->save();

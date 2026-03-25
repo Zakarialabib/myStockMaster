@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\Livewire\Brands;
 
-use App\Livewire\Utils\Datatable;
 use App\Imports\BrandsImport;
+use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\HasDelete;
 use App\Models\Brand;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithFileUploads;
     use Datatable;
     use HasDelete;
     use WithAlert;
+    use WithFileUploads;
 
     /** @var mixed */
     public $brand;
@@ -40,8 +40,8 @@ class Index extends Component
         abort_if(Gate::denies('brand_access'), 403);
 
         $query = Brand::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -71,7 +71,7 @@ class Index extends Component
             'import' => 'required|mimes:xlsx',
         ]);
 
-        Excel::import(new BrandsImport(), $this->file);
+        Excel::import(new BrandsImport, $this->file);
 
         $this->alert('success', __('Brand imported successfully.'));
     }

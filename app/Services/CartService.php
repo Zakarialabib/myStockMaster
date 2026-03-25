@@ -4,33 +4,36 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Traits\CartStorageTrait;
-use App\Traits\CartCalculationTrait;
-use App\Models\Product;
-use App\Models\ProductWarehouse;
 use App\Exceptions\Cart\CartException;
-use App\Exceptions\Cart\ProductNotAvailableException;
 use App\Exceptions\Cart\InsufficientStockException;
 use App\Exceptions\Cart\InvalidQuantityException;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
+use App\Exceptions\Cart\ProductNotAvailableException;
+use App\Models\Product;
+use App\Models\ProductWarehouse;
+use App\Traits\CartCalculationTrait;
+use App\Traits\CartStorageTrait;
 use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class CartService
 {
-    use CartStorageTrait;
     use CartCalculationTrait;
+    use CartStorageTrait;
 
     protected string $sessionKey;
+
     protected string $instanceName;
+
     protected array $config;
+
     protected static array $instances = [];
 
     public function __construct(string $instanceName = 'default')
     {
         $this->instanceName = $instanceName;
-        $this->sessionKey = 'cart_'.$instanceName;
+        $this->sessionKey = 'cart_' . $instanceName;
         $this->config = config('cart', []);
 
         // Configure storage based on instance context
@@ -40,7 +43,7 @@ class CartService
     /** Get or create a cart instance */
     public static function instance(string $instanceName = 'default'): self
     {
-        if ( ! isset(static::$instances[$instanceName])) {
+        if (! isset(static::$instances[$instanceName])) {
             static::$instances[$instanceName] = new static($instanceName);
         }
 
@@ -166,9 +169,9 @@ class CartService
 
         // Log cart operation
         $this->logCartOperation('add', $item['id'], $cartItem['quantity'], [
-            'row_id'       => $rowId,
+            'row_id' => $rowId,
             'product_name' => $item['name'] ?? 'Unknown',
-            'price'        => $cartItem['price'],
+            'price' => $cartItem['price'],
         ]);
 
         return $rowId;
@@ -179,7 +182,7 @@ class CartService
     {
         $content = $this->getContent();
 
-        if ( ! $content->has($rowId)) {
+        if (! $content->has($rowId)) {
             Log::warning('Attempted to update non-existent cart item', ['row_id' => $rowId]);
 
             return false;
@@ -210,9 +213,9 @@ class CartService
 
         // Log cart operation
         $this->logCartOperation('update', $item['id'], $item['quantity'], [
-            'row_id'            => $rowId,
+            'row_id' => $rowId,
             'original_quantity' => $originalQuantity,
-            'updated_fields'    => array_keys($data),
+            'updated_fields' => array_keys($data),
         ]);
 
         return true;
@@ -223,7 +226,7 @@ class CartService
     {
         $content = $this->getContent();
 
-        if ( ! $content->has($rowId)) {
+        if (! $content->has($rowId)) {
             Log::warning('Attempted to remove non-existent cart item', ['row_id' => $rowId]);
 
             return false;
@@ -235,7 +238,7 @@ class CartService
 
         // Log cart operation
         $this->logCartOperation('remove', $item['id'], $item['quantity'], [
-            'row_id'       => $rowId,
+            'row_id' => $rowId,
             'product_name' => $item['name'] ?? 'Unknown',
         ]);
 
@@ -349,7 +352,7 @@ class CartService
     {
         $content = $this->getContent();
 
-        if ( ! $content->has($rowId)) {
+        if (! $content->has($rowId)) {
             return false;
         }
 
@@ -365,7 +368,7 @@ class CartService
     /** Set cart instance for specific user */
     public function session(string $sessionId): self
     {
-        $this->sessionKey = 'cart_'.$this->instanceName.'_'.$sessionId;
+        $this->sessionKey = 'cart_' . $this->instanceName . '_' . $sessionId;
 
         return $this;
     }
@@ -374,16 +377,16 @@ class CartService
     protected function createCartItem(array $item, string $rowId): array
     {
         return [
-            'rowId'            => $rowId,
-            'id'               => $item['id'],
-            'name'             => $item['name'],
-            'price'            => (float) $item['price'],
-            'quantity'         => $item['quantity'] ?? 0,
-            'attributes'       => $item['attributes'] ?? [],
+            'rowId' => $rowId,
+            'id' => $item['id'],
+            'name' => $item['name'],
+            'price' => (float) $item['price'],
+            'quantity' => $item['quantity'] ?? 0,
+            'attributes' => $item['attributes'] ?? [],
             'associated_model' => $item['associated_model'] ?? null,
-            'conditions'       => $item['conditions'] ?? [],
-            'created_at'       => now(),
-            'updated_at'       => now(),
+            'conditions' => $item['conditions'] ?? [],
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 
@@ -393,7 +396,7 @@ class CartService
         $attributes = $item['attributes'] ?? [];
         ksort($attributes);
 
-        return md5($item['id'].serialize($attributes));
+        return md5($item['id'] . serialize($attributes));
     }
 
     /** Get the session key */
@@ -451,7 +454,7 @@ class CartService
         $requiredFields = ['id', 'name', 'price'];
 
         foreach ($requiredFields as $field) {
-            if ( ! isset($item[$field])) {
+            if (! isset($item[$field])) {
                 throw new CartException("Missing required field: {$field}", 400);
             }
         }
@@ -463,7 +466,7 @@ class CartService
         // $this->validateProductAvailability($item['id']);
 
         // Validate price
-        if ( ! is_numeric($item['price']) || $item['price'] < 0) {
+        if (! is_numeric($item['price']) || $item['price'] < 0) {
             throw new CartException('Price must be a positive number', 400);
         }
     }
@@ -485,7 +488,7 @@ class CartService
     {
         $product = Product::find($productId);
 
-        if ( ! $product) {
+        if (! $product) {
             throw new ProductNotAvailableException($productId, 'Product not found');
         }
 
@@ -505,7 +508,7 @@ class CartService
             ->where('warehouse_id', $warehouseId)
             ->first();
 
-        if ( ! $productWarehouse) {
+        if (! $productWarehouse) {
             throw new InsufficientStockException($productId, $warehouseId, $requestedQuantity, 0);
         }
 
@@ -523,12 +526,12 @@ class CartService
     protected function logCartOperation(string $operation, $productId, $quantity, array $context = []): void
     {
         Log::info('Cart operation performed', array_merge([
-            'operation'   => $operation,
-            'instance'    => $this->instanceName,
-            'product_id'  => $productId,
-            'quantity'    => $quantity,
+            'operation' => $operation,
+            'instance' => $this->instanceName,
+            'product_id' => $productId,
+            'quantity' => $quantity,
             'session_key' => $this->sessionKey,
-            'timestamp'   => now()->toISOString(),
+            'timestamp' => now()->toISOString(),
         ], $context));
     }
 
@@ -541,7 +544,7 @@ class CartService
             // This would depend on your storage implementation
             // For now, we'll just log the cleanup attempt
             Log::info('Cart cleanup initiated', [
-                'instance'  => $this->instanceName,
+                'instance' => $this->instanceName,
                 'timestamp' => now()->toISOString(),
             ]);
 
@@ -549,7 +552,7 @@ class CartService
         } catch (Exception $e) {
             Log::error('Cart cleanup failed', [
                 'instance' => $this->instanceName,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -563,14 +566,14 @@ class CartService
         $items = $content->filter(fn ($item) => is_array($item) && isset($item['id']));
 
         return [
-            'total_items'     => $items->count(),
-            'total_quantity'  => $items->sum('quantity'),
+            'total_items' => $items->count(),
+            'total_quantity' => $items->sum('quantity'),
             'unique_products' => $items->pluck('id')->unique()->count(),
-            'subtotal'        => $this->getSubTotal(),
-            'tax'             => $this->getTax(),
-            'total'           => $this->getTotal(),
-            'instance'        => $this->instanceName,
-            'last_updated'    => $items->max('updated_at'),
+            'subtotal' => $this->getSubTotal(),
+            'tax' => $this->getTax(),
+            'total' => $this->getTotal(),
+            'instance' => $this->instanceName,
+            'last_updated' => $items->max('updated_at'),
         ];
     }
 }

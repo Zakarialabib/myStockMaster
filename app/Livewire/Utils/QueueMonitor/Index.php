@@ -4,29 +4,44 @@ declare(strict_types=1);
 
 namespace App\Livewire\Utils\QueueMonitor;
 
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Index extends Component
 {
     use WithAlert;
+
     public $search;
+
     public $sortBy = 'created_at';
+
     public $sortDirection = 'desc';
+
     public $perPage = 10;
 
     public $job_id;
+
     public $name;
+
     public $queue;
+
     public $started_at;
+
     public $finished_at;
+
     public $failed;
+
     public $attempt;
+
     public $exception_message;
+
     public $aggregatedInfo;
+
     public $totalJobsExecuted;
+
     public $totalExecutionTime;
+
     public $averageExecutionTime;
 
     public function mount()
@@ -42,8 +57,8 @@ class Index extends Component
             ->first();
 
         $this->totalJobsExecuted = $this->aggregatedInfo->count ?? 0;
-        $this->totalExecutionTime = ($this->aggregatedInfo->total_time_elapsed ?? 0).'s';
-        $this->averageExecutionTime = ceil((float) $this->aggregatedInfo->average_time_elapsed).'s' ?? 0;
+        $this->totalExecutionTime = ($this->aggregatedInfo->total_time_elapsed ?? 0) . 's';
+        $this->averageExecutionTime = ceil((float) $this->aggregatedInfo->average_time_elapsed) . 's' ?? 0;
     }
 
     public function delete()
@@ -58,7 +73,7 @@ class Index extends Component
         $query = DB::table('jobs');
 
         if ($this->search) {
-            $query->where('job_id', 'like', '%'.$this->search.'%');
+            $query->where('job_id', 'like', '%' . $this->search . '%');
         }
 
         $query->orderBy($this->sortBy, $this->sortDirection);

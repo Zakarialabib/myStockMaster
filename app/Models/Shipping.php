@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipping extends Model
 {
+    use HasAdvancedFilter;
     use HasFactory;
     use SoftDeletes;
-    use HasAdvancedFilter;
 
     protected const ATTRIBUTES = [
         'id',

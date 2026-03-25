@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
 #[Layout('layouts.guest')]
@@ -38,11 +38,11 @@ class Register extends Component
         $this->validate();
 
         $user = User::create([
-            'name'     => $this->name,
-            'email'    => $this->email,
-            'phone'    => $this->phone !== '' ? $this->phone : null,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone !== '' ? $this->phone : null,
             'password' => Hash::make($this->password),
-            'status'   => 1,
+            'status' => 1,
         ]);
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);

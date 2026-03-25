@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Livewire\CustomerGroup;
 
 use App\Models\CustomerGroup;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Edit extends Component
 {
     use WithAlert;
+
     /** @var bool */
     public $editModal = false;
 

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Sale;
-use App\Models\Purchase;
-use App\Models\Product;
-use App\Models\Customer;
-use App\Models\Supplier;
-use App\Models\Warehouse;
-use App\Models\User;
-use App\Enums\SaleStatus;
-use App\Enums\PurchaseStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\PurchaseStatus;
+use App\Enums\SaleStatus;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\Sale;
+use App\Models\Supplier;
+use App\Models\User;
+use App\Models\Warehouse;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class SalesAndPurchasesSeeder extends Seeder
 {
@@ -75,7 +75,7 @@ class SalesAndPurchasesSeeder extends Seeder
             $paymentStatus = $paymentStatuses[array_rand($paymentStatuses)];
 
             $paidAmount = match ($paymentStatus) {
-                PaymentStatus::PAID    => $totalAmount,
+                PaymentStatus::PAID => $totalAmount,
                 PaymentStatus::PARTIAL => rand(1, (int) ($totalAmount * 0.8)),
                 PaymentStatus::PENDING => 0,
             };
@@ -83,24 +83,24 @@ class SalesAndPurchasesSeeder extends Seeder
             $dueAmount = $totalAmount - $paidAmount;
 
             $sale = Sale::create([
-                'id'                  => \Illuminate\Support\Str::uuid(),
-                'date'                => $date->format('Y-m-d'),
-                'reference'           => 'SL-'.str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
-                'customer_id'         => $customer->id,
-                'user_id'             => $user->id,
-                'warehouse_id'        => $warehouse->id,
-                'tax_percentage'      => $taxPercentage,
-                'tax_amount'          => $taxAmount,
+                'id' => \Illuminate\Support\Str::uuid(),
+                'date' => $date->format('Y-m-d'),
+                'reference' => 'SL-' . str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
+                'customer_id' => $customer->id,
+                'user_id' => $user->id,
+                'warehouse_id' => $warehouse->id,
+                'tax_percentage' => $taxPercentage,
+                'tax_amount' => $taxAmount,
                 'discount_percentage' => $discountPercentage,
-                'discount_amount'     => $discountAmount,
-                'shipping_amount'     => $shippingAmount,
-                'total_amount'        => $totalAmount,
-                'paid_amount'         => $paidAmount,
-                'due_amount'          => $dueAmount,
-                'status'              => SaleStatus::COMPLETED,
-                'payment_status'      => $paymentStatus,
-                'created_at'          => $date,
-                'updated_at'          => $date,
+                'discount_amount' => $discountAmount,
+                'shipping_amount' => $shippingAmount,
+                'total_amount' => $totalAmount,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
+                'status' => SaleStatus::COMPLETED,
+                'payment_status' => $paymentStatus,
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
 
             // Create sale details (products)
@@ -111,18 +111,18 @@ class SalesAndPurchasesSeeder extends Seeder
                 $quantity = rand(1, 10);
                 $price = $product->price ?? rand(10, 500);
                 DB::table('sale_details')->insert([
-                    'sale_id'                 => $sale->id,
-                    'product_id'              => $product->id,
-                    'name'                    => $product->name,
-                    'code'                    => $product->code,
-                    'quantity'                => $quantity,
-                    'price'                   => $price,
-                    'unit_price'              => $price,
-                    'sub_total'               => $price * $quantity,
+                    'sale_id' => $sale->id,
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'unit_price' => $price,
+                    'sub_total' => $price * $quantity,
                     'product_discount_amount' => 0,
-                    'product_tax_amount'      => 0,
-                    'created_at'              => $date,
-                    'updated_at'              => $date,
+                    'product_tax_amount' => 0,
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ]);
             }
         }
@@ -156,7 +156,7 @@ class SalesAndPurchasesSeeder extends Seeder
             $paymentStatus = $paymentStatuses[array_rand($paymentStatuses)];
 
             $paidAmount = match ($paymentStatus) {
-                PaymentStatus::PAID    => $totalAmount,
+                PaymentStatus::PAID => $totalAmount,
                 PaymentStatus::PARTIAL => rand(1, (int) ($totalAmount * 0.7)),
                 PaymentStatus::PENDING => 0,
             };
@@ -164,22 +164,22 @@ class SalesAndPurchasesSeeder extends Seeder
             $dueAmount = $totalAmount - $paidAmount;
 
             $purchase = Purchase::create([
-                'id'                  => \Illuminate\Support\Str::uuid(),
-                'date'                => $date->format('Y-m-d'),
-                'reference'           => 'PU-'.str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
-                'supplier_id'         => $supplier->id,
-                'tax_percentage'      => $taxPercentage,
-                'tax_amount'          => $taxAmount,
+                'id' => \Illuminate\Support\Str::uuid(),
+                'date' => $date->format('Y-m-d'),
+                'reference' => 'PU-' . str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
+                'supplier_id' => $supplier->id,
+                'tax_percentage' => $taxPercentage,
+                'tax_amount' => $taxAmount,
                 'discount_percentage' => $discountPercentage,
-                'discount_amount'     => $discountAmount,
-                'shipping_amount'     => $shippingAmount,
-                'total_amount'        => $totalAmount,
-                'paid_amount'         => $paidAmount,
-                'due_amount'          => $dueAmount,
-                'status'              => PurchaseStatus::COMPLETED,
-                'payment_status'      => $paymentStatus,
-                'created_at'          => $date,
-                'updated_at'          => $date,
+                'discount_amount' => $discountAmount,
+                'shipping_amount' => $shippingAmount,
+                'total_amount' => $totalAmount,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
+                'status' => PurchaseStatus::COMPLETED,
+                'payment_status' => $paymentStatus,
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
 
             // Create purchase details (products)
@@ -190,18 +190,18 @@ class SalesAndPurchasesSeeder extends Seeder
                 $quantity = rand(5, 50);
                 $price = $product->cost ?? rand(5, 300);
                 DB::table('purchase_details')->insert([
-                    'purchase_id'             => $purchase->id,
-                    'product_id'              => $product->id,
-                    'name'                    => $product->name,
-                    'code'                    => $product->code,
-                    'quantity'                => $quantity,
-                    'price'                   => $price,
-                    'unit_price'              => $price,
-                    'sub_total'               => $price * $quantity,
+                    'purchase_id' => $purchase->id,
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'unit_price' => $price,
+                    'sub_total' => $price * $quantity,
                     'product_discount_amount' => 0,
-                    'product_tax_amount'      => 0,
-                    'created_at'              => $date,
-                    'updated_at'              => $date,
+                    'product_tax_amount' => 0,
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ]);
             }
         }

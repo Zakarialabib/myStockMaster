@@ -6,12 +6,12 @@ namespace App\Livewire\Reports;
 
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
+use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class PurchasesReturnReport extends Component

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
-use Livewire\Component;
 use App\Models\Language;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class EditTranslation extends Component
@@ -25,7 +25,7 @@ class EditTranslation extends Component
         // dd($this->all());
         $this->translations = $this->getTranslations();
         $this->translations = collect($this->translations)->map(static fn ($item, $key): array => [
-            'key'   => $key,
+            'key' => $key,
             'value' => $item,
         ])->toArray();
     }

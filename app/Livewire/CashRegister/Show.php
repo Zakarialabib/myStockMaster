@@ -10,13 +10,14 @@ use App\Models\Expense;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\SaleReturn;
+use App\Traits\WithAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $showModal = false;
 
     public $cashRegister;

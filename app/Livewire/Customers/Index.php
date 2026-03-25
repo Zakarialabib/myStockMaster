@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Livewire\Customers;
 
 use App\Exports\CustomerExport;
-use App\Livewire\Utils\Datatable;
 use App\Imports\CustomerImport;
+use App\Livewire\Utils\Datatable;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
+use App\Traits\WithAlert;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
     use WithFileUploads;
 
     public $customer;
@@ -50,8 +50,8 @@ class Index extends Component
         $query = Customer::when($this->customer_group_id, function ($query) {
             $query->where('customer_group_id', $this->customer_group_id);
         })->advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -116,7 +116,7 @@ class Index extends Component
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
-        Excel::import(new CustomerImport(), $this->file);
+        Excel::import(new CustomerImport, $this->file);
 
         $this->importModal = false;
 
@@ -125,7 +125,7 @@ class Index extends Component
 
     private function callExport(): CustomerExport
     {
-        return new CustomerExport();
+        return new CustomerExport;
     }
 
     public function downloadSample()

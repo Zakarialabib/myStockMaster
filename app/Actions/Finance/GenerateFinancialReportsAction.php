@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Finance;
 
-use App\Models\Sale;
-use App\Models\Expense;
 use App\Models\CashRegister;
+use App\Models\Expense;
+use App\Models\Sale;
 use Carbon\Carbon;
 
 class GenerateFinancialReportsAction
@@ -19,19 +19,19 @@ class GenerateFinancialReportsAction
         $reportType = $params['report_type'] ?? 'profit_loss';
 
         // Set default date range based on period
-        if ( ! $startDate || ! $endDate) {
+        if (! $startDate || ! $endDate) {
             [$startDate, $endDate] = $this->getDateRange($period);
         }
 
         return match ($reportType) {
-            'profit_loss'      => $this->generateProfitLossStatement($startDate, $endDate, $period),
-            'cash_flow'        => $this->generateCashFlowStatement($startDate, $endDate, $period),
-            'balance_sheet'    => $this->generateBalanceSheet($startDate, $endDate),
+            'profit_loss' => $this->generateProfitLossStatement($startDate, $endDate, $period),
+            'cash_flow' => $this->generateCashFlowStatement($startDate, $endDate, $period),
+            'balance_sheet' => $this->generateBalanceSheet($startDate, $endDate),
             'income_statement' => $this->generateIncomeStatement($startDate, $endDate, $period),
-            'expense_report'   => $this->generateExpenseReport($startDate, $endDate, $period),
+            'expense_report' => $this->generateExpenseReport($startDate, $endDate, $period),
             'revenue_analysis' => $this->generateRevenueAnalysis($startDate, $endDate, $period),
-            'comparative'      => $this->generateComparativeReport($startDate, $endDate, $period),
-            default            => $this->generateProfitLossStatement($startDate, $endDate, $period)
+            'comparative' => $this->generateComparativeReport($startDate, $endDate, $period),
+            default => $this->generateProfitLossStatement($startDate, $endDate, $period)
         };
     }
 
@@ -65,25 +65,25 @@ class GenerateFinancialReportsAction
 
         return [
             'report_type' => 'profit_loss',
-            'period'      => $period,
-            'start_date'  => $startDate->format('Y-m-d'),
-            'end_date'    => $endDate->format('Y-m-d'),
-            'currency'    => 'USD',
-            'revenue'     => [
-                'total'       => $totalRevenue,
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'revenue' => [
+                'total' => $totalRevenue,
                 'by_category' => $revenueByCategory,
-                'by_period'   => $revenueByPeriod,
+                'by_period' => $revenueByPeriod,
                 'growth_rate' => $previousPeriod['revenue_growth'] ?? 0,
             ],
             'cost_of_goods_sold' => [
-                'total'                 => $cogs,
+                'total' => $cogs,
                 'percentage_of_revenue' => $totalRevenue > 0 ? ($cogs / $totalRevenue) * 100 : 0,
-                'breakdown'             => $this->getCOGSBreakdown($startDate, $endDate),
+                'breakdown' => $this->getCOGSBreakdown($startDate, $endDate),
             ],
             'gross_profit' => [
                 'amount' => $grossProfit,
                 'margin' => $grossMargin,
-                'trend'  => $this->calculateTrend($grossProfit, $previousPeriod['gross_profit'] ?? 0),
+                'trend' => $this->calculateTrend($grossProfit, $previousPeriod['gross_profit'] ?? 0),
             ],
             'operating_expenses' => array_merge($operatingExpenses, [
                 'percentage_of_revenue' => $totalRevenue > 0 ? ($operatingExpenses['total'] / $totalRevenue) * 100 : 0,
@@ -91,24 +91,24 @@ class GenerateFinancialReportsAction
             'operating_income' => [
                 'amount' => $operatingIncome,
                 'margin' => $operatingMargin,
-                'trend'  => $this->calculateTrend($operatingIncome, $previousPeriod['operating_income'] ?? 0),
+                'trend' => $this->calculateTrend($operatingIncome, $previousPeriod['operating_income'] ?? 0),
             ],
-            'other_income'   => $otherIncome,
+            'other_income' => $otherIncome,
             'other_expenses' => $otherExpenses,
-            'net_income'     => [
-                'amount'  => $netIncome,
-                'margin'  => $netMargin,
-                'trend'   => $this->calculateTrend($netIncome, $previousPeriod['net_income'] ?? 0),
+            'net_income' => [
+                'amount' => $netIncome,
+                'margin' => $netMargin,
+                'trend' => $this->calculateTrend($netIncome, $previousPeriod['net_income'] ?? 0),
                 'per_day' => $netIncome / max(1, $startDate->diffInDays($endDate)),
             ],
             'key_ratios' => [
-                'gross_margin'     => $grossMargin,
+                'gross_margin' => $grossMargin,
                 'operating_margin' => $operatingMargin,
-                'net_margin'       => $netMargin,
-                'expense_ratio'    => $totalRevenue > 0 ? (($operatingExpenses['total'] + $otherExpenses) / $totalRevenue) * 100 : 0,
+                'net_margin' => $netMargin,
+                'expense_ratio' => $totalRevenue > 0 ? (($operatingExpenses['total'] + $otherExpenses) / $totalRevenue) * 100 : 0,
             ],
             'previous_period_comparison' => $previousPeriod,
-            'generated_at'               => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -131,20 +131,20 @@ class GenerateFinancialReportsAction
         $endingCash = $beginningCash + $netCashFlow;
 
         return [
-            'report_type'           => 'cash_flow',
-            'period'                => $period,
-            'start_date'            => $startDate->format('Y-m-d'),
-            'end_date'              => $endDate->format('Y-m-d'),
-            'currency'              => 'USD',
-            'beginning_cash'        => $beginningCash,
-            'operating_activities'  => $operatingCashFlow,
-            'investing_activities'  => $investingCashFlow,
-            'financing_activities'  => $financingCashFlow,
-            'net_cash_flow'         => $netCashFlow,
-            'ending_cash'           => $endingCash,
-            'cash_flow_by_period'   => $this->getCashFlowByPeriod($startDate, $endDate, $period),
+            'report_type' => 'cash_flow',
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'beginning_cash' => $beginningCash,
+            'operating_activities' => $operatingCashFlow,
+            'investing_activities' => $investingCashFlow,
+            'financing_activities' => $financingCashFlow,
+            'net_cash_flow' => $netCashFlow,
+            'ending_cash' => $endingCash,
+            'cash_flow_by_period' => $this->getCashFlowByPeriod($startDate, $endDate, $period),
             'cash_conversion_cycle' => $this->calculateCashConversionCycle($startDate, $endDate),
-            'generated_at'          => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -165,22 +165,22 @@ class GenerateFinancialReportsAction
 
         return [
             'report_type' => 'balance_sheet',
-            'as_of_date'  => $endDate->format('Y-m-d'),
-            'currency'    => 'USD',
-            'assets'      => [
+            'as_of_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'assets' => [
                 'current_assets' => $currentAssets,
-                'fixed_assets'   => $fixedAssets,
-                'total_assets'   => $totalAssets,
+                'fixed_assets' => $fixedAssets,
+                'total_assets' => $totalAssets,
             ],
             'liabilities' => [
-                'current_liabilities'   => $currentLiabilities,
+                'current_liabilities' => $currentLiabilities,
                 'long_term_liabilities' => $longTermLiabilities,
-                'total_liabilities'     => $totalLiabilities,
+                'total_liabilities' => $totalLiabilities,
             ],
-            'equity'                       => $equity,
+            'equity' => $equity,
             'total_liabilities_and_equity' => $totalLiabilities + $equity['total'],
-            'financial_ratios'             => [
-                'current_ratio'  => $currentLiabilities['total'] > 0 ? $currentAssets['total'] / $currentLiabilities['total'] : 0,
+            'financial_ratios' => [
+                'current_ratio' => $currentLiabilities['total'] > 0 ? $currentAssets['total'] / $currentLiabilities['total'] : 0,
                 'debt_to_equity' => $equity['total'] > 0 ? $totalLiabilities / $equity['total'] : 0,
                 'asset_turnover' => $this->calculateAssetTurnover($startDate, $endDate, $totalAssets),
             ],
@@ -196,21 +196,21 @@ class GenerateFinancialReportsAction
 
         return [
             'report_type' => 'income_statement',
-            'period'      => $period,
-            'start_date'  => $startDate->format('Y-m-d'),
-            'end_date'    => $endDate->format('Y-m-d'),
-            'currency'    => 'USD',
-            'revenue'     => [
-                'total'     => $revenue,
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'revenue' => [
+                'total' => $revenue,
                 'breakdown' => $this->getRevenueBreakdown($startDate, $endDate),
             ],
             'expenses' => [
-                'total'     => $expenses,
+                'total' => $expenses,
                 'breakdown' => $this->getExpenseBreakdown($startDate, $endDate),
             ],
-            'net_income'       => $netIncome,
+            'net_income' => $netIncome,
             'earnings_per_day' => $netIncome / max(1, $startDate->diffInDays($endDate)),
-            'generated_at'     => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -228,24 +228,24 @@ class GenerateFinancialReportsAction
         $topExpenses = $expenses->sortByDesc('amount')->take(10);
 
         return [
-            'report_type'          => 'expense_report',
-            'period'               => $period,
-            'start_date'           => $startDate->format('Y-m-d'),
-            'end_date'             => $endDate->format('Y-m-d'),
-            'currency'             => 'USD',
-            'total_expenses'       => $expenses->sum('amount'),
-            'expense_count'        => $expenses->count(),
-            'average_expense'      => $expenses->count() > 0 ? $expenses->sum('amount') / $expenses->count() : 0,
+            'report_type' => 'expense_report',
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'total_expenses' => $expenses->sum('amount'),
+            'expense_count' => $expenses->count(),
+            'average_expense' => $expenses->count() > 0 ? $expenses->sum('amount') / $expenses->count() : 0,
             'expenses_by_category' => $expensesByCategory->toArray(),
-            'expenses_by_period'   => $expensesByMonth->toArray(),
-            'top_expenses'         => $topExpenses->map(fn ($expense) => [
+            'expenses_by_period' => $expensesByMonth->toArray(),
+            'top_expenses' => $topExpenses->map(fn ($expense) => [
                 'description' => $expense->description,
-                'amount'      => $expense->amount,
-                'category'    => $expense->category,
-                'date'        => $expense->date->format('Y-m-d'),
+                'amount' => $expense->amount,
+                'category' => $expense->category,
+                'date' => $expense->date->format('Y-m-d'),
             ])->toArray(),
             'expense_trends' => $this->calculateExpenseTrends($startDate, $endDate, $period),
-            'generated_at'   => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -260,20 +260,20 @@ class GenerateFinancialReportsAction
         $averageSaleValue = $orderCount > 0 ? $totalRevenue / $orderCount : 0;
 
         return [
-            'report_type'               => 'revenue_analysis',
-            'period'                    => $period,
-            'start_date'                => $startDate->format('Y-m-d'),
-            'end_date'                  => $endDate->format('Y-m-d'),
-            'currency'                  => 'USD',
-            'total_revenue'             => $totalRevenue,
-            'order_count'               => $orderCount,
-            'average_order_value'       => $averageSaleValue,
-            'revenue_by_day'            => $this->getRevenueByDay($startDate, $endDate),
-            'revenue_by_hour'           => $this->getRevenueByHour($startDate, $endDate),
+            'report_type' => 'revenue_analysis',
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'currency' => 'USD',
+            'total_revenue' => $totalRevenue,
+            'order_count' => $orderCount,
+            'average_order_value' => $averageSaleValue,
+            'revenue_by_day' => $this->getRevenueByDay($startDate, $endDate),
+            'revenue_by_hour' => $this->getRevenueByHour($startDate, $endDate),
             'revenue_by_payment_method' => $this->getRevenueByPaymentMethod($startDate, $endDate),
-            'top_selling_items'         => $this->getTopSellingItems($startDate, $endDate),
-            'revenue_trends'            => $this->calculateRevenueTrends($startDate, $endDate, $period),
-            'generated_at'              => now()->toISOString(),
+            'top_selling_items' => $this->getTopSellingItems($startDate, $endDate),
+            'revenue_trends' => $this->calculateRevenueTrends($startDate, $endDate, $period),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -289,12 +289,12 @@ class GenerateFinancialReportsAction
         $previousPeriod = $this->generateProfitLossStatement($previousStartDate, $previousEndDate, $period);
 
         return [
-            'report_type'       => 'comparative',
-            'period'            => $period,
-            'current_period'    => $currentPeriod,
-            'previous_period'   => $previousPeriod,
+            'report_type' => 'comparative',
+            'period' => $period,
+            'current_period' => $currentPeriod,
+            'previous_period' => $previousPeriod,
             'variance_analysis' => $this->calculateVarianceAnalysis($currentPeriod, $previousPeriod),
-            'generated_at'      => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -303,12 +303,12 @@ class GenerateFinancialReportsAction
         $endDate = now();
 
         $startDate = match ($period) {
-            'daily'     => $endDate->copy()->startOfDay(),
-            'weekly'    => $endDate->copy()->startOfWeek(),
-            'monthly'   => $endDate->copy()->startOfMonth(),
+            'daily' => $endDate->copy()->startOfDay(),
+            'weekly' => $endDate->copy()->startOfWeek(),
+            'monthly' => $endDate->copy()->startOfMonth(),
             'quarterly' => $endDate->copy()->startOfQuarter(),
-            'yearly'    => $endDate->copy()->startOfYear(),
-            default     => $endDate->copy()->startOfMonth()
+            'yearly' => $endDate->copy()->startOfYear(),
+            default => $endDate->copy()->startOfMonth()
         };
 
         return [$startDate, $endDate];
@@ -338,7 +338,7 @@ class GenerateFinancialReportsAction
             ->map(fn ($group) => $group->sum('amount'));
 
         return [
-            'total'     => $expenses->sum('amount'),
+            'total' => $expenses->sum('amount'),
             'breakdown' => $breakdown->toArray(),
         ];
     }
@@ -362,7 +362,7 @@ class GenerateFinancialReportsAction
         // This would require sale items with categories
         // For now, return basic structure
         return [
-            'food'      => $this->calculateTotalRevenue($startDate, $endDate) * 0.7,
+            'food' => $this->calculateTotalRevenue($startDate, $endDate) * 0.7,
             'beverages' => $this->calculateTotalRevenue($startDate, $endDate) * 0.3,
         ];
     }
@@ -370,12 +370,12 @@ class GenerateFinancialReportsAction
     private function getRevenueByPeriod(Carbon $startDate, Carbon $endDate, string $period): array
     {
         $format = match ($period) {
-            'daily'     => 'Y-m-d H:00',
-            'weekly'    => 'Y-m-d',
-            'monthly'   => 'Y-m-d',
+            'daily' => 'Y-m-d H:00',
+            'weekly' => 'Y-m-d',
+            'monthly' => 'Y-m-d',
             'quarterly' => 'Y-m',
-            'yearly'    => 'Y-m',
-            default     => 'Y-m-d'
+            'yearly' => 'Y-m',
+            default => 'Y-m-d'
         };
 
         return Sale::whereBetween('date', [$startDate, $endDate])
@@ -403,11 +403,11 @@ class GenerateFinancialReportsAction
         $currentRevenue = $this->calculateTotalRevenue($startDate, $endDate);
 
         return [
-            'revenue'          => $previousRevenue,
-            'revenue_growth'   => $previousRevenue > 0 ? (($currentRevenue - $previousRevenue) / $previousRevenue) * 100 : 0,
-            'gross_profit'     => $previousGrossProfit,
+            'revenue' => $previousRevenue,
+            'revenue_growth' => $previousRevenue > 0 ? (($currentRevenue - $previousRevenue) / $previousRevenue) * 100 : 0,
+            'gross_profit' => $previousGrossProfit,
             'operating_income' => $previousOperatingIncome,
-            'net_income'       => $previousNetIncome,
+            'net_income' => $previousNetIncome,
         ];
     }
 
@@ -436,9 +436,9 @@ class GenerateFinancialReportsAction
 
         // Simplified operating cash flow calculation
         return [
-            'total'                   => $netIncome,
-            'net_income'              => $netIncome,
-            'depreciation'            => 0, // Would need asset tracking
+            'total' => $netIncome,
+            'net_income' => $netIncome,
+            'depreciation' => 0, // Would need asset tracking
             'working_capital_changes' => 0, // Would need detailed balance sheet tracking
         ];
     }
@@ -450,9 +450,9 @@ class GenerateFinancialReportsAction
             ->sum('amount');
 
         return [
-            'total'               => -$equipmentPurchases,
+            'total' => -$equipmentPurchases,
             'equipment_purchases' => -$equipmentPurchases,
-            'asset_sales'         => 0,
+            'asset_sales' => 0,
         ];
     }
 
@@ -460,9 +460,9 @@ class GenerateFinancialReportsAction
     {
         // This would require loan and investment tracking
         return [
-            'total'             => 0,
-            'loan_proceeds'     => 0,
-            'loan_payments'     => 0,
+            'total' => 0,
+            'loan_proceeds' => 0,
+            'loan_payments' => 0,
             'owner_investments' => 0,
             'owner_withdrawals' => 0,
         ];
@@ -484,10 +484,10 @@ class GenerateFinancialReportsAction
     {
         // Simplified cash conversion cycle
         return [
-            'days_sales_outstanding'     => 0, // Restaurants typically have immediate payment
+            'days_sales_outstanding' => 0, // Restaurants typically have immediate payment
             'days_inventory_outstanding' => 7, // Typical food inventory turnover
-            'days_payable_outstanding'   => 30, // Typical supplier payment terms
-            'cash_conversion_cycle'      => -23, // 0 + 7 - 30
+            'days_payable_outstanding' => 30, // Typical supplier payment terms
+            'cash_conversion_cycle' => -23, // 0 + 7 - 30
         ];
     }
 
@@ -497,10 +497,10 @@ class GenerateFinancialReportsAction
             ->sum('closing_balance');
 
         return [
-            'total'               => $cash,
-            'cash'                => $cash,
+            'total' => $cash,
+            'cash' => $cash,
             'accounts_receivable' => 0, // Restaurants typically don't have AR
-            'inventory'           => 0, // Would need inventory tracking
+            'inventory' => 0, // Would need inventory tracking
         ];
     }
 
@@ -508,9 +508,9 @@ class GenerateFinancialReportsAction
     {
         // This would require asset tracking
         return [
-            'total'                    => 0,
-            'equipment'                => 0,
-            'furniture'                => 0,
+            'total' => 0,
+            'equipment' => 0,
+            'furniture' => 0,
             'accumulated_depreciation' => 0,
         ];
     }
@@ -519,18 +519,18 @@ class GenerateFinancialReportsAction
     {
         // This would require liability tracking
         return [
-            'total'            => 0,
+            'total' => 0,
             'accounts_payable' => 0,
             'accrued_expenses' => 0,
-            'short_term_debt'  => 0,
+            'short_term_debt' => 0,
         ];
     }
 
     private function calculateLongTermLiabilities(Carbon $asOfDate): array
     {
         return [
-            'total'           => 0,
-            'long_term_debt'  => 0,
+            'total' => 0,
+            'long_term_debt' => 0,
             'equipment_loans' => 0,
         ];
     }
@@ -542,8 +542,8 @@ class GenerateFinancialReportsAction
         $totalLiabilities = $this->calculateCurrentLiabilities($asOfDate)['total'] + $this->calculateLongTermLiabilities($asOfDate)['total'];
 
         return [
-            'total'             => $totalAssets - $totalLiabilities,
-            'owner_equity'      => $totalAssets - $totalLiabilities,
+            'total' => $totalAssets - $totalLiabilities,
+            'owner_equity' => $totalAssets - $totalLiabilities,
             'retained_earnings' => 0,
         ];
     }
@@ -626,8 +626,8 @@ class GenerateFinancialReportsAction
         $revenueByPeriod = $this->getRevenueByPeriod($startDate, $endDate, $period);
 
         return [
-            'trend_direction'   => 'up', // Simplified
-            'growth_rate'       => 0,
+            'trend_direction' => 'up', // Simplified
+            'growth_rate' => 0,
             'seasonal_patterns' => [],
         ];
     }
@@ -635,8 +635,8 @@ class GenerateFinancialReportsAction
     private function calculateExpenseTrends(Carbon $startDate, Carbon $endDate, string $period): array
     {
         return [
-            'trend_direction'         => 'stable',
-            'growth_rate'             => 0,
+            'trend_direction' => 'stable',
+            'growth_rate' => 0,
             'cost_control_efficiency' => 85,
         ];
     }
@@ -649,16 +649,16 @@ class GenerateFinancialReportsAction
 
         return [
             'revenue_variance' => [
-                'amount'     => $revenueVariance,
+                'amount' => $revenueVariance,
                 'percentage' => $previous['revenue']['total'] > 0 ? ($revenueVariance / $previous['revenue']['total']) * 100 : 0,
             ],
             'expense_variance' => [
-                'amount'     => $expenseVariance,
+                'amount' => $expenseVariance,
                 'percentage' => ($previous['operating_expenses']['total'] + $previous['other_expenses']) > 0 ?
                     ($expenseVariance / ($previous['operating_expenses']['total'] + $previous['other_expenses'])) * 100 : 0,
             ],
             'net_income_variance' => [
-                'amount'     => $current['net_income']['amount'] - $previous['net_income']['amount'],
+                'amount' => $current['net_income']['amount'] - $previous['net_income']['amount'],
                 'percentage' => $previous['net_income']['amount'] > 0 ?
                     (($current['net_income']['amount'] - $previous['net_income']['amount']) / $previous['net_income']['amount']) * 100 : 0,
             ],

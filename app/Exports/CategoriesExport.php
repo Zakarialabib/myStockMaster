@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDrawings
+class CategoriesExport implements FromQuery, WithDrawings, WithHeadings, WithMapping
 {
     use Exportable;
     use ForModelsTrait;
@@ -19,7 +19,6 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
     /** @var mixed */
     protected $models;
 
-    /** @return string */
     public function title(): string
     {
         return __('Categories');
@@ -36,8 +35,6 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
 
     /**
      * @param mixed $row
-     *
-     * @return array
      */
     public function map($row): array
     {
@@ -57,10 +54,9 @@ class CategoriesExport implements FromQuery, WithMapping, WithHeadings, WithDraw
         ];
     }
 
-    /** @return array */
     public function drawings(): array
     {
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
         $drawing->setName('Logo');
         $drawing->setDescription('Logo');
         $drawing->setPath(public_path('images/logo.png'));

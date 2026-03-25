@@ -21,7 +21,7 @@ class AnalyseComponents extends Command
         $path = base_path($this->option('path'));
         $outputFile = base_path($this->option('output'));
 
-        if ( ! File::isDirectory($path)) {
+        if (! File::isDirectory($path)) {
             $this->error("Path {$path} not found.");
 
             return;
@@ -30,12 +30,12 @@ class AnalyseComponents extends Command
         $components = File::allFiles($path);
 
         $report = "# Component Analysis Report\n\n";
-        $report .= 'Generated: '.now()->toDateTimeString()."\n\n";
+        $report .= 'Generated: ' . now()->toDateTimeString() . "\n\n";
 
         $stats = [];
 
         foreach ($components as $file) {
-            $relative = Str::after($file->getPathname(), base_path().'/');
+            $relative = Str::after($file->getPathname(), base_path() . '/');
             $content = File::get($file->getPathname());
             $lines = substr_count($content, "\n") + 1;
 
@@ -47,19 +47,19 @@ class AnalyseComponents extends Command
             $usageCount = $this->countUsage($componentName);
 
             $stats[] = [
-                'file'          => $relative,
-                'lines'         => $lines,
-                'used'          => $usageCount,
+                'file' => $relative,
+                'lines' => $lines,
+                'used' => $usageCount,
                 'theming_ready' => Str::contains($content, 'class="') ? '✅' : '⚠️',
-                'dusk_ready'    => Str::contains($content, 'dusk=') || Str::contains($content, 'id=') ? '✅' : '⚠️',
+                'dusk_ready' => Str::contains($content, 'dusk=') || Str::contains($content, 'id=') ? '✅' : '⚠️',
             ];
         }
 
         // Summary
         $report .= "## Summary\n\n";
-        $report .= '- Total components: **'.count($stats)."**\n";
-        $report .= '- Most used: **'.collect($stats)->sortByDesc('used')->first()['file']."**\n";
-        $report .= '- Unused: **'.collect($stats)->where('used', 0)->count()."**\n\n";
+        $report .= '- Total components: **' . count($stats) . "**\n";
+        $report .= '- Most used: **' . collect($stats)->sortByDesc('used')->first()['file'] . "**\n";
+        $report .= '- Unused: **' . collect($stats)->where('used', 0)->count() . "**\n\n";
 
         // Detailed table
         $report .= "## Components Detail\n\n";

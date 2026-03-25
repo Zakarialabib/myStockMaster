@@ -66,14 +66,14 @@ final class GenerateRevenueReportAction
         $report = [
             'report_period' => [
                 'from' => $dateFrom->toDateString(),
-                'to'   => $dateTo->toDateString(),
+                'to' => $dateTo->toDateString(),
                 'days' => $dateTo->diffInDays($dateFrom) + 1,
             ],
-            'overall_statistics'       => $overallStats,
-            'time_breakdown'           => $timeBreakdown,
+            'overall_statistics' => $overallStats,
+            'time_breakdown' => $timeBreakdown,
             'payment_method_breakdown' => $paymentMethodBreakdown,
-            'order_status_breakdown'   => $orderStatusBreakdown,
-            'generated_at'             => now()->toISOString(),
+            'order_status_breakdown' => $orderStatusBreakdown,
+            'generated_at' => now()->toISOString(),
         ];
 
         // Add product breakdown if requested
@@ -113,30 +113,30 @@ final class GenerateRevenueReportAction
         $daysDiff = $dateTo->diffInDays($dateFrom) + 1;
 
         return [
-            'total_orders'          => (int) ($stats->total_orders ?? 0),
-            'completed_orders'      => (int) ($stats->completed_orders ?? 0),
-            'cancelled_orders'      => (int) ($stats->cancelled_orders ?? 0),
-            'total_revenue'         => (float) ($stats->total_revenue ?? 0),
-            'total_tax'             => (float) ($stats->total_tax ?? 0),
-            'total_subtotal'        => (float) ($stats->total_subtotal ?? 0),
-            'total_items_sold'      => (int) $totalItems,
-            'average_order_value'   => (float) ($stats->average_order_value ?? 0),
-            'min_order_value'       => (float) ($stats->min_order_value ?? 0),
-            'max_order_value'       => (float) ($stats->max_order_value ?? 0),
+            'total_orders' => (int) ($stats->total_orders ?? 0),
+            'completed_orders' => (int) ($stats->completed_orders ?? 0),
+            'cancelled_orders' => (int) ($stats->cancelled_orders ?? 0),
+            'total_revenue' => (float) ($stats->total_revenue ?? 0),
+            'total_tax' => (float) ($stats->total_tax ?? 0),
+            'total_subtotal' => (float) ($stats->total_subtotal ?? 0),
+            'total_items_sold' => (int) $totalItems,
+            'average_order_value' => (float) ($stats->average_order_value ?? 0),
+            'min_order_value' => (float) ($stats->min_order_value ?? 0),
+            'max_order_value' => (float) ($stats->max_order_value ?? 0),
             'daily_average_revenue' => (float) (($stats->total_revenue ?? 0) / $daysDiff),
-            'daily_average_orders'  => (float) (($stats->completed_orders ?? 0) / $daysDiff),
-            'cancellation_rate'     => $stats->total_orders > 0 ? round(($stats->cancelled_orders / $stats->total_orders) * 100, 2) : 0,
+            'daily_average_orders' => (float) (($stats->completed_orders ?? 0) / $daysDiff),
+            'cancellation_rate' => $stats->total_orders > 0 ? round(($stats->cancelled_orders / $stats->total_orders) * 100, 2) : 0,
         ];
     }
 
     private function getTimeBasedBreakdown(Carbon $dateFrom, Carbon $dateTo, string $groupBy): array
     {
         $dateFormat = match ($groupBy) {
-            'hour'  => '%Y-%m-%d %H:00:00',
-            'day'   => '%Y-%m-%d',
-            'week'  => '%Y-%u',
+            'hour' => '%Y-%m-%d %H:00:00',
+            'day' => '%Y-%m-%d',
+            'week' => '%Y-%u',
             'month' => '%Y-%m',
-            'year'  => '%Y',
+            'year' => '%Y',
             default => '%Y-%m-%d',
         };
 
@@ -154,10 +154,10 @@ final class GenerateRevenueReportAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'period'          => $item->period,
-                    'order_count'     => (int) $item->order_count,
-                    'revenue'         => (float) $item->revenue,
-                    'tax'             => (float) $item->tax,
+                    'period' => $item->period,
+                    'order_count' => (int) $item->order_count,
+                    'revenue' => (float) $item->revenue,
+                    'tax' => (float) $item->tax,
                     'avg_order_value' => (float) $item->avg_order_value,
                 ];
             })
@@ -165,11 +165,11 @@ final class GenerateRevenueReportAction
 
         return [
             'group_by' => $groupBy,
-            'data'     => $breakdown,
-            'summary'  => [
+            'data' => $breakdown,
+            'summary' => [
                 'total_periods' => count($breakdown),
-                'best_period'   => collect($breakdown)->sortByDesc('revenue')->first(),
-                'worst_period'  => collect($breakdown)->sortBy('revenue')->first(),
+                'best_period' => collect($breakdown)->sortByDesc('revenue')->first(),
+                'worst_period' => collect($breakdown)->sortBy('revenue')->first(),
             ],
         ];
     }
@@ -190,9 +190,9 @@ final class GenerateRevenueReportAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'payment_method'  => $item->payment_method,
-                    'order_count'     => (int) $item->order_count,
-                    'revenue'         => (float) $item->revenue,
+                    'payment_method' => $item->payment_method,
+                    'order_count' => (int) $item->order_count,
+                    'revenue' => (float) $item->revenue,
                     'avg_order_value' => (float) $item->avg_order_value,
                 ];
             })
@@ -206,7 +206,7 @@ final class GenerateRevenueReportAction
 
                 return $item;
             })->toArray(),
-            'most_popular_method'    => collect($breakdown)->sortByDesc('order_count')->first()['payment_method'] ?? 'N/A',
+            'most_popular_method' => collect($breakdown)->sortByDesc('order_count')->first()['payment_method'] ?? 'N/A',
             'highest_revenue_method' => collect($breakdown)->sortByDesc('revenue')->first()['payment_method'] ?? 'N/A',
         ];
     }
@@ -224,9 +224,9 @@ final class GenerateRevenueReportAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'status'      => $item->status,
+                    'status' => $item->status,
                     'order_count' => (int) $item->order_count,
-                    'revenue'     => (float) $item->revenue,
+                    'revenue' => (float) $item->revenue,
                 ];
             })
             ->toArray();
@@ -262,18 +262,18 @@ final class GenerateRevenueReportAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'product_id'     => $item->product_id,
-                    'product_name'   => $item->product?->name ?? 'Unknown Product',
+                    'product_id' => $item->product_id,
+                    'product_name' => $item->product?->name ?? 'Unknown Product',
                     'total_quantity' => (int) $item->total_quantity,
-                    'revenue'        => (float) $item->revenue,
-                    'order_count'    => (int) $item->order_count,
-                    'avg_price'      => (float) $item->avg_price,
+                    'revenue' => (float) $item->revenue,
+                    'order_count' => (int) $item->order_count,
+                    'avg_price' => (float) $item->avg_price,
                 ];
             })
             ->toArray();
 
         return [
-            'top_products'        => $breakdown,
+            'top_products' => $breakdown,
             'total_products_sold' => count($breakdown),
         ];
     }
@@ -298,11 +298,11 @@ final class GenerateRevenueReportAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'category_id'    => $item->category_id,
-                    'category_name'  => $item->category_name,
+                    'category_id' => $item->category_id,
+                    'category_name' => $item->category_name,
                     'total_quantity' => (int) $item->total_quantity,
-                    'revenue'        => (float) $item->revenue,
-                    'order_count'    => (int) $item->order_count,
+                    'revenue' => (float) $item->revenue,
+                    'order_count' => (int) $item->order_count,
                 ];
             })
             ->toArray();

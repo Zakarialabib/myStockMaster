@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.guest')]
 class ResetPassword extends Component
@@ -40,14 +40,14 @@ class ResetPassword extends Component
 
         $status = Password::reset(
             [
-                'email'                 => $this->email,
-                'password'              => $this->password,
+                'email' => $this->email,
+                'password' => $this->password,
                 'password_confirmation' => $this->password_confirmation,
-                'token'                 => $this->token,
+                'token' => $this->token,
             ],
             function ($user) {
                 $user->forceFill([
-                    'password'       => Hash::make($this->password),
+                    'password' => Hash::make($this->password),
                     'remember_token' => Str::random(60),
                 ])->save();
 

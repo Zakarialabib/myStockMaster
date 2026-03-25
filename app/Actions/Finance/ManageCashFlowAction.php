@@ -20,7 +20,7 @@ final class ManageCashFlowAction
     public function __invoke(
         float $currentCashBalance,
         array $monthlyExpenses,
-        Carbon $analysisDate = null
+        ?Carbon $analysisDate = null
     ): array {
         $analysisDate ??= now();
 
@@ -56,19 +56,19 @@ final class ManageCashFlowAction
 
         return [
             'current_position' => [
-                'cash_balance'  => round($currentCashBalance, 2),
+                'cash_balance' => round($currentCashBalance, 2),
                 'analysis_date' => $analysisDate->toDateString(),
                 'buffer_status' => $bufferAnalysis['status'],
                 'buffer_months' => $bufferAnalysis['buffer_months'],
             ],
-            'buffer_analysis'    => $bufferAnalysis,
-            'cash_flow_trends'   => $cashFlowTrends,
-            'projections'        => $projections,
+            'buffer_analysis' => $bufferAnalysis,
+            'cash_flow_trends' => $cashFlowTrends,
+            'projections' => $projections,
             'surplus_allocation' => $surplusAllocation,
-            'recommendations'    => $recommendations,
-            'alerts'             => $alerts,
+            'recommendations' => $recommendations,
+            'alerts' => $alerts,
             'management_actions' => $this->suggestManagementActions($bufferAnalysis, $cashFlowTrends),
-            'calculated_at'      => now()->toISOString(),
+            'calculated_at' => now()->toISOString(),
         ];
     }
 
@@ -78,7 +78,7 @@ final class ManageCashFlowAction
 
         $bufferRequirements = [
             'minimum' => $totalMonthlyExpenses * 2,    // 2 months
-            'target'  => $totalMonthlyExpenses * 2.5,   // 2.5 months
+            'target' => $totalMonthlyExpenses * 2.5,   // 2.5 months
             'optimal' => $totalMonthlyExpenses * 3,    // 3 months
         ];
 
@@ -88,19 +88,19 @@ final class ManageCashFlowAction
 
         $status = match (true) {
             $currentBalance >= $bufferRequirements['optimal'] => 'optimal',
-            $currentBalance >= $bufferRequirements['target']  => 'adequate',
+            $currentBalance >= $bufferRequirements['target'] => 'adequate',
             $currentBalance >= $bufferRequirements['minimum'] => 'minimum',
-            default                                           => 'critical'
+            default => 'critical'
         };
 
         return [
-            'monthly_expenses'    => round($totalMonthlyExpenses, 2),
-            'expense_breakdown'   => array_map(fn ($expense) => round($expense, 2), $monthlyExpenses),
+            'monthly_expenses' => round($totalMonthlyExpenses, 2),
+            'expense_breakdown' => array_map(fn ($expense) => round($expense, 2), $monthlyExpenses),
             'buffer_requirements' => array_map(fn ($req) => round($req, 2), $bufferRequirements),
-            'current_buffer'      => round($currentBalance, 2),
-            'buffer_months'       => round($bufferMonths, 1),
-            'status'              => $status,
-            'shortfall'           => $currentBalance < $bufferRequirements['target']
+            'current_buffer' => round($currentBalance, 2),
+            'buffer_months' => round($bufferMonths, 1),
+            'status' => $status,
+            'shortfall' => $currentBalance < $bufferRequirements['target']
                 ? round($bufferRequirements['target'] - $currentBalance, 2)
                 : 0,
             'excess' => $currentBalance > $bufferRequirements['optimal']
@@ -112,7 +112,7 @@ final class ManageCashFlowAction
     private function analyzeCashFlowTrends(Carbon $analysisDate): array
     {
         $periods = [
-            'last_7_days'  => $analysisDate->copy()->subDays(7),
+            'last_7_days' => $analysisDate->copy()->subDays(7),
             'last_30_days' => $analysisDate->copy()->subDays(30),
             'last_90_days' => $analysisDate->copy()->subDays(90),
         ];
@@ -133,9 +133,9 @@ final class ManageCashFlowAction
 
             $trends[$period] = [
                 'total_revenue' => round($revenue, 2),
-                'order_count'   => $orderCount,
+                'order_count' => $orderCount,
                 'daily_average' => round($dailyAverage, 2),
-                'days'          => $days,
+                'days' => $days,
             ];
         }
 
@@ -143,10 +143,10 @@ final class ManageCashFlowAction
         $trendDirection = $this->calculateTrendDirection($trends);
 
         return [
-            'periods'            => $trends,
-            'trend_direction'    => $trendDirection,
+            'periods' => $trends,
+            'trend_direction' => $trendDirection,
             'monthly_projection' => round($trends['last_30_days']['daily_average'] * 30, 2),
-            'growth_rate'        => $this->calculateGrowthRate($trends),
+            'growth_rate' => $this->calculateGrowthRate($trends),
         ];
     }
 
@@ -162,11 +162,11 @@ final class ManageCashFlowAction
         $changePercent = (($recent - $previous) / $previous) * 100;
 
         return match (true) {
-            $changePercent > 10  => 'strong_growth',
-            $changePercent > 5   => 'growth',
-            $changePercent > -5  => 'stable',
+            $changePercent > 10 => 'strong_growth',
+            $changePercent > 5 => 'growth',
+            $changePercent > -5 => 'stable',
             $changePercent > -10 => 'decline',
-            default              => 'strong_decline'
+            default => 'strong_decline'
         };
     }
 
@@ -178,8 +178,8 @@ final class ManageCashFlowAction
         $growthRate = $previous > 0 ? (($current - $previous) / $previous) * 100 : 0;
 
         return [
-            'monthly_growth_rate'      => round($growthRate, 2),
-            'current_monthly_average'  => round($current, 2),
+            'monthly_growth_rate' => round($growthRate, 2),
+            'current_monthly_average' => round($current, 2),
             'previous_monthly_average' => round($previous, 2),
         ];
     }
@@ -198,18 +198,18 @@ final class ManageCashFlowAction
 
             $projections["month_{$month}"] = [
                 'projected_balance' => round($balance, 2),
-                'net_cash_flow'     => round($monthlyNetCashFlow, 2),
-                'buffer_months'     => $monthlyExpenseTotal > 0 ? round($balance / $monthlyExpenseTotal, 1) : 0,
-                'status'            => $this->getProjectedStatus($balance, $monthlyExpenseTotal),
+                'net_cash_flow' => round($monthlyNetCashFlow, 2),
+                'buffer_months' => $monthlyExpenseTotal > 0 ? round($balance / $monthlyExpenseTotal, 1) : 0,
+                'status' => $this->getProjectedStatus($balance, $monthlyExpenseTotal),
             ];
         }
 
         return [
-            'monthly_net_cash_flow'      => round($monthlyNetCashFlow, 2),
+            'monthly_net_cash_flow' => round($monthlyNetCashFlow, 2),
             'monthly_revenue_projection' => round($monthlyRevenue, 2),
-            'monthly_expense_total'      => round($monthlyExpenseTotal, 2),
-            'six_month_projections'      => $projections,
-            'cash_runway_months'         => $monthlyNetCashFlow < 0
+            'monthly_expense_total' => round($monthlyExpenseTotal, 2),
+            'six_month_projections' => $projections,
+            'cash_runway_months' => $monthlyNetCashFlow < 0
                 ? round($currentBalance / abs($monthlyNetCashFlow), 1)
                 : null,
         ];
@@ -220,11 +220,11 @@ final class ManageCashFlowAction
         $bufferMonths = $monthlyExpenses > 0 ? $balance / $monthlyExpenses : 0;
 
         return match (true) {
-            $bufferMonths >= 3   => 'optimal',
+            $bufferMonths >= 3 => 'optimal',
             $bufferMonths >= 2.5 => 'adequate',
-            $bufferMonths >= 2   => 'minimum',
-            $bufferMonths >= 1   => 'warning',
-            default              => 'critical'
+            $bufferMonths >= 2 => 'minimum',
+            $bufferMonths >= 1 => 'warning',
+            default => 'critical'
         };
     }
 
@@ -239,9 +239,9 @@ final class ManageCashFlowAction
 
         // Playbook allocation: 50% Reinvestment, 30% Reserve, 20% Profit
         $allocation = [
-            'total_surplus'       => round($surplus, 2),
-            'reinvestment'        => round($surplus * 0.50, 2),
-            'reserve'             => round($surplus * 0.30, 2),
+            'total_surplus' => round($surplus, 2),
+            'reinvestment' => round($surplus * 0.50, 2),
+            'reserve' => round($surplus * 0.30, 2),
             'profit_distribution' => round($surplus * 0.20, 2),
         ];
 
@@ -260,36 +260,36 @@ final class ManageCashFlowAction
 
         if ($reinvestmentAmount >= 5000) {
             $suggestions[] = [
-                'category'       => 'equipment',
-                'suggestion'     => __('Kitchen equipment upgrade or expansion'),
+                'category' => 'equipment',
+                'suggestion' => __('Kitchen equipment upgrade or expansion'),
                 'estimated_cost' => 5000,
-                'expected_roi'   => __('Increased efficiency and capacity'),
+                'expected_roi' => __('Increased efficiency and capacity'),
             ];
         }
 
         if ($reinvestmentAmount >= 2000) {
             $suggestions[] = [
-                'category'       => 'marketing',
-                'suggestion'     => __('Digital marketing campaign'),
+                'category' => 'marketing',
+                'suggestion' => __('Digital marketing campaign'),
                 'estimated_cost' => 2000,
-                'expected_roi'   => __('Customer acquisition and retention'),
+                'expected_roi' => __('Customer acquisition and retention'),
             ];
         }
 
         if ($reinvestmentAmount >= 1000) {
             $suggestions[] = [
-                'category'       => 'technology',
-                'suggestion'     => __('POS system upgrade or software enhancement'),
+                'category' => 'technology',
+                'suggestion' => __('POS system upgrade or software enhancement'),
                 'estimated_cost' => 1000,
-                'expected_roi'   => __('Operational efficiency improvements'),
+                'expected_roi' => __('Operational efficiency improvements'),
             ];
         }
 
         $suggestions[] = [
-            'category'       => 'inventory',
-            'suggestion'     => __('Strategic inventory investment'),
+            'category' => 'inventory',
+            'suggestion' => __('Strategic inventory investment'),
             'estimated_cost' => min($reinvestmentAmount, 3000),
-            'expected_roi'   => __('Better supplier terms and reduced stockouts'),
+            'expected_roi' => __('Better supplier terms and reduced stockouts'),
         ];
 
         return $suggestions;
@@ -305,8 +305,8 @@ final class ManageCashFlowAction
                 $recommendations[] = [
                     'priority' => 'critical',
                     'category' => 'cash_buffer',
-                    'message'  => __('Critical cash buffer shortage. Immediate action required.'),
-                    'actions'  => [
+                    'message' => __('Critical cash buffer shortage. Immediate action required.'),
+                    'actions' => [
                         __('Accelerate accounts receivable collection'),
                         __('Negotiate extended payment terms with suppliers'),
                         __('Consider emergency financing options'),
@@ -320,8 +320,8 @@ final class ManageCashFlowAction
                 $recommendations[] = [
                     'priority' => 'high',
                     'category' => 'cash_buffer',
-                    'message'  => __('Cash buffer at minimum level. Build reserves.'),
-                    'actions'  => [
+                    'message' => __('Cash buffer at minimum level. Build reserves.'),
+                    'actions' => [
                         __('Focus on cash flow positive activities'),
                         __('Review and optimize payment cycles'),
                         __('Delay non-essential expenditures'),
@@ -336,8 +336,8 @@ final class ManageCashFlowAction
             $recommendations[] = [
                 'priority' => 'high',
                 'category' => 'revenue_trend',
-                'message'  => __('Revenue trend showing strong decline. Investigate causes.'),
-                'actions'  => [
+                'message' => __('Revenue trend showing strong decline. Investigate causes.'),
+                'actions' => [
                     __('Analyze customer feedback and market conditions'),
                     __('Review marketing and promotional strategies'),
                     __('Consider menu or pricing adjustments'),
@@ -355,10 +355,10 @@ final class ManageCashFlowAction
         // Critical buffer alert
         if ($bufferAnalysis['status'] === 'critical') {
             $alerts[] = [
-                'level'     => 'critical',
-                'type'      => 'cash_buffer',
-                'message'   => __('Cash buffer below 2 months of expenses'),
-                'value'     => $bufferAnalysis['buffer_months'],
+                'level' => 'critical',
+                'type' => 'cash_buffer',
+                'message' => __('Cash buffer below 2 months of expenses'),
+                'value' => $bufferAnalysis['buffer_months'],
                 'threshold' => 2.0,
             ];
         }
@@ -366,10 +366,10 @@ final class ManageCashFlowAction
         // Negative cash flow projection alert
         if ($projections['monthly_net_cash_flow'] < 0) {
             $alerts[] = [
-                'level'     => 'warning',
-                'type'      => 'negative_cash_flow',
-                'message'   => __('Projected negative monthly cash flow'),
-                'value'     => $projections['monthly_net_cash_flow'],
+                'level' => 'warning',
+                'type' => 'negative_cash_flow',
+                'message' => __('Projected negative monthly cash flow'),
+                'value' => $projections['monthly_net_cash_flow'],
                 'threshold' => 0,
             ];
         }
@@ -377,10 +377,10 @@ final class ManageCashFlowAction
         // Cash runway alert
         if (isset($projections['cash_runway_months']) && $projections['cash_runway_months'] < 6) {
             $alerts[] = [
-                'level'     => 'critical',
-                'type'      => 'cash_runway',
-                'message'   => __('Cash runway less than 6 months'),
-                'value'     => $projections['cash_runway_months'],
+                'level' => 'critical',
+                'type' => 'cash_runway',
+                'message' => __('Cash runway less than 6 months'),
+                'value' => $projections['cash_runway_months'],
                 'threshold' => 6.0,
             ];
         }

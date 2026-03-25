@@ -21,8 +21,6 @@ class UpdateProductCostHistory implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @param $cart_item
      */
     public function __construct($cart_item)
     {
@@ -34,7 +32,5 @@ class UpdateProductCostHistory implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {
-    }
+    public function handle() {}
 }

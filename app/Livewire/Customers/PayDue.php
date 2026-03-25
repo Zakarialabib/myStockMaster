@@ -7,11 +7,11 @@ namespace App\Livewire\Customers;
 use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Models\SalePayment;
+use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class PayDue extends Component
 {
@@ -57,16 +57,16 @@ class PayDue extends Component
             $paidAmount = min($this->amount, $dueAmount);
 
             SalePayment::create([
-                'date'       => date('Y-m-d'),
-                'amount'     => $paidAmount,
-                'sale_id'    => $sale->id,
+                'date' => date('Y-m-d'),
+                'amount' => $paidAmount,
+                'sale_id' => $sale->id,
                 'payment_id' => $this->payment_id,
-                'user_id'    => Auth::user()->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             $sale->update([
-                'paid_amount'    => ($sale->paid_amount + $paidAmount) * 100,
-                'due_amount'     => max(0, $dueAmount - $paidAmount) * 100,
+                'paid_amount' => ($sale->paid_amount + $paidAmount) * 100,
+                'due_amount' => max(0, $dueAmount - $paidAmount) * 100,
                 'payment_status' => max(0, $dueAmount - $paidAmount) === 0 ? PaymentStatus::PAID : PaymentStatus::PARTIAL,
             ]);
 

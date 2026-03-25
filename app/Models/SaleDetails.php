@@ -48,8 +48,6 @@ class SaleDetails extends Model
 
     /**
      * get price attribute
-     *
-     * @return Attribute
      */
     protected function price(): Attribute
     {
@@ -60,8 +58,6 @@ class SaleDetails extends Model
 
     /**
      * Interact with unit price
-     *
-     * @return Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -72,8 +68,6 @@ class SaleDetails extends Model
 
     /**
      * get subtotal attribute
-     *
-     * @return Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -84,8 +78,6 @@ class SaleDetails extends Model
 
     /**
      * product discount amount attribute
-     *
-     * @return Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -96,8 +88,6 @@ class SaleDetails extends Model
 
     /**
      * Interact with shipping amount
-     *
-     * @return Attribute
      */
     protected function productTaxAmountAttribute(): Attribute
     {

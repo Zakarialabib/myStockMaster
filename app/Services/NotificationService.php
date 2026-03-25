@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\SaleStatus;
-use App\Models\Sale;
 use App\Models\Notification as NotificationModel;
+use App\Models\Sale;
 use App\Notifications\SaleStatusUpdate;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +18,7 @@ class NotificationService
     public function notifyCustomer(Sale $order, SaleStatus $status): void
     {
         try {
-            if ( ! $order->customer_email) {
+            if (! $order->customer_email) {
                 Log::info('No customer email available for notification', [
                     'order_id' => $order->id,
                 ]);
@@ -30,17 +30,17 @@ class NotificationService
             Notification::route('mail', $order->customer_email)->notify($notification);
 
             Log::info('Customer notified about order status change', [
-                'order_id'        => $order->id,
+                'order_id' => $order->id,
                 'order_reference' => $order->reference,
-                'customer_email'  => $order->customer_email,
-                'status'          => $status->value,
+                'customer_email' => $order->customer_email,
+                'status' => $status->value,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to notify customer', [
-                'order_id'       => $order->id,
+                'order_id' => $order->id,
                 'customer_email' => $order->customer_email,
-                'status'         => $status->value,
-                'error'          => $e->getMessage(),
+                'status' => $status->value,
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -55,13 +55,13 @@ class NotificationService
             }
 
             Log::info('Delayed order notifications sent', [
-                'order_id'        => $order->id,
+                'order_id' => $order->id,
                 'order_reference' => $order->reference,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send delayed order notifications', [
                 'order_id' => $order->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -74,13 +74,13 @@ class NotificationService
             $this->notifyCustomer($order, SaleStatus::COMPLETED);
 
             Log::info('Sale completion notifications sent', [
-                'order_id'        => $order->id,
+                'order_id' => $order->id,
                 'order_reference' => $order->reference,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send order completion notifications', [
                 'order_id' => $order->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -93,14 +93,14 @@ class NotificationService
             $this->notifyCustomer($order, SaleStatus::CANCELED);
 
             Log::info('Sale cancellation notifications sent', [
-                'order_id'        => $order->id,
+                'order_id' => $order->id,
                 'order_reference' => $order->reference,
-                'reason'          => $reason,
+                'reason' => $reason,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send order cancellation notifications', [
                 'order_id' => $order->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -108,7 +108,7 @@ class NotificationService
     /** Get unread notification count for a user */
     public function getUnreadCount($user): int
     {
-        if ( ! $user) {
+        if (! $user) {
             return 0;
         }
 
@@ -156,9 +156,9 @@ class NotificationService
             return true;
         } catch (Exception $e) {
             Log::error('Failed to mark notifications as read', [
-                'customer_id'      => $customer->id,
+                'customer_id' => $customer->id,
                 'notification_ids' => $notificationIds,
-                'error'            => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
 
             return false;
@@ -177,12 +177,12 @@ class NotificationService
 
             Log::info('Real-time notification sent', [
                 'channel' => $channel,
-                'data'    => $data,
+                'data' => $data,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send real-time notification', [
                 'channel' => $channel,
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -200,12 +200,12 @@ class NotificationService
 
             Log::info('SMS notification sent', [
                 'phone_number' => $phoneNumber,
-                'message'      => $message,
+                'message' => $message,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send SMS notification', [
                 'phone_number' => $phoneNumber,
-                'error'        => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }

@@ -10,16 +10,16 @@ use App\Livewire\Utils\WithModels;
 use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Livewire\Attributes\Title;
 
 #[Layout('layouts.app')]
 #[Title('Create Purchase')]
 class Create extends Component
 {
-    use WithModels;
     use LivewireCartTrait;
+    use WithModels;
 
     public $cart_item;
 
@@ -113,7 +113,7 @@ class Create extends Component
 
     public function store(): void
     {
-        if ( ! $this->warehouse_id) {
+        if (! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -123,17 +123,17 @@ class Create extends Component
 
         app(StorePurchaseAction::class)(
             [
-                'date'                => $this->date,
-                'supplier_id'         => $this->supplier_id,
-                'warehouse_id'        => $this->warehouse_id,
-                'user_id'             => Auth::id(),
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'supplier_id' => $this->supplier_id,
+                'warehouse_id' => $this->warehouse_id,
+                'user_id' => Auth::id(),
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount,
-                'paid_amount'         => $this->paid_amount,
-                'total_amount'        => $this->total_amount,
-                'payment_method'      => $this->payment_method,
-                'note'                => $this->note,
+                'shipping_amount' => $this->shipping_amount,
+                'paid_amount' => $this->paid_amount,
+                'total_amount' => $this->total_amount,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,

@@ -6,8 +6,8 @@ namespace App\Jobs;
 
 use App\Models\Sale;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,15 +18,13 @@ class PrintReceiptJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public function __construct(public string|int $saleId)
-    {
-    }
+    public function __construct(public string|int $saleId) {}
 
     public function handle(): void
     {
         $sale = Sale::with(['customer', 'saleDetails.product'])->find($this->saleId);
 
-        if ( ! $sale) {
+        if (! $sale) {
             return;
         }
 

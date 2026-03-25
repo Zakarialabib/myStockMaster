@@ -12,12 +12,12 @@ use App\Actions\Finance\GenerateFinancialKpiReportAction;
 use App\Actions\Finance\GenerateFinancialReportsAction;
 use App\Models\Product;
 use Carbon\Carbon;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
-use Exception;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Lazy]
 class FinancialDashboard extends Component
@@ -39,12 +39,19 @@ class FinancialDashboard extends Component
     public $endDate;
 
     public $kpiData = [];
+
     public $profitLossData = [];
+
     public $cashFlowData = [];
+
     public $breakEvenData = [];
+
     public $grossMarginData = [];
+
     public $loading = false;
+
     public $search = '';
+
     public $refreshInterval = 300; // 5 minutes
 
     public function placeholder()
@@ -111,11 +118,11 @@ class FinancialDashboard extends Component
 
                 break;
             case 'custom':
-                if ( ! $this->startDate) {
+                if (! $this->startDate) {
                     $this->startDate = now()->subDays(30)->format('Y-m-d');
                 }
 
-                if ( ! $this->endDate) {
+                if (! $this->endDate) {
                     $this->endDate = now()->format('Y-m-d');
                 }
                 $this->dateFrom = $this->startDate;
@@ -150,44 +157,44 @@ class FinancialDashboard extends Component
 
             // Load KPI data using action
             $kpiAction = new GenerateFinancialKpiReportAction(
-                new CalculateGrossMarginAction(),
-                new CalculateNetMarginAction(),
-                new CalculateCashFlowAction(),
-                new CalculateBreakEvenAction()
+                new CalculateGrossMarginAction,
+                new CalculateNetMarginAction,
+                new CalculateCashFlowAction,
+                new CalculateBreakEvenAction
             );
             $this->kpiData = $kpiAction($dateFrom, $dateTo);
 
             // Generate profit & loss report
-            $profitLossAction = new GenerateFinancialReportsAction();
+            $profitLossAction = new GenerateFinancialReportsAction;
             $this->profitLossData = $profitLossAction([
                 'report_type' => 'profit_loss',
-                'start_date'  => $dateFrom,
-                'end_date'    => $dateTo,
-                'period'      => 'daily',
+                'start_date' => $dateFrom,
+                'end_date' => $dateTo,
+                'period' => 'daily',
             ]);
 
             // Generate cash flow report
-            $cashFlowAction = new CalculateCashFlowAction();
+            $cashFlowAction = new CalculateCashFlowAction;
             $this->cashFlowData = $cashFlowAction($dateFrom, $dateTo);
 
             // Calculate break-even analysis
-            $breakEvenAction = new CalculateBreakEvenAction();
+            $breakEvenAction = new CalculateBreakEvenAction;
             $this->breakEvenData = $breakEvenAction([
-                'rent'                   => 0,
-                'salaries'               => 0,
-                'insurance'              => 0,
-                'utilities_fixed'        => 0,
-                'equipment_lease'        => 0,
+                'rent' => 0,
+                'salaries' => 0,
+                'insurance' => 0,
+                'utilities_fixed' => 0,
+                'equipment_lease' => 0,
                 'software_subscriptions' => 0,
-                'marketing_fixed'        => 0,
-                'other_fixed'            => 0,
+                'marketing_fixed' => 0,
+                'other_fixed' => 0,
             ], $dateTo);
 
             // Calculate gross margin
-            $grossMarginAction = new CalculateGrossMarginAction();
+            $grossMarginAction = new CalculateGrossMarginAction;
             $this->grossMarginData = $grossMarginAction($dateFrom, $dateTo);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to load financial data: '.$e->getMessage());
+            session()->flash('error', 'Failed to load financial data: ' . $e->getMessage());
         } finally {
             $this->loading = false;
         }
@@ -198,8 +205,8 @@ class FinancialDashboard extends Component
     {
         return Product::query()
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%'.$this->search.'%')
-                    ->orWhere('sku', 'like', '%'.$this->search.'%');
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('sku', 'like', '%' . $this->search . '%');
             })
             ->paginate(10);
     }
@@ -231,15 +238,15 @@ class FinancialDashboard extends Component
     public function exportFinancialReport($type = 'complete')
     {
         try {
-            $filename = 'financial_report_'.$type.'_'.now()->format('Y-m-d_H-i-s').'.json';
+            $filename = 'financial_report_' . $type . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             $exportData = [
                 'report_type' => $type,
-                'date_range'  => [
+                'date_range' => [
                     'from' => $this->dateFrom,
-                    'to'   => $this->dateTo,
+                    'to' => $this->dateTo,
                 ],
-                'kpi_data'     => $this->kpiData,
+                'kpi_data' => $this->kpiData,
                 'generated_at' => now()->toISOString(),
             ];
 
@@ -272,14 +279,14 @@ class FinancialDashboard extends Component
                 'Content-Type' => 'application/json',
             ]);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export financial report: '.$e->getMessage());
+            session()->flash('error', 'Failed to export financial report: ' . $e->getMessage());
         }
     }
 
     #[Computed]
     public function chartData()
     {
-        if ( ! isset($this->profitLossData['monthly_breakdown'])) {
+        if (! isset($this->profitLossData['monthly_breakdown'])) {
             return [];
         }
 
@@ -296,24 +303,24 @@ class FinancialDashboard extends Component
         }
 
         return [
-            'labels'   => $labels,
+            'labels' => $labels,
             'datasets' => [
                 [
-                    'label'           => 'Revenue',
-                    'data'            => $revenues,
-                    'borderColor'     => 'rgb(34, 197, 94)',
+                    'label' => 'Revenue',
+                    'data' => $revenues,
+                    'borderColor' => 'rgb(34, 197, 94)',
                     'backgroundColor' => 'rgba(34, 197, 94, 0.1)',
                 ],
                 [
-                    'label'           => 'Expenses',
-                    'data'            => $expenses,
-                    'borderColor'     => 'rgb(239, 68, 68)',
+                    'label' => 'Expenses',
+                    'data' => $expenses,
+                    'borderColor' => 'rgb(239, 68, 68)',
                     'backgroundColor' => 'rgba(239, 68, 68, 0.1)',
                 ],
                 [
-                    'label'           => 'Net Profit',
-                    'data'            => $profits,
-                    'borderColor'     => 'rgb(59, 130, 246)',
+                    'label' => 'Net Profit',
+                    'data' => $profits,
+                    'borderColor' => 'rgb(59, 130, 246)',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
                 ],
             ],

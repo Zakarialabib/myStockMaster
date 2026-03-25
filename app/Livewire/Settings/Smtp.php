@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Settings;
 
+use App\Traits\WithAlert;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Smtp extends Component
 {
@@ -49,25 +49,25 @@ class Smtp extends Component
     public function update(): void
     {
         $toReplace = [
-            'MAIL_MAILER='.env('MAIL_HOST'),
-            'MAIL_HOST="'.env('MAIL_HOST').'"',
-            'MAIL_PORT='.env('MAIL_PORT'),
-            'MAIL_FROM_ADDRESS="'.env('MAIL_FROM_ADDRESS').'"',
-            'MAIL_FROM_NAME="'.env('MAIL_FROM_NAME').'"',
-            'MAIL_USERNAME="'.env('MAIL_USERNAME').'"',
-            'MAIL_PASSWORD="'.env('MAIL_PASSWORD').'"',
-            'MAIL_ENCRYPTION="'.env('MAIL_ENCRYPTION').'"',
+            'MAIL_MAILER=' . env('MAIL_HOST'),
+            'MAIL_HOST="' . env('MAIL_HOST') . '"',
+            'MAIL_PORT=' . env('MAIL_PORT'),
+            'MAIL_FROM_ADDRESS="' . env('MAIL_FROM_ADDRESS') . '"',
+            'MAIL_FROM_NAME="' . env('MAIL_FROM_NAME') . '"',
+            'MAIL_USERNAME="' . env('MAIL_USERNAME') . '"',
+            'MAIL_PASSWORD="' . env('MAIL_PASSWORD') . '"',
+            'MAIL_ENCRYPTION="' . env('MAIL_ENCRYPTION') . '"',
         ];
 
         $replaceWith = [
-            'MAIL_MAILER='.$this->mail_mailer,
-            'MAIL_HOST="'.$this->mail_host.'"',
-            'MAIL_PORT='.$this->mail_port,
-            'MAIL_FROM_ADDRESS="'.$this->mail_from_address.'"',
-            'MAIL_FROM_NAME="'.$this->mail_from_name.'"',
-            'MAIL_USERNAME="'.$this->mail_username.'"',
-            'MAIL_PASSWORD="'.$this->mail_password.'"',
-            'MAIL_ENCRYPTION="'.$this->mail_encryption.'"',
+            'MAIL_MAILER=' . $this->mail_mailer,
+            'MAIL_HOST="' . $this->mail_host . '"',
+            'MAIL_PORT=' . $this->mail_port,
+            'MAIL_FROM_ADDRESS="' . $this->mail_from_address . '"',
+            'MAIL_FROM_NAME="' . $this->mail_from_name . '"',
+            'MAIL_USERNAME="' . $this->mail_username . '"',
+            'MAIL_PASSWORD="' . $this->mail_password . '"',
+            'MAIL_ENCRYPTION="' . $this->mail_encryption . '"',
         ];
 
         try {

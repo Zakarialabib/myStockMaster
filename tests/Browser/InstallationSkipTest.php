@@ -43,16 +43,16 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with completed installation
         Setting::create([
-            'company_logo'              => 'logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@company.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test St',
-            'default_currency_id'       => 1,
+            'company_logo' => 'logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test St',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'default_language'          => 'en',
-            'installation_completed'    => true,
+            'default_date_format' => 'Y-m-d',
+            'default_language' => 'en',
+            'installation_completed' => true,
         ]);
 
         $this->browse(function (Browser $browser) {
@@ -72,16 +72,16 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo'              => 'logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@company.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test St',
-            'default_currency_id'       => 1,
+            'company_logo' => 'logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test St',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'default_language'          => 'en',
-            'installation_completed'    => false,
+            'default_date_format' => 'Y-m-d',
+            'default_language' => 'en',
+            'installation_completed' => false,
         ]);
 
         $this->browse(function (Browser $browser) {
@@ -102,16 +102,16 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo'              => 'logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@company.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test St',
-            'default_currency_id'       => 1,
+            'company_logo' => 'logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test St',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'default_language'          => 'en',
-            'installation_completed'    => false,
+            'default_date_format' => 'Y-m-d',
+            'default_language' => 'en',
+            'installation_completed' => false,
         ]);
 
         $this->browse(function (Browser $browser) {
@@ -145,16 +145,16 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo'              => 'logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@company.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test St',
-            'default_currency_id'       => 1,
+            'company_logo' => 'logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test St',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'default_language'          => 'en',
-            'installation_completed'    => false,
+            'default_date_format' => 'Y-m-d',
+            'default_language' => 'en',
+            'installation_completed' => false,
         ]);
 
         $this->browse(function (Browser $browser) {
@@ -183,16 +183,16 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with completed installation
         Setting::create([
-            'company_logo'              => 'logo.png',
-            'company_name'              => 'Test Company',
-            'company_email'             => 'test@company.com',
-            'company_phone'             => '123-456-7890',
-            'company_address'           => '123 Test St',
-            'default_currency_id'       => 1,
+            'company_logo' => 'logo.png',
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'company_phone' => '123-456-7890',
+            'company_address' => '123 Test St',
+            'default_currency_id' => 1,
             'default_currency_position' => 'before',
-            'default_date_format'       => 'Y-m-d',
-            'default_language'          => 'en',
-            'installation_completed'    => true,
+            'default_date_format' => 'Y-m-d',
+            'default_language' => 'en',
+            'installation_completed' => true,
         ]);
 
         $this->browse(function (Browser $browser) {

@@ -67,19 +67,19 @@ class Create extends Component
     public ?string $seasonality = null;
 
     #[Validate([
-        'productWarehouse.qty'          => 'numeric',
-        'productWarehouse.price'        => 'numeric',
-        'productWarehouse.old_price'    => 'numeric',
-        'productWarehouse.cost'         => 'numeric',
-        'productWarehouse.stock_alert'  => 'numeric',
+        'productWarehouse.qty' => 'numeric',
+        'productWarehouse.price' => 'numeric',
+        'productWarehouse.old_price' => 'numeric',
+        'productWarehouse.cost' => 'numeric',
+        'productWarehouse.stock_alert' => 'numeric',
         'productWarehouse.is_ecommerce' => 'boolean',
     ])]
     public array $productWarehouse = [
-        'qty'          => 0,
-        'price'        => 0,
-        'cost'         => 0,
-        'old_price'    => 0,
-        'stock_alert'  => 10,
+        'qty' => 0,
+        'price' => 0,
+        'cost' => 0,
+        'old_price' => 0,
+        'stock_alert' => 10,
         'is_ecommerce' => false,
     ];
 
@@ -118,7 +118,7 @@ class Create extends Component
         $this->slug = Str::slug($this->name);
 
         if ($this->image) {
-            $imageName = Str::slug($this->name).'-'.$this->image->extension();
+            $imageName = Str::slug($this->name) . '-' . $this->image->extension();
             $this->image->storeAs('products', $imageName, 'local_files');
             $this->image = $imageName;
         }
@@ -127,7 +127,7 @@ class Create extends Component
             $gallery = [];
 
             foreach ($this->gallery as $value) {
-                $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$value->extension();
+                $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $value->extension();
                 $value->storeAs('products', $imageName, 'local_files');
                 $gallery[] = $imageName;
             }
@@ -138,30 +138,30 @@ class Create extends Component
         $this->description = json_encode($this->description);
 
         $product = Product::create([
-            'name'              => $this->name,
-            'code'              => $this->code,
+            'name' => $this->name,
+            'code' => $this->code,
             'barcode_symbology' => $this->barcode_symbology,
-            'slug'              => $this->slug,
-            'unit'              => $this->unit,
-            'tax_amount'        => $this->tax_amount,
-            'description'       => $this->description,
-            'tax_type'          => $this->tax_type,
-            'category_id'       => $this->category_id,
-            'brand_id'          => $this->brand_id,
-            'availability'      => $this->availability,
-            'seasonality'       => $this->seasonality,
-            'image'             => $this->image,
-            'gallery'           => $this->gallery,
+            'slug' => $this->slug,
+            'unit' => $this->unit,
+            'tax_amount' => $this->tax_amount,
+            'description' => $this->description,
+            'tax_type' => $this->tax_type,
+            'category_id' => $this->category_id,
+            'brand_id' => $this->brand_id,
+            'availability' => $this->availability,
+            'seasonality' => $this->seasonality,
+            'image' => $this->image,
+            'gallery' => $this->gallery,
         ]);
 
         ProductWarehouse::create([
-            'product_id'   => $product->id,
+            'product_id' => $product->id,
             'warehouse_id' => $this->warehouse?->id,
-            'price'        => $this->productWarehouse['price'],
-            'cost'         => $this->productWarehouse['cost'],
-            'qty'          => $this->productWarehouse['qty'] ?? 0,
-            'old_price'    => $this->productWarehouse['old_price'],
-            'stock_alert'  => $this->productWarehouse['stock_alert'] ?? 0,
+            'price' => $this->productWarehouse['price'],
+            'cost' => $this->productWarehouse['cost'],
+            'qty' => $this->productWarehouse['qty'] ?? 0,
+            'old_price' => $this->productWarehouse['old_price'],
+            'stock_alert' => $this->productWarehouse['stock_alert'] ?? 0,
             'is_ecommerce' => $this->productWarehouse['is_ecommerce'] ?? false,
         ]);
 

@@ -6,20 +6,20 @@ namespace App\Livewire\Adjustment;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Adjustment;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 #[Lazy]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
     use WithFileUploads;
 
     public function placeholder()
@@ -38,8 +38,8 @@ class Index extends Component
 
         $query = Adjustment::with('adjustedProducts', 'adjustedProducts.warehouse', 'adjustedProducts.product')
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -64,11 +64,11 @@ class Index extends Component
         $confirmationMessage = __('Are you sure you want to delete this adjustment?');
 
         $this->confirm($confirmationMessage, [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
 
         $this->adjustment = $adjustment;

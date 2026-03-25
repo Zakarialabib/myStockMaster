@@ -14,9 +14,9 @@ use App\Models\SalePayment;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use App\Models\Warehouse;
-use Livewire\Component;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class ProfitLossReport extends Component
 {
@@ -29,22 +29,39 @@ class ProfitLossReport extends Component
     public $end_date;
 
     public $total_sales = 0;
+
     public $sales_amount = 0;
+
     public $total_purchases = 0;
+
     public $purchases_amount = 0;
+
     public $total_sale_returns = 0;
+
     public $sale_returns_amount = 0;
+
     public $total_purchase_returns = 0;
+
     public $purchase_returns_amount = 0;
+
     public $expenses_amount = 0;
+
     public $profit_amount = 0;
+
     public $payments_received_amount = 0;
+
     public $payments_sent_amount = 0;
+
     public $payments_net_amount = 0;
+
     public $warehouse_id;
+
     public $warehouses;
+
     public $completed_purchases;
+
     public $pending_purchases;
+
     public $top_selling_products;
 
     public function mount(): void

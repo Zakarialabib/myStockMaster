@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Facades\Cart;
 use App\Models\Product;
 use App\Models\Quotation;
-use App\Facades\Cart;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,26 +25,26 @@ class QuotationSalesController extends Controller
         foreach ($quotation_details as $quotation_detail) {
             $product = Product::findOrFail($quotation_detail->product_id);
             $cart->add([
-                'id'         => $quotation_detail->product_id,
-                'name'       => $quotation_detail->name,
-                'quantity'   => $quotation_detail->quantity,
-                'price'      => $quotation_detail->price,
+                'id' => $quotation_detail->product_id,
+                'name' => $quotation_detail->name,
+                'quantity' => $quotation_detail->quantity,
+                'price' => $quotation_detail->price,
                 'attributes' => [
-                    'product_discount'      => $quotation_detail->product_discount_amount,
+                    'product_discount' => $quotation_detail->product_discount_amount,
                     'product_discount_type' => $quotation_detail->product_discount_type,
-                    'sub_total'             => $quotation_detail->sub_total,
-                    'code'                  => $quotation_detail->code,
-                    'stock'                 => $product->quantity,
-                    'product_tax'           => $quotation_detail->product_tax_amount,
-                    'unit_price'            => $quotation_detail->unit_price,
-                    'unit'                  => $product->unit,
+                    'sub_total' => $quotation_detail->sub_total,
+                    'code' => $quotation_detail->code,
+                    'stock' => $product->quantity,
+                    'product_tax' => $quotation_detail->product_tax_amount,
+                    'unit_price' => $quotation_detail->unit_price,
+                    'unit' => $product->unit,
                 ],
             ]);
         }
 
         return view('admin.quotation.quotation-sales.create', [
             'quotation_id' => $quotation->id,
-            'sale'         => $quotation,
+            'sale' => $quotation,
         ]);
     }
 }

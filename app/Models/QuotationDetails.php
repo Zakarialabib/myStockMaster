@@ -24,8 +24,6 @@ class QuotationDetails extends Model
 
     /**
      * get price attribute
-     *
-     * @return Attribute
      */
     protected function price(): Attribute
     {
@@ -36,8 +34,6 @@ class QuotationDetails extends Model
 
     /**
      * Interact with unit price
-     *
-     * @return Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -48,8 +44,6 @@ class QuotationDetails extends Model
 
     /**
      * get subtotal attribute
-     *
-     * @return Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -60,8 +54,6 @@ class QuotationDetails extends Model
 
     /**
      * Interact with shipping amount
-     *
-     * @return Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -72,8 +64,6 @@ class QuotationDetails extends Model
 
     /**
      * Interact with shipping amount
-     *
-     * @return Attribute
      */
     protected function productTaxAmountAttribute(): Attribute
     {

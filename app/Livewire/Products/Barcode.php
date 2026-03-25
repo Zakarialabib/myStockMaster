@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 #[Layout('layouts.app')]
 class Barcode extends Component
 {
-    use WithModels;
     use WithAlert;
+    use WithModels;
 
     public $warehouse_id;
 
     #[Validate([
-        'products.*.quantity'    => 'required|integer|min:1|max:100',
+        'products.*.quantity' => 'required|integer|min:1|max:100',
         'products.*.barcodeSize' => 'required|in:small,medium,large,extra,huge',
     ])]
     public array $products = [];
@@ -48,13 +48,13 @@ class Barcode extends Component
 
         if ($productWarehouse) {
             $this->products[] = [
-                'id'                => $productWarehouse->product_id,
-                'name'              => $productWarehouse->product->name,
-                'code'              => $productWarehouse->product->code,
-                'price'             => $productWarehouse->price,
-                'quantity'          => 1,
+                'id' => $productWarehouse->product_id,
+                'name' => $productWarehouse->product->name,
+                'code' => $productWarehouse->product->code,
+                'price' => $productWarehouse->price,
+                'quantity' => 1,
                 'barcode_symbology' => $productWarehouse->product->barcode_symbology,
-                'barcodeSize'       => 'medium',
+                'barcodeSize' => 'medium',
             ];
         }
     }
@@ -88,7 +88,7 @@ class Barcode extends Component
 
         return response()->streamDownload(static function () use ($pdf): void {
             echo $pdf->output();
-        }, 'barcodes-'.date('Y-m-d').'.pdf');
+        }, 'barcodes-' . date('Y-m-d') . '.pdf');
     }
 
     public function deleteProduct($productId): void
@@ -103,7 +103,7 @@ class Barcode extends Component
             }
         }
 
-        if ( ! is_null($index)) {
+        if (! is_null($index)) {
             unset($this->products[$index]);
             $this->products = array_values($this->products);
         }

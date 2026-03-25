@@ -32,11 +32,11 @@ it('updates a supplier', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('suppliers', [
-        'id'    => $supplier->id,
-        'name'  => 'New Name',
+        'id' => $supplier->id,
+        'name' => 'New Name',
         'phone' => '00000000000',
         'email' => 'supplier@gmail.com',
-        'city'  => 'casablanca',
+        'city' => 'casablanca',
     ]);
 });
 
@@ -55,8 +55,8 @@ it('tests the uodate supplier component validation', function () {
         ->assertHasErrors(
             ['supplier.name' => 'required'],
             ['supplier.phonne' => 'required'],
-            ['supplier.email'  => 'nullable'],
-            ['supplier.city'   => 'nullable'],
+            ['supplier.email' => 'nullable'],
+            ['supplier.city' => 'nullable'],
         );
 });
 
@@ -69,7 +69,7 @@ it('validates the supplier', function () {
         ->set('supplier.phone', '')
         ->call('update')
         ->assertHasErrors([
-            'supplier.name'  => 'The name field cannot be empty.',
+            'supplier.name' => 'The name field cannot be empty.',
             'supplier.phone' => 'The phone field cannot be empty.',
         ]);
 });

@@ -52,7 +52,7 @@ class GenerateProperty extends Command
     {
         $migrationPath = database_path('migrations');
 
-        return File::glob($migrationPath.'/*.php');
+        return File::glob($migrationPath . '/*.php');
     }
 
     protected function getTableName(string $migrationFile): string

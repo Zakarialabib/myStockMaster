@@ -27,8 +27,8 @@ it('tests the create currency can create', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
-        'name'   => 'Us Dollar',
-        'code'   => 'MA',
+        'name' => 'Us Dollar',
+        'code' => 'MA',
         'locale' => '$',
     ]);
 });
@@ -44,7 +44,7 @@ it('tests the create user component validation', function () {
         ->call('create')
         ->assertHasErrors(
             ['currency.name' => 'required'],
-            ['currency.code'   => 'required'],
+            ['currency.code' => 'required'],
             ['currency.locale' => 'required'],
         );
 });

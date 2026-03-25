@@ -10,10 +10,6 @@ use Illuminate\Support\Carbon;
 trait SaleScope
 {
     /**
-     * @param Builder $builder
-     * @param Carbon $date
-     * @param int $dividedNumber
-     *
      * @return mixed
      */
     public function scopeSalesTotal(Builder $builder, Carbon $date, int $dividedNumber = 100)

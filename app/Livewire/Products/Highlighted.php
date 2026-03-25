@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Livewire\Products;
 
 use App\Models\Product;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Throwable;
-use App\Traits\WithAlert;
 
 class Highlighted extends Component
 {
     use WithAlert;
+
     public $product;
 
     public $hot;

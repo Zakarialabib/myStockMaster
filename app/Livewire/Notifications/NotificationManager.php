@@ -6,11 +6,11 @@ namespace App\Livewire\Notifications;
 
 use App\Models\Notification;
 use App\Services\NotificationService;
+use Exception;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Exception;
 
 class NotificationManager extends Component
 {
@@ -29,9 +29,13 @@ class NotificationManager extends Component
     public $searchTerm = '';
 
     public $selectedNotifications = [];
+
     public $selectAll = false;
+
     public $showFilters = false;
+
     public $notificationTypes = [];
+
     public $loading = false;
 
     public function mount()
@@ -105,10 +109,10 @@ class NotificationManager extends Component
         }
 
         // Apply search
-        if ( ! empty($this->searchTerm)) {
+        if (! empty($this->searchTerm)) {
             $query->where(function ($q) {
-                $q->where('type', 'like', '%'.$this->searchTerm.'%')
-                    ->orWhere('data', 'like', '%'.$this->searchTerm.'%');
+                $q->where('type', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
             });
         }
 
@@ -129,7 +133,7 @@ class NotificationManager extends Component
             session()->flash('success', 'Notification marked as read.');
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notification as read: '.$e->getMessage());
+            session()->flash('error', 'Failed to mark notification as read: ' . $e->getMessage());
         }
     }
 
@@ -142,7 +146,7 @@ class NotificationManager extends Component
             session()->flash('success', 'Notification marked as unread.');
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notification as unread: '.$e->getMessage());
+            session()->flash('error', 'Failed to mark notification as unread: ' . $e->getMessage());
         }
     }
 
@@ -155,7 +159,7 @@ class NotificationManager extends Component
         }
 
         try {
-            $notificationService = new NotificationService();
+            $notificationService = new NotificationService;
             $notificationService->markNotificationsAsRead($this->selectedNotifications);
 
             $count = count($this->selectedNotifications);
@@ -165,7 +169,7 @@ class NotificationManager extends Component
             $this->selectAll = false;
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notifications as read: '.$e->getMessage());
+            session()->flash('error', 'Failed to mark notifications as read: ' . $e->getMessage());
         }
     }
 
@@ -187,7 +191,7 @@ class NotificationManager extends Component
             $this->selectAll = false;
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to delete notifications: '.$e->getMessage());
+            session()->flash('error', 'Failed to delete notifications: ' . $e->getMessage());
         }
     }
 
@@ -200,7 +204,7 @@ class NotificationManager extends Component
             session()->flash('success', 'Notification deleted successfully.');
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to delete notification: '.$e->getMessage());
+            session()->flash('error', 'Failed to delete notification: ' . $e->getMessage());
         }
     }
 
@@ -218,10 +222,10 @@ class NotificationManager extends Component
                 $query->where('data->priority', $this->filterPriority);
             }
 
-            if ( ! empty($this->searchTerm)) {
+            if (! empty($this->searchTerm)) {
                 $query->where(function ($q) {
-                    $q->where('type', 'like', '%'.$this->searchTerm.'%')
-                        ->orWhere('data', 'like', '%'.$this->searchTerm.'%');
+                    $q->where('type', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
                 });
             }
 
@@ -231,7 +235,7 @@ class NotificationManager extends Component
             session()->flash('success', "Marked {$count} notification(s) as read.");
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark all notifications as read: '.$e->getMessage());
+            session()->flash('error', 'Failed to mark all notifications as read: ' . $e->getMessage());
         }
     }
 
@@ -249,10 +253,10 @@ class NotificationManager extends Component
                 $query->where('data->priority', $this->filterPriority);
             }
 
-            if ( ! empty($this->searchTerm)) {
+            if (! empty($this->searchTerm)) {
                 $query->where(function ($q) {
-                    $q->where('type', 'like', '%'.$this->searchTerm.'%')
-                        ->orWhere('data', 'like', '%'.$this->searchTerm.'%');
+                    $q->where('type', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
                 });
             }
 
@@ -262,7 +266,7 @@ class NotificationManager extends Component
             session()->flash('success', "Deleted {$count} read notification(s).");
             $this->dispatch('notificationUpdated');
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to clear read notifications: '.$e->getMessage());
+            session()->flash('error', 'Failed to clear read notifications: ' . $e->getMessage());
         }
     }
 
@@ -294,14 +298,14 @@ class NotificationManager extends Component
     public function getNotificationIcon($type)
     {
         $icons = [
-            'sale_created'    => 'shopping-cart',
-            'sale_updated'    => 'edit',
-            'low_stock'       => 'exclamation-triangle',
+            'sale_created' => 'shopping-cart',
+            'sale_updated' => 'edit',
+            'low_stock' => 'exclamation-triangle',
             'product_updated' => 'package',
             'expense_created' => 'credit-card',
-            'system'          => 'cog',
-            'user'            => 'user',
-            'default'         => 'bell',
+            'system' => 'cog',
+            'user' => 'user',
+            'default' => 'bell',
         ];
 
         return $icons[$type] ?? $icons['default'];
@@ -310,14 +314,14 @@ class NotificationManager extends Component
     public function getNotificationColor($type)
     {
         $colors = [
-            'sale_created'    => 'green',
-            'sale_updated'    => 'blue',
-            'low_stock'       => 'red',
+            'sale_created' => 'green',
+            'sale_updated' => 'blue',
+            'low_stock' => 'red',
             'product_updated' => 'purple',
             'expense_created' => 'orange',
-            'system'          => 'gray',
-            'user'            => 'indigo',
-            'default'         => 'gray',
+            'system' => 'gray',
+            'user' => 'indigo',
+            'default' => 'gray',
         ];
 
         return $colors[$type] ?? $colors['default'];
@@ -327,7 +331,7 @@ class NotificationManager extends Component
     {
         $data = is_string($notification->data) ? json_decode($notification->data, true) : $notification->data;
 
-        if ( ! is_array($data)) {
+        if (! is_array($data)) {
             return [];
         }
 
@@ -335,29 +339,29 @@ class NotificationManager extends Component
         switch ($notification->type) {
             case 'sale_created':
                 return [
-                    'title'   => 'New Sale Created',
-                    'message' => "Sale #{$data['sale_id']} created for ".($data['customer_name'] ?? 'Unknown Customer'),
-                    'amount'  => $data['total_amount'] ?? null,
+                    'title' => 'New Sale Created',
+                    'message' => "Sale #{$data['sale_id']} created for " . ($data['customer_name'] ?? 'Unknown Customer'),
+                    'amount' => $data['total_amount'] ?? null,
                 ];
 
             case 'low_stock':
                 return [
-                    'title'         => 'Low Stock Alert',
-                    'message'       => "Product '{$data['product_name']}' is running low",
+                    'title' => 'Low Stock Alert',
+                    'message' => "Product '{$data['product_name']}' is running low",
                     'current_stock' => $data['current_stock'] ?? null,
                     'minimum_stock' => $data['minimum_stock'] ?? null,
                 ];
 
             case 'expense_created':
                 return [
-                    'title'   => 'New Expense Recorded',
+                    'title' => 'New Expense Recorded',
                     'message' => "Expense for {$data['category']} recorded",
-                    'amount'  => $data['amount'] ?? null,
+                    'amount' => $data['amount'] ?? null,
                 ];
 
             default:
                 return [
-                    'title'   => ucfirst(str_replace('_', ' ', $notification->type)),
+                    'title' => ucfirst(str_replace('_', ' ', $notification->type)),
                     'message' => $data['message'] ?? 'Notification received',
                 ];
         }

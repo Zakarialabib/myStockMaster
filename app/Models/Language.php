@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Enums\Status;
+use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
 {
     public const IS_DEFAULT = 1;
+
     public const IS_NOT_DEFAULT = 0;
 
     public const ATTRIBUTES = [
@@ -21,6 +22,7 @@ class Language extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**

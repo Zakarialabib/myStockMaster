@@ -23,27 +23,27 @@ enum ShippingStatus: string
     public function label(): string
     {
         return match ($this) {
-            static::PENDING   => __('Pending'),
-            static::PREPARING => __('Processing'),
-            static::SUBMITTED => __('Completed'),
-            static::SHIPPING  => __('Shipped'),
-            static::DELIVERED => __('Returned'),
-            static::CANCELLED => __('Canceled'),
-            static::FAILED    => __('Failed'),
+            self::PENDING => __('Pending'),
+            self::PREPARING => __('Processing'),
+            self::SUBMITTED => __('Completed'),
+            self::SHIPPING => __('Shipped'),
+            self::DELIVERED => __('Returned'),
+            self::CANCELLED => __('Canceled'),
+            self::FAILED => __('Failed'),
         };
     }
 
     public function getBadgeType(): string
     {
         return match ($this) {
-            self::PENDING   => 'secondary',
+            self::PENDING => 'secondary',
             self::PREPARING => 'info',
             self::SUBMITTED => 'success',
-            self::SHIPPING  => 'primary',
+            self::SHIPPING => 'primary',
             self::DELIVERED => 'success',
             self::CANCELLED => 'warning',
-            self::FAILED    => 'danger',
-            default         => 'secondary',
+            self::FAILED => 'danger',
+            default => 'secondary',
         };
     }
 }

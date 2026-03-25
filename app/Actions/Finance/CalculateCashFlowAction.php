@@ -40,18 +40,18 @@ final class CalculateCashFlowAction
             : null;
 
         return [
-            'cash_inflows'           => $cashInflows,
-            'cash_outflows'          => $cashOutflows,
-            'net_cash_flow'          => round($netCashFlow, 2),
-            'current_cash_balance'   => round($currentCashBalance, 2),
+            'cash_inflows' => $cashInflows,
+            'cash_outflows' => $cashOutflows,
+            'net_cash_flow' => round($netCashFlow, 2),
+            'current_cash_balance' => round($currentCashBalance, 2),
             'projected_cash_balance' => round($currentCashBalance + $netCashFlow, 2),
-            'buffer_requirement'     => $bufferRequirement,
-            'cash_position'          => $cashPosition,
-            'surplus_allocation'     => $surplusAllocation,
-            'recommendations'        => $this->getRecommendations($cashPosition, $netCashFlow),
-            'period'                 => [
+            'buffer_requirement' => $bufferRequirement,
+            'cash_position' => $cashPosition,
+            'surplus_allocation' => $surplusAllocation,
+            'recommendations' => $this->getRecommendations($cashPosition, $netCashFlow),
+            'period' => [
                 'from' => $dateFrom->toDateString(),
-                'to'   => $dateTo->toDateString(),
+                'to' => $dateTo->toDateString(),
                 'days' => $dateTo->diffInDays($dateFrom) + 1,
             ],
             'calculated_at' => now()->toISOString(),
@@ -73,10 +73,10 @@ final class CalculateCashFlowAction
         $daysDiff = $dateTo->diffInDays($dateFrom) + 1;
 
         return [
-            'sale_revenue'    => round($saleRevenue, 2),
-            'paid_revenue'    => round($paidRevenue, 2),
-            'total'           => round($paidRevenue, 2), // Use paid revenue as actual cash inflow
-            'daily_average'   => round($paidRevenue / $daysDiff, 2),
+            'sale_revenue' => round($saleRevenue, 2),
+            'paid_revenue' => round($paidRevenue, 2),
+            'total' => round($paidRevenue, 2), // Use paid revenue as actual cash inflow
+            'daily_average' => round($paidRevenue / $daysDiff, 2),
             'monthly_average' => round(($paidRevenue / $daysDiff) * 30, 2),
         ];
     }
@@ -86,23 +86,23 @@ final class CalculateCashFlowAction
         $daysDiff = $dateTo->diffInDays($dateFrom) + 1;
 
         $expenseCategories = [
-            'cogs'        => $expenses['cogs'] ?? 0,
+            'cogs' => $expenses['cogs'] ?? 0,
             'labor_costs' => $expenses['labor_costs'] ?? 0,
-            'rent'        => $expenses['rent'] ?? 0,
-            'utilities'   => $expenses['utilities'] ?? 0,
-            'marketing'   => $expenses['marketing'] ?? 0,
-            'insurance'   => $expenses['insurance'] ?? 0,
+            'rent' => $expenses['rent'] ?? 0,
+            'utilities' => $expenses['utilities'] ?? 0,
+            'marketing' => $expenses['marketing'] ?? 0,
+            'insurance' => $expenses['insurance'] ?? 0,
             'maintenance' => $expenses['maintenance'] ?? 0,
-            'supplies'    => $expenses['supplies'] ?? 0,
-            'other'       => $expenses['other'] ?? 0,
+            'supplies' => $expenses['supplies'] ?? 0,
+            'other' => $expenses['other'] ?? 0,
         ];
 
         $totalOutflows = array_sum($expenseCategories);
 
         return [
-            'breakdown'       => $expenseCategories,
-            'total'           => round($totalOutflows, 2),
-            'daily_average'   => round($totalOutflows / $daysDiff, 2),
+            'breakdown' => $expenseCategories,
+            'total' => round($totalOutflows, 2),
+            'daily_average' => round($totalOutflows / $daysDiff, 2),
             'monthly_average' => round(($totalOutflows / $daysDiff) * 30, 2),
         ];
     }
@@ -110,9 +110,9 @@ final class CalculateCashFlowAction
     private function calculateBufferRequirement(float $monthlyExpenses): array
     {
         return [
-            'minimum_buffer'   => round($monthlyExpenses * 2, 2), // 2 months
-            'target_buffer'    => round($monthlyExpenses * 2.5, 2), // 2.5 months
-            'optimal_buffer'   => round($monthlyExpenses * 3, 2), // 3 months
+            'minimum_buffer' => round($monthlyExpenses * 2, 2), // 2 months
+            'target_buffer' => round($monthlyExpenses * 2.5, 2), // 2.5 months
+            'optimal_buffer' => round($monthlyExpenses * 3, 2), // 3 months
             'monthly_expenses' => round($monthlyExpenses, 2),
         ];
     }
@@ -123,17 +123,17 @@ final class CalculateCashFlowAction
 
         $status = match (true) {
             $currentBalance >= $bufferRequirement['optimal_buffer'] => 'excellent',
-            $currentBalance >= $bufferRequirement['target_buffer']  => 'good',
+            $currentBalance >= $bufferRequirement['target_buffer'] => 'good',
             $currentBalance >= $bufferRequirement['minimum_buffer'] => 'warning',
-            default                                                 => 'critical'
+            default => 'critical'
         };
 
         return [
-            'status'                => $status,
-            'buffer_ratio'          => round($bufferRatio, 2),
-            'buffer_months'         => round($currentBalance / $bufferRequirement['monthly_expenses'], 1),
+            'status' => $status,
+            'buffer_ratio' => round($bufferRatio, 2),
+            'buffer_months' => round($currentBalance / $bufferRequirement['monthly_expenses'], 1),
             'is_cash_flow_positive' => $netCashFlow > 0,
-            'runway_days'           => $netCashFlow < 0
+            'runway_days' => $netCashFlow < 0
                 ? round($currentBalance / abs($netCashFlow / 30), 0)
                 : null,
         ];
@@ -143,13 +143,13 @@ final class CalculateCashFlowAction
     {
         // Playbook allocation: 50% Reinvestment, 30% Reserve, 20% Profit
         return [
-            'total_surplus'          => round($surplus, 2),
-            'reinvestment'           => round($surplus * 0.50, 2),
-            'reserve'                => round($surplus * 0.30, 2),
-            'profit_distribution'    => round($surplus * 0.20, 2),
+            'total_surplus' => round($surplus, 2),
+            'reinvestment' => round($surplus * 0.50, 2),
+            'reserve' => round($surplus * 0.30, 2),
+            'profit_distribution' => round($surplus * 0.20, 2),
             'allocation_percentages' => [
-                'reinvestment'        => 50,
-                'reserve'             => 30,
+                'reinvestment' => 50,
+                'reserve' => 30,
                 'profit_distribution' => 20,
             ],
         ];

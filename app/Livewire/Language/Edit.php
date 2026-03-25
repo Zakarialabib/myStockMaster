@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
-use Livewire\Attributes\On;
-use Livewire\Component;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\App;
 use App\Models\Language;
-use Livewire\Attributes\Validate;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\File;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Edit extends Component
 {
     use WithAlert;
+
     public array $languages = [];
 
     public $language;
@@ -48,7 +49,7 @@ class Edit extends Component
             'code' => $this->code,
         ]);
 
-        File::copy(App::langPath().('/en.json'), App::langPath().('/'.$this->code.'.json'));
+        File::copy(App::langPath() . ('/en.json'), App::langPath() . ('/' . $this->code . '.json'));
 
         $this->alert('success', __('Data created successfully!'));
 

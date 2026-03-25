@@ -28,17 +28,16 @@ final class HandleNotificationFailureAction
 {
     public function __construct(
         private readonly NotificationService $notificationService,
-    ) {
-    }
+    ) {}
 
     public function handleSaleProcessingFailure(Sale $sale, Throwable $exception): void
     {
         try {
             // Log the failure
             Log::error('Sale processing failure', [
-                'order_id'  => $sale->id,
+                'order_id' => $sale->id,
                 'exception' => $exception->getMessage(),
-                'trace'     => $exception->getTraceAsString(),
+                'trace' => $exception->getTraceAsString(),
             ]);
 
             // Notify management about the failure
@@ -55,7 +54,7 @@ final class HandleNotificationFailureAction
             $this->markSaleForManualReview($sale, $exception);
         } catch (Throwable $e) {
             Log::critical('Failed to handle sale processing failure', [
-                'order_id'           => $sale->id,
+                'order_id' => $sale->id,
                 'original_exception' => $exception->getMessage(),
                 'handling_exception' => $e->getMessage(),
             ]);
@@ -67,10 +66,10 @@ final class HandleNotificationFailureAction
         try {
             // Log the status change failure
             Log::error('Sale status change failure', [
-                'order_id'   => $sale->id,
+                'order_id' => $sale->id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
-                'exception'  => $exception->getMessage(),
+                'exception' => $exception->getMessage(),
             ]);
 
             // Notify management about status change issues
@@ -84,7 +83,7 @@ final class HandleNotificationFailureAction
             $this->attemptStatusRevert($sale, $oldStatus, $exception);
         } catch (Throwable $e) {
             Log::critical('Failed to handle status change failure', [
-                'order_id'           => $sale->id,
+                'order_id' => $sale->id,
                 'handling_exception' => $e->getMessage(),
             ]);
         }
@@ -97,7 +96,7 @@ final class HandleNotificationFailureAction
                 // Send email notification about delay
                 Log::info('Customer delay notification sent via email', [
                     'order_id' => $sale->id,
-                    'email'    => $sale->customer_email,
+                    'email' => $sale->customer_email,
                 ]);
             }
 
@@ -110,12 +109,12 @@ final class HandleNotificationFailureAction
             // Send push notification if available
             $this->notificationService->sendRealTimeNotification('sale-delays', [
                 'order_id' => $sale->id,
-                'message'  => 'Your sale is experiencing a slight delay',
+                'message' => 'Your sale is experiencing a slight delay',
             ]);
         } catch (Throwable $e) {
             Log::error('Failed to notify customer about processing delay', [
                 'order_id' => $sale->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -125,7 +124,7 @@ final class HandleNotificationFailureAction
         try {
             // Add a note to the sale about the failure
             $sale->update([
-                'notes'                  => ($sale->notes ?? '')."\n\nProcessing failure: {$exception->getMessage()} at ".now()->toDateTimeString(),
+                'notes' => ($sale->notes ?? '') . "\n\nProcessing failure: {$exception->getMessage()} at " . now()->toDateTimeString(),
                 'requires_manual_review' => true,
             ]);
 
@@ -135,7 +134,7 @@ final class HandleNotificationFailureAction
         } catch (Throwable $e) {
             Log::error('Failed to mark sale for manual review', [
                 'order_id' => $sale->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -146,7 +145,7 @@ final class HandleNotificationFailureAction
             // Only attempt revert for certain scenarios
             if ($this->shouldAttemptRevert($exception)) {
                 Log::info('Attempting to revert sale status', [
-                    'order_id'     => $sale->id,
+                    'order_id' => $sale->id,
                     'reverting_to' => $oldStatus,
                 ]);
 
@@ -156,7 +155,7 @@ final class HandleNotificationFailureAction
         } catch (Throwable $e) {
             Log::error('Failed to revert sale status', [
                 'order_id' => $sale->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }

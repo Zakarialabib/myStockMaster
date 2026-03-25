@@ -8,17 +8,17 @@ use App\Enums\PaymentStatus;
 use App\Livewire\Utils\Datatable;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
-use App\Traits\WithAlert;
 
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
     use WithFileUploads;
 
     public $salereturn;
@@ -59,8 +59,8 @@ class Index extends Component
 
         $query = SaleReturn::with(['customer', 'saleReturnPayments', 'saleReturnDetails'])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -116,10 +116,10 @@ class Index extends Component
             $this->validate();
 
             SaleReturnPayment::create([
-                'date'           => $this->date,
-                'amount'         => $this->amount,
-                'note'           => $this->note ?? null,
-                'sale_id'        => $this->salereturn_id,
+                'date' => $this->date,
+                'amount' => $this->amount,
+                'note' => $this->note ?? null,
+                'sale_id' => $this->salereturn_id,
                 'payment_method' => $this->payment_method,
                 // 'user_id'        => Auth::user()->id,
             ]);
@@ -137,8 +137,8 @@ class Index extends Component
             }
 
             $salereturn->update([
-                'paid_amount'    => ($salereturn->paid_amount + $this->amount) * 100,
-                'due_amount'     => $due_amount * 100,
+                'paid_amount' => ($salereturn->paid_amount + $this->amount) * 100,
+                'due_amount' => $due_amount * 100,
                 'payment_status' => $payment_status,
             ]);
 
@@ -148,7 +148,7 @@ class Index extends Component
 
             $this->paymentModal = false;
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Error.').$throwable->getMessage());
+            $this->alert('error', __('Error.') . $throwable->getMessage());
         }
     }
 }

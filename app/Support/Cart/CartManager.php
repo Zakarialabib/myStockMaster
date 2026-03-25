@@ -17,7 +17,7 @@ final class CartManager extends Manager
 
     public function createSessionDriver(): CartDriver
     {
-        return new SessionDriver();
+        return new SessionDriver;
     }
 
     public function get(string $instance): \Illuminate\Support\Collection

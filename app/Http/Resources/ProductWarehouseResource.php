@@ -12,19 +12,19 @@ class ProductWarehouseResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * <<<<<<< HEAD
+     * @param \Illuminate\Http\Request $request
+     *                                          <<<<<<< HEAD
      *
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
-     * =======
+     *                                                                        =======
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
-     * >>>>>>> Api
+     *                                                                        >>>>>>> Api
      */
     public function toArray($request)
     {
         return [
             'warehouse_id' => $this->warehouse_id,
-            'product_id'   => $this->product_id,
+            'product_id' => $this->product_id,
         ];
     }
 }

@@ -15,7 +15,7 @@ class CheckInstallation
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(Request): (Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -46,14 +46,14 @@ class CheckInstallation
 
         try {
             // Check if settings table exists
-            if ( ! Schema::hasTable('settings')) {
+            if (! Schema::hasTable('settings')) {
                 return redirect()->route('installation.index');
             }
 
             // Check if installation is completed
             $installationCompleted = settings('installation_completed', false);
 
-            if ( ! $installationCompleted) {
+            if (! $installationCompleted) {
                 return redirect()->route('installation.index');
             }
         } catch (Exception $e) {

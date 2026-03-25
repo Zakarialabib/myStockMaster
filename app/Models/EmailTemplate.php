@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class EmailTemplate extends Model
 {
@@ -48,8 +48,6 @@ class EmailTemplate extends Model
 
     /**
      * Scope a query to only include default email templates.
-     *
-     * @param   $query
      */
     public function scopeDefault(Builder $query): Builder
     {

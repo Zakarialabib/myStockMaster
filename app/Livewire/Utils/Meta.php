@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Utils;
 
-use Livewire\Component;
 use App\Traits\WithAlert;
+use Livewire\Component;
 
 class Meta extends Component
 {

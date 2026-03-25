@@ -10,19 +10,20 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturnPayment;
-use App\Models\SaleDetails;
 use App\Models\Sale;
+use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use App\Models\SaleReturnPayment;
+use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Transactions extends Component
 {
     use WithAlert;
+
     public $typeChart = 'monthly';
 
     public $profit;
@@ -147,9 +148,9 @@ class Transactions extends Component
             ->toArray();
 
         $sales = [
-            'total'      => array_column($query, 'total'),
+            'total' => array_column($query, 'total'),
             'due_amount' => array_map(static fn ($total, $dueAmount): int|float => $total - $dueAmount, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels'     => array_column($query, 'labels'),
+            'labels' => array_column($query, 'labels'),
         ];
 
         $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
@@ -165,18 +166,18 @@ class Transactions extends Component
             ->toArray();
 
         $purchases = [
-            'total'      => array_column($query, 'total'),
+            'total' => array_column($query, 'total'),
             'due_amount' => array_map(static fn ($total, $dueAmount): int|float => $total - $dueAmount, array_column($query, 'total'), array_column($query, 'due_amount')),
-            'labels'     => array_column($query, 'labels'),
+            'labels' => array_column($query, 'labels'),
         ];
 
         $this->charts = json_encode([
             'total' => [
-                'sales'    => $sales['total'],
+                'sales' => $sales['total'],
                 'purchase' => $purchases['total'],
             ],
             'due_amount' => [
-                'sales'    => $sales['due_amount'],
+                'sales' => $sales['due_amount'],
                 'purchase' => $purchases['due_amount'],
             ],
             'labels' => $sales['labels'],
@@ -192,7 +193,7 @@ class Transactions extends Component
             $dataarray['total']['sales'][$i] = $sale['total'];
             $dataarray['due_amount']['sales'][$i] = $sale['total'] - $sale['due_amount'];
             $dataarray['labels'][$i] = $sale['labels'];
-            ++$i;
+            $i++;
         }
 
         $i = 0;
@@ -200,7 +201,7 @@ class Transactions extends Component
         foreach ($purchases as $purchase) {
             $dataarray['total']['purchase'][$i] = $purchase['total'];
             $dataarray['due_amount']['purchase'][$i] = $purchase['total'] - $purchase['due_amount'];
-            ++$i;
+            $i++;
         }
 
         return json_encode($dataarray, JSON_THROW_ON_ERROR);
@@ -209,7 +210,7 @@ class Transactions extends Component
     #[Computed]
     public function topProducts()
     {
-        return  SaleDetails::query()
+        return SaleDetails::query()
             ->selectRaw('
                 SUM(sale_details.quantity) as qtyItem,
                 products.name as name,
@@ -275,12 +276,12 @@ class Transactions extends Component
 
         return [
             'chart' => [
-                'type'  => 'bar',
+                'type' => 'bar',
                 'width' => '100%',
             ],
             'plotOptions' => [
                 'bar' => [
-                    'horizontal'   => true,
+                    'horizontal' => true,
                     'borderRadius' => 4,
                 ],
             ],
@@ -306,9 +307,9 @@ class Transactions extends Component
                 ],
             ],
             'legend' => [
-                'position'        => 'top',
+                'position' => 'top',
                 'horizontalAlign' => 'center',
-                'offsetX'         => 40,
+                'offsetX' => 40,
             ],
         ];
     }
@@ -348,8 +349,8 @@ class Transactions extends Component
             $sale = $salesData->where('day', $day)->first();
             $purchase = $purchasesData->where('day', $day)->first();
             $chartData[] = [
-                'day'       => $day,
-                'sales'     => ($sale) ? $sale->total_sales : 0,
+                'day' => $day,
+                'sales' => ($sale) ? $sale->total_sales : 0,
                 'purchases' => ($purchase) ? $purchase->total_purchases : 0,
             ];
         }
@@ -357,13 +358,13 @@ class Transactions extends Component
         // Create stacked bar chart options
         $dailyChartOptions = [
             'chart' => [
-                'type'    => 'bar',
+                'type' => 'bar',
                 'stacked' => true,
-                'width'   => '100%',
+                'width' => '100%',
             ],
             'plotOptions' => [
                 'bar' => [
-                    'horizontal'  => false,
+                    'horizontal' => false,
                     'endingShape' => 'flat',
                     'columnWidth' => '70%',
                 ],
@@ -380,9 +381,9 @@ class Transactions extends Component
             ],
             'xaxis' => [
                 'categories' => array_column($chartData, 'day'),
-                'labels'     => [
+                'labels' => [
                     'rotateAlways' => true,
-                    'rotate'       => -45,
+                    'rotate' => -45,
                 ],
             ],
             'yaxis' => [
@@ -391,9 +392,9 @@ class Transactions extends Component
                 ],
             ],
             'legend' => [
-                'position'        => 'top',
+                'position' => 'top',
                 'horizontalAlign' => 'center',
-                'offsetX'         => 40,
+                'offsetX' => 40,
             ],
             'colors' => ['#4CAF50', '#F44336'],
         ];
@@ -475,12 +476,12 @@ class Transactions extends Component
 
         return [
             'chart' => [
-                'type'  => 'bar',
+                'type' => 'bar',
                 'width' => '100%',
             ],
             'plotOptions' => [
                 'bar' => [
-                    'horizontal'  => false,
+                    'horizontal' => false,
                     'endingShape' => 'flat',
                     'columnWidth' => '70%',
                 ],
@@ -497,9 +498,9 @@ class Transactions extends Component
             ],
             'xaxis' => [
                 'categories' => $dateLabels,
-                'labels'     => [
+                'labels' => [
                     'rotateAlways' => true,
-                    'rotate'       => -45,
+                    'rotate' => -45,
                 ],
             ],
             'yaxis' => [
@@ -508,9 +509,9 @@ class Transactions extends Component
                 ],
             ],
             'legend' => [
-                'position'        => 'top',
+                'position' => 'top',
                 'horizontalAlign' => 'center',
-                'offsetX'         => 40,
+                'offsetX' => 40,
             ],
             'colors' => ['#F44336', '#4CAF50'],
         ];

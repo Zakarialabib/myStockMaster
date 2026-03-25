@@ -19,7 +19,7 @@ class ExpenseCategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name'        => 'bills',
+            'name' => 'bills',
             'description' => 'electriciy bill',
         ];
     }

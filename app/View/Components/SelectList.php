@@ -13,7 +13,7 @@ class SelectList extends Component
     /**
      * Create a new component instance.
      *
-     * @param  mixed  $options
+     * @param mixed $options
      */
     public function __construct($options)
     {

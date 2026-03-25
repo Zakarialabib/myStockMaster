@@ -44,16 +44,15 @@ class Create extends Component
 
     #[Validate([
         'products.*.quantities' => 'required|integer|min:1',
-        'products.*.types'      => 'required|in:add,sub',
+        'products.*.types' => 'required|in:add,sub',
     ])]
-
     public $products = [];
 
     public function mount(): void
     {
         $this->products = [];
 
-        $this->reference = 'Adj-'.Str::random(5);
+        $this->reference = 'Adj-' . Str::random(5);
         $this->date = date('Y-m-d');
 
         if (settings()->default_warehouse_id !== null) {
@@ -76,7 +75,7 @@ class Create extends Component
     {
         abort_if(Gate::denies('adjustment_create'), 403);
 
-        if ( ! $this->warehouse_id) {
+        if (! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -87,9 +86,9 @@ class Create extends Component
 
             app(StoreAdjustmentAction::class)(
                 [
-                    'date'         => $this->date,
-                    'note'         => $this->note,
-                    'user_id'      => auth()->id(),
+                    'date' => $this->date,
+                    'note' => $this->note,
+                    'user_id' => auth()->id(),
                     'warehouse_id' => $this->warehouse_id,
                 ],
                 $this->products,
@@ -99,7 +98,7 @@ class Create extends Component
 
             $this->redirectRoute('adjustments.index', navigate: true);
         } catch (Throwable $throwable) {
-            $this->alert('error', 'Error Occurred in '.$throwable->getMessage());
+            $this->alert('error', 'Error Occurred in ' . $throwable->getMessage());
         }
     }
 
@@ -140,18 +139,18 @@ class Create extends Component
         $calculation = $this->calculate($product);
 
         $this->products[] = [
-            'id'      => $product->id,
-            'name'    => $product->name,
-            'qty'     => 1,
-            'code'    => $product->code,
-            'weight'  => 1,
+            'id' => $product->id,
+            'name' => $product->name,
+            'qty' => 1,
+            'code' => $product->code,
+            'weight' => 1,
             'options' => array_merge($calculation, [
-                'product_discount'      => 0.00,
+                'product_discount' => 0.00,
                 'product_discount_type' => 'fixed',
-                'code'                  => $product->code,
-                'stock'                 => $productWarehouse->qty,
-                'unit'                  => $product->unit,
-                'types'                 => 'add',
+                'code' => $product->code,
+                'stock' => $productWarehouse->qty,
+                'unit' => $product->unit,
+                'types' => 'add',
             ]),
         ];
 

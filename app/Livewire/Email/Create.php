@@ -7,11 +7,11 @@ namespace App\Livewire\Email;
 use App\Models\EmailTemplate;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Gate;
 
 class Create extends Component
 {
@@ -20,12 +20,12 @@ class Create extends Component
     public bool $createModal = false;
 
     #[Validate([
-        'email_setting.name'         => ['required', 'max:255'],
-        'email_setting.default'      => ['required'],
+        'email_setting.name' => ['required', 'max:255'],
+        'email_setting.default' => ['required'],
         'email_setting.placeholders' => ['required'],
-        'email_setting.type'         => ['required'],
-        'email_setting.subject'      => ['required'],
-        'email_setting.status'       => ['required'],
+        'email_setting.type' => ['required'],
+        'email_setting.subject' => ['required'],
+        'email_setting.status' => ['required'],
     ])]
     public EmailTemplate $email_setting;
 
@@ -47,7 +47,7 @@ class Create extends Component
     {
         $this->resetErrorBag();
         $this->resetValidation();
-        $this->email_setting = new EmailTemplate();
+        $this->email_setting = new EmailTemplate;
         $this->description = '';
         $this->message = '';
         $this->createModal = true;

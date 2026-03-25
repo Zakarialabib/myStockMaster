@@ -29,9 +29,9 @@ it('tests the create user component', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('users', [
-        'name'     => 'John Doe',
-        'phone'    => '00000000000',
-        'email'    => 'admin@admin.com',
+        'name' => 'John Doe',
+        'phone' => '00000000000',
+        'email' => 'admin@admin.com',
         'password' => 'password',
     ]);
 });
@@ -48,8 +48,8 @@ it('tests the create user component validation', function () {
         ->call('create')
         ->assertHasErrors(
             ['user.name' => 'required'],
-            ['user.phone'    => 'required'],
-            ['user.email'    => 'required'],
+            ['user.phone' => 'required'],
+            ['user.email' => 'required'],
             ['user.password' => 'required']
         );
 });

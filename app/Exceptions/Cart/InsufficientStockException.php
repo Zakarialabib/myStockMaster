@@ -10,8 +10,8 @@ class InsufficientStockException extends CartException
     {
         $message = "Insufficient stock for product ID {$productId} in warehouse {$warehouseId}. Requested: {$requestedQty}, Available: {$availableQty}";
         parent::__construct($message, 400, null, array_merge($context, [
-            'product_id'         => $productId,
-            'warehouse_id'       => $warehouseId,
+            'product_id' => $productId,
+            'warehouse_id' => $warehouseId,
             'requested_quantity' => $requestedQty,
             'available_quantity' => $availableQty,
         ]));

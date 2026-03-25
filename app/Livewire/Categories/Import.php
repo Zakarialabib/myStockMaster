@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Categories;
 
-use Livewire\Component;
 use App\Imports\CategoriesImport;
 use Illuminate\Support\Facades\Gate;
-use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Import extends Component
 {
@@ -42,7 +42,7 @@ class Import extends Component
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
-        Excel::import(new CategoriesImport(), $this->file);
+        Excel::import(new CategoriesImport, $this->file);
 
         $this->alert('success', __('Categories imported successfully.'));
 

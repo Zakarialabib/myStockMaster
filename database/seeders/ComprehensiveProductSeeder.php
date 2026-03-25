@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
-use App\Models\Category;
-use App\Models\Brand;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ComprehensiveProductSeeder extends Seeder
 {
@@ -107,11 +107,11 @@ class ComprehensiveProductSeeder extends Seeder
         // Ensure we have at least one warehouse
         if (Warehouse::count() === 0) {
             Warehouse::create([
-                'name'    => 'Main Distribution Center',
-                'city'    => 'Central City',
+                'name' => 'Main Distribution Center',
+                'city' => 'Central City',
                 'address' => '123 Industrial Blvd',
-                'phone'   => '+1-555-0100',
-                'email'   => 'main@warehouse.com',
+                'phone' => '+1-555-0100',
+                'email' => 'main@warehouse.com',
                 'country' => 'USA',
             ]);
         }
@@ -166,7 +166,7 @@ class ComprehensiveProductSeeder extends Seeder
         $electronicsCategory = $categories->where('code', 'ELEC')->first();
         $techBrand = $brands->where('name', 'TechPro')->first();
 
-        if ( ! $electronicsCategory || ! $techBrand) {
+        if (! $electronicsCategory || ! $techBrand) {
             return;
         }
 
@@ -189,7 +189,7 @@ class ComprehensiveProductSeeder extends Seeder
         $clothingCategory = $categories->where('code', 'CLTH')->first();
         $styleBrand = $brands->where('name', 'StyleMax')->first();
 
-        if ( ! $clothingCategory || ! $styleBrand) {
+        if (! $clothingCategory || ! $styleBrand) {
             return;
         }
 
@@ -210,7 +210,7 @@ class ComprehensiveProductSeeder extends Seeder
         $foodCategory = $categories->where('code', 'FOOD')->first();
         $freshBrand = $brands->where('name', 'FreshChoice')->first();
 
-        if ( ! $foodCategory || ! $freshBrand) {
+        if (! $foodCategory || ! $freshBrand) {
             return;
         }
 
@@ -231,7 +231,7 @@ class ComprehensiveProductSeeder extends Seeder
         $homeCategory = $categories->where('code', 'HOME')->first();
         $homeBrand = $brands->where('name', 'HomeComfort')->first();
 
-        if ( ! $homeCategory || ! $homeBrand) {
+        if (! $homeCategory || ! $homeBrand) {
             return;
         }
 
@@ -252,7 +252,7 @@ class ComprehensiveProductSeeder extends Seeder
         $sportsCategory = $categories->where('code', 'SPRT')->first();
         $activeBrand = $brands->where('name', 'ActiveLife')->first();
 
-        if ( ! $sportsCategory || ! $activeBrand) {
+        if (! $sportsCategory || ! $activeBrand) {
             return;
         }
 
@@ -273,7 +273,7 @@ class ComprehensiveProductSeeder extends Seeder
         $healthCategory = $categories->where('code', 'HLTH')->first();
         $pureBrand = $brands->where('name', 'PureWell')->first();
 
-        if ( ! $healthCategory || ! $pureBrand) {
+        if (! $healthCategory || ! $pureBrand) {
             return;
         }
 
@@ -294,7 +294,7 @@ class ComprehensiveProductSeeder extends Seeder
         $autoCategory = $categories->where('code', 'AUTO')->first();
         $autoBrand = $brands->where('name', 'AutoMax')->first();
 
-        if ( ! $autoCategory || ! $autoBrand) {
+        if (! $autoCategory || ! $autoBrand) {
             return;
         }
 
@@ -315,7 +315,7 @@ class ComprehensiveProductSeeder extends Seeder
         $officeCategory = $categories->where('code', 'OFFC')->first();
         $officeBrand = $brands->where('name', 'OfficeElite')->first();
 
-        if ( ! $officeCategory || ! $officeBrand) {
+        if (! $officeCategory || ! $officeBrand) {
             return;
         }
 
@@ -379,27 +379,27 @@ class ComprehensiveProductSeeder extends Seeder
     {
         foreach ($products as $index => $productData) {
             $productId = (string) Str::uuid();
-            $code = strtoupper($category->code).str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
+            $code = strtoupper($category->code) . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
 
             // Create the product
             $product = [
-                'id'                => $productId,
-                'name'              => $productData['name'],
-                'code'              => $code,
-                'category_id'       => $category->id,
-                'brand_id'          => $brand->id,
-                'unit'              => $productData['unit'],
-                'slug'              => Str::slug($productData['name']),
+                'id' => $productId,
+                'name' => $productData['name'],
+                'code' => $code,
+                'category_id' => $category->id,
+                'brand_id' => $brand->id,
+                'unit' => $productData['unit'],
+                'slug' => Str::slug($productData['name']),
                 'barcode_symbology' => 'C128',
-                'tax_amount'        => fake()->randomElement([0, 5, 10, 15]), // Tax percentage
-                'tax_type'          => fake()->randomElement([0, 1]), // 0 = percentage, 1 = fixed
-                'status'            => true,
-                'featured'          => fake()->boolean(25),
-                'best'              => fake()->boolean(15),
-                'hot'               => fake()->boolean(20),
-                'description'       => fake()->sentence(10),
-                'created_at'        => now(),
-                'updated_at'        => now(),
+                'tax_amount' => fake()->randomElement([0, 5, 10, 15]), // Tax percentage
+                'tax_type' => fake()->randomElement([0, 1]), // 0 = percentage, 1 = fixed
+                'status' => true,
+                'featured' => fake()->boolean(25),
+                'best' => fake()->boolean(15),
+                'hot' => fake()->boolean(20),
+                'description' => fake()->sentence(10),
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
 
             DB::table('products')->insert($product);
@@ -416,16 +416,16 @@ class ComprehensiveProductSeeder extends Seeder
                 $oldPrice = min($price * 1.15, 99999.99);
 
                 ProductWarehouse::create([
-                    'product_id'    => $productId,
-                    'warehouse_id'  => $warehouse->id,
-                    'qty'           => fake()->numberBetween(20, 150),
-                    'price'         => round($price, 2), // Store as decimal
-                    'cost'          => round($cost, 2), // Store as decimal
-                    'old_price'     => round($oldPrice, 2), // Store as decimal
-                    'stock_alert'   => fake()->numberBetween(10, 25),
-                    'is_discount'   => fake()->boolean(20),
+                    'product_id' => $productId,
+                    'warehouse_id' => $warehouse->id,
+                    'qty' => fake()->numberBetween(20, 150),
+                    'price' => round($price, 2), // Store as decimal
+                    'cost' => round($cost, 2), // Store as decimal
+                    'old_price' => round($oldPrice, 2), // Store as decimal
+                    'stock_alert' => fake()->numberBetween(10, 25),
+                    'is_discount' => fake()->boolean(20),
                     'discount_date' => fake()->boolean(20) ? fake()->dateTimeBetween('now', '+30 days') : null,
-                    'is_ecommerce'  => fake()->boolean(60), // 60% chance for e-commerce
+                    'is_ecommerce' => fake()->boolean(60), // 60% chance for e-commerce
                 ]);
             }
         }

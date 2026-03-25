@@ -20,20 +20,20 @@ final class CalculateCustomerMetricsAction
         $segmentBy = $params['segment_by'] ?? null; // 'acquisition_channel', 'customer_type', etc.
 
         return [
-            'clv_metrics'                 => $this->calculateCLVMetrics($startDate, $endDate, $period),
-            'cac_metrics'                 => $this->calculateCACMetrics($startDate, $endDate, $period),
-            'customer_segments'           => $this->calculateSegmentMetrics($startDate, $endDate, $segmentBy),
-            'cohort_analysis'             => $this->calculateCohortAnalysis($startDate, $endDate),
-            'retention_metrics'           => $this->calculateRetentionMetrics($startDate, $endDate),
-            'ltv_cac_ratio'               => $this->calculateLTVCACRatio($startDate, $endDate),
+            'clv_metrics' => $this->calculateCLVMetrics($startDate, $endDate, $period),
+            'cac_metrics' => $this->calculateCACMetrics($startDate, $endDate, $period),
+            'customer_segments' => $this->calculateSegmentMetrics($startDate, $endDate, $segmentBy),
+            'cohort_analysis' => $this->calculateCohortAnalysis($startDate, $endDate),
+            'retention_metrics' => $this->calculateRetentionMetrics($startDate, $endDate),
+            'ltv_cac_ratio' => $this->calculateLTVCACRatio($startDate, $endDate),
             'customer_acquisition_trends' => $this->calculateAcquisitionTrends($startDate, $endDate, $period),
-            'revenue_per_customer'        => $this->calculateRevenuePerCustomer($startDate, $endDate),
-            'churn_analysis'              => $this->calculateChurnAnalysis($startDate, $endDate),
+            'revenue_per_customer' => $this->calculateRevenuePerCustomer($startDate, $endDate),
+            'churn_analysis' => $this->calculateChurnAnalysis($startDate, $endDate),
             'customer_value_distribution' => $this->calculateValueDistribution($startDate, $endDate),
-            'period'                      => $period,
-            'start_date'                  => $startDate->format('Y-m-d'),
-            'end_date'                    => $endDate->format('Y-m-d'),
-            'generated_at'                => Carbon::now()->toISOString(),
+            'period' => $period,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'generated_at' => Carbon::now()->toISOString(),
         ];
     }
 
@@ -67,15 +67,15 @@ final class CalculateCustomerMetricsAction
         $clvSegments = $this->segmentCustomersByCLV($customers, $averageSaleValue, $averagePurchaseFrequency);
 
         return [
-            'total_customers'                  => $totalCustomers,
-            'active_customers'                 => $activeCustomers,
-            'average_sale_value'               => round($averageSaleValue, 2),
-            'average_purchase_frequency'       => round($averagePurchaseFrequency, 2),
+            'total_customers' => $totalCustomers,
+            'active_customers' => $activeCustomers,
+            'average_sale_value' => round($averageSaleValue, 2),
+            'average_purchase_frequency' => round($averagePurchaseFrequency, 2),
             'average_customer_lifespan_months' => round($averageCustomerLifespan, 2),
-            'average_clv'                      => round($averageCLV, 2),
-            'total_customer_value'             => round($totalRevenue, 2),
-            'clv_segments'                     => $clvSegments,
-            'clv_distribution'                 => $this->calculateCLVDistribution($customers, $averageSaleValue, $averagePurchaseFrequency),
+            'average_clv' => round($averageCLV, 2),
+            'total_customer_value' => round($totalRevenue, 2),
+            'clv_segments' => $clvSegments,
+            'clv_distribution' => $this->calculateCLVDistribution($customers, $averageSaleValue, $averagePurchaseFrequency),
         ];
     }
 
@@ -98,20 +98,20 @@ final class CalculateCustomerMetricsAction
         $cacTrends = $this->calculateCACTrends($startDate, $endDate, $period);
 
         return [
-            'total_marketing_spend'     => round($marketingSpend['total'], 2),
-            'new_customers_acquired'    => $newCustomers,
-            'average_cac'               => round($totalCAC, 2),
-            'cac_by_channel'            => $cacByChannel,
-            'cac_trends'                => $cacTrends,
+            'total_marketing_spend' => round($marketingSpend['total'], 2),
+            'new_customers_acquired' => $newCustomers,
+            'average_cac' => round($totalCAC, 2),
+            'cac_by_channel' => $cacByChannel,
+            'cac_trends' => $cacTrends,
             'marketing_spend_breakdown' => $marketingSpend['breakdown'],
-            'cac_payback_period'        => $this->calculateCACPaybackPeriod($totalCAC, $startDate, $endDate),
+            'cac_payback_period' => $this->calculateCACPaybackPeriod($totalCAC, $startDate, $endDate),
         ];
     }
 
     /** Calculate customer segment metrics */
     private function calculateSegmentMetrics(Carbon $startDate, Carbon $endDate, ?string $segmentBy): array
     {
-        if ( ! $segmentBy) {
+        if (! $segmentBy) {
             return [];
         }
 
@@ -174,8 +174,8 @@ final class CalculateCustomerMetricsAction
             }
 
             $cohorts[] = [
-                'cohort_month'    => $cohort->cohort_month,
-                'customers'       => $cohort->customers,
+                'cohort_month' => $cohort->cohort_month,
+                'customers' => $cohort->customers,
                 'retention_rates' => $retentionRates,
             ];
         }
@@ -211,11 +211,11 @@ final class CalculateCustomerMetricsAction
         $repeatPurchaseRate = $customersWithSales > 0 ? ($customersWithMultipleSales / $customersWithSales) * 100 : 0;
 
         return [
-            'retention_rate'                  => round($retentionRate, 2),
-            'churn_rate'                      => round($churnRate, 2),
-            'repeat_purchase_rate'            => round($repeatPurchaseRate, 2),
-            'total_existing_customers'        => $totalCustomers,
-            'active_existing_customers'       => $activeCustomers,
+            'retention_rate' => round($retentionRate, 2),
+            'churn_rate' => round($churnRate, 2),
+            'repeat_purchase_rate' => round($repeatPurchaseRate, 2),
+            'total_existing_customers' => $totalCustomers,
+            'active_existing_customers' => $activeCustomers,
             'customers_with_repeat_purchases' => $customersWithMultipleSales,
         ];
     }
@@ -240,10 +240,10 @@ final class CalculateCustomerMetricsAction
         }
 
         return [
-            'ltv_cac_ratio'  => round($ltvCacRatio, 2),
-            'ratio_health'   => $ratioHealth,
-            'average_clv'    => $clvMetrics['average_clv'],
-            'average_cac'    => $cacMetrics['average_cac'],
+            'ltv_cac_ratio' => round($ltvCacRatio, 2),
+            'ratio_health' => $ratioHealth,
+            'average_clv' => $clvMetrics['average_clv'],
+            'average_cac' => $cacMetrics['average_cac'],
             'recommendation' => $this->getLTVCACRecommendation($ltvCacRatio),
         ];
     }
@@ -252,11 +252,11 @@ final class CalculateCustomerMetricsAction
     private function calculateAcquisitionTrends(Carbon $startDate, Carbon $endDate, string $period): array
     {
         $dateFormat = match ($period) {
-            'daily'     => '%Y-%m-%d',
-            'weekly'    => '%Y-%u',
-            'monthly'   => '%Y-%m',
+            'daily' => '%Y-%m-%d',
+            'weekly' => '%Y-%u',
+            'monthly' => '%Y-%m',
             'quarterly' => '%Y-%q',
-            default     => '%Y-%m',
+            default => '%Y-%m',
         };
 
         $trends = Customer::selectRaw("DATE_FORMAT(created_at, '{$dateFormat}') as period, COUNT(*) as new_customers")
@@ -266,7 +266,7 @@ final class CalculateCustomerMetricsAction
             ->get()
             ->map(function ($item) {
                 return [
-                    'period'        => $item->period,
+                    'period' => $item->period,
                     'new_customers' => $item->new_customers,
                 ];
             })
@@ -283,10 +283,10 @@ final class CalculateCustomerMetricsAction
                 ->where('status', 'completed');
         }])->get()->map(function ($customer) {
             return [
-                'customer_id'        => $customer->id,
-                'customer_name'      => $customer->name,
-                'total_revenue'      => $customer->sales->sum('total_amount'),
-                'sale_count'         => $customer->sales->count(),
+                'customer_id' => $customer->id,
+                'customer_name' => $customer->name,
+                'total_revenue' => $customer->sales->sum('total_amount'),
+                'sale_count' => $customer->sales->count(),
                 'average_sale_value' => $customer->sales->count() > 0 ? $customer->sales->sum('total_amount') / $customer->sales->count() : 0,
             ];
         })->sortByDesc('total_revenue');
@@ -296,11 +296,11 @@ final class CalculateCustomerMetricsAction
         $averageRevenuePerCustomer = $totalCustomers > 0 ? $totalRevenue / $totalCustomers : 0;
 
         return [
-            'total_revenue'                => round($totalRevenue, 2),
-            'total_customers'              => $totalCustomers,
+            'total_revenue' => round($totalRevenue, 2),
+            'total_customers' => $totalCustomers,
             'average_revenue_per_customer' => round($averageRevenuePerCustomer, 2),
-            'top_customers'                => $customerRevenue->take(10)->values()->toArray(),
-            'revenue_distribution'         => $this->calculateRevenueDistribution($customerRevenue),
+            'top_customers' => $customerRevenue->take(10)->values()->toArray(),
+            'revenue_distribution' => $this->calculateRevenueDistribution($customerRevenue),
         ];
     }
 
@@ -322,12 +322,12 @@ final class CalculateCustomerMetricsAction
         $churnReasons = $this->analyzeChurnReasons($startDate, $endDate);
 
         return [
-            'churned_customers'    => $churnedCustomers,
-            'total_customers'      => $totalCustomers,
-            'churn_rate'           => round($churnRate, 2),
+            'churned_customers' => $churnedCustomers,
+            'total_customers' => $totalCustomers,
+            'churn_rate' => round($churnRate, 2),
             'churn_threshold_days' => 90,
-            'churn_reasons'        => $churnReasons,
-            'at_risk_customers'    => $this->identifyAtRiskCustomers(),
+            'churn_reasons' => $churnReasons,
+            'at_risk_customers' => $this->identifyAtRiskCustomers(),
         ];
     }
 
@@ -345,10 +345,10 @@ final class CalculateCustomerMetricsAction
 
         if ($total === 0) {
             return [
-                'low_value'    => 0,
+                'low_value' => 0,
                 'medium_value' => 0,
-                'high_value'   => 0,
-                'percentiles'  => [],
+                'high_value' => 0,
+                'percentiles' => [],
             ];
         }
 
@@ -366,10 +366,10 @@ final class CalculateCustomerMetricsAction
         $highValue = $customerValues->filter(fn ($v) => $v > $percentiles['p75'])->count();
 
         return [
-            'low_value'       => $lowValue,
-            'medium_value'    => $mediumValue,
-            'high_value'      => $highValue,
-            'percentiles'     => $percentiles,
+            'low_value' => $lowValue,
+            'medium_value' => $mediumValue,
+            'high_value' => $highValue,
+            'percentiles' => $percentiles,
             'total_customers' => $total,
         ];
     }
@@ -429,9 +429,9 @@ final class CalculateCustomerMetricsAction
         }
 
         return [
-            'min'     => round($clvValues->min(), 2),
-            'max'     => round($clvValues->max(), 2),
-            'median'  => round($clvValues->values()[intval($total * 0.5)] ?? 0, 2),
+            'min' => round($clvValues->min(), 2),
+            'max' => round($clvValues->max(), 2),
+            'median' => round($clvValues->values()[intval($total * 0.5)] ?? 0, 2),
             'average' => round($clvValues->average(), 2),
         ];
     }
@@ -443,13 +443,13 @@ final class CalculateCustomerMetricsAction
         $totalSpend = 10000; // Placeholder
 
         return [
-            'total'     => $totalSpend,
+            'total' => $totalSpend,
             'breakdown' => [
                 'digital_advertising' => $totalSpend * 0.4,
-                'social_media'        => $totalSpend * 0.3,
-                'email_marketing'     => $totalSpend * 0.1,
-                'content_marketing'   => $totalSpend * 0.1,
-                'other'               => $totalSpend * 0.1,
+                'social_media' => $totalSpend * 0.3,
+                'email_marketing' => $totalSpend * 0.1,
+                'content_marketing' => $totalSpend * 0.1,
+                'other' => $totalSpend * 0.1,
             ],
         ];
     }
@@ -458,11 +458,11 @@ final class CalculateCustomerMetricsAction
     {
         // Placeholder implementation - would need actual channel tracking
         return [
-            'organic'      => ['customers' => 50, 'spend' => 0, 'cac' => 0],
-            'paid_search'  => ['customers' => 30, 'spend' => 3000, 'cac' => 100],
+            'organic' => ['customers' => 50, 'spend' => 0, 'cac' => 0],
+            'paid_search' => ['customers' => 30, 'spend' => 3000, 'cac' => 100],
             'social_media' => ['customers' => 25, 'spend' => 2500, 'cac' => 100],
-            'email'        => ['customers' => 15, 'spend' => 500, 'cac' => 33.33],
-            'referral'     => ['customers' => 10, 'spend' => 200, 'cac' => 20],
+            'email' => ['customers' => 15, 'spend' => 500, 'cac' => 33.33],
+            'referral' => ['customers' => 10, 'spend' => 200, 'cac' => 20],
         ];
     }
 
@@ -479,7 +479,7 @@ final class CalculateCustomerMetricsAction
         $paybackMonths = $monthlyRevenuePerCustomer > 0 ? $cac / $monthlyRevenuePerCustomer : 0;
 
         return [
-            'payback_period_months'        => round($paybackMonths, 1),
+            'payback_period_months' => round($paybackMonths, 1),
             'monthly_revenue_per_customer' => $monthlyRevenuePerCustomer,
         ];
     }
@@ -518,7 +518,7 @@ final class CalculateCustomerMetricsAction
         }
 
         return [
-            'top_20_percent'    => $revenues->slice(intval($total * 0.8))->sum(),
+            'top_20_percent' => $revenues->slice(intval($total * 0.8))->sum(),
             'middle_60_percent' => $revenues->slice(intval($total * 0.2), intval($total * 0.6))->sum(),
             'bottom_20_percent' => $revenues->slice(0, intval($total * 0.2))->sum(),
         ];
@@ -529,10 +529,10 @@ final class CalculateCustomerMetricsAction
         // Placeholder implementation - would analyze sale patterns, feedback, etc.
         return [
             'price_sensitivity' => 25,
-            'service_quality'   => 20,
-            'competition'       => 30,
-            'location_change'   => 15,
-            'other'             => 10,
+            'service_quality' => 20,
+            'competition' => 30,
+            'location_change' => 15,
+            'other' => 10,
         ];
     }
 
@@ -551,7 +551,7 @@ final class CalculateCustomerMetricsAction
         })->count();
 
         return [
-            'count'          => $atRiskCustomers,
+            'count' => $atRiskCustomers,
             'threshold_days' => 30,
         ];
     }

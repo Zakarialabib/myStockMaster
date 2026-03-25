@@ -22,10 +22,10 @@ class BrandFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'        => $this->faker->company(),
+            'name' => $this->faker->company(),
             'description' => $this->faker->realText(100),
-            'image'       => null, // uploadImage('images/brands', '500', '500'),
-            'origin'      => $this->faker->country(),
+            'image' => null, // uploadImage('images/brands', '500', '500'),
+            'origin' => $this->faker->country(),
         ];
     }
 }

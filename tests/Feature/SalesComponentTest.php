@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\User;
+use App\Livewire\Sales\Create as CreateSale;
+use App\Livewire\Sales\Edit as EditSale;
+use App\Livewire\Sales\Index as SalesIndex;
 use App\Models\Customer;
-use App\Models\Warehouse;
 use App\Models\Sale;
+use App\Models\User;
+use App\Models\Warehouse;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use App\Livewire\Sales\Index as SalesIndex;
-use App\Livewire\Sales\Create as CreateSale;
-use App\Livewire\Sales\Edit as EditSale;
-use Exception;
 
 class SalesComponentTest extends TestCase
 {
     use RefreshDatabase;
 
     protected User $user;
+
     protected Customer $customer;
+
     protected Warehouse $warehouse;
+
     protected Sale $sale;
 
     protected function setUp(): void
@@ -34,9 +37,9 @@ class SalesComponentTest extends TestCase
         $this->warehouse = Warehouse::factory()->create();
 
         $this->sale = Sale::factory()->create([
-            'customer_id'  => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'warehouse_id' => $this->warehouse->id,
-            'user_id'      => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
     }
 

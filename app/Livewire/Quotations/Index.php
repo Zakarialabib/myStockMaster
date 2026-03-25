@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
-use App\Livewire\Utils\WithModels;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\HasDelete;
+use App\Livewire\Utils\WithModels;
 use App\Models\Quotation;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use App\Traits\WithAlert;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use HasDelete;
+    use WithAlert;
     use WithFileUploads;
     use WithModels;
-    use HasDelete;
 
     public $quotation;
 
@@ -32,8 +32,8 @@ class Index extends Component
         abort_if(Gate::denies('quotation_access'), 403);
 
         $query = Quotation::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

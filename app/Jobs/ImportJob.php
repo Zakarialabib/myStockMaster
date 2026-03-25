@@ -25,15 +25,13 @@ class ImportJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(protected $filename)
-    {
-    }
+    public function __construct(protected $filename) {}
 
     /** Execute the job. */
     public function handle(): void
     {
         // Excel::import(new ImportUpdates(), public_path('images/products/'.$this->filename));
 
-        File::delete(public_path('images/products/'.$this->filename));
+        File::delete(public_path('images/products/' . $this->filename));
     }
 }

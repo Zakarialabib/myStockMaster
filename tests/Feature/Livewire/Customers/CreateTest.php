@@ -27,7 +27,7 @@ it('tests the create customer validation rules', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('customers', [
-        'name'  => 'John doe',
+        'name' => 'John doe',
         'phone' => '00000000000',
     ]);
 });

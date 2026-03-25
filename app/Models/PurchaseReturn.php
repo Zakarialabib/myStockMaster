@@ -32,7 +32,9 @@ class PurchaseReturn extends Model
         'payment_id',
         'supplier_id',
     ];
+
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -93,11 +95,11 @@ class PurchaseReturn extends Model
         $dueAmount = $totalAmount - $paidAmount;
 
         $this->updateQuietly([
-            'tax_amount'      => $taxAmount,
+            'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
-            'total_amount'    => $totalAmount,
-            'paid_amount'     => $paidAmount,
-            'due_amount'      => $dueAmount,
+            'total_amount' => $totalAmount,
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
         ]);
     }
 
@@ -134,7 +136,7 @@ class PurchaseReturn extends Model
                 $number = 1;
             }
 
-            $purchaseReturn->reference = $prefix.str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
@@ -162,8 +164,6 @@ class PurchaseReturn extends Model
 
     /**
      * get shipping amount
-     *
-     * @return Attribute
      */
     protected function shippingAmount(): Attribute
     {
@@ -174,8 +174,6 @@ class PurchaseReturn extends Model
 
     /**
      * get paid amount
-     *
-     * @return Attribute
      */
     protected function paidAmount(): Attribute
     {
@@ -186,8 +184,6 @@ class PurchaseReturn extends Model
 
     /**
      * get total amount
-     *
-     * @return Attribute
      */
     protected function totalAmount(): Attribute
     {
@@ -198,8 +194,6 @@ class PurchaseReturn extends Model
 
     /**
      * get due amount
-     *
-     * @return Attribute
      */
     protected function dueAmount(): Attribute
     {

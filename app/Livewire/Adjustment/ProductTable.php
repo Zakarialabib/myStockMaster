@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use App\Traits\WithAlert;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class ProductTable extends Component
 {

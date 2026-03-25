@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Supplier extends Model
 {
     use HasAdvancedFilter;
-    use HasUuid;
     use HasFactory;
+    use HasUuid;
     use SoftDeletes;
 
     protected const ATTRIBUTES = [
@@ -51,8 +51,8 @@ class Supplier extends Model
 
     public function scopeSearchByName($query, $name)
     {
-        return $query->when( ! empty($name), function ($query) use ($name) {
-            return $query->where('name', 'like', '%'.$name.'%');
+        return $query->when(! empty($name), function ($query) use ($name) {
+            return $query->where('name', 'like', '%' . $name . '%');
         });
     }
 

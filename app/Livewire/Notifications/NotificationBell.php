@@ -6,20 +6,27 @@ namespace App\Livewire\Notifications;
 
 use App\Models\Notification;
 use App\Services\NotificationService;
-use Livewire\Component;
+use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Exception;
+use Livewire\Component;
 
 class NotificationBell extends Component
 {
     public $unreadCount = 0;
+
     public $recentNotifications = [];
+
     public $showDropdown = false;
+
     public $maxRecentNotifications = 5;
+
     public $autoRefresh = true;
+
     public $refreshInterval = 30; // seconds
+
     public $search = '';
+
     public $loading = false;
 
     protected $notificationService;
@@ -35,7 +42,7 @@ class NotificationBell extends Component
     public function loadNotifications()
     {
         try {
-            $notificationService = new NotificationService();
+            $notificationService = new NotificationService;
 
             // Get unread count for current user
             $user = auth()->user();
@@ -48,14 +55,14 @@ class NotificationBell extends Component
                 ->get()
                 ->map(function ($notification) {
                     return [
-                        'id'         => $notification->id,
-                        'type'       => $notification->type,
-                        'data'       => $this->formatNotificationData($notification),
-                        'read_at'    => $notification->read_at,
+                        'id' => $notification->id,
+                        'type' => $notification->type,
+                        'data' => $this->formatNotificationData($notification),
+                        'read_at' => $notification->read_at,
                         'created_at' => $notification->created_at,
-                        'time_ago'   => $notification->created_at->diffForHumans(),
-                        'icon'       => $this->getNotificationIcon($notification->type),
-                        'color'      => $this->getNotificationColor($notification->type),
+                        'time_ago' => $notification->created_at->diffForHumans(),
+                        'icon' => $this->getNotificationIcon($notification->type),
+                        'color' => $this->getNotificationColor($notification->type),
                     ];
                 })
                 ->toArray();
@@ -186,14 +193,14 @@ class NotificationBell extends Component
     public function getNotificationIcon($type)
     {
         $icons = [
-            'sale_created'    => 'shopping-cart',
-            'sale_updated'    => 'edit',
-            'low_stock'       => 'exclamation-triangle',
+            'sale_created' => 'shopping-cart',
+            'sale_updated' => 'edit',
+            'low_stock' => 'exclamation-triangle',
             'product_updated' => 'package',
             'expense_created' => 'credit-card',
-            'system'          => 'cog',
-            'user'            => 'user',
-            'default'         => 'bell',
+            'system' => 'cog',
+            'user' => 'user',
+            'default' => 'bell',
         ];
 
         return $icons[$type] ?? $icons['default'];
@@ -202,14 +209,14 @@ class NotificationBell extends Component
     public function getNotificationColor($type)
     {
         $colors = [
-            'sale_created'    => 'green',
-            'sale_updated'    => 'blue',
-            'low_stock'       => 'red',
+            'sale_created' => 'green',
+            'sale_updated' => 'blue',
+            'low_stock' => 'red',
             'product_updated' => 'purple',
             'expense_created' => 'orange',
-            'system'          => 'gray',
-            'user'            => 'indigo',
-            'default'         => 'gray',
+            'system' => 'gray',
+            'user' => 'indigo',
+            'default' => 'gray',
         ];
 
         return $colors[$type] ?? $colors['default'];
@@ -219,9 +226,9 @@ class NotificationBell extends Component
     {
         $data = is_string($notification->data) ? json_decode($notification->data, true) : $notification->data;
 
-        if ( ! is_array($data)) {
+        if (! is_array($data)) {
             return [
-                'title'   => 'Notification',
+                'title' => 'Notification',
                 'message' => 'You have a new notification',
             ];
         }
@@ -230,63 +237,63 @@ class NotificationBell extends Component
         switch ($notification->type) {
             case 'sale_created':
                 return [
-                    'title'         => 'New Sale',
-                    'message'       => "Sale #{$data['sale_id']} created",
-                    'sale_id'       => $data['sale_id'] ?? null,
+                    'title' => 'New Sale',
+                    'message' => "Sale #{$data['sale_id']} created",
+                    'sale_id' => $data['sale_id'] ?? null,
                     'customer_name' => $data['customer_name'] ?? null,
-                    'total_amount'  => $data['total_amount'] ?? null,
+                    'total_amount' => $data['total_amount'] ?? null,
                 ];
 
             case 'sale_updated':
                 return [
-                    'title'   => 'Sale Updated',
+                    'title' => 'Sale Updated',
                     'message' => "Sale #{$data['sale_id']} was updated",
                     'sale_id' => $data['sale_id'] ?? null,
-                    'status'  => $data['status'] ?? null,
+                    'status' => $data['status'] ?? null,
                 ];
 
             case 'low_stock':
                 return [
-                    'title'         => 'Low Stock Alert',
-                    'message'       => "'{$data['product_name']}' is running low",
-                    'product_id'    => $data['product_id'] ?? null,
-                    'product_name'  => $data['product_name'] ?? null,
+                    'title' => 'Low Stock Alert',
+                    'message' => "'{$data['product_name']}' is running low",
+                    'product_id' => $data['product_id'] ?? null,
+                    'product_name' => $data['product_name'] ?? null,
                     'current_stock' => $data['current_stock'] ?? null,
                     'minimum_stock' => $data['minimum_stock'] ?? null,
                 ];
 
             case 'product_updated':
                 return [
-                    'title'        => 'Product Updated',
-                    'message'      => "Product '{$data['product_name']}' was updated",
-                    'product_id'   => $data['product_id'] ?? null,
+                    'title' => 'Product Updated',
+                    'message' => "Product '{$data['product_name']}' was updated",
+                    'product_id' => $data['product_id'] ?? null,
                     'product_name' => $data['product_name'] ?? null,
                 ];
 
             case 'expense_created':
                 return [
-                    'title'      => 'New Expense',
-                    'message'    => "Expense for {$data['category']} recorded",
+                    'title' => 'New Expense',
+                    'message' => "Expense for {$data['category']} recorded",
                     'expense_id' => $data['expense_id'] ?? null,
-                    'category'   => $data['category'] ?? null,
-                    'amount'     => $data['amount'] ?? null,
+                    'category' => $data['category'] ?? null,
+                    'amount' => $data['amount'] ?? null,
                 ];
 
             case 'system':
                 return [
-                    'title'   => 'System Notification',
+                    'title' => 'System Notification',
                     'message' => $data['message'] ?? 'System notification received',
                 ];
 
             case 'user':
                 return [
-                    'title'   => 'User Notification',
+                    'title' => 'User Notification',
                     'message' => $data['message'] ?? 'User notification received',
                 ];
 
             default:
                 return [
-                    'title'   => ucfirst(str_replace('_', ' ', $notification->type)),
+                    'title' => ucfirst(str_replace('_', ' ', $notification->type)),
                     'message' => $data['message'] ?? 'Notification received',
                 ];
         }

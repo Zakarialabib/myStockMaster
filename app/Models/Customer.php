@@ -83,7 +83,7 @@ class Customer extends Model
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->first_name ?? '').' '.($this->last_name ?? ''),
+            get: fn () => ($this->first_name ?? '') . ' ' . ($this->last_name ?? ''),
         );
     }
 
@@ -101,8 +101,8 @@ class Customer extends Model
 
     public function scopeSearchByName($query, $name)
     {
-        return $query->when( ! empty($name), function ($query) use ($name) {
-            return $query->where('name', 'like', '%'.$name.'%');
+        return $query->when(! empty($name), function ($query) use ($name) {
+            return $query->where('name', 'like', '%' . $name . '%');
         });
     }
 

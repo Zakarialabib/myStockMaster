@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Actions;
 
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Traits\WithAlert;
 
 class Logout
 {

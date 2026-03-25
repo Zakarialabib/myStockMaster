@@ -37,6 +37,7 @@ class Product extends Model
     ];
 
     public $orderable = self::ATTRIBUTES;
+
     public $filterable = self::ATTRIBUTES;
 
     /**
@@ -69,17 +70,17 @@ class Product extends Model
     {
         return [
             'featured' => 'boolean',
-            'status'   => 'boolean',
-            'hot'      => 'boolean',
-            'best'     => 'boolean',
-            'options'  => 'array',
+            'status' => 'boolean',
+            'hot' => 'boolean',
+            'best' => 'boolean',
+            'options' => 'array',
         ];
     }
 
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d').mt_rand(10000000, 99999999),
+            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
         ], true);
         parent::__construct($attributes);
     }
@@ -97,7 +98,8 @@ class Product extends Model
     /**
      * Generate a slug from the product name.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return string
      */
     public function generateSlug($name)
@@ -229,9 +231,9 @@ class Product extends Model
 
     public function scopeSearchByNameOrCode($query, $term)
     {
-        return $query->when( ! empty($term), function ($query) use ($term) {
-            $query->where('name', 'like', '%'.$term.'%')
-                ->orWhere('code', 'like', '%'.$term.'%');
+        return $query->when(! empty($term), function ($query) use ($term) {
+            $query->where('name', 'like', '%' . $term . '%')
+                ->orWhere('code', 'like', '%' . $term . '%');
         });
     }
 

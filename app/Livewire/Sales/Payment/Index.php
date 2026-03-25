@@ -7,12 +7,12 @@ namespace App\Livewire\Sales\Payment;
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Livewire\Utils\Datatable;
-use App\Models\SalePayment;
 use App\Models\Sale;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\Attributes\On;
+use App\Models\SalePayment;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Index extends Component
 {
@@ -35,8 +35,8 @@ class Index extends Component
             $query->where('sale_id', $this->sale_id);
         })
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -59,7 +59,7 @@ class Index extends Component
     {
         $this->confirm(__('Are you sure you want to delete this payment?'), [
             'onConfirmed' => 'deletePayment',
-            'params'      => ['id' => $id],
+            'params' => ['id' => $id],
         ]);
     }
 
@@ -74,7 +74,7 @@ class Index extends Component
 
         // Update sale status
         Sale::where('id', $salepayment->sale_id)->update([
-            'status'         => SaleStatus::PENDING,
+            'status' => SaleStatus::PENDING,
             'payment_status' => PaymentStatus::PENDING,
         ]);
 

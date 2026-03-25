@@ -18,7 +18,7 @@ class CartServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('cart', function ($app) {
-            return new CartService();
+            return new CartService;
         });
 
         $this->app->bind(CartService::class, function ($app) {
@@ -27,9 +27,7 @@ class CartServiceProvider extends ServiceProvider
     }
 
     /** Bootstrap services. */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /** Get the services provided by the provider. */
     public function provides(): array

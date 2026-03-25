@@ -8,8 +8,8 @@ use App\Livewire\Purchase\Create;
 use App\Livewire\Purchase\Edit;
 use App\Models\Product;
 use App\Models\Purchase;
-use App\Models\User;
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -19,7 +19,9 @@ class PurchaseCartTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Product $product;
+
     protected Supplier $supplier;
 
     protected function setUp(): void
@@ -29,9 +31,9 @@ class PurchaseCartTest extends TestCase
         $this->user = User::factory()->create();
         $this->supplier = Supplier::factory()->create();
         $this->product = Product::factory()->create([
-            'name'     => 'Test Product',
+            'name' => 'Test Product',
             'quantity' => 20,
-            'code'     => 'PURCH001',
+            'code' => 'PURCH001',
         ]);
 
         $this->actingAs($this->user);
@@ -122,15 +124,15 @@ class PurchaseCartTest extends TestCase
             ->assertRedirect(route('purchases.index'));
 
         $this->assertDatabaseHas('purchases', [
-            'supplier_id'    => $this->supplier->id,
-            'total_amount'   => 80.00,
+            'supplier_id' => $this->supplier->id,
+            'total_amount' => 80.00,
             'payment_status' => 'paid',
         ]);
 
         $this->assertDatabaseHas('purchase_details', [
             'product_id' => $this->product->id,
-            'quantity'   => 10,
-            'unit_cost'  => 8.00,
+            'quantity' => 10,
+            'unit_cost' => 8.00,
         ]);
     }
 
@@ -140,7 +142,7 @@ class PurchaseCartTest extends TestCase
         Livewire::test(Create::class)
             ->call('store')
             ->assertHasErrors([
-                'supplier_id'    => 'required',
+                'supplier_id' => 'required',
                 'payment_status' => 'required',
             ]);
     }
@@ -159,17 +161,17 @@ class PurchaseCartTest extends TestCase
     public function it_can_edit_existing_purchase_cart()
     {
         $purchase = Purchase::factory()->create([
-            'supplier_id'    => $this->supplier->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 80.00,
+            'supplier_id' => $this->supplier->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 80.00,
             'payment_status' => 'paid',
         ]);
 
         $purchase->purchaseDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 10,
-            'unit_cost'  => 8.00,
-            'total'      => 80.00,
+            'quantity' => 10,
+            'unit_cost' => 8.00,
+            'total' => 80.00,
         ]);
 
         Livewire::test(Edit::class, ['purchase' => $purchase])
@@ -183,17 +185,17 @@ class PurchaseCartTest extends TestCase
     public function it_can_update_existing_purchase_cart_items()
     {
         $purchase = Purchase::factory()->create([
-            'supplier_id'    => $this->supplier->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 80.00,
+            'supplier_id' => $this->supplier->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 80.00,
             'payment_status' => 'paid',
         ]);
 
         $purchase->purchaseDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 10,
-            'unit_cost'  => 8.00,
-            'total'      => 80.00,
+            'quantity' => 10,
+            'unit_cost' => 8.00,
+            'total' => 80.00,
         ]);
 
         Livewire::test(Edit::class, ['purchase' => $purchase])
@@ -208,23 +210,23 @@ class PurchaseCartTest extends TestCase
     public function it_can_add_new_items_to_existing_purchase()
     {
         $product2 = Product::factory()->create([
-            'name'     => 'Second Product',
-            'price'    => 18.00,
+            'name' => 'Second Product',
+            'price' => 18.00,
             'quantity' => 25,
         ]);
 
         $purchase = Purchase::factory()->create([
-            'supplier_id'    => $this->supplier->id,
-            'user_id'        => $this->user->id,
-            'total_amount'   => 80.00,
+            'supplier_id' => $this->supplier->id,
+            'user_id' => $this->user->id,
+            'total_amount' => 80.00,
             'payment_status' => 'paid',
         ]);
 
         $purchase->purchaseDetails()->create([
             'product_id' => $this->product->id,
-            'quantity'   => 10,
-            'unit_cost'  => 8.00,
-            'total'      => 80.00,
+            'quantity' => 10,
+            'unit_cost' => 8.00,
+            'total' => 80.00,
         ]);
 
         Livewire::test(Edit::class, ['purchase' => $purchase])

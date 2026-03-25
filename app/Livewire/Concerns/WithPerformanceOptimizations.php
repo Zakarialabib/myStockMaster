@@ -13,8 +13,11 @@ trait WithPerformanceOptimizations
     use WithPagination;
 
     public $loadingState = false;
+
     public $enableLazyLoading = true;
+
     public $cacheTimeout = 300; // 5 minutes
+
     public $debounceDelay = 500; // milliseconds
 
     /** Enable lazy loading for heavy operations */
@@ -54,17 +57,17 @@ trait WithPerformanceOptimizations
     /** Cache key generator for computed properties */
     protected function getCacheKey(string $method, array $params = []): string
     {
-        $baseKey = static::class.':'.$method;
+        $baseKey = static::class . ':' . $method;
 
-        if ( ! empty($params)) {
-            $baseKey .= ':'.md5(serialize($params));
+        if (! empty($params)) {
+            $baseKey .= ':' . md5(serialize($params));
         }
 
         return $baseKey;
     }
 
     /** Get cached result or execute callback */
-    protected function getCachedResult(string $key, callable $callback, int $timeout = null)
+    protected function getCachedResult(string $key, callable $callback, ?int $timeout = null)
     {
         $timeout ??= $this->cacheTimeout;
 
@@ -72,14 +75,14 @@ trait WithPerformanceOptimizations
     }
 
     /** Clear cache for specific key pattern */
-    protected function clearCache(string $pattern = null): void
+    protected function clearCache(?string $pattern = null): void
     {
-        $pattern ??= static::class.':*';
+        $pattern ??= static::class . ':*';
 
         // Clear cache keys matching pattern
         $keys = cache()->getRedis()->keys($pattern);
 
-        if ( ! empty($keys)) {
+        if (! empty($keys)) {
             cache()->getRedis()->del($keys);
         }
     }
@@ -87,7 +90,7 @@ trait WithPerformanceOptimizations
     /** Optimize database queries with eager loading */
     protected function optimizeQuery($query, array $relations = [])
     {
-        if ( ! empty($relations)) {
+        if (! empty($relations)) {
             $query->with($relations);
         }
 
@@ -129,8 +132,8 @@ trait WithPerformanceOptimizations
 
         logger()->info("Performance: {$operation}", [
             'execution_time_ms' => $executionTime,
-            'memory_usage_mb'   => $memoryUsage,
-            'component'         => static::class,
+            'memory_usage_mb' => $memoryUsage,
+            'component' => static::class,
         ]);
 
         return $result;

@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Customer;
-use App\Models\Warehouse;
+use App\Livewire\Pos\Index as PosIndex;
 use App\Models\CashRegister;
+use App\Models\Customer;
+use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
-use App\Livewire\Pos\Index as PosIndex;
 
 class PosComponentTest extends TestCase
 {
     use RefreshDatabase;
 
     protected User $user;
+
     protected Customer $customer;
+
     protected Warehouse $warehouse;
+
     protected CashRegister $cashRegister;
 
     protected function setUp(): void
@@ -31,9 +34,9 @@ class PosComponentTest extends TestCase
         $this->warehouse = Warehouse::factory()->create();
 
         $this->cashRegister = CashRegister::factory()->create([
-            'user_id'      => $this->user->id,
+            'user_id' => $this->user->id,
             'warehouse_id' => $this->warehouse->id,
-            'status'       => true,
+            'status' => true,
         ]);
     }
 

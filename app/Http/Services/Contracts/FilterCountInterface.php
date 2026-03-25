@@ -11,9 +11,10 @@ interface FilterCountInterface
     /**
      * Apply the count filter to the query.
      *
-     * @param  Builder  $query
-     * @param  mixed  $startDate
-     * @param  mixed  $endDate
+     * @param Builder $query
+     * @param mixed   $startDate
+     * @param mixed   $endDate
+     *
      * @return Builder
      */
     public function filterCount($query, $startDate, $endDate);

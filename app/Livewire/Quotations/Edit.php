@@ -12,15 +12,15 @@ use App\Traits\LivewireCartTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
-    use WithModels;
     use LivewireCartTrait;
+    use WithModels;
 
     public $quotation;
 
@@ -66,17 +66,17 @@ class Edit extends Component
         foreach ($this->quotation_details as $quotation_detail) {
             $product = Product::findOrFail($quotation_detail->product_id);
             $this->addToCart([
-                'id'         => $quotation_detail->product_id,
-                'name'       => $quotation_detail->name,
-                'quantity'   => $quotation_detail->quantity,
-                'price'      => $quotation_detail->price / 100,
+                'id' => $quotation_detail->product_id,
+                'name' => $quotation_detail->name,
+                'quantity' => $quotation_detail->quantity,
+                'price' => $quotation_detail->price / 100,
                 'attributes' => [
-                    'product_discount'      => $quotation_detail->product_discount_amount / 100,
+                    'product_discount' => $quotation_detail->product_discount_amount / 100,
                     'product_discount_type' => $quotation_detail->product_discount_type,
-                    'sub_total'             => $quotation_detail->sub_total / 100,
-                    'code'                  => $quotation_detail->code,
-                    'stock'                 => $product->quantity,
-                    'unit_price'            => $quotation_detail->unit_price / 100,
+                    'sub_total' => $quotation_detail->sub_total / 100,
+                    'code' => $quotation_detail->code,
+                    'stock' => $product->quantity,
+                    'unit_price' => $quotation_detail->unit_price / 100,
                 ],
             ]);
         }
@@ -101,34 +101,34 @@ class Edit extends Component
             }
 
             $this->quotation->update([
-                'date'                => $this->date,
-                'reference'           => $this->reference,
-                'customer_id'         => $this->customer_id,
-                'user_id'             => Auth::user()->id,
-                'warehouse_id'        => $this->warehouse_id,
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => $this->date,
+                'reference' => $this->reference,
+                'customer_id' => $this->customer_id,
+                'user_id' => Auth::user()->id,
+                'warehouse_id' => $this->warehouse_id,
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount * 100,
-                'total_amount'        => $this->total_amount * 100,
-                'status'              => $this->status,
-                'note'                => $this->note,
-                'tax_amount'          => $this->cartTax * 100,
-                'discount_amount'     => $this->cartDiscount * 100,
+                'shipping_amount' => $this->shipping_amount * 100,
+                'total_amount' => $this->total_amount * 100,
+                'status' => $this->status,
+                'note' => $this->note,
+                'tax_amount' => $this->cartTax * 100,
+                'discount_amount' => $this->cartDiscount * 100,
             ]);
 
             foreach ($this->cartContent as $cart_item) {
                 QuotationDetails::create([
-                    'quotation_id'            => $this->quotation->id,
-                    'product_id'              => $cart_item->id,
-                    'name'                    => $cart_item->name,
-                    'code'                    => $cart_item->options->code,
-                    'quantity'                => $cart_item->qty,
-                    'price'                   => $cart_item->price * 100,
-                    'unit_price'              => $cart_item->options->unit_price * 100,
-                    'sub_total'               => $cart_item->options->sub_total * 100,
+                    'quotation_id' => $this->quotation->id,
+                    'product_id' => $cart_item->id,
+                    'name' => $cart_item->name,
+                    'code' => $cart_item->options->code,
+                    'quantity' => $cart_item->qty,
+                    'price' => $cart_item->price * 100,
+                    'unit_price' => $cart_item->options->unit_price * 100,
+                    'sub_total' => $cart_item->options->sub_total * 100,
                     'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type'   => $cart_item->options->product_discount_type,
-                    'product_tax_amount'      => $cart_item->options->product_tax * 100,
+                    'product_discount_type' => $cart_item->options->product_discount_type,
+                    'product_tax_amount' => $cart_item->options->product_tax * 100,
                 ]);
             }
 

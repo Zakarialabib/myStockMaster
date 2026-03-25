@@ -7,27 +7,27 @@ namespace App\Livewire\Pos;
 use App\Actions\Sales\StorePosSaleAction;
 use App\Jobs\PaymentNotification;
 use App\Jobs\PrintReceiptJob;
+use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Customer;
-use Illuminate\Support\Facades\Auth;
-use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Livewire\Attributes\Title;
 
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
 class Index extends Component
 {
+    use LivewireCartTrait;
     use WithAlert;
     use WithModels;
-    use LivewireCartTrait;
 
     public bool $discountModal = false;
 
@@ -157,7 +157,7 @@ class Index extends Component
 
     public function store(): void
     {
-        if ( ! $this->warehouse_id) {
+        if (! $this->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
@@ -167,18 +167,18 @@ class Index extends Component
 
         $sale = app(StorePosSaleAction::class)(
             [
-                'date'                => date('Y-m-d'),
-                'customer_id'         => $this->customer_id,
-                'warehouse_id'        => $this->warehouse_id,
-                'user_id'             => $this->user_id,
-                'cash_register_id'    => $this->cash_register_id,
-                'tax_percentage'      => $this->tax_percentage,
+                'date' => date('Y-m-d'),
+                'customer_id' => $this->customer_id,
+                'warehouse_id' => $this->warehouse_id,
+                'user_id' => $this->user_id,
+                'cash_register_id' => $this->cash_register_id,
+                'tax_percentage' => $this->tax_percentage,
                 'discount_percentage' => $this->discount_percentage,
-                'shipping_amount'     => $this->shipping_amount,
-                'paid_amount'         => $this->paid_amount,
-                'total_amount'        => $this->total_amount,
-                'payment_method'      => $this->payment_method,
-                'note'                => $this->note,
+                'shipping_amount' => $this->shipping_amount,
+                'paid_amount' => $this->paid_amount,
+                'total_amount' => $this->total_amount,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
             ],
             $this->cartContent,
             $this->cartTax,

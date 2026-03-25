@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Livewire\Settings;
 
-use Livewire\Component;
-use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\Sale;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 class Messaging extends Component
 {
     use WithAlert;
+
     public $botToken;
 
     #[Validate('required|numeric')]
@@ -98,13 +99,13 @@ class Messaging extends Component
     {
         $sale = Sale::find($saleId);
 
-        if ( ! $sale) {
+        if (! $sale) {
             $this->alert('error', __('Sale not found'));
 
             return;
         }
 
-        $message = sprintf('Due Amount for Sale %s: ', $sale->id).format_currency($sale->due_amount);
+        $message = sprintf('Due Amount for Sale %s: ', $sale->id) . format_currency($sale->due_amount);
 
         $this->chatId = settings()->telegram_channel; // Use your Telegram channel chat ID here
         $this->message = $message;
@@ -133,13 +134,13 @@ class Messaging extends Component
     {
         $product = Product::find($id);
 
-        if ( ! $product) {
+        if (! $product) {
             $this->alert('error', __('Product not found'));
 
             return;
         }
 
-        $this->message .= ' '.$product->name.' : '.format_currency($product->price);
+        $this->message .= ' ' . $product->name . ' : ' . format_currency($product->price);
         $this->openProductModal = false;
     }
 
@@ -147,13 +148,13 @@ class Messaging extends Component
     {
         $sale = Sale::find($id);
 
-        if ( ! $sale) {
+        if (! $sale) {
             $this->alert('error', __('Sale not found'));
 
             return;
         }
 
-        $this->message .= ' '.$sale->id.' : '.format_currency($sale->due_amount);
+        $this->message .= ' ' . $sale->id . ' : ' . format_currency($sale->due_amount);
         $this->openProductModal = false;
     }
 
@@ -189,7 +190,7 @@ class Messaging extends Component
             $response = Http::post($url);
 
             // Check if the API call was successful
-            if ( ! $response->ok()) {
+            if (! $response->ok()) {
                 // Handle error if the message couldn't be sent
                 $this->alert('error', __('Failed to send message to channel'));
             }

@@ -7,8 +7,8 @@ namespace App\Livewire\Pages\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.guest')]
 class ForgotPassword extends Component

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Livewire\Expense;
 
+use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\On;
-use Livewire\Component;
 use Livewire\Attributes\Computed;
-use App\Livewire\CashRegister\Create as CashRegisterCreate;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Create extends Component
 {

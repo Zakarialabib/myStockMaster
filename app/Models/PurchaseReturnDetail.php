@@ -37,8 +37,6 @@ class PurchaseReturnDetail extends Model
 
     /**
      * get price attribute
-     *
-     * @return Attribute
      */
     protected function price(): Attribute
     {
@@ -50,8 +48,6 @@ class PurchaseReturnDetail extends Model
 
     /**
      * Interact with unit price
-     *
-     * @return Attribute
      */
     protected function unitPrice(): Attribute
     {
@@ -63,8 +59,6 @@ class PurchaseReturnDetail extends Model
 
     /**
      * get subtotal attribute
-     *
-     * @return Attribute
      */
     protected function subTotal(): Attribute
     {
@@ -76,8 +70,6 @@ class PurchaseReturnDetail extends Model
 
     /**
      * Interact with product discount amount
-     *
-     * @return Attribute
      */
     protected function productDiscountAmount(): Attribute
     {
@@ -89,8 +81,6 @@ class PurchaseReturnDetail extends Model
 
     /**
      * Interact with product tax amount
-     *
-     * @return Attribute
      */
     protected function productTaxAmount(): Attribute
     {

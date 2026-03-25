@@ -43,25 +43,25 @@ class SaleFactory extends Factory
         $dueAmount = $totalAmount - $paidAmount;
 
         return [
-            'id'                  => Str::uuid(),
-            'date'                => $this->faker->date(),
-            'reference'           => 'SL-'.str_pad($this->faker->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT),
-            'customer_id'         => Customer::factory(),
-            'user_id'             => User::factory(),
-            'warehouse_id'        => Warehouse::factory(),
-            'tax_percentage'      => $taxPercentage,
-            'tax_amount'          => $taxAmount,
+            'id' => Str::uuid(),
+            'date' => $this->faker->date(),
+            'reference' => 'SL-' . str_pad($this->faker->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT),
+            'customer_id' => Customer::factory(),
+            'user_id' => User::factory(),
+            'warehouse_id' => Warehouse::factory(),
+            'tax_percentage' => $taxPercentage,
+            'tax_amount' => $taxAmount,
             'discount_percentage' => $discountPercentage,
-            'discount_amount'     => $discountAmount,
-            'shipping_amount'     => $shippingAmount,
-            'total_amount'        => $totalAmount,
-            'paid_amount'         => $paidAmount,
-            'due_amount'          => $dueAmount,
-            'status'              => $this->faker->randomElement(['pending', 'ordered', 'completed']),
-            'payment_status'      => $this->faker->randomElement(['pending', 'paid', 'partial']),
-            'shipping_status'     => $this->faker->randomElement(['pending', 'shipped', 'delivered']),
-            'document'            => null,
-            'note'                => $this->faker->optional()->sentence(),
+            'discount_amount' => $discountAmount,
+            'shipping_amount' => $shippingAmount,
+            'total_amount' => $totalAmount,
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
+            'status' => $this->faker->randomElement(['pending', 'ordered', 'completed']),
+            'payment_status' => $this->faker->randomElement(['pending', 'paid', 'partial']),
+            'shipping_status' => $this->faker->randomElement(['pending', 'shipped', 'delivered']),
+            'document' => null,
+            'note' => $this->faker->optional()->sentence(),
         ];
     }
 
@@ -79,8 +79,8 @@ class SaleFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'payment_status' => 'paid',
-                'paid_amount'    => $attributes['total_amount'],
-                'due_amount'     => 0,
+                'paid_amount' => $attributes['total_amount'],
+                'due_amount' => 0,
             ];
         });
     }
@@ -91,8 +91,8 @@ class SaleFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'payment_status' => 'pending',
-                'paid_amount'    => 0,
-                'due_amount'     => $attributes['total_amount'],
+                'paid_amount' => 0,
+                'due_amount' => $attributes['total_amount'],
             ];
         });
     }

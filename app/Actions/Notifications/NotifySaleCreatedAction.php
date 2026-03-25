@@ -24,8 +24,7 @@ final class NotifySaleCreatedAction
 {
     public function __construct(
         private readonly NotificationService $notificationService,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Sale $sale): void
     {
@@ -47,15 +46,15 @@ final class NotifySaleCreatedAction
             $this->setupSaleStatusNotifications($sale);
 
             Log::info('Sale creation notifications sent', [
-                'order_id'        => $sale->id,
+                'order_id' => $sale->id,
                 'order_reference' => $sale->reference,
-                'customer_email'  => $sale->customer_email,
-                'customer_phone'  => $sale->customer_phone,
+                'customer_email' => $sale->customer_email,
+                'customer_phone' => $sale->customer_phone,
             ]);
         } catch (Exception $e) {
             Log::error('Failed to send sale creation notifications', [
                 'order_id' => $sale->id,
-                'error'    => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -68,13 +67,13 @@ final class NotifySaleCreatedAction
                 $sale->customer,
                 'sale_created',
                 [
-                    'sale_id'      => $sale->id,
+                    'sale_id' => $sale->id,
                     'total_amount' => $sale->total_amount,
-                    'items'        => $sale->saleDetails->map(function ($detail) {
+                    'items' => $sale->saleDetails->map(function ($detail) {
                         return [
                             'product_name' => $detail->product->name,
-                            'quantity'     => $detail->quantity,
-                            'price'        => $detail->price,
+                            'quantity' => $detail->quantity,
+                            'price' => $detail->price,
                         ];
                     })->toArray(),
                 ]
@@ -82,7 +81,7 @@ final class NotifySaleCreatedAction
         }
 
         Log::info('Sale confirmation sent', [
-            'order_id'       => $sale->id,
+            'order_id' => $sale->id,
             'customer_email' => $sale->customer_email,
         ]);
     }
@@ -103,7 +102,7 @@ final class NotifySaleCreatedAction
         // This would typically use a specific notification class for sale confirmation emails
         Log::info('Email confirmation sent', [
             'order_id' => $sale->id,
-            'email'    => $sale->customer_email,
+            'email' => $sale->customer_email,
         ]);
     }
 

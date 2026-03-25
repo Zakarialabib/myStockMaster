@@ -6,15 +6,16 @@ namespace App\Livewire\Settings;
 
 use App\Jobs\UnderMaintenanceJob;
 use App\Models\Setting;
+use App\Traits\WithAlert;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class MaintenanceMode extends Component
 {
     use WithAlert;
+
     public $site_maintenance_message;
 
     public $status;

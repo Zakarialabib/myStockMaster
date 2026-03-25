@@ -15,19 +15,19 @@ final class StoreAdjustmentAction
     {
         return DB::transaction(function () use ($adjustmentData, $products): Adjustment {
             $adjustment = Adjustment::create([
-                'date'         => $adjustmentData['date'],
-                'note'         => $adjustmentData['note'],
-                'user_id'      => $adjustmentData['user_id'],
+                'date' => $adjustmentData['date'],
+                'note' => $adjustmentData['note'],
+                'user_id' => $adjustmentData['user_id'],
                 'warehouse_id' => $adjustmentData['warehouse_id'],
             ]);
 
             foreach ($products as $product) {
                 AdjustedProduct::create([
                     'adjustment_id' => $adjustment->id,
-                    'product_id'    => $product['id'],
-                    'warehouse_id'  => $adjustmentData['warehouse_id'],
-                    'quantity'      => $product['quantities'],
-                    'type'          => $product['types'],
+                    'product_id' => $product['id'],
+                    'warehouse_id' => $adjustmentData['warehouse_id'],
+                    'quantity' => $product['quantities'],
+                    'type' => $product['types'],
                 ]);
 
                 $productWarehouse = ProductWarehouse::where('product_id', $product['id'])

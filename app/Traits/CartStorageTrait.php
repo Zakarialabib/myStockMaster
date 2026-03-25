@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Cache;
 use App\Models\CartStorage;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 trait CartStorageTrait
 {
@@ -75,7 +75,7 @@ trait CartStorageTrait
         CartStorage::updateOrCreate(
             ['session_key' => $this->sessionKey],
             [
-                'cart_data'  => $content->toJson(),
+                'cart_data' => $content->toJson(),
                 'updated_at' => now(),
             ]
         );
@@ -86,7 +86,7 @@ trait CartStorageTrait
     {
         $cartStorage = CartStorage::where('session_key', $this->sessionKey)->first();
 
-        if ( ! $cartStorage) {
+        if (! $cartStorage) {
             return collect();
         }
 
@@ -294,7 +294,7 @@ trait CartStorageTrait
     }
 
     /** Migrate cart from one storage configuration to another */
-    public function migrateStorage(string $fromPrimary, string $toPrimary, string $fromSecondary = null, string $toSecondary = null): bool
+    public function migrateStorage(string $fromPrimary, string $toPrimary, ?string $fromSecondary = null, ?string $toSecondary = null): bool
     {
         $originalPrimary = $this->primaryStorage;
         $originalSecondary = $this->secondaryStorage;
@@ -343,15 +343,15 @@ trait CartStorageTrait
         $content = $this->retrieveContent();
 
         return [
-            'primary_storage'       => $this->primaryStorage,
-            'secondary_storage'     => $this->secondaryStorage,
-            'hybrid_enabled'        => $this->useHybridStorage,
-            'session_key'           => $this->sessionKey,
-            'item_count'            => $content->count(),
-            'total_quantity'        => $content->sum('quantity'),
-            'storage_size'          => strlen(json_encode($content->toArray())),
-            'last_updated'          => $content->max('updated_at'),
-            'primary_has_content'   => $this->hasPrimaryStorageContent(),
+            'primary_storage' => $this->primaryStorage,
+            'secondary_storage' => $this->secondaryStorage,
+            'hybrid_enabled' => $this->useHybridStorage,
+            'session_key' => $this->sessionKey,
+            'item_count' => $content->count(),
+            'total_quantity' => $content->sum('quantity'),
+            'storage_size' => strlen(json_encode($content->toArray())),
+            'last_updated' => $content->max('updated_at'),
+            'primary_has_content' => $this->hasPrimaryStorageContent(),
             'secondary_has_content' => $this->useHybridStorage ? $this->hasSecondaryStorageContent() : false,
         ];
     }

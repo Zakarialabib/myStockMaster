@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Permission;
 
+use App\Livewire\Utils\Datatable;
 use App\Models\Permission;
 use Exception;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
-use App\Livewire\Utils\Datatable;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -33,8 +33,8 @@ class Index extends Component
     public function render()
     {
         $query = Permission::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -96,7 +96,7 @@ class Index extends Component
 
             $this->editModal = false;
         } catch (Exception $exception) {
-            $this->alert('error', 'Something goes wrong while updating permission!!'.$exception->getMessage());
+            $this->alert('error', 'Something goes wrong while updating permission!!' . $exception->getMessage());
         }
     }
 

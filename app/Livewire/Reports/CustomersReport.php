@@ -8,12 +8,12 @@ use App\Models\Customer;
 use App\Models\Quotation;
 use App\Models\Sale;
 use App\Models\SaleReturn;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class CustomersReport extends Component

@@ -8,20 +8,21 @@ use App\Models\Expense;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Models\Quotation;
-use App\Models\Warehouse;
 use App\Models\QuotationDetails;
 use App\Models\Sale;
 use App\Models\SaleDetails;
+use App\Models\Warehouse;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class WarehouseReport extends Component
 {
     use WithAlert;
+
     public $warehouses;
 
     public $warehouse_id;

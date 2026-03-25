@@ -6,27 +6,27 @@ namespace App\Livewire\Printer;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Printer;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
 
     #[Validate([
-        'printer.name'               => 'required|string|min:3|max:255',
-        'printer.connection_type'    => 'required|string|max:255',
+        'printer.name' => 'required|string|min:3|max:255',
+        'printer.connection_type' => 'required|string|max:255',
         'printer.capability_profile' => 'required|string|max:255',
-        'printer.char_per_line'      => 'required',
-        'printer.ip_address'         => 'required|string|max:255',
-        'printer.port'               => 'required|string|max:255',
-        'printer.path'               => 'required|string|max:255',
+        'printer.char_per_line' => 'required',
+        'printer.ip_address' => 'required|string|max:255',
+        'printer.port' => 'required|string|max:255',
+        'printer.path' => 'required|string|max:255',
     ])]
     public $printer;
 
@@ -41,8 +41,8 @@ class Index extends Component
         abort_if(Gate::denies('printer_access'), 403);
 
         $query = Printer::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

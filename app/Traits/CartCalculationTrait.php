@@ -34,7 +34,7 @@ trait CartCalculationTrait
         $subtotal = $item['price'] * $item['quantity'];
 
         // Apply item-specific conditions
-        if ( ! empty($item['conditions'])) {
+        if (! empty($item['conditions'])) {
             $subtotal = $this->applyItemConditions($subtotal, $item['conditions']);
         }
 
@@ -60,7 +60,7 @@ trait CartCalculationTrait
 
         $taxableAmount = $items->sum(function ($item) {
             // Ignore non-item values (e.g., global settings stored as scalars)
-            if ( ! is_array($item)) {
+            if (! is_array($item)) {
                 return 0;
             }
 
@@ -93,7 +93,7 @@ trait CartCalculationTrait
 
         foreach ($applicableConditions as $condition) {
             // Ensure condition is an array
-            if ( ! is_array($condition)) {
+            if (! is_array($condition)) {
                 continue;
             }
 
@@ -158,11 +158,11 @@ trait CartCalculationTrait
     public function addCondition(array $condition): self
     {
         $this->conditions[] = array_merge([
-            'name'       => 'Condition',
-            'type'       => 'fixed',
-            'target'     => 'subtotal',
-            'value'      => 0,
-            'order'      => 0,
+            'name' => 'Condition',
+            'type' => 'fixed',
+            'target' => 'subtotal',
+            'value' => 0,
+            'order' => 0,
             'attributes' => [],
         ], $condition);
 
@@ -220,7 +220,7 @@ trait CartCalculationTrait
     {
         $price = $item['price'];
 
-        if ( ! empty($item['conditions'])) {
+        if (! empty($item['conditions'])) {
             $price = $this->applyItemConditions($price, $item['conditions']);
         }
 
@@ -236,7 +236,7 @@ trait CartCalculationTrait
     /** Get formatted price */
     public function formatPrice(float $price, string $currency = '$', int $decimals = 2): string
     {
-        return $currency.number_format($price, $decimals);
+        return $currency . number_format($price, $decimals);
     }
 
     /** Calculate discount amount */
@@ -251,7 +251,7 @@ trait CartCalculationTrait
         $discountConditions = $this->getConditionsByType('discount');
         $subtotal = $items->sum(function ($item) {
             // Ignore non-item values (e.g., global settings stored as scalars)
-            if ( ! is_array($item)) {
+            if (! is_array($item)) {
                 return 0;
             }
             $price = isset($item['price']) ? (float) $item['price'] : 0.0;
@@ -264,7 +264,7 @@ trait CartCalculationTrait
 
         foreach ($discountConditions as $condition) {
             // Ensure condition is an array
-            if ( ! is_array($condition)) {
+            if (! is_array($condition)) {
                 continue;
             }
 
@@ -284,11 +284,11 @@ trait CartCalculationTrait
         $total = $this->calculateTotal($items);
 
         return [
-            'subtotal'       => $subtotal,
-            'tax'            => $tax,
-            'discount'       => $discount,
-            'total'          => $total,
-            'item_count'     => $items->count(),
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'discount' => $discount,
+            'total' => $total,
+            'item_count' => $items->count(),
             'quantity_count' => $items->sum('quantity'),
         ];
     }

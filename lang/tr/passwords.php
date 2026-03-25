@@ -15,10 +15,10 @@ return [
     |
     */
 
-    'reset'     => 'Şifreniz sıfırlandı!',
-    'sent'      => 'Şifre sıfırlama bağlantısını e-posta ile gönderdik!',
+    'reset' => 'Şifreniz sıfırlandı!',
+    'sent' => 'Şifre sıfırlama bağlantısını e-posta ile gönderdik!',
     'throttled' => 'Lütfen tekrar denemeden önce bekleyin.',
-    'token'     => 'Bu şifre sıfırlama belirteci geçersiz.',
-    'user'      => 'Bu e-posta adresine sahip bir kullanıcı bulunamadı.',
+    'token' => 'Bu şifre sıfırlama belirteci geçersiz.',
+    'user' => 'Bu e-posta adresine sahip bir kullanıcı bulunamadı.',
 
 ];

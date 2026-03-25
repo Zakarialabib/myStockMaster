@@ -7,14 +7,14 @@ namespace App\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 class Edit extends Component
@@ -73,21 +73,21 @@ class Edit extends Component
     public bool $hot = false;
 
     #[Validate([
-        'productWarehouse.*.qty'          => 'numeric',
-        'productWarehouse.*.price'        => 'numeric',
-        'productWarehouse.*.old_price'    => 'numeric',
-        'productWarehouse.*.cost'         => 'numeric',
-        'productWarehouse.*.stock_alert'  => 'numeric',
+        'productWarehouse.*.qty' => 'numeric',
+        'productWarehouse.*.price' => 'numeric',
+        'productWarehouse.*.old_price' => 'numeric',
+        'productWarehouse.*.cost' => 'numeric',
+        'productWarehouse.*.stock_alert' => 'numeric',
         'productWarehouse.*.is_ecommerce' => 'boolean',
-        'options.*.type'                  => '',
-        'options.*.value'                 => '',
+        'options.*.type' => '',
+        'options.*.value' => '',
     ])]
     public array $productWarehouse = [];
 
     public function addOption(): void
     {
         $this->options[] = [
-            'type'  => '',
+            'type' => '',
             'value' => '',
         ];
     }
@@ -122,11 +122,11 @@ class Edit extends Component
         $this->productWarehouses = $this->product->warehouses;
 
         $this->productWarehouse = $this->productWarehouses->mapWithKeys(static fn ($warehouse): array => [$warehouse->id => [
-            'price'        => $warehouse->pivot->price,
-            'qty'          => $warehouse->pivot->qty,
-            'cost'         => $warehouse->pivot->cost,
-            'old_price'    => $warehouse->pivot->old_price,
-            'stock_alert'  => $warehouse->pivot->stock_alert,
+            'price' => $warehouse->pivot->price,
+            'qty' => $warehouse->pivot->qty,
+            'cost' => $warehouse->pivot->cost,
+            'old_price' => $warehouse->pivot->old_price,
+            'stock_alert' => $warehouse->pivot->stock_alert,
             'is_ecommerce' => $warehouse->pivot->is_ecommerce,
         ]])->toArray();
 
@@ -144,10 +144,10 @@ class Edit extends Component
             $this->slug = Str::slug($this->name);
         }
 
-        if ( ! $this->image) {
+        if (! $this->image) {
             $this->image = null;
         } elseif (is_object($this->image) && method_exists($this->image, 'extension')) {
-            $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$this->image->extension();
+            $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $this->image->extension();
             $this->image->storeAs('products', $imageName, 'local_files');
             $this->image = $imageName;
         }
@@ -156,7 +156,7 @@ class Edit extends Component
             $gallery = [];
 
             foreach ($this->gallery as $value) {
-                $imageName = Str::slug($this->name).'-'.Str::random(5).'.'.$value->extension();
+                $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $value->extension();
                 $value->storeAs('products', $imageName, 'local_files');
                 $gallery[] = $imageName;
             }
@@ -165,32 +165,32 @@ class Edit extends Component
         }
 
         $this->product->update([
-            'name'              => $this->name,
-            'code'              => $this->code,
+            'name' => $this->name,
+            'code' => $this->code,
             'barcode_symbology' => $this->barcode_symbology,
-            'slug'              => $this->slug,
-            'unit'              => $this->unit,
-            'tax_amount'        => $this->tax_amount,
-            'description'       => $this->description,
-            'tax_type'          => $this->tax_type,
-            'category_id'       => $this->category_id,
-            'brand_id'          => $this->brand_id,
-            'availability'      => $this->availability,
-            'seasonality'       => $this->seasonality,
-            'image'             => $this->image,
-            'gallery'           => $this->gallery,
-            'featured'          => $this->featured,
-            'best'              => $this->best,
-            'hot'               => $this->hot,
+            'slug' => $this->slug,
+            'unit' => $this->unit,
+            'tax_amount' => $this->tax_amount,
+            'description' => $this->description,
+            'tax_type' => $this->tax_type,
+            'category_id' => $this->category_id,
+            'brand_id' => $this->brand_id,
+            'availability' => $this->availability,
+            'seasonality' => $this->seasonality,
+            'image' => $this->image,
+            'gallery' => $this->gallery,
+            'featured' => $this->featured,
+            'best' => $this->best,
+            'hot' => $this->hot,
         ]);
 
         foreach ($this->productWarehouse as $warehouseId => $warehouse) {
             $this->product->warehouses()->updateExistingPivot($warehouseId, [
-                'price'        => $warehouse['price'],
-                'qty'          => $warehouse['qty'],
-                'cost'         => $warehouse['cost'],
-                'old_price'    => $warehouse['old_price'],
-                'stock_alert'  => $warehouse['stock_alert'],
+                'price' => $warehouse['price'],
+                'qty' => $warehouse['qty'],
+                'cost' => $warehouse['cost'],
+                'old_price' => $warehouse['old_price'],
+                'stock_alert' => $warehouse['stock_alert'],
                 'is_ecommerce' => $warehouse['is_ecommerce'],
             ]);
         }

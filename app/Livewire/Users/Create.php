@@ -67,20 +67,20 @@ class Create extends Component
         $this->validate();
 
         $this->user = User::create([
-            'name'     => $this->name,
-            'email'    => $this->email,
+            'name' => $this->name,
+            'email' => $this->email,
             'password' => Hash::make($this->password),
-            'phone'    => $this->phone,
-            'city'     => $this->city,
-            'country'  => $this->country,
-            'address'  => $this->address,
+            'phone' => $this->phone,
+            'city' => $this->city,
+            'country' => $this->country,
+            'address' => $this->address,
         ]);
 
         $this->user->assignRole($this->role);
 
         foreach ($this->warehouse_id as $warehouseId) {
             UserWarehouse::create([
-                'user_id'      => $this->user->id,
+                'user_id' => $this->user->id,
                 'warehouse_id' => $warehouseId,
             ]);
         }

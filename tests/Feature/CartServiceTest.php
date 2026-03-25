@@ -26,10 +26,10 @@ class CartServiceTest extends TestCase
     public function it_can_add_items_to_cart()
     {
         $item = [
-            'id'         => 1,
-            'name'       => 'Test Product',
-            'price'      => 10.00,
-            'quantity'   => 2,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
+            'quantity' => 2,
             'attributes' => ['color' => 'red'],
         ];
 
@@ -44,9 +44,9 @@ class CartServiceTest extends TestCase
     public function it_can_update_cart_items()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 
@@ -61,9 +61,9 @@ class CartServiceTest extends TestCase
     public function it_can_remove_cart_items()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 
@@ -79,16 +79,16 @@ class CartServiceTest extends TestCase
     public function it_can_calculate_subtotal()
     {
         $item1 = [
-            'id'       => 1,
-            'name'     => 'Product 1',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Product 1',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 
         $item2 = [
-            'id'       => 2,
-            'name'     => 'Product 2',
-            'price'    => 15.00,
+            'id' => 2,
+            'name' => 'Product 2',
+            'price' => 15.00,
             'quantity' => 1,
         ];
 
@@ -104,9 +104,9 @@ class CartServiceTest extends TestCase
         $this->cartService->setTaxRate(10); // 10% tax
 
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 100.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 100.00,
             'quantity' => 1,
         ];
 
@@ -120,18 +120,18 @@ class CartServiceTest extends TestCase
     public function it_can_calculate_discount()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 100.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 100.00,
             'quantity' => 1,
         ];
 
         $this->cartService->add($item);
         $this->cartService->addCondition([
-            'name'   => '10% Discount',
-            'type'   => 'discount',
+            'name' => '10% Discount',
+            'type' => 'discount',
             'target' => 'subtotal',
-            'value'  => -10,
+            'value' => -10,
         ]);
 
         $this->assertGreaterThanOrEqual(0, $this->cartService->discount());
@@ -141,9 +141,9 @@ class CartServiceTest extends TestCase
     public function it_can_clear_cart()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 
@@ -158,9 +158,9 @@ class CartServiceTest extends TestCase
     public function it_can_destroy_cart()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 
@@ -175,16 +175,16 @@ class CartServiceTest extends TestCase
     public function it_can_search_cart_items()
     {
         $item1 = [
-            'id'       => 1,
-            'name'     => 'Red Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Red Product',
+            'price' => 10.00,
             'quantity' => 1,
         ];
 
         $item2 = [
-            'id'       => 2,
-            'name'     => 'Blue Product',
-            'price'    => 15.00,
+            'id' => 2,
+            'name' => 'Blue Product',
+            'price' => 15.00,
             'quantity' => 1,
         ];
 
@@ -203,9 +203,9 @@ class CartServiceTest extends TestCase
     public function it_handles_duplicate_items_correctly()
     {
         $item = [
-            'id'       => 1,
-            'name'     => 'Test Product',
-            'price'    => 10.00,
+            'id' => 1,
+            'name' => 'Test Product',
+            'price' => 10.00,
             'quantity' => 2,
         ];
 

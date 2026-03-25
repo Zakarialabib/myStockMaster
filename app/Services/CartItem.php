@@ -7,6 +7,7 @@ namespace App\Services;
 class CartItem
 {
     protected array $data;
+
     protected string $rowId;
 
     public function __construct(array $data, string $rowId)
@@ -18,14 +19,14 @@ class CartItem
     public function __get(string $name)
     {
         return match ($name) {
-            'id'    => $this->data['id'],
-            'name'  => $this->data['name'],
+            'id' => $this->data['id'],
+            'name' => $this->data['name'],
             'price' => $this->data['price'],
             'qty', 'quantity' => $this->data['quantity'],
-            'rowId'      => $this->rowId,
-            'options'    => new CartItemOptions($this->data['attributes'] ?? []),
+            'rowId' => $this->rowId,
+            'options' => new CartItemOptions($this->data['attributes'] ?? []),
             'attributes' => $this->data['attributes'] ?? [],
-            default      => $this->data[$name] ?? null,
+            default => $this->data[$name] ?? null,
         };
     }
 

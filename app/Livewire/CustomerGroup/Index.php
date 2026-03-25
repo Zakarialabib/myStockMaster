@@ -7,8 +7,8 @@ namespace App\Livewire\CustomerGroup;
 use App\Livewire\Utils\Datatable;
 use App\Models\CustomerGroup;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Index extends Component
@@ -31,8 +31,8 @@ class Index extends Component
         abort_if(Gate::denies('customer-group_access'), 403);
 
         $query = CustomerGroup::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

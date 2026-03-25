@@ -6,23 +6,23 @@ namespace App\Livewire\Role;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Role;
+use App\Traits\WithAlert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Index extends Component
 {
-    use WithAlert;
     use Datatable;
+    use WithAlert;
 
     public $model = Role::class;
 
     public function render()
     {
         $query = Role::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 

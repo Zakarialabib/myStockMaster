@@ -32,10 +32,10 @@ it('tests the create expense can create', function () {
         ->assertHasNoErrors();
 
     assertDatabaseHas('expenses', [
-        'reference'   => '12345',
-        'date'        => '01-01-2023',
+        'reference' => '12345',
+        'date' => '01-01-2023',
         'category_id' => $category_id,
-        'amount'      => '50000',
+        'amount' => '50000',
     ]);
 });
 
@@ -50,8 +50,8 @@ it('tests the create expense component validation', function () {
         ->call('create')
         ->assertHasErrors(
             ['reference' => 'required'],
-            ['date'        => 'required'],
+            ['date' => 'required'],
             ['category_id' => 'required'],
-            ['amount'      => 'required'],
+            ['amount' => 'required'],
         );
 });

@@ -7,17 +7,14 @@ namespace app\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class SupplierController extends BaseController
 {
     /**
      * Retrieve a list of suppliers with optional filters and pagination.
-     *
-     * @param  Request  $request
-     *
      */
     public function index(Request $request)
     {
@@ -28,10 +25,10 @@ class SupplierController extends BaseController
 
                 $order = $request->get('_order') ? $request->get('_order') : 'asc';
                 $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                //Filters
+                // Filters
                 $where_raw = ' 1=1 ';
 
-                //capture sort fields
+                // capture sort fields
                 $sort_array = explode(',', $sort);
 
                 if (count($sort_array) > 0) {
@@ -61,9 +58,6 @@ class SupplierController extends BaseController
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     *
      */
     public function store(Request $request)
     {
@@ -85,8 +79,7 @@ class SupplierController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function show($id)
     {
@@ -106,9 +99,7 @@ class SupplierController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function update(Request $request, $id)
     {
@@ -121,8 +112,7 @@ class SupplierController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     *
+     * @param int $id
      */
     public function destroy($id)
     {

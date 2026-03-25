@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Livewire\PurchaseReturn;
 
 use App\Models\PurchaseReturn;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Show extends Component
 {
     use WithAlert;
+
     public $purchasereturn;
 
     public $showModal = false;

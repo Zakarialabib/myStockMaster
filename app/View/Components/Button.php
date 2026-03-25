@@ -9,11 +9,17 @@ use Illuminate\View\Component;
 class Button extends Component
 {
     public $type;
+
     public $href;
+
     public $icon;
+
     public $iconPosition;
+
     public $size;
+
     public $variant;
+
     public $outline;
 
     public function __construct(
@@ -108,8 +114,8 @@ class Button extends Component
         $baseClasses = 'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
         $borderClass = $this->outline ? 'border-2 bg-transparent' : 'border border-transparent';
 
-        return $baseClasses.' '.$borderClass.' '.
-               ($sizeClasses[$this->size] ?? $sizeClasses['md']).' '.
+        return $baseClasses . ' ' . $borderClass . ' ' .
+               ($sizeClasses[$this->size] ?? $sizeClasses['md']) . ' ' .
                ($variantClasses[$this->variant] ?? $variantClasses['primary']);
     }
 

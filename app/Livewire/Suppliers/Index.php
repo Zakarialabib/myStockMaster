@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Livewire\Suppliers;
 
 use App\Exports\SupplierExport;
-use App\Livewire\Utils\Datatable;
 use App\Imports\SupplierImport;
+use App\Livewire\Utils\Datatable;
 use App\Models\Supplier;
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
+use App\Traits\WithAlert;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Async;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Async;
-use App\Traits\WithAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use Datatable;
     use WithAlert;
     use WithFileUploads;
-    use Datatable;
 
     /** @var mixed */
     public $supplier;
@@ -33,7 +33,6 @@ class Index extends Component
 
     public $model = Supplier::class;
 
-    /** @var bool */
     public bool $importModal = false;
 
     public function render()
@@ -41,8 +40,8 @@ class Index extends Component
         abort_if(Gate::denies('supplier_access'), 403);
 
         $query = Supplier::advancedFilter([
-            's'               => $this->search ?: null,
-            'order_column'    => $this->sortBy,
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
@@ -90,7 +89,7 @@ class Index extends Component
             'file' => 'required|mimes:xlsx,xls,csv,txt',
         ]);
 
-        Supplier::import(new SupplierImport(), $this->file);
+        Supplier::import(new SupplierImport, $this->file);
 
         $this->alert('success', __('Supplier Imported Successfully'));
 
@@ -134,6 +133,6 @@ class Index extends Component
 
     private function callExport(): SupplierExport
     {
-        return new SupplierExport();
+        return new SupplierExport;
     }
 }

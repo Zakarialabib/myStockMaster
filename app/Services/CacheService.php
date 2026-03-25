@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class CacheService
 {
@@ -15,12 +15,12 @@ class CacheService
 
     /** Cache prefixes for different data types */
     public const PREFIXES = [
-        'products'   => 'products:',
+        'products' => 'products:',
         'categories' => 'categories:',
-        'users'      => 'users:',
-        'reports'    => 'reports:',
-        'dashboard'  => 'dashboard:',
-        'filters'    => 'filters:',
+        'users' => 'users:',
+        'reports' => 'reports:',
+        'dashboard' => 'dashboard:',
+        'filters' => 'filters:',
     ];
 
     /** Get cached data or execute callback */
@@ -30,7 +30,7 @@ class CacheService
             return Cache::remember($key, $timeout, $callback);
         } catch (Exception $e) {
             Log::warning('Cache remember failed', [
-                'key'   => $key,
+                'key' => $key,
                 'error' => $e->getMessage(),
             ]);
 
@@ -56,8 +56,8 @@ class CacheService
             return Cache::put($prefixedKey, $value, $timeout);
         } catch (Exception $e) {
             Log::warning('Cache put failed', [
-                'type'  => $type,
-                'key'   => $key,
+                'type' => $type,
+                'key' => $key,
                 'error' => $e->getMessage(),
             ]);
 
@@ -74,8 +74,8 @@ class CacheService
             return Cache::forget($prefixedKey);
         } catch (Exception $e) {
             Log::warning('Cache forget failed', [
-                'type'  => $type,
-                'key'   => $key,
+                'type' => $type,
+                'key' => $key,
                 'error' => $e->getMessage(),
             ]);
 
@@ -87,18 +87,18 @@ class CacheService
     public static function clearType(string $type): void
     {
         try {
-            $prefix = self::PREFIXES[$type] ?? $type.':';
+            $prefix = self::PREFIXES[$type] ?? $type . ':';
 
             // Get all keys with the prefix
-            $keys = Cache::getRedis()->keys($prefix.'*');
+            $keys = Cache::getRedis()->keys($prefix . '*');
 
-            if ( ! empty($keys)) {
+            if (! empty($keys)) {
                 Cache::getRedis()->del($keys);
                 Log::info('Cache cleared for type', ['type' => $type, 'keys_count' => count($keys)]);
             }
         } catch (Exception $e) {
             Log::warning('Cache clear type failed', [
-                'type'  => $type,
+                'type' => $type,
                 'error' => $e->getMessage(),
             ]);
         }
@@ -124,7 +124,7 @@ class CacheService
             $stats = [];
 
             foreach (self::PREFIXES as $type => $prefix) {
-                $keys = Cache::getRedis()->keys($prefix.'*');
+                $keys = Cache::getRedis()->keys($prefix . '*');
                 $stats[$type] = count($keys);
             }
 
@@ -165,9 +165,9 @@ class CacheService
     /** Get prefixed cache key */
     private static function getPrefixedKey(string $type, string $key): string
     {
-        $prefix = self::PREFIXES[$type] ?? $type.':';
+        $prefix = self::PREFIXES[$type] ?? $type . ':';
 
-        return $prefix.$key;
+        return $prefix . $key;
     }
 
     /** Generate cache key from parameters */
@@ -188,8 +188,8 @@ class CacheService
             // Warm up product counts
             self::cacheProducts('counts', function () {
                 return [
-                    'total'     => \App\Models\Product::count(),
-                    'active'    => \App\Models\Product::where('status', true)->count(),
+                    'total' => \App\Models\Product::count(),
+                    'active' => \App\Models\Product::where('status', true)->count(),
                     'low_stock' => \App\Models\Product::where('quantity', '<', 10)->count(),
                 ];
             });

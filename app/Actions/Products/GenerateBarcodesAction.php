@@ -15,7 +15,7 @@ final class GenerateBarcodesAction
         foreach ($products as $product) {
             $quantity = (int) $product['quantity'];
 
-            for ($i = 0; $i < $quantity; ++$i) {
+            for ($i = 0; $i < $quantity; $i++) {
                 $barcode = DNS1DFacade::getBarCodeSVG(
                     $product['code'],
                     $product['barcode_symbology'],
@@ -27,8 +27,8 @@ final class GenerateBarcodesAction
 
                 $barcodes[] = [
                     'barcode' => $barcode,
-                    'name'    => $product['name'],
-                    'price'   => $product['price'],
+                    'name' => $product['name'],
+                    'price' => $product['price'],
                 ];
             }
         }
@@ -39,12 +39,12 @@ final class GenerateBarcodesAction
     private function barcodeScale(string $size): float
     {
         return match ($size) {
-            'small'  => 1.0,
+            'small' => 1.0,
             'medium' => 1.5,
-            'large'  => 2.0,
-            'extra'  => 2.5,
-            'huge'   => 3.0,
-            default  => 1.5,
+            'large' => 2.0,
+            'extra' => 2.5,
+            'huge' => 3.0,
+            default => 1.5,
         };
     }
 }

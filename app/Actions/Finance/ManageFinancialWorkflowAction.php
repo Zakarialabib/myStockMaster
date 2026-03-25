@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Finance;
 
+use App\Models\CashFlowRecord;
 use App\Models\Expense;
 use App\Models\Sale;
-use App\Models\CashFlowRecord;
 use Carbon\Carbon;
 
 class ManageFinancialWorkflowAction
@@ -14,11 +14,11 @@ class ManageFinancialWorkflowAction
     public function __invoke(string $period = 'daily'): array
     {
         return match ($period) {
-            'daily'     => $this->getDailyTasks(),
-            'weekly'    => $this->getWeeklyTasks(),
-            'monthly'   => $this->getMonthlyTasks(),
+            'daily' => $this->getDailyTasks(),
+            'weekly' => $this->getWeeklyTasks(),
+            'monthly' => $this->getMonthlyTasks(),
             'quarterly' => $this->getQuarterlyTasks(),
-            default     => $this->getDailyTasks(),
+            default => $this->getDailyTasks(),
         };
     }
 
@@ -38,54 +38,54 @@ class ManageFinancialWorkflowAction
         $cashFlowRecord = CashFlowRecord::whereDate('record_date', $yesterday)->first();
 
         $tasks = [
-            'period'          => 'daily',
-            'date'            => $today->format('Y-m-d'),
+            'period' => 'daily',
+            'date' => $today->format('Y-m-d'),
             'completed_tasks' => [],
-            'pending_tasks'   => [],
-            'overdue_tasks'   => [],
-            'metrics'         => [
-                'yesterday_revenue'  => $yesterdayRevenue,
+            'pending_tasks' => [],
+            'overdue_tasks' => [],
+            'metrics' => [
+                'yesterday_revenue' => $yesterdayRevenue,
                 'yesterday_expenses' => $yesterdayExpenses,
-                'net_cash_flow'      => $yesterdayRevenue - $yesterdayExpenses,
+                'net_cash_flow' => $yesterdayRevenue - $yesterdayExpenses,
                 'cash_flow_recorded' => $cashFlowRecord !== null,
             ],
             'reminders' => [],
-            'alerts'    => [],
+            'alerts' => [],
         ];
 
         // Daily task checklist
         $dailyChecklist = [
             [
-                'id'             => 'record_cash_flow',
-                'title'          => 'Record Daily Cash Flow',
-                'description'    => 'Update cash position and record daily transactions',
-                'priority'       => 'high',
+                'id' => 'record_cash_flow',
+                'title' => 'Record Daily Cash Flow',
+                'description' => 'Update cash position and record daily transactions',
+                'priority' => 'high',
                 'estimated_time' => 5,
-                'category'       => 'cash_management',
+                'category' => 'cash_management',
             ],
             [
-                'id'             => 'review_expenses',
-                'title'          => 'Review Daily Expenses',
-                'description'    => 'Verify and categorize all expenses from yesterday',
-                'priority'       => 'medium',
+                'id' => 'review_expenses',
+                'title' => 'Review Daily Expenses',
+                'description' => 'Verify and categorize all expenses from yesterday',
+                'priority' => 'medium',
                 'estimated_time' => 10,
-                'category'       => 'expense_management',
+                'category' => 'expense_management',
             ],
             [
-                'id'             => 'check_inventory_costs',
-                'title'          => 'Check Inventory Costs',
-                'description'    => 'Review food costs and wastage from yesterday',
-                'priority'       => 'medium',
+                'id' => 'check_inventory_costs',
+                'title' => 'Check Inventory Costs',
+                'description' => 'Review food costs and wastage from yesterday',
+                'priority' => 'medium',
                 'estimated_time' => 15,
-                'category'       => 'cost_control',
+                'category' => 'cost_control',
             ],
             [
-                'id'             => 'update_sales_data',
-                'title'          => 'Update Sales Data',
-                'description'    => 'Ensure all sales transactions are properly recorded',
-                'priority'       => 'high',
+                'id' => 'update_sales_data',
+                'title' => 'Update Sales Data',
+                'description' => 'Ensure all sales transactions are properly recorded',
+                'priority' => 'high',
                 'estimated_time' => 5,
-                'category'       => 'revenue_tracking',
+                'category' => 'revenue_tracking',
             ],
         ];
 
@@ -104,21 +104,21 @@ class ManageFinancialWorkflowAction
         }
 
         // Generate reminders
-        if ( ! $cashFlowRecord) {
+        if (! $cashFlowRecord) {
             $tasks['reminders'][] = [
-                'type'     => 'missing_data',
-                'title'    => 'Cash Flow Not Recorded',
-                'message'  => 'Yesterday\'s cash flow has not been recorded yet.',
-                'action'   => 'record_cash_flow',
+                'type' => 'missing_data',
+                'title' => 'Cash Flow Not Recorded',
+                'message' => 'Yesterday\'s cash flow has not been recorded yet.',
+                'action' => 'record_cash_flow',
                 'priority' => 'high',
             ];
         }
 
         if ($yesterdayExpenses > $yesterdayRevenue) {
             $tasks['alerts'][] = [
-                'type'     => 'negative_cash_flow',
-                'title'    => 'Negative Cash Flow Alert',
-                'message'  => 'Yesterday\'s expenses exceeded revenue by $'.number_format($yesterdayExpenses - $yesterdayRevenue, 2),
+                'type' => 'negative_cash_flow',
+                'title' => 'Negative Cash Flow Alert',
+                'message' => 'Yesterday\'s expenses exceeded revenue by $' . number_format($yesterdayExpenses - $yesterdayRevenue, 2),
                 'priority' => 'critical',
             ];
         }
@@ -143,61 +143,61 @@ class ManageFinancialWorkflowAction
         ])->sum('amount');
 
         $tasks = [
-            'period'          => 'weekly',
-            'week_start'      => $thisWeek->format('Y-m-d'),
+            'period' => 'weekly',
+            'week_start' => $thisWeek->format('Y-m-d'),
             'completed_tasks' => [],
-            'pending_tasks'   => [],
-            'overdue_tasks'   => [],
-            'metrics'         => [
-                'last_week_revenue'  => $weeklyRevenue,
+            'pending_tasks' => [],
+            'overdue_tasks' => [],
+            'metrics' => [
+                'last_week_revenue' => $weeklyRevenue,
                 'last_week_expenses' => $weeklyExpenses,
-                'weekly_profit'      => $weeklyRevenue - $weeklyExpenses,
-                'profit_margin'      => $weeklyRevenue > 0 ? (($weeklyRevenue - $weeklyExpenses) / $weeklyRevenue) * 100 : 0,
+                'weekly_profit' => $weeklyRevenue - $weeklyExpenses,
+                'profit_margin' => $weeklyRevenue > 0 ? (($weeklyRevenue - $weeklyExpenses) / $weeklyRevenue) * 100 : 0,
             ],
             'reminders' => [],
-            'alerts'    => [],
+            'alerts' => [],
         ];
 
         $weeklyChecklist = [
             [
-                'id'             => 'analyze_weekly_performance',
-                'title'          => 'Analyze Weekly Performance',
-                'description'    => 'Review KPIs, profit margins, and cost ratios',
-                'priority'       => 'high',
+                'id' => 'analyze_weekly_performance',
+                'title' => 'Analyze Weekly Performance',
+                'description' => 'Review KPIs, profit margins, and cost ratios',
+                'priority' => 'high',
                 'estimated_time' => 30,
-                'category'       => 'performance_analysis',
+                'category' => 'performance_analysis',
             ],
             [
-                'id'             => 'reconcile_accounts',
-                'title'          => 'Reconcile Bank Accounts',
-                'description'    => 'Match bank statements with recorded transactions',
-                'priority'       => 'high',
+                'id' => 'reconcile_accounts',
+                'title' => 'Reconcile Bank Accounts',
+                'description' => 'Match bank statements with recorded transactions',
+                'priority' => 'high',
                 'estimated_time' => 45,
-                'category'       => 'accounting',
+                'category' => 'accounting',
             ],
             [
-                'id'             => 'review_supplier_payments',
-                'title'          => 'Review Supplier Payments',
-                'description'    => 'Check outstanding invoices and payment schedules',
-                'priority'       => 'medium',
+                'id' => 'review_supplier_payments',
+                'title' => 'Review Supplier Payments',
+                'description' => 'Check outstanding invoices and payment schedules',
+                'priority' => 'medium',
                 'estimated_time' => 20,
-                'category'       => 'payables',
+                'category' => 'payables',
             ],
             [
-                'id'             => 'staff_cost_analysis',
-                'title'          => 'Staff Cost Analysis',
-                'description'    => 'Review labor costs vs revenue and productivity',
-                'priority'       => 'medium',
+                'id' => 'staff_cost_analysis',
+                'title' => 'Staff Cost Analysis',
+                'description' => 'Review labor costs vs revenue and productivity',
+                'priority' => 'medium',
                 'estimated_time' => 25,
-                'category'       => 'cost_control',
+                'category' => 'cost_control',
             ],
             [
-                'id'             => 'inventory_valuation',
-                'title'          => 'Inventory Valuation',
-                'description'    => 'Update inventory values and check for slow-moving items',
-                'priority'       => 'medium',
+                'id' => 'inventory_valuation',
+                'title' => 'Inventory Valuation',
+                'description' => 'Update inventory values and check for slow-moving items',
+                'priority' => 'medium',
                 'estimated_time' => 35,
-                'category'       => 'inventory_management',
+                'category' => 'inventory_management',
             ],
         ];
 
@@ -217,9 +217,9 @@ class ManageFinancialWorkflowAction
         // Weekly alerts
         if ($tasks['metrics']['profit_margin'] < 10) {
             $tasks['alerts'][] = [
-                'type'     => 'low_profit_margin',
-                'title'    => 'Low Profit Margin Alert',
-                'message'  => 'Weekly profit margin is below 10% ('.number_format($tasks['metrics']['profit_margin'], 1).'%)',
+                'type' => 'low_profit_margin',
+                'title' => 'Low Profit Margin Alert',
+                'message' => 'Weekly profit margin is below 10% (' . number_format($tasks['metrics']['profit_margin'], 1) . '%)',
                 'priority' => 'high',
             ];
         }
@@ -243,61 +243,61 @@ class ManageFinancialWorkflowAction
         ])->sum('amount');
 
         $tasks = [
-            'period'          => 'monthly',
-            'month_start'     => $thisMonth->format('Y-m-d'),
+            'period' => 'monthly',
+            'month_start' => $thisMonth->format('Y-m-d'),
             'completed_tasks' => [],
-            'pending_tasks'   => [],
-            'overdue_tasks'   => [],
-            'metrics'         => [
-                'last_month_revenue'  => $monthlyRevenue,
+            'pending_tasks' => [],
+            'overdue_tasks' => [],
+            'metrics' => [
+                'last_month_revenue' => $monthlyRevenue,
                 'last_month_expenses' => $monthlyExpenses,
-                'monthly_profit'      => $monthlyRevenue - $monthlyExpenses,
-                'break_even_days'     => $this->calculateBreakEvenDays($monthlyRevenue, $monthlyExpenses),
+                'monthly_profit' => $monthlyRevenue - $monthlyExpenses,
+                'break_even_days' => $this->calculateBreakEvenDays($monthlyRevenue, $monthlyExpenses),
             ],
             'reminders' => [],
-            'alerts'    => [],
+            'alerts' => [],
         ];
 
         $monthlyChecklist = [
             [
-                'id'             => 'generate_pnl_statement',
-                'title'          => 'Generate P&L Statement',
-                'description'    => 'Create comprehensive profit and loss statement',
-                'priority'       => 'high',
+                'id' => 'generate_pnl_statement',
+                'title' => 'Generate P&L Statement',
+                'description' => 'Create comprehensive profit and loss statement',
+                'priority' => 'high',
                 'estimated_time' => 60,
-                'category'       => 'financial_reporting',
+                'category' => 'financial_reporting',
             ],
             [
-                'id'             => 'cash_flow_projection',
-                'title'          => 'Cash Flow Projection',
-                'description'    => 'Project next month\'s cash flow and identify potential issues',
-                'priority'       => 'high',
+                'id' => 'cash_flow_projection',
+                'title' => 'Cash Flow Projection',
+                'description' => 'Project next month\'s cash flow and identify potential issues',
+                'priority' => 'high',
                 'estimated_time' => 45,
-                'category'       => 'cash_management',
+                'category' => 'cash_management',
             ],
             [
-                'id'             => 'budget_variance_analysis',
-                'title'          => 'Budget Variance Analysis',
-                'description'    => 'Compare actual vs budgeted performance',
-                'priority'       => 'medium',
+                'id' => 'budget_variance_analysis',
+                'title' => 'Budget Variance Analysis',
+                'description' => 'Compare actual vs budgeted performance',
+                'priority' => 'medium',
                 'estimated_time' => 40,
-                'category'       => 'budgeting',
+                'category' => 'budgeting',
             ],
             [
-                'id'             => 'supplier_performance_review',
-                'title'          => 'Supplier Performance Review',
-                'description'    => 'Evaluate supplier costs, quality, and payment terms',
-                'priority'       => 'medium',
+                'id' => 'supplier_performance_review',
+                'title' => 'Supplier Performance Review',
+                'description' => 'Evaluate supplier costs, quality, and payment terms',
+                'priority' => 'medium',
                 'estimated_time' => 30,
-                'category'       => 'procurement',
+                'category' => 'procurement',
             ],
             [
-                'id'             => 'tax_preparation',
-                'title'          => 'Tax Preparation',
-                'description'    => 'Organize documents and calculate tax obligations',
-                'priority'       => 'high',
+                'id' => 'tax_preparation',
+                'title' => 'Tax Preparation',
+                'description' => 'Organize documents and calculate tax obligations',
+                'priority' => 'high',
                 'estimated_time' => 90,
-                'category'       => 'compliance',
+                'category' => 'compliance',
             ],
         ];
 
@@ -333,53 +333,53 @@ class ManageFinancialWorkflowAction
         ])->sum('amount');
 
         $tasks = [
-            'period'          => 'quarterly',
-            'quarter_start'   => $thisQuarter->format('Y-m-d'),
+            'period' => 'quarterly',
+            'quarter_start' => $thisQuarter->format('Y-m-d'),
             'completed_tasks' => [],
-            'pending_tasks'   => [],
-            'overdue_tasks'   => [],
-            'metrics'         => [
-                'last_quarter_revenue'  => $quarterlyRevenue,
+            'pending_tasks' => [],
+            'overdue_tasks' => [],
+            'metrics' => [
+                'last_quarter_revenue' => $quarterlyRevenue,
                 'last_quarter_expenses' => $quarterlyExpenses,
-                'quarterly_profit'      => $quarterlyRevenue - $quarterlyExpenses,
-                'growth_rate'           => $this->calculateGrowthRate($quarterlyRevenue),
+                'quarterly_profit' => $quarterlyRevenue - $quarterlyExpenses,
+                'growth_rate' => $this->calculateGrowthRate($quarterlyRevenue),
             ],
             'reminders' => [],
-            'alerts'    => [],
+            'alerts' => [],
         ];
 
         $quarterlyChecklist = [
             [
-                'id'             => 'strategic_financial_review',
-                'title'          => 'Strategic Financial Review',
-                'description'    => 'Comprehensive review of financial performance and strategy',
-                'priority'       => 'high',
+                'id' => 'strategic_financial_review',
+                'title' => 'Strategic Financial Review',
+                'description' => 'Comprehensive review of financial performance and strategy',
+                'priority' => 'high',
                 'estimated_time' => 120,
-                'category'       => 'strategic_planning',
+                'category' => 'strategic_planning',
             ],
             [
-                'id'             => 'expansion_readiness_assessment',
-                'title'          => 'Expansion Readiness Assessment',
-                'description'    => 'Evaluate financial capacity for business expansion',
-                'priority'       => 'medium',
+                'id' => 'expansion_readiness_assessment',
+                'title' => 'Expansion Readiness Assessment',
+                'description' => 'Evaluate financial capacity for business expansion',
+                'priority' => 'medium',
                 'estimated_time' => 90,
-                'category'       => 'growth_planning',
+                'category' => 'growth_planning',
             ],
             [
-                'id'             => 'annual_budget_planning',
-                'title'          => 'Annual Budget Planning',
-                'description'    => 'Plan and set budgets for the upcoming year',
-                'priority'       => 'high',
+                'id' => 'annual_budget_planning',
+                'title' => 'Annual Budget Planning',
+                'description' => 'Plan and set budgets for the upcoming year',
+                'priority' => 'high',
                 'estimated_time' => 180,
-                'category'       => 'budgeting',
+                'category' => 'budgeting',
             ],
             [
-                'id'             => 'financial_audit_preparation',
-                'title'          => 'Financial Audit Preparation',
-                'description'    => 'Prepare documents and records for annual audit',
-                'priority'       => 'high',
+                'id' => 'financial_audit_preparation',
+                'title' => 'Financial Audit Preparation',
+                'description' => 'Prepare documents and records for annual audit',
+                'priority' => 'high',
                 'estimated_time' => 240,
-                'category'       => 'compliance',
+                'category' => 'compliance',
             ],
         ];
 
@@ -409,9 +409,9 @@ class ManageFinancialWorkflowAction
     private function isTaskOverdue(string $taskId, string $period, Carbon $date): bool
     {
         $overdueThresholds = [
-            'daily'     => 1, // 1 day
-            'weekly'    => 3, // 3 days into the week
-            'monthly'   => 7, // 1 week into the month
+            'daily' => 1, // 1 day
+            'weekly' => 3, // 3 days into the week
+            'monthly' => 7, // 1 week into the month
             'quarterly' => 14, // 2 weeks into the quarter
         ];
 
@@ -466,23 +466,23 @@ class ManageFinancialWorkflowAction
                                count($monthly['completed_tasks']) + count($quarterly['completed_tasks']),
             'by_period' => [
                 'daily' => [
-                    'pending'   => count($daily['pending_tasks']),
-                    'overdue'   => count($daily['overdue_tasks']),
+                    'pending' => count($daily['pending_tasks']),
+                    'overdue' => count($daily['overdue_tasks']),
                     'completed' => count($daily['completed_tasks']),
                 ],
                 'weekly' => [
-                    'pending'   => count($weekly['pending_tasks']),
-                    'overdue'   => count($weekly['overdue_tasks']),
+                    'pending' => count($weekly['pending_tasks']),
+                    'overdue' => count($weekly['overdue_tasks']),
                     'completed' => count($weekly['completed_tasks']),
                 ],
                 'monthly' => [
-                    'pending'   => count($monthly['pending_tasks']),
-                    'overdue'   => count($monthly['overdue_tasks']),
+                    'pending' => count($monthly['pending_tasks']),
+                    'overdue' => count($monthly['overdue_tasks']),
                     'completed' => count($monthly['completed_tasks']),
                 ],
                 'quarterly' => [
-                    'pending'   => count($quarterly['pending_tasks']),
-                    'overdue'   => count($quarterly['overdue_tasks']),
+                    'pending' => count($quarterly['pending_tasks']),
+                    'overdue' => count($quarterly['overdue_tasks']),
                     'completed' => count($quarterly['completed_tasks']),
                 ],
             ],

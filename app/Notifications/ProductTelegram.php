@@ -13,7 +13,9 @@ class ProductTelegram extends Notification
     use Queueable;
 
     public $telegramChannel;
+
     public $productName;
+
     public $productPrice;
 
     /**
@@ -55,14 +57,14 @@ class ProductTelegram extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            'product_name'  => $this->productName,
+            'product_name' => $this->productName,
             'product_price' => $this->productPrice,
         ];
     }

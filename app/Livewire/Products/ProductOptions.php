@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
-use Livewire\Component;
-use Illuminate\Contracts\View\View;
 use App\Traits\WithAlert;
+use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
 class ProductOptions extends Component
 {
     use WithAlert;
+
     public $options;
 
     public function updatedOptions($options): void
@@ -18,7 +19,7 @@ class ProductOptions extends Component
         $options = [];
 
         foreach ($options as $option) {
-            if ( ! empty($option['type']) && ! empty($option['value'])) {
+            if (! empty($option['type']) && ! empty($option['value'])) {
                 $this->options[] = $option;
             }
         }
@@ -29,7 +30,7 @@ class ProductOptions extends Component
     public function addOption(): void
     {
         $this->options[] = [
-            'type'  => '',
+            'type' => '',
             'value' => '',
         ];
     }
@@ -44,7 +45,7 @@ class ProductOptions extends Component
     {
         $this->options = [
             [
-                'type'  => '',
+                'type' => '',
                 'value' => '',
             ],
         ];

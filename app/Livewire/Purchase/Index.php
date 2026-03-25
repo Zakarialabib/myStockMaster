@@ -7,20 +7,20 @@ namespace App\Livewire\Purchase;
 use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
 use App\Models\Supplier;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use App\Traits\WithAlert;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 
 #[Layout('layouts.app')]
 class Index extends Component
 {
+    use Datatable;
     use WithAlert;
     use WithFileUploads;
-    use Datatable;
 
     public $purchase;
 
@@ -68,8 +68,8 @@ class Index extends Component
         $query = Purchase::with(['supplier', 'user', 'purchaseDetails', 'purchasePayments', 'purchaseDetails.product'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
-                's'               => $this->search ?: null,
-                'order_column'    => $this->sortBy,
+                's' => $this->search ?: null,
+                'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ]);
 
@@ -90,11 +90,11 @@ class Index extends Component
     public function deleteModal($id): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
-            'toast'             => false,
-            'position'          => 'center',
+            'toast' => false,
+            'position' => 'center',
             'showConfirmButton' => true,
-            'cancelButtonText'  => __('Cancel'),
-            'onConfirmed'       => 'delete',
+            'cancelButtonText' => __('Cancel'),
+            'onConfirmed' => 'delete',
         ]);
         $this->purchase = $id;
     }

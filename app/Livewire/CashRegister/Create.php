@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Livewire\CashRegister;
 
 use App\Models\CashRegister;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Traits\WithAlert;
 
 class Create extends Component
 {
     use WithAlert;
+
     /** @var bool */
     public $createModal = false;
 
@@ -44,8 +45,8 @@ class Create extends Component
         CashRegister::create([
             'cash_in_hand' => $this->cash_in_hand,
             'warehouse_id' => $this->warehouse_id,
-            'user_id'      => auth()->user()->id,
-            'status'       => true,
+            'user_id' => auth()->user()->id,
+            'status' => true,
         ]);
 
         $this->dispatch('refreshIndex')->to(Index::class);

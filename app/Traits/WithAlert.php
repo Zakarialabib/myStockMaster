@@ -9,9 +9,9 @@ trait WithAlert
     /**
      * Dispatch an alert event to the frontend
      *
-     * @param string $type The alert type (success, error, warning, info, danger)
+     * @param string $type    The alert type (success, error, warning, info, danger)
      * @param string $message The alert message
-     * @param array $options Additional options for the alert
+     * @param array  $options Additional options for the alert
      */
     public function alert(string $type, string $message, array $options = []): void
     {

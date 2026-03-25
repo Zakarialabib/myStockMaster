@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Notification;
 
-use Livewire\Component;
 use App\Models\ProductWarehouse;
-use Livewire\Attributes\Computed;
-use Livewire\WithPagination;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {

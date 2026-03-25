@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Livewire\Brands\Edit;
-use Livewire\Livewire;
 use App\Models\Brand;
+use Livewire\Livewire;
 
 it('test the brand edit component if working', function () {
     $this->loginAsAdmin();

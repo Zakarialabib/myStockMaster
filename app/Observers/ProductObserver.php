@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Enums\RedirectionStatus;
 use App\Models\Product;
 use App\Models\Redirect;
-use App\Enums\RedirectionStatus;
 
 class ProductObserver
 {
@@ -20,8 +20,8 @@ class ProductObserver
 
             // Create a redirection entry for the old slug
             Redirect::create([
-                'old_url'          => $oldSlug,
-                'new_url'          => $newSlug,
+                'old_url' => $oldSlug,
+                'new_url' => $newSlug,
                 'http_status_code' => RedirectionStatus::MOVED_PERMANENTLY,
             ]);
 

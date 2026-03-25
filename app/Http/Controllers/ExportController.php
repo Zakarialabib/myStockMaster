@@ -20,8 +20,6 @@ class ExportController extends Controller
      * Return a response with the PDF to show in the browser
      *
      * @param mixed $id
-     *
-     * @return Response
      */
     public function salePos($id): Response
     {
@@ -35,7 +33,7 @@ class ExportController extends Controller
             'format' => 'a5',
         ]);
 
-        return $pdf->stream(__('Sale').$sale->reference.'.pdf');
+        return $pdf->stream(__('Sale') . $sale->reference . '.pdf');
     }
 
     public function sale($id): Response
@@ -45,17 +43,17 @@ class ExportController extends Controller
         $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
 
         $data = [
-            'sale'     => $sale,
+            'sale' => $sale,
             'customer' => $customer,
-            'logo'     => $this->getCompanyLogo(),
+            'logo' => $this->getCompanyLogo(),
         ];
 
         $pdf = PDF::loadView('admin.sale.print', $data, [], [
-            'format'    => 'a4',
+            'format' => 'a4',
             'watermark' => $this->setWaterMark($sale),
         ]);
 
-        return $pdf->stream(__('Sale').$sale->reference.'.pdf');
+        return $pdf->stream(__('Sale') . $sale->reference . '.pdf');
     }
 
     public function purchaseReturns($id): Response
@@ -65,12 +63,12 @@ class ExportController extends Controller
 
         $data = [
             'purchase_return' => $purchaseReturn,
-            'supplier'        => $supplier,
+            'supplier' => $supplier,
         ];
 
         $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
 
-        return $pdf->stream(__('Purchase Return').$purchaseReturn->reference.'.pdf');
+        return $pdf->stream(__('Purchase Return') . $purchaseReturn->reference . '.pdf');
     }
 
     public function quotation($id): Response
@@ -80,12 +78,12 @@ class ExportController extends Controller
 
         $data = [
             'quotation' => $quotation,
-            'customer'  => $customer,
+            'customer' => $customer,
         ];
 
         $pdf = PDF::loadView('admin.quotation.print', $data);
 
-        return $pdf->stream(__('Quotation').$quotation->reference.'.pdf');
+        return $pdf->stream(__('Quotation') . $quotation->reference . '.pdf');
     }
 
     public function purchase($id): Response
@@ -102,7 +100,7 @@ class ExportController extends Controller
             'format' => 'a5',
         ]);
 
-        return $pdf->stream(__('Purchase').$purchase->reference.'.pdf');
+        return $pdf->stream(__('Purchase') . $purchase->reference . '.pdf');
     }
 
     public function saleReturns($id): Response
@@ -112,17 +110,17 @@ class ExportController extends Controller
 
         $data = [
             'sale_return' => $saleReturn,
-            'customer'    => $customer,
+            'customer' => $customer,
         ];
 
         $pdf = PDF::loadView('admin.salesreturn.print', $data);
 
-        return $pdf->stream(__('Sale Return').$saleReturn->reference.'.pdf');
+        return $pdf->stream(__('Sale Return') . $saleReturn->reference . '.pdf');
     }
 
     private function getCompanyLogo()
     {
-        return 'data:image/png;base64,'.base64_encode(file_get_contents(public_path('images/logo.png')));
+        return 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/logo.png')));
     }
 
     private function setWaterMark($model)

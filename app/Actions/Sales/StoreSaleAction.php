@@ -34,23 +34,23 @@ final class StoreSaleAction
             }
 
             $sale = Sale::create([
-                'date'                => $saleData['date'],
-                'customer_id'         => $saleData['customer_id'],
-                'warehouse_id'        => $saleData['warehouse_id'],
-                'user_id'             => $saleData['user_id'],
-                'cash_register_id'    => $saleData['cash_register_id'],
-                'tax_percentage'      => $saleData['tax_percentage'],
+                'date' => $saleData['date'],
+                'customer_id' => $saleData['customer_id'],
+                'warehouse_id' => $saleData['warehouse_id'],
+                'user_id' => $saleData['user_id'],
+                'cash_register_id' => $saleData['cash_register_id'],
+                'tax_percentage' => $saleData['tax_percentage'],
                 'discount_percentage' => $saleData['discount_percentage'],
-                'shipping_amount'     => $saleData['shipping_amount'] * 100,
-                'paid_amount'         => $saleData['paid_amount'] * 100,
-                'total_amount'        => $saleData['total_amount'] * 100,
-                'due_amount'          => $dueAmount * 100,
-                'status'              => $status,
-                'payment_status'      => $paymentStatus,
-                'payment_method'      => $saleData['payment_method'],
-                'note'                => $saleData['note'],
-                'tax_amount'          => (int) ($cartTax * 100),
-                'discount_amount'     => (int) ($cartDiscount * 100),
+                'shipping_amount' => $saleData['shipping_amount'] * 100,
+                'paid_amount' => $saleData['paid_amount'] * 100,
+                'total_amount' => $saleData['total_amount'] * 100,
+                'due_amount' => $dueAmount * 100,
+                'status' => $status,
+                'payment_status' => $paymentStatus,
+                'payment_method' => $saleData['payment_method'],
+                'note' => $saleData['note'],
+                'tax_amount' => (int) ($cartTax * 100),
+                'discount_amount' => (int) ($cartDiscount * 100),
             ]);
 
             foreach ($cartItems as $cartItem) {
@@ -69,18 +69,18 @@ final class StoreSaleAction
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
                 SaleDetails::create([
-                    'sale_id'                 => $sale->id,
-                    'warehouse_id'            => $saleData['warehouse_id'],
-                    'product_id'              => $productId,
-                    'name'                    => $productName,
-                    'code'                    => $productCode,
-                    'quantity'                => $quantity,
-                    'price'                   => $price * 100,
-                    'unit_price'              => $unitPrice * 100,
-                    'sub_total'               => $subTotal * 100,
+                    'sale_id' => $sale->id,
+                    'warehouse_id' => $saleData['warehouse_id'],
+                    'product_id' => $productId,
+                    'name' => $productName,
+                    'code' => $productCode,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'unit_price' => $unitPrice * 100,
+                    'sub_total' => $subTotal * 100,
                     'product_discount_amount' => $discountAmount * 100,
-                    'product_discount_type'   => $discountType,
-                    'product_tax_amount'      => $taxAmount * 100,
+                    'product_discount_type' => $discountType,
+                    'product_tax_amount' => $taxAmount * 100,
                 ]);
 
                 $product = Product::findOrFail($productId);
@@ -94,24 +94,24 @@ final class StoreSaleAction
                 ]);
 
                 Movement::create([
-                    'type'         => MovementType::SALE,
-                    'quantity'     => $quantity,
-                    'price'        => $price * 100,
-                    'date'         => date('Y-m-d'),
+                    'type' => MovementType::SALE,
+                    'quantity' => $quantity,
+                    'price' => $price * 100,
+                    'date' => date('Y-m-d'),
                     'movable_type' => get_class($product),
-                    'movable_id'   => $product->id,
-                    'user_id'      => $saleData['user_id'],
+                    'movable_id' => $product->id,
+                    'user_id' => $saleData['user_id'],
                 ]);
             }
 
             if ($saleData['paid_amount'] > 0) {
                 SalePayment::create([
-                    'date'             => date('Y-m-d'),
-                    'amount'           => $saleData['paid_amount'] * 100,
-                    'sale_id'          => $sale->id,
-                    'payment_method'   => $saleData['payment_method'],
+                    'date' => date('Y-m-d'),
+                    'amount' => $saleData['paid_amount'] * 100,
+                    'sale_id' => $sale->id,
+                    'payment_method' => $saleData['payment_method'],
                     'cash_register_id' => $saleData['cash_register_id'],
-                    'user_id'          => $saleData['user_id'],
+                    'user_id' => $saleData['user_id'],
                 ]);
             }
 

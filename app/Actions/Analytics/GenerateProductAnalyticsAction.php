@@ -65,17 +65,17 @@ final class GenerateProductAnalyticsAction
         $profitabilityAnalysis = $this->getProfitabilityAnalysis($baseQuery, $product);
 
         return [
-            'product_id'   => $product->id,
+            'product_id' => $product->id,
             'product_name' => $product->name,
-            'date_range'   => [
+            'date_range' => [
                 'from' => $dateFrom->toDateString(),
-                'to'   => $dateTo->toDateString(),
+                'to' => $dateTo->toDateString(),
             ],
-            'sales_statistics'       => $salesStats,
-            'performance_metrics'    => $performanceMetrics,
-            'trend_analysis'         => $trendAnalysis,
+            'sales_statistics' => $salesStats,
+            'performance_metrics' => $performanceMetrics,
+            'trend_analysis' => $trendAnalysis,
             'profitability_analysis' => $profitabilityAnalysis,
-            'generated_at'           => now()->toISOString(),
+            'generated_at' => now()->toISOString(),
         ];
     }
 
@@ -91,12 +91,12 @@ final class GenerateProductAnalyticsAction
         ')->first();
 
         return [
-            'total_orders'        => (int) ($stats->total_orders ?? 0),
+            'total_orders' => (int) ($stats->total_orders ?? 0),
             'total_quantity_sold' => (int) ($stats->total_quantity_sold ?? 0),
-            'total_revenue'       => (float) ($stats->total_revenue ?? 0),
+            'total_revenue' => (float) ($stats->total_revenue ?? 0),
             'average_order_value' => (float) ($stats->average_order_value ?? 0),
-            'min_order_value'     => (float) ($stats->min_order_value ?? 0),
-            'max_order_value'     => (float) ($stats->max_order_value ?? 0),
+            'min_order_value' => (float) ($stats->min_order_value ?? 0),
+            'max_order_value' => (float) ($stats->max_order_value ?? 0),
         ];
     }
 
@@ -115,12 +115,12 @@ final class GenerateProductAnalyticsAction
         $stockTurnoverRate = $averageStock > 0 ? $totalQuantity / $averageStock : 0;
 
         return [
-            'daily_average_sales'     => $totalQuantity / $daysDiff,
-            'daily_average_orders'    => $totalSales / $daysDiff,
-            'stock_turnover_rate'     => round($stockTurnoverRate, 2),
-            'current_stock_level'     => $currentStock,
-            'minimum_stock_level'     => $minimumStock,
-            'stock_status'            => $this->getStockStatus($currentStock, $minimumStock),
+            'daily_average_sales' => $totalQuantity / $daysDiff,
+            'daily_average_orders' => $totalSales / $daysDiff,
+            'stock_turnover_rate' => round($stockTurnoverRate, 2),
+            'current_stock_level' => $currentStock,
+            'minimum_stock_level' => $minimumStock,
+            'stock_status' => $this->getStockStatus($currentStock, $minimumStock),
             'days_of_stock_remaining' => $this->calculateDaysOfStockRemaining($currentStock, $totalQuantity, $daysDiff),
         ];
     }
@@ -142,10 +142,10 @@ final class GenerateProductAnalyticsAction
         $trend = $this->calculateTrend($dailySales->pluck('daily_quantity')->toArray());
 
         return [
-            'daily_sales_data'  => $dailySales->toArray(),
-            'trend_direction'   => $trend['direction'],
-            'trend_strength'    => $trend['strength'],
-            'best_selling_day'  => $dailySales->sortByDesc('daily_quantity')->first()?->sale_date,
+            'daily_sales_data' => $dailySales->toArray(),
+            'trend_direction' => $trend['direction'],
+            'trend_strength' => $trend['strength'],
+            'best_selling_day' => $dailySales->sortByDesc('daily_quantity')->first()?->sale_date,
             'worst_selling_day' => $dailySales->sortBy('daily_quantity')->first()?->sale_date,
         ];
     }
@@ -162,12 +162,12 @@ final class GenerateProductAnalyticsAction
         $markupPercentage = $totalCost > 0 ? (($totalRevenue - $totalCost) / $totalCost) * 100 : 0;
 
         return [
-            'total_revenue'            => round($totalRevenue, 2),
-            'total_cost'               => round($totalCost, 2),
-            'total_profit'             => round($totalProfit, 2),
+            'total_revenue' => round($totalRevenue, 2),
+            'total_cost' => round($totalCost, 2),
+            'total_profit' => round($totalProfit, 2),
             'profit_margin_percentage' => round($profitMargin, 2),
-            'markup_percentage'        => round($markupPercentage, 2),
-            'average_profit_per_unit'  => $items->count() > 0 ? round($totalProfit / $items->sum('quantity'), 2) : 0,
+            'markup_percentage' => round($markupPercentage, 2),
+            'average_profit_per_unit' => $items->count() > 0 ? round($totalProfit / $items->sum('quantity'), 2) : 0,
         ];
     }
 
@@ -197,7 +197,7 @@ final class GenerateProductAnalyticsAction
 
         return [
             'direction' => $direction,
-            'strength'  => round($strength, 3),
+            'strength' => round($strength, 3),
         ];
     }
 

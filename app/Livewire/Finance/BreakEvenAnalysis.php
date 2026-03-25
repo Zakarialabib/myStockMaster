@@ -6,14 +6,14 @@ namespace App\Livewire\Finance;
 
 use App\Actions\Finance\CalculateBreakEvenAction;
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetails;
-use App\Models\Product;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class BreakEvenAnalysis extends Component
 {
@@ -30,7 +30,9 @@ class BreakEvenAnalysis extends Component
     public $selectedProduct = null;
 
     public $breakEvenData = [];
+
     public $scenarioAnalysis = [];
+
     public $loading = false;
 
     // Scenario planning inputs
@@ -138,7 +140,7 @@ class BreakEvenAnalysis extends Component
                     break;
             }
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to load break-even analysis: '.$e->getMessage());
+            session()->flash('error', 'Failed to load break-even analysis: ' . $e->getMessage());
         } finally {
             $this->loading = false;
         }
@@ -146,7 +148,7 @@ class BreakEvenAnalysis extends Component
 
     private function loadOverallBreakEven($dateFrom, $dateTo)
     {
-        $breakEvenAction = new CalculateBreakEvenAction();
+        $breakEvenAction = new CalculateBreakEvenAction;
 
         // Get actual fixed costs for the period
         $fixedCosts = Expense::whereBetween('date', [$dateFrom, $dateTo])
@@ -165,7 +167,7 @@ class BreakEvenAnalysis extends Component
 
     private function loadProductBreakEven($dateFrom, $dateTo)
     {
-        if ( ! $this->selectedProduct) {
+        if (! $this->selectedProduct) {
             $this->breakEvenData = [];
 
             return;
@@ -201,19 +203,19 @@ class BreakEvenAnalysis extends Component
         $breakEvenRevenue = $breakEvenUnits * $averageSellingPrice;
 
         $this->breakEvenData = [
-            'product'                   => $product,
-            'current_sales_units'       => $productSales,
-            'current_revenue'           => $productRevenue,
-            'average_selling_price'     => $averageSellingPrice,
-            'variable_cost_per_unit'    => $variableCostPerUnit,
-            'contribution_margin'       => $contributionMargin,
+            'product' => $product,
+            'current_sales_units' => $productSales,
+            'current_revenue' => $productRevenue,
+            'average_selling_price' => $averageSellingPrice,
+            'variable_cost_per_unit' => $variableCostPerUnit,
+            'contribution_margin' => $contributionMargin,
             'contribution_margin_ratio' => $contributionMarginRatio,
-            'allocated_fixed_costs'     => $allocatedFixedCosts,
-            'break_even_units'          => $breakEvenUnits,
-            'break_even_revenue'        => $breakEvenRevenue,
-            'units_above_break_even'    => max(0, $productSales - $breakEvenUnits),
-            'safety_margin_units'       => $productSales - $breakEvenUnits,
-            'safety_margin_percentage'  => $productSales > 0 ? (($productSales - $breakEvenUnits) / $productSales) * 100 : 0,
+            'allocated_fixed_costs' => $allocatedFixedCosts,
+            'break_even_units' => $breakEvenUnits,
+            'break_even_revenue' => $breakEvenRevenue,
+            'units_above_break_even' => max(0, $productSales - $breakEvenUnits),
+            'safety_margin_units' => $productSales - $breakEvenUnits,
+            'safety_margin_percentage' => $productSales > 0 ? (($productSales - $breakEvenUnits) / $productSales) * 100 : 0,
         ];
     }
 
@@ -238,11 +240,11 @@ class BreakEvenAnalysis extends Component
         $degreeOfOperatingLeverage = $operatingIncome != 0 ? $contributionMargin / $operatingIncome : 0;
 
         return [
-            'total_revenue'                => $totalRevenue,
-            'total_sales'                  => $totalSales,
-            'average_order_value'          => $averageOrderValue,
-            'margin_of_safety'             => $marginOfSafety,
-            'margin_of_safety_percentage'  => $marginOfSafetyPercentage,
+            'total_revenue' => $totalRevenue,
+            'total_sales' => $totalSales,
+            'average_order_value' => $averageOrderValue,
+            'margin_of_safety' => $marginOfSafety,
+            'margin_of_safety_percentage' => $marginOfSafetyPercentage,
             'degree_of_operating_leverage' => $degreeOfOperatingLeverage,
         ];
     }
@@ -278,14 +280,14 @@ class BreakEvenAnalysis extends Component
             : 0;
 
         $this->scenarioAnalysis = [
-            'adjusted_fixed_costs'               => $adjustedFixedCosts,
-            'adjusted_variable_cost_ratio'       => $adjustedVariableCostRatio,
-            'adjusted_average_price'             => $adjustedAveragePrice,
+            'adjusted_fixed_costs' => $adjustedFixedCosts,
+            'adjusted_variable_cost_ratio' => $adjustedVariableCostRatio,
+            'adjusted_average_price' => $adjustedAveragePrice,
             'adjusted_contribution_margin_ratio' => $adjustedContributionMarginRatio,
-            'adjusted_break_even_revenue'        => $adjustedBreakEvenRevenue,
-            'adjusted_break_even_units'          => $adjustedBreakEvenUnits,
-            'target_revenue_for_profit'          => $targetRevenueForProfit,
-            'revenue_change_vs_base'             => $this->breakEvenData['break_even_revenue'] > 0
+            'adjusted_break_even_revenue' => $adjustedBreakEvenRevenue,
+            'adjusted_break_even_units' => $adjustedBreakEvenUnits,
+            'target_revenue_for_profit' => $targetRevenueForProfit,
+            'revenue_change_vs_base' => $this->breakEvenData['break_even_revenue'] > 0
                 ? (($adjustedBreakEvenRevenue - $this->breakEvenData['break_even_revenue']) / $this->breakEvenData['break_even_revenue']) * 100
                 : 0,
         ];
@@ -303,16 +305,16 @@ class BreakEvenAnalysis extends Component
     public function exportAnalysis()
     {
         try {
-            $filename = 'break_even_analysis_'.$this->analysisType.'_'.now()->format('Y-m-d_H-i-s').'.json';
+            $filename = 'break_even_analysis_' . $this->analysisType . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             $exportData = [
                 'analysis_type' => $this->analysisType,
-                'date_range'    => [
+                'date_range' => [
                     'from' => $this->dateFrom,
-                    'to'   => $this->dateTo,
+                    'to' => $this->dateTo,
                 ],
                 'break_even_data' => $this->breakEvenData,
-                'generated_at'    => now()->toISOString(),
+                'generated_at' => now()->toISOString(),
             ];
 
             if ($this->analysisType === 'product' && $this->selectedProduct) {
@@ -321,10 +323,10 @@ class BreakEvenAnalysis extends Component
 
             if ($this->analysisType === 'scenario') {
                 $exportData['scenario_inputs'] = [
-                    'fixed_cost_adjustment'    => $this->fixedCostAdjustment,
+                    'fixed_cost_adjustment' => $this->fixedCostAdjustment,
                     'variable_cost_adjustment' => $this->variableCostAdjustment,
-                    'price_adjustment'         => $this->priceAdjustment,
-                    'target_profit'            => $this->targetProfit,
+                    'price_adjustment' => $this->priceAdjustment,
+                    'target_profit' => $this->targetProfit,
                 ];
                 $exportData['scenario_analysis'] = $this->scenarioAnalysis;
             }
@@ -335,7 +337,7 @@ class BreakEvenAnalysis extends Component
                 'Content-Type' => 'application/json',
             ]);
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export analysis: '.$e->getMessage());
+            session()->flash('error', 'Failed to export analysis: ' . $e->getMessage());
         }
     }
 
@@ -366,26 +368,26 @@ class BreakEvenAnalysis extends Component
         }
 
         return [
-            'labels'   => $labels,
+            'labels' => $labels,
             'datasets' => [
                 [
-                    'label'           => 'Revenue',
-                    'data'            => $revenuePoints,
-                    'borderColor'     => 'rgb(34, 197, 94)',
+                    'label' => 'Revenue',
+                    'data' => $revenuePoints,
+                    'borderColor' => 'rgb(34, 197, 94)',
                     'backgroundColor' => 'rgba(34, 197, 94, 0.1)',
                 ],
                 [
-                    'label'           => 'Total Costs',
-                    'data'            => $totalCostPoints,
-                    'borderColor'     => 'rgb(239, 68, 68)',
+                    'label' => 'Total Costs',
+                    'data' => $totalCostPoints,
+                    'borderColor' => 'rgb(239, 68, 68)',
                     'backgroundColor' => 'rgba(239, 68, 68, 0.1)',
                 ],
                 [
-                    'label'           => 'Fixed Costs',
-                    'data'            => $fixedCostPoints,
-                    'borderColor'     => 'rgb(156, 163, 175)',
+                    'label' => 'Fixed Costs',
+                    'data' => $fixedCostPoints,
+                    'borderColor' => 'rgb(156, 163, 175)',
                     'backgroundColor' => 'rgba(156, 163, 175, 0.1)',
-                    'borderDash'      => [5, 5],
+                    'borderDash' => [5, 5],
                 ],
             ],
         ];
@@ -397,11 +399,11 @@ class BreakEvenAnalysis extends Component
         $scenarioBreakEven = $this->scenarioAnalysis['adjusted_break_even_revenue'] ?? 0;
 
         return [
-            'labels'   => ['Base Scenario', 'Adjusted Scenario'],
+            'labels' => ['Base Scenario', 'Adjusted Scenario'],
             'datasets' => [
                 [
-                    'label'           => 'Break-Even Revenue',
-                    'data'            => [$baseBreakEven, $scenarioBreakEven],
+                    'label' => 'Break-Even Revenue',
+                    'data' => [$baseBreakEven, $scenarioBreakEven],
                     'backgroundColor' => ['rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)'],
                 ],
             ],
@@ -415,7 +417,7 @@ class BreakEvenAnalysis extends Component
             ->get();
 
         return view('livewire.finance.break-even-analysis', [
-            'products'  => $products,
+            'products' => $products,
             'chartData' => $this->getChartData(),
         ]);
     }

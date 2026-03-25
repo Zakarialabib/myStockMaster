@@ -6,13 +6,13 @@ namespace App\Livewire\Customers;
 
 use App\Models\Customer;
 use App\Models\CustomerGroup;
+use App\Models\Role;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Role;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Validate;
 
 class Edit extends Component
 {
