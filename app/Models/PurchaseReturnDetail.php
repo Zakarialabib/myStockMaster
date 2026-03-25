@@ -12,6 +12,19 @@ class PurchaseReturnDetail extends Model
 {
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($detail) {
+            $detail->purchaseReturn->syncTotals();
+        });
+
+        static::deleted(function ($detail) {
+            $detail->purchaseReturn->syncTotals();
+        });
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');

@@ -78,6 +78,29 @@ class PurchaseReturn extends Model
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
     }
 
+    public function syncTotals(): void
+    {
+        $details = $this->purchaseReturnDetails;
+        $payments = $this->purchaseReturnPayments;
+
+        $subTotal = $details->sum(fn ($detail) => $detail->getRawOriginal('sub_total'));
+        $taxAmount = ($subTotal * $this->tax_percentage) / 100;
+        $discountAmount = ($subTotal * $this->discount_percentage) / 100;
+        $shippingAmount = $this->getRawOriginal('shipping_amount');
+
+        $totalAmount = $subTotal + $taxAmount - $discountAmount + $shippingAmount;
+        $paidAmount = $payments->sum(fn ($payment) => $payment->getRawOriginal('amount'));
+        $dueAmount = $totalAmount - $paidAmount;
+
+        $this->updateQuietly([
+            'tax_amount'      => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'total_amount'    => $totalAmount,
+            'paid_amount'     => $paidAmount,
+            'due_amount'      => $dueAmount,
+        ]);
+    }
+
     public function purchaseReturnPayments(): HasMany
     {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');

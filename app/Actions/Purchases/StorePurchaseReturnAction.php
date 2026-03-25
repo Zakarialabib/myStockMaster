@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Actions\Purchases;
 
 use App\Enums\PaymentStatus;
-use App\Models\Product;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseReturnDetail;
 use App\Models\PurchaseReturnPayment;
@@ -59,8 +58,14 @@ final class StorePurchaseReturnAction
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
+                // Use per-item warehouse if available
+                $itemWarehouseId = ! $isObject && isset($cartItem['attributes']['warehouse_id'])
+                    ? $cartItem['attributes']['warehouse_id']
+                    : $data['warehouse_id'];
+
                 PurchaseReturnDetail::create([
                     'purchase_return_id'      => $purchaseReturn->id,
+                    'warehouse_id'            => $itemWarehouseId,
                     'product_id'              => $productId,
                     'name'                    => $productName,
                     'code'                    => $productCode,
@@ -74,10 +79,15 @@ final class StorePurchaseReturnAction
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {
-                    $product = Product::findOrFail($productId);
-                    $product->update([
-                        'quantity' => $product->quantity - $quantity,
-                    ]);
+                    $productWarehouse = \App\Models\ProductWarehouse::where('product_id', $productId)
+                        ->where('warehouse_id', $itemWarehouseId)
+                        ->first();
+
+                    if ($productWarehouse) {
+                        $productWarehouse->update([
+                            'qty' => $productWarehouse->qty + $quantity, // Returning TO stock
+                        ]);
+                    }
                 }
             }
 
@@ -90,6 +100,8 @@ final class StorePurchaseReturnAction
                     'payment_method'     => $data['payment_method'],
                 ]);
             }
+
+            $purchaseReturn->syncTotals();
 
             return $purchaseReturn;
         });
