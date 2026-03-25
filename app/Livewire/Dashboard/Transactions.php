@@ -32,21 +32,11 @@ class Transactions extends Component
 
     public $purchase;
 
-    public $lastPurchases;
-
-    public $bestSales;
-
-    public $lastSales;
-
     public $charts;
 
     public $purchases;
 
-    public $purchases_count;
-
     public $sales;
-
-    public $sales_count;
 
     public $startDate;
 
@@ -63,17 +53,31 @@ class Transactions extends Component
         $this->startDate = Carbon::now()->startOfMonth()->toDateString();
         $this->endDate = Carbon::now()->endOfMonth()->toDateString();
 
-        $this->lastSales = Sale::with('customer')
+        $this->chart();
+    }
+
+    #[Computed]
+    public function lastSales()
+    {
+        return Sale::with('customer')
             ->latest()
             ->take(5)
             ->get(['id', 'reference', 'total_amount', 'status', 'customer_id', 'user_id', 'date']);
+    }
 
-        $this->lastPurchases = Purchase::with('supplier')
+    #[Computed]
+    public function lastPurchases()
+    {
+        return Purchase::with('supplier')
             ->latest()
             ->take(5)
             ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date', 'user_id']);
+    }
 
-        $this->bestSales = Sale::query()
+    #[Computed]
+    public function bestSales()
+    {
+        return Sale::query()
             ->select('sales.*', 'customers.name')
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
             ->with('user', 'customer')
@@ -81,18 +85,24 @@ class Transactions extends Component
             ->orderBy('sales.total_amount', 'desc')
             ->take(5)
             ->get();
+    }
 
-        $this->purchases_count = Purchase::where('date', '>=', Carbon::now()->subWeek())
+    #[Computed]
+    public function purchasesCount()
+    {
+        return Purchase::where('date', '>=', Carbon::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
             ->groupBy('date')
             ->pluck('purchases');
+    }
 
-        $this->sales_count = Sale::whereDate('date', '>=', Carbon::now()->subWeek())
+    #[Computed]
+    public function salesCount()
+    {
+        return Sale::whereDate('date', '>=', Carbon::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
             ->pluck('sales');
-
-        $this->chart();
     }
 
     public function chart(): void
