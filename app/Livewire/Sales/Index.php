@@ -69,7 +69,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $query = Sale::with(['customer', 'user', 'saleDetails', 'salepayments', 'saleDetails.product'])
+        $query = Sale::with(['customer', 'user', 'salePayments'])
+            ->withSum('saleDetails', 'quantity')
             ->whereBetween('date', [$this->startDate, $this->endDate])
             ->advancedFilter([
                 's'               => $this->search ?: null,

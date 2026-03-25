@@ -31,6 +31,19 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($payment) {
+            $payment->purchaseReturn->syncTotals();
+        });
+
+        static::deleted(function ($payment) {
+            $payment->purchaseReturn->syncTotals();
+        });
+    }
+
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');

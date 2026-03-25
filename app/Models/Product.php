@@ -138,7 +138,13 @@ class Product extends Model
     protected function productCost(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: function ($value) {
+                if (array_key_exists('pivot_cost', $this->attributes)) {
+                    return $this->attributes['pivot_cost'] / 100;
+                }
+
+                return $value / 100;
+            },
             set: fn ($value) => $value * 100,
         );
     }
@@ -147,7 +153,13 @@ class Product extends Model
     protected function productPrice(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: function ($value) {
+                if (array_key_exists('pivot_price', $this->attributes)) {
+                    return $this->attributes['pivot_price'] / 100;
+                }
+
+                return $value / 100;
+            },
             set: fn ($value) => $value * 100,
         );
     }
