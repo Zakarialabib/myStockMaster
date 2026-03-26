@@ -16,19 +16,21 @@ class MaintenanceMode extends Component
 {
     use WithAlert;
 
-    public $site_maintenance_message;
+    public ?string $site_maintenance_message = null;
 
-    public $status;
+    public ?bool $status = null;
 
-    public $secret;
+    public ?string $secret = null;
 
-    public $refresh;
+    public ?int $refresh = null;
 
     public function mount(): void
     {
-        $this->site_maintenance_message = settings()->site_maintenance_message;
-        $this->status = settings()->site_maintenance_status;
-        $this->refresh = settings()->site_refresh;
+        $settings = settings();
+
+        $this->site_maintenance_message = $settings->site_maintenance_message;
+        $this->status = $settings->site_maintenance_status;
+        $this->refresh = $settings->site_refresh;
         $this->secret = Str::uuid()->toString();
     }
 

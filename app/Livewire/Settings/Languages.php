@@ -6,18 +6,19 @@ namespace App\Livewire\Settings;
 
 use App\Models\Language;
 use App\Traits\WithAlert;
-use DateTime;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Languages extends Component
 {
     use WithAlert;
+    use WithPagination;
 
-    public $languages = [];
+    public array $languages = [];
 
     public function mount(): void
     {
@@ -26,7 +27,9 @@ class Languages extends Component
 
     public function render(): View|Factory
     {
-        return view('livewire.translations');
+        return view('livewire.translations', [
+            'languages' => Language::paginate(10),
+        ]);
     }
 
     public function onSetDefault($id): void
@@ -35,7 +38,7 @@ class Languages extends Component
             Language::where('is_default', '=', true)->update(['is_default' => false]);
             $trans = Language::findOrFail($id);
             $trans->is_default = true;
-            $trans->updated_at = new DateTime;
+            $trans->updated_at = now();
             $trans->save();
 
             $this->alert('success', __('Language updated successfully!'));

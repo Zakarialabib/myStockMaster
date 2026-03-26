@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Settings;
 
-use App\Models\Customer;
 use App\Models\Sale;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\File;
@@ -16,17 +15,19 @@ class InvoiceTheme extends Component
 {
     use WithAlert;
 
-    public $templates = [];
+    public array $templates = [];
 
-    public $selectedTemplate = '';
+    public ?string $selectedTemplate = null;
 
-    public $headerHtml;
+    public ?string $headerHtml = null;
 
-    public $footerHtml;
+    public ?string $footerHtml = null;
+
+    public ?string $selectedTheme = null;
 
     public function mount(): void
     {
-        $this->templates = config('invoice.templates');
+        $this->templates = config('invoice.templates') ?? [];
     }
 
     private function updateTemplatePreview(): void
@@ -93,12 +94,11 @@ class InvoiceTheme extends Component
         $headerHtml = File::get(config('invoice.templates.' . $this->selectedTemplate . '.header_html'));
         $footerHtml = File::get(config('invoice.templates.' . $this->selectedTemplate . '.footer_html'));
 
-        $sale = Sale::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
+        $sale = Sale::with('customer')->findOrFail($id);
 
         $data = [
             'sale' => $sale,
-            'customer' => $customer,
+            'customer' => $sale->customer,
             'logo' => $this->getCompanyLogo(),
             'headerHtml' => $headerHtml,
             'footerHtml' => $footerHtml,

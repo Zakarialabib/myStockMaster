@@ -12,9 +12,9 @@ class Update extends Component
 {
     use WithAlert;
 
-    public $message;
+    public ?string $message = null;
 
-    public $updateAvailable;
+    public ?bool $updateAvailable = null;
 
     public function checkForUpdates(): void
     {
@@ -23,7 +23,7 @@ class Update extends Component
 
         if ($updatesAvailable) {
             $this->updateAvailable = true;
-            $this->message = 'Updates available on origin/' . env('GIT_BRANCH', 'master') . '.';
+            $this->message = 'Updates available on origin/' . config('app.git_branch', 'master') . '.';
         } else {
             $this->message = 'No updates available.';
         }

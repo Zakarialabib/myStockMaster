@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Http;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -16,39 +18,41 @@ class Messaging extends Component
 {
     use WithAlert;
 
-    public $botToken;
+    public ?string $botToken = null;
 
     #[Validate('required|numeric')]
-    public $chatId;
+    public ?string $chatId = null;
 
     #[Validate('required|min:1|max:1000')]
-    public $message;
+    public ?string $message = null;
 
-    public $type;
+    public ?string $type = null;
 
-    public $sale_id;
+    public ?int $sale_id = null;
 
-    public $product_id;
+    public ?int $product_id = null;
 
-    public $selectedProduct;
+    public ?string $selectedProduct = null;
 
-    public $openTemplate;
+    public bool $openTemplate = false;
 
-    public $openProductModal;
+    public bool $openProductModal = false;
 
-    public $openClientModal;
+    public bool $openClientModal = false;
 
     public function mount(): void
     {
         $this->botToken = settings()->telegram_channel;
     }
 
-    public function getProductsProperty()
+    #[Computed]
+    public function products()
     {
         return Product::select('id', 'name', 'image')->take(10)->get();
     }
 
-    public function getCustomersProperty()
+    #[Computed]
+    public function customers()
     {
         return Customer::select('id', 'name', 'phone')
             ->orderBy('id', 'desc')
@@ -56,7 +60,8 @@ class Messaging extends Component
             ->get();
     }
 
-    public function getSalesProperty()
+    #[Computed]
+    public function sales()
     {
         return Sale::select('id', 'customer_id', 'due_amount')
             ->where('due_amount', '>', 0)
@@ -65,6 +70,7 @@ class Messaging extends Component
             ->get();
     }
 
+    #[On('type-updated')]
     public function updatedType(): void
     {
         $this->chatId = '';
@@ -97,21 +103,14 @@ class Messaging extends Component
 
     public function sendDueAmount($saleId): void
     {
-        $sale = Sale::find($saleId);
-
-        if (! $sale) {
-            $this->alert('error', __('Sale not found'));
-
-            return;
-        }
+        $sale = Sale::findOrFail($saleId);
 
         $message = sprintf('Due Amount for Sale %s: ', $sale->id) . format_currency($sale->due_amount);
 
-        $this->chatId = settings()->telegram_channel; // Use your Telegram channel chat ID here
+        $this->chatId = settings()->telegram_channel;
         $this->message = $message;
         $this->type = 'telegram';
 
-        // Send the message using the existing sendMessage method
         $this->sendMessage();
     }
 
@@ -132,13 +131,7 @@ class Messaging extends Component
 
     public function insertProduct($id): void
     {
-        $product = Product::find($id);
-
-        if (! $product) {
-            $this->alert('error', __('Product not found'));
-
-            return;
-        }
+        $product = Product::findOrFail($id);
 
         $this->message .= ' ' . $product->name . ' : ' . format_currency($product->price);
         $this->openProductModal = false;
@@ -146,13 +139,7 @@ class Messaging extends Component
 
     public function insertSale($id): void
     {
-        $sale = Sale::find($id);
-
-        if (! $sale) {
-            $this->alert('error', __('Sale not found'));
-
-            return;
-        }
+        $sale = Sale::findOrFail($id);
 
         $this->message .= ' ' . $sale->id . ' : ' . format_currency($sale->due_amount);
         $this->openProductModal = false;
@@ -160,9 +147,8 @@ class Messaging extends Component
 
     public function selectCustomer($customerId): void
     {
-        $customer = Customer::find($customerId);
+        $customer = Customer::findOrFail($customerId);
 
-        // Get the customer's phone number
         $phone = $customer->phone;
 
         // Delete the leading zero from the phone number, if it exists.

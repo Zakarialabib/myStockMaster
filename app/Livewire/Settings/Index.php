@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -23,33 +24,34 @@ class Index extends Component
     use WithFileUploads;
     use WithModels;
 
+    #[Locked]
     public Setting $settings;
 
     public $invoice_header;
 
     public $invoice_footer;
 
-    public $invoice_template;
+    public ?string $invoice_template = null;
 
     public $image;
 
     public $site_logo;
 
-    public $site_title;
+    public ?string $site_title = null;
 
-    public $social_facebook;
+    public ?string $social_facebook = null;
 
-    public $social_twitter;
+    public ?string $social_twitter = null;
 
-    public $social_instagram;
+    public ?string $social_instagram = null;
 
-    public $social_linkedin;
+    public ?string $social_linkedin = null;
 
-    public $social_whatsapp;
+    public ?string $social_whatsapp = null;
 
-    public $social_tiktok;
+    public ?string $social_tiktok = null;
 
-    public $site_favicon;
+    public ?string $site_favicon = null;
 
     #[Validate('required|string|min:1|max:255')]
     public string $company_name;
@@ -132,11 +134,11 @@ class Index extends Component
         return view('livewire.settings.index');
     }
 
-    public $analyticsControl;
+    public ?array $analyticsControl = null;
 
     public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
 
-    public $invoice_control;
+    public ?array $invoice_control = null;
 
     public function save()
     {
@@ -148,21 +150,16 @@ class Index extends Component
         // $this->dispatch('analyticsControlUpdated', $updatedAnalyticsControl);
     }
 
-    public function toggleStatus($index)
+    public function toggleStatus($index): void
     {
-        $this->settings = Setting::first();
-
         $this->analyticsControl[$index]['status'] = ! $this->analyticsControl[$index]['status'];
         $this->settings->save();
-        // $this->save();
     }
 
-    public function changeColor($index, $color)
+    public function changeColor($index, $color): void
     {
-        $this->settings = Setting::first();
         $this->analyticsControl[$index]['color'] = $color;
         $this->settings->save();
-        // $this->save();
     }
 
     public function updatedInvoiceControl($field)
@@ -185,46 +182,48 @@ class Index extends Component
     {
         abort_if(Gate::denies('setting_access'), 403);
 
-        $this->site_logo = settings()->site_logo;
-        $this->site_title = settings()->site_title;
-        $this->site_favicon = settings()->site_favicon;
-        $this->company_name = settings()->company_name;
-        $this->company_email = settings()->company_email;
-        $this->company_phone = settings()->company_phone;
-        $this->company_address = settings()->company_address;
-        $this->company_tax = settings()->company_tax;
-        $this->telegram_channel = settings()->telegram_channel;
-        $this->default_currency_id = settings()->default_currency_id;
-        $this->default_currency_position = settings()->default_currency_position;
-        $this->default_date_format = settings()->default_date_format;
-        $this->default_client_id = settings()->default_client_id;
-        $this->default_warehouse_id = settings()->default_warehouse_id;
-        // $this->multi_language = settings()->multi_language;
-        $this->invoice_footer_text = settings()->invoice_footer_text;
-        $this->sale_prefix = settings()->sale_prefix;
-        $this->saleReturn_prefix = settings()->saleReturn_prefix;
-        $this->purchase_prefix = settings()->purchase_prefix;
-        $this->purchaseReturn_prefix = settings()->purchaseReturn_prefix;
-        $this->quotation_prefix = settings()->quotation_prefix;
-        $this->salePayment_prefix = settings()->salePayment_prefix;
-        $this->purchasePayment_prefix = settings()->purchasePayment_prefix;
-        $this->expense_prefix = settings()->expense_prefix;
-        $this->delivery_prefix = settings()->delivery_prefix;
-        $this->is_rtl = (bool) settings()->is_rtl;
+        $this->settings = Setting::firstOrFail();
 
-        $this->social_facebook = settings()->social_facebook;
-        $this->social_twitter = settings()->social_twitter;
-        $this->social_instagram = settings()->social_instagram;
-        $this->social_linkedin = settings()->social_linkedin;
-        $this->social_whatsapp = settings()->social_whatsapp;
-        $this->social_tiktok = settings()->social_tiktok;
-        $this->head_tags = settings()->head_tags;
-        $this->body_tags = settings()->body_tags;
-        $this->seo_meta_title = settings()->seo_meta_title;
-        $this->seo_meta_description = settings()->seo_meta_description;
-        $this->whatsapp_custom_message = settings()->whatsapp_custom_message;
-        $this->invoice_template = settings()->invoice_template;
-        $this->invoice_control = settings()->invoice_control;
+        $this->site_logo = $this->settings->site_logo;
+        $this->site_title = $this->settings->site_title;
+        $this->site_favicon = $this->settings->site_favicon;
+        $this->company_name = $this->settings->company_name;
+        $this->company_email = $this->settings->company_email;
+        $this->company_phone = $this->settings->company_phone;
+        $this->company_address = $this->settings->company_address;
+        $this->company_tax = $this->settings->company_tax;
+        $this->telegram_channel = $this->settings->telegram_channel;
+        $this->default_currency_id = $this->settings->default_currency_id;
+        $this->default_currency_position = $this->settings->default_currency_position;
+        $this->default_date_format = $this->settings->default_date_format;
+        $this->default_client_id = $this->settings->default_client_id;
+        $this->default_warehouse_id = $this->settings->default_warehouse_id;
+        $this->invoice_footer_text = $this->settings->invoice_footer_text;
+        $this->sale_prefix = $this->settings->sale_prefix;
+        $this->saleReturn_prefix = $this->settings->saleReturn_prefix;
+        $this->purchase_prefix = $this->settings->purchase_prefix;
+        $this->purchaseReturn_prefix = $this->settings->purchaseReturn_prefix;
+        $this->quotation_prefix = $this->settings->quotation_prefix;
+        $this->salePayment_prefix = $this->settings->salePayment_prefix;
+        $this->purchasePayment_prefix = $this->settings->purchasePayment_prefix;
+        $this->expense_prefix = $this->settings->expense_prefix;
+        $this->delivery_prefix = $this->settings->delivery_prefix;
+        $this->is_rtl = (bool) $this->settings->is_rtl;
+
+        $this->social_facebook = $this->settings->social_facebook;
+        $this->social_twitter = $this->settings->social_twitter;
+        $this->social_instagram = $this->settings->social_instagram;
+        $this->social_linkedin = $this->settings->social_linkedin;
+        $this->social_whatsapp = $this->settings->social_whatsapp;
+        $this->social_tiktok = $this->settings->social_tiktok;
+        $this->head_tags = $this->settings->head_tags;
+        $this->body_tags = $this->settings->body_tags;
+        $this->seo_meta_title = $this->settings->seo_meta_title;
+        $this->seo_meta_description = $this->settings->seo_meta_description;
+        $this->whatsapp_custom_message = $this->settings->whatsapp_custom_message;
+        $this->invoice_template = $this->settings->invoice_template;
+        $this->invoice_control = $this->settings->invoice_control;
+        $this->analyticsControl = $this->settings->analytics_control;
     }
 
     public function saveImage()
@@ -285,8 +284,6 @@ class Index extends Component
             $this->site_favicon->storeAs('images', $imageName, 'local_files');
             $this->site_favicon = $imageName;
         }
-
-        $this->settings = Setting::firstOrFail(); // Retrieve the existing settings object
 
         $this->settings->update([
             'site_logo' => $this->site_logo,

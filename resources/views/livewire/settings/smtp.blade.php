@@ -41,7 +41,11 @@
             </div>
         </div>
 
-        <div class="mb-4 w-full">
+        <div class="mb-4 w-full" wire:loading wire:target="update">
+            <x-button type="button" primary class="w-full text-center" disabled>
+                {{ __('Saving...') }}</x-button>
+        </div>
+        <div class="mb-4 w-full" wire:loading.remove wire:target="update">
             <x-button type="submit" primary class="w-full text-center">
                 {{ __('Save Changes') }}</x-button>
         </div>
