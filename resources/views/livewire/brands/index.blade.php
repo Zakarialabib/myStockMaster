@@ -1,7 +1,7 @@
 <div>
     @section('title', __('Brands List'))
     <x-page-container title="{{ __('Brands List') }}" :breadcrumbs="[['name' => __('Brands'), 'url' => route('brands.index')]]">
-
+    
         <x-slot name="actions">
             <x-dropdown align="right" width="48" class="w-auto mr-3">
                 <x-slot name="trigger" class="inline-flex">
@@ -78,9 +78,10 @@
                     {{ __('Actions') }}
                 </x-table.th>
             </x-slot>
-            <x-slot name="tbody">
+            <x-table.tbody>
                 @forelse($brands as $brand)
-                    <x-table.tr>
+                
+                    <x-table.tr wire:key="row-{{ $brand->id }}" class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <x-table.td>
                             <input type="checkbox" value="{{ $brand->id }}" wire:model.live="selected"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2">
@@ -134,7 +135,7 @@
                         </x-table.td>
                     </x-table.tr>
                 @endforelse
-            </x-slot>
+            </x-table.tbody>
         </x-table>
 
         <x-slot name="pagination">

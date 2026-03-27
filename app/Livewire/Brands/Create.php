@@ -11,10 +11,11 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithAlert;
 
     public bool $createModal = false;
 
