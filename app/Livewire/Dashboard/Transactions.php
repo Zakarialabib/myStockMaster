@@ -182,7 +182,7 @@ class Transactions extends Component
         return json_encode($dataarray, JSON_THROW_ON_ERROR);
     }
 
-    #[Computed]
+    #[Computed(persist: true, seconds: 7200)]
     public function topProducts()
     {
         return SaleDetails::query()
@@ -203,7 +203,7 @@ class Transactions extends Component
             ->get();
     }
 
-    #[Computed]
+    #[Computed(persist: true, seconds: 7200)]
     public function topCustomers()
     {
         return Sale::query()
@@ -224,7 +224,7 @@ class Transactions extends Component
             ->get();
     }
 
-    #[Computed]
+    #[Computed(persist: true, seconds: 7200)]
     public function monthlyChartOptions(): array
     {
         $startDate = Carbon::now()->startOfMonth();
@@ -289,7 +289,7 @@ class Transactions extends Component
         ];
     }
 
-    #[Computed]
+    #[Computed(persist: true, seconds: 7200)]
     public function dailyChartOptions(): array
     {
         $currentMonth = Carbon::now()->startOfMonth();
@@ -370,7 +370,7 @@ class Transactions extends Component
         ];
     }
 
-    #[Computed]
+    #[Computed(persist: true, seconds: 7200)]
     public function paymentChart(): array
     {
         $dates = collect();
