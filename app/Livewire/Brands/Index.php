@@ -47,7 +47,7 @@ class Index extends Component
 
         $brands = $query->paginate($this->perPage);
 
-        return view('livewire.brands.index', ['brands' => $brands]);
+        return view('livewire.brands.index', compact('brands'));
     }
 
     #[On('importModal')]

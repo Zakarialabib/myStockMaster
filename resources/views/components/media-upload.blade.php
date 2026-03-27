@@ -25,9 +25,9 @@
                         <img src="{{ $image->temporaryUrl() ?? '' }}" class="w-20 h-20">
                     @endif
                     <div class="font-light text-zinc-500">
-                        <p>Type: {{ Str::upper($photoInfo["extension"]) }}</p>
-                        <p>Size: {{ $photoInfo["size"] }} MB</p>
-                        <button wire:click="$set('{{ $name }}')" class="px-2 mt-2 text-xs text-red-400 border border-red-400 rounded-sm">
+                        <p>Type: {{ $image?->getClientOriginalExtension() }}</p>
+                        <p>Size: {{ Number::fileSize($image?->getSize(), precision: 2) }} MB</p>
+                        <button type="button" wire:click="$set('{{ $name }}', '')" class="px-2 mt-2 text-xs text-red-400 border border-red-400 rounded-sm">
                             {{__('Remove')}}
                         </button>
                     </div>
