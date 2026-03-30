@@ -23,7 +23,7 @@
                 </div>
                 <div class="w-full px-3 mb-4">
                     <x-label for="image" :value="__('Image')" />
-                    <x-media-upload title="{{ __('Image') }}" name="image" wire:model="image" :file="$image"
+                    <x-media-upload title="{{ __('Image') }}" name="image" wire:model="image" :image="$image"
                         single types="PNG / JPEG / WEBP" fileTypes="image/*" />
                     <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
                 </div>
