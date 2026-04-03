@@ -7,6 +7,29 @@
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
             </select>
+            @can('purchase_return_export')
+                <x-button wire:click="exportAll" secondary type="button" class="ml-3">
+                    <i class="fas fa-file-pdf"></i>
+                </x-button>
+                <x-button wire:click="downloadAll" secondary type="button" class="ml-3">
+                    <i class="fas fa-file-excel"></i>
+                </x-button>
+            @endcan
+            @if ($selected)
+                @can('purchase_return_delete')
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
+                </x-button>
+                @endcan
+                @can('purchase_return_export')
+                <x-button success type="button" wire:click="downloadSelected" class="ml-3">
+                    {{ __('Excel') }}
+                </x-button>
+                <x-button warning type="button" wire:click="exportSelected" class="ml-3">
+                    {{ __('PDF') }}
+                </x-button>
+                @endcan
+            @endif
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">

@@ -7,6 +7,14 @@
         </x-slot>
 
         <x-slot name="actions">
+            @can('purchase_export')
+                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
+                    {{ __('PDF') }}
+                </x-button>
+                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
+                    {{ __('Excel') }}
+                </x-button>
+            @endcan
             @can('purchase_create')
                 <x-button href="{{ route('purchase.create') }}" primary>
                     <i class="fas fa-plus mr-2"></i>
@@ -53,10 +61,22 @@
 
             @if ($selected)
                 <div class="flex items-center space-x-4 mt-4">
+                    @can('purchase_delete')
                     <x-button type="button" wire:click="deleteSelected" danger>
                         <i class="fas fa-trash mr-2"></i>
                         {{ __('Delete Selected') }}
                     </x-button>
+                    @endcan
+                    @can('purchase_export')
+                    <x-button type="button" wire:click="downloadSelected" success>
+                        <i class="fas fa-file-excel mr-2"></i>
+                        {{ __('Excel Selected') }}
+                    </x-button>
+                    <x-button type="button" wire:click="exportSelected" warning>
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        {{ __('PDF Selected') }}
+                    </x-button>
+                    @endcan
                     @if ($this->selectedCount)
                         <div class="flex items-center space-x-3">
                             <div

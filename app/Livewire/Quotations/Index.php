@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
+use App\Exports\QuotationExport;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\HasDelete;
 use App\Livewire\Utils\WithModels;
@@ -47,5 +48,40 @@ class Index extends Component
     protected function getGateDelete(): string
     {
         return 'quotation_delete';
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('quotation_access'), 403);
+
+        $quotations = Quotation::whereIn('id', $this->selected)->get();
+
+        return (new QuotationExport($quotations))->download('quotations.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('quotation_access'), 403);
+
+        return $this->callExport()->download('quotations.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('quotation_access'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('quotations.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('quotation_access'), 403);
+
+        return $this->callExport()->download('quotations.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): QuotationExport
+    {
+        return new QuotationExport;
     }
 }

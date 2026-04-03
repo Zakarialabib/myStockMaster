@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\PurchaseReturn;
 
 use App\Enums\PaymentStatus;
+use App\Exports\PurchaseReturnExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
@@ -136,7 +137,42 @@ class Index extends Component
 
             $this->dispatch('refreshIndex');
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Error.') . ' ' . $throwable->getMessage());
+            $this->alert('error', __('Error ') . $throwable->getMessage());
         }
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('purchase_return_access'), 403);
+
+        $purchasereturns = PurchaseReturn::whereIn('id', $this->selected)->get();
+
+        return (new PurchaseReturnExport($purchasereturns))->download('purchase_returns.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_return_access'), 403);
+
+        return $this->callExport()->download('purchase_returns.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_return_access'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('purchase_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_return_access'), 403);
+
+        return $this->callExport()->download('purchase_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): PurchaseReturnExport
+    {
+        return new PurchaseReturnExport;
     }
 }
