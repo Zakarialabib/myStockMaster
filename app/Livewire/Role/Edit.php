@@ -4,34 +4,63 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
-// use App\Models\Permission;
+use App\Models\Role;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-// use App\Models\Role;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class Edit extends Component
 {
     use WithAlert;
 
-    #[Validate([
-        'role.title' => 'required|string',
-        'permissions' => 'required|array',
-        'permissions.*' => 'integer|exists:permissions,id',
-    ])]
-    public Role $role;
+    public bool $openModal = false;
 
-    public array $permissions = [];
+    public ?Role $role = null;
 
-    public array $listsForFields = [];
+    #[Validate('required|string')]
+    public string $name = '';
 
-    public function mount(Role $role): void
+    #[Validate('array')]
+    public array $selectedPermissions = [];
+
+    #[On('editModal')]
+    public function openEditModal(int $id): void
     {
-        $this->role = $role;
-        $this->permissions = $this->role->permissions->pluck('id')->toArray();
-        $this->initListsForFields();
+        $this->role = Role::findOrFail($id);
+        $this->name = $this->role->name;
+        $this->selectedPermissions = $this->role->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
+        $this->openModal = true;
+    }
+
+    #[Computed]
+    public function permissions()
+    {
+        return Permission::all();
+    }
+
+    #[Computed]
+    public function isAllSelected(): bool
+    {
+        return count($this->selectedPermissions) === $this->permissions->count();
+    }
+
+    #[Computed]
+    public function isNoneSelected(): bool
+    {
+        return count($this->selectedPermissions) === 0;
+    }
+
+    public function selectAllPermissions(): void
+    {
+        $this->selectedPermissions = $this->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
+    }
+
+    public function deselectAllPermissions(): void
+    {
+        $this->selectedPermissions = [];
     }
 
     public function render()
@@ -39,20 +68,18 @@ class Edit extends Component
         return view('livewire.role.edit');
     }
 
-    public function submit()
+    public function update()
     {
-        $this->validate();
+        $this->validate([
+            'name' => 'required|string|unique:roles,name,' . $this->role->id,
+        ]);
 
-        $this->role->save();
-        $this->role->syncPermissions($this->permissions);
+        $this->role->update(['name' => $this->name]);
+        $this->role->syncPermissions($this->selectedPermissions);
 
-        // $this->alert('success', __('Role updated successfully!') );
+        $this->alert('success', __('Role updated successfully!'));
 
-        return redirect()->route('roles.index');
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['permissions'] = Permission::pluck('title', 'id')->toArray();
+        $this->dispatch('refreshIndex')->to(Index::class);
+        $this->openModal = false;
     }
 }

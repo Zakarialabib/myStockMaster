@@ -4,33 +4,51 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
-// use App\Models\Permission;
+use App\Models\Role;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
-// use App\Models\Role;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class Create extends Component
 {
     use WithAlert;
 
-    #[Validate([
-        'role.title' => 'required|string',
-        'permissions' => 'required|array',
-        'permissions.*' => 'integer|exists:permissions,id',
-    ])]
-    public Role $role;
+    public bool $openModal = false;
 
-    public array $permissions = [];
+    #[Validate('required|string|unique:roles,name')]
+    public string $name = '';
 
-    public array $listsForFields = [];
+    #[Validate('array')]
+    public array $selectedPermissions = [];
 
-    public function mount(): void
+    #[Computed]
+    public function permissions()
     {
-        $this->role = new Role;
-        $this->initListsForFields();
+        return Permission::all();
+    }
+
+    #[Computed]
+    public function isAllSelected(): bool
+    {
+        return count($this->selectedPermissions) === $this->permissions->count();
+    }
+
+    #[Computed]
+    public function isNoneSelected(): bool
+    {
+        return count($this->selectedPermissions) === 0;
+    }
+
+    public function selectAllPermissions(): void
+    {
+        $this->selectedPermissions = $this->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
+    }
+
+    public function deselectAllPermissions(): void
+    {
+        $this->selectedPermissions = [];
     }
 
     public function render()
@@ -38,21 +56,17 @@ class Create extends Component
         return view('livewire.role.create');
     }
 
-    public function submit()
+    public function store()
     {
         $this->validate();
 
-        $this->role->save();
+        $role = Role::create(['name' => $this->name]);
+        $role->syncPermissions($this->selectedPermissions);
 
-        $this->role->givePermissionTo($this->permissions);
+        $this->alert('success', __('Role created successfully!'));
 
-        // $this->alert('success', __('Role created successfully!') );
-
-        return redirect()->route('roles.index');
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['permissions'] = Permission::pluck('title', 'id')->toArray();
+        $this->dispatch('refreshIndex')->to(Index::class);
+        $this->openModal = false;
+        $this->reset(['name', 'selectedPermissions']);
     }
 }

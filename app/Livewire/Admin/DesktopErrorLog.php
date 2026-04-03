@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin;
 
-
 use App\Services\EnvironmentService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;

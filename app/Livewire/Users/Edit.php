@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
+use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -19,31 +19,7 @@ class Edit extends Component
 
     public $editModal = false;
 
-    public $selectedWarehouses = [];
-
-    public $user;
-
-    #[Validate('required|string|max:255')]
-    public $name;
-
-    #[Validate('required|email')]
-    public $email;
-
-    #[Validate('required|string|min:8')]
-    public $password;
-
-    #[Validate('required|numeric')]
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $warehouse_id = [];
-
-    public $role;
+    public UserForm $form;
 
     #[On('editModal')]
     public function openEditModal($id): void
@@ -54,44 +30,34 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->user = User::findOrfail($id);
+        $user = User::findOrfail($id);
+        $this->form->setUser($user);
 
-        $this->name = $this->user->name;
-
-        $this->email = $this->user->email;
-
-        $this->password = $this->user->password;
-
-        $this->phone = $this->user->phone;
-
-        $this->city = $this->user->city;
-
-        $this->country = $this->user->country;
-
-        $this->address = $this->user->address;
-
-        $this->selectedWarehouses = $this->user->warehouses()->pluck('warehouses.id')->toArray();
         $this->editModal = true;
     }
 
     public function update(): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        $this->user->update([
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'city' => $this->city,
-            'country' => $this->country,
-            'address' => $this->address,
+        $this->form->user->update([
+            'name' => $this->form->name,
+            'email' => $this->form->email,
+            'phone' => $this->form->phone,
+            'city' => $this->form->city,
+            'country' => $this->form->country,
+            'address' => $this->form->address,
         ]);
 
-        if ($this->password && $this->password !== $this->user->password) {
-            $this->user->update(['password' => Hash::make($this->password)]);
+        if ($this->form->password && $this->form->password !== $this->form->user->password) {
+            $this->form->user->update(['password' => Hash::make($this->form->password)]);
         }
 
-        $this->user->warehouses()->sync($this->selectedWarehouses);
+        $this->form->user->warehouses()->sync($this->form->warehouse_id);
+
+        if ($this->form->role) {
+            $this->form->user->syncRoles($this->form->role);
+        }
 
         $this->alert('success', __('User Updated Successfully'));
 

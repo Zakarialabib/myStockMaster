@@ -20,17 +20,16 @@ class Index extends Component
 {
     use Datatable;
 
-    /** @var mixed */
-    public $permission;
+    public ?Permission $permission = null;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
     #[Validate('required|max:255|unique:permissions,name')]
-    public $name;
+    public string $name = '';
 
-    public $model = Permission::class;
+    public string $model = Permission::class;
 
     public function render()
     {
@@ -51,7 +50,6 @@ class Index extends Component
         abort_if(Gate::denies('permission_create'), 403);
 
         $this->resetErrorBag();
-
         $this->resetValidation();
 
         $this->createModal = true;
@@ -61,41 +59,40 @@ class Index extends Component
     {
         $this->validate();
 
-        Permission::create($this->permission);
+        Permission::create(['name' => $this->name]);
 
         $this->createModal = false;
-
         $this->alert('success', __('Permission created successfully.'));
+        $this->reset('name');
     }
 
     #[On('editModal')]
-    public function openEditModal(Permission $permission): void
+    public function openEditModal(int $id): void
     {
         abort_if(Gate::denies('permission_update'), 403);
 
         $this->resetErrorBag();
-
         $this->resetValidation();
 
-        $this->permission = Permission::find($permission->id);
+        $this->permission = Permission::findOrFail($id);
+        $this->name = $this->permission->name;
 
         $this->editModal = true;
     }
 
     public function update(): void
     {
-        $this->validate();
+        $this->validate([
+            'name' => 'required|max:255|unique:permissions,name,' . $this->permission->id,
+        ]);
 
         try {
-            // Update category
             $this->permission->update([
                 'name' => $this->name,
             ]);
 
             $this->alert('success', __('Permission updated successfully.'));
-
             $this->dispatch('refreshIndex')->to(Index::class);
-
             $this->editModal = false;
         } catch (Exception $exception) {
             $this->alert('error', 'Something goes wrong while updating permission!!' . $exception->getMessage());
