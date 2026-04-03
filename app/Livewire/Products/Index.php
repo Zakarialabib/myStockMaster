@@ -14,7 +14,9 @@ use App\Traits\WithAlert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -22,6 +24,8 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+#[Isolate]
+#[Lazy]
 #[Layout('layouts.app')]
 #[Title('Products')]
 class Index extends Component
@@ -29,11 +33,6 @@ class Index extends Component
     use Datatable;
     use WithAlert;
     use WithFileUploads;
-
-    public function placeholder()
-    {
-        return view('livewire.placeholders.skeleton');
-    }
 
     public int $perPage = 25;
 

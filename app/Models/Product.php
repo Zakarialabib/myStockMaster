@@ -36,9 +36,9 @@ class Product extends Model
         'created_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -77,21 +77,15 @@ class Product extends Model
         ];
     }
 
-    public function __construct(array $attributes = [])
-    {
-        $this->setRawAttributes([
-            'code' => Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999),
-        ], true);
-        parent::__construct($attributes);
-    }
-
-    // 'slug' => Str::slug($attributes['name'] ?? ''),
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($product) {
             $product->slug = Str::slug($product->name);
+            if (empty($product->code)) {
+                $product->code = Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
+            }
         });
     }
 
