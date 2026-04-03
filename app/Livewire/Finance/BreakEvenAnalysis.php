@@ -12,41 +12,44 @@ use App\Models\SaleDetails;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+#[Lazy]
 class BreakEvenAnalysis extends Component
 {
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
     #[Validate('required|in:overall,product,scenario')]
-    public $analysisType = 'overall';
+    public string $analysisType = 'overall';
 
     #[Validate('nullable|exists:products,id')]
-    public $selectedProduct = null;
+    public ?int $selectedProduct = null;
 
-    public $breakEvenData = [];
+    public array $breakEvenData = [];
 
-    public $scenarioAnalysis = [];
+    public array $scenarioAnalysis = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
     // Scenario planning inputs
     #[Validate('numeric|min:-100|max:100')]
-    public $fixedCostAdjustment = 0;
+    public float|int $fixedCostAdjustment = 0;
 
     #[Validate('numeric|min:-100|max:100')]
-    public $variableCostAdjustment = 0;
+    public float|int $variableCostAdjustment = 0;
 
     #[Validate('numeric|min:-100|max:100')]
-    public $priceAdjustment = 0;
+    public float|int $priceAdjustment = 0;
 
     #[Validate('numeric|min:0')]
-    public $targetProfit = 0;
+    public float|int $targetProfit = 0;
 
     public function mount()
     {
@@ -341,7 +344,8 @@ class BreakEvenAnalysis extends Component
         }
     }
 
-    public function getChartData()
+    #[Computed]
+    public function chartData(): array
     {
         if ($this->analysisType === 'scenario' && ! empty($this->scenarioAnalysis)) {
             return $this->getScenarioChartData();
@@ -393,7 +397,7 @@ class BreakEvenAnalysis extends Component
         ];
     }
 
-    private function getScenarioChartData()
+    private function getScenarioChartData(): array
     {
         $baseBreakEven = $this->breakEvenData['break_even_revenue'] ?? 0;
         $scenarioBreakEven = $this->scenarioAnalysis['adjusted_break_even_revenue'] ?? 0;
@@ -410,15 +414,16 @@ class BreakEvenAnalysis extends Component
         ];
     }
 
-    public function render()
+    #[Computed]
+    public function products()
     {
-        $products = Product::select('id', 'name', 'code')
+        return Product::select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
+    }
 
-        return view('livewire.finance.break-even-analysis', [
-            'products' => $products,
-            'chartData' => $this->getChartData(),
-        ]);
+    public function render()
+    {
+        return view('livewire.finance.break-even-analysis');
     }
 }

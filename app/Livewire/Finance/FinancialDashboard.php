@@ -25,34 +25,34 @@ class FinancialDashboard extends Component
     use WithPagination;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
-    public $dateRange = 'month';
+    public string $dateRange = 'month';
 
     #[Validate('nullable|date')]
-    public $startDate;
+    public ?string $startDate = null;
 
     #[Validate('nullable|date|after_or_equal:startDate')]
-    public $endDate;
+    public ?string $endDate = null;
 
-    public $kpiData = [];
+    public array $kpiData = [];
 
-    public $profitLossData = [];
+    public array $profitLossData = [];
 
-    public $cashFlowData = [];
+    public array $cashFlowData = [];
 
-    public $breakEvenData = [];
+    public array $breakEvenData = [];
 
-    public $grossMarginData = [];
+    public array $grossMarginData = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
-    public $search = '';
+    public string $search = '';
 
-    public $refreshInterval = 300; // 5 minutes
+    public int $refreshInterval = 300; // 5 minutes
 
     public function placeholder()
     {

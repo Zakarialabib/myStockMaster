@@ -26,7 +26,7 @@
                             <div class="w-full md:w-1/3 px-2 mb-2">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <x-select-list :options="$customers" name="customer_id" id="customer_id"
+                                    <x-select-list :options="$this->customers" name="customer_id" id="customer_id"
                                         wire:model.live="customer_id" />
                                 </div>
                             </div>

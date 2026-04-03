@@ -29,22 +29,22 @@ class AnalyticsDashboard extends Component
     }
 
     #[Validate('required|date')]
-    public $dateFrom = '';
+    public string $dateFrom = '';
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo = '';
+    public string $dateTo = '';
 
-    public $selectedProduct = null;
+    public ?int $selectedProduct = null;
 
-    public $analyticsData = [];
+    public array $analyticsData = [];
 
-    public $revenueData = [];
+    public array $revenueData = [];
 
-    public $priceTrends = [];
+    public array $priceTrends = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
-    public $search = '';
+    public string $search = '';
 
     public function mount(): void
     {
