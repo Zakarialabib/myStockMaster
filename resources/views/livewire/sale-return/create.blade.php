@@ -65,7 +65,7 @@
                                         <label for="paid_amount" class="block text-sm font-medium text-gray-700">{{ __('Amount Received') }} <span class="text-red-500">*</span></label>
                                         <div class="flex mt-1">
                                             <input type="number" step="0.01" wire:model.blur="paid_amount" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-l-md" required />
-                                            <button wire:click="$set('paid_amount', {{ $total_amount }})" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            <button wire:click="$set('paid_amount', {{ $form->total_amount }})" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                 <i class="fa fa-check"></i>
                                             </button>
                                         </div>

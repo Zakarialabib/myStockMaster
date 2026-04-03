@@ -6,8 +6,10 @@ namespace App\Livewire\Utils\QueueMonitor;
 
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class Index extends Component
 {
     use WithAlert;

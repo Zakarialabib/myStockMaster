@@ -11,11 +11,13 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 #[Title('Categories')]
+#[Lazy]
 class Index extends Component
 {
     use Datatable;

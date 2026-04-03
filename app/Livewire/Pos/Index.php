@@ -21,11 +21,13 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Isolate]
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
+#[Lazy]
 class Index extends Component
 {
     use LivewireCartTrait;

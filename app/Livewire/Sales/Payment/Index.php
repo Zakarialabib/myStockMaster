@@ -12,8 +12,10 @@ use App\Models\SalePayment;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
+#[Lazy]
 class Index extends Component
 {
     use Datatable;

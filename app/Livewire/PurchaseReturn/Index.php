@@ -12,10 +12,12 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+#[Lazy]
 class Index extends Component
 {
     use Datatable;

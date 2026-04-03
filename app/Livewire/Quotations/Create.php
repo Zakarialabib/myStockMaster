@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Livewire\Forms\QuotationForm;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -21,34 +22,27 @@ class Create extends Component
     use LivewireCartTrait;
     use WithModels;
 
-    #[Validate('required')]
-    public $customer_id;
+    public QuotationForm $form;
 
-    #[Validate('required')]
-    public $warehouse_id;
+    
 
-    public $total_amount;
+    
 
-    #[Validate('numeric')]
-    public $shipping_amount;
+    
 
-    public $note;
+    
 
-    #[Validate('required|integer|max:255')]
-    public $status;
+    
 
-    #[Validate('required')]
-    public $date;
+    
 
-    #[Validate('integer|min:0|max:100')]
-    public $tax_percentage;
+    
 
-    #[Validate('integer|min:0|max:100')]
-    public $discount_percentage;
+    
 
     public function proceed(): void
     {
-        if ($this->customer_id !== null) {
+        if ($this->form->customer_id !== null) {
             $this->store();
         } else {
             $this->alert('error', __('Please select a customer!'));
@@ -62,43 +56,43 @@ class Create extends Component
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->discount_percentage = 0;
-        $this->tax_percentage = 0;
-        $this->shipping_amount = 0;
+        $this->form->discount_percentage = 0;
+        $this->form->tax_percentage = 0;
+        $this->form->shipping_amount = 0;
 
         if (settings()->default_client_id !== null) {
-            $this->customer_id = settings()->default_client_id;
+            $this->form->customer_id = settings()->default_client_id;
         }
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
 
-        $this->date = date('Y-m-d');
+        $this->form->date = date('Y-m-d');
     }
 
     public function store()
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
         DB::transaction(function (): void {
-            $this->validate();
+            $this->form->validate();
 
             $quotation = Quotation::create([
-                'date' => $this->date,
-                'customer_id' => $this->customer_id,
-                'warehouse_id' => $this->warehouse_id,
+                'date' => $this->form->date,
+                'customer_id' => $this->form->customer_id,
+                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => Auth::user()->id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount * 100,
-                'total_amount' => $this->total_amount * 100,
-                'status' => $this->status,
-                'note' => $this->note,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount * 100,
+                'total_amount' => $this->form->total_amount * 100,
+                'status' => $this->form->status,
+                'note' => $this->form->note,
                 'tax_amount' => (int) $this->cartTax * 100,
                 'discount_amount' => (int) $this->cartDiscount * 100,
             ]);
@@ -129,12 +123,12 @@ class Create extends Component
 
     public function hydrate(): void
     {
-        $this->total_amount = $this->calculateTotal();
+        $this->form->total_amount = $this->calculateTotal();
     }
 
     public function calculateTotal(): float|int|array
     {
-        return $this->cartTotal + $this->shipping_amount;
+        return $this->cartTotal + $this->form->shipping_amount;
     }
 
     public function render(): \Illuminate\View\View
@@ -144,9 +138,9 @@ class Create extends Component
         return view('livewire.quotations.create', ['cart_items' => $this->cartContent]);
     }
 
-    public function updatedWarehouseId($value): void
+    public function updatedFormWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 }
