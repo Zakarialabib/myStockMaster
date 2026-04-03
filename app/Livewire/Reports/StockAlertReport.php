@@ -8,24 +8,26 @@ use App\Models\Product;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+#[Lazy]
 class StockAlertReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public $thresholds = [];
+    public array $thresholds = [];
 
-    public $filterName = '';
+    public string $filterName = '';
 
-    public $filterCode = '';
+    public string $filterCode = '';
 
-    public $filterQuantityMin = null;
+    public ?int $filterQuantityMin = null;
 
-    public $filterQuantityMax = null;
+    public ?int $filterQuantityMax = null;
 
     #[Computed]
     public function stockAlert()

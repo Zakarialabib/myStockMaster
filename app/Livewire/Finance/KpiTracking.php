@@ -27,26 +27,26 @@ class KpiTracking extends Component
     use WithPagination;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
     #[Validate('required|in:revenue,profitability,efficiency,growth')]
-    public $kpiType = 'revenue';
+    public string $kpiType = 'revenue';
 
     #[Validate('required|in:previous,year_ago,custom')]
-    public $comparisonPeriod = 'previous';
+    public string $comparisonPeriod = 'previous';
 
-    public $kpiData = [];
+    public array $kpiData = [];
 
-    public $comparisonData = [];
+    public array $comparisonData = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
-    public $autoRefresh = false;
+    public bool $autoRefresh = false;
 
-    public $refreshInterval = 60; // seconds
+    public int $refreshInterval = 60; // seconds
 
     public function mount()
     {

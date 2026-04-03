@@ -28,7 +28,7 @@
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="supplier_id">
                                 <option value="">{{ __('Select Supplier') }}</option>
-                                @foreach ($suppliers as $supplier)
+                                @foreach ($this->suppliers as $supplier)
                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                 @endforeach
                             </select>

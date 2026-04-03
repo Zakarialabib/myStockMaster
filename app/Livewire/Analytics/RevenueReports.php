@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -20,29 +21,29 @@ class RevenueReports extends Component
     use WithPagination;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
     #[Validate('required|in:daily,weekly,monthly,yearly')]
-    public $reportType = 'daily';
+    public string $reportType = 'daily';
 
     #[Validate('nullable|exists:categories,id')]
-    public $categoryFilter = null;
+    public ?int $categoryFilter = null;
 
     #[Validate('nullable|exists:products,id')]
-    public $productFilter = null;
+    public ?int $productFilter = null;
 
-    public $revenueData = [];
+    public array $revenueData = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
-    public $includeProductBreakdown = true;
+    public bool $includeProductBreakdown = true;
 
-    public $includeCategoryBreakdown = true;
+    public bool $includeCategoryBreakdown = true;
 
-    public $includeTimeBreakdown = true;
+    public bool $includeTimeBreakdown = true;
 
     public function placeholder()
     {
@@ -216,7 +217,8 @@ class RevenueReports extends Component
         ]);
     }
 
-    public function getChartData()
+    #[Computed]
+    public function chartData()
     {
         if (! isset($this->revenueData['time_breakdown'])) {
             return [];
@@ -252,20 +254,24 @@ class RevenueReports extends Component
         ];
     }
 
+    #[Computed]
+    public function categories()
+    {
+        return Category::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
+
+    #[Computed]
+    public function products()
+    {
+        return Product::select('id', 'name', 'code')
+            ->orderBy('name')
+            ->get();
+    }
+
     public function render()
     {
-        $categories = Category::select('id', 'name')
-            ->orderBy('name')
-            ->get();
-
-        $products = Product::select('id', 'name', 'code')
-            ->orderBy('name')
-            ->get();
-
-        return view('livewire.analytics.revenue-reports', [
-            'categories' => $categories,
-            'products' => $products,
-            'chartData' => $this->getChartData(),
-        ]);
+        return view('livewire.analytics.revenue-reports');
     }
 }

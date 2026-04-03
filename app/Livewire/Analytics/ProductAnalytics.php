@@ -9,6 +9,7 @@ use App\Actions\Analytics\GenerateProductAnalyticsAction;
 use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
@@ -22,27 +23,27 @@ class ProductAnalytics extends Component
     use WithPagination;
 
     #[Validate('required|exists:products,id')]
-    public $productId;
+    public ?int $productId = null;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom = '';
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo = '';
 
-    public $analyticsData = [];
+    public array $analyticsData = [];
 
-    public $priceTrends = [];
+    public array $priceTrends = [];
 
     #[Validate([
         'comparisonProducts' => 'array|max:3',
         'comparisonProducts.*' => 'exists:products,id',
     ])]
-    public $comparisonProducts = [];
+    public array $comparisonProducts = [];
 
-    public $loading = false;
+    public bool $loading = false;
 
-    public $showComparison = false;
+    public bool $showComparison = false;
 
     public function mount($productId = null)
     {
@@ -192,16 +193,19 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function render()
+    #[Computed]
+    public function products()
     {
-        $products = Product::select('id', 'name', 'code')
+        return Product::select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
+    }
 
+    public function render()
+    {
         $selectedProduct = $this->productId ? Product::find($this->productId) : null;
 
         return view('livewire.analytics.product-analytics', [
-            'products' => $products,
             'selectedProduct' => $selectedProduct,
         ]);
     }
