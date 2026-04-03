@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
+use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\User;
 use App\Models\UserWarehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
@@ -19,29 +19,7 @@ class Create extends Component
 
     public $createModal = false;
 
-    public User $user;
-
-    #[Validate('required|string|max:255')]
-    public $name;
-
-    #[Validate('required|email|unique:users,email')]
-    public $email;
-
-    #[Validate('required|string|min:8')]
-    public $password;
-
-    #[Validate('required|numeric')]
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $warehouse_id = [];
-
-    public $role;
+    public UserForm $form;
 
     public function render()
     {
@@ -64,23 +42,26 @@ class Create extends Component
 
     public function create(): void
     {
-        $this->validate();
-
-        $this->user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'phone' => $this->phone,
-            'city' => $this->city,
-            'country' => $this->country,
-            'address' => $this->address,
+        $this->form->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
-        $this->user->assignRole($this->role);
+        $user = User::create([
+            'name' => $this->form->name,
+            'email' => $this->form->email,
+            'password' => Hash::make($this->form->password),
+            'phone' => $this->form->phone,
+            'city' => $this->form->city,
+            'country' => $this->form->country,
+            'address' => $this->form->address,
+        ]);
 
-        foreach ($this->warehouse_id as $warehouseId) {
+        $user->assignRole($this->form->role);
+
+        foreach ($this->form->warehouse_id as $warehouseId) {
             UserWarehouse::create([
-                'user_id' => $this->user->id,
+                'user_id' => $user->id,
                 'warehouse_id' => $warehouseId,
             ]);
         }
@@ -89,7 +70,7 @@ class Create extends Component
 
         $this->alert('success', 'User created successfully!');
 
-        $this->reset('name', 'email', 'password', 'phone', 'role', 'warehouse_id');
+        $this->form->reset();
 
         $this->createModal = false;
     }

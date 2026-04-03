@@ -55,14 +55,14 @@
                 <div class="mb-4">
                     <label for="current_password">{{ __('Current Password') }} <span
                             class="text-danger">*</span></label>
-                    <x-input type="password" name="current_password" required />
+                    <x-input type="password" name="current_password" wire:model="current_password" required />
                     @error('current_password')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="mb-4">
                     <label for="password">{{ __('New Password') }} <span class="text-danger">*</span></label>
-                    <x-input type="password" name="password" required />
+                    <x-input type="password" name="password" wire:model="password" required />
                     @error('password')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
@@ -70,7 +70,7 @@
                 <div class="mb-4">
                     <label for="password_confirmation">{{ __('Confirm Password') }} <span
                             class="text-danger">*</span></label>
-                    <x-input type="password" name="password_confirmation" required />
+                    <x-input type="password" name="password_confirmation" wire:model="password_confirmation" required />
                     @error('password_confirmation')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror

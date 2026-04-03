@@ -19,11 +19,15 @@ class DatabaseSync extends Component
 
     public array $syncLog = [];
 
-    protected DatabaseSyncService $syncService;
+    protected ?DatabaseSyncService $syncService = null;
+
+    public function boot(DatabaseSyncService $syncService): void
+    {
+        $this->syncService = $syncService;
+    }
 
     public function mount(): void
     {
-        $this->syncService = app(DatabaseSyncService::class);
         $this->checkOnlineStatus();
         $this->loadSyncHistory();
     }

@@ -8,8 +8,8 @@
             <form wire:submit="update">
                 <div class="w-full px-3">
                     <x-label for="name" :value="__('Name')" />
-                    <x-input type="text" id="name" wire:model="role.name" />
-                    @error('role.name')
+                    <x-input type="text" id="name" wire:model="name" />
+                    @error('name')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
