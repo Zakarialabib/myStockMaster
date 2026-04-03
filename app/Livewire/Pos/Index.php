@@ -15,12 +15,15 @@ use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+#[Isolate]
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
 class Index extends Component
@@ -65,35 +68,28 @@ class Index extends Component
     #[Validate('required', message: 'Please provide a warehouse ID')]
     public int|string|null $warehouse_id = null;
 
-    #[Validate('required', message: 'Please provide a tax percentage')]
-    #[Validate('integer', message: 'The tax percentage must be an integer')]
-    #[Validate('min:0', message: 'The tax percentage must be at least 0')]
-    #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
+    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a tax percentage'])]
     public int $tax_percentage = 0;
 
-    #[Validate('required', message: 'Please provide a discount percentage')]
-    #[Validate('integer', message: 'The discount percentage must be an integer')]
-    #[Validate('min:0', message: 'The discount percentage must be at least 0')]
-    #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
+    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a discount percentage'])]
     public int $discount_percentage = 0;
 
-    #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
+    #[Validate('nullable|numeric', message: ['numeric' => 'Shipping amount must be a numeric value'])]
     public float|int $shipping_amount = 0;
 
-    #[Validate('required', message: 'Please provide a total amount')]
-    #[Validate('numeric', message: 'The total amount must be a numeric value')]
+    #[Validate('required|numeric', message: ['required' => 'Please provide a total amount'])]
     public float|int $total_amount = 0;
 
-    #[Validate('nullable', message: 'Paid amount must be a numeric value')]
+    #[Validate('nullable|numeric', message: ['numeric' => 'Paid amount must be a numeric value'])]
     public float|int $paid_amount = 0;
 
-    #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
-    #[Validate('string', message: 'Note must be a string')]
-    #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
+    #[Validate('nullable|string|max:1000', message: ['max' => 'Note must not exceed 1000 characters'])]
     public ?string $note = null;
 
+    #[Locked]
     public int|string|null $user_id = null;
 
+    #[Locked]
     public int|string|null $cash_register_id = null;
 
     #[On('refreshIndex')]
@@ -139,13 +135,28 @@ class Index extends Component
         $this->total_with_shipping = (float) $this->cartTotal + (float) $this->shipping_amount;
     }
 
-    public function hydrate(): void
+    public function syncCartState(): void
     {
+        $this->total_amount = $this->calculateTotal();
         if ($this->payment_method === 'cash') {
             $this->paid_amount = $this->total_amount;
         }
+    }
 
+    public function updatedShippingAmount(): void
+    {
         $this->total_amount = $this->calculateTotal();
+        $this->total_with_shipping = $this->total_amount;
+        if ($this->payment_method === 'cash') {
+            $this->paid_amount = $this->total_amount;
+        }
+    }
+
+    public function updatedPaymentMethod($value): void
+    {
+        if ($value === 'cash') {
+            $this->paid_amount = $this->total_amount;
+        }
     }
 
     public function render()

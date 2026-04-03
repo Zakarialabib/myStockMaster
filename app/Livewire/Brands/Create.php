@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Livewire\Brands;
 
 use App\Models\Brand;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Traits\WithAlert;
 
 class Create extends Component
 {
-    use WithFileUploads, WithAlert;
+    use WithAlert, WithFileUploads;
 
     public bool $createModal = false;
 

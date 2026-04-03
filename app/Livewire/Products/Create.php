@@ -14,11 +14,13 @@ use App\Models\Warehouse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Isolate]
 class Create extends Component
 {
     use WithFileUploads;
@@ -28,11 +30,11 @@ class Create extends Component
 
     public Product $product;
 
-    public $image;
+    public mixed $image = null;
 
     public ?string $code = null;
 
-    public $gallery;
+    public mixed $gallery = null;
 
     #[Validate('required|min:3|max:255')]
     public string $name;
