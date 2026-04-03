@@ -30,16 +30,16 @@ class PurchaseFactory extends Factory
      */
     public function definition(): array
     {
-        $subtotal = $this->faker->randomFloat(2, 200, 2000);
-        $taxPercentage = $this->faker->numberBetween(0, 25);
-        $discountPercentage = $this->faker->numberBetween(0, 10);
+        $subtotal = $this->faker->randomFloat(nbMaxDecimals: 2, min: 200, max: 2000);
+        $taxPercentage = $this->faker->numberBetween(int1: 0, int2: 25);
+        $discountPercentage = $this->faker->numberBetween(int1: 0, int2: 10);
 
         $taxAmount = ($subtotal * $taxPercentage) / 100;
         $discountAmount = ($subtotal * $discountPercentage) / 100;
-        $shippingAmount = $this->faker->randomFloat(2, 0, 100);
+        $shippingAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 0, max: 100);
 
         $totalAmount = $subtotal + $taxAmount - $discountAmount + $shippingAmount;
-        $paidAmount = $this->faker->randomFloat(2, 0, $totalAmount);
+        $paidAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 0, max: $totalAmount);
         $dueAmount = $totalAmount - $paidAmount;
 
         return [

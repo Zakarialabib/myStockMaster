@@ -11,15 +11,12 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id')->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignIdFor(App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
             $table->decimal('cash_in_hand', 8, 2);
             $table->decimal('recieved', 8, 2)->nullable();
@@ -31,10 +28,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('cash_registers');
     }

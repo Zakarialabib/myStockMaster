@@ -11,10 +11,8 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Check if comprehensive seeding is requested via environment variable
         $useComprehensiveSeeding = env('COMPREHENSIVE_SEEDING', false);

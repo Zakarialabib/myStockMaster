@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace app\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RoleController extends BaseController
+class RoleController extends Controller
 {
     /**
      * Retrieve a list of Role with optional filters and pagination.
@@ -19,97 +20,84 @@ class RoleController extends BaseController
     /**
      * Retrieve a list of roles with optional filters and pagination.
      */
-    public function index(Request $request)
+    #[Get('/api/roles', name: 'api.roles.index')]
+    #[Middleware('api')]
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
+        if ($request->get('_end') !== null) {
+            $limit = $request->get('_end') ? $request->get('_end') : 10;
+            $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                // capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
+            $order = $request->get('_order') ? $request->get('_order') : 'asc';
+            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
+            // Filters
+            $where_raw = ' 1=1 ';
 
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit roles list
-                    $roles = Role::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit roles list
-                    $roles = Role::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
+            // capture brand_id filter
+            // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
+            // if ($brand_id !== '') {
+            //     $where_raw .= " AND (brand_id =  $brand_id)";
+            // }
+            // capture sort fields
+            $sort_array = explode(',', $sort);
+
+            if (count($sort_array) > 0) {
+                // retireve ordered and limit roles list
+                $roles = Role::whereRaw($where_raw)
+                    // ->orderByRaw("COALESCE($sort)")
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get();
             } else {
-                // retireve all roles
-                $roles = Role::get();
+                // retireve ordered and limit roles list
+                $roles = Role::orderBy($sort, $order)
+                    ->offset($offset)
+                    ->limit($limit)
+                    ->get();
             }
-
-            return $this->sendResponse($roles, 'Role List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        } else {
+            // retireve all roles
+            $roles = Role::get();
         }
+
+        return RoleResource::collection($roles);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    #[Post('/api/roles', name: 'api.roles.store')]
+    #[Middleware('api')]
+    public function store(StoreRoleRequest $request): RoleResource
     {
-        DB::beginTransaction();
+        $Role = Role::create($request->all());
 
-        try {
-            $input = $request->all();
-            $Role = Role::create($input);
-            DB::commit();
-
-            return $this->sendResponse($Role, 'Role created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new RoleResource($Role);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    #[Get('/api/roles/{id}', name: 'api.roles.show')]
+    #[Middleware('api')]
+    public function show(int $id): RoleResource|JsonResponse
     {
-        try {
-            $Role = Role::find($id);
+        $Role = Role::find($id);
 
-            if (is_null($Role)) {
-                return $this->sendError('Role not found');
-            } else {
-                return $this->sendResponse($Role, 'Role retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if (is_null($Role)) {
+            return response()->json(['message' => 'Role not found'], 404);
         }
+
+        return new RoleResource($Role);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    #[Put('/api/roles/{id}', name: 'api.roles.update')]
+    #[Middleware('api')]
+    public function update(UpdateRoleRequest $request, int $id): RoleResource
     {
         $Role = Role::findOrFail($id);
         $Role->update($request->all());

@@ -11,8 +11,8 @@ use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Lazy]

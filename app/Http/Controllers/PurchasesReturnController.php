@@ -6,12 +6,19 @@ namespace App\Http\Controllers;
 
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Delete;
+use Illuminate\Routing\Attributes\Get;
+use Illuminate\Routing\Attributes\Middleware;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 
 class PurchasesReturnController extends Controller
 {
-    public function show(PurchaseReturn $purchase_return)
+    #[Get('/admin/purchase-returns/{purchase_return}', name: 'purchase-returns.show')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function show(PurchaseReturn $purchase_return): View
     {
         abort_if(Gate::denies('purchase_return_show'), 403);
 
@@ -20,7 +27,9 @@ class PurchasesReturnController extends Controller
         return view('admin.purchasesreturn.show', compact('purchase_return', 'supplier'));
     }
 
-    public function destroy(PurchaseReturn $purchase_return)
+    #[Delete('/admin/purchase-returns/{purchase_return}', name: 'purchase-returns.destroy')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function destroy(PurchaseReturn $purchase_return): RedirectResponse
     {
         abort_if(Gate::denies('purchase_return_delete'), 403);
 

@@ -12,10 +12,8 @@ class ComprehensiveSupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Create different types of suppliers
         $this->createManufacturingSuppliers();
@@ -321,7 +319,7 @@ class ComprehensiveSupplierSeeder extends Seeder
             'updated_at' => now(),
         ];
 
-        DB::table('suppliers')->insert($supplier);
+        DB::table('suppliers')->insertOrIgnore($supplier);
     }
 
     private function generateTaxNumber($country)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
+use App\Livewire\Forms\QuotationForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Quotation;
 use App\Models\QuotationDetails;
@@ -12,8 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use App\Livewire\Forms\QuotationForm;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -23,22 +22,6 @@ class Create extends Component
     use WithModels;
 
     public QuotationForm $form;
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     public function proceed(): void
     {

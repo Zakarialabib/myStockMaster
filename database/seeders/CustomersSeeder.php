@@ -11,10 +11,8 @@ class CustomersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         Customer::factory(50)->create();
     }

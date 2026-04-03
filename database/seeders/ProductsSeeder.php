@@ -16,25 +16,25 @@ class ProductsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Ensure we have at least one warehouse
         $warehouses = Warehouse::all();
 
         if ($warehouses->isEmpty()) {
             $warehouses = collect([
-                Warehouse::create([
-                    'name' => 'Main Warehouse',
-                    'city' => 'Default City',
-                    'address' => '123 Main Street',
-                    'phone' => '+1234567890',
-                    'email' => 'warehouse@example.com',
-                    'country' => 'USA',
-                    'status' => true,
-                ]),
+                Warehouse::firstOrCreate(
+                    ['email' => 'warehouse@example.com'],
+                    [
+                        'name' => 'Main Warehouse',
+                        'city' => 'Default City',
+                        'address' => '123 Main Street',
+                        'phone' => '+1234567890',
+                        'country' => 'USA',
+                        'status' => true,
+                    ]
+                ),
             ]);
         }
 
@@ -43,10 +43,10 @@ class ProductsSeeder extends Seeder
 
         if ($categories->isEmpty()) {
             $categories = collect([
-                Category::create([
-                    'name' => 'General',
-                    'code' => 'GEN001',
-                ]),
+                Category::firstOrCreate(
+                    ['code' => 'GEN001'],
+                    ['name' => 'General']
+                ),
             ]);
         }
 
@@ -55,7 +55,7 @@ class ProductsSeeder extends Seeder
 
         for ($i = 0; $i < 25; $i++) {
             $productId = (string) Str::uuid();
-            $productData = [
+            $products[] = [
                 'id' => $productId,
                 'name' => fake()->words(2, true),
                 'category_id' => $categories->random()->id,
@@ -64,14 +64,13 @@ class ProductsSeeder extends Seeder
                 'quantity' => fake()->numberBetween(50, 200),
                 'unit' => fake()->randomElement(['pcs', 'kg', 'ltr', 'box']),
                 'status' => true,
-                'slug' => Str::slug(fake()->words(2, true)),
+                'slug' => Str::slug(fake()->words(2, true)) . '-' . $productId,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-
-            DB::table('products')->insert($productData);
-            $products[] = array_merge($productData, ['id' => $productId]);
         }
+
+        DB::table('products')->insertOrIgnore($products);
 
         // Create product-warehouse relationships
         foreach ($products as $product) {

@@ -4,111 +4,106 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Attributes\Delete;
+use Illuminate\Routing\Attributes\Get;
+use Illuminate\Routing\Attributes\Middleware;
+use Illuminate\Routing\Attributes\Post;
+use Illuminate\Routing\Attributes\Put;
 
-class ProductController extends BaseController
+class ProductController extends Controller
 {
     /**
      * Retrieve a list of products with optional filters and pagination.
      */
-    public function index(Request $request)
+    #[Get('/api/products', name: 'api.products.index')]
+    #[Middleware('api')]
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
+        if ($request->get('_end') !== null) {
+            $limit = $request->get('_end') ? $request->get('_end') : 10;
+            $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                // capture brand_id filter
-                $brand_id = $request->get('brand_id') ? $request->get('brand_id') : '';
+            $order = $request->get('_order') ? $request->get('_order') : 'asc';
+            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
+            // Filters
+            $where_raw = ' 1=1 ';
 
-                if ($brand_id !== '') {
-                    $where_raw .= " AND (brand_id =  $brand_id)";
-                }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
+            // capture brand_id filter
+            $brand_id = $request->get('brand_id') ? $request->get('brand_id') : '';
 
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        // ->offset($offset)
-                        // ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit products list
-                    $products = Product::with(['category', 'brand'])
-                        ->orderBy($sort, $order)
-                        // ->offset($offset)
-                        // ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all products
-                $products = Product::with(['category', 'brand'])->get();
+            if ($brand_id !== '') {
+                $where_raw .= " AND (brand_id =  $brand_id)";
             }
+            // capture sort fields
+            $sort_array = explode(',', $sort);
 
-            return $this->sendResponse($products, 'Product List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            if (count($sort_array) > 0) {
+                // retireve ordered and limit products list
+                $products = Product::with(['category', 'brand'])
+                    ->whereRaw($where_raw)
+                    // ->orderByRaw("COALESCE($sort)")
+                    // ->offset($offset)
+                    // ->limit($limit)
+                    ->get();
+            } else {
+                // retireve ordered and limit products list
+                $products = Product::with(['category', 'brand'])
+                    ->orderBy($sort, $order)
+                    // ->offset($offset)
+                    // ->limit($limit)
+                    ->get();
+            }
+        } else {
+            // retireve all products
+            $products = Product::with(['category', 'brand'])->get();
         }
+
+        return ProductResource::collection($products);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    #[Post('/api/products', name: 'api.products.store')]
+    #[Middleware('api')]
+    public function store(StoreProductRequest $request): ProductResource
     {
-        DB::beginTransaction();
+        $product = Product::create($request->all());
 
-        try {
-            $input = $request->all();
-            $product = Product::create($input);
-            DB::commit();
-
-            return $this->sendResponse($product, 'Product updated successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new ProductResource($product);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    #[Get('/api/products/{id}', name: 'api.products.show')]
+    #[Middleware('api')]
+    public function show(int $id): ProductResource|JsonResponse
     {
-        try {
-            $product = Product::find($id);
+        $product = Product::find($id);
 
-            if (is_null($product)) {
-                return $this->sendError('Product not found');
-            } else {
-                return $this->sendResponse($product, 'Product retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if (is_null($product)) {
+            return response()->json(['message' => 'Product not found'], 404);
         }
+
+        return new ProductResource($product);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    #[Put('/api/products/{id}', name: 'api.products.update')]
+    #[Middleware('api')]
+    public function update(UpdateProductRequest $request, int $id): ProductResource
     {
         $product = Product::findOrFail($id);
         $product->update($request->all());
@@ -118,20 +113,14 @@ class ProductController extends BaseController
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    #[Delete('/api/products/{id}', name: 'api.products.destroy')]
+    #[Middleware('api')]
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $product = Product::findorFail($id);
-            $product->delete();
+        $product = Product::findOrFail($id);
+        $product->delete();
 
-            return $this->sendResponse($product, 'Product deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 }

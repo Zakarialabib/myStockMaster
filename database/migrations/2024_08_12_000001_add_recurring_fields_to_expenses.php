@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
             $table->date('start_date')->nullable();
@@ -17,7 +17,7 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('expenses', function (Blueprint $table) {
             $table->dropColumn('start_date');

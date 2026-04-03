@@ -13,13 +13,19 @@ use App\Models\PurchaseReturnPayment;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\SaleReturnPayment;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Get;
+use Illuminate\Routing\Attributes\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    public function currentMonthChart()
+    #[Get('/admin/current-month/chart-data', name: 'current-month.chart')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function currentMonthChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
 
@@ -40,7 +46,9 @@ class HomeController extends Controller
         ]);
     }
 
-    public function salesPurchasesChart()
+    #[Get('/admin/sales-purchases/chart-data', name: 'sales-purchases.chart')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function salesPurchasesChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
 
@@ -50,7 +58,9 @@ class HomeController extends Controller
         return response()->json(['sales' => $sales, 'purchases' => $purchases]);
     }
 
-    public function paymentChart()
+    #[Get('/admin/payment-flow/chart-data', name: 'payment-flow.chart')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function paymentChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
 
@@ -129,7 +139,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function salesChartData()
+    public function salesChartData(): JsonResponse
     {
         $dates = collect();
 
@@ -163,7 +173,7 @@ class HomeController extends Controller
         return response()->json(['data' => $data, 'days' => $days]);
     }
 
-    public function purchasesChartData()
+    public function purchasesChartData(): JsonResponse
     {
         $dates = collect();
 
@@ -197,7 +207,9 @@ class HomeController extends Controller
         return response()->json(['data' => $data, 'days' => $days]);
     }
 
-    public function changeLanguage($locale)
+    #[Get('/admin/lang/{lang}', name: 'changelanguage')]
+    #[Middleware(['auth', 'auth.session', 'role:admin'])]
+    public function changeLanguage(string $locale): RedirectResponse
     {
         Cookie::queue('lang', $locale);
 
