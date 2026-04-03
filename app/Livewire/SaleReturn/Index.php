@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\SaleReturn;
 
 use App\Enums\PaymentStatus;
+use App\Exports\SaleReturnExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
@@ -150,7 +151,42 @@ class Index extends Component
 
             $this->paymentModal = false;
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Error.') . $throwable->getMessage());
+            $this->alert('error', __('Error ') . $throwable->getMessage());
         }
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('sale_return_access'), 403);
+
+        $salereturns = SaleReturn::whereIn('id', $this->selected)->get();
+
+        return (new SaleReturnExport($salereturns))->download('sale_returns.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('sale_return_access'), 403);
+
+        return $this->callExport()->download('sale_returns.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('sale_return_access'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('sale_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('sale_return_access'), 403);
+
+        return $this->callExport()->download('sale_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SaleReturnExport
+    {
+        return new SaleReturnExport;
     }
 }

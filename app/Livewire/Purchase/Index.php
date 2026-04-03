@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
+use App\Exports\PurchaseExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
 use App\Models\Supplier;
@@ -109,5 +110,40 @@ class Index extends Component
         Purchase::findOrFail($this->purchase)->delete();
 
         $this->alert('success', __('Purchase deleted successfully.'));
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('purchase_export'), 403);
+
+        $purchases = Purchase::whereIn('id', $this->selected)->get();
+
+        return (new PurchaseExport($purchases))->download('purchases.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_export'), 403);
+
+        return $this->callExport()->download('purchases.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_export'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('purchases.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
+    {
+        abort_if(Gate::denies('purchase_export'), 403);
+
+        return $this->callExport()->download('purchases.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): PurchaseExport
+    {
+        return new PurchaseExport;
     }
 }

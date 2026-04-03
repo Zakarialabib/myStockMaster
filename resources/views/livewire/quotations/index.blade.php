@@ -3,6 +3,14 @@
 
     <x-page-container title="{{ __('Quotations List') }}">
         <x-slot name="actions">
+            @can('quotation_export')
+                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
+                    {{ __('PDF') }}
+                </x-button>
+                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
+                    {{ __('Excel') }}
+                </x-button>
+            @endcan
             @can('quotation_create')
                 <x-button primary href="{{ route('quotation.create') }}" icon="fas fa-plus">
                     {{ __('Create Quotation') }}
@@ -25,6 +33,14 @@
                 @can('quotation_delete')
                     <x-button danger wire:click="deleteSelected" icon="fas fa-trash">
                         {{ __('Delete Selected') }}
+                    </x-button>
+                @endcan
+                @can('quotation_export')
+                    <x-button success wire:click="downloadSelected" icon="fas fa-file-excel">
+                        {{ __('Excel Selected') }}
+                    </x-button>
+                    <x-button warning wire:click="exportSelected" icon="fas fa-file-pdf">
+                        {{ __('PDF Selected') }}
                     </x-button>
                 @endcan
                 <div class="flex items-center px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800">

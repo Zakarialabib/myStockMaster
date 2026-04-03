@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
+use App\Exports\SaleExport;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\WithModels;
 use App\Models\Sale;
@@ -91,6 +92,43 @@ class Index extends Component
         abort_if(Gate::denies('sale_create'), 403);
 
         $this->importModal = true;
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        $sales = Sale::whereIn('id', $this->selected)->get();
+
+        return (new SaleExport($sales))->download('sales.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    #[On('downloadAll')]
+    public function downloadAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->download('sales.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('sales.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    #[On('exportAll')]
+    public function exportAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->download('sales.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SaleExport
+    {
+        return new SaleExport;
     }
 
     public function downloadSample(): StreamedResponse|Response

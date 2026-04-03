@@ -38,6 +38,12 @@
                         <i class="fas fa-trash"></i>
                     </x-button>
                 @endcan
+                <x-button success type="button" wire:click="downloadSelected" class="ml-3">
+                    {{ __('EXCEL') }}
+                </x-button>
+                <x-button warning type="button" wire:click="exportSelected" class="ml-3">
+                    {{ __('PDF') }}
+                </x-button>
             @endif
             @if ($this->selectedCount)
                 <p class="text-sm leading-5">
