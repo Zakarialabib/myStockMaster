@@ -87,7 +87,7 @@ class KpiCards extends Component
                 ->groupBy('product_id')
                 ->orderByDesc('total_quantity')
                 ->with('product:id,name')
-                ->first()?->product?->name ?? 'N/A';
+                ->first()?->product->name ?? 'N/A';
         });
     }
 
