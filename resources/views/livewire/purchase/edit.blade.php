@@ -1,20 +1,42 @@
-<div>
+<div x-data="{ isCartOpen: false }">
     @section('title', __('Edit Purchase'))
 
     <x-theme.breadcrumb :title="__('Edit Purchase')" :parent="route('purchases.index')" :parentName="__('Purchases List')" :childrenName="__('Edit Purchase')">
-
+        <div class="flex items-center gap-2">
+            <x-button primary type="button" @click="isCartOpen = true">
+                {{ __('View Cart & Checkout') }}
+            </x-button>
+        </div>
     </x-theme.breadcrumb>
 
-    <div class="flex flex-wrap">
+    <div class="mt-2 w-full h-full">
+        <livewire:products.search-product :$warehouse_id="$this->warehouse_id" lazy />
+    </div>
 
-        <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:search-product :$warehouse_id="$this->warehouse_id" lazy />
-        </div>
+    <!-- Slide-over -->
+    <div x-show="isCartOpen" style="display: none;" class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 overflow-hidden">
+            <div x-show="isCartOpen" x-transition.opacity class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="isCartOpen = false" aria-hidden="true"></div>
 
-        <div class="lg:w-1/2 sm:w-full h-full">
-            <x-validation-errors class="mb-4" :errors="$errors" />
-
-            <form wire:submit="update">
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <div x-show="isCartOpen" x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="pointer-events-auto w-screen max-w-2xl">
+                    <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                        <div class="bg-indigo-600 px-4 py-6 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-medium text-white" id="slide-over-title">{{ __('Cart & Checkout') }}</h2>
+                                <div class="ml-3 flex h-7 items-center">
+                                    <button type="button" class="rounded-md bg-indigo-600 text-indigo-200 hover:text-white focus:outline-hidden focus:ring-2 focus:ring-white" @click="isCartOpen = false">
+                                        <span class="sr-only">Close panel</span>
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative flex-1 px-4 py-6 sm:px-6">
+                            <x-validation-errors class="mb-4" :errors="$errors" />
+                            <form wire:submit="update">
                 <div class="mb-4 flex flex-wrap gap-4">
                     <div class="flex-1">
                         <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
@@ -22,14 +44,9 @@
                     </div>
                     <div class="flex-1">
                         <label for="supplier_id">{{ __('Supplier') }} <span class="text-red-500">*</span></label>
-                        <select name="supplier_id" id="supplier_id" wire:model.live="supplier_id">
-                            <option value="">{{ __('Select a supplier') }}</option>
-                            @foreach ($this->suppliers as $index => $supplier)
-                                <option value="{{ $index }}">
-                                    {{ $supplier }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <x-searchable-select
+                            required id="supplier_id" name="supplier_id" wire:model.live="supplier_id"
+                            :options="$this->suppliers" />
                     </div>
                     <div class="flex-1">
                         <x-label for="warehouse" :value="__('Warehouse')" />
@@ -88,7 +105,11 @@
                         {{ __('Update Purchase') }}
                     </x-button>
                 </div>
-            </form>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

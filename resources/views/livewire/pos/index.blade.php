@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     @endif
-                    <livewire:search-product :warehouseId="$warehouse_id" />
+                    <livewire:products.search-product :warehouseId="$warehouse_id" />
                 </div>
             </div>
         </div>

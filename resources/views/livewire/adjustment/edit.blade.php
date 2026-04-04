@@ -5,7 +5,7 @@
 
     <div class="flex flex-wrap">
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:search-product />
+            <livewire:products.search-product />
         </div>
         <div class="lg:w-1/2 sm:w-full h-full">
             <x-validation-errors class="mb-4" :errors="$errors" />

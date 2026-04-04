@@ -1,4 +1,7 @@
-<div>
+<div x-data="productCart({
+    currencyCode: '{{ settings()?->currency?->code ?? 'USD' }}',
+    locale: '{{ settings()?->currency?->locale ?? 'en_US' }}'
+})">
     <div class="relative">
         <x-validation-errors class="mb-4" :errors="$errors" />
 
@@ -73,6 +76,7 @@
                                             <div wire:change="updatePrice('{{ $item->rowId }}', '{{ $item->id }}')"
                                                 class="flex flex-col">
                                                 <input type="number" step="0.01"
+                                                    x-model="prices[{{ $item->id }}]"
                                                     wire:model.blur="price.{{ $item->id }}"
                                                     class="w-20 text-xs px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                                     placeholder="{{ format_currency($item->attributes['unit_price'] ?? $item->price ?? 0) }}" />
@@ -85,6 +89,7 @@
                                     <div class="mt-0.5 inline-block">
                                         <div class="flex items-center justify-center">
                                             <input type="number" step="1" min="1"
+                                                x-model="quantities[{{ $item->id }}]"
                                                 wire:model.blur="quantity.{{ $item->id }}"
                                                 wire:change="updateQuantity('{{ $item->rowId }}', '{{ $item->id }}')"
                                                 class="w-16 text-center text-sm px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
@@ -93,7 +98,7 @@
                                 </td>
 
                                 <td class="px-3 py-2 align-top text-right">
-                                    <div class="font-bold text-green-600 mt-1 whitespace-nowrap">
+                                    <div class="font-bold text-green-600 mt-1 whitespace-nowrap" x-text="formatCurrency((parseFloat(prices[{{ $item->id }}]) || 0) * (parseFloat(quantities[{{ $item->id }}]) || 0))">
                                         {{ format_currency($item->attributes['sub_total'] ?? ($item->price * $item->quantity)) }}
                                     </div>
                                 </td>
@@ -129,23 +134,23 @@
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
                         @if (settings()->show_order_tax == true)
                             <div class="flex justify-between items-center px-4 py-3 text-sm">
-                                <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Order Tax') }} ({{ $global_tax }}%)</span>
-                                <span class="font-bold text-gray-900 dark:text-gray-100">(+) {{ format_currency($this->cartTax) }}</span>
+                                <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Order Tax') }} (<span x-text="globalTax"></span>%)</span>
+                                <span class="font-bold text-gray-900 dark:text-gray-100" x-text="'(+) ' + formatCurrency(cartTax)">(+) {{ format_currency($this->cartTax) }}</span>
                             </div>
                         @endif
                         @if (settings()->show_discount == true)
                             <div class="flex justify-between items-center px-4 py-3 text-sm">
-                                <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Discount') }} ({{ $global_discount }}%)</span>
-                                <span class="font-bold text-gray-900 dark:text-gray-100">(-) {{ format_currency($this->cartDiscount) }}</span>
+                                <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Discount') }} (<span x-text="globalDiscount"></span>%)</span>
+                                <span class="font-bold text-gray-900 dark:text-gray-100" x-text="'(-) ' + formatCurrency(cartDiscount)">(-) {{ format_currency($this->cartDiscount) }}</span>
                             </div>
                         @endif
                         <div class="flex justify-between items-center px-4 py-3 text-sm">
                             <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Shipping') }}</span>
-                            <span class="font-bold text-gray-900 dark:text-gray-100">(+) {{ format_currency($shipping_amount) }}</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100" x-text="'(+) ' + formatCurrency(shippingAmount)">(+) {{ format_currency($shipping_amount) }}</span>
                         </div>
                         <div class="flex justify-between items-center px-4 py-3 bg-white dark:bg-gray-900 rounded-b-lg">
                             <span class="text-base font-bold text-gray-900 dark:text-gray-100">{{ __('Grand Total') }}</span>
-                            <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
+                            <span class="text-lg font-bold text-primary-600 dark:text-primary-400" x-text="'(=) ' + formatCurrency(grandTotal)">
                                 (=) {{ format_currency($this->cartTotal + $shipping_amount) }}
                             </span>
                         </div>
@@ -154,24 +159,74 @@
             </div>
         </div>
 
-        <input type="hidden" name="total_amount" value="{{ $this->cartTotal + $shipping_amount }}">
+        <input type="hidden" name="total_amount" x-bind:value="grandTotal" value="{{ $this->cartTotal + $shipping_amount }}">
 
         <div class="grid grid-cols-3 gap-3 mt-4">
             <div>
                 <label for="tax_percentage"
                     class="block text-xs font-medium text-gray-700 mb-1">{{ __('Order Tax (%)') }}</label>
-                <x-input type="number" step="0.01" wire:model.blur="global_tax" />
+                <x-input type="number" step="0.01" wire:model.blur="global_tax" x-model="globalTax" />
             </div>
             <div>
                 <label for="discount_percentage"
                     class="block text-xs font-medium text-gray-700 mb-1">{{ __('Discount (%)') }}</label>
-                <x-input type="number" step="0.01" wire:model.blur="global_discount" />
+                <x-input type="number" step="0.01" wire:model.blur="global_discount" x-model="globalDiscount" />
             </div>
             <div>
                 <label for="shipping_amount"
                     class="block text-xs font-medium text-gray-700 mb-1">{{ __('Shipping') }}</label>
-                <x-input type="number" step="0.01" wire:model.blur="shipping_amount" />
+                <x-input type="number" step="0.01" wire:model.blur="shipping_amount" x-model="shippingAmount" />
             </div>
         </div>
     </div>
+
+    @script
+    <script>
+        Alpine.data('productCart', (config) => ({
+            quantities: $wire.entangle('quantity'),
+            prices: $wire.entangle('price'),
+            globalTax: $wire.entangle('global_tax'),
+            globalDiscount: $wire.entangle('global_discount'),
+            shippingAmount: $wire.entangle('shipping_amount'),
+            
+            get cartSubtotal() {
+                let total = 0;
+                for (let id in this.quantities) {
+                    let qty = parseFloat(this.quantities[id]) || 0;
+                    let price = parseFloat(this.prices[id]) || 0;
+                    total += (qty * price);
+                }
+                return total;
+            },
+            
+            get cartTax() {
+                let taxPercentage = parseFloat(this.globalTax) || 0;
+                return (this.cartSubtotal * taxPercentage) / 100;
+            },
+            
+            get cartDiscount() {
+                let discountPercentage = parseFloat(this.globalDiscount) || 0;
+                return (this.cartSubtotal * discountPercentage) / 100;
+            },
+            
+            get grandTotal() {
+                let shipping = parseFloat(this.shippingAmount) || 0;
+                return this.cartSubtotal + this.cartTax - this.cartDiscount + shipping;
+            },
+
+            formatCurrency(value) {
+                let locale = config.locale.replace('_', '-');
+                try {
+                    let formatter = new Intl.NumberFormat(locale, {
+                        style: 'currency',
+                        currency: config.currencyCode
+                    });
+                    return formatter.format(value || 0);
+                } catch (e) {
+                    return '$' + parseFloat(value || 0).toFixed(2);
+                }
+            }
+        }))
+    </script>
+    @endscript
 </div>

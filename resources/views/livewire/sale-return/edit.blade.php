@@ -2,7 +2,7 @@
     <div class="px-4 mx-auto mb-4">
         <div class="flex flex-col">
             <div class="w-full">
-                <livewire:search-product />
+                <livewire:products.search-product />
             </div>
 
             <div class="w-full mt-4">
