@@ -1,124 +1,34 @@
-<?php
-
-declare(strict_types=1);
-
-use App\Models\Category;
-use App\Models\Product;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Url;
-use Livewire\Component;
-use Livewire\WithPagination;
-use App\Traits\WithAlert;
-
-new class extends Component
-{
-    use WithAlert;
-    use WithPagination;
-
-    public $product;
-
-    #[Url(as: 'q')]
-    public $querySearch = '';
-
-    public $category_id;
-
-    public $warehouse_id;
-
-    public $search_results;
-
-    public int $showCount = 9;
-
-    public bool $featured = false;
-
-    public bool $hasMorePages = true;
-
-    public function loadMore(): void
-    {
-        $this->showCount += 5;
-    }
-
-    public function selectProduct($id): void
-    {
-        if ($this->warehouse_id !== null) {
-            $this->dispatch('productSelected', productId: $id, warehouseId: $this->warehouse_id);
-        } else {
-            $this->alert('error', __('Please select a warehouse!'));
-        }
-    }
-
-    #[On('warehouseSelected')]
-    public function updatedWarehouseId(int $warehouseId): void
-    {
-        $this->warehouse_id = $warehouseId;
-        $this->resetPage();
-    }
-
-    #[Computed]
-    public function categories()
-    {
-        return Category::pluck('name', 'id');
-    }
-
-    public function mount(int|string|null $warehouseId = null): void
-    {
-        if ($warehouseId !== null) {
-            $this->warehouse_id = (int) $warehouseId;
-        }
-    }
-
-    public function resetQuery(): void
-    {
-        $this->querySearch = '';
-    }
-
-    public function updatedQuerySearch(): void
-    {
-        // Check if input looks like a barcode (numeric, 8-14 chars)
-        if (preg_match('/^\d{8,14}$/', $this->querySearch)) {
-            $product = Product::where('code', $this->querySearch)->first();
-            if ($product) {
-                $this->selectProduct($product->id);
-                $this->querySearch = '';
-            }
-        }
-    }
-
-    public function render()
-    {
-        $query = Product::with(['warehouses' => static function ($query): void {
-            $query->withPivot('qty', 'price', 'cost');
-        }, 'category'])
-            ->when($this->querySearch, function ($query): void {
-                $query->where(function ($query): void {
-                    $query->where('name', 'like', '%'.$this->querySearch.'%')
-                        ->orWhere('code', 'like', '%'.$this->querySearch.'%');
-                });
-            })
-            ->when($this->category_id, function ($query): void {
-                $query->where('category_id', $this->category_id);
-            })
-            ->when($this->warehouse_id, function ($query): void {
-                $query->whereHas('warehouses', function ($q): void {
-                    $q->where('warehouse_id', $this->warehouse_id);
-                });
-            })
-            ->when($this->featured, static function ($query): void {
-                $query->where('featured', true);
-            });
-
-        $products = $query->paginate($this->showCount);
-        $this->hasMorePages = $products->hasMorePages();
-
-        return view('components.search-product', [
-            'products' => $products,
-        ]);
-    }
-};
-?>
-
 <div>
-    <div class="relative mt-2" x-data="{ showScan: false }">
+    <div class="relative mt-2" 
+        x-data="{ 
+            showScan: false,
+            barcodeBuffer: '',
+            lastKeystrokeTime: 0,
+            handleKeydown(e) {
+                // Ignore if focus is in an input, textarea, or select
+                if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+                const currentTime = new Date().getTime();
+                
+                // Reset buffer if more than 50ms between keystrokes
+                if (currentTime - this.lastKeystrokeTime > 50) {
+                    this.barcodeBuffer = '';
+                }
+
+                if (e.key === 'Enter') {
+                    if (this.barcodeBuffer.length >= 4) {
+                        $wire.dispatch('barcodeScanned', { barcode: this.barcodeBuffer });
+                        this.barcodeBuffer = '';
+                        e.preventDefault();
+                    }
+                } else if (e.key.length === 1) {
+                    this.barcodeBuffer += e.key;
+                }
+
+                this.lastKeystrokeTime = currentTime;
+            }
+        }"
+        @keydown.window="handleKeydown($event)">
         <div class="mb-3 px-2">
             <div class="mb-3 w-full relative text-gray-600 focus-within:text-gray-400">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -126,7 +36,11 @@ new class extends Component
                         <i class="fas fa-camera text-lg"></i>
                     </button>
                 </span>
-                <input wire:keydown.escape="resetQuery" wire:model.live.debounce.500ms="querySearch" type="search" class="block w-full pl-12 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50"
+                <input wire:keydown.escape="resetQuery" 
+                       wire:keydown.enter="$dispatch('barcodeScanned', { barcode: $event.target.value })"
+                       wire:model.live.debounce.500ms="querySearch" 
+                       type="search" 
+                       class="block w-full pl-12 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-50"
                     minlength="4" placeholder="{{ __('Search products by code, reference or name...') }}"
                     id="product-search-input"
                     autofocus />
@@ -177,10 +91,26 @@ new class extends Component
             </div>
         </div>
 
-        <div class="w-full px-2 mb-4 bg-white">
+        <div class="w-full px-2 mb-4 bg-white relative min-h-[400px]">
+            <!-- Skeleton Loader -->
+            <div wire:loading.delay wire:target="querySearch, category_id, showCount, featured, loadMore" class="absolute inset-0 bg-white z-20">
+                <div class="grid gap-3 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 px-2 mt-5">
+                    @for ($i = 0; $i < 8; $i++)
+                        <div class="w-full py-8 relative border border-gray-200 rounded-xl bg-gray-50 animate-pulse h-48">
+                            <div class="absolute top-2 right-2 w-16 h-6 bg-gray-200 rounded-lg"></div>
+                            <div class="flex flex-col py-4 px-3 gap-y-2 mt-4 items-center h-full justify-center">
+                                <div class="w-3/4 h-4 bg-gray-200 rounded"></div>
+                                <div class="w-1/2 h-4 bg-gray-200 rounded"></div>
+                                <div class="w-1/3 h-6 bg-gray-300 rounded mt-2"></div>
+                            </div>
+                            <div class="w-full h-8 bg-gray-200 absolute bottom-0"></div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+
             <div class="flex flex-wrap w-full">
-                <div
-                    class="w-full grid gap-3 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 px-2 mt-5 overflow-y-auto">
+                <div class="w-full grid gap-3 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 px-2 mt-5 overflow-y-auto">
                     @forelse($products as $product)
                         <div wire:click="selectProduct('{{ $product->id }}')" wire:key="product-{{ $product->id }}"
                             class="group select-none cursor-pointer transition-all duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-105 overflow-hidden bg-white shadow-sm hover:shadow-xl w-full py-8 relative border border-gray-200 hover:border-green-500 rounded-xl"
@@ -309,8 +239,7 @@ new class extends Component
             }
 
             Quagga.onDetected(function(result) {
-                document.querySelector("#product-search-input").value = result.codeResult.code;
-                document.querySelector("#product-search-input").dispatchEvent(new Event('input'));
+                $wire.dispatch('barcodeScanned', { barcode: result.codeResult.code });
                 document.querySelector("#scanner-container").classList.add("hidden");
                 Quagga.stop();
             });
