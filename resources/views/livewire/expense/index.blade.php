@@ -1,90 +1,82 @@
 <div>
     @section('title', __('Expenses'))
-    <x-theme.breadcrumb :title="__('Expenses List')" :parent="route('expenses.index')" :parentName="__('Expenses List')">
-        <x-button primary type="button" wire:click="dispatchTo('expense.create', 'createModal')">
-            {{ __('Create Expense') }}
-        </x-button>
-    </x-theme.breadcrumb>
-    <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap gap-6 w-full items-center">
-            <select wire:model.live="perPage"
-                class="w-auto shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            @if ($selected)
-                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                    <i class="fas fa-trash"></i>
-                </x-button>
-                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
-                    {{ __('EXCEL') }}
-                </x-button>
-                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
-                    {{ __('PDF') }}
-                </x-button>
-            @endif
-            @if ($this->selectedCount)
-                <p class="text-sm  my-auto">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-            @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full ">
-            <x-input wire:model.live="search" placeholder="{{ __('Search') }}" autofocus />
-        </div>
-    </div>
 
+    <x-page-container :title="__('Expenses List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Expenses List'), 'url' => route('expenses.index')]]" :show-filters="true">
 
-    <div class="grid gap-4 grid-cols-2 justify-center mb-2">
-        <div class="w-full flex flex-wrap">
-            <div class="w-full md:w-1/2 px-2">
-                <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                <x-input wire:model.live="startDate" type="date" name="startDate" value="$startDate" />
-                @error('startDate')
-                    <span class="text-danger mt-1">{{ $message }}</span>
-                @enderror
-            </div>
-            <div class="w-full md:w-1/2 px-2">
-                <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                <x-input wire:model.live="endDate" type="date" name="endDate" value="$endDate" />
-                @error('endDate')
-                    <span class="text-danger mt-1">{{ $message }}</span>
-                @enderror
-            </div>
-        </div>
-        <div class="gap-2 inline-flex items-center mx-0 px-2">
-            <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
-            <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
-            <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
-        </div>
-    </div>
-    <x-table>
-        <x-slot name="thead">
+        <x-slot name="actions">
+            <x-dropdown align="right" width="48" class="w-auto mr-2">
+                <x-slot name="trigger" class="inline-flex">
+                    <x-button secondary type="button" class="text-white flex items-center">
+                        <i class="fas fa-angle-double-down w-4 h-4"></i>
+                    </x-button>
+                </x-slot>
+                <x-slot name="content">
+                    <x-dropdown-link wire:click="$dispatch('importModal')" wire:loading.attr="disabled">
+                        {{ __('Excel Import') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="exportSelected" wire:loading.attr="disabled">
+                        {{ __('Export PDF') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="downloadSelected" wire:loading.attr="disabled">
+                        {{ __('Export Excel') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+
+            <x-button primary type="button" wire:click="dispatchTo('expense.create', 'createModal')">
+                <i class="fas fa-plus mr-2"></i>
+                {{ __('Create Expense') }}
+            </x-button>
+        </x-slot>
+
+        <x-slot name="filters">
+            <x-datatable.filters 
+                :per-page="$perPage" 
+                :per-page-options="$paginationOptions" 
+                :selected-count="$this->selectedCount" 
+                :search="$search"
+                search-placeholder="{{ __('Search...') }}"
+                wire:model.live.perPage="perPage"
+                wire:model.live.search="search"
+                wire:click.deleteSelected="deleteSelected"
+                wire:click.resetSelected="resetSelected"
+                :can-delete="true"
+            >
+                <x-slot name="extraFilters">
+                    <div class="flex items-center gap-2">
+                        <x-input wire:model.live="startDate" type="date" name="startDate" />
+                        <x-input wire:model.live="endDate" type="date" name="endDate" />
+                        <x-button type="button" primary size="sm" wire:click="filterByType('day')">{{ __('Today') }}</x-button>
+                        <x-button type="button" info size="sm" wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
+                        <x-button type="button" warning size="sm" wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
+                    </div>
+                </x-slot>
+            </x-datatable.filters>
+        </x-slot>
+
+        <x-table class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <x-slot name="thead">
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
             </x-table.th>
-            <x-table.th sortable :direction="$sorts['user_id'] ?? null" field="user_id" wire:click="sortingBy('user_id')">
-                {{ __('User') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['reference'] ?? null" field="reference" wire:click="sortingBy('reference')">
-                {{ __('Reference') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['category_id'] ?? null" field="category_id" wire:click="sortingBy('category_id')">
-                {{ __('Expense Category') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['warehouse_id'] ?? null" field="warehouse_id" wire:click="sortingBy('warehouse_id')">
-                {{ __('Warehouse') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['date'] ?? null" field="date" wire:click="sortingBy('date')">
-                {{ __('Date') }}
-            </x-table.th>
-            <x-table.th sortable :direction="$sorts['amount'] ?? null" field="amount" wire:click="sortingBy('amount')">
-                {{ __('Amount') }}
-            </x-table.th>
+            <x-table.th sortable :direction="$sortBy === 'user_id' ? $sortDirection : null" field="user_id" wire:click="sortingBy('user_id')">
+                 {{ __('User') }}
+             </x-table.th>
+             <x-table.th sortable :direction="$sortBy === 'reference' ? $sortDirection : null" field="reference" wire:click="sortingBy('reference')">
+                 {{ __('Reference') }}
+             </x-table.th>
+             <x-table.th sortable :direction="$sortBy === 'category_id' ? $sortDirection : null" field="category_id" wire:click="sortingBy('category_id')">
+                 {{ __('Expense Category') }}
+             </x-table.th>
+             <x-table.th sortable :direction="$sortBy === 'warehouse_id' ? $sortDirection : null" field="warehouse_id" wire:click="sortingBy('warehouse_id')">
+                 {{ __('Warehouse') }}
+             </x-table.th>
+             <x-table.th sortable :direction="$sortBy === 'date' ? $sortDirection : null" field="date" wire:click="sortingBy('date')">
+                 {{ __('Date') }}
+             </x-table.th>
+             <x-table.th sortable :direction="$sortBy === 'amount' ? $sortDirection : null" field="amount" wire:click="sortingBy('amount')">
+                 {{ __('Amount') }}
+             </x-table.th>
             <x-table.th>
                 {{ __('Actions') }}
             </x-table.th>
@@ -120,16 +112,16 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info wire:click="showModal('{{ $expense->id }}')" type="button"
+                            <x-button info size="xs" wire:click="showModal('{{ $expense->id }}')" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-eye"></i>
                             </x-button>
-                            <x-button primary
+                            <x-button primary size="xs"
                                 wire:click="dispatchTo('expense.edit','editModal',{ id : {{ $expense->id }}})"
                                 type="button" wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                             </x-button>
-                            <x-button danger wire:click="deleteModal('{{ $expense->id }}')" type="button"
+                            <x-button danger size="xs" wire:click="deleteModal('{{ $expense->id }}')" type="button"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-trash"></i>
                             </x-button>
@@ -245,4 +237,5 @@
             </form>
         </x-slot>
     </x-modal>
+    </x-page-container>
 </div>
