@@ -1,10 +1,12 @@
 <div>
     @section('title', __('Purchases'))
 
-    <x-page-container>
-        <x-slot name="header">
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('Purchases List') }}</h1>
-        </x-slot>
+    <x-page-container :title="__('Purchases List')"
+        :breadcrumbs="[
+            ['label' => __('Dashboard'), 'url' => route('dashboard')],
+            ['label' => __('Purchases List'), 'url' => route('purchases.index')]
+        ]"
+        :show-filters="true">
 
         <x-slot name="actions">
             @can('purchase_export')

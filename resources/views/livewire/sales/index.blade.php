@@ -1,117 +1,110 @@
 <div>
     @section('title', __('Sales'))
 
-    <x-theme.breadcrumb :title="__('Sales List')" :parent="route('sales.index')" :parentName="__('Sales List')">
+    <x-page-container :title="__('Sales List')"
+        :breadcrumbs="[
+            ['label' => __('Dashboard'), 'url' => route('dashboard')],
+            ['label' => __('Sales List'), 'url' => route('sales.index')]
+        ]"
+        :show-filters="true">
 
-        <x-dropdown align="right" width="48" class="w-auto mr-2">
-            <x-slot name="trigger" class="inline-flex">
-                <x-button secondary type="button" class="text-white flex items-center">
-                    <i class="fas fa-angle-double-down w-4 h-4"></i>
-                </x-button>
-            </x-slot>
-            <x-slot name="content">
-                <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
-                    {{ __('PDF') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
-                    {{ __('Excel') }}
-                </x-dropdown-link>
-            </x-slot>
-        </x-dropdown>
-        @can('sale_create')
-            <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
-        @endcan
-
-    </x-theme.breadcrumb>
-
-    <div class="flex flex-wrap justify-center">
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
-                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            @if ($selected)
-                @can('sale_delete')
-                    <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                        <i class="fas fa-trash"></i>
+        <x-slot name="actions">
+            <x-dropdown align="right" width="48" class="w-auto mr-2">
+                <x-slot name="trigger" class="inline-flex">
+                    <x-button secondary type="button" class="text-white flex items-center">
+                        <i class="fas fa-angle-double-down w-4 h-4"></i>
                     </x-button>
-                @endcan
-                <x-button success type="button" wire:click="downloadSelected" class="ml-3">
-                    {{ __('EXCEL') }}
-                </x-button>
-                <x-button warning type="button" wire:click="exportSelected" class="ml-3">
-                    {{ __('PDF') }}
-                </x-button>
-            @endif
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
-            @endif
-        </div>
-        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
-            <div class="my-2">
-                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+                </x-slot>
+                <x-slot name="content">
+                    <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
+                        {{ __('PDF') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
+                        {{ __('Excel') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+            @can('sale_create')
+                <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
+            @endcan
+        </x-slot>
+
+        <x-slot name="filters">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <x-input.select wire:model.live="perPage" :label="__('Show')">
+                    @foreach ($paginationOptions as $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                    @endforeach
+                </x-input.select>
+
+                <x-input.text wire:model.live.debounce.500ms="search" :placeholder="__('Search')" icon="fas fa-search" />
+
+                <x-input.date wire:model.live="startDate" :label="__('Start Date')" />
+
+                <x-input.date wire:model.live="endDate" :label="__('End Date')" />
             </div>
-        </div>
-        <div class="grid gap-4 grid-cols-2 items-center justify-center">
-            <div class="w-full mb-2 flex flex-wrap ">
-                <div class="w-full md:w-1/2 px-2">
-                    <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="startDate" type="date" name="startDate" value="$startDate" />
-                    @error('startDate')
-                        <span class="text-danger mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="w-full md:w-1/2 px-2">
-                    <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                    <x-input wire:model.live="endDate" type="date" name="endDate" value="$endDate" />
-                    @error('endDate')
-                        <span class="text-danger mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="gap-2 inline-flex items-center mx-0 px-2 mb-2">
+
+            <div class="flex flex-wrap gap-2 mt-4">
                 <x-button type="button" primary wire:click="filterByType('day')">{{ __('Today') }}</x-button>
                 <x-button type="button" info wire:click="filterByType('month')">{{ __('This Month') }}</x-button>
                 <x-button type="button" warning wire:click="filterByType('year')">{{ __('This Year') }}</x-button>
             </div>
-        </div>
-    </div>
 
-    <x-table>
+            @if ($selected)
+                <div class="flex items-center space-x-4 mt-4">
+                    @can('sale_delete')
+                        <x-button danger type="button" wire:click="deleteSelected">
+                            <i class="fas fa-trash mr-2"></i>
+                            {{ __('Delete Selected') }}
+                        </x-button>
+                    @endcan
+                    <x-button success type="button" wire:click="downloadSelected">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        {{ __('EXCEL') }}
+                    </x-button>
+                    <x-button warning type="button" wire:click="exportSelected">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        {{ __('PDF') }}
+                    </x-button>
+                    @if ($this->selectedCount)
+                        <div class="flex items-center space-x-3">
+                            <div class="flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded-lg">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span class="text-sm font-medium">{{ $this->selectedCount }} {{ __('Entries selected') }}</span>
+                            </div>
+                            <x-button secondary type="button" wire:click="resetSelected">
+                                {{ __('Clear Selected') }}
+                            </x-button>
+                        </div>
+                    @endif
+                </div>
+            @endif
+        </x-slot>
+
+        <x-table>
         <x-slot name="thead">
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('reference')" :direction="$sorts['reference'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('reference')" :direction="$sortBy === 'reference' ? $sortDirection : null">
                 {{ __('Reference') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('date')" :direction="$sorts['date'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('date')" :direction="$sortBy === 'date' ? $sortDirection : null">
                 {{ __('Date') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="$sortBy === 'customer_id' ? $sortDirection : null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('payment_id')" :direction="$sortBy === 'payment_id' ? $sortDirection : null">
                 {{ __('Payment status') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sortBy === 'due_amount' ? $sortDirection : null">
                 {{ __('Due Amount') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('total')" :direction="$sorts['total'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('total')" :direction="$sortBy === 'total' ? $sortDirection : null">
                 {{ __('Total') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
                 {{ __('Status') }}
             </x-table.th>
             <x-table.th>
@@ -249,6 +242,8 @@
     <div class="px-6 py-3">
         {{ $sales->links() }}
     </div>
+
+    </x-page-container>
 
     @livewire('sales.show', ['sale' => $sale], key('show' . $sale?->id))
 
