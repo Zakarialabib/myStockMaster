@@ -18,7 +18,7 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public $editModal = false;
+    public $showModal = false;
 
     /** @var mixed */
     public $customer;
@@ -51,7 +51,7 @@ class Edit extends Component
         return view('livewire.customers.edit');
     }
 
-    #[On('editModal')]
+    #[On('showModal')]
     public function openEditModal($id): void
     {
         abort_if(Gate::denies('customer_update'), 403);
@@ -78,7 +78,7 @@ class Edit extends Component
 
         $this->tax_number = $this->customer->tax_number;
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     #[Computed]
@@ -102,7 +102,7 @@ class Edit extends Component
 
         $this->alert('success', __('Customer updated successfully.'));
 
-        $this->editModal = false;
+        $this->showModal = false;
 
         $this->dispatch('refreshIndex')->to(Index::class);
     }

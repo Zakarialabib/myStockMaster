@@ -16,7 +16,7 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public bool $editModal = false;
+    public bool $showModal = false;
 
     public Brand $brand;
 
@@ -44,7 +44,7 @@ class Edit extends Component
         $this->image = $this->brand->image;
         $this->origin = $this->brand->origin ?? '';
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -63,7 +63,7 @@ class Edit extends Component
 
         $this->alert('success', __('Brand updated successfully.'));
 
-        $this->editModal = false;
+        $this->showModal = false;
     }
 
     public function render()

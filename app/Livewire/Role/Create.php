@@ -7,6 +7,7 @@ namespace App\Livewire\Role;
 use App\Models\Role;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
@@ -15,7 +16,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public bool $openModal = false;
+    public bool $showModal = false;
 
     #[Validate('required|string|unique:roles,name')]
     public string $name = '';
@@ -56,6 +57,14 @@ class Create extends Component
         return view('livewire.role.create');
     }
 
+    #[On('createModal')]
+    public function createModal(): void
+    {
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->showModal = true;
+    }
+
     public function store()
     {
         $this->validate();
@@ -66,7 +75,7 @@ class Create extends Component
         $this->alert('success', __('Role created successfully!'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
-        $this->openModal = false;
+        $this->showModal = false;
         $this->reset(['name', 'selectedPermissions']);
     }
 }

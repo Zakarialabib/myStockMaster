@@ -15,7 +15,7 @@ class Edit extends Component
 {
     use WithAlert;
 
-    public bool $editModal = false;
+    public bool $showModal = false;
 
     public $expenseCategory;
 
@@ -44,7 +44,7 @@ class Edit extends Component
         $this->name = $this->expenseCategory->name;
         $this->description = $this->expenseCategory->description;
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -59,6 +59,6 @@ class Edit extends Component
 
         $this->reset(['name', 'description']);
 
-        $this->editModal = false;
+        $this->showModal = false;
     }
 }

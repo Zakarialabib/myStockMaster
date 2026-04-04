@@ -15,7 +15,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public bool $createModal = false;
+    public bool $showModal = false;
 
     public Supplier $supplier;
 
@@ -43,14 +43,14 @@ class Create extends Component
         return view('livewire.suppliers.create');
     }
 
-    #[On('createModal')]
+    #[On('showModal')]
     public function openModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
     public function create(): void
@@ -65,6 +65,6 @@ class Create extends Component
 
         $this->reset(['name', 'email', 'phone', 'address', 'city', 'country', 'tax_number']);
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 }

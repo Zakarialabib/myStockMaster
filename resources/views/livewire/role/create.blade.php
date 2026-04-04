@@ -1,20 +1,20 @@
 <div>
-    <x-modal wire:model="openModal">
+    <x-modal wire:model="showModal">
         <x-slot name="title">
             {{ __('Create') }}
         </x-slot>
 
         <x-slot name="content">
-            <form wire:submit="store">
-                <div class="w-full px-3">
+            <form wire:submit="store" class="space-y-4">
+                <div>
                     <x-label for="name" :value="__('Name')" />
-                    <x-input type="text" id="name" wire:model="name" />
+                    <x-input type="text" id="name" wire:model="name" class="w-full" />
                     @error('name')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <div class="w-full px-3">
+                <div>
                     <x-label for="permissions" :value="__('Permissions')" />
                     <div class="flex items-center justify-center w-full gap-4 mb-3">
                         <div>
@@ -42,7 +42,7 @@
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="w-full px-3">
+                <div class="w-full">
                     <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
                         {{ __('Save') }}
                     </x-button>

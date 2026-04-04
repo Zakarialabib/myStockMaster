@@ -17,7 +17,7 @@ class Edit extends Component
 {
     use WithModels;
 
-    public $editModal = false;
+    public $showModal = false;
 
     public UserForm $form;
 
@@ -33,7 +33,7 @@ class Edit extends Component
         $user = User::findOrfail($id);
         $this->form->setUser($user);
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -61,7 +61,7 @@ class Edit extends Component
 
         $this->alert('success', __('User Updated Successfully'));
 
-        $this->editModal = false;
+        $this->showModal = false;
     }
 
     public function render(): View

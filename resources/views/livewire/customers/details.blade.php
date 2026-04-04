@@ -1,7 +1,12 @@
 <div>
     @section('title', __('Customer Detail') . '-' . $customer?->name)
     
-    <x-theme.breadcrumb :title="__('Customer Details')" :parent="route('customers.index')" :parentName="__('Customer List')" childName="{{ $customer->name }}" />
+    <x-page-container :title="__('Customer Details')"
+        :breadcrumbs="[
+            ['label' => __('Dashboard'), 'url' => route('dashboard')],
+            ['label' => __('Customer List'), 'url' => route('customers.index')],
+            ['label' => $customer->name, 'url' => '']
+        ]">
 
     <div class="container px-4 mx-auto">
         <div class="w-full">
@@ -215,4 +220,5 @@
             </div>
         </div>
     </div>
+    </x-page-container>
 </div>

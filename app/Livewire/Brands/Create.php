@@ -17,7 +17,7 @@ class Create extends Component
 {
     use WithAlert, WithFileUploads;
 
-    public bool $createModal = false;
+    public bool $showModal = false;
 
     public Brand $brand;
 
@@ -40,7 +40,7 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
     public function create(): void
@@ -61,7 +61,7 @@ class Create extends Component
 
         $this->reset(['name', 'description', 'image']);
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 
     public function render()

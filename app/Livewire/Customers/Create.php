@@ -18,7 +18,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $createModal = false;
+    public $showModal = false;
 
     public Customer $customer;
 
@@ -45,14 +45,14 @@ class Create extends Component
 
     public $role;
 
-    #[On('createModal')]
+    #[On('showModal')]
     public function openCreateModal(): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
     public function create(): void
@@ -65,7 +65,7 @@ class Create extends Component
 
         $this->dispatch('refreshIndex');
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 
     #[Computed]

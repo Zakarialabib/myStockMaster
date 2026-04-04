@@ -28,7 +28,7 @@
                 </x-slot>
             </x-dropdown>
             @can('customer_create')
-                <x-button primary type="button" wire:click="dispatchTo('customers.create', 'createModal')">
+                <x-button primary type="button" wire:click="dispatchTo('customers.create', 'showModal')">
                     <i class="fas fa-plus mr-2"></i>
                     {{ __('Create Customer') }}
                 </x-button>
@@ -147,7 +147,7 @@
                                         {{ __('Details') }}
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link wire:click="dispatchTo('customers.edit','editModal', { id : '{{ $customer->id }}'})"
+                                    <x-dropdown-link wire:click="dispatchTo('customers.edit','showModal', { id : '{{ $customer->id }}'})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
