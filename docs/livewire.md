@@ -30,3 +30,18 @@ State management is currently handled through a combination of approaches:
 - **Computed Properties**: Read-only state that is derived from the database (e.g., dashboard statistics) is managed via the `#[Computed]` attribute. This ensures the data is not serialized and sent back and forth between the client and server, saving bandwidth.
 - **Event-Driven Reactivity**: Components communicate with each other using Livewire's event system via the `#[On('eventName')]` attribute (e.g., refreshing a datatable when an item is deleted, or opening a modal).
 - **Caching**: Heavy computed properties utilize Laravel's `Cache::flexible()` or Livewire's native `persist: true` parameter within `#[Computed]` to maintain state across requests without hitting the database repeatedly.
+
+## 4. UX Patterns & Enhancements
+Recent improvements have introduced several modern UX patterns using a combination of Livewire and Alpine.js to provide a snappy, app-like experience.
+
+### Slide-over Cart
+To maximize the screen real estate available for product search and selection, the Sales and Purchase interfaces (Create/Edit) utilize an Alpine.js-driven slide-over drawer (off-canvas) for the cart and checkout form. This allows users to seamlessly browse products while keeping the cart accessible at a moment's notice.
+
+### Optimistic Alpine.js Updates
+The Product Cart features optimistic UI updates powered by Alpine.js. By utilizing Alpine's `$watch` and Livewire's `$wire.entangle()`, calculations for quantity, price, discounts, and taxes are performed instantly on the client side. This provides immediate visual feedback to the user while Livewire processes the authoritative background update asynchronously.
+
+### Searchable Comboboxes
+Standard dropdowns for relational data selection (such as Customers in Sales and Suppliers in Purchases) have been upgraded to searchable Comboboxes. These Alpine.js-driven components allow users to quickly filter and select records from large datasets without leaving the keyboard or scrolling through endless native select options.
+
+### Global Barcode Scanner Integration
+The Barcode Scanner functionality has been refactored to be completely unobtrusive. It employs global Alpine `window` keydown listeners to capture rapid barcode scans automatically. This means the user no longer needs to manually focus a specific search input field before scanning a product, greatly accelerating the checkout process.
