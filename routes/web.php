@@ -35,6 +35,7 @@ use App\Livewire\Purchase\Index as PurchasesIndex;
 use App\Livewire\Purchase\Invoice as PurchaseInvoice;
 use App\Livewire\PurchaseReturn\Create as CreatePurchaseReturn;
 use App\Livewire\PurchaseReturn\Edit as EditPurchaseReturn;
+use App\Livewire\PurchaseReturn\Index as PurchaseReturnIndex;
 use App\Livewire\Quotations\Create as CreateQuotation;
 use App\Livewire\Quotations\Edit as EditQuotation;
 use App\Livewire\Quotations\Index as QuotationsIndex;
@@ -49,6 +50,7 @@ use App\Livewire\Reports\StockAlertReport;
 use App\Livewire\Role\Index as RolesIndex;
 use App\Livewire\SaleReturn\Create as CreateSaleReturn;
 use App\Livewire\SaleReturn\Edit as EditSaleReturn;
+use App\Livewire\SaleReturn\Index as SaleReturnIndex;
 use App\Livewire\Sales\Create as CreateSale;
 use App\Livewire\Sales\Edit as EditSale;
 use App\Livewire\Sales\Index as SalesIndex;
@@ -261,12 +263,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
     // Purchase Returns
     Route::prefix('purchase-returns')->name('purchase-returns.')->group(function () {
+        Route::livewire('/', PurchaseReturnIndex::class)->name('index');
         Route::livewire('/create', CreatePurchaseReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditPurchaseReturn::class)->name('edit');
     });
 
     // Generate Sale Returns PDF
     Route::prefix('sale-returns')->name('sale-returns.')->group(function () {
+        Route::livewire('/', SaleReturnIndex::class)->name('index');
         Route::livewire('/create', CreateSaleReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditSaleReturn::class)->name('edit');
     });
