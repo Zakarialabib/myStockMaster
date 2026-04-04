@@ -15,7 +15,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public bool $createModal = false;
+    public bool $showModal = false;
 
     public Warehouse $warehouse;
 
@@ -52,7 +52,7 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
     public function create(): void
@@ -67,6 +67,6 @@ class Create extends Component
 
         $this->reset(['name', 'phone', 'country', 'city', 'email']);
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 }

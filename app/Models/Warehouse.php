@@ -7,12 +7,13 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class Warehouse extends Model
 {
-    use HasAdvancedFilter;
+    use HasAdvancedFilter, HasFactory;
 
     protected const ATTRIBUTES = [
         'id',

@@ -15,7 +15,7 @@ class Edit extends Component
 {
     use WithAlert;
 
-    public bool $editModal = false;
+    public bool $showModal = false;
 
     public Warehouse $warehouse;
 
@@ -60,7 +60,7 @@ class Edit extends Component
 
         $this->email = $this->warehouse->email;
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -71,7 +71,7 @@ class Edit extends Component
 
         $this->warehouse->save();
 
-        $this->editModal = false;
+        $this->showModal = false;
 
         $this->alert('success', __('Warehouse updated successfully'));
     }

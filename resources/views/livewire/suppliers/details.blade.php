@@ -1,10 +1,15 @@
 <div>
     @section('title', __('Supplier Detail') . '-' . $supplier->name)
-    <x-theme.breadcrumb :title="__('Supplier Detail')" :parent="route('suppliers.index')" :parentName="__('Supplier List')" :childrenName="__('Supplier Detail')">
-        <h2 class="mb-1 text-2xl font-bold">
-            {{ $this->supplier->name }}
-        </h2>
-    </x-theme.breadcrumb>
+    
+    <x-page-container>
+        <x-slot name="breadcrumbs">
+            <x-breadcrumb :items="[
+                ['label' => __('Dashboard'), 'url' => route('dashboard')],
+                ['label' => __('Supplier List'), 'url' => route('suppliers.index')],
+                ['label' => $supplier->name, 'url' => '']
+            ]" />
+        </x-slot>
+        
     <div class="w-full">
         <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 w-full mb-4">
             <div class="flex items-center p-4 bg-white rounded-lg shadow-md">
@@ -251,4 +256,5 @@
             </div>
         </div>
     </x-theme.accordion>
+    </x-page-container>
 </div>

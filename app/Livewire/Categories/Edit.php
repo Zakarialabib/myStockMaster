@@ -18,7 +18,7 @@ class Edit extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public bool $editModal = false;
+    public bool $showModal = false;
 
     public Category $category;
 
@@ -52,7 +52,7 @@ class Edit extends Component
         $this->code = $this->category->code;
         $this->image = $this->category->image ?? null;
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -74,6 +74,6 @@ class Edit extends Component
 
         $this->reset(['name', 'description', 'code', 'image']);
 
-        $this->editModal = false;
+        $this->showModal = false;
     }
 }

@@ -16,7 +16,7 @@ class Edit extends Component
 {
     use WithAlert;
 
-    public bool $openModal = false;
+    public bool $showModal = false;
 
     public ?Role $role = null;
 
@@ -32,7 +32,7 @@ class Edit extends Component
         $this->role = Role::findOrFail($id);
         $this->name = $this->role->name;
         $this->selectedPermissions = $this->role->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
-        $this->openModal = true;
+        $this->showModal = true;
     }
 
     #[Computed]
@@ -80,6 +80,6 @@ class Edit extends Component
         $this->alert('success', __('Role updated successfully!'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
-        $this->openModal = false;
+        $this->showModal = false;
     }
 }

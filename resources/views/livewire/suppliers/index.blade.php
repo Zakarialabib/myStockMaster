@@ -28,7 +28,7 @@
                     </x-dropdown-link>
                 </x-slot>
             </x-dropdown>
-            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'createModal')">
+            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
                 {{ __('Create Supplier') }}
             </x-button>
         </x-slot>
@@ -138,7 +138,7 @@
                                             {{ __('Details') }}
                                         </x-dropdown-link>
                                         <x-dropdown-link
-                                            wire:click="dispatchTo('suppliers.edit', 'editModal', { id : '{{ $supplier->id }}' })"
+                                            wire:click="dispatchTo('suppliers.edit', 'showModal', { id : '{{ $supplier->id }}' })"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit mr-2"></i>
                                             {{ __('Edit') }}

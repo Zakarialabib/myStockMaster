@@ -17,7 +17,7 @@ class Create extends Component
 {
     use WithModels;
 
-    public $createModal = false;
+    public $showModal = false;
 
     public UserForm $form;
 
@@ -37,7 +37,7 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
     public function create(): void
@@ -72,6 +72,6 @@ class Create extends Component
 
         $this->form->reset();
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 }

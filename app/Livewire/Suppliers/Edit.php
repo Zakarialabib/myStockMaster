@@ -15,7 +15,7 @@ class Edit extends Component
 {
     use WithFileUploads;
 
-    public bool $editModal = false;
+    public bool $showModal = false;
 
     /** @var mixed */
     public Supplier $supplier;
@@ -48,7 +48,7 @@ class Edit extends Component
         return view('livewire.suppliers.edit');
     }
 
-    #[On('editModal')]
+    #[On('showModal')]
     public function openModal($id): void
     {
         $this->resetErrorBag();
@@ -71,7 +71,7 @@ class Edit extends Component
 
         $this->tax_number = $this->supplier->tax_number;
 
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     public function update(): void
@@ -84,6 +84,6 @@ class Edit extends Component
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
-        $this->editModal = false;
+        $this->showModal = false;
     }
 }
