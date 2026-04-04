@@ -1,15 +1,25 @@
 <div>
     @section('title', __('Quotations'))
 
-    <x-page-container title="{{ __('Quotations List') }}">
+    <x-page-container title="{{ __('Quotations List') }}" :show-filters="true">
         <x-slot name="actions">
             @can('quotation_export')
-                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
-                    {{ __('PDF') }}
-                </x-button>
-                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
-                    {{ __('Excel') }}
-                </x-button>
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button secondary type="button">
+                            <i class="fas fa-file-export mr-2"></i>
+                            {{ __('Export') }}
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="exportAll">
+                            <i class="fas fa-file-pdf mr-2"></i> {{ __('PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="downloadAll">
+                            <i class="fas fa-file-excel mr-2"></i> {{ __('Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
             @endcan
             @can('quotation_create')
                 <x-button primary href="{{ route('quotation.create') }}" icon="fas fa-plus">
@@ -19,37 +29,17 @@
         </x-slot>
 
         <x-slot name="filters">
-            <div class="flex items-center gap-2">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Show') }}</label>
-                <x-input.select wire:model.live="perPage" class="w-20">
-                    @foreach ($paginationOptions as $value)
-                        <option value="{{ $value }}">{{ $value }}</option>
-                    @endforeach
-                </x-input.select>
-                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('entries') }}</span>
-            </div>
-            
-            @if ($selected)
-                @can('quotation_delete')
-                    <x-button danger wire:click="deleteSelected" icon="fas fa-trash">
-                        {{ __('Delete Selected') }}
-                    </x-button>
-                @endcan
-                @can('quotation_export')
-                    <x-button success wire:click="downloadSelected" icon="fas fa-file-excel">
-                        {{ __('Excel Selected') }}
-                    </x-button>
-                    <x-button warning wire:click="exportSelected" icon="fas fa-file-pdf">
-                        {{ __('PDF Selected') }}
-                    </x-button>
-                @endcan
-                <div class="flex items-center px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <i class="fas fa-info-circle mr-2 text-xs"></i>
-                    <span class="text-sm font-medium">{{ count($selected) }} {{ __('selected') }}</span>
-                </div>
-            @endif
-            
-            <x-input.text wire:model.live.debounce.300ms="search" placeholder="{{ __('Search quotations...') }}" icon="fas fa-search" />
+            <x-datatable.filters 
+                :per-page="$perPage" 
+                :pagination-options="$paginationOptions" 
+                :selected-count="count($selected)" 
+                :search="$search"
+                search-placeholder="{{ __('Search quotations...') }}" 
+                wire:model.live.perPage="perPage"
+                wire:model.live.search="search" 
+                wire:click.deleteSelected="deleteSelected"
+                wire:click.resetSelected="resetSelected" 
+                :can-delete="auth()->user()->can('quotation_delete')" />
         </x-slot>
 
         <x-table>
@@ -74,10 +64,10 @@
                     {{ __('Actions') }}
                 </x-table.th>
             </x-slot>
-            <x-slot name="tbody">
+            <x-table.tbody>
                 @forelse ($quotations as $quotation)
                     {{-- @dd($quotation); --}}
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                    <x-table.tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
                         wire:loading.class.delay="opacity-50">
                         <x-table.td>
                             <input type="checkbox" value="{{ $quotation->id }}" wire:model.live="selected"
@@ -160,11 +150,11 @@
                                 </x-slot>
                             </x-dropdown>
                         </x-table.td>
-                    </tr>
+                    </x-table.tr>
                 @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-12">
-                            <div class="flex flex-col items-center justify-center text-center">
+                    <x-table.tr>
+                        <x-table.td colspan="6">
+                            <div class="flex flex-col items-center justify-center text-center py-12">
                                 <div
                                     class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
                                     <i
@@ -175,13 +165,13 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                                     {{ __('Get started by creating your first quotation.') }}</p>
                             </div>
-                        </td>
-                    </tr>
+                        </x-table.td>
+                    </x-table.tr>
                 @endforelse
-            </x-slot>
+            </x-table.tbody>
         </x-table>
 
-        <x-slot name="pagination">
+        <div class="mt-4">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div class="text-sm text-gray-700 dark:text-gray-300">
                     {{ __('Showing') }}
@@ -196,7 +186,7 @@
                     {{ $quotations->links() }}
                 </div>
             </div>
-        </x-slot>
+        </div>
     </x-page-container>
 
     <livewire:quotations.show />

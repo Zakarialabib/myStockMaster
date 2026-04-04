@@ -11,52 +11,23 @@
         </x-slot>
 
         <x-slot name="filters">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Show') }}</label>
-                    <x-input.select wire:model.live="perPage">
-                        @foreach ($paginationOptions as $value)
-                            <option value="{{ $value }}">{{ $value }}</option>
-                        @endforeach
-                    </x-input.select>
-                </div>
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Warehouse') }}</label>
-                    <x-input.select wire:model.live="warehouse_id">
-                        <option value="">{{ __('Select warehouse') }}</option>
-                        @foreach ($this->warehouses as $index => $warehouse)
-                            <option value="{{ $index }}">{{ $warehouse }}</option>
-                        @endforeach
-                    </x-input.select>
-                    <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
-                </div>
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Search') }}</label>
-                    <x-input.text wire:model.live.debounce.500ms="search" placeholder="{{ __('Search users...') }}"
-                        icon="fas fa-search" />
-                </div>
-            </div>
-            @if ($selected)
-                <div
-                    class="flex items-center space-x-2 mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <div class="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
-                        <i class="fas fa-info-circle w-4 h-4"></i>
-                        <span class="text-sm font-medium">{{ $this->selectedCount ?? count($selected) }}
-                            {{ __('selected') }}</span>
+            <x-datatable.filters 
+                :per-page-options="$paginationOptions"
+                :selected-count="$this->selectedCount ?? count($selected)"
+                :can-delete="auth()->user()->can('user_delete')"
+            >
+                <x-slot name="extraFilters">
+                    <div class="w-full md:w-64">
+                        <x-input.select wire:model.live="warehouse_id">
+                            <option value="">{{ __('Select warehouse') }}</option>
+                            @foreach ($this->warehouses as $index => $warehouse)
+                                <option value="{{ $index }}">{{ $warehouse }}</option>
+                            @endforeach
+                        </x-input.select>
+                        <x-input-error :messages="$errors->get('warehouse_id')" class="mt-1" />
                     </div>
-                    @can('user_delete')
-                        <x-button wire:click="deleteSelected" variant="danger" size="sm" icon="fas fa-trash">
-                            {{ __('Delete Selected') }}
-                        </x-button>
-                    @endcan
-                    <x-button wire:click="$set('selected', [])" variant="secondary" size="sm" icon="fas fa-times">
-                        {{ __('Clear Selected') }}
-                    </x-button>
-                </div>
-            @endif
+                </x-slot>
+            </x-datatable.filters>
         </x-slot>
 
         <x-table>
@@ -64,20 +35,20 @@
                 <x-table.th class="w-12">
                     <x-input.checkbox wire:model.live="selectPage" />
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('created_at')" field="created_at" :direction="$sorts['created_at'] ?? null"
+                <x-table.th sortable wire:click="sortingBy('created_at')" field="created_at" :direction="$sortBy === 'created_at' ? $sortDirection : null"
                     class="min-w-32">
                     {{ __('Date') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('name')" field="name" :direction="$sorts['name'] ?? null" class="min-w-40">
+                <x-table.th sortable wire:click="sortingBy('name')" field="name" :direction="$sortBy === 'name' ? $sortDirection : null" class="min-w-40">
                     {{ __('Name') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('email')" field="email" :direction="$sorts['email'] ?? null" class="min-w-48">
+                <x-table.th sortable wire:click="sortingBy('email')" field="email" :direction="$sortBy === 'email' ? $sortDirection : null" class="min-w-48">
                     {{ __('Email') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('phone')" field="phone" :direction="$sorts['phone'] ?? null" class="min-w-32">
+                <x-table.th sortable wire:click="sortingBy('phone')" field="phone" :direction="$sortBy === 'phone' ? $sortDirection : null" class="min-w-32">
                     {{ __('Phone') }}
                 </x-table.th>
-                <x-table.th sortable wire:click="sortingBy('status')" field="status" :direction="$sorts['status'] ?? null" class="min-w-24">
+                <x-table.th sortable wire:click="sortingBy('status')" field="status" :direction="$sortBy === 'status' ? $sortDirection : null" class="min-w-24">
                     {{ __('Status') }}
                 </x-table.th>
                 <x-table.th class="min-w-32">
@@ -145,21 +116,21 @@
                         <x-table.td>
                             <div class="flex items-center space-x-2">
                                 @can('user_show')
-                                    <x-button variant="secondary" size="sm"
+                                    <x-button variant="secondary" size="xs"
                                         wire:click="$dispatch('showModal', { id :'{{ $user->id }}' })"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-eye w-4 h-4"></i>
                                     </x-button>
                                 @endcan
                                 @can('user_edit')
-                                    <x-button variant="primary" size="sm"
+                                    <x-button variant="primary" size="xs"
                                         wire:click="$dispatch('editModal', { id : '{{ $user->id }}' })"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit w-4 h-4"></i>
                                     </x-button>
                                 @endcan
                                 @can('user_delete')
-                                    <x-button variant="danger" size="sm" wire:click="delete({{ $user->id }})"
+                                    <x-button variant="danger" size="xs" wire:click="delete({{ $user->id }})"
                                         wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-trash w-4 h-4"></i>
