@@ -45,11 +45,11 @@
                 @endisset
             </main>
 
-            <livewire:sales.recent lazy />
+            <livewire:sales.recent />
 
-            <livewire:products.create lazy />
+            <livewire:products.create />
 
-            <livewire:customers.create lazy />
+            <livewire:customers.create />
 
             <x-settings-bar />
 

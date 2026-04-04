@@ -8,11 +8,10 @@ use App\Livewire\Utils\Datatable;
 use App\Models\Currency;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use Datatable;

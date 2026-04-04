@@ -14,12 +14,10 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Lazy]
 class FinancialDashboard extends Component
 {
     use WithPagination;

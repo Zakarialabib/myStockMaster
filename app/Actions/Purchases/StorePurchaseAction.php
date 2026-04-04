@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 final class StorePurchaseAction
 {
-    public function __invoke(array $purchaseData, iterable $cartItems, float|int $cartTax, float|int $cartDiscount): Purchase
+    public function __invoke(array $purchaseData, iterable $cartItems, float|int $cartTax, float|int $cartDiscount, bool $isDraft = false): Purchase
     {
-        return DB::transaction(function () use ($purchaseData, $cartItems, $cartTax, $cartDiscount): Purchase {
+        return DB::transaction(function () use ($purchaseData, $cartItems, $cartTax, $cartDiscount, $isDraft): Purchase {
             $dueAmount = $purchaseData['total_amount'] - $purchaseData['paid_amount'];
 
             if ($dueAmount === $purchaseData['total_amount']) {
@@ -31,6 +31,11 @@ final class StorePurchaseAction
             } else {
                 $paymentStatus = PaymentStatus::PAID;
                 $status = PurchaseStatus::COMPLETED;
+            }
+
+            if ($isDraft) {
+                $status = PurchaseStatus::PENDING;
+                $paymentStatus = PaymentStatus::PENDING;
             }
 
             $purchase = Purchase::create([
@@ -83,35 +88,37 @@ final class StorePurchaseAction
                     'product_tax_amount' => $taxAmount * 100,
                 ]);
 
-                $product = Product::findOrFail($productId);
+                if (! $isDraft) {
+                    $product = Product::findOrFail($productId);
 
-                $productWarehouse = ProductWarehouse::firstOrNew([
-                    'product_id' => $product->id,
-                    'warehouse_id' => $purchaseData['warehouse_id'],
-                ], [
-                    'price' => $price,
-                    'cost' => $unitPrice,
-                    'qty' => 0,
-                ]);
+                    $productWarehouse = ProductWarehouse::firstOrNew([
+                        'product_id' => $product->id,
+                        'warehouse_id' => $purchaseData['warehouse_id'],
+                    ], [
+                        'price' => $price,
+                        'cost' => $unitPrice,
+                        'qty' => 0,
+                    ]);
 
-                $productWarehouse->fill([
-                    'qty' => $productWarehouse->qty + $quantity,
-                    'cost' => $productWarehouse->cost,
-                ]);
-                $productWarehouse->save();
+                    $productWarehouse->fill([
+                        'qty' => $productWarehouse->qty + $quantity,
+                        'cost' => $productWarehouse->cost,
+                    ]);
+                    $productWarehouse->save();
 
-                Movement::create([
-                    'type' => MovementType::PURCHASE,
-                    'quantity' => $quantity,
-                    'price' => $price * 100,
-                    'date' => date('Y-m-d'),
-                    'movable_type' => get_class($product),
-                    'movable_id' => $product->id,
-                    'user_id' => $purchaseData['user_id'],
-                ]);
+                    Movement::create([
+                        'type' => MovementType::PURCHASE,
+                        'quantity' => $quantity,
+                        'price' => $price * 100,
+                        'date' => date('Y-m-d'),
+                        'movable_type' => get_class($product),
+                        'movable_id' => $product->id,
+                        'user_id' => $purchaseData['user_id'],
+                    ]);
+                }
             }
 
-            if ($purchaseData['paid_amount'] > 0) {
+            if ($purchaseData['paid_amount'] > 0 && ! $isDraft) {
                 PurchasePayment::create([
                     'date' => date('Y-m-d'),
                     'user_id' => $purchaseData['user_id'],

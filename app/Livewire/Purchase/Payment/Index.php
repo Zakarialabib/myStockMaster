@@ -8,11 +8,9 @@ use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[Lazy]
 class Index extends Component
 {
     use Datatable;

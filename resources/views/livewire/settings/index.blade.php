@@ -445,7 +445,7 @@
                             </div>
                         </div>
                         <div class="p-6">
-                            <livewire:settings.smtp lazy />
+                            <livewire:settings.smtp />
                         </div>
                     </div>
                 </div>
@@ -513,7 +513,7 @@
                             </div>
                         </div>
                         <div class="p-6">
-                            <livewire:settings.messaging lazy />
+                            <livewire:settings.messaging />
                         </div>
                     </div>
                 </div>

@@ -102,7 +102,7 @@
         {{ $customergroups->links() }}
     </div>
 
-    <livewire:customer-group.edit :customergroup="$customergroup" lazy />
+    <livewire:customer-group.edit :customergroup="$customergroup" />
 
     <livewire:customer-group.create />
 

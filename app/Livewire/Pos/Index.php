@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -27,7 +26,7 @@ use Livewire\Component;
 #[Isolate]
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
-#[Lazy]
+
 class Index extends Component
 {
     use LivewireCartTrait;

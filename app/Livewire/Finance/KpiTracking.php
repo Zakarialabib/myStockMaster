@@ -13,14 +13,13 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Title('KPI Tracking')]
-#[Lazy]
+
 #[Layout('layouts.app')]
 class KpiTracking extends Component
 {

@@ -13,11 +13,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-#[Lazy]
 class BreakEvenAnalysis extends Component
 {
     #[Validate('required|date')]

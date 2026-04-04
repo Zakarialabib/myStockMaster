@@ -11,13 +11,12 @@ use App\Models\SaleReturnPayment;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class PaymentsReport extends Component
 {
     use WithAlert;

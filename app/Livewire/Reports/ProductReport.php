@@ -6,11 +6,10 @@ namespace App\Livewire\Reports;
 
 use App\Traits\WithAlert;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class ProductReport extends Component
 {
     use WithAlert;

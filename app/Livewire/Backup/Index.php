@@ -8,14 +8,13 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use WithAlert;
