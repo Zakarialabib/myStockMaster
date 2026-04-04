@@ -129,7 +129,7 @@
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            <livewire:toggle-button :model="$user" field="status" key="{{ $user->id }}" lazy />
+                            <livewire:toggle-button :model="$user" field="status" key="{{ $user->id }}" />
                         </x-table.td>
                         <x-table.td>
                             <div class="flex flex-wrap gap-1">

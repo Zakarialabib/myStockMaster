@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 final class StoreSaleAction
 {
-    public function __invoke(array $saleData, iterable $cartItems, float|int $cartTax, float|int $cartDiscount): Sale
+    public function __invoke(array $saleData, iterable $cartItems, float|int $cartTax, float|int $cartDiscount, bool $isDraft = false): Sale
     {
-        return DB::transaction(function () use ($saleData, $cartItems, $cartTax, $cartDiscount): Sale {
+        return DB::transaction(function () use ($saleData, $cartItems, $cartTax, $cartDiscount, $isDraft): Sale {
             $dueAmount = $saleData['total_amount'] - $saleData['paid_amount'];
 
             if ($dueAmount === $saleData['total_amount']) {
@@ -31,6 +31,11 @@ final class StoreSaleAction
             } else {
                 $paymentStatus = PaymentStatus::PAID;
                 $status = SaleStatus::COMPLETED;
+            }
+
+            if ($isDraft) {
+                $status = SaleStatus::PENDING;
+                $paymentStatus = PaymentStatus::PENDING;
             }
 
             $sale = Sale::create([
@@ -83,28 +88,30 @@ final class StoreSaleAction
                     'product_tax_amount' => $taxAmount * 100,
                 ]);
 
-                $product = Product::findOrFail($productId);
+                if (! $isDraft) {
+                    $product = Product::findOrFail($productId);
 
-                $productWarehouse = ProductWarehouse::where('product_id', $product->id)
-                    ->where('warehouse_id', $saleData['warehouse_id'])
-                    ->firstOrFail();
+                    $productWarehouse = ProductWarehouse::where('product_id', $product->id)
+                        ->where('warehouse_id', $saleData['warehouse_id'])
+                        ->firstOrFail();
 
-                $productWarehouse->update([
-                    'qty' => $productWarehouse->qty - $quantity,
-                ]);
+                    $productWarehouse->update([
+                        'qty' => $productWarehouse->qty - $quantity,
+                    ]);
 
-                Movement::create([
-                    'type' => MovementType::SALE,
-                    'quantity' => $quantity,
-                    'price' => $price * 100,
-                    'date' => date('Y-m-d'),
-                    'movable_type' => get_class($product),
-                    'movable_id' => $product->id,
-                    'user_id' => $saleData['user_id'],
-                ]);
+                    Movement::create([
+                        'type' => MovementType::SALE,
+                        'quantity' => $quantity,
+                        'price' => $price * 100,
+                        'date' => date('Y-m-d'),
+                        'movable_type' => get_class($product),
+                        'movable_id' => $product->id,
+                        'user_id' => $saleData['user_id'],
+                    ]);
+                }
             }
 
-            if ($saleData['paid_amount'] > 0) {
+            if ($saleData['paid_amount'] > 0 && ! $isDraft) {
                 SalePayment::create([
                     'date' => date('Y-m-d'),
                     'amount' => $saleData['paid_amount'] * 100,

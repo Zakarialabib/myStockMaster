@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <livewire:utils.product-cart :cartInstance="'quotation'" :data="$quotation" lazy />
+                <livewire:utils.product-cart :cartInstance="'quotation'" :data="$quotation" />
 
                 <div class="flex flex-wrap mb-3">
                     <div class="w-full md:w-1/3 px-2 mb-2">

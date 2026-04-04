@@ -14,7 +14,37 @@
         </div>
     </x-theme.breadcrumb>
 
-    <div class="mt-2 w-full h-full">
+    <!-- Top Selection Header -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mt-4 border border-gray-200">
+        <div class="flex flex-wrap gap-4">
+            <div class="flex-1">
+                <x-label for='warehouse_id' :value="__('Warehouse')" required />
+                <select
+                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
+                    required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id">
+                    <option value=""> {{ __('Select warehouse') }}</option>
+                    @foreach ($this->warehouses as $index => $warehouse)
+                        <option value="{{ $index }}">{{ $warehouse }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+            </div>
+            <div class="flex-1">
+                <x-label for='customer_id' :value="__('Customer')" required />
+                <x-searchable-select
+                    required id="customer_id" name="customer_id" wire:model.live="customer_id"
+                    :options="$this->customers" />
+                <x-input-error :messages="$errors->get('customer_id')" class="mt-2" />
+            </div>
+            <div class="flex-1">
+                <x-label for="date" :value="__('Date')" required />
+                <x-input type="date" name="date" required wire:model="date" class="w-full mt-1" />
+                <x-input-error :messages="$errors->get('date')" class="mt-2" />
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 w-full h-full">
         <livewire:products.search-product />
     </div>
 
@@ -42,34 +72,6 @@
                         <div class="relative flex-1 px-4 py-6 sm:px-6">
                             <x-validation-errors class="mb-4" :errors="$errors" />
                             <form wire:submit="store">
-
-                <div class="mb-4 flex flex-wrap gap-4">
-                    <div class="flex-1">
-                        <x-label for='customer_id' :value="__('Customer')" required />
-                        <x-searchable-select
-                            required id="customer_id" name="customer_id" wire:model.live="customer_id"
-                            :options="$this->customers" />
-                        <x-input-error :messages="$errors->get('customer_id')" class="mt-2" />
-                    </div>
-                    <div class="flex-1">
-                        <x-label for="date" :value="__('Date')" required />
-                        <input type="date" name="date" required wire:model="date"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                        <x-input-error :messages="$errors->get('date')" class="mt-2" />
-                    </div>
-                    <div class="flex-1">
-                        <x-label for="warehouse" :value="__('Warehouse')" />
-                        <select
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id">
-                            <option value=""> {{ __('Select warehouse') }}</option>
-                            @foreach ($this->warehouses as $index => $warehouse)
-                                <option value="{{ $index }}">{{ $warehouse }}</option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
-                    </div>
-                </div>
 
                 <livewire:utils.product-cart :cartInstance="'sale'" />
                 <div class="mb-4 grid md:grid-cols-2 sm:grid-cols-1 gap-4">
@@ -126,17 +128,13 @@
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                 </div>
 
-                <div class="flex flex-wrap gap-4 justify-between">
-                    <x-button danger type="button" wire:click="resetCart" wire:loading.attr="disabled"
-                        class="ml-2 font-bold flex-1">
-                        {{ __('Reset') }}
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <x-button secondary type="button" wire:click="saveDraft" class="w-full justify-center">
+                        {{ __('Save Draft') }}
                     </x-button>
-                    <button
-                        class="flex-1 items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-green-900 focus:outline-hidden focus:border-green-900 focus:ring-3 ring-green-500 disabled:opacity-25 transition ease-in-out duration-150 bg-green-600 hover:bg-green-700"
-                        type="button" wire:click.throttle="proceed" wire:loading.attr="disabled"
-                        {{ $total_amount == 0 ? 'disabled' : '' }}>
-                        {{ __('Proceed') }}
-                    </button>
+                    <x-button type="button" primary wire:click.throttle="proceed" class="w-full justify-center" wire:loading.attr="disabled" {{ $total_amount == 0 ? 'disabled' : '' }}>
+                        {{ __('Finish Sale') }}
+                    </x-button>
                 </div>
 
                             </form>

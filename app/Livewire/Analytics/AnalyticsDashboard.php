@@ -11,13 +11,11 @@ use App\Models\Product;
 use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
 
-#[Lazy]
 class AnalyticsDashboard extends Component
 {
     use WithAlert;

@@ -7,11 +7,9 @@ namespace App\Livewire\Notification;
 use App\Models\ProductWarehouse;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Lazy]
 class Index extends Component
 {
     use WithAlert;

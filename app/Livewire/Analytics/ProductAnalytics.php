@@ -11,13 +11,12 @@ use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class ProductAnalytics extends Component
 {
     use WithPagination;

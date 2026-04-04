@@ -11,13 +11,12 @@ use App\Models\SaleReturn;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class CustomersReport extends Component
 {
     use WithAlert;

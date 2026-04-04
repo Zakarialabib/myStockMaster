@@ -111,6 +111,51 @@ class Create extends Component
         }
     }
 
+    public function saveDraft(): void
+    {
+        if (! $this->warehouse_id) {
+            $this->alert('error', __('Please select a warehouse'));
+
+            return;
+        }
+
+        if (! $this->supplier_id) {
+            $this->alert('error', __('Please select a supplier!'));
+
+            return;
+        }
+
+        $this->validate();
+
+        $purchase = app(StorePurchaseAction::class)(
+            [
+                'date' => $this->date,
+                'supplier_id' => $this->supplier_id,
+                'warehouse_id' => $this->warehouse_id,
+                'user_id' => $this->user_id,
+                'tax_percentage' => $this->tax_percentage,
+                'discount_percentage' => $this->discount_percentage,
+                'shipping_amount' => $this->shipping_amount,
+                'paid_amount' => $this->paid_amount,
+                'total_amount' => $this->total_amount,
+                'payment_method' => $this->payment_method,
+                'note' => $this->note,
+                'tax_amount' => (int) ($this->cartTax * 100),
+                'discount_amount' => (int) ($this->cartDiscount * 100),
+            ],
+            $this->cartContent->toArray(),
+            $this->cartTax,
+            $this->cartDiscount,
+            true // isDraft
+        );
+
+        $this->alert('success', __('Draft saved successfully!'));
+
+        $this->clearCart();
+
+        $this->redirectRoute('purchases.index', navigate: true);
+    }
+
     public function store(): void
     {
         if (! $this->warehouse_id) {
