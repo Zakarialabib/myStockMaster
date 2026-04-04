@@ -9,12 +9,9 @@ use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Post;
 
 class SyncController extends Controller
 {
-    #[Get('/api/sync/pull', name: 'api.sync.pull')]
     public function pull(Request $request): JsonResponse
     {
         $lastSyncedAt = $request->input('last_synced_at');
@@ -33,7 +30,6 @@ class SyncController extends Controller
         ]);
     }
 
-    #[Post('/api/sync/push', name: 'api.sync.push')]
     public function push(Request $request): JsonResponse
     {
         // TODO: Handle incoming changes from desktop

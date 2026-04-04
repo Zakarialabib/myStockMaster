@@ -2,64 +2,43 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ExpenseController extends Controller
 {
     /**
-     * Retrieve a list of Expense with optional filters and pagination.
-     */
-    /**
      * Retrieve a list of expenses with optional filters and pagination.
      */
-    #[Get('/api/expenses', name: 'api.expenses.index')]
-    #[Middleware('api')]
     public function index(Request $request): AnonymousResourceCollection
     {
+        $query = Expense::query();
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->integer('category_id'));
+        }
 
         if ($request->get('_end') !== null) {
-            $limit = $request->get('_end') ? $request->get('_end') : 10;
-            $offset = $request->get('_start') ? $request->get('_start') : 0;
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-            $order = $request->get('_order') ? $request->get('_order') : 'asc';
-            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-            // Filters
-            $where_raw = ' 1=1 ';
-
-            // capture category_id filter
-            $category_id = $request->get('category_id') ? $request->get('category_id') : '';
-
-            if ($category_id !== '') {
-                $where_raw .= " AND (category_id =  $category_id)";
-            }
-            // capture sort fields
-            $sort_array = explode(',', $sort);
-
-            if (count($sort_array) > 0) {
-                // retireve ordered and limit expenses list
-                $expenses = Expense::whereRaw($where_raw)
-                    // ->orderByRaw("COALESCE($sort)")
-                    ->offset($offset)
-                    ->limit($limit)
-                    ->get();
-            } else {
-                // retireve ordered and limit expenses list
-                $expenses = Expense::orderBy($sort, $order)
-                    ->offset($offset)
-                    ->limit($limit)
-                    ->get();
-            }
+            $expenses = $query
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
         } else {
-            // retireve all expenses
-            $expenses = Expense::get();
+            $expenses = $query->get();
         }
 
         return ExpenseResource::collection($expenses);
@@ -68,60 +47,46 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    #[Post('/api/expenses', name: 'api.expenses.store')]
-    #[Middleware('api')]
     public function store(StoreExpenseRequest $request): ExpenseResource
     {
-        $Expense = Expense::create($request->all());
+        $expense = Expense::create($request->all());
 
-        return new ExpenseResource($Expense);
+        return new ExpenseResource($expense);
     }
 
     /**
      * Display the specified resource.
      */
-    #[Get('/api/expenses/{id}', name: 'api.expenses.show')]
-    #[Middleware('api')]
     public function show(int $id): ExpenseResource|JsonResponse
     {
-        $Expense = Expense::find($id);
+        $expense = Expense::find($id);
 
-        if (is_null($Expense)) {
+        if ($expense === null) {
             return response()->json(['message' => 'Expense not found'], 404);
         }
 
-        return new ExpenseResource($Expense);
+        return new ExpenseResource($expense);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    #[Put('/api/expenses/{id}', name: 'api.expenses.update')]
-    #[Middleware('api')]
     public function update(UpdateExpenseRequest $request, int $id): ExpenseResource
     {
-        $Expense = Expense::findOrFail($id);
-        $Expense->update($request->all());
+        $expense = Expense::findOrFail($id);
+        $expense->update($request->all());
 
-        return new ExpenseResource($Expense);
+        return new ExpenseResource($expense);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $Expense = Expense::findOrFail($id);
-            $Expense->delete();
+        $expense = Expense::findOrFail($id);
+        $expense->delete();
 
-            return $this->sendResponse($Expense, 'Expense deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Expense deleted successfully']);
     }
 }

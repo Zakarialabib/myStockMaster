@@ -8,13 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    #[Post('/api/register', name: 'api.register')]
     public function register(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
@@ -29,7 +27,7 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->accessToken;
 
         return response()->json([
             'token' => $token,
@@ -37,7 +35,6 @@ class AuthController extends Controller
         ]);
     }
 
-    #[Post('/api/login', name: 'api.login')]
     public function login(Request $request): JsonResponse
     {
         if (! Auth::attempt($request->only(['email', 'password']))) {
@@ -48,7 +45,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request['email'])->firstOrFail();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->accessToken;
 
         return response()->json([
             'token' => $token,

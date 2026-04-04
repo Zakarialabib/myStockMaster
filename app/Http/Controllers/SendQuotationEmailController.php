@@ -8,16 +8,10 @@ use App\Mail\QuotationMail;
 use App\Models\Quotation;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendQuotationEmailController extends Controller
 {
-    #[Get('/admin/quotation/mail/{quotation}', name: 'quotation.email')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function __invoke(Quotation $quotation): RedirectResponse
     {
         try {
@@ -29,7 +23,7 @@ class SendQuotationEmailController extends Controller
 
             // toast('Sent On "'.$quotation->customer->email.'"!', 'success');
         } catch (Exception $exception) {
-            Log::error($exception);
+            report($exception);
             // toast('Something Went Wrong!', 'error');
         }
 

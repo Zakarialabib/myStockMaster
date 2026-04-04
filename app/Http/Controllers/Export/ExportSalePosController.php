@@ -6,15 +6,10 @@ namespace App\Http\Controllers\Export;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sale;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use PDF;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class ExportSalePosController extends Controller
 {
-    #[Get('/admin/sales/pos/pdf/{id}', name: 'sales.pos.pdf')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function __invoke(int|string $id): Response
     {
         $sale = Sale::where('id', $id)->firstOrFail();
@@ -23,10 +18,6 @@ class ExportSalePosController extends Controller
             'sale' => $sale,
         ];
 
-        $pdf = PDF::loadView('admin.sale.print-pos', $data, [], [
-            'format' => 'a5',
-        ]);
-
-        return $pdf->stream(__('Sale') . $sale->reference . '.pdf');
+        return response()->view('admin.sale.print-pos', $data);
     }
 }

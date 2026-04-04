@@ -15,16 +15,12 @@ use App\Models\SalePayment;
 use App\Models\SaleReturnPayment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    #[Get('/admin/current-month/chart-data', name: 'current-month.chart')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function currentMonthChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
@@ -46,8 +42,6 @@ class HomeController extends Controller
         ]);
     }
 
-    #[Get('/admin/sales-purchases/chart-data', name: 'sales-purchases.chart')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function salesPurchasesChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
@@ -58,8 +52,6 @@ class HomeController extends Controller
         return response()->json(['sales' => $sales, 'purchases' => $purchases]);
     }
 
-    #[Get('/admin/payment-flow/chart-data', name: 'payment-flow.chart')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function paymentChart(): JsonResponse
     {
         abort_if(! request()->ajax(), 404);
@@ -207,8 +199,6 @@ class HomeController extends Controller
         return response()->json(['data' => $data, 'days' => $days]);
     }
 
-    #[Get('/admin/lang/{lang}', name: 'changelanguage')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function changeLanguage(string $locale): RedirectResponse
     {
         Cookie::queue('lang', $locale);

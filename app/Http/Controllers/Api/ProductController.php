@@ -12,19 +12,12 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Routing\Attributes\Delete;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use Illuminate\Routing\Attributes\Post;
-use Illuminate\Routing\Attributes\Put;
 
 class ProductController extends Controller
 {
     /**
      * Retrieve a list of products with optional filters and pagination.
      */
-    #[Get('/api/products', name: 'api.products.index')]
-    #[Middleware('api')]
     public function index(Request $request): AnonymousResourceCollection
     {
 
@@ -43,25 +36,12 @@ class ProductController extends Controller
             if ($brand_id !== '') {
                 $where_raw .= " AND (brand_id =  $brand_id)";
             }
-            // capture sort fields
-            $sort_array = explode(',', $sort);
-
-            if (count($sort_array) > 0) {
-                // retireve ordered and limit products list
-                $products = Product::with(['category', 'brand'])
-                    ->whereRaw($where_raw)
-                    // ->orderByRaw("COALESCE($sort)")
-                    // ->offset($offset)
-                    // ->limit($limit)
-                    ->get();
-            } else {
-                // retireve ordered and limit products list
-                $products = Product::with(['category', 'brand'])
-                    ->orderBy($sort, $order)
-                    // ->offset($offset)
-                    // ->limit($limit)
-                    ->get();
-            }
+            $products = Product::with(['category', 'brand'])
+                ->whereRaw($where_raw)
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
         } else {
             // retireve all products
             $products = Product::with(['category', 'brand'])->get();
@@ -73,8 +53,6 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    #[Post('/api/products', name: 'api.products.store')]
-    #[Middleware('api')]
     public function store(StoreProductRequest $request): ProductResource
     {
         $product = Product::create($request->all());
@@ -85,8 +63,6 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    #[Get('/api/products/{id}', name: 'api.products.show')]
-    #[Middleware('api')]
     public function show(int $id): ProductResource|JsonResponse
     {
         $product = Product::find($id);
@@ -101,8 +77,6 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[Put('/api/products/{id}', name: 'api.products.update')]
-    #[Middleware('api')]
     public function update(UpdateProductRequest $request, int $id): ProductResource
     {
         $product = Product::findOrFail($id);
@@ -114,8 +88,6 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[Delete('/api/products/{id}', name: 'api.products.destroy')]
-    #[Middleware('api')]
     public function destroy(int $id): JsonResponse
     {
         $product = Product::findOrFail($id);

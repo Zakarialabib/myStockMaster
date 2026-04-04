@@ -7,15 +7,10 @@ namespace App\Http\Controllers\Export;
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use PDF;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class ExportPurchaseReturnController extends Controller
 {
-    #[Get('/admin/purchase-returns/pdf/{id}', name: 'purchase-returns.pdf')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function __invoke(int|string $id): Response
     {
         $purchaseReturn = PurchaseReturn::where('id', $id)->firstOrFail();
@@ -26,8 +21,6 @@ class ExportPurchaseReturnController extends Controller
             'supplier' => $supplier,
         ];
 
-        $pdf = PDF::loadView('admin.purchasesreturn.print', $data);
-
-        return $pdf->stream(__('Purchase Return') . $purchaseReturn->reference . '.pdf');
+        return response()->view('admin.purchasesreturn.print', $data);
     }
 }

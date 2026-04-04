@@ -4,53 +4,50 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use Illuminate\Routing\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 class ReportsController extends Controller
 {
-    public function profitLossReport()
+    public function profitLossReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return view('admin.reports.profit-loss.index');
+        return redirect()->route('profit-loss-report.index');
     }
 
-    public function paymentsReport()
+    public function paymentsReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return view('admin.reports.payments.index');
+        return redirect()->route('payments-report.index');
     }
 
-    public function salesReport()
+    public function salesReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $customers = Customer::select(['id', 'name'])->get();
-
-        return view('admin.reports.sales.index', compact('customers'));
+        return redirect()->route('sales-report.index');
     }
 
-    public function purchasesReport()
+    public function purchasesReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return view('admin.reports.purchases.index');
+        return redirect()->route('purchases-report.index');
     }
 
-    public function salesReturnReport()
+    public function salesReturnReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return view('admin.reports.sales-return.index');
+        return redirect()->route('sales-return-report.index');
     }
 
-    public function purchasesReturnReport()
+    public function purchasesReturnReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return view('admin.reports.purchases-return.index');
+        return redirect()->route('purchases-return-report.index');
     }
 }

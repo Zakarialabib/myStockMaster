@@ -12,19 +12,12 @@ use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Routing\Attributes\Delete;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use Illuminate\Routing\Attributes\Post;
-use Illuminate\Routing\Attributes\Put;
 
 class CategoryController extends Controller
 {
     /**
      * Retrieve a list of categories with optional filters and pagination.
      */
-    #[Get('/api/categories', name: 'api.categories.index')]
-    #[Middleware('api')]
     public function index(Request $request): AnonymousResourceCollection
     {
 
@@ -42,23 +35,11 @@ class CategoryController extends Controller
             // if ($brand_id !== '') {
             //     $where_raw .= " AND (brand_id =  $brand_id)";
             // }
-            // capture sort fields
-            $sort_array = explode(',', $sort);
-
-            if (count($sort_array) > 0) {
-                // retireve ordered and limit categories list
-                $categories = Category::whereRaw($where_raw)
-                    // ->orderByRaw("COALESCE($sort)")
-                    // ->offset($offset)
-                    // ->limit($limit)
-                    ->get();
-            } else {
-                // retireve ordered and limit categories list
-                $categories = Category::orderBy($sort, $order)
-                    // ->offset($offset)
-                    // ->limit($limit)
-                    ->get();
-            }
+            $categories = Category::whereRaw($where_raw)
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
         } else {
             // retireve all categories
             $categories = Category::get();
@@ -70,8 +51,6 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    #[Post('/api/categories', name: 'api.categories.store')]
-    #[Middleware('api')]
     public function store(StoreCategoryRequest $request): CategoryResource
     {
         $category = Category::create($request->all());
@@ -82,8 +61,6 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    #[Get('/api/categories/{id}', name: 'api.categories.show')]
-    #[Middleware('api')]
     public function show(int $id): CategoryResource|JsonResponse
     {
         $category = Category::find($id);
@@ -98,8 +75,6 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[Put('/api/categories/{id}', name: 'api.categories.update')]
-    #[Middleware('api')]
     public function update(UpdateCategoryRequest $request, int $id): CategoryResource
     {
         $category = Category::findOrFail($id);
@@ -111,8 +86,6 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[Delete('/api/categories/{id}', name: 'api.categories.destroy')]
-    #[Middleware('api')]
     public function destroy(int $id): JsonResponse
     {
         $category = Category::findOrFail($id);

@@ -16,12 +16,6 @@ parameters:
     checkUninitializedProperties: true
     checkModelProperties: true
 
-    ignoreErrors:
-        - '#PHPDoc tag @var#'
-        - '#Access to undefined constant#'
-        - '#Call to an undefined method#'
-        - '#Unsafe usage of new static#'
-
     excludePaths:
         - ./*/*/FileToBeExcluded.php
 

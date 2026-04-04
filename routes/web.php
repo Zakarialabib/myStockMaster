@@ -2,8 +2,20 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Export\ExportPurchaseController;
+use App\Http\Controllers\Export\ExportPurchaseReturnController;
+use App\Http\Controllers\Export\ExportQuotationController;
+use App\Http\Controllers\Export\ExportSaleController;
+use App\Http\Controllers\Export\ExportSalePosController;
+use App\Http\Controllers\Export\ExportSaleReturnController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\PurchasePaymentsController;
 use App\Http\Controllers\PurchaseReturnPaymentsController;
+use App\Http\Controllers\PurchasesReturnController;
+use App\Http\Controllers\QuotationSalesController;
+use App\Http\Controllers\SalesReturnController;
+use App\Http\Controllers\SendQuotationEmailController;
 use App\Livewire\Adjustment\Create as CreateAdjustment;
 use App\Livewire\Adjustment\Edit as EditAdjustment;
 use App\Livewire\Adjustment\Index as AdjustmentIndex;
@@ -108,6 +120,7 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
     // Change lang
+    Route::get('/lang/{locale}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
     Route::livewire('/dashboard', Dashboard::class)->name('dashboard');
 
@@ -150,6 +163,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/currencies', CurrencyIndex::class)->name('currencies.index');
 
     // Charts
+    Route::get('/current-month/chart-data', [HomeController::class, 'currentMonthChart'])->name('current-month.chart');
+    Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
+    Route::get('/payment-flow/chart-data', [HomeController::class, 'paymentChart'])->name('payment-flow.chart');
 
     // Expense Category
     Route::livewire('/expense-categories', ExpenseCategoriesIndex::class)->name('expense-categories.index');
@@ -172,15 +188,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Quotations
     Route::prefix('quotations')->name('quotations.')->group(function () {
         Route::livewire('/', QuotationsIndex::class)->name('index');
+        Route::get('/pdf/{id}', ExportQuotationController::class)->name('pdf');
     });
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::livewire('/create', CreateQuotation::class)->name('create');
         Route::livewire('/update/{id}', EditQuotation::class)->name('edit');
     });
 
+    Route::get('/quotation-sales/{quotation}', QuotationSalesController::class)->name('quotation-sales.create');
+    Route::get('/quotation/mail/{quotation}', SendQuotationEmailController::class)->name('quotation.email');
+
     // Purchases
     Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::livewire('/purchases', PurchasesIndex::class)->name('index');
+        Route::get('/purchases/pdf/{id}', ExportPurchaseController::class)->name('pdf');
     });
     Route::prefix('purchase')->name('purchase.')->group(function () {
         Route::livewire('/purchase/create', CreatePurchase::class)->name('create');
@@ -212,6 +233,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Sales
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::livewire('/', SalesIndex::class)->name('index');
+        Route::get('/pdf/{id}', ExportSaleController::class)->name('pdf');
+        Route::get('/pos/pdf/{id}', ExportSalePosController::class)->name('pos.pdf');
     });
 
     Route::prefix('sale')->name('sale.')->group(function () {
@@ -236,6 +259,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Route::livewire('/logs', 'utils.system-logs')->name('logs.index');
 
     // Integrations
+    Route::get('/integrations', IntegrationController::class)->name('integrations.index');
 
     // Cash Register
     Route::livewire('/cash-registers', CashRegisterIndex::class)->name('cash-register.index');
@@ -266,6 +290,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
         Route::livewire('/', PurchaseReturnIndex::class)->name('index');
         Route::livewire('/create', CreatePurchaseReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditPurchaseReturn::class)->name('edit');
+        Route::get('/pdf/{id}', ExportPurchaseReturnController::class)->name('pdf');
+        Route::get('/{purchase_return}', [PurchasesReturnController::class, 'show'])->name('show');
+        Route::delete('/{purchase_return}', [PurchasesReturnController::class, 'destroy'])->name('destroy');
     });
 
     // Generate Sale Returns PDF
@@ -273,6 +300,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
         Route::livewire('/', SaleReturnIndex::class)->name('index');
         Route::livewire('/create', CreateSaleReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditSaleReturn::class)->name('edit');
+        Route::get('/pdf/{id}', ExportSaleReturnController::class)->name('pdf');
+        Route::get('/{sale_return}', [SalesReturnController::class, 'show'])->name('show');
+        Route::delete('/{sale_return}', [SalesReturnController::class, 'destroy'])->name('destroy');
     });
 
     // Transfers

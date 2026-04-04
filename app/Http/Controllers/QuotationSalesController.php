@@ -8,15 +8,10 @@ use App\Facades\Cart;
 use App\Models\Product;
 use App\Models\Quotation;
 use Illuminate\Contracts\View\View;
-use Illuminate\Routing\Attributes\Get;
-use Illuminate\Routing\Attributes\Middleware;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 
 class QuotationSalesController extends Controller
 {
-    #[Get('/admin/quotation-sales/{quotation}', name: 'quotation-sales.create')]
-    #[Middleware(['auth', 'auth.session', 'role:admin'])]
     public function __invoke(Quotation $quotation): View
     {
         abort_if(Gate::denies('quotation_sale'), 403);
