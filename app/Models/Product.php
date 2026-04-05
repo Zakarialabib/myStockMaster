@@ -259,7 +259,13 @@ class Product extends Model
     protected function totalQuantity(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $sum = $this->warehouses->sum('pivot.qty');
+
+                    return $sum !== null ? (float) $sum : null;
+                }
+
                 $sum = $this->warehouses()->sum('qty');
 
                 return $sum !== null ? (float) $sum : null;
@@ -270,7 +276,13 @@ class Product extends Model
     protected function averagePrice(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.price');
+
+                    return $avg !== null ? (float) $avg : null;
+                }
+
                 $avg = $this->warehouses()->avg('price');
 
                 return $avg !== null ? (float) $avg : null;
@@ -281,7 +293,13 @@ class Product extends Model
     protected function averageCost(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.cost');
+
+                    return $avg !== null ? (float) $avg : null;
+                }
+
                 $avg = $this->warehouses()->avg('cost');
 
                 return $avg !== null ? (float) $avg : null;
@@ -292,7 +310,13 @@ class Product extends Model
     protected function averageOldPrice(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.old_price');
+
+                    return $avg !== null ? (float) $avg : null;
+                }
+
                 $avg = $this->warehouses()->avg('old_price');
 
                 return $avg !== null ? (float) $avg : null;

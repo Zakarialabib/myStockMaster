@@ -146,12 +146,9 @@ class Index extends Component
 
         $query = Product::query()
             ->with([
-                'warehouses' => static function ($query): void {
-                    $query->withPivot('qty', 'price', 'cost');
-                },
+                'warehouses',
                 'category',
                 'brand',
-                'movements',
             ])->select('products.*')
             ->advancedFilter([
                 's' => $this->search ?: null,
