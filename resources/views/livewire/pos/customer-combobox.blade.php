@@ -1,9 +1,9 @@
 <div
     x-data="{
-        open: @entangle('isOpen'),
-        search: @entangle('search'),
-        selectedId: @entangle('selectedCustomerId'),
-        highlightedIdx: @entangle('highlightedIndex'),
+        open: $wire.entangle('isOpen'),
+        search: $wire.entangle('search'),
+        selectedId: $wire.entangle('selectedCustomerId'),
+        highlightedIdx: $wire.entangle('highlightedIndex'),
         selectedName: @js($selectedCustomerName),
         init() {
             this.$watch('open', value => {
@@ -15,16 +15,16 @@
             });
         },
         selectOption(id, name) {
-            selectedId = id;
-            selectedName = name;
-            open = false;
-            search = '';
-            highlightedIdx = -1;
+            this.selectedId = id;
+            this.selectedName = name;
+            this.open = false;
+            this.search = '';
+            this.highlightedIdx = -1;
             $wire.selectCustomer(id);
         },
         clearSelection() {
-            selectedId = null;
-            selectedName = null;
+            this.selectedId = null;
+            this.selectedName = null;
             $wire.clearSelection();
         },
         handleKeydown(e) {
@@ -38,7 +38,7 @@
                 e.preventDefault();
                 $wire.selectHighlighted();
             } else if (e.key === 'Escape') {
-                open = false;
+                this.open = false;
             }
         }
     }"

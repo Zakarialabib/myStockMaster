@@ -75,7 +75,7 @@
             <div class="flex items-center justify-center gap-1">
                 <button
                     type="button"
-                    @click="decrementQty()"
+                    @click="if (!quantities[{{ $item->id }}]) quantities[{{ $item->id }}] = 1; quantities[{{ $item->id }}] = parseInt(quantities[{{ $item->id }}]) - 1; if (quantities[{{ $item->id }}] < 1) quantities[{{ $item->id }}] = 1; $wire.updateQuantity('{{ $item->rowId }}', '{{ $item->id }}')"
                     class="w-7 h-7 flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 active:bg-gray-100 dark:active:bg-gray-500 transition-colors touch-manipulation"
                     aria-label="{{ __('Decrease quantity') }}"
                 >
@@ -93,7 +93,7 @@
                 />
                 <button
                     type="button"
-                    @click="incrementQty()"
+                    @click="if (!quantities[{{ $item->id }}]) quantities[{{ $item->id }}] = 1; quantities[{{ $item->id }}] = parseInt(quantities[{{ $item->id }}]) + 1; $wire.updateQuantity('{{ $item->rowId }}', '{{ $item->id }}')"
                     class="w-7 h-7 flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 active:bg-gray-100 dark:active:bg-gray-500 transition-colors touch-manipulation"
                     aria-label="{{ __('Increase quantity') }}"
                 >

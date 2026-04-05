@@ -1,9 +1,9 @@
 <div
     x-data="{
-        showCheckout: @entangle('checkoutModal'),
-        totalAmount: @entangle('total_amount'),
-        paidAmount: @entangle('paid_amount'),
-        paymentMethod: @entangle('payment_method'),
+        showCheckout: $wire.entangle('checkoutModal'),
+        totalAmount: $wire.entangle('total_amount'),
+        paidAmount: $wire.entangle('paid_amount'),
+        paymentMethod: $wire.entangle('payment_method'),
         scanBeep: null,
         scanError: null,
         init() {
