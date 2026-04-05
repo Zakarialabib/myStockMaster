@@ -154,7 +154,11 @@ class Index extends Component
                 'category',
                 'brand',
                 'movements',
-            ])->select('products.*')
+            ])
+            ->withSum('warehouses as total_qty', 'product_warehouse.qty')
+            ->withAvg('warehouses as avg_price', 'product_warehouse.price')
+            ->withAvg('warehouses as avg_cost', 'product_warehouse.cost')
+            ->select('products.*')
             ->advancedFilter([
                 's' => $this->search ?: null,
                 'order_column' => $this->sortBy,

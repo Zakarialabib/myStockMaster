@@ -177,6 +177,10 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
+                if (array_key_exists('total_qty', $this->attributes)) {
+                    return $this->attributes['total_qty'] !== null ? (float) $this->attributes['total_qty'] : null;
+                }
+
                 $sum = $this->warehouses()->sum('qty');
 
                 return $sum !== null ? (float) $sum : null;
@@ -188,6 +192,10 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
+                if (array_key_exists('avg_price', $this->attributes)) {
+                    return $this->attributes['avg_price'] !== null ? (float) $this->attributes['avg_price'] : null;
+                }
+
                 $avg = $this->warehouses()->avg('price');
 
                 return $avg !== null ? (float) $avg : null;
@@ -199,6 +207,10 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
+                if (array_key_exists('avg_cost', $this->attributes)) {
+                    return $this->attributes['avg_cost'] !== null ? (float) $this->attributes['avg_cost'] : null;
+                }
+
                 $avg = $this->warehouses()->avg('cost');
 
                 return $avg !== null ? (float) $avg : null;
