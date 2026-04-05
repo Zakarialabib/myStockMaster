@@ -18,16 +18,12 @@ class SearchProduct extends Component
     use WithAlert;
     use WithPagination;
 
-    public $product;
-
     #[Url(as: 'q')]
     public $querySearch = '';
 
     public $category_id;
 
     public $warehouse_id;
-
-    public $search_results;
 
     public int $showCount = 9;
 

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire\Pos;
 
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -12,16 +15,12 @@ class CustomerCombobox extends Component
 {
     public string $search = '';
 
+    #[Modelable]
     public int|string|null $selectedCustomerId = null;
 
     public bool $isOpen = false;
 
     public int $highlightedIndex = -1;
-
-    public function mount(?int $customerId = null): void
-    {
-        $this->selectedCustomerId = $customerId;
-    }
 
     public function updatedSearch(): void
     {
@@ -35,19 +34,16 @@ class CustomerCombobox extends Component
         $this->isOpen = false;
         $this->search = '';
         $this->highlightedIndex = -1;
-        $this->dispatch('customer-selected', customerId: $customerId);
     }
 
     public function clearSelection(): void
     {
         $this->selectedCustomerId = null;
-        $this->dispatch('customer-selected', customerId: null);
     }
 
     public function highlightNext(): void
     {
-        $customers = $this->getCustomers();
-        if ($this->highlightedIndex < count($customers) - 1) {
+        if ($this->highlightedIndex < $this->customers->count() - 1) {
             $this->highlightedIndex++;
         }
     }
@@ -61,19 +57,19 @@ class CustomerCombobox extends Component
 
     public function selectHighlighted(): void
     {
-        $customers = $this->getCustomers();
-        if ($this->highlightedIndex >= 0 && isset($customers[$this->highlightedIndex])) {
-            $this->selectCustomer($customers[$this->highlightedIndex]->id);
+        if ($this->highlightedIndex >= 0 && isset($this->customers[$this->highlightedIndex])) {
+            $this->selectCustomer($this->customers[$this->highlightedIndex]->id);
         }
     }
 
     #[On('customer-created')]
     public function refreshCustomers(): void
     {
-        $this->dispatch('$refresh');
+        unset($this->customers);
     }
 
-    public function getCustomers()
+    #[Computed]
+    public function customers(): Collection
     {
         $query = Customer::select(['id', 'name', 'phone']);
 
@@ -87,12 +83,11 @@ class CustomerCombobox extends Component
         return $query->limit(10)->get();
     }
 
-    public function getSelectedCustomerName(): ?string
+    #[Computed]
+    public function selectedCustomerName(): ?string
     {
         if ($this->selectedCustomerId) {
-            $customer = Customer::find($this->selectedCustomerId);
-
-            return $customer?->name;
+            return Customer::find($this->selectedCustomerId)?->name;
         }
 
         return null;
@@ -100,9 +95,6 @@ class CustomerCombobox extends Component
 
     public function render()
     {
-        return view('livewire.pos.customer-combobox', [
-            'customers' => $this->getCustomers(),
-            'selectedCustomerName' => $this->getSelectedCustomerName(),
-        ]);
+        return view('livewire.pos.customer-combobox');
     }
 }

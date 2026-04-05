@@ -1,9 +1,9 @@
 <div
     x-data="{
         showCheckout: $wire.entangle('checkoutModal'),
-        totalAmount: $wire.entangle('total_amount'),
-        paidAmount: $wire.entangle('paid_amount'),
-        paymentMethod: $wire.entangle('payment_method'),
+        totalAmount: $wire.entangle('form.total_amount'),
+        paidAmount: $wire.entangle('form.paid_amount'),
+        paymentMethod: $wire.entangle('form.payment_method'),
         scanBeep: null,
         scanError: null,
         init() {
@@ -44,7 +44,7 @@
         <div class="w-full lg:w-5/12 flex flex-col gap-4">
             <!-- Product Search -->
             <div
-                class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex-1 relative {{ !$warehouse_id ? 'opacity-75' : '' }}"
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex-1 relative {{ !$form->warehouse_id ? 'opacity-75' : '' }}"
                 role="region"
                 aria-label="{{ __('Product selection area') }}"
             >
@@ -56,7 +56,7 @@
                     </h3>
                 </div>
                 <div class="p-3">
-                    @if (!$warehouse_id)
+                    @if (!$form->warehouse_id)
                         <div
                             class="absolute inset-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center">
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-700">
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                     @endif
-                    <livewire:products.search-product :warehouseId="$warehouse_id" />
+                    <livewire:products.search-product :warehouseId="$form->warehouse_id" />
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
                     </span>
                 </div>
                 <div class="p-3 flex-1 overflow-y-auto" role="region" aria-label="{{ __('Cart items') }}">
-                    <livewire:utils.product-cart :cartInstance="'pos'" :warehouseId="$warehouse_id" />
+                    <livewire:utils.product-cart :cartInstance="'pos'" :warehouseId="$form->warehouse_id" />
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
                         <i class="fas fa-warehouse mr-2 text-blue-500" aria-hidden="true"></i>
                         {{ __('Warehouse') }}
                     </h3>
-                    @if (!$warehouse_id)
+                    @if (!$form->warehouse_id)
                         <span
                             class="px-2 py-1 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 rounded-full animate-pulse"
                             role="alert"
@@ -118,8 +118,8 @@
                             required
                             id="warehouse_id"
                             name="warehouse_id"
-                            wire:model.live="warehouse_id"
-                            class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 {{ !$warehouse_id ? 'ring-2 ring-red-300 dark:ring-red-800' : '' }}"
+                            wire:model.live="form.warehouse_id"
+                            class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 {{ !$form->warehouse_id ? 'ring-2 ring-red-300 dark:ring-red-800' : '' }}"
                             aria-label="{{ __('Select warehouse') }}"
                             aria-required="true"
                         >
@@ -144,7 +144,7 @@
                     </h3>
                 </div>
                 <div class="p-4">
-                    <livewire:pos.customer-combobox :customer-id="$customer_id" />
+                    <livewire:pos.customer-combobox wire:model="form.customer_id" />
                 </div>
             </div>
 
@@ -161,7 +161,7 @@
                         type="button"
                         wire:click="proceed"
                         wire:loading.attr="disabled"
-                        class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors {{ $total_amount == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
+                        class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors {{ $form->total_amount == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
                         aria-label="{{ __('Proceed to checkout') }}"
                     >
                         <i class="fas fa-cash-register mr-2" aria-hidden="true"></i>
@@ -209,7 +209,7 @@
                                     <input
                                         id="total_amount"
                                         type="text"
-                                        wire:model.live="total_amount"
+                                        wire:model.live="form.total_amount"
                                         class="block w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100"
                                         name="total_amount"
                                         readonly
@@ -232,7 +232,7 @@
                                             class="text-xl font-bold"
                                             :class="(paidAmount - totalAmount) < 0 ? 'text-red-500' : 'text-green-600'"
                                         >
-                                            {{ format_currency((float) $paid_amount - (float) $total_amount) }}
+                                            {{ format_currency((float) $form->paid_amount - (float) $form->total_amount) }}
                                         </span>
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@
                                         id="paid_amount"
                                         type="number"
                                         step="0.01"
-                                        wire:model.live.debounce.300ms="paid_amount"
+                                        wire:model.live.debounce.300ms="form.paid_amount"
                                         class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg font-semibold bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         name="paid_amount"
                                         required
@@ -253,14 +253,14 @@
                                 </div>
 
                                 <!-- Smart Cash Buttons -->
-                                <x-smart-cash-buttons :total-amount="$total_amount" wire-model="paid_amount" />
+                                <x-smart-cash-buttons :total-amount="$form->total_amount" wire-model="form.paid_amount" />
                             </div>
 
                             <div>
                                 <x-label for="payment_method" :value="__('Payment Method')" required class="mb-2" />
                                 <div class="relative">
                                     <select
-                                        wire:model.live="payment_method"
+                                        wire:model.live="form.payment_method"
                                         id="payment_method"
                                         required
                                         class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -283,7 +283,7 @@
                                     name="note"
                                     id="note"
                                     rows="4"
-                                    wire:model.live.debounce.300ms="note"
+                                    wire:model.live.debounce.300ms="form.note"
                                     class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                     placeholder="{{ __('Add any notes...') }}"
                                     maxlength="1000"
@@ -328,7 +328,7 @@
                                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
                                     <span class="text-gray-600 dark:text-gray-400">{{ __('Shipping') }}</span>
                                     <span
-                                        class="font-medium text-blue-600 dark:text-blue-400">+{{ format_currency($shipping_amount) }}</span>
+                                        class="font-medium text-blue-600 dark:text-blue-400">+{{ format_currency($form->shipping_amount) }}</span>
                                 </div>
                                 <div class="flex justify-between items-center py-4 bg-gray-50 dark:bg-gray-900/50 px-4 rounded-lg">
                                     <span class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Grand Total') }}</span>

@@ -4,7 +4,7 @@
         search: $wire.entangle('search'),
         selectedId: $wire.entangle('selectedCustomerId'),
         highlightedIdx: $wire.entangle('highlightedIndex'),
-        selectedName: @js($selectedCustomerName),
+        selectedName: @js($this->selectedCustomerName),
         init() {
             this.$watch('open', value => {
                 if (value) {
@@ -130,7 +130,7 @@
         </div>
 
         <ul class="py-1">
-            @forelse($customers as $index => $customer)
+            @forelse($this->customers as $index => $customer)
                 <li
                     wire:key="customer-{{ $customer->id }}"
                     @click="selectOption({{ $customer->id }}, '{{ addslashes($customer->name) }}')"
