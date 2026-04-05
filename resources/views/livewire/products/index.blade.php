@@ -308,6 +308,32 @@
             <livewire:products.create />
 
             <livewire:products.import />
+
+            <!-- Bulk Action Preview Modal -->
+            <x-modal wire:model="previewBulkAction">
+                <x-slot name="title">
+                    {{ __('Confirm Bulk Action') }}
+                </x-slot>
+                <x-slot name="content">
+                    <div class="space-y-4">
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {{ __('You are about to perform a bulk') }} <strong>{{ $bulkActionType }}</strong> {{ __('action on') }} 
+                            <strong>{{ count($selected) }}</strong> {{ __('selected item(s).') }}
+                        </p>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {{ __('Are you sure you want to proceed?') }}
+                        </p>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <x-button variant="secondary" wire:click="$set('previewBulkAction', false)">
+                            {{ __('Cancel') }}
+                        </x-button>
+                        <x-button :variant="$bulkActionType === 'delete' ? 'danger' : 'primary'" wire:click="confirmBulkAction">
+                            {{ __('Confirm') }}
+                        </x-button>
+                    </div>
+                </x-slot>
+            </x-modal>
         </div>
     </x-page-container>
 </div>

@@ -95,6 +95,15 @@
                     {{ __('Delete Selected') }}
                 </x-button>
             @endif
+
+            <x-button 
+                wire:click="printSelectedModal" 
+                variant="secondary" 
+                size="sm" 
+                icon="fas fa-print"
+            >
+                {{ __('Print Selected') }}
+            </x-button>
             
             <x-button 
                 wire:click="$set('selected', [])" 

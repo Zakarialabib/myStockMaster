@@ -70,6 +70,10 @@ class Index extends Component
     #[Url(history: true)]
     public $filterSeasonality = '';
 
+    public bool $previewBulkAction = false;
+
+    public string $bulkActionType = '';
+
     #[Computed]
     public function categories()
     {
@@ -93,15 +97,32 @@ class Index extends Component
 
     public function deleteSelectedModal(): void
     {
-        $confirmationMessage = __('Are you sure you want to delete the selected products? items can be recovered.');
+        $this->bulkActionType = 'delete';
+        $this->previewBulkAction = true;
+    }
 
-        $this->confirm($confirmationMessage, [
-            'toast' => false,
-            'position' => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText' => __('Cancel'),
-            'onConfirmed' => 'deleteSelected',
-        ]);
+    public function printSelectedModal(): void
+    {
+        $this->bulkActionType = 'print';
+        $this->previewBulkAction = true;
+    }
+
+    public function confirmBulkAction()
+    {
+        $this->previewBulkAction = false;
+
+        if ($this->bulkActionType === 'delete') {
+            $this->deleteSelected();
+        } elseif ($this->bulkActionType === 'print') {
+            return $this->printSelected();
+        }
+    }
+
+    public function printSelected()
+    {
+        abort_if(Gate::denies('product_export'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     #[On('deleteSelected')]
@@ -223,9 +244,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_export'), 403);
 
-        $products = Product::whereIn('id', $this->selected)->get();
-
-        return (new ProductExport($products))->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->forModels($this->selected)->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function promoAllProducts(): void

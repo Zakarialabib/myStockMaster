@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Warehouses;
 
+use App\Livewire\Forms\WarehouseForm;
 use App\Models\Warehouse;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -17,22 +17,7 @@ class Edit extends Component
 
     public bool $showModal = false;
 
-    public Warehouse $warehouse;
-
-    #[Validate('string|required|max:255')]
-    public string $name;
-
-    #[Validate('numeric|nullable|max:255')]
-    public ?string $phone = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $country = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $city = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $email = null;
+    public WarehouseForm $form;
 
     public function render()
     {
@@ -48,17 +33,9 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->warehouse = Warehouse::find($id);
+        $warehouse = Warehouse::find($id);
 
-        $this->name = $this->warehouse->name;
-
-        $this->phone = $this->warehouse->phone;
-
-        $this->country = $this->warehouse->country;
-
-        $this->city = $this->warehouse->city;
-
-        $this->email = $this->warehouse->email;
+        $this->form->setWarehouse($warehouse);
 
         $this->showModal = true;
     }
@@ -67,9 +44,7 @@ class Edit extends Component
     {
         abort_if(Gate::denies('warehouse_update'), 403);
 
-        $this->validate();
-
-        $this->warehouse->save();
+        $this->form->update();
 
         $this->showModal = false;
 
