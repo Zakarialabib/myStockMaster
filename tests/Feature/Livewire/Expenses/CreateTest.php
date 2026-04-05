@@ -13,7 +13,7 @@ it('test the expenses create if working', function () {
 
     Livewire::test(Create::class)
         ->assertOk()
-        ->assertViewIs('livewire.expense.create');
+        ->assertViewIs('livewire.form.create');
 });
 
 it('tests the create expense can create', function () {
@@ -24,10 +24,10 @@ it('tests the create expense can create', function () {
     $category_id = $category->id;
 
     Livewire::test(Create::class)
-        ->set('expense.reference', '12345')
-        ->set('expense.date', '01-01-2023')
-        ->set('expense.category_id', $category_id)
-        ->set('expense.amount', '50000')
+        ->set('form.reference', '12345')
+        ->set('form.date', '01-01-2023')
+        ->set('form.category_id', $category_id)
+        ->set('form.amount', '50000')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -43,10 +43,10 @@ it('tests the create expense component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('expense.reference', '')
-        ->set('expense.date', '')
-        ->set('expense.category_id', '')
-        ->set('expense.amount', '')
+        ->set('form.reference', '')
+        ->set('form.date', '')
+        ->set('form.category_id', '')
+        ->set('form.amount', '')
         ->call('create')
         ->assertHasErrors(
             ['reference' => 'required'],
