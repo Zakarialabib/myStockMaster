@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use App\Livewire\Forms\ProductForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Brand;
 use App\Models\Category;
@@ -17,7 +18,6 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -30,60 +30,25 @@ class Create extends Component
 
     public bool $createModal = false;
 
-    public Product $product;
+    public int $step = 1;
 
-    public mixed $image = null;
-
-    public ?string $code = null;
+    public ProductForm $form;
 
     public mixed $gallery = null;
 
-    #[Validate('required|min:3|max:255')]
-    public string $name;
+    public array $options = [];
 
-    public string $barcode_symbology = 'C128';
+    public ?bool $availability = null;
 
-    public ?string $slug = null;
-
-    public string $unit = 'pcs';
-
-    public int $tax_amount = 9;
-
-    public ?string $description = null;
-
-    public ?string $tax_type = null;
-
-    public ?string $usage = null;
+    public ?string $seasonality = null;
 
     public ?string $embeded_video = null;
 
-    #[Validate('required')]
-    public ?int $category_id = null;
+    public ?string $usage = null;
 
-    public ?int $brand_id = null;
-
-    public array $options = [];
-
-    #[Validate('nullable|boolean')]
-    public ?bool $availability = null;
-
-    #[Validate('nullable|string|max:255')]
-    public ?string $seasonality = null;
-
-    #[Validate([
-        'productWarehouse.qty' => 'numeric',
-        'productWarehouse.price' => 'numeric',
-        'productWarehouse.old_price' => 'numeric',
-        'productWarehouse.cost' => 'numeric',
-        'productWarehouse.stock_alert' => 'numeric',
-        'productWarehouse.is_ecommerce' => 'boolean',
-    ])]
     public array $productWarehouse = [
         'qty' => 0,
-        'price' => 0,
-        'cost' => 0,
         'old_price' => 0,
-        'stock_alert' => 10,
         'is_ecommerce' => false,
     ];
 
@@ -108,64 +73,67 @@ class Create extends Component
     public function openModal(): void
     {
         $this->resetErrorBag();
-
-        $this->resetValidation();
-        $this->unit = 'pcs';
-        $this->barcode_symbology = 'C128';
+        $this->form->reset();
+        $this->step = 1;
+        $this->form->unit = 'pcs';
+        $this->form->barcode_symbology = 'C128';
         $this->createModal = true;
     }
 
     public function create(): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        $this->slug = Str::slug($this->name);
+        $slug = Str::slug($this->form->name);
 
-        if ($this->image) {
-            $imageName = Str::slug($this->name) . '-' . $this->image->extension();
-            $this->image->storeAs('products', $imageName, 'local_files');
-            $this->image = $imageName;
+        $imageName = null;
+        if ($this->form->image) {
+            $imageName = Str::slug($this->form->name) . '-' . $this->form->image->extension();
+            $this->form->image->storeAs('products', $imageName, 'local_files');
         }
 
+        $galleryData = null;
         if ($this->gallery) {
             $gallery = [];
 
             foreach ($this->gallery as $value) {
-                $imageName = Str::slug($this->name) . '-' . Str::random(5) . '.' . $value->extension();
-                $value->storeAs('products', $imageName, 'local_files');
-                $gallery[] = $imageName;
+                $gName = Str::slug($this->form->name) . '-' . Str::random(5) . '.' . $value->extension();
+                $value->storeAs('products', $gName, 'local_files');
+                $gallery[] = $gName;
             }
 
-            $this->gallery = json_encode($gallery);
+            $galleryData = json_encode($gallery);
         }
 
-        $this->description = json_encode($this->description);
+        $description = json_encode($this->form->note);
 
         $product = Product::create([
-            'name' => $this->name,
-            'code' => $this->code,
-            'barcode_symbology' => $this->barcode_symbology,
-            'slug' => $this->slug,
-            'unit' => $this->unit,
-            'tax_amount' => $this->tax_amount,
-            'description' => $this->description,
-            'tax_type' => $this->tax_type,
-            'category_id' => $this->category_id,
-            'brand_id' => $this->brand_id,
+            'name' => $this->form->name,
+            'code' => $this->form->code,
+            'barcode_symbology' => $this->form->barcode_symbology,
+            'slug' => $slug,
+            'unit' => $this->form->unit,
+            'tax_amount' => $this->form->order_tax,
+            'description' => $description,
+            'tax_type' => $this->form->tax_type,
+            'category_id' => $this->form->category_id,
+            'brand_id' => $this->form->brand_id,
             'availability' => $this->availability,
             'seasonality' => $this->seasonality,
-            'image' => $this->image,
-            'gallery' => $this->gallery,
+            'image' => $imageName,
+            'gallery' => $galleryData,
+            'embeded_video' => $this->embeded_video,
+            'usage' => $this->usage,
         ]);
 
         ProductWarehouse::create([
             'product_id' => $product->id,
             'warehouse_id' => $this->warehouse?->id,
-            'price' => $this->productWarehouse['price'],
-            'cost' => $this->productWarehouse['cost'],
+            'price' => $this->form->price,
+            'cost' => $this->form->cost,
             'qty' => $this->productWarehouse['qty'] ?? 0,
-            'old_price' => $this->productWarehouse['old_price'],
-            'stock_alert' => $this->productWarehouse['stock_alert'] ?? 0,
+            'old_price' => $this->productWarehouse['old_price'] ?? 0,
+            'stock_alert' => $this->form->stock_alert,
             'is_ecommerce' => $this->productWarehouse['is_ecommerce'] ?? false,
         ]);
 
