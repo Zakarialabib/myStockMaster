@@ -6,7 +6,6 @@ namespace App\Livewire\Language;
 
 use App\Models\Language;
 use App\Traits\WithAlert;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -43,7 +42,7 @@ class Create extends Component
             'code' => $this->code,
         ]);
 
-        File::copy(App::langPath() . ('/en.json'), App::langPath() . ('/' . $this->code . '.json'));
+        File::copy(lang_path('en.json'), lang_path($this->code . '.json'));
 
         $this->alert('success', __('Language created successfully!'));
 

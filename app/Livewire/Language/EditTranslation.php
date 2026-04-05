@@ -40,7 +40,7 @@ class EditTranslation extends Component
 
     private function getTranslations()
     {
-        $path = base_path(sprintf('lang/%s.json', $this->language->code));
+        $path = lang_path($this->language->code . '.json');
         $content = file_get_contents($path);
 
         return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
@@ -50,7 +50,7 @@ class EditTranslation extends Component
     {
         $this->validate();
 
-        $path = base_path(sprintf('lang/%s.json', $this->language->code));
+        $path = lang_path($this->language->code . '.json');
 
         $data = file_get_contents($path);
         $translations = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
