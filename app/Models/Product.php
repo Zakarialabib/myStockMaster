@@ -259,9 +259,11 @@ class Product extends Model
     protected function totalQuantity(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                if (array_key_exists('total_qty', $this->attributes)) {
-                    return $this->attributes['total_qty'] !== null ? (float) $this->attributes['total_qty'] : null;
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $sum = $this->warehouses->sum('pivot.qty');
+
+                    return $sum !== null ? (float) $sum : null;
                 }
 
                 $sum = $this->warehouses()->sum('qty');
@@ -274,9 +276,11 @@ class Product extends Model
     protected function averagePrice(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                if (array_key_exists('avg_price', $this->attributes)) {
-                    return $this->attributes['avg_price'] !== null ? (float) $this->attributes['avg_price'] : null;
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.price');
+
+                    return $avg !== null ? (float) $avg : null;
                 }
 
                 $avg = $this->warehouses()->avg('price');
@@ -289,9 +293,11 @@ class Product extends Model
     protected function averageCost(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                if (array_key_exists('avg_cost', $this->attributes)) {
-                    return $this->attributes['avg_cost'] !== null ? (float) $this->attributes['avg_cost'] : null;
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.cost');
+
+                    return $avg !== null ? (float) $avg : null;
                 }
 
                 $avg = $this->warehouses()->avg('cost');
@@ -304,7 +310,13 @@ class Product extends Model
     protected function averageOldPrice(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): ?float {
+                if ($this->relationLoaded('warehouses')) {
+                    $avg = $this->warehouses->avg('pivot.old_price');
+
+                    return $avg !== null ? (float) $avg : null;
+                }
+
                 $avg = $this->warehouses()->avg('old_price');
 
                 return $avg !== null ? (float) $avg : null;
