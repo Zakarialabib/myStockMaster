@@ -18,16 +18,12 @@ class SearchProduct extends Component
     use WithAlert;
     use WithPagination;
 
-    public $product;
-
     #[Url(as: 'q')]
     public $querySearch = '';
 
     public $category_id;
 
     public $warehouse_id;
-
-    public $search_results;
 
     public int $showCount = 9;
 
@@ -81,8 +77,10 @@ class SearchProduct extends Component
         if ($product) {
             $this->selectProduct($product->id);
             $this->querySearch = '';
+            $this->dispatch('barcode-scanned-success');
         } else {
             $this->querySearch = $barcode;
+            $this->dispatch('barcode-scanned-error');
         }
     }
 
