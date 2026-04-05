@@ -6,13 +6,13 @@ namespace App\Livewire\Purchase;
 
 use App\Actions\Purchases\StorePurchaseAction;
 use App\Enums\PurchaseStatus;
+use App\Livewire\Forms\PurchaseForm;
 use App\Livewire\Utils\WithModels;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -23,70 +23,18 @@ class Create extends Component
     use WithAlert;
     use WithModels;
 
-    public $cart_item;
-
-    #[Validate('required')]
-    public $warehouse_id;
-
-    #[Validate('required')]
-    public $supplier_id;
-
-    #[Validate('required|integer|min:0|max:100')]
-    public $tax_percentage;
-
-    #[Validate('required|integer|min:0|max:100')]
-    public $discount_percentage;
-
-    #[Validate('required|numeric')]
-    public $shipping_amount;
-
-    #[Validate('required|numeric')]
-    public $total_amount;
-
-    #[Validate('required|numeric')]
-    public $paid_amount;
-
-    #[Validate('required')]
-    public $status;
-
-    #[Validate('required|string|max:50')]
-    public $payment_method;
-
-    public $payment_status;
-
-    #[Validate('nullable|string|max:1000')]
-    public $note;
-
-    public $product;
-
-    public $quantity;
-
-    public $check_quantity;
-
-    public $price;
-
-    public $date;
-
-    public $discount_type;
-
-    public $item_discount;
-
-    public array $listsForFields = [];
+    public PurchaseForm $form;
 
     public function mount(string $cartInstance = 'purchase'): void
     {
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->tax_percentage = 0;
-        $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
-        $this->paid_amount = 0;
-        $this->payment_method = 'cash';
-        $this->date = date('Y-m-d');
+        $this->form->payment_method = 'cash';
+        $this->form->date = date('Y-m-d');
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
     }
 
@@ -101,12 +49,12 @@ class Create extends Component
 
     public function hydrate(): void
     {
-        $this->total_amount = $this->calculateTotal();
+        $this->form->total_amount = $this->calculateTotal();
     }
 
     public function proceed(): void
     {
-        if ($this->supplier_id !== null) {
+        if ($this->form->supplier_id !== null) {
             $this->store();
         } else {
             $this->alert('error', __('Please select a supplier!'));
@@ -115,35 +63,37 @@ class Create extends Component
 
     public function saveDraft(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        if (! $this->supplier_id) {
+        if (! $this->form->supplier_id) {
             $this->alert('error', __('Please select a supplier!'));
 
             return;
         }
 
-        $this->validate();
+        $this->form->validate();
 
         $purchase = app(StorePurchaseAction::class)(
             [
-                'date' => $this->date,
-                'supplier_id' => $this->supplier_id,
-                'warehouse_id' => $this->warehouse_id,
-                'user_id' => $this->user_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'date' => $this->form->date,
+                'supplier_id' => $this->form->supplier_id,
+                'warehouse_id' => $this->form->warehouse_id,
+                'user_id' => Auth::id(),
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
                 'tax_amount' => (int) ($this->cartTax * 100),
                 'discount_amount' => (int) ($this->cartDiscount * 100),
+                'status' => $this->form->status,
+                'payment_status' => $this->form->payment_status,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -160,27 +110,31 @@ class Create extends Component
 
     public function store(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        $this->validate();
+        $this->form->validate();
 
         app(StorePurchaseAction::class)(
             [
-                'date' => $this->date,
-                'supplier_id' => $this->supplier_id,
-                'warehouse_id' => $this->warehouse_id,
+                'date' => $this->form->date,
+                'supplier_id' => $this->form->supplier_id,
+                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => Auth::id(),
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
+                'tax_amount' => (int) ($this->cartTax * 100),
+                'discount_amount' => (int) ($this->cartDiscount * 100),
+                'status' => $this->form->status,
+                'payment_status' => $this->form->payment_status,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -194,9 +148,9 @@ class Create extends Component
         $this->redirectRoute('purchases.index', navigate: true);
     }
 
-    public function calculateTotal(): mixed
+    public function calculateTotal(): float|int|array
     {
-        return $this->cartTotal + $this->shipping_amount;
+        return $this->cartTotal + $this->form->shipping_amount;
     }
 
     public function resetCart(): void
@@ -204,23 +158,23 @@ class Create extends Component
         $this->clearCart();
     }
 
-    public function updatedWarehouseId($warehouse_id): void
+    public function updatedFormWarehouseId($warehouse_id): void
     {
-        $this->warehouse_id = $warehouse_id;
+        $this->form->warehouse_id = $warehouse_id;
         $this->dispatch('warehouseSelected', $warehouse_id);
     }
 
-    public function updatedStatus($status): void
+    public function updatedFormStatus($status): void
     {
-        if ($status === PurchaseStatus::COMPLETED) {
-            $this->paid_amount = $this->total_amount;
+        if ($status === (string) PurchaseStatus::COMPLETED->value || $status === PurchaseStatus::COMPLETED->value) {
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
-    public function updatedPaymentMethod($payment_status): void
+    public function updatedFormPaymentMethod($payment_status): void
     {
         if ($payment_status === 'cash') {
-            $this->paid_amount = $this->total_amount;
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 }

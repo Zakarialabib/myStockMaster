@@ -136,11 +136,17 @@
 
                     </x-table.td>
                     <x-table.td>
-                        {{ $sale->payment_id }}
-                        @php
-                            $type = $sale->payment_id;
-                        @endphp
-                        <x-badge :type="$type">{{ $sale->payment_id }}</x-badge>
+                        <x-table.status-dropdown 
+                            :id="$sale->id" 
+                            :value="$sale->payment_id" 
+                            action="updatePaymentStatus"
+                            :options="[
+                                ['value' => App\Enums\PaymentStatus::PENDING->value, 'label' => App\Enums\PaymentStatus::PENDING->getName()],
+                                ['value' => App\Enums\PaymentStatus::PARTIAL->value, 'label' => App\Enums\PaymentStatus::PARTIAL->getName()],
+                                ['value' => App\Enums\PaymentStatus::PAID->value, 'label' => App\Enums\PaymentStatus::PAID->getName()],
+                                ['value' => App\Enums\PaymentStatus::DUE->value, 'label' => App\Enums\PaymentStatus::DUE->getName()]
+                            ]" 
+                        />
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($sale->due_amount) }}
@@ -150,11 +156,18 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @php
-                            $badgeType = $sale->status->getBadgeType();
-                        @endphp
-
-                        <x-badge :type="$badgeType">{{ $sale->status->getName() }}</x-badge>
+                        <x-table.status-dropdown 
+                            :id="$sale->id" 
+                            :value="$sale->status->getName()" 
+                            action="updateStatus"
+                            :options="[
+                                ['value' => App\Enums\SaleStatus::PENDING->value, 'label' => App\Enums\SaleStatus::PENDING->getName()],
+                                ['value' => App\Enums\SaleStatus::ORDERED->value, 'label' => App\Enums\SaleStatus::ORDERED->getName()],
+                                ['value' => App\Enums\SaleStatus::COMPLETED->value, 'label' => App\Enums\SaleStatus::COMPLETED->getName()],
+                                ['value' => App\Enums\SaleStatus::CANCELED->value, 'label' => App\Enums\SaleStatus::CANCELED->getName()],
+                                ['value' => App\Enums\SaleStatus::SHIPPED->value, 'label' => App\Enums\SaleStatus::SHIPPED->getName()]
+                            ]" 
+                        />
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">

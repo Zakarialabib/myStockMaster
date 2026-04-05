@@ -85,6 +85,26 @@ class Index extends Component
         return view('livewire.sales.index', ['sales' => $sales]);
     }
 
+    public function updateStatus(int $id, string $status): void
+    {
+        abort_if(Gate::denies('sale_update'), 403);
+
+        $sale = Sale::findOrFail($id);
+        $sale->update(['status' => $status]);
+
+        $this->alert('success', __('Sale status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(int $id, string $payment_status): void
+    {
+        abort_if(Gate::denies('sale_update'), 403);
+
+        $sale = Sale::findOrFail($id);
+        $sale->update(['payment_status' => $payment_status]);
+
+        $this->alert('success', __('Sale payment status updated successfully.'));
+    }
+
     #[On('importModal')]
     public function openImportModal(): void
     {
