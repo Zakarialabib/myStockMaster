@@ -93,6 +93,7 @@ class Expense extends Model
         'start_date',
         'end_date',
         'frequency',
+        'document',
     ];
 
     protected static function boot()

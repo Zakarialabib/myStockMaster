@@ -33,11 +33,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date From') }}</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateFrom">
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="dateFrom">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date To') }}</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateTo">
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="dateTo">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Analysis Type') }}</label>
@@ -186,19 +186,19 @@
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Fixed Costs') }}</label>
-                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="scenarioFixedCosts" step="0.01" placeholder="{{ __('Enter fixed costs') }}">
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="fixedCostAdjustment" step="0.01" placeholder="{{ __('Enter fixed costs') }}">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Variable Cost per Unit') }}</label>
-                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="scenarioVariableCost" step="0.01" placeholder="{{ __('Enter variable cost') }}">
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="variableCostAdjustment" step="0.01" placeholder="{{ __('Enter variable cost') }}">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Selling Price per Unit') }}</label>
-                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="scenarioSellingPrice" step="0.01" placeholder="{{ __('Enter selling price') }}">
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="priceAdjustment" step="0.01" placeholder="{{ __('Enter selling price') }}">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Target Units') }}</label>
-                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="scenarioTargetUnits" placeholder="{{ __('Enter target units') }}">
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="targetProfit" placeholder="{{ __('Enter target units') }}">
                                     </div>
                                 </div>
                                 

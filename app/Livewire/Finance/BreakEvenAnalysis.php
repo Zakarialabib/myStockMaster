@@ -163,7 +163,7 @@ class BreakEvenAnalysis extends Component
         $this->breakEvenData = $breakEvenAction($fixedCosts, $dateTo);
 
         // Add additional analysis
-        $this->breakEvenData['analysis'] = $this->calculateAdditionalMetrics($dateFrom, $dateTo);
+        $this->breakEvenData['analysis'] = $this->calculateBreakEven($dateFrom, $dateTo);
     }
 
     private function loadProductBreakEven($dateFrom, $dateTo)
@@ -220,34 +220,37 @@ class BreakEvenAnalysis extends Component
         ];
     }
 
-    private function calculateAdditionalMetrics($dateFrom, $dateTo)
+    private function calculateBreakEven($dateFrom, $dateTo)
     {
-        $totalRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
-            ->sum('total_amount');
+        return \Illuminate\Support\Facades\Cache::remember('break_even_' . $this->analysisType . '_' . $this->dateFrom . '_' . $this->dateTo, 3600, function () use ($dateFrom, $dateTo) {
+            $metrics = Sale::whereBetween('date', [$dateFrom, $dateTo])
+                ->selectRaw('COALESCE(SUM(total_amount), 0) as total_revenue, COUNT(*) as total_sales')
+                ->first();
 
-        $totalSales = Sale::whereBetween('date', [$dateFrom, $dateTo])
-            ->count();
+            $totalRevenue = (float) $metrics->total_revenue;
+            $totalSales = (int) $metrics->total_sales;
 
-        $averageOrderValue = $totalSales > 0 ? $totalRevenue / $totalSales : 0;
+            $averageOrderValue = $totalSales > 0 ? $totalRevenue / $totalSales : 0;
 
-        // Calculate margin of safety
-        $breakEvenRevenue = $this->breakEvenData['break_even_revenue'] ?? 0;
-        $marginOfSafety = $totalRevenue - $breakEvenRevenue;
-        $marginOfSafetyPercentage = $totalRevenue > 0 ? ($marginOfSafety / $totalRevenue) * 100 : 0;
+            // Calculate margin of safety
+            $breakEvenRevenue = $this->breakEvenData['break_even_revenue'] ?? 0;
+            $marginOfSafety = $totalRevenue - $breakEvenRevenue;
+            $marginOfSafetyPercentage = $totalRevenue > 0 ? ($marginOfSafety / $totalRevenue) * 100 : 0;
 
-        // Calculate degree of operating leverage
-        $contributionMargin = $this->breakEvenData['total_contribution_margin'] ?? 0;
-        $operatingIncome = $contributionMargin - ($this->breakEvenData['total_fixed_costs'] ?? 0);
-        $degreeOfOperatingLeverage = $operatingIncome != 0 ? $contributionMargin / $operatingIncome : 0;
+            // Calculate degree of operating leverage
+            $contributionMargin = $this->breakEvenData['total_contribution_margin'] ?? 0;
+            $operatingIncome = $contributionMargin - ($this->breakEvenData['total_fixed_costs'] ?? 0);
+            $degreeOfOperatingLeverage = $operatingIncome != 0 ? $contributionMargin / $operatingIncome : 0;
 
-        return [
-            'total_revenue' => $totalRevenue,
-            'total_sales' => $totalSales,
-            'average_order_value' => $averageOrderValue,
-            'margin_of_safety' => $marginOfSafety,
-            'margin_of_safety_percentage' => $marginOfSafetyPercentage,
-            'degree_of_operating_leverage' => $degreeOfOperatingLeverage,
-        ];
+            return [
+                'total_revenue' => $totalRevenue,
+                'total_sales' => $totalSales,
+                'average_order_value' => $averageOrderValue,
+                'margin_of_safety' => $marginOfSafety,
+                'margin_of_safety_percentage' => $marginOfSafetyPercentage,
+                'degree_of_operating_leverage' => $degreeOfOperatingLeverage,
+            ];
+        });
     }
 
     public function runScenarioAnalysis()
