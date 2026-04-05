@@ -140,6 +140,7 @@
         <x-sidebar.dropdown title="{{ __('Settings') }}" :active="request()->routeIs('settings.*') || request()->routeIs('currencies.*') || request()->routeIs('units.*')" :icon="'<i class=\'fas fa-cog w-5 h-5\'></i>'">
             <x-sidebar.sublink title="{{ __('General Settings') }}" href="{{ route('settings.index') }}" :active="request()->routeIs('settings.index')" :icon="'<i class=\'fas fa-sliders-h w-4 h-4\'></i>'" />
             <x-sidebar.sublink title="{{ __('Currencies') }}" href="{{ route('currencies.index') }}" :active="request()->routeIs('currencies.index')" :icon="'<i class=\'fas fa-coins w-4 h-4\'></i>'" />
+            <x-sidebar.sublink title="{{ __('Languages') }}" href="{{ route('languages.index') }}" :active="request()->routeIs('languages.index')" :icon="'<i class=\'fas fa-ruler w-4 h-4\'></i>'" />
             {{-- <x-sidebar.sublink title="{{ __('Units') }}" href="{{ route('units.index') }}" :active="request()->routeIs('units.index')" :icon="'<i class=\'fas fa-ruler w-4 h-4\'></i>'" /> --}}
         </x-sidebar.dropdown>
     @endcan
