@@ -8,37 +8,47 @@
             <form wire:submit="update" class="space-y-4">
                 <div>
                     <x-label for="name" :value="__('Name')" />
-                    <x-input type="text" id="name" wire:model="name" class="w-full" />
-                    @error('name')
+                    <x-input type="text" id="name" wire:model="form.name" class="w-full" />
+                    @error('form.name')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
-                <div>
+                <div x-data="{
+                    selectAll: false,
+                    permissions: @entangle('form.permissions'),
+                    toggleAll() {
+                        if (this.selectAll) {
+                            this.permissions = {{ $this->permission_groups->flatten()->pluck('id')->map(fn($id) => (string) $id)->toJson() }};
+                        } else {
+                            this.permissions = [];
+                        }
+                    }
+                }">
                     <x-label for="permissions" :value="__('Permissions')" />
                     <div class="flex items-center justify-center w-full gap-4 mb-3">
                         <div>
-                            <input type="checkbox" id="select-all" wire:click="selectAllPermissions"
-                                {{ $this->isAllSelected ? 'checked' : '' }}>
+                            <input type="checkbox" id="select-all" x-model="selectAll" x-on:change="toggleAll">
                             <label for="select-all" class="ml-2">{{ __('Select All') }}</label>
                         </div>
-
-                        <div>
-                            <input type="checkbox" id="deselectAll" wire:click="deselectAllPermissions"
-                                {{ $this->isNoneSelected ? 'checked' : '' }}>
-                            <label for="deselectAll" class="ml-2">{{ __('Deselect All') }}</label>
-                        </div>
                     </div>
-                    <div class="py-2 grid grid-cols-3 gap-6">
-                        @foreach ($this->permissions as $permission)
-                            <div>
-                                <input type="checkbox" id="permission-{{ $permission->id }}"
-                                    wire:model.live="selectedPermissions" value="{{ $permission->id }}"
-                                    {{ in_array($permission->id, $selectedPermissions) ? 'checked' : '' }}>
-                                <label for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
+                    
+                    <div class="space-y-4">
+                        @foreach ($this->permission_groups as $group => $permissions)
+                            <div class="p-4 border rounded">
+                                <h3 class="mb-2 text-lg font-semibold capitalize">{{ $group }}</h3>
+                                <div class="py-2 grid grid-cols-3 gap-6">
+                                    @foreach ($permissions as $permission)
+                                        <div>
+                                            <input type="checkbox" id="permission-{{ $permission->id }}"
+                                                x-model="permissions" value="{{ $permission->id }}">
+                                            <label for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         @endforeach
                     </div>
-                    @error('selectedPermissions')
+                    @error('form.permissions')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>

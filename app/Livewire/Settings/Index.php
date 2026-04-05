@@ -86,8 +86,8 @@ class Index extends Component
         $this->settings = Setting::firstOrFail();
         $this->form->setSetting($this->settings);
 
-        $this->invoice_control = $this->settings->invoice_control;
-        $this->analyticsControl = $this->settings->analytics_control;
+        $this->invoice_control = is_string($this->settings->invoice_control) ? json_decode($this->settings->invoice_control, true) : $this->settings->invoice_control;
+        $this->analyticsControl = is_string($this->settings->analytics_control) ? json_decode($this->settings->analytics_control, true) : $this->settings->analytics_control;
     }
 
     public function saveImage()
@@ -167,6 +167,8 @@ class Index extends Component
         cache()->forget('settings');
 
         $this->alert('success', __('Settings Updated successfully !'));
+
+        $this->dispatch('settings-saved');
     }
 
     protected function createHTMLfile($file, string $name): string

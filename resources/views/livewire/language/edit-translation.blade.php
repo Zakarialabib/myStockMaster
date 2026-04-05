@@ -39,13 +39,23 @@
                     </a>
                 </div>
             </div>
-            <div class="float-right">
-                <x-button primary type="button" wire:click="updateTranslation" wire:loading.attr="disabled">
-                    {{ __('Update') }}
-                </x-button>
-            </div>
         </div>
     </section>
+
+    <div class="sticky top-0 z-50 bg-white dark:bg-gray-800 p-4 shadow-sm rounded-t-md border-b flex flex-wrap gap-4 justify-between items-center mb-4">
+        <div class="w-full md:w-1/3">
+            <x-input type="text" 
+                class="w-full" 
+                placeholder="{{ __('Search translations...') }}" 
+                wire:model.live="search" />
+        </div>
+        <div>
+            <x-button primary type="button" wire:click="update" wire:loading.attr="disabled">
+                {{ __('Save Translations') }}
+            </x-button>
+        </div>
+    </div>
+
     <x-card>
         <div wire:loading.class="opacity-50">
             <x-table>
@@ -55,22 +65,24 @@
                     <x-table.th>{{ __('Action') }}</x-table.th>
                 </x-slot>
                 <x-table.tbody>
-                    @foreach ($translations as $key => $translation)
+                    @foreach ($paginator as $translation)
+                        @php $tKey = $translation['key']; @endphp
                         <x-table.tr>
                             <x-table.td class="max-w-xs h-auto overflow-hidden">
-                                <p class="truncate">{{ $key }}</p>
+                                <p class="truncate" title="{{ $tKey }}">{{ $tKey }}</p>
                             </x-table.td>
                             <x-table.td>
-                                <textarea type="text" id="value-{{ $key }}" rows="3"
-                                    wire:model.live="translations.{{ $key }}.value">
-                            </textarea>
-                                @error('translations.' . $key . '.value')
+                                <textarea id="value-{{ md5($tKey) }}" rows="3"
+                                    class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    wire:model="translations.{{ $tKey }}.value">
+                                </textarea>
+                                @error('translations.' . $tKey . '.value')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </x-table.td>
                             <x-table.td>
                                 {{-- <x-button type="button" danger
-                        wire:click="deleteTranslation({{ $key }})">
+                        wire:click="deleteTranslation('{{ $tKey }}')">
                         <i class="fa fa-trash"></i>
                     </x-button> --}}
                             </x-table.td>
@@ -78,6 +90,10 @@
                     @endforeach
                 </x-table.tbody>
             </x-table>
+            
+            <div class="mt-4">
+                {{ $paginator->links() }}
+            </div>
         </div>
     </x-card>
 </div>

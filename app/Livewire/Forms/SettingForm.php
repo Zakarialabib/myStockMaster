@@ -36,7 +36,7 @@ class SettingForm extends Form
 
     public ?string $social_tiktok = null;
 
-    public ?string $site_favicon = null;
+    public $site_favicon;
 
     #[Validate('required|string|min:1|max:255')]
     public string $company_name = '';
@@ -111,6 +111,12 @@ class SettingForm extends Form
 
     public ?string $whatsapp_custom_message = null;
 
+    public ?string $notification_email = null;
+
+    public ?string $footer_text = null;
+
+    public bool $is_ecommerce_active = false;
+
     public function setSetting(Setting $setting): void
     {
         $this->setting = $setting;
@@ -153,6 +159,9 @@ class SettingForm extends Form
         $this->seo_meta_description = $setting->seo_meta_description;
         $this->whatsapp_custom_message = $setting->whatsapp_custom_message;
         $this->invoice_template = $setting->invoice_template;
+        $this->notification_email = $setting->notification_email ?? null;
+        $this->footer_text = $setting->footer_text ?? null;
+        $this->is_ecommerce_active = (bool) $setting->is_ecommerce_active;
     }
 
     public function update(): void
@@ -200,6 +209,9 @@ class SettingForm extends Form
             'seo_meta_description' => $this->seo_meta_description,
             'whatsapp_custom_message' => $this->whatsapp_custom_message,
             'invoice_template' => $this->invoice_template,
+            'notification_email' => $this->notification_email,
+            'footer_text' => $this->footer_text,
+            'is_ecommerce_active' => $this->is_ecommerce_active,
         ]);
 
         $this->setting->save();

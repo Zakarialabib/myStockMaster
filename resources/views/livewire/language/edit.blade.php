@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model.live="editLanguage">
+    <x-modal wire:model="editModal">
         <x-slot name="title">
             {{ __('Update language') }}
         </x-slot>

@@ -2,7 +2,22 @@
     @section('title', __('Settings'))
 
     <x-page-container title="{{ __('Settings') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Settings')]]">
-        <div x-data="{ tab: 'company' }" class="space-y-6">
+                <form wire:submit="update" x-data="{ isDirty: false }" @change="isDirty = true" @settings-saved.window="isDirty = false" class="space-y-6">
+
+            <!-- Sticky Save Button -->
+            <div x-show="isDirty" x-transition.opacity.duration.300ms
+                class="sticky top-0 z-50 bg-indigo-50 dark:bg-gray-800 p-4 rounded-lg shadow-md border border-indigo-200 dark:border-indigo-800 flex justify-between items-center mb-6">
+                <div class="flex items-center text-indigo-700 dark:text-indigo-300">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-medium">{{ __('You have unsaved changes.') }}</span>
+                </div>
+                <x-button type="submit" primary>
+                    <i class="fas fa-save mr-2"></i>
+                    {{ __('Save Changes') }}
+                </x-button>
+            </div>
+
+            <div x-data="{ tab: 'company' }" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div class="lg:col-span-1">
                     <div
@@ -519,5 +534,6 @@
                 </div>
             </div>
         </div>
+        </form>
     </x-page-container>
 </div>

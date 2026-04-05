@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
+use App\Livewire\Forms\RoleForm;
 use App\Models\Role;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 
 /**
- * @property \Illuminate\Support\Collection $permissions
  * @property \Illuminate\Support\Collection $permission_groups
- * @property bool                           $isAllSelected
  */
 class Edit extends Component
 {
@@ -23,49 +21,22 @@ class Edit extends Component
 
     public bool $showModal = false;
 
-    public ?Role $role = null;
-
-    #[Validate('required|string')]
-    public string $name = '';
-
-    #[Validate('array')]
-    public array $selectedPermissions = [];
+    public RoleForm $form;
 
     #[On('editModal')]
     public function openEditModal(int $id): void
     {
-        $this->role = Role::findOrFail($id);
-        $this->name = $this->role->name;
-        $this->selectedPermissions = $this->role->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
+        $role = Role::findOrFail($id);
+        $this->form->setRole($role);
         $this->showModal = true;
     }
 
     #[Computed]
-    public function permissions()
+    public function permission_groups()
     {
-        return Permission::all();
-    }
-
-    #[Computed]
-    public function isAllSelected(): bool
-    {
-        return count($this->selectedPermissions) === $this->permissions->count();
-    }
-
-    #[Computed]
-    public function isNoneSelected(): bool
-    {
-        return count($this->selectedPermissions) === 0;
-    }
-
-    public function selectAllPermissions(): void
-    {
-        $this->selectedPermissions = $this->permissions->pluck('id')->map(fn ($id) => (string) $id)->toArray();
-    }
-
-    public function deselectAllPermissions(): void
-    {
-        $this->selectedPermissions = [];
+        return Permission::all()->groupBy(function ($permission) {
+            return explode('_', $permission->name)[0];
+        });
     }
 
     public function render()
@@ -75,12 +46,13 @@ class Edit extends Component
 
     public function update()
     {
-        $this->validate([
-            'name' => 'required|string|unique:roles,name,' . $this->role->id,
+        $this->form->validate([
+            'name' => 'required|string|unique:roles,name,' . $this->form->role->id,
+            'permissions' => 'array',
         ]);
 
-        $this->role->update(['name' => $this->name]);
-        $this->role->syncPermissions($this->selectedPermissions);
+        $this->form->role->update(['name' => $this->form->name]);
+        $this->form->role->syncPermissions($this->form->permissions);
 
         $this->alert('success', __('Role updated successfully!'));
 
