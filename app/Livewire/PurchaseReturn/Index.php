@@ -169,6 +169,24 @@ class Index extends Component
         return $this->callExport()->download('purchase_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
+    public function updateStatus(PurchaseReturn $purchaseReturn, $status)
+    {
+        abort_if(Gate::denies('purchase_return_update'), 403);
+
+        $purchaseReturn->update(['status' => $status]);
+
+        $this->alert('success', __('Status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(PurchaseReturn $purchaseReturn, $payment_status)
+    {
+        abort_if(Gate::denies('purchase_return_update'), 403);
+
+        $purchaseReturn->update(['payment_status' => $payment_status]);
+
+        $this->alert('success', __('Payment status updated successfully.'));
+    }
+
     private function callExport(): PurchaseReturnExport
     {
         return new PurchaseReturnExport;
