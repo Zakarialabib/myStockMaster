@@ -7,7 +7,6 @@ namespace App\Livewire\Pos;
 use App\Actions\Sales\StorePosSaleAction;
 use App\Jobs\PaymentNotification;
 use App\Jobs\PrintReceiptJob;
-use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Customer;
@@ -132,11 +131,29 @@ class Index extends Component
             if ($cashRegister) {
                 $this->cash_register_id = $cashRegister->id;
             } else {
-                $this->dispatch('createModal')->to(CashRegisterCreate::class);
+                $this->initializeCashRegister();
             }
         }
 
         $this->total_with_shipping = (float) $this->cartTotal + (float) $this->shipping_amount;
+    }
+
+    protected function initializeCashRegister(): void
+    {
+        if (! $this->user_id || ! $this->warehouse_id) {
+            return;
+        }
+
+        $cashRegister = CashRegister::create([
+            'user_id' => $this->user_id,
+            'warehouse_id' => $this->warehouse_id,
+            'cash_in_hand' => 0,
+            'status' => true,
+        ]);
+
+        $this->cash_register_id = $cashRegister->id;
+
+        $this->dispatch('cash-register-opened', cashRegisterId: $cashRegister->id);
     }
 
     public function syncCartState(): void

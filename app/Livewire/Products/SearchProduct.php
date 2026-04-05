@@ -81,8 +81,10 @@ class SearchProduct extends Component
         if ($product) {
             $this->selectProduct($product->id);
             $this->querySearch = '';
+            $this->dispatch('barcode-scanned-success');
         } else {
             $this->querySearch = $barcode;
+            $this->dispatch('barcode-scanned-error');
         }
     }
 
