@@ -9,6 +9,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\Quotation;
 use App\Models\QuotationDetails;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -19,6 +20,7 @@ use Livewire\Component;
 class Create extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
 
     public QuotationForm $form;

@@ -9,6 +9,38 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int                             $id
+ * @property int                             $is_pickup
+ * @property string                          $title
+ * @property string|null                     $subtitle
+ * @property float                           $cost
+ * @property int                             $status
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Sale> $sales
+ * @property-read int|null $sales_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereIsPickup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereSubtitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Shipping withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Shipping extends Model
 {
     use HasAdvancedFilter;

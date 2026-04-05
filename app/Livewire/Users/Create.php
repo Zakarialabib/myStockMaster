@@ -8,6 +8,7 @@ use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\User;
 use App\Models\UserWarehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
@@ -15,6 +16,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public $showModal = false;

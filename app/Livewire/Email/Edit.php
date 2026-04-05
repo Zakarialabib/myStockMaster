@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Email;
 
 use App\Models\EmailTemplate;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -15,6 +16,7 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public bool $openModal = false;

@@ -10,6 +10,50 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string                          $id
+ * @property string                          $reference
+ * @property int                             $from_warehouse_id
+ * @property int                             $to_warehouse_id
+ * @property int                             $item
+ * @property int                             $total_qty
+ * @property int                             $total_tax
+ * @property numeric                         $total_cost
+ * @property numeric                         $total_amount
+ * @property float|null                      $shipping
+ * @property string|null                     $document
+ * @property int                             $status
+ * @property string|null                     $note
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Warehouse|null $fromWarehouse
+ * @property-read Warehouse|null $toWarehouse
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, TransferDetails> $transferDetails
+ * @property-read int|null $transfer_details_count
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereDocument($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereFromWarehouseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereItem($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereShipping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereToWarehouseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereTotalCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereTotalQty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereTotalTax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereUpdatedAt($value)
+ *
+ * @mixin \Eloquent
+ */
 class Transfer extends Model
 {
     use HasAdvancedFilter;

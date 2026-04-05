@@ -7,6 +7,7 @@ namespace App\Livewire\Expense;
 use App\Livewire\Utils\WithModels;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -15,6 +16,7 @@ use Livewire\Component;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public $editModal = false;

@@ -6,6 +6,7 @@ namespace App\Livewire\Currency;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Currency;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -15,6 +16,7 @@ use Livewire\Component;
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     /** @var mixed */
     public $currency;

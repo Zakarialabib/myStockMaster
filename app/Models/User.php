@@ -16,6 +16,75 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property string                          $id
+ * @property string                          $name
+ * @property string                          $email
+ * @property string                          $password
+ * @property string|null                     $avatar
+ * @property string|null                     $phone
+ * @property string|null                     $city
+ * @property string|null                     $address
+ * @property string|null                     $country
+ * @property int|null                        $role_id
+ * @property Status                          $status
+ * @property bool                            $is_all_warehouses
+ * @property int|null                        $default_client_id
+ * @property int|null                        $default_warehouse_id
+ * @property int|null                        $provider_id
+ * @property string|null                     $deleted_at
+ * @property string|null                     $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Warehouse> $assignedWarehouses
+ * @property-read int|null $assigned_warehouses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Passport\Client> $clients
+ * @property-read int|null $clients_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Passport\Client> $oauthApps
+ * @property-read int|null $oauth_apps_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
+ * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Passport\Token> $tokens
+ * @property-read int|null $tokens_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Warehouse> $warehouses
+ * @property-read int|null $warehouses_count
+ *
+ * @method static Builder<static>|User            advancedFilter($data)
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static Builder<static>|User            isActive()
+ * @method static Builder<static>|User            newModelQuery()
+ * @method static Builder<static>|User            newQuery()
+ * @method static Builder<static>|User            permission($permissions, $without = false)
+ * @method static Builder<static>|User            query()
+ * @method static Builder<static>|User            role($roles, $guard = null, $without = false)
+ * @method static Builder<static>|User            whereAddress($value)
+ * @method static Builder<static>|User            whereAvatar($value)
+ * @method static Builder<static>|User            whereCity($value)
+ * @method static Builder<static>|User            whereCountry($value)
+ * @method static Builder<static>|User            whereCreatedAt($value)
+ * @method static Builder<static>|User            whereDefaultClientId($value)
+ * @method static Builder<static>|User            whereDefaultWarehouseId($value)
+ * @method static Builder<static>|User            whereDeletedAt($value)
+ * @method static Builder<static>|User            whereEmail($value)
+ * @method static Builder<static>|User            whereId($value)
+ * @method static Builder<static>|User            whereIsAllWarehouses($value)
+ * @method static Builder<static>|User            whereName($value)
+ * @method static Builder<static>|User            wherePassword($value)
+ * @method static Builder<static>|User            wherePhone($value)
+ * @method static Builder<static>|User            whereProviderId($value)
+ * @method static Builder<static>|User            whereRememberToken($value)
+ * @method static Builder<static>|User            whereRoleId($value)
+ * @method static Builder<static>|User            whereStatus($value)
+ * @method static Builder<static>|User            whereUpdatedAt($value)
+ * @method static Builder<static>|User            withoutPermission($permissions)
+ * @method static Builder<static>|User            withoutRole($roles, $guard = null)
+ *
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
     use HasAdvancedFilter;

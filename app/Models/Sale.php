@@ -13,8 +13,81 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string                          $id
+ * @property \Illuminate\Support\Carbon      $date
+ * @property string                          $reference
+ * @property string|null                     $customer_id
+ * @property string                          $user_id
+ * @property int|null                        $warehouse_id
+ * @property int|null                        $cash_register_id
+ * @property int                             $tax_percentage
+ * @property numeric                         $tax_amount
+ * @property int                             $discount_percentage
+ * @property numeric                         $discount_amount
+ * @property numeric                         $shipping_amount
+ * @property numeric                         $total_amount
+ * @property numeric                         $paid_amount
+ * @property numeric                         $due_amount
+ * @property int|null                        $payment_id
+ * @property SaleStatus                      $status
+ * @property string|null                     $shipping_status
+ * @property string|null                     $document
+ * @property string|null                     $note
+ * @property string|null                     $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string                          $payment_status
+ * @property-read CashRegister|null $cashRegister
+ * @property-read Customer|null $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SaleDetails> $saleDetails
+ * @property-read int|null $sale_details_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SalePayment> $salePayments
+ * @property-read int|null $sale_payments_count
+ * @property-read User $user
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale completed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale salesTotal(\Illuminate\Support\Carbon $date, int $dividedNumber = 100)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale searchByReference($term)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale thisMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereCashRegisterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDocument($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereDueAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale wherePaidAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale wherePaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereShippingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereShippingStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereTaxPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereWarehouseId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Sale extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
     use HasUuid;
     use SaleScope;

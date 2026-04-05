@@ -6,6 +6,7 @@ namespace App\Livewire\Permission;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\Permission;
+use App\Traits\WithAlert;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
@@ -18,6 +19,7 @@ use Livewire\Component;
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     public ?Permission $permission = null;
 

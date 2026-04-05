@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Language;
 
 use App\Models\Language;
+use App\Traits\WithAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -12,6 +13,8 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class EditTranslation extends Component
 {
+    use WithAlert;
+
     public $language;
 
     #[Validate([

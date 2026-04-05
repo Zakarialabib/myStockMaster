@@ -8,6 +8,7 @@ use App\Actions\Adjustments\StoreAdjustmentAction;
 use App\Livewire\Utils\WithModels;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -19,6 +20,7 @@ use Throwable;
 #[Layout('layouts.app')]
 class Create extends Component
 {
+    use WithAlert;
     use WithModels;
 
     #[Validate('required|date')]

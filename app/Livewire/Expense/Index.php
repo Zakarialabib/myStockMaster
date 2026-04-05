@@ -8,6 +8,7 @@ use App\Exports\ExpenseExport;
 use App\Imports\ExpenseImport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Expense;
+use App\Traits\WithAlert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     public $expense;
 

@@ -10,8 +10,43 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int         $id
+ * @property int         $sale_return_id
+ * @property string|null $user_id
+ * @property numeric     $amount
+ * @property Carbon      $date
+ * @property string      $reference
+ * @property string      $payment_method
+ * @property string|null $note
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read SaleReturn $saleReturn
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment bySaleReturn()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereSaleReturnId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnPayment whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SaleReturnPayment extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

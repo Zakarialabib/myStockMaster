@@ -12,6 +12,11 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 
+/**
+ * @property \Illuminate\Support\Collection $permissions
+ * @property \Illuminate\Support\Collection $permission_groups
+ * @property bool                           $isAllSelected
+ */
 class Edit extends Component
 {
     use WithAlert;

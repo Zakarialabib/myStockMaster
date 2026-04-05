@@ -7,6 +7,7 @@ namespace App\Livewire\Users;
 use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\User;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,7 @@ use Livewire\Component;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public $showModal = false;

@@ -27,6 +27,9 @@ use Livewire\Component;
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
 
+/**
+ * @property \Illuminate\Support\Collection $customers
+ */
 class Index extends Component
 {
     use LivewireCartTrait;

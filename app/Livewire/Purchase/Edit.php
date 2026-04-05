@@ -14,6 +14,7 @@ use App\Models\ProductWarehouse;
 use App\Models\Purchase;
 use App\Models\PurchaseDetail;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -25,6 +26,7 @@ use Livewire\Component;
 class Edit extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
 
     public $purchase_details;

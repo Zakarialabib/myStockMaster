@@ -8,14 +8,17 @@ use App\Livewire\Utils\WithModels;
 use App\Models\AdjustedProduct;
 use App\Models\Adjustment;
 use App\Models\ProductWarehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public $adjustment;
