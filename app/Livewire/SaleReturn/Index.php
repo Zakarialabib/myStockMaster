@@ -79,6 +79,24 @@ class Index extends Component
         $this->showModal = true;
     }
 
+    public function updateStatus(SaleReturn $saleReturn, $status): void
+    {
+        abort_if(Gate::denies('sale_return_update'), 403);
+
+        $saleReturn->update(['status' => $status]);
+
+        $this->alert('success', __('Status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(SaleReturn $saleReturn, $payment_status): void
+    {
+        abort_if(Gate::denies('sale_return_update'), 403);
+
+        $saleReturn->update(['payment_status' => $payment_status]);
+
+        $this->alert('success', __('Payment status updated successfully.'));
+    }
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('sale_delete'), 403);

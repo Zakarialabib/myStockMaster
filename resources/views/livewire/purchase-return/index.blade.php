@@ -57,6 +57,9 @@
             <x-table.th sortable wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
             </x-table.th>
+            <x-table.th sortable wire:click="sortingBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+                {{ __('Payment Status') }}
+            </x-table.th>
             <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="$sorts['total_amount'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
@@ -83,13 +86,13 @@
                         </a>
                     </x-table.td>
                     <x-table.td>
-                        @php
-                            $type = $purchase_return->status->getBadgeType();
-                        @endphp
-                        <x-badge :type="$type">{{ $purchase_return->status->getName() }}</x-badge>
+                        <x-table.status-dropdown :model="$purchasereturn" field="status" :options="\App\Enums\PurchaseReturnStatus::cases()" updateMethod="updateStatus" />
                     </x-table.td>
                     <x-table.td>
-                        {{ format_currency($salereturn->total_amount) }}
+                        <x-table.status-dropdown :model="$purchasereturn" field="payment_status" :options="\App\Enums\PaymentStatus::cases()" updateMethod="updatePaymentStatus" />
+                    </x-table.td>
+                    <x-table.td>
+                        {{ format_currency($purchasereturn->total_amount) }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -150,7 +153,7 @@
                 </x-table.tr>
             @empty
                 <x-table.tr>
-                    <x-table.td colspan="7">
+                    <x-table.td colspan="8">
                         <div class="flex justify-center items-center">
                             <i class="fas fa-box-open text-4xl text-gray-400"></i>
                             {{ __('No results found') }}

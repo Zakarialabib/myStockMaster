@@ -100,10 +100,18 @@
                             </div>
                         </x-table.td>
                         <x-table.td>
-                            @php
-                                $badgeType = $quotation->status->getBadgeType();
-                            @endphp
-                            <x-badge :type="$badgeType">{{ $quotation->status->getName() }}</x-badge>
+                            <x-table.status-dropdown 
+                                :id="$quotation->id" 
+                                :value="$quotation->status->getName()" 
+                                action="updateStatus"
+                                :options="[
+                                    ['value' => App\Enums\QuotationStatus::PENDING->value, 'label' => App\Enums\QuotationStatus::PENDING->getName()],
+                                    ['value' => App\Enums\QuotationStatus::SENT->value, 'label' => App\Enums\QuotationStatus::SENT->getName()],
+                                    ['value' => App\Enums\QuotationStatus::ACCEPTED->value, 'label' => App\Enums\QuotationStatus::ACCEPTED->getName()],
+                                    ['value' => App\Enums\QuotationStatus::EXPIRED->value, 'label' => App\Enums\QuotationStatus::EXPIRED->getName()],
+                                    ['value' => App\Enums\QuotationStatus::REJECTED->value, 'label' => App\Enums\QuotationStatus::REJECTED->getName()]
+                                ]" 
+                            />
                         </x-table.td>
                         <x-table.td>
                             <x-dropdown align="right" width="56">

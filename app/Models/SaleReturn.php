@@ -90,6 +90,7 @@ class SaleReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
+        'payment_status',
         'payment_id',
         'customer_id',
 
@@ -119,6 +120,7 @@ class SaleReturn extends Model
         'paid_amount',
         'due_amount',
         'status',
+        'payment_status',
         'payment_id',
         'note',
         'customer_id',
@@ -133,6 +135,7 @@ class SaleReturn extends Model
     {
         return [
             'status' => SaleReturnStatus::class,
+            'payment_status' => \App\Enums\PaymentStatus::class,
         ];
     }
 

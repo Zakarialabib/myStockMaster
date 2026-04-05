@@ -1,4 +1,16 @@
 <div>
+    @php
+        $paymentStatusOptions = collect(\App\Enums\PaymentStatus::cases())->map(fn($status) => [
+            'value' => $status->value,
+            'label' => $status->getName(),
+        ])->toArray();
+
+        $saleReturnStatusOptions = collect(\App\Enums\SaleReturnStatus::cases())->map(fn($status) => [
+            'value' => $status->value,
+            'label' => $status->getName(),
+        ])->toArray();
+    @endphp
+
     <x-page-container title="{{ __('Sale Returns List') }}" :show-filters="true">
         <x-slot name="actions">
             @can('sale_return_export')
@@ -51,7 +63,7 @@
             <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
@@ -84,13 +96,12 @@
                         </a>
                     </x-table.td>
                     <x-table.td>
-                        {{ $salereturn->payment_id}}
-
-                        {{-- @php
-                            $badgeType = $salereturn->payment_id->getBadgeType();
-                        @endphp
-
-                        <x-badge :type="$badgeType">{{ $salereturn->payment_id->getName() }}</x-badge> --}}
+                        <x-table.status-dropdown 
+                            :id="$salereturn->id"
+                            :value="$salereturn->payment_status?->getName() ?? __('Pending')"
+                            :options="$paymentStatusOptions"
+                            action="updatePaymentStatus"
+                        />
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($salereturn->due_amount) }}
@@ -101,11 +112,12 @@
                     </x-table.td>
 
                     <x-table.td>
-                        @php
-                            $type = $salereturn->status->getBadgeType();
-                        @endphp
-                        <x-badge :type="$type">{{ $salereturn->status->getName() }}</x-badge>
-
+                        <x-table.status-dropdown 
+                            :id="$salereturn->id"
+                            :value="$salereturn->status?->getName() ?? __('Pending')"
+                            :options="$saleReturnStatusOptions"
+                            action="updateStatus"
+                        />
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">

@@ -29,6 +29,16 @@ class Index extends Component
 
     public $model = Quotation::class;
 
+    public function updateStatus(int $id, int|string $status)
+    {
+        abort_if(Gate::denies('quotation_update'), 403);
+
+        $quotation = Quotation::findOrFail($id);
+        $quotation->update(['status' => (int) $status]);
+
+        $this->alert('success', __('Quotation status updated successfully.'));
+    }
+
     public function render()
     {
         abort_if(Gate::denies('quotation_access'), 403);
