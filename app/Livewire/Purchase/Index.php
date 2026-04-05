@@ -80,6 +80,26 @@ class Index extends Component
         return view('livewire.purchase.index', ['purchases' => $purchases]);
     }
 
+    public function updateStatus(int $id, string $status): void
+    {
+        abort_if(Gate::denies('purchase_update'), 403);
+
+        $purchase = Purchase::findOrFail($id);
+        $purchase->update(['status' => $status]);
+
+        $this->alert('success', __('Purchase status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(int $id, string $payment_status): void
+    {
+        abort_if(Gate::denies('purchase_update'), 403);
+
+        $purchase = Purchase::findOrFail($id);
+        $purchase->update(['payment_status' => $payment_status]);
+
+        $this->alert('success', __('Purchase payment status updated successfully.'));
+    }
+
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('purchase_delete'), 403);

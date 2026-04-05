@@ -8,17 +8,15 @@ use App\Actions\Sales\StoreSaleAction;
 use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
+use App\Livewire\Forms\SaleForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
-use App\Models\Category;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -29,65 +27,11 @@ class Create extends Component
     use WithAlert;
     use WithModels;
 
-    public $global_discount;
+    public SaleForm $form;
 
-    public $discount_amount;
+    public int|string|null $user_id = null;
 
-    public $global_tax;
-
-    public $quantity;
-
-    public $check_quantity;
-
-    public $discount_type;
-
-    public $item_discount;
-
-    public $date;
-
-    public $price;
-
-    #[Validate('required', message: 'Please provide a customer ID')]
-    public $customer_id;
-
-    #[Validate('required', message: 'Please provide a warehouse ID')]
-    public $warehouse_id;
-
-    #[Validate('required', message: 'Please provide a tax percentage')]
-    #[Validate('integer', message: 'The tax percentage must be an integer')]
-    #[Validate('min:0', message: 'The tax percentage must be at least 0')]
-    #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
-    public $tax_percentage;
-
-    #[Validate('required', message: 'Please provide a discount percentage')]
-    #[Validate('integer', message: 'The discount percentage must be an integer')]
-    #[Validate('min:0', message: 'The discount percentage must be at least 0')]
-    #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
-    public $discount_percentage;
-
-    #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
-    public $shipping_amount;
-
-    #[Validate('required', message: 'Please provide a total amount')]
-    #[Validate('numeric', message: 'The total amount must be a numeric value')]
-    public $total_amount;
-
-    #[Validate('nullable', message: 'Paid amount must be a numeric value')]
-    public $paid_amount;
-
-    #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
-    #[Validate('string', message: 'Note must be a string')]
-    #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
-    public $note;
-
-    #[Validate('required|integer|max:255')]
-    public $status;
-
-    public string $payment_method = 'cash';
-
-    public $cash_register_id;
-
-    public $user_id;
+    public int|string|null $cash_register_id = null;
 
     public function mount(string $cartInstance = 'sale', $quotationId = null): void
     {
@@ -96,39 +40,31 @@ class Create extends Component
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        // $this->cart_instance = $cartInstance;
-        $this->discount_percentage = 0;
-        $this->tax_percentage = 0;
-        $this->shipping_amount = 0;
-        $this->check_quantity = [];
-        $this->quantity = [];
-        $this->discount_type = [];
-        $this->item_discount = [];
-        $this->payment_method = 'cash';
-        $this->date = date('Y-m-d');
+        $this->form->payment_method = 'cash';
+        $this->form->date = date('Y-m-d');
         $this->user_id = Auth::user()->id;
 
         if ($quotationId) {
             $quotation = \App\Models\Quotation::findOrFail($quotationId);
-            $this->customer_id = $quotation->customer_id;
-            $this->warehouse_id = $quotation->warehouse_id;
-            $this->tax_percentage = $quotation->tax_percentage;
-            $this->discount_percentage = $quotation->discount_percentage;
-            $this->shipping_amount = $quotation->shipping_amount / 100;
-            $this->note = $quotation->note;
+            $this->form->customer_id = $quotation->customer_id;
+            $this->form->warehouse_id = $quotation->warehouse_id;
+            $this->form->tax_percentage = $quotation->tax_percentage;
+            $this->form->discount_percentage = $quotation->discount_percentage;
+            $this->form->shipping_amount = $quotation->shipping_amount / 100;
+            $this->form->note = $quotation->note;
         } else {
             if (settings()->default_client_id !== null) {
-                $this->customer_id = settings()->default_client_id;
+                $this->form->customer_id = settings()->default_client_id;
             }
 
             if (settings()->default_warehouse_id !== null) {
-                $this->warehouse_id = settings()->default_warehouse_id;
+                $this->form->warehouse_id = settings()->default_warehouse_id;
             }
         }
 
-        if ($this->user_id && $this->warehouse_id) {
+        if ($this->user_id && $this->form->warehouse_id) {
             $cashRegister = CashRegister::where('user_id', $this->user_id)
-                ->where('warehouse_id', $this->warehouse_id)
+                ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
 
@@ -144,11 +80,11 @@ class Create extends Component
 
     public function hydrate(): void
     {
-        if ($this->payment_method === 'cash') {
-            $this->paid_amount = $this->total_amount;
+        if ($this->form->payment_method === 'cash') {
+            $this->form->paid_amount = $this->form->total_amount;
         }
 
-        $this->total_amount = $this->calculateTotal();
+        $this->form->total_amount = $this->calculateTotal();
     }
 
     public function render()
@@ -160,9 +96,9 @@ class Create extends Component
 
     public function proceed(): void
     {
-        if ($this->user_id && $this->warehouse_id) {
+        if ($this->user_id && $this->form->warehouse_id) {
             $cashRegister = CashRegister::where('user_id', $this->user_id)
-                ->where('warehouse_id', $this->warehouse_id)
+                ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
 
@@ -180,36 +116,38 @@ class Create extends Component
 
     public function saveDraft(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        if (! $this->customer_id) {
+        if (! $this->form->customer_id) {
             $this->alert('error', __('Please select a customer!'));
 
             return;
         }
 
-        $this->validate();
+        $this->form->validate();
 
         $sale = app(StoreSaleAction::class)(
             [
-                'date' => $this->date,
-                'customer_id' => $this->customer_id,
-                'warehouse_id' => $this->warehouse_id,
+                'date' => $this->form->date,
+                'customer_id' => $this->form->customer_id,
+                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => $this->user_id,
                 'cash_register_id' => $this->cash_register_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
                 'tax_amount' => (int) ($this->cartTax * 100),
                 'discount_amount' => (int) ($this->cartDiscount * 100),
+                'status' => $this->form->status,
+                'payment_status' => $this->form->payment_status,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -226,34 +164,38 @@ class Create extends Component
 
     public function store(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        if (! $this->customer_id) {
+        if (! $this->form->customer_id) {
             $this->alert('error', __('Please select a customer!'));
+
+            return;
         }
 
-        $this->validate();
+        $this->form->validate();
 
         $sale = app(StoreSaleAction::class)(
             [
-                'date' => $this->date,
-                'customer_id' => $this->customer_id,
-                'warehouse_id' => $this->warehouse_id,
+                'date' => $this->form->date,
+                'customer_id' => $this->form->customer_id,
+                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => $this->user_id,
                 'cash_register_id' => $this->cash_register_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
                 'tax_amount' => (int) ($this->cartTax * 100),
                 'discount_amount' => (int) ($this->cartDiscount * 100),
+                'status' => $this->form->status,
+                'payment_status' => $this->form->payment_status,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,
@@ -271,7 +213,7 @@ class Create extends Component
 
     public function calculateTotal(): float|int|array
     {
-        return $this->cartTotal + $this->shipping_amount;
+        return $this->cartTotal + $this->form->shipping_amount;
     }
 
     public function resetCart(): void
@@ -279,22 +221,16 @@ class Create extends Component
         $this->clearCart();
     }
 
-    #[Computed]
-    public function category()
+    public function updatedFormWarehouseId($value): void
     {
-        return Category::select('name', 'id')->get();
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function updatedWarehouseId($value): void
+    public function updatedFormStatus($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
-    }
-
-    public function updatedStatus($value): void
-    {
-        if ($value === SaleStatus::COMPLETED->value) {
-            $this->paid_amount = $this->total_amount;
+        if ($value === (string) SaleStatus::COMPLETED->value || $value === SaleStatus::COMPLETED->value) {
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 }

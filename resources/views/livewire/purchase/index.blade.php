@@ -119,6 +119,9 @@
                 <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sortBy === 'due_amount' ? $sortDirection : null">
                     {{ __('Due amount') }}
                 </x-table.th>
+                <x-table.th sortable wire:click="sortingBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
+                    {{ __('Status') }}
+                </x-table.th>
                 <x-table.th>
                     {{ __('Actions') }}
                 </x-table.th>
@@ -156,23 +159,41 @@
                                 </a>
                             @else
                                 <span
-                                    class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier->name }}</span>
+                                    class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier?->name ?? '' }}</span>
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            {{-- @php
-                            $badgeType = $purchase->status->getBadgeType();
-                        @endphp --}}
-                            {{-- <x-badge :type="$badgeType"> --}}
-                            {{ $purchase->payment_id }}
-                            {{-- {{ \app\Enums\PaymentStatus::getName($purchase->payment_id) }} --}}
-                            {{-- </x-badge> --}}
+                            <x-table.status-dropdown 
+                                :id="$purchase->id" 
+                                :value="$purchase->payment_status" 
+                                action="updatePaymentStatus"
+                                :options="[
+                                    ['value' => App\Enums\PaymentStatus::PENDING->value, 'label' => App\Enums\PaymentStatus::PENDING->getName()],
+                                    ['value' => App\Enums\PaymentStatus::PARTIAL->value, 'label' => App\Enums\PaymentStatus::PARTIAL->getName()],
+                                    ['value' => App\Enums\PaymentStatus::PAID->value, 'label' => App\Enums\PaymentStatus::PAID->getName()],
+                                    ['value' => App\Enums\PaymentStatus::DUE->value, 'label' => App\Enums\PaymentStatus::DUE->getName()]
+                                ]" 
+                            />
                         </x-table.td>
                         <x-table.td>
                             {{ format_currency($purchase->total_amount) }}
                         </x-table.td>
                         <x-table.td>
                             {{ format_currency($purchase->due_amount) }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-table.status-dropdown 
+                                :id="$purchase->id" 
+                                :value="$purchase->status->getName()" 
+                                action="updateStatus"
+                                :options="[
+                                    ['value' => App\Enums\PurchaseStatus::PENDING->value, 'label' => App\Enums\PurchaseStatus::PENDING->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::ORDERED->value, 'label' => App\Enums\PurchaseStatus::ORDERED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::COMPLETED->value, 'label' => App\Enums\PurchaseStatus::COMPLETED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::RETURNED->value, 'label' => App\Enums\PurchaseStatus::RETURNED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::CANCELED->value, 'label' => App\Enums\PurchaseStatus::CANCELED->getName()]
+                                ]" 
+                            />
                         </x-table.td>
                         <x-table.td>
                             <x-dropdown align="right" width="56">
@@ -239,7 +260,7 @@
                     </x-table.tr>
                 @empty
                     <tr>
-                        <x-table.td colspan="8">
+                        <x-table.td colspan="9">
                             <div class="flex flex-col items-center justify-center py-12">
                                 <div
                                     class="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
