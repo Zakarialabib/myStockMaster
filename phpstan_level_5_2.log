@@ -1,0 +1,10 @@
+ ------ -------------------------------------------------------------- 
+  Line   app/Livewire/Adjustment/Create.php                            
+ ------ -------------------------------------------------------------- 
+  5      Syntax error, unexpected '$', expecting ';' or '{' on line 5  
+         🪪  phpstan.parse (non-ignorable)                             
+ ------ -------------------------------------------------------------- 
+
+
+ [ERROR] Found 1 error                                                          
+

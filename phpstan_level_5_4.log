@@ -1,0 +1,576 @@
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Adjustment/Create.php                                   
+ ------ --------------------------------------------------------------------- 
+  6      Syntax error, unexpected T_NAME_QUALIFIED on line 6                  
+         🪪  phpstan.parse (non-ignorable)                                    
+  22     Syntax error, unexpected T_USE, expecting '{' on line 22             
+         🪪  phpstan.parse (non-ignorable)                                    
+  24     Syntax error, unexpected T_USE on line 24                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  27     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 27                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  30     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 30                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  33     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 33                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  51     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 51                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  53     Syntax error, unexpected T_PUBLIC on line 53                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  65     Syntax error, unexpected T_PUBLIC on line 65                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  70     Syntax error, unexpected T_PUBLIC on line 70                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  76     Syntax error, unexpected T_PUBLIC on line 76                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  108    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 108                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  162    Syntax error, unexpected T_PRIVATE on line 162                       
+         🪪  phpstan.parse (non-ignorable)                                    
+  168    Syntax error, unexpected T_PUBLIC on line 168                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  177    Syntax error, unexpected T_PRIVATE on line 177                       
+         🪪  phpstan.parse (non-ignorable)                                    
+  198    Syntax error, unexpected T_PUBLIC on line 198                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Adjustment/Edit.php                                     
+ ------ --------------------------------------------------------------------- 
+  20     Syntax error, unexpected T_USE, expecting '{' on line 20             
+         🪪  phpstan.parse (non-ignorable)                                    
+  22     Syntax error, unexpected T_USE on line 22                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  29     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 29                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  32     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 32                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  35     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 35                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  45     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 45                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  62     Syntax error, unexpected T_PUBLIC on line 62                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  104    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 104                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  132    Syntax error, unexpected T_PUBLIC on line 132                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  138    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 138                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  144    Syntax error, unexpected T_PUBLIC on line 144                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Brands/Edit.php                                         
+ ------ --------------------------------------------------------------------- 
+  17     Syntax error, unexpected T_USE, expecting '{' on line 17             
+         🪪  phpstan.parse (non-ignorable)                                    
+  19     Syntax error, unexpected T_USE on line 19                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  23     Syntax error, unexpected T_PUBLIC on line 23                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  31     Syntax error, unexpected T_PUBLIC on line 31                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  36     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 36                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  52     Syntax error, unexpected T_PUBLIC on line 52                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  71     Syntax error, unexpected T_PUBLIC on line 71                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------- 
+  Line   app/Livewire/Categories/Import.php            
+ ------ ---------------------------------------------- 
+  34     Syntax error, unexpected T_PUBLIC on line 34  
+         🪪  phpstan.parse (non-ignorable)             
+  39     Syntax error, unexpected T_PUBLIC on line 39  
+         🪪  phpstan.parse (non-ignorable)             
+  54     Syntax error, unexpected T_PUBLIC on line 54  
+         🪪  phpstan.parse (non-ignorable)             
+ ------ ---------------------------------------------- 
+
+ ------ ---------------------------------------------- 
+  Line   app/Livewire/Currency/Index.php               
+ ------ ---------------------------------------------- 
+  26     Syntax error, unexpected T_PUBLIC on line 26  
+         🪪  phpstan.parse (non-ignorable)             
+  41     Syntax error, unexpected T_PUBLIC on line 41  
+         🪪  phpstan.parse (non-ignorable)             
+ ------ ---------------------------------------------- 
+
+ ------ ---------------------------------------------- 
+  Line   app/Livewire/CustomerGroup/Index.php          
+ ------ ---------------------------------------------- 
+  30     Syntax error, unexpected T_PUBLIC on line 30  
+         🪪  phpstan.parse (non-ignorable)             
+  32     Syntax error, unexpected T_PUBLIC on line 32  
+         🪪  phpstan.parse (non-ignorable)             
+  47     Syntax error, unexpected T_PUBLIC on line 47  
+         🪪  phpstan.parse (non-ignorable)             
+  56     Syntax error, unexpected T_PUBLIC on line 56  
+         🪪  phpstan.parse (non-ignorable)             
+ ------ ---------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Customers/Edit.php                                      
+ ------ --------------------------------------------------------------------- 
+  19     Syntax error, unexpected T_USE, expecting '{' on line 19             
+         🪪  phpstan.parse (non-ignorable)                                    
+  21     Syntax error, unexpected T_USE on line 21                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  31     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 31                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  37     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 37                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  57     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 57                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  87     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 87                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  93     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 93                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  98     Syntax error, unexpected T_PUBLIC on line 98                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Email/Create.php                                        
+ ------ --------------------------------------------------------------------- 
+  18     Syntax error, unexpected T_USE, expecting '{' on line 18             
+         🪪  phpstan.parse (non-ignorable)                                    
+  20     Syntax error, unexpected T_USE on line 20                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  38     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 38                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  40     Syntax error, unexpected T_PUBLIC on line 40                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  48     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 48                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  58     Syntax error, unexpected T_PUBLIC on line 58                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Email/Edit.php                                          
+ ------ --------------------------------------------------------------------- 
+  34     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 34                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  44     Syntax error, unexpected T_PUBLIC on line 44                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  52     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 52                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Expense/Create.php                                      
+ ------ --------------------------------------------------------------------- 
+  41     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 41                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  44     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 44                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  47     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 47                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  50     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 50                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  66     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 66                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  95     Syntax error, unexpected T_PUBLIC on line 95                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  113    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 113                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Expense/Edit.php                                        
+ ------ --------------------------------------------------------------------- 
+  24     Syntax error, unexpected T_PUBLIC on line 24                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  39     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 39                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  42     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 42                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  50     Syntax error, unexpected T_PUBLIC on line 50                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  53     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 53                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  64     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 64                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  86     Syntax error, unexpected T_PUBLIC on line 86                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------- 
+  Line   app/Livewire/Expense/Index.php                            
+ ------ ---------------------------------------------------------- 
+  23     Syntax error, unexpected T_USE, expecting '{' on line 23  
+         🪪  phpstan.parse (non-ignorable)                         
+  25     Syntax error, unexpected T_USE on line 25                 
+         🪪  phpstan.parse (non-ignorable)                         
+  33     Syntax error, unexpected T_PUBLIC on line 33              
+         🪪  phpstan.parse (non-ignorable)                         
+  43     Syntax error, unexpected T_PUBLIC on line 43              
+         🪪  phpstan.parse (non-ignorable)                         
+  45     Syntax error, unexpected T_PUBLIC on line 45              
+         🪪  phpstan.parse (non-ignorable)                         
+  51     Syntax error, unexpected T_PUBLIC on line 51              
+         🪪  phpstan.parse (non-ignorable)                         
+  72     Syntax error, unexpected T_PUBLIC on line 72              
+         🪪  phpstan.parse (non-ignorable)                         
+  89     Syntax error, unexpected T_PUBLIC on line 89              
+         🪪  phpstan.parse (non-ignorable)                         
+  105    Syntax error, unexpected T_PUBLIC on line 105             
+         🪪  phpstan.parse (non-ignorable)                         
+  114    Syntax error, unexpected T_PUBLIC on line 114             
+         🪪  phpstan.parse (non-ignorable)                         
+  121    Syntax error, unexpected T_PUBLIC on line 121             
+         🪪  phpstan.parse (non-ignorable)                         
+  128    Syntax error, unexpected T_PUBLIC on line 128             
+         🪪  phpstan.parse (non-ignorable)                         
+  135    Syntax error, unexpected T_PUBLIC on line 135             
+         🪪  phpstan.parse (non-ignorable)                         
+  142    Syntax error, unexpected T_PRIVATE on line 142            
+         🪪  phpstan.parse (non-ignorable)                         
+  147    Syntax error, unexpected T_PUBLIC on line 147             
+         🪪  phpstan.parse (non-ignorable)                         
+  162    Syntax error, unexpected T_PUBLIC on line 162             
+         🪪  phpstan.parse (non-ignorable)                         
+  167    Syntax error, unexpected T_PUBLIC on line 167             
+         🪪  phpstan.parse (non-ignorable)                         
+ ------ ---------------------------------------------------------- 
+
+ ------ ---------------------------------------------- 
+  Line   app/Livewire/ExpenseCategories/Index.php      
+ ------ ---------------------------------------------- 
+  27     Syntax error, unexpected T_PUBLIC on line 27  
+         🪪  phpstan.parse (non-ignorable)             
+  42     Syntax error, unexpected T_PUBLIC on line 42  
+         🪪  phpstan.parse (non-ignorable)             
+ ------ ---------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Language/EditTranslation.php                            
+ ------ --------------------------------------------------------------------- 
+  15     Syntax error, unexpected T_USE, expecting '{' on line 15             
+         🪪  phpstan.parse (non-ignorable)                                    
+  17     Syntax error, unexpected T_PUBLIC on line 17                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  22     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 22                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  35     Syntax error, unexpected T_PRIVATE on line 35                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  61     Syntax error, unexpected T_PUBLIC on line 61                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Permission/Index.php                                    
+ ------ --------------------------------------------------------------------- 
+  28     Syntax error, unexpected T_PUBLIC on line 28                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  35     Syntax error, unexpected T_PUBLIC on line 35                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  49     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 49                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  59     Syntax error, unexpected T_PUBLIC on line 59                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  71     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 71                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  84     Syntax error, unexpected T_PUBLIC on line 84                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  103    Syntax error, unexpected T_PUBLIC on line 103                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  112    Syntax error, unexpected T_PUBLIC on line 112                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Products/Create.php                                     
+ ------ --------------------------------------------------------------------- 
+  26     Syntax error, unexpected T_USE, expecting '{' on line 26             
+         🪪  phpstan.parse (non-ignorable)                                    
+  28     Syntax error, unexpected T_USE on line 28                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  37     Syntax error, unexpected T_PUBLIC on line 37                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  46     Syntax error, unexpected T_PUBLIC on line 46                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  48     Syntax error, unexpected T_PUBLIC on line 48                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  61     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 61                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  63     Syntax error, unexpected T_PUBLIC on line 63                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  68     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 68                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  81     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 81                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  90     Syntax error, unexpected T_PUBLIC on line 90                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  100    Syntax error, unexpected T_PUBLIC on line 100                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  118    Syntax error, unexpected T_PUBLIC on line 118                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  184    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 184                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  190    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 190                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  196    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 196                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Products/Import.php                                     
+ ------ --------------------------------------------------------------------- 
+  36     Syntax error, unexpected T_PUBLIC on line 36                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  59     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 59                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  78     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 78                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Purchase/Create.php                                     
+ ------ --------------------------------------------------------------------- 
+  21     Syntax error, unexpected T_USE, expecting '{' on line 21             
+         🪪  phpstan.parse (non-ignorable)                                    
+  23     Syntax error, unexpected T_USE on line 23                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  58     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 58                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  93     Syntax error, unexpected T_PUBLIC on line 93                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  102    Syntax error, unexpected T_PUBLIC on line 102                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  107    Syntax error, unexpected T_PUBLIC on line 107                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  116    Syntax error, unexpected T_PUBLIC on line 116                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  161    Syntax error, unexpected T_PUBLIC on line 161                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  197    Syntax error, unexpected T_PUBLIC on line 197                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  202    Syntax error, unexpected T_PUBLIC on line 202                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  207    Syntax error, unexpected T_PUBLIC on line 207                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  213    Syntax error, unexpected T_PUBLIC on line 213                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  220    Syntax error, unexpected T_PUBLIC on line 220                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Purchase/Edit.php                                       
+ ------ --------------------------------------------------------------------- 
+  27     Syntax error, unexpected T_USE, expecting '{' on line 27             
+         🪪  phpstan.parse (non-ignorable)                                    
+  29     Syntax error, unexpected T_USE on line 29                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  56     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 56                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  62     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 62                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  129    Syntax error, unexpected T_PUBLIC on line 129                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  243    Syntax error, unexpected T_PUBLIC on line 243                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  250    Syntax error, unexpected T_PUBLIC on line 250                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  255    Syntax error, unexpected T_PUBLIC on line 255                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  260    Syntax error, unexpected T_PUBLIC on line 260                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  265    Syntax error, unexpected T_PUBLIC on line 265                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  271    Syntax error, unexpected T_PUBLIC on line 271                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------- 
+  Line   app/Livewire/Quotations/Create.php             
+ ------ ----------------------------------------------- 
+  109    Syntax error, unexpected T_PUBLIC on line 109  
+         🪪  phpstan.parse (non-ignorable)              
+  119    Syntax error, unexpected T_PUBLIC on line 119  
+         🪪  phpstan.parse (non-ignorable)              
+  126    Syntax error, unexpected T_PUBLIC on line 126  
+         🪪  phpstan.parse (non-ignorable)              
+ ------ ----------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Quotations/Edit.php                                     
+ ------ --------------------------------------------------------------------- 
+  40     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 40                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  43     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 43                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  54     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 54                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  145    Syntax error, unexpected T_PUBLIC on line 145                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  152    Syntax error, unexpected T_PUBLIC on line 152                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Sales/Create.php                                        
+ ------ --------------------------------------------------------------------- 
+  60     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 60                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  69     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 69                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  73     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 73                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  76     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 76                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  84     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 84                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  88     Syntax error, unexpected T_PUBLIC on line 88                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  154    Syntax error, unexpected T_PUBLIC on line 154                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  181    Syntax error, unexpected T_PUBLIC on line 181                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  227    Syntax error, unexpected T_PUBLIC on line 227                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  272    Syntax error, unexpected T_PUBLIC on line 272                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  277    Syntax error, unexpected T_PUBLIC on line 277                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  283    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 283                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  288    Syntax error, unexpected T_PUBLIC on line 288                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  294    Syntax error, unexpected T_PUBLIC on line 294                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Sales/Edit.php                                          
+ ------ --------------------------------------------------------------------- 
+  65     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 65                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  70     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 70                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  127    Syntax error, unexpected T_PUBLIC on line 127                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  136    Syntax error, unexpected T_PUBLIC on line 136                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  238    Syntax error, unexpected T_PUBLIC on line 238                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  249    Syntax error, unexpected T_PUBLIC on line 249                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Suppliers/Edit.php                                      
+ ------ --------------------------------------------------------------------- 
+  16     Syntax error, unexpected T_USE, expecting '{' on line 16             
+         🪪  phpstan.parse (non-ignorable)                                    
+  18     Syntax error, unexpected T_USE on line 18                            
+         🪪  phpstan.parse (non-ignorable)                                    
+  26     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 26                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  79     Syntax error, unexpected T_PUBLIC on line 79                         
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Transfer/Create.php                                     
+ ------ --------------------------------------------------------------------- 
+  132    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 132                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  160    Syntax error, unexpected T_PUBLIC on line 160                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   app/Livewire/Transfer/Edit.php                                       
+ ------ --------------------------------------------------------------------- 
+  38     Syntax error, unexpected T_PUBLIC on line 38                         
+         🪪  phpstan.parse (non-ignorable)                                    
+  46     Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 46                                                 
+         🪪  phpstan.parse (non-ignorable)                                    
+  107    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 107                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  139    Syntax error, unexpected T_PUBLIC on line 139                        
+         🪪  phpstan.parse (non-ignorable)                                    
+  145    Syntax error, unexpected T_PUBLIC, expecting T_TRAIT or T_INTERFACE  
+         or T_ENUM on line 145                                                
+         🪪  phpstan.parse (non-ignorable)                                    
+  151    Syntax error, unexpected T_PUBLIC on line 151                        
+         🪪  phpstan.parse (non-ignorable)                                    
+ ------ --------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------- 
+  Line   app/Livewire/Users/Edit.php                   
+ ------ ---------------------------------------------- 
+  69     Syntax error, unexpected T_PUBLIC on line 69  
+         🪪  phpstan.parse (non-ignorable)             
+ ------ ---------------------------------------------- 
+
+ [ERROR] Found 189 errors                                                       
+
