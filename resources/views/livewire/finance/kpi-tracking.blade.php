@@ -42,11 +42,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date From') }}</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateFrom">
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="dateFrom">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date To') }}</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateTo">
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live.debounce.1000ms="dateTo">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('KPI Type') }}</label>

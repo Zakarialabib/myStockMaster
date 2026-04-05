@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\ExpenseCategories;
 
+use App\Livewire\Forms\ExpenseCategoryForm;
 use App\Models\ExpenseCategory;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -19,11 +19,7 @@ class Edit extends Component
 
     public $expenseCategory;
 
-    #[Validate('required', message: 'Please provide a name')]
-    #[Validate('min:3', message: 'This name is too short')]
-    public string $name;
-
-    public ?string $description = null;
+    public ExpenseCategoryForm $form;
 
     public function render()
     {
@@ -41,8 +37,7 @@ class Edit extends Component
 
         $this->expenseCategory = ExpenseCategory::where('id', $id)->firstOrFail();
 
-        $this->name = $this->expenseCategory->name;
-        $this->description = $this->expenseCategory->description;
+        $this->form->setCategory($this->expenseCategory);
 
         $this->showModal = true;
     }
@@ -51,13 +46,13 @@ class Edit extends Component
     {
         $this->validate();
 
-        $this->expenseCategory->update($this->all());
+        $this->expenseCategory->update($this->form->all());
 
         $this->alert('success', __('Expense Category Updated Successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
-        $this->reset(['name', 'description']);
+        $this->form->reset();
 
         $this->showModal = false;
     }

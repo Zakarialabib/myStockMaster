@@ -116,11 +116,12 @@ class KpiTracking extends Component
 
     private function calculateRevenueKpis($dateFrom, $dateTo)
     {
-        $totalRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
-            ->sum('total_amount');
+        $salesData = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            ->selectRaw('SUM(total_amount) as total_revenue, COUNT(id) as total_sales')
+            ->first();
 
-        $totalSales = Sale::whereBetween('date', [$dateFrom, $dateTo])
-            ->count();
+        $totalRevenue = (float) ($salesData->total_revenue ?? 0);
+        $totalSales = (int) ($salesData->total_sales ?? 0);
 
         $averageOrderValue = $totalSales > 0 ? $totalRevenue / $totalSales : 0;
 
@@ -160,18 +161,17 @@ class KpiTracking extends Component
         $totalRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
             ->sum('total_amount');
 
-        $totalExpenses = Expense::whereBetween('date', [$dateFrom, $dateTo])
-            ->sum('amount');
+        $expensesData = Expense::whereBetween('date', [$dateFrom, $dateTo])
+            ->selectRaw("SUM(amount) as total_expenses, SUM(CASE WHEN category NOT IN ('depreciation', 'interest') THEN amount ELSE 0 END) as operating_expenses")
+            ->first();
+
+        $totalExpenses = (float) ($expensesData->total_expenses ?? 0);
+        $operatingExpenses = (float) ($expensesData->operating_expenses ?? 0);
 
         $netProfit = $totalRevenue - $totalExpenses;
         $netProfitMargin = $totalRevenue > 0 ? ($netProfit / $totalRevenue) * 100 : 0;
 
         // Calculate EBITDA (simplified)
-        $operatingExpenses = Expense::whereBetween('date', [$dateFrom, $dateTo])
-            ->where('category', '!=', 'depreciation')
-            ->where('category', '!=', 'interest')
-            ->sum('amount');
-
         $ebitda = $totalRevenue - $operatingExpenses;
         $ebitdaMargin = $totalRevenue > 0 ? ($ebitda / $totalRevenue) * 100 : 0;
 
@@ -189,14 +189,15 @@ class KpiTracking extends Component
 
     private function calculateEfficiencyKpis($dateFrom, $dateTo)
     {
-        $totalSales = Sale::whereBetween('date', [$dateFrom, $dateTo])
-            ->count();
-
         $totalProducts = Product::count();
-        $activeSoldProducts = SaleDetails::join('sales', 'sale_details.sale_id', '=', 'sales.id')
-            ->whereBetween('sales.date', [$dateFrom, $dateTo])
-            ->distinct('sale_details.product_id')
-            ->count();
+
+        $efficiencyData = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            ->leftJoin('sale_details', 'sales.id', '=', 'sale_details.sale_id')
+            ->selectRaw('COUNT(DISTINCT sales.id) as total_sales, COUNT(DISTINCT sale_details.product_id) as active_products')
+            ->first();
+
+        $totalSales = (int) ($efficiencyData->total_sales ?? 0);
+        $activeSoldProducts = (int) ($efficiencyData->active_products ?? 0);
 
         $productTurnoverRate = $totalProducts > 0 ? ($activeSoldProducts / $totalProducts) * 100 : 0;
 
@@ -303,24 +304,22 @@ class KpiTracking extends Component
                 return;
         }
 
-        switch ($this->kpiType) {
-            case 'revenue':
-                $this->comparisonData = $this->calculateRevenueKpis($comparisonDateFrom, $comparisonDateTo);
+        $cacheKey = 'kpi_compare_' . $this->kpiType . '_' . $this->comparisonPeriod . '_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-                break;
-            case 'profitability':
-                $this->comparisonData = $this->calculateProfitabilityKpis($comparisonDateFrom, $comparisonDateTo);
-
-                break;
-            case 'efficiency':
-                $this->comparisonData = $this->calculateEfficiencyKpis($comparisonDateFrom, $comparisonDateTo);
-
-                break;
-            case 'growth':
-                $this->comparisonData = $this->calculateGrowthKpis($comparisonDateFrom, $comparisonDateTo);
-
-                break;
-        }
+        $this->comparisonData = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($comparisonDateFrom, $comparisonDateTo) {
+            switch ($this->kpiType) {
+                case 'revenue':
+                    return $this->calculateRevenueKpis($comparisonDateFrom, $comparisonDateTo);
+                case 'profitability':
+                    return $this->calculateProfitabilityKpis($comparisonDateFrom, $comparisonDateTo);
+                case 'efficiency':
+                    return $this->calculateEfficiencyKpis($comparisonDateFrom, $comparisonDateTo);
+                case 'growth':
+                    return $this->calculateGrowthKpis($comparisonDateFrom, $comparisonDateTo);
+                default:
+                    return [];
+            }
+        });
     }
 
     public function toggleAutoRefresh()

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\ExpenseCategories;
 
+use App\Livewire\Forms\ExpenseCategoryForm;
 use App\Models\ExpenseCategory;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
@@ -17,16 +17,7 @@ class Create extends Component
 
     public $showModal = false;
 
-    public ExpenseCategory $expenseCategory;
-
-    #[Validate('required|min:3|max:255')]
-    public string $name;
-
-    public ?string $description = null;
-
-    protected $messages = [
-        'expenseCategory.name.required' => 'The name field cannot be empty.',
-    ];
+    public ExpenseCategoryForm $form;
 
     public function render()
     {
@@ -49,13 +40,13 @@ class Create extends Component
     {
         $this->validate();
 
-        ExpenseCategory::create($this->all());
+        ExpenseCategory::create($this->form->all());
 
         $this->alert('success', __('Expense created successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
-        $this->reset(['name', 'description']);
+        $this->form->reset();
 
         $this->showModal = false;
     }
