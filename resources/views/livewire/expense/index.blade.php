@@ -153,7 +153,7 @@
         {{ $expenses->links() }}
     </div>
 
-    <livewire:expense.edit :expense="$expense" />
+    <livewire:expense.edit />
 
     <livewire:expense.create />
 

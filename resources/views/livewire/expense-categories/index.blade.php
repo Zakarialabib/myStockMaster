@@ -124,7 +124,7 @@
         </div>
 
         <!-- Modals -->
-        <livewire:expense-categories.edit :expenseCategory="$expenseCategory" />
+        <livewire:expense-categories.edit />
         <livewire:expense-categories.create />
         
     </x-page-container>

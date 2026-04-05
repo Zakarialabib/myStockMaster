@@ -25,7 +25,7 @@ class Index extends Component
 
     public $purchase_id;
 
-    public function mount($purchase): void
+    public function mount($purchase = null): void
     {
         $this->purchase = $purchase;
     }

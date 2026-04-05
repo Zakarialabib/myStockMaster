@@ -25,7 +25,7 @@ class Edit extends Component
     }
 
     #[On('editModal')]
-    public function openModal($id): void
+    public function openModal($warehouse): void
     {
         abort_if(Gate::denies('warehouse_update'), 403);
 
@@ -33,7 +33,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $warehouse = Warehouse::find($id);
+        $warehouse = Warehouse::find($warehouse);
 
         $this->form->setWarehouse($warehouse);
 

@@ -303,7 +303,7 @@
                 </div>
             </div>
 
-            <livewire:products.show :product="$product" />
+            <livewire:products.show />
 
             <livewire:products.create />
 

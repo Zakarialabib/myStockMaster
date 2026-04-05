@@ -307,7 +307,7 @@ class CartService
     }
 
     /** Get cart count */
-    public function count(): int
+    public function count(): float|int
     {
         return $this->getContent()->sum('quantity');
     }

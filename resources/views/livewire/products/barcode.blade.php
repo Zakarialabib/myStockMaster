@@ -34,14 +34,14 @@
                                             min="0" max="100" required />
                                     </x-table.td>
                                     <x-table.td>
-                                        <select name="barcodeSize" id="barcodeSize"
+                                        <x-select name="barcodeSize" id="barcodeSize"
                                             wire:model.live="products.{{ $index }}.barcodeSize">
                                             <option value="small">{{ __('Small') }}</option>
                                             <option value="medium">{{ __('Medium') }}</option>
                                             <option value="large">{{ __('Large') }}</option>
                                             <option value="extra">{{ __('Extra') }}</option>
                                             <option value="huge">{{ __('Huge') }}</option>
-                                        </select>
+                                        </x-select>
                                     </x-table.td>
                                     <x-table.td>
                                         <x-button danger type="button"

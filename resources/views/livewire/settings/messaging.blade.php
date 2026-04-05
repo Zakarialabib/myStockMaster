@@ -5,12 +5,12 @@
                 <h2 class="text-lg font-medium mb-4">{{ __('Messaging Configuration') }}</h2>
                 <div class="mb-4">
                     <label for="type">{{ __('Message Type') }}:</label>
-                    <select id="type" wire:model="type"
+                    <x-select id="type" wire:model="type"
                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         <option value="">{{ __('Select Message Type') }}</option>
                         <option value="whatsapp">WhatsApp</option>
                         <option value="telegram">Telegram</option>
-                    </select>
+                    </x-select>
                 </div>
                 @if ($type == 'telegram')
                     <div class="mb-4" x-data="{ showTooltip: false }">

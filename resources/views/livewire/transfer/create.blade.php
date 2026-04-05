@@ -21,13 +21,13 @@
                     <div>
                         <x-label for="from_warehouse_id" :value="__('From Warehouse')" required />
                         <div class="relative mt-1">
-                            <select required id="from_warehouse_id" name="from_warehouse_id" wire:model.live="form.from_warehouse_id"
+                            <x-select required id="from_warehouse_id" name="from_warehouse_id" wire:model.live="form.from_warehouse_id"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md">
                                 <option value="">{{ __('Select From Warehouse') }}</option>
                                 @foreach ($this->warehouses as $index => $warehouse)
                                     <option value="{{ $index }}">{{ $warehouse }}</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                         <x-input-error :messages="$errors->get('form.from_warehouse_id')" class="mt-2" />
                     </div>
@@ -35,13 +35,13 @@
                     <div>
                         <x-label for="to_warehouse_id" :value="__('To Warehouse')" required />
                         <div class="relative mt-1">
-                            <select required id="to_warehouse_id" name="to_warehouse_id" wire:model.live="form.to_warehouse_id"
+                            <x-select required id="to_warehouse_id" name="to_warehouse_id" wire:model.live="form.to_warehouse_id"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md">
                                 <option value="">{{ __('Select To Warehouse') }}</option>
                                 @foreach ($this->warehouses as $index => $warehouse)
                                     <option value="{{ $index }}">{{ $warehouse }}</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                         <x-input-error :messages="$errors->get('form.to_warehouse_id')" class="mt-2" />
                     </div>

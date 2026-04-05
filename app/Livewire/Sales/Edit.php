@@ -70,7 +70,7 @@ class Edit extends Component
     public $status;
 
     #[Validate('required|string|max:255')]
-    public string $payment_method;
+    public ?string $payment_method = null;
 
     public $date;
 

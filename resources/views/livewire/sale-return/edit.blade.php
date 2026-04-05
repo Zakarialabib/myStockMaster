@@ -21,12 +21,12 @@
                                 <div class="w-full md:w-1/3 px-2 mb-2">
                                     <div class="mb-4">
                                         <label for="customer_id" class="block text-sm font-medium text-gray-700">{{ __('Customer') }} <span class="text-red-500">*</span></label>
-                                        <select wire:model.blur="customer_id" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
+                                        <x-select wire:model.blur="customer_id" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
                                             <option value="">{{ __('Select Customer') }}</option>
                                             @foreach($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-2 mb-2">
@@ -43,21 +43,21 @@
                                 <div class="w-full md:w-1/3 px-2 mb-2">
                                     <div class="mb-4">
                                         <label for="status" class="block text-sm font-medium text-gray-700">{{ __('Status') }} <span class="text-red-500">*</span></label>
-                                        <select wire:model.blur="status" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
+                                        <x-select wire:model.blur="status" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
                                             <option value="Pending">{{ __('Pending') }}</option>
                                             <option value="Completed">{{ __('Completed') }}</option>
-                                        </select>
+                                        </x-select>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-2 mb-2">
                                     <div class="mb-4">
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700">{{ __('Payment Method') }} <span class="text-red-500">*</span></label>
-                                        <select wire:model.blur="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
+                                        <x-select wire:model.blur="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
                                             <option value="Cash">{{ __('Cash') }}</option>
                                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                                             <option value="Cheque">{{ __('Cheque') }}</option>
                                             <option value="Other">{{ __('Other') }}</option>
-                                        </select>
+                                        </x-select>
                                     </div>
                                 </div>
                                 <div class="w-full md:w-1/3 px-2 mb-2">

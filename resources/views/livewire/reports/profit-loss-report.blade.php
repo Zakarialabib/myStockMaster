@@ -22,13 +22,13 @@
             </div>
             <div class="lg:w-1/3 sm:w-full px-4">
                 <x-label for="warehouse_id" :value="__('Warehouse')" required />
-                <select wire:model.live="warehouse_id" name="warehouse_id" required
+                <x-select wire:model.live="warehouse_id" name="warehouse_id" required
                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
                     <option>{{ __('Select Warehouse') }}</option>
                     @foreach ($this->warehouses as $index => $warehouse)
                         <option value="{{ $index }}">{{ $warehouse }}</option>
                     @endforeach
-                </select>
+                </x-select>
             </div>
         </div>
         <div class="my-4 text-center">

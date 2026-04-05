@@ -31,14 +31,14 @@
                     <div>
                         <x-label for='warehouse_id' :value="__('Warehouse')" required />
                         <div class="relative mt-1">
-                            <select
+                            <x-select
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md"
                                 required id="warehouse_id" name="warehouse_id" wire:model.live="form.warehouse_id">
                                 <option value=""> {{ __('Select warehouse') }}</option>
                                 @foreach ($this->warehouses as $index => $warehouse)
                                     <option value="{{ $index }}">{{ $warehouse }}</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                         <x-input-error :messages="$errors->get('form.warehouse_id')" class="mt-2" />
                     </div>
@@ -59,7 +59,7 @@
                     
                     <div>
                         <x-label for="status" :value="__('Status')" required />
-                        <select
+                        <x-select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md mt-1"
                             name="status" id="status" required wire:model.live="form.status">
                             <option value=""> {{ __('Select option') }}</option>
@@ -68,7 +68,7 @@
                                     {{ __($status->name) }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('form.status')" class="mt-2" />
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <x-label for="payment_method" :value="__('Payment Method')" required />
-                        <select
+                        <x-select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md mt-1"
                             name="payment_method" id="payment_method" wire:model.live="form.payment_method" required>
                             <option value=""> {{ __('Select option') }}</option>
@@ -120,7 +120,7 @@
                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                             <option value="Cheque">{{ __('Cheque') }}</option>
                             <option value="Other">{{ __('Other') }}</option>
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('form.payment_method')" class="mt-2" />
                     </div>
 

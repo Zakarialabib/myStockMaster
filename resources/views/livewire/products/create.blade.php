@@ -33,14 +33,14 @@
                         </div>
                         <div class="md:w-1/3 sm:w-full px-3 mt-4">
                             <x-label for="barcode_symbology" :value="__('Barcode Symbology')" />
-                            <select wire:model="form.barcode_symbology" name="barcode_symbology" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
+                            <x-select wire:model="form.barcode_symbology" name="barcode_symbology" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" required>
                                 <option value="C128">Code 128</option>
                                 <option value="C39">Code 39</option>
                                 <option value="UPCA">UPC-A</option>
                                 <option value="UPCE">UPC-E</option>
                                 <option value="EAN13">EAN-13</option>
                                 <option value="EAN8">EAN-8</option>
-                            </select>
+                            </x-select>
                             <x-input-error :messages="$errors->get('form.barcode_symbology')" for="form.barcode_symbology" class="mt-2" />
                         </div>
                     </div>
@@ -101,10 +101,10 @@
                     <div class="flex flex-wrap mb-4">
                         <div class="lg:w-1/3 sm:w-1/2 px-2">
                             <x-label for="tax_type" :value="__('Tax type')" />
-                            <select wire:model="form.tax_type" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="tax_type" id="tax_type">
+                            <x-select wire:model="form.tax_type" required class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="tax_type" id="tax_type">
                                 <option value="0">{{ __('Exlusive') }}</option>
                                 <option value="1">{{ __('Inclusive') }}</option>
-                            </select>
+                            </x-select>
                             <x-input-error :messages="$errors->get('form.tax_type')" for="form.tax_type" class="mt-2" />
                         </div>
                         <div class="lg:w-1/3 sm:w-1/2 px-2">

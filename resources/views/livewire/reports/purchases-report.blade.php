@@ -24,14 +24,14 @@
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <div class="mb-4">
                             <label>{{ __('Supplier') }}</label>
-                            <select wire:model="supplier_id"
+                            <x-select wire:model="supplier_id"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="supplier_id">
                                 <option value="">{{ __('Select Supplier') }}</option>
                                 @foreach ($this->suppliers as $supplier)
                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <div class="mb-4">
                             <label>{{ __('Status') }}</label>
-                            <select wire:model="purchase_status"
+                            <x-select wire:model="purchase_status"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="purchase_status">
                                 @foreach (\App\Enums\PurchaseStatus::cases() as $status)
@@ -47,13 +47,13 @@
                                         {{ __($status->name) }}
                                     </option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <div class="mb-4">
                             <label>{{ __('Payment Status') }}</label>
-                            <select wire:model="payment_status"
+                            <x-select wire:model="payment_status"
                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                 name="payment_status">
                                 <option value="">{{ __('Select Payment Status') }}</option>
@@ -62,7 +62,7 @@
                                         {{ __($status->name) }}
                                     </option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                     </div>
                 </div>

@@ -195,7 +195,6 @@ class BreakEvenAnalysis extends Component
         // Allocate fixed costs (simplified - equal allocation)
         $totalProducts = Product::count();
         $totalFixedCosts = Expense::whereBetween('date', [$dateFrom, $dateTo])
-            ->whereIn('category', ['rent', 'salaries', 'utilities', 'insurance'])
             ->sum('amount');
 
         $allocatedFixedCosts = $totalProducts > 0 ? $totalFixedCosts / $totalProducts : 0;
@@ -309,39 +308,30 @@ class BreakEvenAnalysis extends Component
     public function exportAnalysis()
     {
         try {
-            $filename = 'break_even_analysis_' . $this->analysisType . '_' . now()->format('Y-m-d_H-i-s') . '.json';
+            $filename = 'break_even_analysis_' . $this->analysisType . '_' . now()->format('Y-m-d') . '.csv';
 
-            $exportData = [
-                'analysis_type' => $this->analysisType,
-                'date_range' => [
-                    'from' => $this->dateFrom,
-                    'to' => $this->dateTo,
-                ],
-                'break_even_data' => $this->breakEvenData,
-                'generated_at' => now()->toISOString(),
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ];
 
-            if ($this->analysisType === 'product' && $this->selectedProduct) {
-                $exportData['selected_product_id'] = $this->selectedProduct;
-            }
+            return response()->streamDownload(function () {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, ['Metric', 'Value']);
 
-            if ($this->analysisType === 'scenario') {
-                $exportData['scenario_inputs'] = [
-                    'fixed_cost_adjustment' => $this->fixedCostAdjustment,
-                    'variable_cost_adjustment' => $this->variableCostAdjustment,
-                    'price_adjustment' => $this->priceAdjustment,
-                    'target_profit' => $this->targetProfit,
-                ];
-                $exportData['scenario_analysis'] = $this->scenarioAnalysis;
-            }
+                foreach ($this->breakEvenData as $key => $value) {
+                    if (is_scalar($value)) {
+                        fputcsv($file, [$key, $value]);
+                    }
+                }
 
-            return response()->streamDownload(function () use ($exportData) {
-                echo json_encode($exportData, JSON_PRETTY_PRINT);
-            }, $filename, [
-                'Content-Type' => 'application/json',
-            ]);
+                fclose($file);
+            }, $filename, $headers);
+
         } catch (Exception $e) {
-            session()->flash('error', 'Failed to export analysis: ' . $e->getMessage());
+            session()->flash('error', 'Error exporting data: ' . $e->getMessage());
+
+            return;
         }
     }
 

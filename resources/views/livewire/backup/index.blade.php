@@ -107,13 +107,13 @@
 
                     <div class="w-1/2 px-2 my-4">
                         <label for="backup_status">{{ __('Backup Schedule') }}</label>
-                        <select wire:model.live="backup_schedule" name="backup_schedule">
+                        <x-select wire:model.live="backup_schedule" name="backup_schedule">
                             @foreach (\App\Enums\BackupSchedule::cases() as $type)
                                 <option value="{{ $type->value }}">
                                     {{ __($type->name) }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('backup_schedule')" for="backup_schedule" class="mt-2" />
                     </div>
 

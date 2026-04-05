@@ -84,7 +84,7 @@
                                         <div class="mb-4">
                                             <label for="payment_method">{{ __('Payment Method') }} <span
                                                     class="text-red-500">*</span></label>
-                                            <select
+                                            <x-select
                                                 class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                                 name="payment_method" id="payment_method" required>
                                                 <option
@@ -99,7 +99,7 @@
                                                 <option
                                                     {{ $saleReturnPayment->payment_method == 'Other' ? 'selected' : '' }}
                                                     value="Other">Other</option>
-                                            </select>
+                                            </x-select>
                                         </div>
                                     </div>
                                 </div>

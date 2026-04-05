@@ -302,6 +302,6 @@
     @livewire('purchase.payment-form', ['purchase' => $purchase])
 
     {{-- @if (empty($showPayments))
-        <livewire:purchase.payment.index :purchase="$purchase" />
+        <livewire:purchase.payment.index />
       @endif --}}
 </div>

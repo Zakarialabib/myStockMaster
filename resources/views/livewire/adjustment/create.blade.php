@@ -62,7 +62,7 @@
                                             value="{{ $product['qty'] ?? $product['options']['qty'] }}">
                                     </x-table.td>
                                     <x-table.td>
-                                        <select name="types[]" wire:model="products.{{ $key }}.types"
+                                        <x-select name="types[]" wire:model="products.{{ $key }}.types"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                             <option value="add"
                                                 {{ isset($product['type']) && $product['options']['type'] == 'add' ? 'selected' : '' }}>
@@ -71,7 +71,7 @@
                                             <option value="sub"
                                                 {{ isset($product['type']) && $product['options']['type'] == 'sub' ? 'selected' : '' }}>
                                                 (-) {{ __('Subtraction') }}</option>
-                                        </select>
+                                        </x-select>
                                     </x-table.td>
                                     <x-table.td>
                                         <x-button danger type="button"

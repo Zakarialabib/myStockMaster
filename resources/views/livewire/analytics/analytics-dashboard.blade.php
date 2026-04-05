@@ -40,12 +40,12 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Product') }}</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="selectedProduct">
+                    <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="selectedProduct">
                         <option value="">{{ __('All Products') }}</option>
                         @foreach($this->products as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
                 <div class="flex items-end">
                     <button type="button" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md font-medium flex items-center" wire:click="resetFilters">

@@ -36,29 +36,29 @@
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="form-label">{{ __('Notification Type') }}</label>
-                                    <select class="form-select" wire:model.live="filterType">
+                                    <x-select class="form-select" wire:model.live="filterType">
                                         <option value="">{{ __('All Types') }}</option>
                                         @foreach($notificationTypes as $type)
                                             <option value="{{ $type }}">{{ __(ucfirst(str_replace('_', ' ', $type))) }}</option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">{{ __('Status') }}</label>
-                                    <select class="form-select" wire:model.live="filterRead">
+                                    <x-select class="form-select" wire:model.live="filterRead">
                                         <option value="">{{ __('All Notifications') }}</option>
                                         <option value="unread">{{ __('Unread Only') }}</option>
                                         <option value="read">{{ __('Read Only') }}</option>
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">{{ __('Priority') }}</label>
-                                    <select class="form-select" wire:model.live="filterPriority">
+                                    <x-select class="form-select" wire:model.live="filterPriority">
                                         <option value="">{{ __('All Priorities') }}</option>
                                         <option value="high">{{ __('High Priority') }}</option>
                                         <option value="medium">{{ __('Medium Priority') }}</option>
                                         <option value="low">{{ __('Low Priority') }}</option>
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">{{ __('Search') }}</label>

@@ -28,13 +28,13 @@
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payments')}}</label>
-                                    <select wire:model.live="payments" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payments">
+                                    <x-select wire:model.live="payments" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payments">
                                         <option value="">{{__('Select Payments')}}</option>
                                         <option value="sale">{{__('Sales')}}</option>
                                         <option value="sale_return">{{__('Sale Returns')}}</option>
                                         <option value="purchase">{{__('Purchase')}}</option>
                                         <option value="purchase_return">{{__('Purchase Returns')}}</option>
-                                    </select>
+                                    </x-select>
                                     @error('payments')
                                     <span class="text-danger mt-1">{{ $message }}</span>
                                     @enderror
@@ -43,13 +43,13 @@
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{__('Payment Method')}}</label>
-                                    <select wire:model="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method">
+                                    <x-select wire:model="payment_method" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1" name="payment_method">
                                         <option value="">{{__('Select Payment Method')}}</option>
                                         <option value="Cash">{{__('Cash')}}</option>
                                         <option value="Bank Transfer">{{__('Bank Transfer')}}</option>
                                         <option value="Cheque">{{__('Cheque')}}</option>
                                         <option value="Other">{{__('Other')}}</option>
-                                    </select>
+                                    </x-select>
                                 </div>
                             </div>
                         </div>

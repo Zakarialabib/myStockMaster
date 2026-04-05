@@ -34,24 +34,24 @@
                         <x-table.td>
                             @if (isset($product['type']))
                                 @if ($product['type'] == 'add')
-                                    <select name="types[]"
+                                    <x-select name="types[]"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                         <option value="add" selected>(+) {{__('Addition')}}</option>
                                         <option value="sub">(-) {{__('Subtraction')}}</option>
-                                    </select>
+                                    </x-select>
                                 @elseif($product['type'] == 'sub')
-                                    <select name="types[]"
+                                    <x-select name="types[]"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                         <option value="sub" selected>(-) {{__('Subtraction')}}</option>
                                         <option value="add">(+)  {{__('Addition')}}</option>
-                                    </select>
+                                    </x-select>
                                 @endif
                             @else
-                                <select name="types[]"
+                                <x-select name="types[]"
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                     <option value="add">(+) {{__('Addition')}}</option>
                                     <option value="sub">(-) {{__('Subtraction')}}</option>
-                                </select>
+                                </x-select>
                             @endif
                         </x-table.td>
                         <x-table.td>

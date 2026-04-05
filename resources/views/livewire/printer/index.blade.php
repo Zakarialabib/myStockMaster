@@ -20,12 +20,12 @@
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center space-x-2">
                     <x-label for="perPage" :value="__('Per Page')" class="text-sm font-medium text-gray-700" />
-                    <select wire:model.live="perPage" id="perPage"
+                    <x-select wire:model.live="perPage" id="perPage"
                         class="w-20 block p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                         @foreach ($paginationOptions as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
 
                 @if ($this->selectedCount)

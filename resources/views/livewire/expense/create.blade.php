@@ -22,7 +22,7 @@
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="category_id" :value="__('Expense Category')" required />
-                        <select required
+                        <x-select required
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             id="category_id" name="category_id" wire:model.live="form.category_id">
                             <option value="">{{ __('Select...') }}</option>
@@ -31,7 +31,7 @@
                                     {{ $expensecategory->name }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('form.category_id')" class="mt-2" />
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
@@ -41,14 +41,14 @@
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="warehouse_id" :value="__('Warehouse')" required />
-                        <select
+                        <x-select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             id="warehouse_id" name="warehouse_id" wire:model.live="form.warehouse_id">
                             <option value="">{{ __('Select...') }}</option>
                             @foreach ($this->warehouses as $index => $warehouse)
                                 <option value="{{ $index }}">{{ $warehouse }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('form.warehouse_id')" class="mt-2" />
                     </div>
                     <div x-show="frequency !== 'none'" class="w-full flex flex-wrap">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="md:w-1/2 sm:w-full px-3">
                         <x-label for="frequency" :value="__('Frequency')" />
-                        <select
+                        <x-select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             id="frequency" name="frequency" wire:model.live="form.frequency">
                             <option value="none">{{ __('None') }}</option>
@@ -73,7 +73,7 @@
                             <option value="weekly">{{ __('Weekly') }}</option>
                             <option value="monthly">{{ __('Monthly') }}</option>
                             <option value="yearly">{{ __('Yearly') }}</option>
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('form.frequency')" class="mt-2" />
                     </div>
                     <div class="w-full px-3">

@@ -105,9 +105,9 @@ class Create extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected($id): void
+    public function productSelected($productId, $warehouseId = null): void
     {
-        $product = Product::find($id);
+        $product = Product::find($productId);
 
         switch ($this->hasAdjustments) {
             case true:
@@ -134,7 +134,7 @@ class Create extends Component
 
         // add default quantities and types to the product array
 
-        $productWarehouse = ProductWarehouse::where('product_id', $id)
+        $productWarehouse = ProductWarehouse::where('product_id', $productId)
             ->where('warehouse_id', $this->warehouse_id)
             ->first();
 
