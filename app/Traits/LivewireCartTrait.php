@@ -11,6 +11,15 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/**
+ * @property Collection $cartContent
+ * @property int        $cartCount
+ * @property float      $cartTotal
+ * @property float      $cartSubtotal
+ * @property float      $cartTax
+ * @property float      $cartDiscount
+ * @property bool       $cartIsEmpty
+ */
 trait LivewireCartTrait
 {
     protected ?CartService $cart = null;

@@ -8,6 +8,50 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int                             $id
+ * @property string|null                     $sale_id
+ * @property string|null                     $product_id
+ * @property string|null                     $user_id
+ * @property int|null                        $warehouse_id
+ * @property string                          $name
+ * @property string                          $code
+ * @property int                             $quantity
+ * @property numeric                         $price
+ * @property numeric                         $unit_price
+ * @property numeric                         $sub_total
+ * @property numeric                         $product_discount_amount
+ * @property string                          $product_discount_type
+ * @property int                             $product_tax_amount
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Product|null $product
+ * @property-read mixed $product_tax_amount_attribute
+ * @property-read Sale|null $sale
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereProductDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereProductDiscountType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereProductTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereSaleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereSubTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereUnitPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleDetails whereWarehouseId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SaleDetails extends Model
 {
     /**

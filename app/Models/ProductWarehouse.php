@@ -10,6 +10,49 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int                             $id
+ * @property string                          $product_id
+ * @property int                             $warehouse_id
+ * @property int|float                       $price
+ * @property int|float                       $cost
+ * @property int|float                       $old_price
+ * @property int                             $qty
+ * @property int                             $stock_alert
+ * @property int                             $is_ecommerce
+ * @property int                             $is_discount
+ * @property string|null                     $discount_date
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Product|null $product
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Movement> $productMovements
+ * @property-read int|null $product_movements_count
+ * @property-read Warehouse $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereDiscountDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereIsDiscount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereIsEcommerce($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereOldPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereQty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereStockAlert($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse whereWarehouseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductWarehouse withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class ProductWarehouse extends Pivot
 {
     use SoftDeletes;

@@ -9,6 +9,7 @@ use App\Jobs\ImportJob;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Traits\WithAlert;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
@@ -23,6 +24,7 @@ use Throwable;
 
 class Import extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public $file;

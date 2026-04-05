@@ -118,6 +118,11 @@ class Index extends Component
         }
     }
 
+    private function storeImage($image, string $name): void
+    {
+        $image->storeAs('settings', $name, 'public');
+    }
+
     #[On('update')]
     public function update(): void
     {

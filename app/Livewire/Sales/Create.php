@@ -12,6 +12,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Category;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -25,6 +26,7 @@ use Livewire\Component;
 class Create extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
 
     public $global_discount;

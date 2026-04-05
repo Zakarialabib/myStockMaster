@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class MatchCurrentPassword implements Rule
 {
@@ -36,6 +36,6 @@ class MatchCurrentPassword implements Rule
      */
     public function message()
     {
-        return __('Current password');
+        return __('The provided password does not match your current password.');
     }
 }

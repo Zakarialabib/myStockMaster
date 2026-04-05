@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Models\Transfer;
 use App\Models\TransferDetails;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -18,6 +19,7 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class Edit extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public Transfer $transfer;

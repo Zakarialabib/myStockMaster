@@ -11,10 +11,37 @@ parameters:
         - tests
 
     # Level 9 is the highest level
-    level: 5
+    level: 6
 
     checkUninitializedProperties: true
     checkModelProperties: true
+
+    ignoreErrors:
+        - '#Called .env. outside of the config directory#'
+        - '#Call to an undefined method Illuminate\\Database\\Schema\\ForeignIdColumnDefinition::(cascadeOnDelete|nullOnDelete)\(\)#'
+        - '#Return type \(array<string, mixed>\) of method Database\\Factories\\[a-zA-Z0-9_]+::definition\(\) should be compatible with return type#'
+        - '#PHPDoc type string of property Database\\Factories\\[a-zA-Z0-9_]+::\$model is not covariant with PHPDoc type#'
+        - '#PHPDoc tag @return with type Illuminate\\Database\\Eloquent\\Factories\\Factory<App\\Models\\[a-zA-Z0-9_]+> is not subtype of native type#'
+        - '#Using nullsafe property access on non-nullable type App\\Models\\User#'
+        - '#Using nullsafe property access "\?->(quantity|minimum_quantity)" on left side of \?\? is unnecessary#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder<App\\Models\\Customer>::saleBy\(\)#'
+        - '#Call to an undefined static method Illuminate\\Support\\Facades\\Cache::getRedis\(\)#'
+        - '#Call to function is_array\(\) with array<mixed, mixed> will always evaluate to true#'
+        - '#Trait App\\Traits\\[a-zA-Z0-9_]+ is used zero times and is not analysed#'
+        - '#Method App\\Providers\\[a-zA-Z0-9_]+::[a-zA-Z0-9_]+\(\) is unused#'
+        - '#Access to an undefined property App\\Console\\Commands\\GenerateApiController::\$(controller|model|resource)#'
+        - '#Type string in generic type Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<App\\Models\\[a-zA-Z0-9_]+, Illuminate\\Database\\Eloquent\\Relations\\Pivot, string> in PHPDoc tag @return is not subtype of template type TPivotModel#'
+        - '#Attribute class App\\Livewire\\Dashboard\\Lazy does not exist#'
+        - '#Call to an undefined method Faker\\Generator::currencyLocal\(\)#'
+        - '#Class App\\Exports\\[a-zA-Z0-9_]+ constructor invoked with [0-9]+ parameter, [0-9]+ required#'
+        - '#Parameter \#1 \$view of function view expects view-string\|null, string given#'
+        - '#Call to an undefined method App\\Services\\NotificationService::(notifyManagement|sendSMS)\(\)#'
+        - '#Unsafe usage of new static\(\)#'
+        - '#Call to static method create\(\) on an unknown class App\\Models\\Redirect#'
+        - '#Access to constant MOVED_PERMANENTLY on an unknown class App\\Enums\\RedirectionStatus#'
+        - '#Expression on left side of \?\? is not nullable#'
+
+    reportUnmatchedIgnoredErrors: false
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php

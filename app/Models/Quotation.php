@@ -12,8 +12,64 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int             $id
+ * @property string          $customer_id
+ * @property string          $user_id
+ * @property int|null        $warehouse_id
+ * @property Carbon          $date
+ * @property string          $reference
+ * @property int             $tax_percentage
+ * @property int             $tax_amount
+ * @property int             $discount_percentage
+ * @property int             $discount_amount
+ * @property int             $shipping_amount
+ * @property int             $total_amount
+ * @property QuotationStatus $status
+ * @property string|null     $sent_on
+ * @property string|null     $expires_on
+ * @property string|null     $note
+ * @property string|null     $deleted_at
+ * @property Carbon|null     $created_at
+ * @property Carbon|null     $updated_at
+ * @property-read Customer|null $customer
+ * @property-read mixed $due_amount
+ * @property-read mixed $paid_amount
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, QuotationDetails> $quotationDetails
+ * @property-read int|null $quotation_details_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereExpiresOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereSentOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereShippingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereTaxPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereWarehouseId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Quotation extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

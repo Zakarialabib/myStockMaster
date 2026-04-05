@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Brands;
 
 use App\Models\Brand;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
@@ -14,6 +15,7 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public bool $showModal = false;

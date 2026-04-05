@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -23,6 +24,7 @@ use Livewire\WithFileUploads;
 #[Isolate]
 class Create extends Component
 {
+    use WithAlert;
     use WithFileUploads;
     use WithModels;
 

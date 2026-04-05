@@ -10,8 +10,45 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int         $id
+ * @property string      $purchase_id
+ * @property string|null $user_id
+ * @property numeric     $amount
+ * @property Carbon      $date
+ * @property string      $reference
+ * @property string      $payment_method
+ * @property string|null $note
+ * @property string|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Purchase|null $purchase
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment byPurchase()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment wherePurchaseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class PurchasePayment extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

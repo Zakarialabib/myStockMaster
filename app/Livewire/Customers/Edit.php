@@ -7,6 +7,7 @@ namespace App\Livewire\Customers;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Models\Role;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -16,6 +17,7 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public $showModal = false;

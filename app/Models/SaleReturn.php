@@ -11,8 +11,70 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int                             $id
+ * @property string                          $customer_id
+ * @property string                          $user_id
+ * @property int|null                        $warehouse_id
+ * @property int|null                        $cash_register_id
+ * @property \Illuminate\Support\Carbon      $date
+ * @property string                          $reference
+ * @property int                             $tax_percentage
+ * @property numeric                         $tax_amount
+ * @property int                             $discount_percentage
+ * @property numeric                         $discount_amount
+ * @property numeric                         $shipping_amount
+ * @property numeric                         $total_amount
+ * @property numeric                         $paid_amount
+ * @property numeric                         $due_amount
+ * @property SaleReturnStatus                $status
+ * @property int|null                        $payment_id
+ * @property string|null                     $note
+ * @property string|null                     $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read CashRegister|null $cashRegister
+ * @property-read Customer|null $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SaleReturnDetail> $saleReturnDetails
+ * @property-read int|null $sale_return_details_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, SaleReturnPayment> $saleReturnPayments
+ * @property-read int|null $sale_return_payments_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn completed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereCashRegisterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereDiscountAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereDiscountPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereDueAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn wherePaidAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn wherePaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereShippingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereTaxPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereTotalAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereWarehouseId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SaleReturn extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

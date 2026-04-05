@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Suppliers;
 
 use App\Models\Supplier;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -13,6 +14,7 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public bool $showModal = false;

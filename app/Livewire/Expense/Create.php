@@ -9,6 +9,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -17,6 +18,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
+    use WithAlert;
     use WithModels;
 
     public $createModal = false;

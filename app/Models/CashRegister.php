@@ -9,6 +9,37 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int                             $id
+ * @property string                          $user_id
+ * @property int|null                        $warehouse_id
+ * @property numeric                         $cash_in_hand
+ * @property numeric|null                    $recieved
+ * @property numeric|null                    $sent
+ * @property int                             $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read User $user
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister status($status)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister user($userId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereCashInHand($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereRecieved($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereSent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereWarehouseId($value)
+ *
+ * @mixin \Eloquent
+ */
 class CashRegister extends Model
 {
     use HasAdvancedFilter;

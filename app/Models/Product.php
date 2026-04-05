@@ -19,6 +19,95 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
+/**
+ * @property string                          $id
+ * @property int                             $category_id
+ * @property int|null                        $brand_id
+ * @property string                          $name
+ * @property string|null                     $code
+ * @property string                          $slug
+ * @property string|null                     $barcode_symbology
+ * @property int                             $quantity
+ * @property string|null                     $image
+ * @property string|null                     $gallery
+ * @property string|null                     $unit
+ * @property int                             $tax_amount
+ * @property string|null                     $description
+ * @property bool                            $status
+ * @property int                             $tax_type
+ * @property string|null                     $embeded_video
+ * @property array<array-key, mixed>|null    $options
+ * @property string|null                     $usage
+ * @property bool                            $featured
+ * @property bool                            $best
+ * @property bool                            $hot
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null                     $seasonality
+ * @property int                             $availability
+ * @property numeric                         $price
+ * @property numeric                         $cost
+ * @property-read mixed $average_cost
+ * @property-read mixed $average_old_price
+ * @property-read mixed $average_price
+ * @property-read Brand|null $brand
+ * @property-read Category $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Movement> $movements
+ * @property-read int|null $movements_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PriceHistory> $priceHistory
+ * @property-read int|null $price_history_count
+ * @property mixed $product_cost
+ * @property mixed $product_price
+ * @property-read mixed $total_quantity
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Warehouse> $warehouses
+ * @property-read int|null $warehouses_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product belowStockAlert()
+ * @method static \Database\Factories\ProductFactory                    factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product productsByCategory($category_id)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product searchByNameOrCode($term)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereAvailability($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereBarcodeSymbology($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereBest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereBrandId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereEmbededVideo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereFeatured($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereGallery($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereHot($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereOptions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSeasonality($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereTaxAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereTaxType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUsage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     use HasAdvancedFilter;

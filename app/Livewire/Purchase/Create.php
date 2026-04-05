@@ -8,6 +8,7 @@ use App\Actions\Purchases\StorePurchaseAction;
 use App\Enums\PurchaseStatus;
 use App\Livewire\Utils\WithModels;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -19,6 +20,7 @@ use Livewire\Component;
 class Create extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
 
     public $cart_item;
