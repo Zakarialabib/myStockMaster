@@ -228,11 +228,12 @@
                                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
                                         {{ __('Change') }}:
                                         <span
-                                            x-text="formatCurrency(Math.max(0, paidAmount - totalAmount))"
-                                            class="text-xl font-bold"
-                                            :class="(paidAmount - totalAmount) < 0 ? 'text-red-500' : 'text-green-600'"
+                                            @class([
+                                                'text-xl font-bold',
+                                                ((float) $form->paid_amount - (float) $form->total_amount) < 0 ? 'text-red-500' : 'text-green-600',
+                                            ])
                                         >
-                                            {{ format_currency((float) $form->paid_amount - (float) $form->total_amount) }}
+                                            {{ format_currency(max(0, (float) $form->paid_amount - (float) $form->total_amount)) }}
                                         </span>
                                     </div>
                                 </div>
@@ -359,13 +360,6 @@
             document.addEventListener('open-print-window', (event) => {
                 window.open(event.detail.url, '_blank');
             });
-
-            function formatCurrency(amount) {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(amount);
-            }
         </script>
     @endpush
 </div>

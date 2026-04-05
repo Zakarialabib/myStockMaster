@@ -18,27 +18,25 @@ class CustomerCombobox extends Component
     #[Modelable]
     public int|string|null $selectedCustomerId = null;
 
-    public bool $isOpen = false;
-
     public int $highlightedIndex = -1;
 
-    public function updatedSearch(): void
-    {
-        $this->isOpen = true;
-        $this->highlightedIndex = -1;
-    }
+    // public function updatedSearch(): void
+    // {
+    //     $this->highlightedIndex = -1;
+    // }
 
-    public function selectCustomer(int $customerId): void
+    public function selectCustomer(int|string $customerId): void
     {
         $this->selectedCustomerId = $customerId;
-        $this->isOpen = false;
         $this->search = '';
         $this->highlightedIndex = -1;
+        $this->dispatch('customer-selected', customerId: $customerId);
     }
 
     public function clearSelection(): void
     {
         $this->selectedCustomerId = null;
+        $this->dispatch('customer-selected', customerId: null);
     }
 
     public function highlightNext(): void
@@ -65,13 +63,13 @@ class CustomerCombobox extends Component
     #[On('customer-created')]
     public function refreshCustomers(): void
     {
-        unset($this->customers);
+        unset($this->customers, $this->selectedCustomerName);
     }
 
     #[Computed]
     public function customers(): Collection
     {
-        $query = Customer::select(['id', 'name', 'phone']);
+        $query = Customer::query()->select(['id', 'name', 'phone']);
 
         if (strlen($this->search) >= 2) {
             $query->where(function ($q) {
@@ -87,7 +85,9 @@ class CustomerCombobox extends Component
     public function selectedCustomerName(): ?string
     {
         if ($this->selectedCustomerId) {
-            return Customer::find($this->selectedCustomerId)?->name;
+            return Customer::query()
+                ->whereKey($this->selectedCustomerId)
+                ->value('name');
         }
 
         return null;
