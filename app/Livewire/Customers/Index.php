@@ -84,16 +84,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_export'), 403);
 
-        $customers = Customer::whereIn('id', $this->selected)->get();
-
-        return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->forModels($this->selected)->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function downloadAll(Customer $customers): StreamedResponse|Response
+    public function downloadAll(): StreamedResponse|Response
     {
         abort_if(Gate::denies('customer_export'), 403);
 
-        return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function exportSelected(): StreamedResponse|Response

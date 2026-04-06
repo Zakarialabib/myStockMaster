@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Warehouses;
 
+use App\Livewire\Forms\WarehouseForm;
 use App\Models\Warehouse;
+use App\Services\WarehouseService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -19,20 +20,7 @@ class Edit extends Component
 
     public Warehouse $warehouse;
 
-    #[Validate('string|required|max:255')]
-    public string $name;
-
-    #[Validate('numeric|nullable|max:255')]
-    public ?string $phone = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $country = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $city = null;
-
-    #[Validate('nullable|max:255')]
-    public ?string $email = null;
+    public WarehouseForm $form;
 
     public function render()
     {
@@ -46,30 +34,26 @@ class Edit extends Component
 
         $this->resetErrorBag();
 
-        $this->resetValidation();
+        $this->form->reset();
 
-        $this->warehouse = Warehouse::find($id);
+        $this->warehouse = Warehouse::findOrFail($id);
 
-        $this->name = $this->warehouse->name;
-
-        $this->phone = $this->warehouse->phone;
-
-        $this->country = $this->warehouse->country;
-
-        $this->city = $this->warehouse->city;
-
-        $this->email = $this->warehouse->email;
+        $this->form->name = $this->warehouse->name;
+        $this->form->phone = $this->warehouse->phone;
+        $this->form->country = $this->warehouse->country;
+        $this->form->city = $this->warehouse->city;
+        $this->form->email = $this->warehouse->email;
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(WarehouseService $service): void
     {
         abort_if(Gate::denies('warehouse_update'), 403);
 
-        $this->validate();
+        $this->form->validate();
 
-        $this->warehouse->save();
+        $service->update($this->warehouse, $this->form->all());
 
         $this->editModal = false;
 

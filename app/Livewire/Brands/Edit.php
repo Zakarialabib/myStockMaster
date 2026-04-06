@@ -4,72 +4,61 @@ declare(strict_types=1);
 
 namespace App\Livewire\Brands;
 
+use App\Livewire\Forms\BrandForm;
 use App\Models\Brand;
+use App\Services\BrandService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
-    use WithFileUploads;
+    use WithAlert, WithFileUploads;
 
     public bool $editModal = false;
 
     public Brand $brand;
 
-    #[Validate('required', message: 'Please provide a name')]
-    #[Validate('min:3', message: 'This name is too short')]
-    public string $name;
-
-    public ?string $description = null;
-
-    public $image;
-
-    public ?string $origin = null;
+    public BrandForm $form;
 
     #[On('editModal')]
     public function openEditModal($id): void
     {
+        abort_if(Gate::denies('brand_update'), 403);
+
         $this->resetErrorBag();
 
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->brand = Brand::where('id', $id)->firstOrFail();
 
-        $this->name = $this->brand->name;
-        $this->description = $this->brand->description;
-        $this->image = $this->brand->image;
-        $this->origin = $this->brand->origin ?? '';
+        $this->form->name = $this->brand->name;
+        $this->form->description = $this->brand->description;
+        $this->form->image = $this->brand->image;
+        $this->form->origin = $this->brand->origin ?? '';
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(BrandService $service): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        if ($this->image) {
-            $imageName = Str::slug($this->name) . '-' . $this->image->extension();
-            $this->image->storeAs('brands', $imageName);
-            $this->image = $imageName;
-        }
-
-        $this->brand->update($this->all());
+        $service->update($this->brand, $this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', __('Brand updated successfully.'));
+
+        $this->form->reset();
 
         $this->editModal = false;
     }
 
     public function render()
     {
-        abort_if(Gate::denies('brand_update'), 403);
-
         return view('livewire.brands.edit');
     }
 }

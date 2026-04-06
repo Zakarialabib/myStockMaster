@@ -7,13 +7,16 @@ use Livewire\Form;
 
 class QuotationForm extends Form
 {
+    public $reference;
+
     #[Validate('required')]
     public $customer_id;
 
     #[Validate('required')]
     public $warehouse_id;
 
-    public $total_amount;
+    #[Validate('required|numeric')]
+    public $total_amount = 0;
 
     #[Validate('numeric')]
     public $shipping_amount = 0;

@@ -222,9 +222,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_export'), 403);
 
-        $products = Product::whereIn('id', $this->selected)->get();
-
-        return (new ProductExport($products))->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->forModels($this->selected)->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function promoAllProducts(): void

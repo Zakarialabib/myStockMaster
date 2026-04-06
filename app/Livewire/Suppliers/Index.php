@@ -103,9 +103,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        $suppliers = Supplier::whereIn('id', $this->selected)->get();
-
-        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->forModels($this->selected)->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     #[On('downloadAll')]

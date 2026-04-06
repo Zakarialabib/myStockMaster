@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\PurchaseReturn;
 
-use App\Actions\Purchases\UpdatePurchaseReturnAction;
+use App\Livewire\Forms\PurchaseReturnForm;
+use App\Services\PurchaseReturnService;
 use App\Models\Product;
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
@@ -12,7 +13,6 @@ use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -21,38 +21,9 @@ class Edit extends Component
     use LivewireCartTrait;
     use WithAlert;
 
+    public PurchaseReturnForm $form;
+
     public $purchasereturn;
-
-    #[Validate('required')]
-    public $supplier_id;
-
-    public $reference;
-
-    #[Validate('required|numeric|min:0|max:100')]
-    public $tax_percentage;
-
-    #[Validate('required|numeric|min:0|max:100')]
-    public $discount_percentage;
-
-    #[Validate('required|numeric')]
-    public $shipping_amount;
-
-    #[Validate('required|numeric')]
-    public $total_amount;
-
-    #[Validate('required|numeric')]
-    public $paid_amount;
-
-    #[Validate('required|string|max:255')]
-    public $status;
-
-    #[Validate('required|string|max:255')]
-    public $payment_method;
-
-    #[Validate('nullable|string|max:1000')]
-    public $note;
-
-    public $date;
 
     public function mount($id, string $cartInstance = 'purchase_return'): void
     {
@@ -63,17 +34,17 @@ class Edit extends Component
 
         $this->purchasereturn = PurchaseReturn::findOrFail($id);
 
-        $this->supplier_id = $this->purchasereturn->supplier_id;
-        $this->reference = $this->purchasereturn->reference;
-        $this->tax_percentage = $this->purchasereturn->tax_percentage;
-        $this->discount_percentage = $this->purchasereturn->discount_percentage;
-        $this->shipping_amount = $this->purchasereturn->shipping_amount / 100;
-        $this->total_amount = $this->purchasereturn->total_amount / 100;
-        $this->paid_amount = $this->purchasereturn->paid_amount / 100;
-        $this->status = $this->purchasereturn->status;
-        $this->payment_method = $this->purchasereturn->payment_method;
-        $this->note = $this->purchasereturn->note;
-        $this->date = $this->purchasereturn->date;
+        $this->form->supplier_id = $this->purchasereturn->supplier_id;
+        $this->form->reference = $this->purchasereturn->reference;
+        $this->form->tax_percentage = $this->purchasereturn->tax_percentage;
+        $this->form->discount_percentage = $this->purchasereturn->discount_percentage;
+        $this->form->shipping_amount = $this->purchasereturn->shipping_amount / 100;
+        $this->form->total_amount = $this->purchasereturn->total_amount / 100;
+        $this->form->paid_amount = $this->purchasereturn->paid_amount / 100;
+        $this->form->status = $this->purchasereturn->status;
+        $this->form->payment_method = $this->purchasereturn->payment_method;
+        $this->form->note = $this->purchasereturn->note;
+        $this->form->date = $this->purchasereturn->date;
 
         $this->clearCart();
 
@@ -99,17 +70,17 @@ class Edit extends Component
 
     public function hydrate(): void
     {
-        $this->total_amount = $this->calculateTotal();
+        $this->form->total_amount = $this->calculateTotal();
     }
 
     public function calculateTotal(): float
     {
-        return $this->cartTotal + (float) $this->shipping_amount;
+        return $this->cartTotal + (float) $this->form->shipping_amount;
     }
 
     public function proceed(): void
     {
-        if ($this->supplier_id !== null) {
+        if ($this->form->supplier_id !== null) {
             $this->update();
         } else {
             $this->alert('error', __('Please select a supplier!'));
@@ -120,22 +91,22 @@ class Edit extends Component
     {
         abort_if(Gate::denies('purchase_update'), 403);
 
-        $this->validate();
+        $this->form->validate();
 
-        app(UpdatePurchaseReturnAction::class)(
+        app(PurchaseReturnService::class)->update(
             $this->purchasereturn,
             [
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'supplier_id' => $this->supplier_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'status' => $this->status,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'date' => $this->form->date,
+                'reference' => $this->form->reference,
+                'supplier_id' => $this->form->supplier_id,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'status' => $this->form->status,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,

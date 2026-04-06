@@ -5,10 +5,10 @@ namespace App\Livewire\Forms;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class SaleReturnForm extends Form
+class PurchaseReturnForm extends Form
 {
-    #[Validate('required', message: 'Please provide a customer ID')]
-    public $customer_id;
+    #[Validate('required', message: 'Please provide a supplier ID')]
+    public $supplier_id;
 
     public $warehouse_id;
 

@@ -112,7 +112,7 @@ class PurchaseReturn extends Model
     {
         return $this->belongsTo(
             related: Supplier::class,
-            foreignKey: 'user_id',
+            foreignKey: 'supplier_id',
         );
     }
 
