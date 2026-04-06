@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Warehouses;
 
 use App\Livewire\Forms\WarehouseForm;
+use App\Services\WarehouseService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
@@ -14,7 +15,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public bool $showModal = false;
+    public bool $createModal = false;
 
     public WarehouseForm $form;
 
@@ -30,14 +31,16 @@ class Create extends Component
     {
         $this->resetErrorBag();
 
-        $this->resetValidation();
+        $this->form->reset();
 
-        $this->showModal = true;
+        $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(WarehouseService $service): void
     {
-        $this->form->store();
+        $this->form->validate();
+
+        $service->create($this->form->all());
 
         $this->alert('success', __('Warehouse created successfully.'));
 
@@ -45,6 +48,6 @@ class Create extends Component
 
         $this->form->reset();
 
-        $this->showModal = false;
+        $this->createModal = false;
     }
 }

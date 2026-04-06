@@ -10,37 +10,45 @@ use Livewire\Form;
 class PurchaseReturnForm extends Form
 {
     #[Validate('required', message: 'Please provide a supplier ID')]
-    public int|string|null $supplier_id = null;
+    public $supplier_id;
 
-    #[Validate('required', message: 'Please provide a warehouse ID')]
-    public int|string|null $warehouse_id = null;
+    public $warehouse_id;
 
-    #[Validate('required|integer|min:0|max:100')]
-    public int|string|null $tax_percentage = 0;
+    #[Validate('required', message: 'Please provide a tax percentage')]
+    #[Validate('integer', message: 'The tax percentage must be an integer')]
+    #[Validate('min:0', message: 'The tax percentage must be at least 0')]
+    #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
+    public $tax_percentage = 0;
 
-    #[Validate('required|integer|min:0|max:100')]
-    public int|string|null $discount_percentage = 0;
+    #[Validate('required', message: 'Please provide a discount percentage')]
+    #[Validate('integer', message: 'The discount percentage must be an integer')]
+    #[Validate('min:0', message: 'The discount percentage must be at least 0')]
+    #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
+    public $discount_percentage = 0;
 
-    #[Validate('nullable|numeric')]
-    public float|int $shipping_amount = 0;
+    #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
+    public $shipping_amount = 0;
 
-    #[Validate('required|numeric')]
-    public float|int $total_amount = 0;
+    #[Validate('required', message: 'Please provide a total amount')]
+    #[Validate('numeric', message: 'The total amount must be a numeric value')]
+    public $total_amount = 0;
 
-    #[Validate('nullable|numeric')]
-    public float|int $paid_amount = 0;
+    #[Validate('nullable', message: 'Paid amount must be a numeric value')]
+    public $paid_amount = 0;
 
-    #[Validate('nullable|string|max:1000')]
-    public ?string $note = null;
+    #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
+    #[Validate('string', message: 'Note must be a string')]
+    #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
+    public $note;
 
     #[Validate('required|integer|max:255')]
-    public int|string|null $status = null;
+    public $status;
 
-    #[Validate('required|integer|max:255')]
-    public int|string|null $payment_status = null;
+    #[Validate('required|string|max:255')]
+    public $payment_method = 'Cash';
 
-    public string $payment_method = 'cash';
+    #[Validate('required')]
+    public $date;
 
-    #[Validate('required|date')]
-    public ?string $date = null;
+    public $reference;
 }

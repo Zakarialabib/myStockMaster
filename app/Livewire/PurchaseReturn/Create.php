@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\PurchaseReturn;
 
-use App\Actions\Purchases\StorePurchaseReturnAction;
 use App\Livewire\Forms\PurchaseReturnForm;
 use App\Models\Supplier;
+use App\Services\PurchaseReturnService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
@@ -21,8 +21,6 @@ class Create extends Component
     use WithAlert;
 
     public PurchaseReturnForm $form;
-
-    public $reference;
 
     public function mount(string $cartInstance = 'purchase_return'): void
     {
@@ -69,13 +67,13 @@ class Create extends Component
 
         $this->form->validate();
 
-        app(StorePurchaseReturnAction::class)(
+        app(PurchaseReturnService::class)->create(
             [
                 'date' => $this->form->date,
-                'reference' => $this->reference,
+                'reference' => $this->form->reference,
                 'supplier_id' => $this->form->supplier_id,
-                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => Auth::id(),
+                'warehouse_id' => $this->form->warehouse_id,
                 'tax_percentage' => $this->form->tax_percentage,
                 'discount_percentage' => $this->form->discount_percentage,
                 'shipping_amount' => $this->form->shipping_amount,
@@ -96,23 +94,13 @@ class Create extends Component
         $this->redirectRoute('purchase-returns.index', navigate: true);
     }
 
-    public function getSuppliersProperty()
-    {
-        return Supplier::select(['id', 'name'])->get()->map(function ($supplier) {
-            return [
-                'label' => $supplier->name,
-                'value' => $supplier->id,
-            ];
-        })->toArray();
-    }
-
-    public function getWarehousesProperty()
-    {
-        return \App\Models\Warehouse::pluck('name', 'id')->toArray();
-    }
-
     public function render()
     {
-        return view('livewire.purchase-return.create');
+        $suppliers = Supplier::select(['id', 'name'])->get();
+
+        return view('livewire.purchase-return.create', [
+            'cart_items' => $this->cartContent,
+            'suppliers' => $suppliers,
+        ]);
     }
 }

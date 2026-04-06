@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
-use App\Exports\QuotationExport;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\HasDelete;
 use App\Livewire\Utils\WithModels;
@@ -12,11 +11,13 @@ use App\Models\Quotation;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
-
+#[Lazy]
 class Index extends Component
 {
     use Datatable;
@@ -28,16 +29,6 @@ class Index extends Component
     public $quotation;
 
     public $model = Quotation::class;
-
-    public function updateStatus(int $id, int|string $status)
-    {
-        abort_if(Gate::denies('quotation_update'), 403);
-
-        $quotation = Quotation::findOrFail($id);
-        $quotation->update(['status' => (int) $status]);
-
-        $this->alert('success', __('Quotation status updated successfully.'));
-    }
 
     public function render()
     {
@@ -54,43 +45,46 @@ class Index extends Component
         return view('livewire.quotations.index', ['quotations' => $quotations]);
     }
 
+    #[On('delete')]
+    public function delete(\App\Services\QuotationService $quotationService): void
+    {
+        abort_if(Gate::denies($this->getGateDelete()), 403);
+
+        try {
+            $quotation = Quotation::findOrFail($this->value);
+            $quotationService->delete($quotation);
+            $this->alert('success', __('Item deleted successfully.'));
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') {
+                $this->alert('error', __('Cannot delete this item because it has related records.'));
+            } else {
+                $this->alert('error', __('An error occurred while deleting the item.'));
+            }
+        }
+    }
+
+    public function deleteSelected(\App\Services\QuotationService $quotationService): void
+    {
+        abort_if(Gate::denies($this->getGateDelete()), 403);
+
+        try {
+            $quotations = Quotation::whereIn('id', $this->selected)->get();
+            foreach ($quotations as $quotation) {
+                $quotationService->delete($quotation);
+            }
+            $this->resetSelected();
+            $this->alert('success', __('Items deleted successfully.'));
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') {
+                $this->alert('error', __('Some items cannot be deleted because they have related records.'));
+            } else {
+                $this->alert('error', __('An error occurred while deleting the items.'));
+            }
+        }
+    }
+
     protected function getGateDelete(): string
     {
         return 'quotation_delete';
-    }
-
-    public function downloadSelected()
-    {
-        abort_if(Gate::denies('quotation_access'), 403);
-
-        $quotations = Quotation::whereIn('id', $this->selected)->get();
-
-        return (new QuotationExport($quotations))->download('quotations.xls', \Maatwebsite\Excel\Excel::XLS);
-    }
-
-    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('quotation_access'), 403);
-
-        return $this->callExport()->download('quotations.xls', \Maatwebsite\Excel\Excel::XLS);
-    }
-
-    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('quotation_access'), 403);
-
-        return $this->callExport()->forModels($this->selected)->download('quotations.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('quotation_access'), 403);
-
-        return $this->callExport()->download('quotations.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    private function callExport(): QuotationExport
-    {
-        return new QuotationExport;
     }
 }

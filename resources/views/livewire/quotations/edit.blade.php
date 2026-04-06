@@ -5,7 +5,7 @@
     <div class="flex flex-wrap">
 
         <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:products.search-product :warehouse_id="$this->quotation->warehouse_id" />
+            <livewire:search-product :warehouse_id="$this->quotation->warehouse_id" />
         </div>
 
         <div class="lg:w-1/2 sm:w-full h-full">
@@ -15,42 +15,41 @@
                 <div class="flex flex-wrap mb-3">
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <label for="reference">{{ __('Reference') }} <span class="text-red-500">*</span></label>
-                        <x-input type="text" wire:model.live="reference" name="reference" required readonly />
+                        <x-input type="text" wire:model.live="form.reference" name="reference" required readonly />
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <label for="customer_id">{{ __('Customer') }} <span class="text-red-500">*</span></label>
-                        <x-select-list :options="$this->customers" name="customer_id" id="customer_id" wire:model="customer_id" />
-                        <x-input-error :messages="$errors->get('customer_id')" class="mt-2" />
+                        <x-select-list :options="$this->customers" name="customer_id" id="customer_id" wire:model="form.customer_id" />
+                        <x-input-error :messages="$errors->get('form.customer_id')" class="mt-2" />
 
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <x-label for="warehouse" :value="__('Warehouse')" required />
                         <x-select disabled
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id">
+                            required id="warehouse_id" name="warehouse_id" wire:model.live="form.warehouse_id">
                             @foreach ($this->warehouses as $index => $warehouse)
-                                <option value="{{ $index }}" @if ($warehouse_id == $index) selected @endif>
+                                <option value="{{ $index }}" @if ($form->warehouse_id == $index) selected @endif>
                                     {{ $warehouse }}</option>
-                                {{ $warehouse }}</option>
                             @endforeach
                         </x-select>
-                        <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('form.warehouse_id')" class="mt-2" />
                     </div>
 
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <x-label for="date" :value="__('Date')" required />
-                        <input type="date" name="date" required wire:model="date"
+                        <input type="date" name="date" required wire:model="form.date"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                        <x-input-error :messages="$errors->get('date')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('form.date')" class="mt-2" />
                     </div>
                 </div>
 
-                <livewire:utils.product-cart :cartInstance="'quotation'" :data="$quotation" />
+                <livewire:utils.product-cart :cartInstance="'quotation'" :data="$quotation" lazy />
 
                 <div class="flex flex-wrap mb-3">
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <x-label for="status" :value="__('Status')" required />
-                        <x-select wire:model="status"
+                        <x-select wire:model="form.status"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="status" id="status" required>
                             <option value="">{{ __('Select Status') }}</option>
@@ -65,12 +64,12 @@
 
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <x-label for="total_amount" :value="__('Total amount')" />
-                        <x-input type="number" wire:model="total_amount" name="total_amount" />
+                        <x-input type="number" wire:model="form.total_amount" name="total_amount" />
                     </div>
 
                     <div class="w-full px-3 mb-4">
                         <label for="note">{{ __('Note (If Needed)') }}</label>
-                        <textarea name="note" id="note" rows="5" wire:model="note"
+                        <textarea name="note" id="note" rows="5" wire:model="form.note"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">{{ $quotation->note }}</textarea>
                     </div>
 
