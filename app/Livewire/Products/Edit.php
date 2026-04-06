@@ -13,6 +13,7 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -21,6 +22,9 @@ class Edit extends Component
 {
     use WithAlert;
     use WithFileUploads;
+
+    #[Locked]
+    public int $productId;
 
     public Product $product;
 
@@ -44,6 +48,7 @@ class Edit extends Component
 
     public function mount($id): void
     {
+        $this->productId = (int) $id;
         $this->product = Product::findOrFail($id);
         $this->productWarehouses = $this->product->warehouses;
         $this->form->setProduct($this->product);

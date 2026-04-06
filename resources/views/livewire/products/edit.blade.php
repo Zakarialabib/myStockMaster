@@ -171,8 +171,9 @@
                 <x-button type="button" primary x-show="step < 3" @click="step++">
                     {{ __('Next') }} <i class="fas fa-arrow-right ml-2"></i>
                 </x-button>
-                <x-button type="submit" primary x-show="step === 3" wire:loading.attr="disabled">
+                <x-button type="submit" primary x-show="step === 3" wire:loading.attr="disabled" wire:dirty.class="bg-orange-500 hover:bg-orange-600">
                     <i class="fas fa-save mr-2"></i> {{ __('Save Changes') }}
+                    <span wire:dirty class="ml-2 text-xs opacity-75">(Unsaved)</span>
                 </x-button>
             </div>
         </div>
