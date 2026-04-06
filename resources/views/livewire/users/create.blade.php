@@ -1,5 +1,5 @@
 <div>
-    <x-modal wire:model="showModal">
+    <x-modal wire:model="form.showModal">
         <x-slot name="title">
             {{ __('Create User') }}
         </x-slot>

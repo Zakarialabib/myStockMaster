@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
-use App\Actions\Purchases\StorePurchaseAction;
 use App\Enums\PurchaseStatus;
 use App\Livewire\Forms\PurchaseForm;
 use App\Livewire\Utils\WithModels;
+use App\Services\PurchaseService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
@@ -63,6 +63,8 @@ class Create extends Component
 
     public function saveDraft(): void
     {
+        $purchaseService = app(PurchaseService::class);
+
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
@@ -77,7 +79,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        $purchase = app(StorePurchaseAction::class)(
+        $purchase = $purchaseService->create(
             [
                 'date' => $this->form->date,
                 'supplier_id' => $this->form->supplier_id,
@@ -110,6 +112,8 @@ class Create extends Component
 
     public function store(): void
     {
+        $purchaseService = app(PurchaseService::class);
+
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
@@ -118,7 +122,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        app(StorePurchaseAction::class)(
+        $purchaseService->create(
             [
                 'date' => $this->form->date,
                 'supplier_id' => $this->form->supplier_id,

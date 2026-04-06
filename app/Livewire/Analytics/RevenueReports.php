@@ -166,7 +166,7 @@ class RevenueReports extends Component
     private function exportJSON($filename)
     {
         return response()->streamDownload(function () {
-            echo json_encode([
+            $exportData = [
                 'report_type' => $this->reportType,
                 'date_range' => [
                     'from' => $this->dateFrom,
@@ -183,7 +183,24 @@ class RevenueReports extends Component
                 ],
                 'data' => $this->revenueData,
                 'generated_at' => now()->toISOString(),
-            ], JSON_PRETTY_PRINT);
+            ];
+
+            $generator = function () use ($exportData) {
+                yield '{';
+                $first = true;
+                foreach ($exportData as $key => $value) {
+                    if (! $first) {
+                        yield ',';
+                    }
+                    yield '"' . $key . '":' . json_encode($value);
+                    $first = false;
+                }
+                yield '}';
+            };
+
+            foreach ($generator() as $chunk) {
+                echo $chunk;
+            }
         }, $filename . '.json', [
             'Content-Type' => 'application/json',
         ]);
@@ -197,16 +214,21 @@ class RevenueReports extends Component
             // Write headers
             fputcsv($output, ['Date', 'Total Revenue', 'Total Sales', 'Average Order Value']);
 
-            // Write time breakdown data if available
-            if (isset($this->revenueData['time_breakdown'])) {
-                foreach ($this->revenueData['time_breakdown'] as $period => $data) {
-                    fputcsv($output, [
-                        $period,
-                        $data['total_revenue'] ?? 0,
-                        $data['total_sales'] ?? 0,
-                        $data['average_order_value'] ?? 0,
-                    ]);
+            $generator = function () {
+                if (isset($this->revenueData['time_breakdown'])) {
+                    foreach ($this->revenueData['time_breakdown'] as $period => $data) {
+                        yield [
+                            $period,
+                            $data['total_revenue'] ?? 0,
+                            $data['total_sales'] ?? 0,
+                            $data['average_order_value'] ?? 0,
+                        ];
+                    }
                 }
+            };
+
+            foreach ($generator() as $row) {
+                fputcsv($output, $row);
             }
 
             fclose($output);

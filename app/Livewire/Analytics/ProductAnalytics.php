@@ -175,7 +175,7 @@ class ProductAnalytics extends Component
             $filename = 'product_analytics_' . $product->code . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             return response()->streamDownload(function () {
-                echo json_encode([
+                $exportData = [
                     'product_id' => $this->productId,
                     'date_range' => [
                         'from' => $this->dateFrom,
@@ -183,7 +183,24 @@ class ProductAnalytics extends Component
                     ],
                     'analytics' => $this->analyticsData,
                     'price_trends' => $this->priceTrends,
-                ], JSON_PRETTY_PRINT);
+                ];
+
+                $generator = function () use ($exportData) {
+                    yield '{';
+                    $first = true;
+                    foreach ($exportData as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);

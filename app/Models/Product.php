@@ -7,7 +7,6 @@ namespace App\Models;
 use App\Scopes\ProductScope;
 use App\Support\HasAdvancedFilter;
 use App\Traits\HasUuid;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -164,18 +163,6 @@ class Product extends Model
             'best' => 'boolean',
             'options' => 'array',
         ];
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($product) {
-            $product->slug = Str::slug($product->name);
-            if (empty($product->code)) {
-                $product->code = Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
-            }
-        });
     }
 
     /**

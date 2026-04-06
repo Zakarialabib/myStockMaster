@@ -319,10 +319,16 @@ class BreakEvenAnalysis extends Component
                 $file = fopen('php://output', 'w');
                 fputcsv($file, ['Metric', 'Value']);
 
-                foreach ($this->breakEvenData as $key => $value) {
-                    if (is_scalar($value)) {
-                        fputcsv($file, [$key, $value]);
+                $generator = function () {
+                    foreach ($this->breakEvenData as $key => $value) {
+                        if (is_scalar($value)) {
+                            yield [$key, $value];
+                        }
                     }
+                };
+
+                foreach ($generator() as $row) {
+                    fputcsv($file, $row);
                 }
 
                 fclose($file);

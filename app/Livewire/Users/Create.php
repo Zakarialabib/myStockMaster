@@ -6,11 +6,9 @@ namespace App\Livewire\Users;
 
 use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\User;
-use App\Models\UserWarehouse;
+use App\Services\UserService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -18,8 +16,6 @@ class Create extends Component
 {
     use WithAlert;
     use WithModels;
-
-    public $showModal = false;
 
     public UserForm $form;
 
@@ -39,34 +35,17 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->showModal = true;
+        $this->form->showModal = true;
     }
 
-    public function create(): void
+    public function create(UserService $userService): void
     {
         $this->form->validate([
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
         ]);
 
-        $user = User::create([
-            'name' => $this->form->name,
-            'email' => $this->form->email,
-            'password' => Hash::make($this->form->password),
-            'phone' => $this->form->phone,
-            'city' => $this->form->city,
-            'country' => $this->form->country,
-            'address' => $this->form->address,
-        ]);
-
-        $user->assignRole($this->form->role);
-
-        foreach ($this->form->warehouse_id as $warehouseId) {
-            UserWarehouse::create([
-                'user_id' => $user->id,
-                'warehouse_id' => $warehouseId,
-            ]);
-        }
+        $userService->createUser($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
@@ -74,6 +53,6 @@ class Create extends Component
 
         $this->form->reset();
 
-        $this->showModal = false;
+        $this->form->showModal = false;
     }
 }

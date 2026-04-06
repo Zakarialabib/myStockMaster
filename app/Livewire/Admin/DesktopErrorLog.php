@@ -118,7 +118,22 @@ class DesktopErrorLog extends Component
         $filename = 'desktop_error_log_' . now()->format('Y-m-d_H-i-s') . '.json';
 
         return response()->streamDownload(function () use ($errors) {
-            echo json_encode($errors, JSON_PRETTY_PRINT);
+            $generator = function () use ($errors) {
+                yield '[';
+                $first = true;
+                foreach ($errors as $error) {
+                    if (! $first) {
+                        yield ',';
+                    }
+                    yield json_encode($error, JSON_PRETTY_PRINT);
+                    $first = false;
+                }
+                yield ']';
+            };
+
+            foreach ($generator() as $chunk) {
+                echo $chunk;
+            }
         }, $filename, [
             'Content-Type' => 'application/json',
         ]);
