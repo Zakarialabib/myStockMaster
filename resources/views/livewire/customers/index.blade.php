@@ -152,7 +152,8 @@
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link wire:click="dispatch('deleteModal', {{ $customer->id }})"
+                                    <x-dropdown-link wire:click="delete({{ $customer->id }})"
+                                        wire:confirm="{{ __('Are you sure you want to delete this customer? This action cannot be undone.') }}"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-trash"></i>
                                         {{ __('Delete') }}

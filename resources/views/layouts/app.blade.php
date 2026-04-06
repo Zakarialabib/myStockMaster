@@ -49,6 +49,10 @@
 
 <body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
 
+    <div wire:offline class="fixed top-0 left-0 w-full z-[100] bg-red-600 text-white text-center py-2 font-semibold shadow-md transition-all">
+        <i class="fas fa-wifi-slash mr-2"></i> You are currently offline. Some features may be unavailable.
+    </div>
+
     <div @resize.window="handleWindowResize">
         {{-- <div class="min-h-screen"> --}}
             <!-- Sidebar -->
@@ -98,6 +102,8 @@
         {{-- </div> --}}
     </div>
 
+    <!-- Teleport Target for Modals -->
+    <div id="modals-container"></div>
 </body>
 
 </html>

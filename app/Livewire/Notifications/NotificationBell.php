@@ -8,9 +8,12 @@ use App\Models\Notification;
 use App\Services\NotificationService;
 use Exception;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Renderless;
 use Livewire\Component;
 
+#[Isolate]
 class NotificationBell extends Component
 {
     public $unreadCount = 0;
@@ -87,6 +90,7 @@ class NotificationBell extends Component
         $this->showDropdown = false;
     }
 
+    #[Renderless]
     public function markAsRead($notificationId)
     {
         try {
@@ -100,6 +104,7 @@ class NotificationBell extends Component
         }
     }
 
+    #[Renderless]
     public function markAllAsRead()
     {
         try {
