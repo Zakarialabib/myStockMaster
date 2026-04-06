@@ -6,9 +6,7 @@ namespace App\Livewire\Transfer;
 
 use App\Livewire\Forms\TransferForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\ProductWarehouse;
-use App\Models\Transfer;
-use App\Models\TransferDetails;
+use App\Services\TransferService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -53,7 +51,7 @@ class Create extends Component
         $this->dispatch('warehouseSelected', $this->form->from_warehouse_id);
     }
 
-    public function store()
+    public function store(TransferService $transferService)
     {
         abort_if(Gate::denies('transfer_create'), 403);
 
@@ -78,53 +76,7 @@ class Create extends Component
         try {
             $this->form->validate();
 
-            $transfer = Transfer::create([
-                'reference' => $this->form->reference,
-                'date' => $this->form->date,
-                'user_id' => auth()->id(),
-                'from_warehouse_id' => $this->form->from_warehouse_id,
-                'to_warehouse_id' => $this->form->to_warehouse_id,
-                'total_qty' => $this->form->total_qty,
-                'item' => count($this->products),
-                'total_tax' => 0,
-                'total_cost' => $this->form->total_cost,
-                'total_amount' => $this->form->total_amount,
-                'shipping' => $this->form->shipping_amount,
-                'document' => $this->form->document,
-                'status' => $this->form->status,
-                'note' => $this->form->note,
-            ]);
-
-            foreach ($this->products as $product) {
-                TransferDetails::create([
-                    'transfer_id' => $transfer->id,
-                    'product_id' => $product['id'],
-                    'warehouse_id' => $this->form->to_warehouse_id,
-                    'quantity' => $product['quantities'] ?? 1,
-                ]);
-
-                $qty = $product['quantities'] ?? 1;
-
-                // Decrement the source ProductWarehouse
-                ProductWarehouse::where('product_id', $product['id'])
-                    ->where('warehouse_id', $this->form->from_warehouse_id)
-                    ->decrement('qty', $qty);
-
-                // Increment the destination ProductWarehouse
-                $destProductWarehouse = ProductWarehouse::firstOrCreate(
-                    [
-                        'product_id' => $product['id'],
-                        'warehouse_id' => $this->form->to_warehouse_id,
-                    ],
-                    [
-                        'price' => $product['price'] ?? 0,
-                        'cost' => $product['cost'] ?? 0,
-                        'qty' => 0,
-                    ]
-                );
-
-                $destProductWarehouse->increment('qty', $qty);
-            }
+            $transferService->createTransfer($this->form->all(), $this->products);
 
             $this->alert('success', __('Transfer created successfully'));
 

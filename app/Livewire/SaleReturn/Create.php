@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\SaleReturn;
 
-use App\Actions\Sales\StoreSaleReturnAction;
 use App\Livewire\Forms\SaleReturnForm;
-use App\Livewire\Utils\WithModels;
+use App\Models\Customer;
+use App\Services\SaleReturnService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,6 @@ class Create extends Component
 {
     use LivewireCartTrait;
     use WithAlert;
-    use WithModels;
 
     public SaleReturnForm $form;
 
@@ -35,12 +34,8 @@ class Create extends Component
         $this->form->shipping_amount = 0;
         $this->form->paid_amount = 0;
         $this->form->payment_method = 'Cash';
-        $this->form->status = \App\Enums\SaleReturnStatus::PENDING->value;
+        $this->form->status = 'Pending';
         $this->form->date = date('Y-m-d');
-
-        if (settings()->default_warehouse_id !== null) {
-            $this->form->warehouse_id = settings()->default_warehouse_id;
-        }
     }
 
     public function hydrate(): void
@@ -66,19 +61,13 @@ class Create extends Component
     {
         abort_if(Gate::denies('sale_return_create'), 403);
 
-        if (! $this->form->warehouse_id) {
-            $this->alert('error', __('Please select a warehouse'));
-
-            return;
-        }
-
         $this->form->validate();
 
-        app(StoreSaleReturnAction::class)(
+        app(SaleReturnService::class)->create(
             [
                 'date' => $this->form->date,
+                'reference' => $this->form->reference,
                 'customer_id' => $this->form->customer_id,
-                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => Auth::id(),
                 'tax_percentage' => $this->form->tax_percentage,
                 'discount_percentage' => $this->form->discount_percentage,
@@ -100,21 +89,13 @@ class Create extends Component
         $this->redirectRoute('sale-returns.index', navigate: true);
     }
 
-    public function resetCart(): void
-    {
-        $this->clearCart();
-    }
-
-    public function updatedFormWarehouseId($warehouse_id): void
-    {
-        $this->form->warehouse_id = $warehouse_id;
-        $this->dispatch('warehouseSelected', $warehouse_id);
-    }
-
     public function render()
     {
+        $customers = Customer::select(['id', 'name'])->get();
+
         return view('livewire.sale-return.create', [
             'cart_items' => $this->cartContent,
+            'customers' => $customers,
         ]);
     }
 }

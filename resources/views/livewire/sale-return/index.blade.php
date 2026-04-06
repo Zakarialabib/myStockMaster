@@ -1,58 +1,26 @@
 <div>
-    @php
-        $paymentStatusOptions = collect(\App\Enums\PaymentStatus::cases())->map(fn($status) => [
-            'value' => $status->value,
-            'label' => $status->getName(),
-        ])->toArray();
-
-        $saleReturnStatusOptions = collect(\App\Enums\SaleReturnStatus::cases())->map(fn($status) => [
-            'value' => $status->value,
-            'label' => $status->getName(),
-        ])->toArray();
-    @endphp
-
-    <x-page-container title="{{ __('Sale Returns List') }}" :show-filters="true">
-        <x-slot name="actions">
-            @can('sale_return_export')
-                <x-dropdown align="right" width="56">
-                    <x-slot name="trigger" class="inline-flex">
-                        <x-button secondary type="button">
-                            <i class="fas fa-file-export mr-2"></i>
-                            {{ __('Export') }}
-                        </x-button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link wire:click="exportAll">
-                            <i class="fas fa-file-pdf mr-2"></i> {{ __('PDF') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link wire:click="downloadAll">
-                            <i class="fas fa-file-excel mr-2"></i> {{ __('Excel') }}
-                        </x-dropdown-link>
-                    </x-slot>
-                </x-dropdown>
-            @endcan
-            @can('sale_return_create')
-                <x-button primary href="{{ route('sale-returns.create') }}" icon="fas fa-plus">
-                    {{ __('Create Sale Return') }}
+    <div class="flex flex-wrap justify-center">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
+            <x-select wire:model.live="perPage"
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                @foreach ($paginationOptions as $value)
+                    <option value="{{ $value }}">{{ $value }}</option>
+                @endforeach
+            </x-select>
+            @if ($selected)
+                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
+                    <i class="fas fa-trash"></i>
                 </x-button>
-            @endcan
-        </x-slot>
+            @endif
+        </div>
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
+                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+            </div>
+        </div>
+    </div>
 
-        <x-slot name="filters">
-            <x-datatable.filters 
-                :per-page="$perPage" 
-                :pagination-options="$paginationOptions" 
-                :selected-count="count($selected)" 
-                :search="$search"
-                search-placeholder="{{ __('Search sale returns...') }}" 
-                wire:model.live.perPage="perPage"
-                wire:model.live.search="search" 
-                wire:click.deleteSelected="deleteSelected"
-                wire:click.resetSelected="resetSelected" 
-                :can-delete="auth()->user()->can('sale_return_delete')" />
-        </x-slot>
-
-        <x-table>
+    <x-table>
         <x-slot name="thead">
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
@@ -63,13 +31,13 @@
             <x-table.th sortable wire:click="sortingBy('customer_id')" :direction="$sorts['customer_id'] ?? null">
                 {{ __('Customer') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('payment_id')" :direction="$sorts['payment_id'] ?? null">
                 {{ __('Payment status') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sorts['due_amount'] ?? null">
                 {{ __('Due Amount') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="$sorts['total_amount'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('total')" :direction="$sorts['total'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
             <x-table.th sortable wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
@@ -96,12 +64,13 @@
                         </a>
                     </x-table.td>
                     <x-table.td>
-                        <x-table.status-dropdown 
-                            :id="$salereturn->id"
-                            :value="$salereturn->payment_status?->getName() ?? __('Pending')"
-                            :options="$paymentStatusOptions"
-                            action="updatePaymentStatus"
-                        />
+                        {{ $salereturn->payment_id}}
+
+                        {{-- @php
+                            $badgeType = $salereturn->payment_id->getBadgeType();
+                        @endphp
+
+                        <x-badge :type="$badgeType">{{ $salereturn->payment_id->getName() }}</x-badge> --}}
                     </x-table.td>
                     <x-table.td>
                         {{ format_currency($salereturn->due_amount) }}
@@ -112,12 +81,11 @@
                     </x-table.td>
 
                     <x-table.td>
-                        <x-table.status-dropdown 
-                            :id="$salereturn->id"
-                            :value="$salereturn->status?->getName() ?? __('Pending')"
-                            :options="$saleReturnStatusOptions"
-                            action="updateStatus"
-                        />
+                        @php
+                            $type = $salereturn->status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$type">{{ $salereturn->status->getName() }}</x-badge>
+
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -191,7 +159,6 @@
     <div class="px-6 py-3">
         {{ $salereturns->links() }}
     </div>
-    </x-page-container>
 
     {{-- Show SaleReturn --}}
     <x-modal wire:model.live="showModal">

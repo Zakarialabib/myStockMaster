@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Transfer;
 
+use App\Livewire\Forms\TransferForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\Product;
-use App\Models\ProductWarehouse;
 use App\Models\Transfer;
-use App\Models\TransferDetails;
+use App\Services\TransferService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -22,83 +20,51 @@ class Edit extends Component
     use WithAlert;
     use WithModels;
 
+    public TransferForm $form;
+
     public Transfer $transfer;
 
-    public $date;
-
-    #[Validate('nullable|string|max:1000')]
-    public ?string $note = null;
-
-    #[Validate('required|string|max:255')]
-    public string $reference;
-
-    #[Validate('required', message: 'Please provide warehouse')]
-    public ?int $warehouse_id = null;
-
-    public $quantity;
-
-    public $type;
-
-    #[Validate([
-        'products.*.quantity' => 'required|integer|min:1',
-        'products.*.type' => 'required|in:add,sub',
-    ])]
     public array $products = [];
 
     public $hasTransfers;
 
     public function mount($id): void
     {
-        $this->transfer = Transfer::with('transferDetails')
+        $this->transfer = Transfer::with('transferDetails', 'transferDetails.product')
             ->where('id', $id)->first();
 
-        $this->date = $this->transfer->date;
-        $this->warehouse_id = $this->transfer->warehouse_id;
+        $this->form->date = $this->transfer->date;
+        $this->form->from_warehouse_id = $this->transfer->from_warehouse_id;
+        $this->form->to_warehouse_id = $this->transfer->to_warehouse_id;
+        $this->form->reference = $this->transfer->reference;
+        $this->form->note = $this->transfer->note;
+        $this->form->status = $this->transfer->status;
+        $this->form->total_qty = $this->transfer->total_qty;
+        $this->form->total_cost = $this->transfer->total_cost;
+        $this->form->total_amount = $this->transfer->total_amount;
+        $this->form->shipping_amount = $this->transfer->shipping;
+        $this->form->document = $this->transfer->document;
+        $this->form->user_id = $this->transfer->user_id;
 
-        $this->reference = $this->transfer->reference;
-
-        $this->products = $this->transfer->adjustedProducts;
+        $this->products = $this->transfer->transferDetails->map(function ($detail) {
+            return [
+                'id' => $detail->product_id,
+                'name' => $detail->product->name,
+                'code' => $detail->product->code,
+                'quantities' => $detail->quantity,
+                'price' => $detail->product->price ?? 0,
+                'cost' => $detail->product->cost ?? 0,
+            ];
+        })->toArray();
     }
 
-    public function update()
+    public function update(TransferService $transferService)
     {
         abort_if(Gate::denies('transfer_update'), 403);
 
-        $this->validate();
+        $this->form->validate();
 
-        $this->transfer->update([
-            'reference' => $this->reference,
-            'note' => $this->note,
-            'date' => $this->date,
-            'user_id' => auth()->id(),
-            'warehouse_id' => $this->warehouse_id,
-        ]);
-
-        foreach ($this->products as $product) {
-            TransferDetails::updateOrCreate(
-                [
-                    'transfer_id' => $this->transfer->id,
-                    'product_id' => $product['product_id'],
-                    'warehouse_id' => $product['warehouse_id'],
-                    'quantity' => $product['quantity'],
-                    'type' => $product['type'],
-                ]
-            );
-
-            $productWarehouse = ProductWarehouse::where('product_id', $product['product_id'])
-                ->where('warehouse_id', $product['warehouse_id'])
-                ->first();
-
-            if ($product['type'] === 'add') {
-                $productWarehouse->update([
-                    'qty' => $productWarehouse->qty + $product['quantity'],
-                ]);
-            } elseif ($product['type'] === 'sub') {
-                $productWarehouse->update([
-                    'qty' => $productWarehouse->qty - $product['quantity'],
-                ]);
-            }
-        }
+        $transferService->updateTransfer($this->transfer, $this->form->all(), $this->products);
 
         return redirect()->route('transfers.index');
     }
@@ -106,46 +72,52 @@ class Edit extends Component
     #[On('productSelected')]
     public function productSelected(array $product): void
     {
-        switch ($this->hasTransfers) {
-            case true:
-                if (in_array($product, array_map(static fn ($transfer) => $transfer['product'], $this->products))) {
-                    $this->alert('error', __('Product added succesfully'));
+        $product['quantities'] = 1;
 
-                    return;
-                }
+        if (in_array($product['id'], array_column($this->products, 'id'))) {
+            $this->alert('error', __('Already exists in the product list!'));
 
-                break;
-            case false:
-                if (in_array($product, $this->products)) {
-                    $this->alert('error', __('Already exists in the product list!'));
-
-                    return;
-                }
-
-                break;
-            default:
-                $this->alert('error', __('Something went wrong!'));
-
-                return;
+            return;
         }
 
-        // add default quantity and type to the product array
-        $product['quantity'] = 10;
-        $product['type'] = 'add';
-
         $this->products[] = $product;
+        $this->calculateTotal();
     }
 
     public function removeProduct($key): void
     {
         unset($this->products[$key]);
+        $this->calculateTotal();
+    }
+
+    public function updateQuantity($key, $quantity): void
+    {
+        $this->products[$key]['quantities'] = $quantity;
+        $this->calculateTotal();
+    }
+
+    public function calculateTotal(): void
+    {
+        $this->form->total_qty = 0;
+        $this->form->total_cost = 0;
+        $this->form->total_amount = 0;
+
+        foreach ($this->products as $product) {
+            $qty = $product['quantities'] ?? 1;
+            $price = $product['price'] ?? 0;
+            $cost = $product['cost'] ?? 0;
+
+            $this->form->total_qty += $qty;
+            $this->form->total_cost += $qty * $cost;
+            $this->form->total_amount += $qty * $price;
+        }
     }
 
     #[On('warehouseSelected')]
-    public function updatedWarehouseId($value): void
+    public function updatedFormFromWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->from_warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->from_warehouse_id);
     }
 
     public function render()

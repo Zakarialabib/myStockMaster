@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\CustomerGroup;
 
+use App\Livewire\Forms\CustomerGroupForm;
 use App\Models\CustomerGroup;
+use App\Services\CustomerGroupService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
@@ -19,13 +20,7 @@ class Create extends Component
 
     public CustomerGroup $customergroup;
 
-    #[Validate('required', message: 'The name field cannot be empty.')]
-    #[Validate('min:3', message: 'The name must be at least 3 characters.')]
-    #[Validate('max:255', message: 'The name may not be greater than 255 characters.')]
-    public $name;
-
-    #[Validate('required', message: 'The percentage field cannot be empty.')]
-    public $percentage;
+    public CustomerGroupForm $form;
 
     public function render()
     {
@@ -38,20 +33,16 @@ class Create extends Component
     public function openCreateModal(): void
     {
         $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(CustomerGroupService $customerGroupService): void
     {
         $this->validate();
 
-        CustomerGroup::create([
-            'name' => $this->name,
-            'percentage' => $this->percentage,
-        ]);
+        $customerGroupService->create($this->form->all());
 
         $this->alert('success', __('Customer group created successfully.'));
 

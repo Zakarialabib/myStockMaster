@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Livewire\PurchaseReturn;
 
 use App\Enums\PaymentStatus;
-use App\Exports\PurchaseReturnExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\PurchasePayment;
 use App\Models\PurchaseReturn;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
+#[Lazy]
 class Index extends Component
 {
     use Datatable;
@@ -135,60 +136,7 @@ class Index extends Component
 
             $this->dispatch('refreshIndex');
         } catch (Throwable $throwable) {
-            $this->alert('error', __('Error ') . $throwable->getMessage());
+            $this->alert('error', __('Error.') . ' ' . $throwable->getMessage());
         }
-    }
-
-    public function downloadSelected()
-    {
-        abort_if(Gate::denies('purchase_return_access'), 403);
-
-        $purchasereturns = PurchaseReturn::whereIn('id', $this->selected)->get();
-
-        return (new PurchaseReturnExport($purchasereturns))->download('purchase_returns.xls', \Maatwebsite\Excel\Excel::XLS);
-    }
-
-    public function downloadAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('purchase_return_access'), 403);
-
-        return $this->callExport()->download('purchase_returns.xls', \Maatwebsite\Excel\Excel::XLS);
-    }
-
-    public function exportSelected(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('purchase_return_access'), 403);
-
-        return $this->callExport()->forModels($this->selected)->download('purchase_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    public function exportAll(): \Symfony\Component\HttpFoundation\StreamedResponse|\Illuminate\Http\Response
-    {
-        abort_if(Gate::denies('purchase_return_access'), 403);
-
-        return $this->callExport()->download('purchase_returns.pdf', \Maatwebsite\Excel\Excel::MPDF);
-    }
-
-    public function updateStatus(PurchaseReturn $purchaseReturn, $status)
-    {
-        abort_if(Gate::denies('purchase_return_update'), 403);
-
-        $purchaseReturn->update(['status' => $status]);
-
-        $this->alert('success', __('Status updated successfully.'));
-    }
-
-    public function updatePaymentStatus(PurchaseReturn $purchaseReturn, $payment_status)
-    {
-        abort_if(Gate::denies('purchase_return_update'), 403);
-
-        $purchaseReturn->update(['payment_status' => $payment_status]);
-
-        $this->alert('success', __('Payment status updated successfully.'));
-    }
-
-    private function callExport(): PurchaseReturnExport
-    {
-        return new PurchaseReturnExport;
     }
 }

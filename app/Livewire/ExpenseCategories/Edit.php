@@ -6,6 +6,7 @@ namespace App\Livewire\ExpenseCategories;
 
 use App\Livewire\Forms\ExpenseCategoryForm;
 use App\Models\ExpenseCategory;
+use App\Services\ExpenseCategoryService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
@@ -42,11 +43,11 @@ class Edit extends Component
         $this->showModal = true;
     }
 
-    public function update(): void
+    public function update(ExpenseCategoryService $expenseCategoryService): void
     {
         $this->validate();
 
-        $this->expenseCategory->update($this->form->all());
+        $expenseCategoryService->update($this->expenseCategory, $this->form->all());
 
         $this->alert('success', __('Expense Category Updated Successfully.'));
 

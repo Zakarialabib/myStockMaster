@@ -9,6 +9,7 @@ use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Services\ExpenseService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -65,22 +66,16 @@ class Create extends Component
         $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(ExpenseService $expenseService): void
     {
         $this->validate();
 
         $data = $this->form->all();
 
-        if ($this->form->document) {
-            $data['document'] = $this->form->document->store('expenses', 'public');
-        }
-
         $data['user_id'] = $this->user_id;
         $data['cash_register_id'] = $this->cash_register_id;
 
-        $this->expense = Expense::create($data);
-
-        $this->expense->user()->associate(auth()->user());
+        $this->expense = $expenseService->create($data);
 
         $this->alert('success', __('Expense created successfully.'));
 

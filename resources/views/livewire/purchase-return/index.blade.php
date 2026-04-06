@@ -1,46 +1,21 @@
 <div>
-    <x-page-container title="{{ __('Purchase Returns List') }}" :show-filters="true">
-        <x-slot name="actions">
-            @can('purchase_return_export')
-                <x-dropdown align="right" width="56">
-                    <x-slot name="trigger" class="inline-flex">
-                        <x-button secondary type="button">
-                            <i class="fas fa-file-export mr-2"></i>
-                            {{ __('Export') }}
-                        </x-button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link wire:click="exportAll">
-                            <i class="fas fa-file-pdf mr-2"></i> {{ __('PDF') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link wire:click="downloadAll">
-                            <i class="fas fa-file-excel mr-2"></i> {{ __('Excel') }}
-                        </x-dropdown-link>
-                    </x-slot>
-                </x-dropdown>
-            @endcan
-            @can('purchase_return_create')
-                <x-button primary href="{{ route('purchase-returns.create') }}" icon="fas fa-plus">
-                    {{ __('Create Purchase Return') }}
-                </x-button>
-            @endcan
-        </x-slot>
+    <div class="flex flex-wrap justify-center">
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
+            <x-select wire:model.live="perPage"
+                class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
+                @foreach ($paginationOptions as $value)
+                    <option value="{{ $value }}">{{ $value }}</option>
+                @endforeach
+            </x-select>
+        </div>
+        <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
+            <div class="my-2">
+                <x-input wire:model.live.debounce.500ms="search" placeholder="{{ __('Search') }}" autofocus />
+            </div>
+        </div>
+    </div>
 
-        <x-slot name="filters">
-            <x-datatable.filters 
-                :per-page="$perPage" 
-                :pagination-options="$paginationOptions" 
-                :selected-count="count($selected)" 
-                :search="$search"
-                search-placeholder="{{ __('Search purchase returns...') }}" 
-                wire:model.live.perPage="perPage"
-                wire:model.live.search="search" 
-                wire:click.deleteSelected="deleteSelected"
-                wire:click.resetSelected="resetSelected" 
-                :can-delete="auth()->user()->can('purchase_return_delete')" />
-        </x-slot>
-
-        <x-table>
+    <x-table>
         <x-slot name="thead">
             <x-table.th>
                 <input type="checkbox" wire:model.live="selectPage" />
@@ -57,10 +32,7 @@
             <x-table.th sortable wire:click="sortingBy('status')" :direction="$sorts['status'] ?? null">
                 {{ __('Status') }}
             </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('payment_status')" :direction="$sorts['payment_status'] ?? null">
-                {{ __('Payment Status') }}
-            </x-table.th>
-            <x-table.th sortable wire:click="sortingBy('total_amount')" :direction="$sorts['total_amount'] ?? null">
+            <x-table.th sortable wire:click="sortingBy('email')" :direction="$sorts['email'] ?? null">
                 {{ __('Total') }}
             </x-table.th>
             <x-table.th>
@@ -86,13 +58,13 @@
                         </a>
                     </x-table.td>
                     <x-table.td>
-                        <x-table.status-dropdown :model="$purchasereturn" field="status" :options="\App\Enums\PurchaseReturnStatus::cases()" updateMethod="updateStatus" />
+                        @php
+                            $type = $purchase_return->status->getBadgeType();
+                        @endphp
+                        <x-badge :type="$type">{{ $purchase_return->status->getName() }}</x-badge>
                     </x-table.td>
                     <x-table.td>
-                        <x-table.status-dropdown :model="$purchasereturn" field="payment_status" :options="\App\Enums\PaymentStatus::cases()" updateMethod="updatePaymentStatus" />
-                    </x-table.td>
-                    <x-table.td>
-                        {{ format_currency($purchasereturn->total_amount) }}
+                        {{ format_currency($salereturn->total_amount) }}
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
@@ -153,7 +125,7 @@
                 </x-table.tr>
             @empty
                 <x-table.tr>
-                    <x-table.td colspan="8">
+                    <x-table.td colspan="7">
                         <div class="flex justify-center items-center">
                             <i class="fas fa-box-open text-4xl text-gray-400"></i>
                             {{ __('No results found') }}
@@ -167,7 +139,7 @@
     <div class="mt-4">
         {{ $purchasereturns->links() }}
     </div>
-    </x-page-container>
+
 
     {{-- Show PurchaseReturn --}}
     <x-modal wire:model.live="showModal">
@@ -334,7 +306,7 @@
 
     {{-- PurchaseReturn Payment payment component   --}}
     {{-- @if (empty($purchasereturn)) --}}
-        <livewire:purchase.payment.index />
+        <livewire:purchase.payment.index :purchasereturn="$purchasereturn" />
     {{-- @endifp --}}
     {{-- End PurchaseReturn Payment payment component   --}}
 
