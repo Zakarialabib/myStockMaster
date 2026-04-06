@@ -8,6 +8,7 @@ use App\Livewire\Forms\ExpenseForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Services\ExpenseService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -61,19 +62,11 @@ class Edit extends Component
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(ExpenseService $expenseService): void
     {
         $this->validate();
 
-        $data = $this->form->all();
-
-        if ($this->form->document) {
-            $data['document'] = $this->form->document->store('expenses', 'public');
-        } else {
-            unset($data['document']); // Do not overwrite existing document if no new file is uploaded
-        }
-
-        $this->expense->update($data);
+        $expenseService->update($this->expense, $this->form->all());
 
         $this->alert('success', __('Expense updated successfully.'));
 

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Suppliers;
 
+use App\Livewire\Forms\SupplierForm;
 use App\Models\Supplier;
+use App\Services\SupplierService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
@@ -19,22 +20,7 @@ class Create extends Component
 
     public Supplier $supplier;
 
-    #[Validate('required|string|min:3|max:255', message: 'The name field is required and must be a string between 3 and 255 characters.')]
-    public string $name;
-
-    #[Validate('required|numeric', message: 'The phone field is required and must be a numeric value.')]
-    public $phone;
-
-    #[Validate('nullable|email|max:255', message: 'The email field must be a valid email address with a maximum of 255 characters.')]
-    public ?string $email;
-
-    public ?string $address;
-
-    public ?string $city;
-
-    public ?string $country;
-
-    public ?string $tax_number;
+    public SupplierForm $form;
 
     public function render()
     {
@@ -47,23 +33,19 @@ class Create extends Component
     public function openModal(): void
     {
         $this->resetErrorBag();
-
-        $this->resetValidation();
-
+        $this->form->reset();
         $this->showModal = true;
     }
 
-    public function create(): void
+    public function create(SupplierService $supplierService): void
     {
         $this->validate();
 
-        Supplier::create($this->all());
+        $supplierService->create($this->form->all());
 
         $this->alert('success', __('Supplier created successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
-
-        $this->reset(['name', 'email', 'phone', 'address', 'city', 'country', 'tax_number']);
 
         $this->showModal = false;
     }

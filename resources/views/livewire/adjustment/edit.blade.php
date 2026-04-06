@@ -14,19 +14,19 @@
                 <div class="flex flex-wrap mb-3">
                     <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
                         <x-label for="reference" :value="__('Reference')" required />
-                        <x-input type="text" wire:model="reference" name="reference" required disabled />
+                        <x-input type="text" wire:model="form.reference" name="reference" required disabled />
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <x-label for="warehouse" :value="__('Warehouse')" />
                         <x-select-list disabled
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id"
+                            required id="warehouse_id" name="warehouse_id" wire:model.live="form.warehouse_id"
                             :options="$this->warehouses" />
-                        <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('form.warehouse_id')" class="mt-2" />
                     </div>
                     <div class="xl:w-1/2 lg:w-1/2 sm:w-full px-3">
                         <x-label for="date" :value="__('Date')" required />
-                        <p>{{ $this->date }}</p>
+                        <p>{{ $this->form->date }}</p>
                     </div>
 
                 </div>
@@ -86,7 +86,7 @@
 
                 <div class="mb-4">
                     <x-label for="note" :value="__('Note (If Needed)')" />
-                    <textarea name="note" id="note" rows="5" wire:model="note"
+                    <textarea name="note" id="note" rows="5" wire:model="form.note"
                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
                 </div>
                 <div class="mt-3">

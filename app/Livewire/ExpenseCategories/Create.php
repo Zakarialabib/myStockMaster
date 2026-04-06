@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\ExpenseCategories;
 
 use App\Livewire\Forms\ExpenseCategoryForm;
-use App\Models\ExpenseCategory;
+use App\Services\ExpenseCategoryService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
@@ -36,13 +36,13 @@ class Create extends Component
         $this->showModal = true;
     }
 
-    public function create(): void
+    public function create(ExpenseCategoryService $expenseCategoryService): void
     {
         $this->validate();
 
-        ExpenseCategory::create($this->form->all());
+        $expenseCategoryService->create($this->form->all());
 
-        $this->alert('success', __('Expense created successfully.'));
+        $this->alert('success', __('Expense Category created successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
 

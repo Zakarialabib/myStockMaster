@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Suppliers;
 
+use App\Livewire\Forms\SupplierForm;
 use App\Models\Supplier;
+use App\Services\SupplierService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -22,26 +23,7 @@ class Edit extends Component
     /** @var mixed */
     public Supplier $supplier;
 
-    #[Validate('required|string|min:3|max:255', message: 'The name field is required and must be a string between 3 and 255 characters.')]
-    public string $name;
-
-    #[Validate('nullable|max:255', message: 'The email field must be a string with a maximum of 255 characters.')]
-    public ?string $email = null;
-
-    #[Validate('required|numeric', message: 'The phone field is required and must be a numeric value.')]
-    public $phone;
-
-    #[Validate('nullable|max:255', message: 'The city field must be a string with a maximum of 255 characters.')]
-    public ?string $city = null;
-
-    #[Validate('nullable|max:255', message: 'The country field must be a string with a maximum of 255 characters.')]
-    public ?string $country = null;
-
-    #[Validate('nullable|max:255', message: 'The address field must be a string with a maximum of 255 characters.')]
-    public ?string $address = null;
-
-    #[Validate('nullable|max:255', message: 'The tax number field must be a string with a maximum of 255 characters.')]
-    public ?string $tax_number = null;
+    public SupplierForm $form;
 
     public function render()
     {
@@ -54,33 +36,26 @@ class Edit extends Component
     public function openModal($id): void
     {
         $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->supplier = Supplier::whereId($id)->first();
 
-        $this->name = $this->supplier->name;
-
-        $this->email = $this->supplier->email;
-
-        $this->phone = $this->supplier->phone;
-
-        $this->city = $this->supplier->city;
-
-        $this->country = $this->supplier->country;
-
-        $this->address = $this->supplier->address;
-
-        $this->tax_number = $this->supplier->tax_number;
+        $this->form->name = $this->supplier->name;
+        $this->form->email = $this->supplier->email;
+        $this->form->phone = $this->supplier->phone;
+        $this->form->city = $this->supplier->city;
+        $this->form->country = $this->supplier->country;
+        $this->form->address = $this->supplier->address;
+        $this->form->tax_number = $this->supplier->tax_number;
 
         $this->showModal = true;
     }
 
-    public function update(): void
+    public function update(SupplierService $supplierService): void
     {
         $this->validate();
 
-        $this->supplier->update($this->all());
+        $supplierService->update($this->supplier, $this->form->all());
 
         $this->alert('success', __('Supplier updated successfully.'));
 

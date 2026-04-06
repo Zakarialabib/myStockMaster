@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\CashRegister;
 
+use App\Livewire\Forms\CashRegisterForm;
 use App\Models\CashRegister;
+use App\Services\CashRegisterService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
@@ -21,12 +22,7 @@ class Create extends Component
 
     public CashRegister $cashRegister;
 
-    #[Validate('required', message: 'Please provide a warehouse')]
-    public $warehouse_id;
-
-    #[Validate('required', message: 'Please provide a cash in hand')]
-    #[Validate('numeric', message: 'Cash in hand must be numeric')]
-    public $cash_in_hand;
+    public CashRegisterForm $form;
 
     #[On('createModal')]
     public function openCreateModal(): void
@@ -38,22 +34,17 @@ class Create extends Component
         $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(CashRegisterService $cashRegisterService): void
     {
         $this->validate();
 
-        CashRegister::create([
-            'cash_in_hand' => $this->cash_in_hand,
-            'warehouse_id' => $this->warehouse_id,
-            'user_id' => auth()->user()->id,
-            'status' => true,
-        ]);
+        $cashRegisterService->create($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', __('CashRegister created successfully.'));
 
-        $this->reset(['cash_in_hand', 'warehouse_id']);
+        $this->form->reset();
 
         $this->createModal = false;
     }
