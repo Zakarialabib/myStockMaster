@@ -12,6 +12,8 @@ class UserForm extends Form
 {
     public ?User $user = null;
 
+    public $showModal = false;
+
     #[Validate('required|string|max:255')]
     public $name;
 

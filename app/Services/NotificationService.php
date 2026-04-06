@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Enums\SaleStatus;
 use App\Models\Notification as NotificationModel;
 use App\Models\Sale;
-use App\Notifications\SaleStatusUpdate;
+// use App\Notifications\SaleStatusUpdate;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -26,8 +26,8 @@ class NotificationService
                 return;
             }
 
-            $notification = new SaleStatusUpdate($order, $status);
-            Notification::route('mail', $order->customer_email)->notify($notification);
+            // $notification = new SaleStatusUpdate($order, $status);
+            // Notification::route('mail', $order->customer_email)->notify($notification);
 
             Log::info('Customer notified about order status change', [
                 'order_id' => $order->id,

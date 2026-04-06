@@ -48,13 +48,13 @@
                     <div class="flex flex-wrap mb-4">
                         <div class="w-1/2 px-3">
                             <x-label for="availability" :value="__('Availability')" />
-                            <x-input.checkbox wire:model="availability" id="availability" />
-                            <x-input-error :messages="$errors->get('availability')" class="mt-2" />
+                            <x-input.checkbox wire:model="form.availability" id="availability" />
+                            <x-input-error :messages="$errors->get('form.availability')" class="mt-2" />
                         </div>
                         <div class="w-1/2 px-3">
                             <x-label for="seasonality" :value="__('Seasonality')" />
-                            <x-input wire:model="seasonality" id="seasonality" type="text" class="block mt-1 w-full" />
-                            <x-input-error :messages="$errors->get('seasonality')" class="mt-2" />
+                            <x-input wire:model="form.seasonality" id="seasonality" type="text" class="block mt-1 w-full" />
+                            <x-input-error :messages="$errors->get('form.seasonality')" class="mt-2" />
                         </div>
                     </div>
                 </div>
@@ -79,12 +79,12 @@
                             </div>
                             <div class="flex-1">
                                 <x-label for="old_price" :value="__('Old Price')" required />
-                                <input type="text" required class="w-full" wire:model="productWarehouse.old_price" id="old_price" name="old_price" />
-                                <x-input-error :messages="$errors->get('productWarehouse.old_price')" for="productWarehouse.old_price" class="mt-2" />
+                                <input type="text" required class="w-full" wire:model="form.productWarehouse.old_price" id="old_price" name="old_price" />
+                                <x-input-error :messages="$errors->get('form.productWarehouse.old_price')" for="form.productWarehouse.old_price" class="mt-2" />
                             </div>
                             <div class="flex-1">
                                 <x-label for="qty" :value="__('Quantity')" />
-                                <input type="text" required class="w-full" wire:model="productWarehouse.qty" id="qty" name="qty" />
+                                <input type="text" required class="w-full" wire:model="form.productWarehouse.qty" id="qty" name="qty" />
                             </div>
                             <div class="flex-1">
                                 <x-label for="stock_alert" :value="__('Stock Alert')" required />
@@ -93,7 +93,7 @@
                             </div>
                             <div class="flex-1 mt-6">
                                 <x-label for="is_ecommerce" :value="__('Is Ecommerce')" required />
-                                <x-input.checkbox id="is_ecommerce" type="checkbox" name="is_ecommerce" wire:model="productWarehouse.is_ecommerce" />
+                                <x-input.checkbox id="is_ecommerce" type="checkbox" name="is_ecommerce" wire:model="form.productWarehouse.is_ecommerce" />
                             </div>
                         </div>
                     </div>
@@ -130,8 +130,8 @@
                         </div>
                         <div class="w-full px-2 my-2">
                             <x-label for="gallery" :value="__('Product Gallery')" />
-                            <x-media-upload title="{{ __('Gallery') }}" name="gallery" wire:model="gallery" :file="$gallery" multiple types="PNG / JPEG / WEBP" fileTypes="image/*" />
-                            <x-input-error :messages="$errors->get('gallery')" for="gallery" class="mt-2" />
+                            <x-media-upload title="{{ __('Gallery') }}" name="gallery" wire:model="form.gallery" :file="$form->gallery" multiple types="PNG / JPEG / WEBP" fileTypes="image/*" />
+                            <x-input-error :messages="$errors->get('form.gallery')" for="form.gallery" class="mt-2" />
                         </div>
                         <div class="w-full px-2 mt-4">
                             <x-label for="note" :value="__('Note / Description')" />
@@ -140,13 +140,13 @@
                         </div>
                         <div class="w-full px-2 mt-4">
                             <x-label for="embeded_video" :value="__('Embeded Video')" />
-                            <x-input id="embeded_video" class="block mt-1 w-full" type="text" name="embeded_video" wire:model="embeded_video" />
-                            <x-input-error :messages="$errors->get('embeded_video')" for="embeded_video" class="mt-2" />
+                            <x-input id="embeded_video" class="block mt-1 w-full" type="text" name="embeded_video" wire:model="form.embeded_video" />
+                            <x-input-error :messages="$errors->get('form.embeded_video')" for="form.embeded_video" class="mt-2" />
                         </div>
                         <div class="w-full px-2 mt-4">
                             <x-label for="usage" :value="__('Usage')" />
-                            <textarea rows="3" class="form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 border-gray-300 rounded-md shadow-sm" name="usage" wire:model="usage"></textarea>
-                            <x-input-error :messages="$errors->get('usage')" for="usage" class="mt-2" />
+                            <textarea rows="3" class="form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 border-gray-300 rounded-md shadow-sm" name="usage" wire:model="form.usage"></textarea>
+                            <x-input-error :messages="$errors->get('form.usage')" for="form.usage" class="mt-2" />
                         </div>
                     </div>
                 </div>

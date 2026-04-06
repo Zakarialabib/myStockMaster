@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
-use App\Actions\Sales\StoreSaleAction;
 use App\Enums\SaleStatus;
 use App\Jobs\PaymentNotification;
 use App\Livewire\CashRegister\Create as CashRegisterCreate;
 use App\Livewire\Forms\SaleForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
+use App\Services\SaleService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +116,8 @@ class Create extends Component
 
     public function saveDraft(): void
     {
+        $saleService = app(SaleService::class);
+
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
@@ -130,7 +132,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        $sale = app(StoreSaleAction::class)(
+        $sale = $saleService->create(
             [
                 'date' => $this->form->date,
                 'customer_id' => $this->form->customer_id,
@@ -164,6 +166,8 @@ class Create extends Component
 
     public function store(): void
     {
+        $saleService = app(SaleService::class);
+
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
@@ -178,7 +182,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        $sale = app(StoreSaleAction::class)(
+        $sale = $saleService->create(
             [
                 'date' => $this->form->date,
                 'customer_id' => $this->form->customer_id,

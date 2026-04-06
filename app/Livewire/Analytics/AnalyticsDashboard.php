@@ -106,7 +106,22 @@ class AnalyticsDashboard extends Component
             $data = $type === 'revenue' ? $this->revenueData : $this->analyticsData;
 
             return response()->streamDownload(function () use ($data) {
-                echo json_encode($data, JSON_PRETTY_PRINT);
+                $generator = function () use ($data) {
+                    yield '{';
+                    $first = true;
+                    foreach ($data as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);

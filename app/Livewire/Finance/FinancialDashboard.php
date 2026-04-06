@@ -272,7 +272,22 @@ class FinancialDashboard extends Component
             }
 
             return response()->streamDownload(function () use ($exportData) {
-                echo json_encode($exportData, JSON_PRETTY_PRINT);
+                $generator = function () use ($exportData) {
+                    yield '{';
+                    $first = true;
+                    foreach ($exportData as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
