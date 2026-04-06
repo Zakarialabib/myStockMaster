@@ -25,7 +25,7 @@
                     </div>
                     <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                         <x-label for="warehouse" :value="__('Warehouse')" required />
-                        <select disabled
+                        <x-select disabled
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id">
                             @foreach ($this->warehouses as $index => $warehouse)
@@ -33,7 +33,7 @@
                                     {{ $warehouse }}</option>
                                 {{ $warehouse }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
                     </div>
 
@@ -50,7 +50,7 @@
                 <div class="flex flex-wrap mb-3">
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <x-label for="status" :value="__('Status')" required />
-                        <select wire:model="status"
+                        <x-select wire:model="status"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="status" id="status" required>
                             <option value="">{{ __('Select Status') }}</option>
@@ -60,7 +60,7 @@
                                     {{ __($status->name) }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
 
                     <div class="w-full md:w-1/3 px-2 mb-2">

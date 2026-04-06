@@ -32,7 +32,7 @@
     @click.outside="open = false"
 >
     <!-- Hidden select for native form submission if needed, and to hold the required attribute -->
-    <select
+    <x-select
         id="{{ $id }}"
         name="{{ $name }}"
         x-model="value"
@@ -43,7 +43,7 @@
         <template x-for="option in options" :key="option.value">
             <option :value="option.value" x-text="option.label"></option>
         </template>
-    </select>
+    </x-select>
 
     <div
         @click="open = !open"

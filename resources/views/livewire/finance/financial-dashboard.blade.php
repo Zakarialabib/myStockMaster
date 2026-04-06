@@ -32,14 +32,14 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date Range') }}</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateRange">
+                    <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="dateRange">
                         <option value="today">{{ __('Today') }}</option>
                         <option value="week">{{ __('This Week') }}</option>
                         <option value="month">{{ __('This Month') }}</option>
                         <option value="quarter">{{ __('This Quarter') }}</option>
                         <option value="year">{{ __('This Year') }}</option>
                         <option value="custom">{{ __('Custom Range') }}</option>
-                    </select>
+                    </x-select>
                 </div>
                 @if($dateRange === 'custom')
                 <div>

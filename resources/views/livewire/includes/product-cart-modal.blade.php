@@ -17,12 +17,12 @@
             <div class="grid grid-cols-2 gap-4 my-4">
                 <div>
                     <x-label for="discount_type_{{ $item->id }}" :value="__('Discount Type')" />
-                    <select wire:model.blur="discount_type.{{ $item->id }}" id="discount_type_{{ $item->id }}"
+                    <x-select wire:model.blur="discount_type.{{ $item->id }}" id="discount_type_{{ $item->id }}"
                         class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         required>
                         <option value="fixed">{{ __('Fixed Amount') }}</option>
                         <option value="percentage">{{ __('Percentage') }}</option>
-                    </select>
+                    </x-select>
                 </div>
                 <div>
                     <x-label for="item_discount_{{ $item->id }}" :value="__('Discount Value')" />

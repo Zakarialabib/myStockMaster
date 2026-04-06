@@ -22,7 +22,7 @@ class ProductAnalytics extends Component
     use WithPagination;
 
     #[Validate('required|exists:products,id')]
-    public ?int $productId = null;
+    public int|string|null $productId = null;
 
     #[Validate('required|date')]
     public string $dateFrom = '';

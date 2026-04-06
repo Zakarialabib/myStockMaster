@@ -114,7 +114,7 @@
                 </div>
                 <div class="p-4">
                     <div class="relative">
-                        <select
+                        <x-select
                             required
                             id="warehouse_id"
                             name="warehouse_id"
@@ -127,7 +127,7 @@
                             @foreach ($this->warehouses as $index => $warehouse)
                                 <option value="{{ $index }}">{{ $warehouse }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-map-marker-alt text-gray-400" aria-hidden="true"></i>
                         </div>
@@ -260,7 +260,7 @@
                             <div>
                                 <x-label for="payment_method" :value="__('Payment Method')" required class="mb-2" />
                                 <div class="relative">
-                                    <select
+                                    <x-select
                                         wire:model.live="form.payment_method"
                                         id="payment_method"
                                         required
@@ -271,7 +271,7 @@
                                         <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                                         <option value="Cheque">{{ __('Cheque') }}</option>
                                         <option value="Other">{{ __('Other') }}</option>
-                                    </select>
+                                    </x-select>
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <i class="fas fa-credit-card text-gray-400" aria-hidden="true"></i>
                                     </div>

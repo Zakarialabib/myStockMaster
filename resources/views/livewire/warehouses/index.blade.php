@@ -161,7 +161,7 @@
 
         </x-page-container>
 
-        <livewire:warehouses.edit :warehouse="$warehouse" />
+        <livewire:warehouses.edit />
 
         <livewire:warehouses.create />
 

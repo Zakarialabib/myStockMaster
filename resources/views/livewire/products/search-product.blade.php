@@ -70,22 +70,22 @@
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i class="fas fa-tags text-gray-400 text-xs"></i>
                         </div>
-                        <select wire:model.live="category_id" id="category_id" class="block w-full pl-9 pr-8 py-2 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <x-select wire:model.live="category_id" id="category_id" class="block w-full pl-9 pr-8 py-2 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                             <option value="">{{ __('All Categories') }}</option>
                             @foreach($this->categories as $id => $name)
                                 <option value="{{ $id }}">{{ $name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
 
                     <div class="relative w-24">
-                        <select wire:model.live="showCount" class="block w-full py-2 pl-3 pr-8 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <x-select wire:model.live="showCount" class="block w-full py-2 pl-3 pr-8 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                             <option value="9">9 / {{ __('page') }}</option>
                             <option value="15">15 / {{ __('page') }}</option>
                             <option value="21">21 / {{ __('page') }}</option>
                             <option value="30">30 / {{ __('page') }}</option>
                             <option value="100">{{ __('All') }}</option>
-                        </select>
+                        </x-select>
                     </div>
                 </div>
             </div>

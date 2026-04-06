@@ -160,7 +160,7 @@
 
                                     <div>
                                         <x-label for="default_currency_position" :value="__('Default currency position')" required />
-                                        <select name="default_currency_position" id="default_currency_position"
+                                        <x-select name="default_currency_position" id="default_currency_position"
                                             wire:model="form.default_currency_position"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                             required>
@@ -172,12 +172,12 @@
                                                 {{ settings('default_currency_position') == 'suffix' ? 'selected' : '' }}
                                                 value="suffix">
                                                 {{ __('Right') }}</option>
-                                        </select>
+                                        </x-select>
                                     </div>
 
                                     <div>
                                         <x-label for="default_date_format" :value="__('Default date format')" required />
-                                        <select name="default_date_format" wire:model="form.default_date_format"
+                                        <x-select name="default_date_format" wire:model="form.default_date_format"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                             required>
                                             <option value="d-m-Y">DD-MM-YYYY</option>
@@ -189,7 +189,7 @@
                                             <option value="Y-m-d">YYYY-MM-DD</option>
                                             <option value="Y/m/d">YYYY/MM/DD</option>
                                             <option value="Y.m.d">YYYY.MM.DD</option>
-                                        </select>
+                                        </x-select>
                                     </div>
 
                                     <div>
@@ -244,7 +244,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <x-label for="invoice_template" :value="__('Invoice Template')" />
-                                        <select wire:model.live="form.invoice_template" id="invoice_template"
+                                        <x-select wire:model.live="form.invoice_template" id="invoice_template"
                                             name="invoice_template"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                             @for ($i = 1; $i <= 5; $i++)
@@ -252,7 +252,7 @@
                                                     {{ $i }}
                                                 </option>
                                             @endfor
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <label
@@ -501,7 +501,7 @@
                                                     </button>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    <select wire:model="analyticsControl.{{ $index }}.color"
+                                                    <x-select wire:model="analyticsControl.{{ $index }}.color"
                                                         wire:change="changeColor({{ $index }}, $event.target.value)"
                                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
                                                         @foreach ($colors as $color)
@@ -509,7 +509,7 @@
                                                                 @if ($control['color'] === $color) selected @endif>
                                                                 {{ ucfirst($color) }}</option>
                                                         @endforeach
-                                                    </select>
+                                                    </x-select>
                                                 </td>
                                             </tr>
                                         @endforeach

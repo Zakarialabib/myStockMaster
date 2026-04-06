@@ -50,23 +50,23 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('KPI Type') }}</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="kpiType">
+                                <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="kpiType">
                                     <option value="all">{{ __('All KPIs') }}</option>
                                     <option value="revenue">{{ __('Revenue KPIs') }}</option>
                                     <option value="profitability">{{ __('Profitability KPIs') }}</option>
                                     <option value="efficiency">{{ __('Efficiency KPIs') }}</option>
                                     <option value="growth">{{ __('Growth KPIs') }}</option>
-                                </select>
+                                </x-select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Comparison Period') }}</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="comparisonPeriod">
+                                <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="comparisonPeriod">
                                     <option value="none">{{ __('No Comparison') }}</option>
                                     <option value="previous_month">{{ __('Previous Month') }}</option>
                                     <option value="previous_quarter">{{ __('Previous Quarter') }}</option>
                                     <option value="previous_year">{{ __('Previous Year') }}</option>
                                     <option value="same_period_last_year">{{ __('Same Period Last Year') }}</option>
-                                </select>
+                                </x-select>
                             </div>
                         </div>
                     </div>

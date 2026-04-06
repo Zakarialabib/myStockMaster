@@ -10,7 +10,7 @@ use Livewire\Form;
 class QuotationForm extends Form
 {
     #[Validate('required|integer')]
-    public ?int $customer_id = null;
+    public int|string|null $customer_id = null;
 
     #[Validate('required|integer')]
     public ?int $warehouse_id = null;

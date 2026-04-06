@@ -20,13 +20,13 @@
 
                     <div class="my-4">
                         <x-label for="warehouse_id" :value="__('Warehouse')" />
-                        <select id="warehouse_id" class="block mt-1 w-full" type="text" name="warehouse_id"
+                        <x-select id="warehouse_id" class="block mt-1 w-full" type="text" name="warehouse_id"
                             wire:model="warehouse_id">
                             <option value="">Select Warehouse</option>
                             @foreach ($this->warehouses as $index => $warehouse)
                                 <option value="{{ $index }}">{{ $warehouse }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->get('warehouse_id')" for="warehouse_id" class="mt-2" />
                     </div>
 

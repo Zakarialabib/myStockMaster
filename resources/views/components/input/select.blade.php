@@ -26,13 +26,13 @@
         </div>
     @endif
     
-    <select {{ $attributes->merge(['class' => $classes]) }}>
+    <x-select {{ $attributes->merge(['class' => $classes]) }}>
         @if ($placeholder)
             <option disabled value="" selected>{{ $placeholder }}</option>
         @endif
 
         {{ $slot }}
-    </select>
+    </x-select>
 
     @if ($trailingAddOn)
         {{ $trailingAddOn }}

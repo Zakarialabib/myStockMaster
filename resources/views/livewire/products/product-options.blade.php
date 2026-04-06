@@ -2,7 +2,7 @@
     <div class="space-y-4 flex flex-col items-center justify-center my-4">
         @foreach ($options as $index => $option)
             <div class="flex flex-row w-full space-x-2">
-                <select wire:model="options.{{ $index }}.type"
+                <x-select wire:model="options.{{ $index }}.type"
                     class="block w-full bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-500">
                     <option value="">{{ __('Choose an option') }}</option>
                     <option value="color" {{ $option['type'] == 'color' ? 'selected' : '' }}>
@@ -20,7 +20,7 @@
                         {{ __('Materials') }}</option>
                     <option value="size" {{ $option['type'] == 'size' ? 'selected' : '' }}>{{ __('Size') }}
                     </option>
-                </select>
+                </x-select>
                 @if ($option['type'] === 'color')
                     <input type="color" wire:model="options.{{ $index }}.value">
                 @else

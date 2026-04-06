@@ -23,14 +23,14 @@
                     </div>
                     <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                         <x-label for="payment_method" :value="__('Payment Method')" required />
-                        <select wire:model.live="payment_method"
+                        <x-select wire:model.live="payment_method"
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="payment_method" id="payment_method" required>
                             <option value="Cash">{{ __('Cash') }}</option>
                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                             <option value="Cheque">{{ __('Cheque') }}</option>
                             <option value="Other">{{ __('Other') }}</option>
-                        </select>
+                        </x-select>
                         <x-input-error :messages="$errors->first('payment_method')" />
                     </div>
                 </div>

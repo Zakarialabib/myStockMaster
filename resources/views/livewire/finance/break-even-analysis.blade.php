@@ -41,22 +41,22 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Analysis Type') }}</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="analysisType">
+                                <x-select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="analysisType">
                                     <option value="overall">{{ __('Overall Business') }}</option>
                                     <option value="product">{{ __('By Product') }}</option>
                                     <option value="category">{{ __('By Category') }}</option>
                                     <option value="scenario">{{ __('Scenario Planning') }}</option>
-                                </select>
+                                </x-select>
                             </div>
                             @if($analysisType === 'product')
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Select Product') }}</label>
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="selectedProduct">
+                                    <x-select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="selectedProduct">
                                         <option value="">{{ __('Select Product') }}</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                             @endif
                         </div>

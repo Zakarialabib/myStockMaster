@@ -60,7 +60,7 @@
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                     </x-table.td>
                                     <x-table.td>
-                                        <select name="types[]" wire:model="products.{{ $key }}.type"
+                                        <x-select name="types[]" wire:model="products.{{ $key }}.type"
                                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                             <option value="add"
                                                 {{ isset($product['type']) && $product['type'] == 'add' ? 'selected' : '' }}>
@@ -69,7 +69,7 @@
                                             <option value="sub"
                                                 {{ isset($product['type']) && $product['type'] == 'sub' ? 'selected' : '' }}>
                                                 (-) {{ __('Subtraction') }}</option>
-                                        </select>
+                                        </x-select>
                                     </x-table.td>
                                     <x-table.td>
                                         <button type="button" class="btn btn-danger"

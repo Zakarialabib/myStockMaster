@@ -37,12 +37,12 @@
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center gap-2">
                     <label class="text-sm font-medium text-gray-700">{{ __('Per Page') }}</label>
-                    <select wire:model.live="perPage"
+                    <x-select wire:model.live="perPage"
                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
                         @foreach ($paginationOptions as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
                 
                 <div class="flex-1 max-w-md">

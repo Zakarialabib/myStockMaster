@@ -73,7 +73,7 @@
                 <div class="flex flex-wrap mb-3">
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <x-label for="status" :value="__('Status')" reauired />
-                        <select
+                        <x-select
                             class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                             name="status" id="status" required wire:model.live="status">
                             @foreach (\App\Enums\PurchaseStatus::cases() as $status)
@@ -81,7 +81,7 @@
                                     {{ __($status->name) }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
                     <div class="w-full md:w-1/3 px-2 mb-2">
                         <x-label for="payment_method" :value="__('Payment Method')" reauired />

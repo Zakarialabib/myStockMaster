@@ -13,7 +13,7 @@
     <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
         <div>
             <label for="currency" class="block text-sm font-semibold text-orange-700 mb-2">Currency *</label>
-            <select wire:model="currency" id="currency" 
+            <x-select wire:model="currency" id="currency" 
                     class="block w-full rounded-xl border-orange-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors duration-200 px-4 py-3 border">
                 <option value="">Select currency...</option>
                 <option value="USD">🇺🇸 US Dollar ($)</option>
@@ -24,13 +24,13 @@
                 <option value="AUD">🇦🇺 Australian Dollar (A$)</option>
                 <option value="MXN">🇲🇽 Mexican Peso ($)</option>
                 <option value="BRL">🇧🇷 Brazilian Real (R$)</option>
-            </select>
+            </x-select>
             @error('currency') <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div>
             <label for="timezone" class="block text-sm font-semibold text-orange-700 mb-2">Timezone *</label>
-            <select wire:model="timezone" id="timezone" 
+            <x-select wire:model="timezone" id="timezone" 
                     class="block w-full rounded-xl border-orange-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm transition-colors duration-200 px-4 py-3 border">
                 <option value="">Select timezone...</option>
                 <option value="America/New_York">🇺🇸 Eastern Time</option>
@@ -43,7 +43,7 @@
                 <option value="Asia/Tokyo">🇯🇵 Tokyo</option>
                 <option value="Australia/Sydney">🇦🇺 Sydney</option>
                 <option value="UTC">🌍 UTC</option>
-            </select>
+            </x-select>
             @error('timezone') <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span> @enderror
         </div>
 

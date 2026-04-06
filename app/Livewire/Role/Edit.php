@@ -46,9 +46,9 @@ class Edit extends Component
 
     public function update()
     {
-        $this->form->validate([
-            'name' => 'required|string|unique:roles,name,' . $this->form->role->id,
-            'permissions' => 'array',
+        $this->validate([
+            'form.name' => 'required|string|unique:roles,name,' . $this->form->role->id,
+            'form.permissions' => 'array',
         ]);
 
         $this->form->role->update(['name' => $this->form->name]);

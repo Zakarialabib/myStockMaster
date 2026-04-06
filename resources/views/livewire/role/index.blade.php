@@ -49,7 +49,7 @@
                         <x-table.td>
                             <div class="inline-flex space-x-2">
                                 @can('role_edit')
-                                    <x-button variant="primary" size="xs" wire:click="$dispatch('editModal', {{ $role->id }} )" type="button"
+                                    <x-button variant="primary" size="xs" wire:click="$dispatch('editModal', { id: {{ $role->id }} } )" type="button"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>
                                     </x-button>

@@ -56,7 +56,7 @@ class Edit extends Component
     public $status;
 
     #[Validate('required|string|max:50')]
-    public string $payment_method;
+    public ?string $payment_method = null;
 
     #[Validate('nullable|string|max:1000')]
     public $note;

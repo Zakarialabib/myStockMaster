@@ -29,12 +29,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Product') }}</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="productId">
+                            <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model.live="productId">
                                 <option value="">{{ __('Select Product') }}</option>
                                 @foreach($products as $product)
                                     <option value="{{ $product->id }}">{{ $product->name }} ({{ $product->code }})</option>
                                 @endforeach
-                            </select>
+                            </x-select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('Date From') }}</label>
@@ -186,14 +186,14 @@
                             <!-- Add Comparison Product -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div class="md:col-span-2">
-                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model="newComparisonProduct">
+                                    <x-select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" wire:model="newComparisonProduct">
                                         <option value="">{{ __('Select product to compare') }}</option>
                                         @foreach($products as $product)
                                             @if($product->id != $productId && !in_array($product->id, $comparisonProducts))
                                                 <option value="{{ $product->id }}">{{ $product->name }} ({{ $product->code }})</option>
                                             @endif
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div>
                                     <button type="button" class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50" wire:click="addComparisonProduct" @if(!$newComparisonProduct) disabled @endif>
