@@ -7,9 +7,11 @@ namespace App\Providers;
 use App\Models\Language;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use App\Models\Setting;
 use App\Observers\PurchaseObserver;
 use App\Observers\SaleObserver;
+use App\Observers\SalePaymentObserver;
 use App\Observers\SettingsObserver;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         Setting::observe(SettingsObserver::class);
         Sale::observe(SaleObserver::class);
         Purchase::observe(PurchaseObserver::class);
+        SalePayment::observe(SalePaymentObserver::class);
 
         JsonResource::withoutWrapping();
 

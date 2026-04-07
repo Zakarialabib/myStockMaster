@@ -655,6 +655,19 @@
                                     </div>
                                     <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                         <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ __('Purchase Created') }}</h4>
+                                            <p class="text-sm text-gray-500">{{ __('Send a notification when a new purchase is completed.') }}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.purchase_created" value="mail" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
                                             <h4 class="font-medium text-gray-900 dark:text-white">{{ __('Payment Received') }}</h4>
                                             <p class="text-sm text-gray-500">{{ __('Send a notification when a payment is received.') }}</p>
                                         </div>
