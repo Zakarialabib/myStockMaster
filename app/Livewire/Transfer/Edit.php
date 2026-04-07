@@ -30,7 +30,7 @@ class Edit extends Component
 
     public function mount(int|string $id): void
     {
-        $this->transfer = Transfer::with('transferDetails', 'transferDetails.product')
+        $this->transfer = Transfer::query()->with('transferDetails', 'transferDetails.product')
             ->where('id', $id)->first();
 
         $this->form->date = $this->transfer->date;
@@ -46,7 +46,7 @@ class Edit extends Component
         $this->form->document = $this->transfer->document;
         $this->form->user_id = $this->transfer->user_id;
 
-        $this->products = $this->transfer->transferDetails->map(fn($detail) => [
+        $this->products = $this->transfer->transferDetails->map(fn ($detail) => [
             'id' => $detail->product_id,
             'name' => $detail->product->name,
             'code' => $detail->product->code,

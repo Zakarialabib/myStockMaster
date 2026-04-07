@@ -17,6 +17,7 @@ class Edit extends Component
 {
     use WithAlert;
     use WithFileUploads;
+
     public bool $editModal = false;
 
     public Brand $brand;

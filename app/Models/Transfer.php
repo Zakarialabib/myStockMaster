@@ -9,6 +9,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string                          $id
@@ -94,7 +95,7 @@ class Transfer extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function fromWarehouse(): BelongsTo
     {
@@ -105,7 +106,7 @@ class Transfer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function toWarehouse(): BelongsTo
     {
@@ -116,7 +117,7 @@ class Transfer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -126,7 +127,7 @@ class Transfer extends Model
         );
     }
 
-    public function transferDetails()
+    public function transferDetails(): HasMany
     {
         return $this->hasMany(TransferDetails::class);
     }

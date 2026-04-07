@@ -18,7 +18,7 @@ class SettingForm extends Form
 
     public ?string $invoice_template = null;
 
-    public mixed $image;
+    public ?string $image = '';
 
     public mixed $site_logo;
 

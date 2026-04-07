@@ -28,7 +28,7 @@ class Show extends Component
     #[On('showModal')]
     public function showModal(int|string $transfer): void
     {
-        $this->transfer = Transfer::with('transferDetails')
+        $this->transfer = Transfer::query()->with('transferDetails')
             ->where('id', $transfer)->first();
 
         $this->showModal = true;

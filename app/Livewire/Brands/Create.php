@@ -16,6 +16,7 @@ class Create extends Component
 {
     use WithAlert;
     use WithFileUploads;
+
     public bool $createModal = false;
 
     public BrandForm $form;

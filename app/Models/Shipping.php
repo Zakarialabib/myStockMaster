@@ -8,10 +8,11 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property int                             $id
- * @property int                             $is_pickup
+ * @property bool|int                        $is_pickup
  * @property string                          $title
  * @property string|null                     $subtitle
  * @property float                           $cost
@@ -74,7 +75,7 @@ class Shipping extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

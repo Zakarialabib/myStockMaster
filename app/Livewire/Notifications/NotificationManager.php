@@ -22,15 +22,15 @@ class NotificationManager extends Component
     use WithPagination;
 
     #[Url(except: 'all')]
-    public $filterType = 'all';
+    public string $filterType = 'all';
 
     #[Url(except: 'all')]
-    public $filterRead = 'all';
+    public string $filterRead = 'all';
 
     #[Url(except: '')]
-    public $searchTerm = '';
+    public string $searchTerm = '';
 
-    public $selectedNotifications = [];
+    public array $selectedNotifications = [];
 
     public bool $selectAll = false;
 

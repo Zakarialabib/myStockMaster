@@ -16,6 +16,11 @@
                     <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="form.name" />
                     <x-input-error :messages="$errors->get('form.name')" for="form.name" class="mt-2" />
                 </div>
+                    <div class="w-full px-3 mb-4">
+                    <x-label for="origin" :value="__('Origin')" />
+                    <x-input id="origin" class="block mt-1 w-full" type="text" name="origin" wire:model="form.origin" />
+                    <x-input-error :messages="$errors->get('form.origin')" for="form.origin" class="mt-2" />
+                </div>
                 <div class="w-full px-3 mb-4">
                     <x-label for="description" :value="__('Description')" />
                     <textarea id="description" class="block mt-1 w-full" type="text" name="description" wire:model="form.description"></textarea>

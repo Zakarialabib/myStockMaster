@@ -14,7 +14,7 @@
                 </div>
                 <div class="flex flex-row">
                     <div class="w-full px-4">
-                        <x-table-responsive>
+                        <x-table>
                             <x-table.tr>
                                 <x-table.th>
                                     {{ __('Name') }}
@@ -39,7 +39,7 @@
                                     {!! $brand?->description !!}
                                 </x-table.td>
                             </x-table.tr>
-                        </x-table-responsive>
+                        </x-table>
                     </div>
                 </div>
             </div>

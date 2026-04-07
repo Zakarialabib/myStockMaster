@@ -29,7 +29,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('transfer_access'), 403);
 
-        $query = Transfer::with('transferDetails')
+        $query = Transfer::query()->with('transferDetails')
             ->advancedFilter([
                 's' => $this->search ?: null,
                 'order_column' => $this->sortBy,

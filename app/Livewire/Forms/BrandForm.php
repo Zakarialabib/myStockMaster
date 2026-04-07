@@ -15,7 +15,7 @@ class BrandForm extends Form
 
     public ?string $description = null;
 
-    public mixed $image;
+    public ?string $image = '';
 
     public ?string $origin = null;
 }
