@@ -24,7 +24,7 @@ class MessagingTest extends TestCase
     public function component_loads_telegram_channel(): void
     {
         Livewire::test(Messaging::class)
-            ->assertSet('botToken', settings()->telegram_channel);
+            ->assertSet('botToken', settings()?->telegram_channel);
     }
 
     /** @test */

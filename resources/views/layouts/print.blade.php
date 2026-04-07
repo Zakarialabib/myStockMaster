@@ -41,7 +41,7 @@
 
         <!-- Print Footer -->
         <div class="mt-12 pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
-            <p>{{ settings()->footer_text ?? 'Thank you for your business!' }}</p>
+            <p>{{ settings()->invoice_footer_text ?? 'Thank you for your business!' }}</p>
             <p class="mt-1">{{ settings()->company_name ?? config('app.name') }} &copy; {{ date('Y') }}</p>
         </div>
     </div>

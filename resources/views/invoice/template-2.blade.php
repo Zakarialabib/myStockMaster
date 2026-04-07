@@ -47,6 +47,14 @@
 
     <div class="max-w-4xl mx-auto bg-white p-10 shadow-lg rounded-lg border border-gray-200">
         <!-- Header Section -->
+        @if(settings('invoice_header'))
+        <div class="mb-8">
+            <img src="{{ asset('storage/settings/' . settings('invoice_header')) }}" alt="Invoice Header" class="w-full h-auto rounded-t-lg">
+        </div>
+        <div class="mb-8">
+            <h1 class="text-4xl font-extrabold text-theme-primary uppercase tracking-wider">{{ $entity ?? 'INVOICE' }}</h1>
+        </div>
+        @else
         <div class="flex justify-between items-center border-b-4 border-theme-primary pb-8 mb-8">
             <div class="w-1/2">
                 @if(settings('site_logo'))
@@ -67,6 +75,7 @@
                 @endif
             </div>
         </div>
+        @endif
 
         <!-- Meta Information -->
         <div class="flex justify-between bg-theme-secondary p-6 rounded-lg mb-8">
@@ -180,7 +189,11 @@
         </div>
 
         <!-- Footer Notes -->
-        @if(settings('invoice_footer_text'))
+        @if(settings('invoice_footer'))
+        <div class="mt-8">
+            <img src="{{ asset('storage/settings/' . settings('invoice_footer')) }}" alt="Invoice Footer" class="w-full h-auto rounded-b-lg">
+        </div>
+        @elseif(settings('invoice_footer_text'))
         <div class="border-t border-gray-200 pt-8 mt-8 text-center">
             <p class="text-sm text-gray-500 italic">{{ settings('invoice_footer_text') }}</p>
             <p class="text-xs text-gray-400 mt-2">Thank you for your business!</p>

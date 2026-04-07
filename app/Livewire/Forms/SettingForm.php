@@ -111,11 +111,11 @@ class SettingForm extends Form
 
     public ?string $whatsapp_custom_message = null;
 
-    public ?string $notification_email = null;
-
-    public ?string $footer_text = null;
-
     public bool $is_ecommerce_active = false;
+
+    public ?string $receipt_printer_type = null;
+
+    public ?string $printer_id = null;
 
     public function setSetting(Setting $setting): void
     {
@@ -159,9 +159,9 @@ class SettingForm extends Form
         $this->seo_meta_description = $setting->seo_meta_description;
         $this->whatsapp_custom_message = $setting->whatsapp_custom_message;
         $this->invoice_template = $setting->invoice_template;
-        $this->notification_email = $setting->notification_email ?? null;
-        $this->footer_text = $setting->footer_text ?? null;
         $this->is_ecommerce_active = (bool) $setting->is_ecommerce_active;
+        $this->receipt_printer_type = $setting->receipt_printer_type;
+        $this->printer_id = $setting->printer_id;
     }
 
     public function update(): void
@@ -209,9 +209,9 @@ class SettingForm extends Form
             'seo_meta_description' => $this->seo_meta_description,
             'whatsapp_custom_message' => $this->whatsapp_custom_message,
             'invoice_template' => $this->invoice_template,
-            'notification_email' => $this->notification_email,
-            'footer_text' => $this->footer_text,
             'is_ecommerce_active' => $this->is_ecommerce_active,
+            'receipt_printer_type' => $this->receipt_printer_type,
+            'printer_id' => $this->printer_id,
         ]);
 
         $this->setting->save();

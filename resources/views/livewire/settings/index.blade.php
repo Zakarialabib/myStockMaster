@@ -220,6 +220,36 @@
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1">{{ __('Toggle Right-to-Left layout for Arabic, Hebrew, or Urdu languages.') }}</p>
                                     </div>
+
+                                    <div>
+                                        <div class="flex items-center space-x-2 mt-6">
+                                            <x-checkbox id="is_ecommerce_active" wire:model="form.is_ecommerce_active" />
+                                            <x-label for="is_ecommerce_active" :value="__('Enable E-commerce')" />
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">{{ __('Toggle e-commerce features for your application.') }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-6 border-t border-gray-200">
+                                    <h3 class="text-sm font-medium text-gray-900 mb-4">
+                                        {{ __('POS Configuration') }}
+                                    </h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <x-label for="receipt_printer_type" :value="__('Receipt Printer Type')" />
+                                            <x-select name="receipt_printer_type" id="receipt_printer_type"
+                                                wire:model.live="form.receipt_printer_type"
+                                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                                                <option value="browser">{{ __('Browser Based Printing') }}</option>
+                                                <option value="printer">{{ __('Configured Receipt Printer') }}</option>
+                                            </x-select>
+                                        </div>
+                                        <div>
+                                            <x-label for="printer_id" :value="__('Printer ID')" />
+                                            <x-input type="text" wire:model.live="form.printer_id" id="printer_id"
+                                                name="printer_id" class="mt-1 block w-full" />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="mt-6 pt-6 border-t border-gray-200">
@@ -278,6 +308,39 @@
                                                     <img src="{{ asset('assets/screens/' . $form->invoice_template . '.png') }}"
                                                         alt="Invoice Preview"
                                                         class="w-full h-auto rounded-lg border border-gray-200">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-8">
+                                            <h3 class="text-sm font-medium text-gray-900 mb-4">{{ __('Invoice Header & Footer Images') }}</h3>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <x-label for="invoice_header" :value="__('Invoice Header Image')" />
+                                                    <input type="file" wire:model="invoice_header" id="invoice_header" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                                                    <div wire:loading wire:target="invoice_header" class="mt-2 text-sm text-gray-500">{{ __('Uploading...') }}</div>
+                                                    @if ($invoice_header)
+                                                        <div class="mt-2">
+                                                            <img src="{{ $invoice_header->temporaryUrl() }}" class="w-full h-auto rounded border" alt="Header Preview">
+                                                        </div>
+                                                    @elseif (settings('invoice_header'))
+                                                        <div class="mt-2">
+                                                            <img src="{{ asset('storage/settings/'.settings('invoice_header')) }}" class="w-full h-auto rounded border" alt="Header Preview">
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <x-label for="invoice_footer" :value="__('Invoice Footer Image')" />
+                                                    <input type="file" wire:model="invoice_footer" id="invoice_footer" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                                                    <div wire:loading wire:target="invoice_footer" class="mt-2 text-sm text-gray-500">{{ __('Uploading...') }}</div>
+                                                    @if ($invoice_footer)
+                                                        <div class="mt-2">
+                                                            <img src="{{ $invoice_footer->temporaryUrl() }}" class="w-full h-auto rounded border" alt="Footer Preview">
+                                                        </div>
+                                                    @elseif (settings('invoice_footer'))
+                                                        <div class="mt-2">
+                                                            <img src="{{ asset('storage/settings/'.settings('invoice_footer')) }}" class="w-full h-auto rounded border" alt="Footer Preview">
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

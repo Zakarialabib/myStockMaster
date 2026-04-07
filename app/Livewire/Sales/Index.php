@@ -206,12 +206,19 @@ class Index extends Component
         // Add the country code to the beginning of the phone number.
         $phone = '+212' . $phone;
 
-        $greeting = __('Hello');
+        $customMessage = settings('whatsapp_custom_message');
 
-        $message = __('You have a due amount of');
-
-        // Construct the message text.
-        $message = sprintf('%s %s %s %s.', $greeting, $name, $message, $dueAmount);
+        if ($customMessage) {
+            $message = str_replace(
+                ['{name}', '{due_amount}'],
+                [$name, $dueAmount],
+                $customMessage
+            );
+        } else {
+            $greeting = __('Hello');
+            $messageText = __('You have a due amount of');
+            $message = sprintf('%s %s %s %s.', $greeting, $name, $messageText, $dueAmount);
+        }
 
         // Encode the message text for use in the URL.
         $message = urlencode($message);

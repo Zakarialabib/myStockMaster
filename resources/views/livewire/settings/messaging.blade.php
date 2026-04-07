@@ -43,6 +43,13 @@
                     </div>
                 @elseif($type == 'whatsapp')
                     <div class="mb-4">
+                        <label for="whatsapp_custom_message" class="block font-medium mb-1">{{ __('Custom Message') }}:</label>
+                        <textarea wire:model="whatsapp_custom_message" id="whatsapp_custom_message" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" rows="3"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ __('Use {name} for customer name and {due_amount} for due amount.') }}
+                        </p>
+                    </div>
+                    <div class="mb-4">
                         <label for="chat-id" class="block font-medium mb-1">{{ __('Phone') }}:</label>
                         <x-input type="text" wire:model="chatId" id="chat-id" />
                     </div>

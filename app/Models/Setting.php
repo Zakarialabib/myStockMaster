@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property int                             $id
- * @property string|null                     $company_logo
  * @property string                          $company_name
  * @property string|null                     $company_email
  * @property string|null                     $company_phone
@@ -79,7 +78,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereBodyTags($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyPhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyTax($value)
@@ -136,6 +134,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Setting extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $guarded = [];
 
     /**
@@ -143,7 +142,7 @@ class Setting extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -158,7 +157,7 @@ class Setting extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, $this>
+     * @return BelongsTo<Currency, $this>
      */
     public function currency(): BelongsTo
     {

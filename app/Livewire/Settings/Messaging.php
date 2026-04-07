@@ -32,6 +32,8 @@ class Messaging extends Component
 
     public ?int $product_id = null;
 
+    public ?string $whatsapp_custom_message = null;
+
     public ?string $selectedProduct = null;
 
     public bool $openTemplate = false;
@@ -42,7 +44,14 @@ class Messaging extends Component
 
     public function mount(): void
     {
-        $this->botToken = settings()->telegram_channel;
+        $this->botToken = settings()?->telegram_channel;
+        $this->whatsapp_custom_message = settings()?->whatsapp_custom_message;
+    }
+
+    public function updatedWhatsappCustomMessage(): void
+    {
+        \App\Models\Setting::set('whatsapp_custom_message', $this->whatsapp_custom_message);
+        $this->alert('success', __('Settings updated successfully!'));
     }
 
     #[Computed]

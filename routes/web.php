@@ -67,7 +67,6 @@ use App\Livewire\Sales\Edit as EditSale;
 use App\Livewire\Sales\Index as SalesIndex;
 use App\Livewire\Sales\Invoice as SaleInvoice;
 use App\Livewire\Settings\Index as SettingsIndex;
-use App\Livewire\Settings\InvoiceTheme;
 use App\Livewire\Shipping\Index as ShippingIndex;
 use App\Livewire\Suppliers\Details as SupplierDetails;
 use App\Livewire\Suppliers\Index as SuppliersIndex;
@@ -313,9 +312,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
     // General Settings
     Route::livewire('/settings', SettingsIndex::class)->name('settings.index');
-
-    // Invoices Theme
-    Route::livewire('/invoices-theme', InvoiceTheme::class)->name('invoices.index');
 
     // Backup
     Route::livewire('/backup', BackupIndex::class)->name('backup.index');
