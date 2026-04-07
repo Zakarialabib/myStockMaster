@@ -46,7 +46,7 @@ if (! function_exists('format_currency')) {
 // formatPercentage --> Number::percentage(25) // 25%
 
 if (! function_exists('format_percentage')) {
-    function format_percentage($value, $decimals = 2)
+    function format_percentage(int|float $value, int $decimals = 2)
     {
         return Number::percentage($value, $decimals);
     }
@@ -92,7 +92,7 @@ if (! function_exists('flag_image_url')) {
 if (! function_exists('format_date')) {
     function format_date($date, $format = true)
     {
-        if (empty($date)) {
+        if (blank($date)) {
             return '';
         }
 
@@ -107,21 +107,23 @@ if (! function_exists('format_date')) {
             return $date->format($date_format);
         }
 
-        return date($date_format, strtotime($date));
+        return date($date_format, strtotime((string) $date));
     }
 }
 
 if (! function_exists('make_reference_id')) {
-    function make_reference_id($prefix, $number)
+    function make_reference_id(string $prefix, $number): string
     {
         return $prefix . '-' . str_pad((string) $number, 5, '0', STR_PAD_LEFT);
     }
 }
 
 if (! function_exists('array_merge_numeric_values')) {
-    function array_merge_numeric_values()
+    /**
+     * @return float[]|int[]|numeric-string[]
+     */
+    function array_merge_numeric_values(...$arrays): array
     {
-        $arrays = func_get_args();
         $merged = [];
 
         foreach ($arrays as $array) {
@@ -147,7 +149,7 @@ if (! function_exists('db_date_format')) {
      * Get the database date format string based on the current driver.
      * Supports MySQL (DATE_FORMAT) and SQLite (strftime).
      */
-    function db_date_format($column, $format)
+    function db_date_format($column, $format): string
     {
         $isSqlite = Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
 
@@ -159,9 +161,9 @@ if (! function_exists('db_date_format')) {
                 $format
             );
 
-            return "strftime('$sqliteFormat', $column)";
+            return sprintf("strftime('%s', %s)", $sqliteFormat, $column);
         }
 
-        return "DATE_FORMAT($column, '$format')";
+        return sprintf("DATE_FORMAT(%s, '%s')", $column, $format);
     }
 }

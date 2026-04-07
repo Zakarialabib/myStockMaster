@@ -14,7 +14,7 @@ trait HasAdvancedFilter
      *
      * @return mixed
      */
-    public function scopeAdvancedFilter($query, $data)
+    protected function scopeAdvancedFilter($query, $data)
     {
         return $this->processQuery($query, $data);
     }
@@ -29,7 +29,7 @@ trait HasAdvancedFilter
     {
         $data = $this->processGlobalSearch($data);
 
-        $v = validator()->make($data, [
+        $validator = validator()->make($data, [
             's' => 'sometimes|nullable|string',
             'order_column' => 'sometimes|required|in:' . $this->orderableColumns(),
             'order_direction' => 'sometimes|required|in:asc,desc',
@@ -44,29 +44,24 @@ trait HasAdvancedFilter
             'f.*.query_2' => 'required_if:f.*.operator,between,not_between',
         ]);
 
-        if ($v->fails()) {
-            throw new ValidationException($v);
-        }
+        throw_if($validator->fails(), ValidationException::class, $validator);
 
-        $data = $v->validated();
+        $data = $validator->validated();
 
         return (new FilterQueryBuilder)->apply($query, $data);
     }
 
-    /** @return string */
-    protected function orderableColumns()
+    protected function orderableColumns(): string
     {
         return implode(',', $this->orderable);
     }
 
-    /** @return string */
-    protected function whiteListColumns()
+    protected function whiteListColumns(): string
     {
         return implode(',', $this->filterable);
     }
 
-    /** @return string */
-    protected function allowedOperators()
+    protected function allowedOperators(): string
     {
         return implode(',', [
             'contains',
@@ -75,10 +70,8 @@ trait HasAdvancedFilter
 
     /**
      * @param mixed $data
-     *
-     * @return mixed
      */
-    protected function processGlobalSearch($data)
+    protected function processGlobalSearch(array $data): array
     {
         if (isset($data['f']) || ! isset($data['s'])) {
             return $data;
@@ -86,13 +79,11 @@ trait HasAdvancedFilter
 
         $data['filter_match'] = 'or';
 
-        $data['f'] = array_map(function ($column) use ($data) {
-            return [
-                'column' => $column,
-                'operator' => 'contains',
-                'query_1' => $data['s'],
-            ];
-        }, $this->filterable);
+        $data['f'] = array_map(fn($column) => [
+            'column' => $column,
+            'operator' => 'contains',
+            'query_1' => $data['s'],
+        ], $this->filterable);
 
         return $data;
     }

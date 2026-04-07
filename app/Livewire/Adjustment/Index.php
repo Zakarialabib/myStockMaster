@@ -21,17 +21,17 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
     /** @var mixed */
-    public $adjustment;
+    public mixed $adjustment;
 
-    public $model = Adjustment::class;
+    public string $model = Adjustment::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('adjustment_access'), 403);
 
@@ -51,14 +51,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('adjustment_delete'), 403);
 
-        Adjustment::whereIn('id', $this->selected)->delete();
+        Adjustment::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
 
         $this->alert('success', __('Adjustment deleted successfully.'));
     }
 
-    public function deleteModal($adjustment): void
+    public function deleteModal(int|string $adjustment): void
     {
         $confirmationMessage = __('Are you sure you want to delete this adjustment?');
 
@@ -78,7 +78,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('adjustment_delete'), 403);
 
-        $adjustment = Adjustment::findOrFail($this->adjustment);
+        $adjustment = Adjustment::query()->findOrFail($this->adjustment);
         $adjustment->delete();
 
         $this->alert('success', __('Adjustment deleted successfully!'));

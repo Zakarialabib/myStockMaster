@@ -14,7 +14,7 @@ class ProductService
     public function create(array $data): Product
     {
         $slug = Str::slug($data['name']);
-        $code = $data['code'] ?? Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
+        $code = $data['code'] ?? \Illuminate\Support\Facades\Date::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
 
         $imageName = null;
         if (isset($data['image']) && is_object($data['image'])) {
@@ -23,7 +23,7 @@ class ProductService
         }
 
         $galleryData = null;
-        if (isset($data['gallery']) && is_array($data['gallery']) && count($data['gallery']) > 0) {
+        if (isset($data['gallery']) && is_array($data['gallery']) && $data['gallery'] !== []) {
             $gallery = [];
             foreach ($data['gallery'] as $value) {
                 if (is_object($value)) {
@@ -34,6 +34,7 @@ class ProductService
                     $gallery[] = $value;
                 }
             }
+
             $galleryData = json_encode($gallery);
         }
 
@@ -42,7 +43,7 @@ class ProductService
             $description = $data['description'];
         }
 
-        $product = Product::create([
+        $product = Product::query()->create([
             'name' => $data['name'],
             'code' => $code,
             'barcode_symbology' => $data['barcode_symbology'] ?? 'C128',
@@ -66,7 +67,7 @@ class ProductService
         ]);
 
         if (isset($data['productWarehouse']) && isset($data['warehouse_id'])) {
-            ProductWarehouse::create([
+            ProductWarehouse::query()->create([
                 'product_id' => $product->id,
                 'warehouse_id' => $data['warehouse_id'],
                 'price' => $data['price'] ?? 0,
@@ -96,8 +97,8 @@ class ProductService
         }
 
         $code = $data['code'] ?? $product->code;
-        if (empty($code)) {
-            $code = Carbon::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
+        if (blank($code)) {
+            $code = \Illuminate\Support\Facades\Date::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
         }
 
         $imageName = $product->image;
@@ -109,7 +110,7 @@ class ProductService
         }
 
         $galleryData = $product->gallery;
-        if (isset($data['gallery']) && is_array($data['gallery']) && count($data['gallery']) > 0) {
+        if (isset($data['gallery']) && is_array($data['gallery']) && $data['gallery'] !== []) {
             $gallery = [];
             foreach ($data['gallery'] as $value) {
                 if (is_object($value)) {
@@ -120,8 +121,9 @@ class ProductService
                     $gallery[] = $value;
                 }
             }
+
             $galleryData = json_encode($gallery, JSON_THROW_ON_ERROR);
-        } elseif (array_key_exists('gallery', $data) && empty($data['gallery'])) {
+        } elseif (array_key_exists('gallery', $data) && blank($data['gallery'])) {
             $galleryData = null;
         }
 

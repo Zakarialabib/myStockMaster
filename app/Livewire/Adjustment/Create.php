@@ -26,15 +26,15 @@ class Create extends Component
 
     public AdjustmentForm $form;
 
-    public $quantities;
+    public mixed $quantities;
 
-    public $types;
+    public mixed $types;
 
-    public $adjustment;
+    public mixed $adjustment;
 
-    public $check_quantity;
+    public mixed $check_quantity;
 
-    public $quantity;
+    public mixed $quantity;
 
     #[Validate([
         'products.*.quantities' => 'required|integer|min:1',
@@ -54,12 +54,12 @@ class Create extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.adjustment.create');
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);
@@ -93,13 +93,13 @@ class Create extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected($productId, $warehouseId = null): void
+    public function productSelected(mixed $productId, mixed $warehouseId = null): void
     {
-        $product = Product::find($productId);
+        $product = Product::query()->find($productId);
 
         switch ($this->hasAdjustments) {
             case true:
-                if (in_array($product, array_map(static fn ($adjustment) => $adjustment['product'], $this->products))) {
+                if (in_array($product, array_map(static fn (array $adjustment) => $adjustment['product'], $this->products))) {
                     $this->alert('error', __('Product added succesfully'));
 
                     return;
@@ -122,7 +122,7 @@ class Create extends Component
 
         // add default quantities and types to the product array
 
-        $productWarehouse = ProductWarehouse::where('product_id', $productId)
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
             ->where('warehouse_id', $this->form->warehouse_id)
             ->first();
 
@@ -147,22 +147,22 @@ class Create extends Component
         $this->updateQuantityAndCheckQuantity($product->id, $productWarehouse->qty);
     }
 
-    private function updateQuantityAndCheckQuantity($productId, $quantity): void
+    private function updateQuantityAndCheckQuantity(mixed $productId, mixed $quantity): void
     {
         $this->check_quantity[$productId] = $quantity;
         $this->quantity[$productId] = 1;
     }
 
-    public function calculate($product): array
+    public function calculate(mixed $product): array
     {
-        $productWarehouse = ProductWarehouse::where('product_id', $product->id)
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $product->id)
             ->where('warehouse_id', $this->form->warehouse_id)
             ->first();
 
         return $this->calculatePrices($product, $productWarehouse);
     }
 
-    private function calculatePrices($product, $productWarehouse)
+    private function calculatePrices(mixed $product, mixed $productWarehouse): array
     {
         $price = $productWarehouse->price;
         $unit_price = $price;
@@ -183,7 +183,7 @@ class Create extends Component
         return ['price' => $price, 'unit_price' => $unit_price, 'product_tax' => $product_tax, 'sub_total' => $sub_total];
     }
 
-    public function removeProduct($key): void
+    public function removeProduct(int|string $key): void
     {
         unset($this->products[$key]);
     }

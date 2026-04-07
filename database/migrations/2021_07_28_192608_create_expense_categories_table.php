@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expense_categories', function (Blueprint $table) {
-            $table->id();
+        Schema::create('expense_categories', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('type')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->string('name');
+            $blueprint->text('description')->nullable();
+            $blueprint->string('type')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

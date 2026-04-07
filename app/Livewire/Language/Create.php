@@ -17,15 +17,15 @@ class Create extends Component
 
     public array $languages = [];
 
-    public $language;
+    public mixed $language;
 
     #[Validate('required|max:191')]
-    public $name;
+    public mixed $name;
 
     #[Validate('required')]
-    public $code;
+    public mixed $code;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
     #[On('createModal')]
     public function openCreateModal(): void
@@ -37,7 +37,7 @@ class Create extends Component
     {
         $this->validate();
 
-        Language::create([
+        Language::query()->create([
             'name' => $this->name,
             'code' => $this->code,
         ]);
@@ -51,7 +51,7 @@ class Create extends Component
         $this->createModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.language.create');
     }

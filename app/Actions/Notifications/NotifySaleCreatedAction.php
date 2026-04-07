@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Log;
  * Ensure customer contact information is validated before sending notifications.
  * Handle notification failures gracefully to avoid blocking sale creation.
  */
-final class NotifySaleCreatedAction
+final readonly class NotifySaleCreatedAction
 {
     public function __construct(
-        private readonly NotificationService $notificationService,
+        private NotificationService $notificationService,
     ) {}
 
     public function __invoke(Sale $sale): void
@@ -51,10 +51,10 @@ final class NotifySaleCreatedAction
                 'customer_email' => $sale->customer_email,
                 'customer_phone' => $sale->customer_phone,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send sale creation notifications', [
                 'order_id' => $sale->id,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }
@@ -65,18 +65,7 @@ final class NotifySaleCreatedAction
         if ($sale->customer && $sale->customer->email) {
             $this->notificationService->notifyCustomer(
                 $sale->customer,
-                'sale_created',
-                [
-                    'sale_id' => $sale->id,
-                    'total_amount' => $sale->total_amount,
-                    'items' => $sale->saleDetails->map(function ($detail) {
-                        return [
-                            'product_name' => $detail->product->name,
-                            'quantity' => $detail->quantity,
-                            'price' => $detail->price,
-                        ];
-                    })->toArray(),
-                ]
+                'sale_created'
             );
         }
 
@@ -92,7 +81,7 @@ final class NotifySaleCreatedAction
         if ($sale->customer && $sale->customer->phone) {
             $this->notificationService->sendSMS(
                 $sale->customer->phone,
-                "Your order #{$sale->id} for {$sale->total_amount} has been confirmed. Thank you!"
+                sprintf('Your order #%s for %s has been confirmed. Thank you!', $sale->id, $sale->total_amount)
             );
         }
     }
@@ -115,12 +104,5 @@ final class NotifySaleCreatedAction
 
         // TODO: Implement automated notification scheduling
         // This could involve setting up jobs or events for future notifications
-    }
-
-    private function isVIPSale(Sale $sale): bool
-    {
-        // Check if this is a VIP sale based on customer status or sale value
-        return $sale->total_amount >= 10000 || // Sales over $100
-               ($sale->customer_email && str_contains($sale->customer_email, 'vip'));
     }
 }

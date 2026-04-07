@@ -11,8 +11,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class BrandsImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
-    public function __construct() {}
-
     /**
      * @return Brand
      * @return \Illuminate\Database\Eloquent\Model|null

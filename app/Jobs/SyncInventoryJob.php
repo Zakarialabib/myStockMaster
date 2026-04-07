@@ -16,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncInventoryJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     public function __construct(
         public array $items,
@@ -33,9 +33,9 @@ class SyncInventoryJob implements ShouldQueue
             $price = $item['price'];
             $unitPrice = $item['unit_price'] ?? $item['price'];
 
-            $product = Product::findOrFail($productId);
+            $product = Product::query()->findOrFail($productId);
 
-            $productWarehouse = ProductWarehouse::firstOrNew([
+            $productWarehouse = ProductWarehouse::query()->firstOrNew([
                 'product_id' => $product->id,
                 'warehouse_id' => $this->warehouseId,
             ], [
@@ -56,12 +56,12 @@ class SyncInventoryJob implements ShouldQueue
 
             $productWarehouse->save();
 
-            Movement::create([
+            Movement::query()->create([
                 'type' => $this->type === 'sale' ? MovementType::SALE : MovementType::PURCHASE,
                 'quantity' => $quantity,
                 'price' => $price, // already in cents based on how it's passed
                 'date' => date('Y-m-d'),
-                'movable_type' => get_class($product),
+                'movable_type' => $product::class,
                 'movable_id' => $product->id,
                 'user_id' => $this->userId,
             ]);

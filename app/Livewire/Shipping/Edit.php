@@ -17,13 +17,13 @@ class Edit extends Component
 {
     use WithAlert;
 
-    public $shipping;
+    public mixed $shipping;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
-    public $langauges;
+    public mixed $langauges;
 
-    public $is_pickup = false;
+    public bool $is_pickup = false;
 
     #[Validate('required|max:255')]
     public string $title;
@@ -32,7 +32,7 @@ class Edit extends Component
     public string $subtitle;
 
     #[Validate('required|numeric')]
-    public $cost;
+    public mixed $cost;
 
     public function render(): View|Factory
     {
@@ -42,7 +42,7 @@ class Edit extends Component
     }
 
     #[On('editModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         // abort_if(Gate::denies('shipping_update'), 403);
 
@@ -50,7 +50,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->shipping = Shipping::findOrFail($id);
+        $this->shipping = Shipping::query()->findOrFail($id);
 
         $this->title = $this->shipping->title;
 

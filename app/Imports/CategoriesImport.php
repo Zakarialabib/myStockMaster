@@ -12,14 +12,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CategoriesImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
-    public function __construct() {}
-
-    public function uniqueBy()
+    public function uniqueBy(): string
     {
         return 'code';
     }
 
-    public function WithUpsertColumns()
+    public function WithUpsertColumns(): array
     {
         return ['code', 'name'];
     }

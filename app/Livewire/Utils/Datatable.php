@@ -15,16 +15,20 @@ trait Datatable
 
     public int $perPage = 25;
 
-    public array $orderable;
+    /** @var array<int, string> */
+    public array $orderable = [];
 
-    public array $filterable;
+    /** @var array<int, string> */
+    public array $filterable = [];
 
-    #[Url(keep: true, history: false)]
+    #[Url(history: false, keep: true)]
     public string $search = '';
 
+    /** @var array<int, mixed> */
     public array $selected = [];
 
-    public array $paginationOptions;
+    /** @var array<int, int> */
+    public array $paginationOptions = [];
 
     public bool $selectPage = false;
 
@@ -39,11 +43,11 @@ trait Datatable
         $this->sortBy = 'id';
         $this->sortDirection = 'desc';
         $this->paginationOptions = [25, 50, 100];
-        $this->orderable = (new $this->model)->orderable;
-        $this->filterable = (new $this->model)->filterable;
+        $this->orderable = (new $this->model)->orderable ?? [];
+        $this->filterable = (new $this->model)->filterable ?? [];
     }
 
-    public function sortingBy($field): void
+    public function sortingBy(string $field): void
     {
         if ($field !== $this->sortBy) {
             $this->sortDirection = 'asc';

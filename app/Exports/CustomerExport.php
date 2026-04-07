@@ -18,8 +18,6 @@ class CustomerExport implements FromQuery, WithHeadings, WithMapping
     /** @var mixed */
     protected $models;
 
-    public function __construct() {}
-
     public function query()
     {
         if ($this->models) {

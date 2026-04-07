@@ -21,11 +21,11 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $transfer;
+    public mixed $transfer;
 
-    public $model = Transfer::class;
+    public string $model = Transfer::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('transfer_access'), 403);
 
@@ -45,7 +45,7 @@ class Index extends Component
     {
         // abort_if(Gate::denies('transfer_delete'), 403);
 
-        Transfer::whereIn('id', $this->selected)->delete();
+        Transfer::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
 

@@ -35,7 +35,7 @@ class ConfirmPassword extends Component
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pages.auth.confirm-password');
     }

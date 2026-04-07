@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_groups', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('percentage');
-            $table->boolean('status')->default(true);
-            $table->timestamps();
+        Schema::create('customer_groups', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('name');
+            $blueprint->string('percentage');
+            $blueprint->boolean('status')->default(true);
+            $blueprint->timestamps();
         });
     }
 

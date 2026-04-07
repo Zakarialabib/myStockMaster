@@ -18,7 +18,7 @@ class Index extends Component
 {
     use WithAlert;
 
-    public $language;
+    public mixed $language;
 
     #[Computed]
     public function languages()
@@ -26,18 +26,18 @@ class Index extends Component
         return Language::query()->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('language_access'), 403);
 
         return view('livewire.language.index');
     }
 
-    public function onSetDefault($id): void
+    public function onSetDefault(mixed $id): void
     {
-        Language::where('is_default', '=', true)->update(['is_default' => false]);
+        Language::query()->where('is_default', '=', true)->update(['is_default' => false]);
 
-        $this->language = Language::findOrFail($id);
+        $this->language = Language::query()->findOrFail($id);
 
         $this->language->is_default = true;
 
@@ -46,9 +46,9 @@ class Index extends Component
         $this->alert('success', __('Language updated successfully!'));
     }
 
-    public function sync($id): void
+    public function sync(mixed $id): void
     {
-        $languages = Language::findOrFail($id);
+        $languages = Language::query()->findOrFail($id);
 
         Artisan::call('translatable:export', ['lang' => $languages->code]);
 

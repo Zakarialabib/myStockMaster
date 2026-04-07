@@ -45,7 +45,7 @@ class ResetPassword extends Component
                 'password_confirmation' => $this->password_confirmation,
                 'token' => $this->token,
             ],
-            function ($user) {
+            function ($user): void {
                 $user->forceFill([
                     'password' => Hash::make($this->password),
                     'remember_token' => Str::random(60),
@@ -66,7 +66,7 @@ class ResetPassword extends Component
         $this->redirectRoute('login', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pages.auth.reset-password');
     }

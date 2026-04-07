@@ -21,9 +21,9 @@ class DatabaseSync extends Component
 
     protected ?DatabaseSyncService $syncService = null;
 
-    public function boot(DatabaseSyncService $syncService): void
+    public function boot(DatabaseSyncService $databaseSyncService): void
     {
-        $this->syncService = $syncService;
+        $this->syncService = $databaseSyncService;
     }
 
     public function mount(): void
@@ -42,9 +42,9 @@ class DatabaseSync extends Component
     {
         try {
             $this->isOnline = $this->syncService->isOnlineAvailable();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->isOnline = false;
-            Log::error('Failed to check online status: ' . $e->getMessage());
+            Log::error('Failed to check online status: ' . $exception->getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ class DatabaseSync extends Component
         if ($rawLastSync instanceof Carbon) {
             $this->lastSync = $rawLastSync;
         } elseif (is_string($rawLastSync) && $rawLastSync !== '') {
-            $this->lastSync = Carbon::parse($rawLastSync);
+            $this->lastSync = \Illuminate\Support\Facades\Date::parse($rawLastSync);
         } else {
             $this->lastSync = null;
         }
@@ -98,13 +98,13 @@ class DatabaseSync extends Component
                     'message' => __('admin.database_sync.messages.sync_to_offline_failed'),
                 ]);
             }
-        } catch (Exception $e) {
-            $this->addToLog('error', 'Sync to offline failed: ' . $e->getMessage());
-            Log::error('Sync to offline failed', ['error' => $e->getMessage()]);
+        } catch (Exception $exception) {
+            $this->addToLog('error', 'Sync to offline failed: ' . $exception->getMessage());
+            Log::error('Sync to offline failed', ['error' => $exception->getMessage()]);
 
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
+                'message' => __('admin.database_sync.messages.sync_error', ['error' => $exception->getMessage()]),
             ]);
         }
     }
@@ -140,13 +140,13 @@ class DatabaseSync extends Component
                     'message' => __('admin.database_sync.messages.sync_to_online_failed'),
                 ]);
             }
-        } catch (Exception $e) {
-            $this->addToLog('error', 'Sync to online failed: ' . $e->getMessage());
-            Log::error('Sync to online failed', ['error' => $e->getMessage()]);
+        } catch (Exception $exception) {
+            $this->addToLog('error', 'Sync to online failed: ' . $exception->getMessage());
+            Log::error('Sync to online failed', ['error' => $exception->getMessage()]);
 
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
+                'message' => __('admin.database_sync.messages.sync_error', ['error' => $exception->getMessage()]),
             ]);
         }
     }
@@ -187,13 +187,13 @@ class DatabaseSync extends Component
             } else {
                 $this->addToLog('error', 'Phase 1: Failed to sync from online to offline');
             }
-        } catch (Exception $e) {
-            $this->addToLog('error', 'Bidirectional sync failed: ' . $e->getMessage());
-            Log::error('Bidirectional sync failed', ['error' => $e->getMessage()]);
+        } catch (Exception $exception) {
+            $this->addToLog('error', 'Bidirectional sync failed: ' . $exception->getMessage());
+            Log::error('Bidirectional sync failed', ['error' => $exception->getMessage()]);
 
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => __('admin.database_sync.messages.sync_error', ['error' => $e->getMessage()]),
+                'message' => __('admin.database_sync.messages.sync_error', ['error' => $exception->getMessage()]),
             ]);
         }
     }
@@ -216,7 +216,7 @@ class DatabaseSync extends Component
         $entry = [
             'type' => $type,
             'message' => $message,
-            'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
+            'timestamp' => \Illuminate\Support\Facades\Date::now()->format('Y-m-d H:i:s'),
         ];
 
         $this->syncLog[] = $entry;
@@ -231,7 +231,7 @@ class DatabaseSync extends Component
     /** Update last sync timestamp. */
     private function updateLastSync(): void
     {
-        $this->lastSync = Carbon::now();
+        $this->lastSync = \Illuminate\Support\Facades\Date::now();
         Cache::put('database_sync.last_sync', $this->lastSync->toDateTimeString(), now()->addDays(30));
     }
 

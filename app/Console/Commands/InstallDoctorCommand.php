@@ -26,7 +26,7 @@ class InstallDoctorCommand extends Command
     protected $description = 'Runs preflight checks to diagnose installation environment issues.';
 
     /** Execute the console command. */
-    public function handle()
+    public function handle(): int
     {
         $this->info('========================================');
         $this->info('   MyStockMaster Installation Doctor    ');
@@ -39,13 +39,13 @@ class InstallDoctorCommand extends Command
 
         $this->info('System Requirements:');
 
-        foreach ($stepManager->preflightResults as $key => $check) {
+        foreach ($stepManager->preflightResults as $check) {
             $status = $check['passed'] ? '<info>PASS</info>' : '<error>FAIL</error>';
-            $hint = isset($check['hint']) && ! $check['passed'] ? " ({$check['hint']})" : '';
+            $hint = isset($check['hint']) && ! $check['passed'] ? sprintf(' (%s)', $check['hint']) : '';
 
             // Format output with padding for better readability
-            $label = str_pad($check['label'], 30, '.');
-            $this->line("  {$label} {$status}{$hint}");
+            $label = str_pad((string) $check['label'], 30, '.');
+            $this->line(sprintf('  %s %s%s', $label, $status, $hint));
 
             if (! $check['passed']) {
                 $errors++;
@@ -58,9 +58,9 @@ class InstallDoctorCommand extends Command
         try {
             DB::connection()->getPdo();
             $this->line('  ' . str_pad('Configured Connection', 30, '.') . ' <info>PASS</info>');
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->line('  ' . str_pad('Configured Connection', 30, '.') . ' <error>FAIL</error>');
-            $this->error('  Exception: ' . $e->getMessage());
+            $this->error('  Exception: ' . $exception->getMessage());
             $errors++;
         }
 
@@ -69,9 +69,10 @@ class InstallDoctorCommand extends Command
         if ($errors === 0) {
             $this->info('Your environment is ready for installation!');
         } else {
-            $this->error("Found {$errors} issue(s) that need to be resolved before installing.");
+            $this->error(sprintf('Found %d issue(s) that need to be resolved before installing.', $errors));
             $this->line('Please fix these issues and run `php artisan install:doctor` again.');
         }
+
         $this->line('========================================');
 
         return $errors === 0 ? Command::SUCCESS : Command::FAILURE;

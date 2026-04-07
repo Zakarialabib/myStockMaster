@@ -15,14 +15,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_warehouse', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->index('user_warehouse_user_id')->constrained();
-            $table->foreignIdFor(Warehouse::class)->index('user_warehouse_warehouse_id')->constrained();
-            $table->boolean('is_default')->default(false);
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('user_warehouse', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(User::class)->index('user_warehouse_user_id')->constrained();
+            $blueprint->foreignIdFor(Warehouse::class)->index('user_warehouse_warehouse_id')->constrained();
+            $blueprint->boolean('is_default')->default(false);
+            $blueprint->boolean('status')->default(true);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

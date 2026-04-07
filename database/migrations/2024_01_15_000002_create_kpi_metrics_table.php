@@ -11,26 +11,26 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::create('kpi_metrics', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('metric_name'); // 'revenue', 'profit_margin', 'roi', 'break_even_point', etc.
-            $table->string('metric_type'); // 'revenue', 'profitability', 'efficiency', 'growth'
-            $table->decimal('value', 15, 4); // The calculated KPI value
-            $table->decimal('previous_value', 15, 4)->nullable(); // Previous period value for comparison
-            $table->string('unit')->nullable(); // 'currency', 'percentage', 'days', 'units', etc.
-            $table->date('period_start'); // Start date of the measurement period
-            $table->date('period_end'); // End date of the measurement period
-            $table->string('period_type'); // 'daily', 'weekly', 'monthly', 'quarterly', 'yearly'
-            $table->json('calculation_data')->nullable(); // Store raw data used for calculation
-            $table->json('metadata')->nullable(); // Additional context like filters applied
-            $table->timestamp('calculated_at');
-            $table->uuid('calculated_by')->nullable();
-            $table->timestamps();
+        Schema::create('kpi_metrics', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->string('metric_name'); // 'revenue', 'profit_margin', 'roi', 'break_even_point', etc.
+            $blueprint->string('metric_type'); // 'revenue', 'profitability', 'efficiency', 'growth'
+            $blueprint->decimal('value', 15, 4); // The calculated KPI value
+            $blueprint->decimal('previous_value', 15, 4)->nullable(); // Previous period value for comparison
+            $blueprint->string('unit')->nullable(); // 'currency', 'percentage', 'days', 'units', etc.
+            $blueprint->date('period_start'); // Start date of the measurement period
+            $blueprint->date('period_end'); // End date of the measurement period
+            $blueprint->string('period_type'); // 'daily', 'weekly', 'monthly', 'quarterly', 'yearly'
+            $blueprint->json('calculation_data')->nullable(); // Store raw data used for calculation
+            $blueprint->json('metadata')->nullable(); // Additional context like filters applied
+            $blueprint->timestamp('calculated_at');
+            $blueprint->uuid('calculated_by')->nullable();
+            $blueprint->timestamps();
 
-            $table->index(['metric_name', 'period_start', 'period_end']);
-            $table->index(['metric_type', 'period_start']);
-            $table->index(['period_type', 'calculated_at']);
-            $table->index('calculated_by');
+            $blueprint->index(['metric_name', 'period_start', 'period_end']);
+            $blueprint->index(['metric_type', 'period_start']);
+            $blueprint->index(['period_type', 'calculated_at']);
+            $blueprint->index('calculated_by');
         });
     }
 

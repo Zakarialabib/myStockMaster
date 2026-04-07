@@ -19,12 +19,11 @@ use Native\Laravel\Menu\Menu as NativeMenu;
 class DesktopServiceProvider extends ServiceProvider
 {
     /** Register services. */
+    #[\Override]
     public function register(): void
     {
         // Register desktop error handler as singleton
-        $this->app->singleton(DesktopErrorHandler::class, function ($app) {
-            return new DesktopErrorHandler;
-        });
+        $this->app->singleton(fn($app): \App\Native\Services\DesktopErrorHandler => new DesktopErrorHandler);
     }
 
     /** Bootstrap services. */
@@ -68,19 +67,19 @@ class DesktopServiceProvider extends ServiceProvider
     /** Configure desktop-specific events. */
     private function configureDesktopEvents(): void
     {
-        \Illuminate\Support\Facades\Event::listen('native.sync.online', function () {
+        \Illuminate\Support\Facades\Event::listen('native.sync.online', function (): void {
             $this->syncWithOnline();
         });
 
-        \Illuminate\Support\Facades\Event::listen('native.toggle.offline', function () {
+        \Illuminate\Support\Facades\Event::listen('native.toggle.offline', function (): void {
             $this->toggleOfflineMode();
         });
 
-        \Illuminate\Support\Facades\Event::listen('native.cache.clear', function () {
+        \Illuminate\Support\Facades\Event::listen('native.cache.clear', function (): void {
             $this->clearCache();
         });
 
-        \Illuminate\Support\Facades\Event::listen('native.check.updates', function () {
+        \Illuminate\Support\Facades\Event::listen('native.check.updates', function (): void {
             $this->checkForUpdates();
         });
     }
@@ -89,19 +88,12 @@ class DesktopServiceProvider extends ServiceProvider
     private function syncWithOnline(): void
     {
         try {
-            $syncService = app(DatabaseSyncService::class);
+            $syncService = resolve(DatabaseSyncService::class);
             $syncService->syncToOnline();
             $this->showNotification('Sync Complete', 'Data synchronized with online database successfully.');
-        } catch (Exception $e) {
-            $this->showNotification('Sync Failed', 'Failed to sync with online database: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            $this->showNotification('Sync Failed', 'Failed to sync with online database: ' . $exception->getMessage());
         }
-    }
-
-    /** Show database sync dialog. */
-    private function showDatabaseSyncDialog(): void
-    {
-        // This would open a dialog for database sync options
-        redirect()->route('admin.database-sync');
     }
 
     /** Toggle offline mode. */
@@ -119,10 +111,10 @@ class DesktopServiceProvider extends ServiceProvider
         );
 
         // Reload window to apply database connection change
-        if (class_exists('\Native\Desktop\Facades\Window')) {
+        if (class_exists(\Native\Desktop\Facades\Window::class)) {
             try {
                 // Short delay to allow notification to show
-                sleep(1);
+                \Illuminate\Support\Sleep::sleep(1);
                 Window::current()->reload();
             } catch (Exception $e) {
                 Log::warning('Failed to reload window after mode toggle: ' . $e->getMessage());
@@ -138,23 +130,9 @@ class DesktopServiceProvider extends ServiceProvider
             Artisan::call('config:clear');
             Artisan::call('view:clear');
             $this->showNotification('Cache Cleared', 'Application cache cleared successfully.');
-        } catch (Exception $e) {
-            $this->showNotification('Cache Clear Failed', 'Failed to clear cache: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            $this->showNotification('Cache Clear Failed', 'Failed to clear cache: ' . $exception->getMessage());
         }
-    }
-
-    /** Show about dialog. */
-    private function showAboutDialog(): void
-    {
-        // This would show an about dialog with app information
-        redirect()->route('about');
-    }
-
-    /** Report an issue. */
-    private function reportIssue(): void
-    {
-        // This would open issue reporting functionality
-        redirect()->route('support.report-issue');
     }
 
     /** Check for application updates. */
@@ -164,8 +142,8 @@ class DesktopServiceProvider extends ServiceProvider
             // Implementation for checking updates
             $this->showNotification('Update Check', 'Checking for updates...');
             // This would typically involve calling an update service
-        } catch (Exception $e) {
-            $this->showNotification('Update Check Failed', 'Failed to check for updates: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            $this->showNotification('Update Check Failed', 'Failed to check for updates: ' . $exception->getMessage());
         }
     }
 
@@ -173,14 +151,14 @@ class DesktopServiceProvider extends ServiceProvider
     private function showNotification(string $title, string $message): void
     {
         try {
-            if (class_exists('\Native\Desktop\Facades\Notification')) {
+            if (class_exists(\Native\Desktop\Facades\Notification::class)) {
                 \Native\Desktop\Facades\Notification::title($title)
                     ->message($message)
                     ->show();
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Fallback to logging if notifications are not available
-            Log::info("Desktop Notification: {$title} - {$message}");
+            Log::info(sprintf('Desktop Notification: %s - %s', $title, $message));
         }
     }
 
@@ -188,37 +166,37 @@ class DesktopServiceProvider extends ServiceProvider
     private function setupDesktopErrorHandling(): void
     {
         // Register custom error handler
-        set_error_handler(function ($severity, $message, $file, $line) {
+        set_error_handler(function (int $severity, string $message, string $file, int $line): false {
             $isLivewireDiscoveryIncludeWarning = $severity === E_WARNING
-                && str_contains((string) $message, 'Failed opening')
-                && str_contains((string) $file, 'vendor\\composer\\ClassLoader.php')
-                && (str_contains((string) $message, 'app/Livewire/')
-                    || str_contains((string) $message, 'app\\Livewire\\'));
+                && str_contains($message, 'Failed opening')
+                && str_contains($file, 'vendor\\composer\\ClassLoader.php')
+                && (str_contains($message, 'app/Livewire/')
+                    || str_contains($message, 'app\\Livewire\\'));
 
             $isDomDocumentWarning = $severity === E_WARNING
-                && str_contains((string) $message, 'DOMDocument::loadHTML()');
+                && str_contains($message, 'DOMDocument::loadHTML()');
 
             if ($isLivewireDiscoveryIncludeWarning || $isDomDocumentWarning) {
                 return false;
             }
 
-            $errorHandler = app(DesktopErrorHandler::class);
-            $errorHandler->handlePhpError($severity, $message, $file, $line);
+            $desktopErrorHandler = resolve(DesktopErrorHandler::class);
+            $desktopErrorHandler->handlePhpError($severity, $message, $file, $line);
 
             // Continue with default error handling
             return false;
         });
 
         // Register exception handler
-        set_exception_handler(function ($exception) {
-            $errorHandler = app(DesktopErrorHandler::class);
-            $errorHandler->handleException($exception);
+        set_exception_handler(function (\Throwable $throwable): void {
+            $desktopErrorHandler = resolve(DesktopErrorHandler::class);
+            $desktopErrorHandler->handleException($throwable);
 
             Log::error('Uncaught exception in desktop mode', [
-                'exception' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'trace' => $exception->getTraceAsString(),
+                'exception' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTraceAsString(),
             ]);
         });
     }

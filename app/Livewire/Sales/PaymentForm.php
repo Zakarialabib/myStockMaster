@@ -20,39 +20,39 @@ class PaymentForm extends Component
 {
     use WithAlert;
 
-    public $paymentModal = false;
+    public bool $paymentModal = false;
 
     public Sale $sale;
 
-    public $sale_id;
+    public mixed $sale_id;
 
-    // public $reference;
+    // public mixed $reference;
 
     #[Validate('required|date')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('required|numeric')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('required|string|max:100')]
-    public $payment_method;
+    public mixed $payment_method;
 
     #[Validate('nullable|numeric')]
-    public $total_amount;
+    public mixed $total_amount;
 
     #[Validate('nullable|numeric')]
-    public $due_amount;
+    public mixed $due_amount;
 
     #[Validate('nullable|numeric')]
-    public $paid_amount;
+    public mixed $paid_amount;
 
     #[Validate('nullable|string|max:1000')]
-    public $note;
+    public mixed $note;
 
     //  Payment modal
 
     #[On('paymentModal')]
-    public function paymentModal($id): void
+    public function paymentModal(mixed $id): void
     {
         // abort_if(Gate::denies('sale_access'), 403);
 
@@ -60,7 +60,7 @@ class PaymentForm extends Component
 
         $this->resetValidation();
 
-        $this->sale = Sale::findOrFail($id);
+        $this->sale = Sale::query()->findOrFail($id);
         $this->date = date('Y-m-d');
         $this->amount = $this->sale->due_amount;
         $this->payment_method = 'Cash';
@@ -73,7 +73,7 @@ class PaymentForm extends Component
         try {
             $this->validate();
 
-            SalePayment::create([
+            SalePayment::query()->create([
                 'date' => $this->date,
                 'amount' => $this->amount,
                 'note' => $this->note,
@@ -82,7 +82,7 @@ class PaymentForm extends Component
                 'user_id' => Auth::user()->id,
             ]);
 
-            $sale = Sale::findOrFail($this->sale_id);
+            $sale = Sale::query()->findOrFail($this->sale_id);
 
             $due_amount = $sale->due_amount - $this->amount;
 
@@ -114,7 +114,7 @@ class PaymentForm extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.sales.payment-form');
     }

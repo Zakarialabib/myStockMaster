@@ -36,10 +36,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdjustedProduct whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AdjustedProduct whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class AdjustedProduct extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -51,22 +52,31 @@ class AdjustedProduct extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Adjustment, $this>
+     */
     public function adjustment(): BelongsTo
     {
         return $this->belongsTo(Adjustment::class, 'adjustment_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id', 'id');

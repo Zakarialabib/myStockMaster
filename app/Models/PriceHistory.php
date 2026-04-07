@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PriceHistory whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PriceHistory whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class PriceHistory extends Model
 {
@@ -41,9 +41,9 @@ class PriceHistory extends Model
         'id', 'product_id', 'price', 'effective_date', 'expiration_date',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $fillable = [
         'product_id',

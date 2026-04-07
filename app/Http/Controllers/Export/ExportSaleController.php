@@ -13,9 +13,9 @@ class ExportSaleController extends Controller
 {
     public function __invoke(int|string $id): Response
     {
-        $sale = Sale::where('id', $id)->firstOrFail();
+        $sale = Sale::query()->where('id', $id)->firstOrFail();
 
-        $customer = Customer::where('id', $sale->customer->id)->firstOrFail();
+        $customer = Customer::query()->where('id', $sale->customer->id)->firstOrFail();
 
         $data = [
             'sale' => $sale,

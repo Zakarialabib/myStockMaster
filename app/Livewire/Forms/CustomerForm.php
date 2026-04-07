@@ -18,7 +18,7 @@ class CustomerForm extends Form
 
     #[Validate('required', message: 'The phone field is required')]
     #[Validate('numeric', message: 'The phone field must be a numeric value.')]
-    public $phone;
+    public mixed $phone;
 
     public ?string $city = null;
 

@@ -15,23 +15,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Sale::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->nullOnDelete();
-            $table->string('name');
-            $table->string('code');
-            $table->integer('quantity');
-            $table->decimal('price', 8, 2);
-            $table->decimal('unit_price', 8, 2);
-            $table->decimal('sub_total', 15, 2);
-            $table->decimal('product_discount_amount', 15, 2);
-            $table->string('product_discount_type')->default('fixed');
-            $table->integer('product_tax_amount');
+        Schema::create('sale_details', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(Sale::class)->nullable()->constrained()->cascadeOnDelete();
+            $blueprint->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
+            $blueprint->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->constrained()->nullOnDelete();
+            $blueprint->string('name');
+            $blueprint->string('code');
+            $blueprint->integer('quantity');
+            $blueprint->decimal('price', 8, 2);
+            $blueprint->decimal('unit_price', 8, 2);
+            $blueprint->decimal('sub_total', 15, 2);
+            $blueprint->decimal('product_discount_amount', 15, 2);
+            $blueprint->string('product_discount_type')->default('fixed');
+            $blueprint->integer('product_tax_amount');
 
-            $table->timestamps();
+            $blueprint->timestamps();
         });
     }
 

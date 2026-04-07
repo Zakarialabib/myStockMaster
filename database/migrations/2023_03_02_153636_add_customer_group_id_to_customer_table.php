@@ -14,9 +14,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->after('tax_number', function ($table) {
-                $table->foreignIdFor(CustomerGroup::class)->nullable()->constrained()->cascadeOnDelete();
+        Schema::table('customers', function (Blueprint $blueprint): void {
+            $blueprint->after('tax_number', function ($table) use ($blueprint): void {
+                $blueprint->foreignIdFor(CustomerGroup::class)->nullable()->constrained()->cascadeOnDelete();
             });
         });
     }
@@ -26,8 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('customer_group_id');
+        Schema::table('customers', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn('customer_group_id');
         });
     }
 };

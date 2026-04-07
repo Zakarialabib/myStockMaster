@@ -47,39 +47,39 @@ class BreakEvenAnalysis extends Component
     #[Validate('numeric|min:0')]
     public float|int $targetProfit = 0;
 
-    public function mount()
+    public function mount(): void
     {
         $this->dateFrom = now()->subDays(90)->format('Y-m-d');
         $this->dateTo = now()->format('Y-m-d');
         $this->loadBreakEvenAnalysis();
     }
 
-    public function updatedDateFrom()
+    public function updatedDateFrom(): void
     {
         $this->validateOnly('dateFrom');
         $this->loadBreakEvenAnalysis();
     }
 
-    public function updatedDateTo()
+    public function updatedDateTo(): void
     {
         $this->validateOnly('dateTo');
         $this->loadBreakEvenAnalysis();
     }
 
-    public function updatedAnalysisType()
+    public function updatedAnalysisType(): void
     {
         $this->validateOnly('analysisType');
         $this->loadBreakEvenAnalysis();
     }
 
-    public function updatedSelectedProduct()
+    public function updatedSelectedProduct(): void
     {
         if ($this->analysisType === 'product') {
             $this->loadBreakEvenAnalysis();
         }
     }
 
-    public function updatedFixedCostAdjustment()
+    public function updatedFixedCostAdjustment(): void
     {
         $this->validateOnly('fixedCostAdjustment');
 
@@ -88,7 +88,7 @@ class BreakEvenAnalysis extends Component
         }
     }
 
-    public function updatedVariableCostAdjustment()
+    public function updatedVariableCostAdjustment(): void
     {
         $this->validateOnly('variableCostAdjustment');
 
@@ -97,7 +97,7 @@ class BreakEvenAnalysis extends Component
         }
     }
 
-    public function updatedPriceAdjustment()
+    public function updatedPriceAdjustment(): void
     {
         $this->validateOnly('priceAdjustment');
 
@@ -106,7 +106,7 @@ class BreakEvenAnalysis extends Component
         }
     }
 
-    public function updatedTargetProfit()
+    public function updatedTargetProfit(): void
     {
         $this->validateOnly('targetProfit');
 
@@ -115,12 +115,12 @@ class BreakEvenAnalysis extends Component
         }
     }
 
-    public function loadBreakEvenAnalysis()
+    public function loadBreakEvenAnalysis(): void
     {
 
         try {
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
             switch ($this->analysisType) {
                 case 'overall':
@@ -137,17 +137,17 @@ class BreakEvenAnalysis extends Component
 
                     break;
             }
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to load break-even analysis: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to load break-even analysis: ' . $exception->getMessage());
         }
     }
 
-    private function loadOverallBreakEven($dateFrom, $dateTo)
+    private function loadOverallBreakEven(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
     {
-        $breakEvenAction = new CalculateBreakEvenAction;
+        $calculateBreakEvenAction = new CalculateBreakEvenAction;
 
         // Get actual fixed costs for the period
-        $fixedCosts = Expense::whereBetween('date', [$dateFrom, $dateTo])
+        $fixedCosts = Expense::query()->whereBetween('date', [$dateFrom, $dateTo])
             ->whereIn('category', ['rent', 'salaries', 'utilities', 'insurance', 'equipment_lease'])
             ->select('category', 'amount')
             ->get()
@@ -155,13 +155,13 @@ class BreakEvenAnalysis extends Component
             ->map->sum('amount')
             ->toArray();
 
-        $this->breakEvenData = $breakEvenAction($fixedCosts, $dateTo);
+        $this->breakEvenData = $calculateBreakEvenAction($fixedCosts, $dateTo);
 
         // Add additional analysis
         $this->breakEvenData['analysis'] = $this->calculateBreakEven($dateFrom, $dateTo);
     }
 
-    private function loadProductBreakEven($dateFrom, $dateTo)
+    private function loadProductBreakEven(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
     {
         if (! $this->selectedProduct) {
             $this->breakEvenData = [];
@@ -169,15 +169,15 @@ class BreakEvenAnalysis extends Component
             return;
         }
 
-        $product = Product::findOrFail($this->selectedProduct);
+        $product = Product::query()->findOrFail($this->selectedProduct);
 
         // Calculate product-specific break-even
-        $productSales = SaleDetails::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+        $productSales = SaleDetails::query()->join('sales', 'sale_details.sale_id', '=', 'sales.id')
             ->where('sale_details.product_id', $this->selectedProduct)
             ->whereBetween('sales.date', [$dateFrom, $dateTo])
             ->sum('sale_details.quantity');
 
-        $productRevenue = SaleDetails::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+        $productRevenue = SaleDetails::query()->join('sales', 'sale_details.sale_id', '=', 'sales.id')
             ->where('sale_details.product_id', $this->selectedProduct)
             ->whereBetween('sales.date', [$dateFrom, $dateTo])
             ->sum(DB::raw('sale_details.price * sale_details.quantity'));
@@ -188,8 +188,8 @@ class BreakEvenAnalysis extends Component
         $contributionMarginRatio = $averageSellingPrice > 0 ? ($contributionMargin / $averageSellingPrice) * 100 : 0;
 
         // Allocate fixed costs (simplified - equal allocation)
-        $totalProducts = Product::count();
-        $totalFixedCosts = Expense::whereBetween('date', [$dateFrom, $dateTo])
+        $totalProducts = Product::query()->count();
+        $totalFixedCosts = Expense::query()->whereBetween('date', [$dateFrom, $dateTo])
             ->sum('amount');
 
         $allocatedFixedCosts = $totalProducts > 0 ? $totalFixedCosts / $totalProducts : 0;
@@ -214,10 +214,10 @@ class BreakEvenAnalysis extends Component
         ];
     }
 
-    private function calculateBreakEven($dateFrom, $dateTo)
+    private function calculateBreakEven(mixed $dateFrom, mixed $dateTo)
     {
-        return \Illuminate\Support\Facades\Cache::remember('break_even_' . $this->analysisType . '_' . $this->dateFrom . '_' . $this->dateTo, 3600, function () use ($dateFrom, $dateTo) {
-            $metrics = Sale::whereBetween('date', [$dateFrom, $dateTo])
+        return \Illuminate\Support\Facades\Cache::remember('break_even_' . $this->analysisType . '_' . $this->dateFrom . '_' . $this->dateTo, 3600, function () use ($dateFrom, $dateTo): array {
+            $metrics = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->selectRaw('COALESCE(SUM(total_amount), 0) as total_revenue, COUNT(*) as total_sales')
                 ->first();
 
@@ -247,9 +247,9 @@ class BreakEvenAnalysis extends Component
         });
     }
 
-    public function runScenarioAnalysis()
+    public function runScenarioAnalysis(): void
     {
-        if (empty($this->breakEvenData)) {
+        if ($this->breakEvenData === []) {
             return;
         }
 
@@ -291,7 +291,7 @@ class BreakEvenAnalysis extends Component
         ];
     }
 
-    public function resetScenario()
+    public function resetScenario(): void
     {
         $this->fixedCostAdjustment = 0;
         $this->variableCostAdjustment = 0;
@@ -310,7 +310,7 @@ class BreakEvenAnalysis extends Component
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ];
 
-            return response()->streamDownload(function () {
+            return response()->streamDownload(function (): void {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, ['Metric', 'Value']);
 
@@ -329,8 +329,8 @@ class BreakEvenAnalysis extends Component
                 fclose($file);
             }, $filename, $headers);
 
-        } catch (Exception $e) {
-            session()->flash('error', 'Error exporting data: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Error exporting data: ' . $exception->getMessage());
 
             return;
         }
@@ -339,11 +339,11 @@ class BreakEvenAnalysis extends Component
     #[Computed]
     public function chartData(): array
     {
-        if ($this->analysisType === 'scenario' && ! empty($this->scenarioAnalysis)) {
+        if ($this->analysisType === 'scenario' && $this->scenarioAnalysis !== []) {
             return $this->getScenarioChartData();
         }
 
-        if (empty($this->breakEvenData)) {
+        if ($this->breakEvenData === []) {
             return [];
         }
 
@@ -409,12 +409,12 @@ class BreakEvenAnalysis extends Component
     #[Computed]
     public function products()
     {
-        return Product::select('id', 'name', 'code')
+        return Product::query()->select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.finance.break-even-analysis');
     }

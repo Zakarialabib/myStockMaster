@@ -41,14 +41,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchasePayment whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class PurchasePayment extends Model
 {
-    protected $casts = [
-        'date' => 'date',
-    ];
-
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -61,31 +59,31 @@ class PurchasePayment extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Purchase, $this>
+     */
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($purchasePayment) {
+        static::creating(function ($purchasePayment): void {
             $prefix = settings()->purchasePayment_prefix;
 
-            $latestPurchasePayment = self::latest()->first();
+            $latestPurchasePayment = self::query()->latest()->first();
 
-            if ($latestPurchasePayment) {
-                $number = intval(substr($latestPurchasePayment->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestPurchasePayment ? intval(substr($latestPurchasePayment->reference, -3)) + 1 : 1;
 
             $purchasePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
@@ -94,10 +92,10 @@ class PurchasePayment extends Model
     /**
      * Get ajustement date.
      */
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
@@ -106,7 +104,7 @@ class PurchasePayment extends Model
      *
      * @return mixed
      */
-    public function scopeByPurchase($query)
+    protected function scopeByPurchase(mixed $query)
     {
         return $query->wherePurchaseId(request()->route('purchase_id'));
     }
@@ -114,8 +112,15 @@ class PurchasePayment extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
+    }
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }

@@ -27,19 +27,19 @@ class WarehouseFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->unique()->numberBetween(1, 1000),
-            'name' => $this->faker->company . ' Warehouse',
-            'city' => $this->faker->city,
-            'phone' => $this->faker->phoneNumber,
-            'email' => $this->faker->unique()->safeEmail,
-            'country' => $this->faker->country,
+            'id' => fake()->unique()->numberBetween(1, 1000),
+            'name' => fake()->company() . ' Warehouse',
+            'city' => fake()->city(),
+            'phone' => fake()->phoneNumber(),
+            'email' => fake()->unique()->safeEmail(),
+            'country' => fake()->country(),
         ];
     }
 
     /** Indicate that the warehouse is the main warehouse. */
     public function main(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'name' => 'Main Warehouse',
         ]);
     }

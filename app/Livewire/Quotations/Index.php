@@ -26,23 +26,23 @@ class Index extends Component
     use WithFileUploads;
     use WithModels;
 
-    public $quotation;
+    public mixed $quotation;
 
-    public $model = Quotation::class;
+    public string $model = Quotation::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
-        $query = Quotation::advancedFilter([
+        $query = Quotation::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $quotations = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.quotations.index', ['quotations' => $quotations]);
+        return view('livewire.quotations.index', ['quotations' => $lengthAwarePaginator]);
     }
 
     #[On('delete')]
@@ -51,11 +51,11 @@ class Index extends Component
         abort_if(Gate::denies($this->getGateDelete()), 403);
 
         try {
-            $quotation = Quotation::findOrFail($this->value);
+            $quotation = Quotation::query()->findOrFail($this->value);
             $quotationService->delete($quotation);
             $this->alert('success', __('Item deleted successfully.'));
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() === '23000') {
+        } catch (\Illuminate\Database\QueryException $queryException) {
+            if ($queryException->getCode() === '23000') {
                 $this->alert('error', __('Cannot delete this item because it has related records.'));
             } else {
                 $this->alert('error', __('An error occurred while deleting the item.'));
@@ -68,14 +68,15 @@ class Index extends Component
         abort_if(Gate::denies($this->getGateDelete()), 403);
 
         try {
-            $quotations = Quotation::whereIn('id', $this->selected)->get();
+            $quotations = Quotation::query()->whereIn('id', $this->selected)->get();
             foreach ($quotations as $quotation) {
                 $quotationService->delete($quotation);
             }
+
             $this->resetSelected();
             $this->alert('success', __('Items deleted successfully.'));
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() === '23000') {
+        } catch (\Illuminate\Database\QueryException $queryException) {
+            if ($queryException->getCode() === '23000') {
                 $this->alert('error', __('Some items cannot be deleted because they have related records.'));
             } else {
                 $this->alert('error', __('An error occurred while deleting the items.'));

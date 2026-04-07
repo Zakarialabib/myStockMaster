@@ -19,36 +19,36 @@ class Index extends Component
     use WithAlert;
 
     /** @var mixed */
-    public $customergroup;
+    public mixed $customergroup;
 
-    public $customer_group_id;
+    public mixed $customer_group_id;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $model = CustomerGroup::class;
+    public string $model = CustomerGroup::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer-group_access'), 403);
 
-        $query = CustomerGroup::advancedFilter([
+        $query = CustomerGroup::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $customergroups = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.customer-group.index', ['customergroups' => $customergroups]);
+        return view('livewire.customer-group.index', ['customergroups' => $lengthAwarePaginator]);
     }
 
-    public function openShowModal($id): void
+    public function openShowModal(mixed $id): void
     {
         abort_if(Gate::denies('customer-group_show'), 403);
 
-        $this->customergroup = CustomerGroup::where('id', $id)->get();
+        $this->customergroup = CustomerGroup::query()->where('id', $id)->get();
 
         $this->showModal = true;
     }
@@ -57,7 +57,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer-group_delete'), 403);
 
-        CustomerGroup::whereIn('id', $this->selected)->delete();
+        CustomerGroup::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

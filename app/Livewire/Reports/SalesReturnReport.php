@@ -49,14 +49,14 @@ class SalesReturnReport extends Component
     #[Computed]
     public function customers()
     {
-        return Customer::select(['id', 'name'])->get();
+        return Customer::query()->select(['id', 'name'])->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $sale_returns = SaleReturn::whereDate('date', '>=', $this->start_date)
+        $lengthAwarePaginator = SaleReturn::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_return_status, fn ($q) => $q->where('sale_return_status', $this->sale_return_status))
@@ -64,7 +64,7 @@ class SalesReturnReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.sales-return-report', [
-            'sale_returns' => $sale_returns,
+            'sale_returns' => $lengthAwarePaginator,
         ]);
     }
 

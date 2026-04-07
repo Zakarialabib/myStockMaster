@@ -24,27 +24,27 @@ class PaymentForm extends Component
 
     public Purchase $purchase;
 
-    public $purchase_id;
+    public mixed $purchase_id;
 
     #[Validate('required|date')]
     public string $date;
 
     #[Validate('required|numeric')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('required|string|max:255')]
     public string $payment_method;
 
-    public $due_amount;
+    public mixed $due_amount;
 
-    public $total_amount;
+    public mixed $total_amount;
 
-    public $paid_amount;
+    public mixed $paid_amount;
 
     #[Validate('nullable|string|max:1000')]
-    public $note;
+    public mixed $note;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.purchase.payment-form');
     }
@@ -52,7 +52,7 @@ class PaymentForm extends Component
     //  Payment modal
 
     #[On('paymentModal')]
-    public function openPaymentModal($id): void
+    public function openPaymentModal(mixed $id): void
     {
         // abort_if(Gate::denies('purchase payment'), 403);
 
@@ -60,7 +60,7 @@ class PaymentForm extends Component
 
         $this->resetValidation();
 
-        $this->purchase = Purchase::findOrFail($id);
+        $this->purchase = Purchase::query()->findOrFail($id);
         $this->date = date('Y-m-d');
         $this->amount = $this->purchase->due_amount;
         $this->payment_method = 'Cash';
@@ -73,7 +73,7 @@ class PaymentForm extends Component
         try {
             $this->validate();
 
-            PurchasePayment::create([
+            PurchasePayment::query()->create([
                 'date' => $this->date,
                 'user_id' => Auth::user()->id,
                 'amount' => $this->amount,
@@ -82,7 +82,7 @@ class PaymentForm extends Component
                 'payment_method' => $this->payment_method,
             ]);
 
-            $purchase = Purchase::findOrFail($this->purchase_id);
+            $purchase = Purchase::query()->findOrFail($this->purchase_id);
 
             $due_amount = $purchase->due_amount - $this->amount;
 

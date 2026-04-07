@@ -58,15 +58,15 @@ class StepManager extends Component
     public bool $migrationsDone = false;
 
     // ── Company details ──
-    public $company_name;
+    public mixed $company_name;
 
-    public $company_email;
+    public mixed $company_email;
 
-    public $company_phone;
+    public mixed $company_phone;
 
-    public $company_address;
+    public mixed $company_address;
 
-    public $company_tax;
+    public mixed $company_tax;
 
     // ── Demo selection ──
     public $selected_business_line = '';
@@ -76,13 +76,13 @@ class StepManager extends Component
     public bool $retailQuickStart = false;
 
     // ── Admin user details ──
-    public $admin_name;
+    public mixed $admin_name;
 
-    public $admin_email;
+    public mixed $admin_email;
 
-    public $admin_password;
+    public mixed $admin_password;
 
-    public $admin_password_confirmation;
+    public mixed $admin_password_confirmation;
 
     public function mount(): void
     {
@@ -104,7 +104,7 @@ class StepManager extends Component
                 $this->selected_business_line = settings('selected_business_line', '');
                 $this->install_demo_data = settings('install_demo_data', true);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Ignore if DB not ready
         }
 
@@ -127,9 +127,9 @@ class StepManager extends Component
 
         try {
             if (Schema::hasTable('settings')) {
-                return (bool) (settings('installation_completed', false) && ! config('installation.force', false));
+                return settings('installation_completed', false) && ! config('installation.force', false);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -198,7 +198,7 @@ class StepManager extends Component
                 }
 
                 $this->currentStep = $step;
-            } catch (\Illuminate\Validation\ValidationException $e) {
+            } catch (\Illuminate\Validation\ValidationException) {
                 $this->alert('error', __('Please complete the current step before proceeding.'));
             }
         }
@@ -243,7 +243,7 @@ class StepManager extends Component
         $this->requirementErrors = [];
 
         // PHP version
-        $phpOk = version_compare(PHP_VERSION, '8.2.0', '>=');
+        $phpOk = PHP_VERSION_ID >= 80200;
         $this->preflightResults['php_version'] = [
             'label' => 'PHP Version (≥ 8.2)',
             'value' => PHP_VERSION,
@@ -257,15 +257,15 @@ class StepManager extends Component
         // Extensions
         $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML', 'sqlite3'];
 
-        foreach ($requiredExtensions as $ext) {
-            $loaded = extension_loaded(strtolower($ext));
-            $this->preflightResults['ext_' . strtolower($ext)] = [
-                'label' => "{$ext} Extension",
+        foreach ($requiredExtensions as $requiredExtension) {
+            $loaded = extension_loaded(strtolower($requiredExtension));
+            $this->preflightResults['ext_' . strtolower($requiredExtension)] = [
+                'label' => $requiredExtension . ' Extension',
                 'passed' => $loaded,
             ];
 
             if (! $loaded) {
-                $this->requirementErrors[] = "PHP extension '{$ext}' is required but not loaded.";
+                $this->requirementErrors[] = sprintf("PHP extension '%s' is required but not loaded.", $requiredExtension);
             }
         }
 
@@ -281,12 +281,12 @@ class StepManager extends Component
         foreach ($writableDirs as $path => $label) {
             $writable = is_writable($path);
             $this->preflightResults['dir_' . str_replace('/', '_', $label)] = [
-                'label' => "Directory: {$label}",
+                'label' => 'Directory: ' . $label,
                 'passed' => $writable,
             ];
 
             if (! $writable) {
-                $this->requirementErrors[] = "Directory '{$label}' is not writable.";
+                $this->requirementErrors[] = sprintf("Directory '%s' is not writable.", $label);
             }
         }
 
@@ -302,7 +302,7 @@ class StepManager extends Component
             $this->requirementErrors[] = '.env file not found. Copy .env.example to .env and run php artisan key:generate.';
         }
 
-        $this->preflightPassed = count($this->requirementErrors) === 0;
+        $this->preflightPassed = $this->requirementErrors === [];
     }
 
     public function testConnection(): void
@@ -336,6 +336,7 @@ class StepManager extends Component
                 if (! file_exists($dbPath)) {
                     touch($dbPath);
                 }
+
                 $config['database'] = $dbPath;
             }
 
@@ -349,12 +350,12 @@ class StepManager extends Component
             // Clean flash session so an old error doesn't block validation
             session()->forget('connection_error');
             $this->alert('success', $this->connectionMessage);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->connectionSuccess = false;
-            $this->connectionMessage = __('Connection failed: ') . $e->getMessage();
+            $this->connectionMessage = __('Connection failed: ') . $exception->getMessage();
             session()->flash('connection_error', $this->connectionMessage);
             $this->alert('error', $this->connectionMessage);
-            Log::warning('Installation DB test failed', ['error' => $e->getMessage()]);
+            Log::warning('Installation DB test failed', ['error' => $exception->getMessage()]);
         }
     }
 
@@ -397,12 +398,13 @@ class StepManager extends Component
         $content = file_get_contents($envPath);
 
         foreach ($data as $key => $value) {
-            if (preg_match("/^{$key}=.*/m", $content)) {
-                $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
+            if (preg_match(sprintf('/^%s=.*/m', $key), $content)) {
+                $content = preg_replace(sprintf('/^%s=.*/m', $key), sprintf('%s=%s', $key, $value), $content);
             } else {
-                $content .= "\n{$key}={$value}";
+                $content .= sprintf('%s%s=%s', PHP_EOL, $key, $value);
             }
         }
+
         file_put_contents($envPath, $content);
         Artisan::call('config:clear');
     }
@@ -452,32 +454,27 @@ class StepManager extends Component
             }
 
             // Ensure settings table exists and has a record
-            if (Setting::count() === 0) {
+            if (Setting::query()->count() === 0) {
                 $seeders = [
-                    'Database\\Seeders\\RolesAndPermissionsSeeder',
-                    'Database\\Seeders\\CurrencySeeder',
-                    'Database\\Seeders\\SettingsSeeder',
-                    'Database\\Seeders\\LanguagesSeeder',
+                    \Database\Seeders\RolesAndPermissionsSeeder::class,
+                    \Database\Seeders\CurrencySeeder::class,
+                    \Database\Seeders\SettingsSeeder::class,
+                    \Database\Seeders\LanguagesSeeder::class,
                 ];
 
                 foreach ($seeders as $seeder) {
                     $exitCode = Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
 
-                    if ($exitCode !== 0) {
-                        throw new Exception("Core data insertion failed for {$seeder}.");
-                    }
+                    throw_if($exitCode !== 0, Exception::class, sprintf('Core data insertion failed for %s.', $seeder));
                 }
             }
 
             // Create admin user
-            $user = User::updateOrCreate(
-                ['email' => $this->admin_email],
-                [
-                    'name' => $this->admin_name ?? explode('@', $this->admin_email ?? '')[0],
-                    'password' => Hash::make($this->admin_password),
-                    'is_admin' => true,
-                ]
-            );
+            $user = User::query()->updateOrCreate(['email' => $this->admin_email], [
+                'name' => $this->admin_name ?? explode('@', $this->admin_email ?? '')[0],
+                'password' => Hash::make($this->admin_password),
+                'is_admin' => true,
+            ]);
 
             // Assign roles if Spatie is used
             if (method_exists($user, 'assignRole')) {
@@ -489,7 +486,7 @@ class StepManager extends Component
             $this->saveCompanyDetails();
 
             // Get the settings record and update it
-            $settings = Setting::first();
+            $settings = Setting::query()->first();
 
             if ($settings) {
                 $settings->installation_completed = true;
@@ -506,16 +503,16 @@ class StepManager extends Component
 
             $this->alert('success', __('Installation completed successfully!'));
 
-            return redirect()->route('dashboard');
-        } catch (Exception $e) {
-            $this->alert('error', __('Installation failed: ') . $e->getMessage());
-            Log::error('Installation completion failed', ['error' => $e->getMessage()]);
+            return to_route('dashboard');
+        } catch (Exception $exception) {
+            $this->alert('error', __('Installation failed: ') . $exception->getMessage());
+            Log::error('Installation completion failed', ['error' => $exception->getMessage()]);
         }
     }
 
     private function saveCompanyDetails(): void
     {
-        $settings = Setting::first();
+        $settings = Setting::query()->first();
 
         if ($settings) {
             $settings->update([
@@ -559,14 +556,14 @@ class StepManager extends Component
     {
         try {
             Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\ComprehensiveDataSeeder',
+                '--class' => \Database\Seeders\ComprehensiveDataSeeder::class,
                 '--force' => true,
             ]);
 
             Log::info('Demo data installed successfully', ['business_line' => $this->selected_business_line]);
-        } catch (Exception $e) {
-            Log::error('Failed to install demo data', ['error' => $e->getMessage()]);
-            $this->alert('warning', __('Demo data installation failed: ') . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to install demo data', ['error' => $exception->getMessage()]);
+            $this->alert('warning', __('Demo data installation failed: ') . $exception->getMessage());
         }
     }
 }

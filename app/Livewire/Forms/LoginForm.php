@@ -16,13 +16,13 @@ class LoginForm extends Form
 {
     #[Validate('required', message: 'Email is required ')]
     #[Validate('email', message: 'Email must be valid')]
-    public $email;
+    public mixed $email;
 
     #[Validate('required', message: 'Password is required')]
-    public $password;
+    public mixed $password;
 
     #[Validate('boolean')]
-    public $remember = false;
+    public mixed $remember = false;
 
     /**
      * Attempt to authenticate the request's credentials.

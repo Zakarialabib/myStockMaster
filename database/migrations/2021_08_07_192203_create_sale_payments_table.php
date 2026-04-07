@@ -15,18 +15,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Sale::class)->nullable()->constrained('sales')->cascadeOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignIdFor(CashRegister::class)->nullable()->cascadeOnDelete();
-            $table->decimal('amount', 8, 2);
-            $table->date('date');
-            $table->string('reference');
-            $table->string('payment_method');
-            $table->text('note')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('sale_payments', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(Sale::class)->nullable()->constrained('sales')->cascadeOnDelete();
+            $blueprint->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $blueprint->foreignIdFor(CashRegister::class)->nullable()->cascadeOnDelete();
+            $blueprint->decimal('amount', 8, 2);
+            $blueprint->date('date');
+            $blueprint->string('reference');
+            $blueprint->string('payment_method');
+            $blueprint->text('note')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

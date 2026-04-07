@@ -14,6 +14,7 @@ class ExpenseResource extends JsonResource
      *
      * @param \App\Models\Expense $resource
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

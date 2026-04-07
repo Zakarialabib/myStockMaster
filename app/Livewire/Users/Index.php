@@ -20,29 +20,29 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $model = User::class;
+    public string $model = User::class;
 
-    public $user;
+    public mixed $user;
 
-    public $role;
+    public mixed $role;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
-    public $filterRole;
+    public mixed $filterRole;
 
-    public function filterRole($role): void
+    public function filterRole(mixed $role): void
     {
         $this->filterRole = $role;
         $this->resetPage(); // Reset pagination to the first page
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('user_access'), 403);
 
-        $query = User::when($this->warehouse_id, function ($query): void {
+        $query = User::query()->when($this->warehouse_id, function ($query): void {
             $query->where('warehouse_id', $this->warehouse_id);
         })->with('roles')->advancedFilter([
             's' => $this->search ?: null,
@@ -55,7 +55,7 @@ class Index extends Component
         return view('livewire.users.index', ['users' => $users]);
     }
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
@@ -63,11 +63,11 @@ class Index extends Component
     #[Computed]
     public function roles()
     {
-        return Role::pluck('name', 'id');
+        return Role::query()->pluck('name', 'id');
     }
 
     // assign or change user role
-    public function assignRole(User $user, $role): void
+    public function assignRole(User $user, mixed $role): void
     {
         $user->assignRole($role);
     }
@@ -76,7 +76,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('user_delete'), 403);
 
-        User::whereIn('id', $this->selected)->delete();
+        User::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

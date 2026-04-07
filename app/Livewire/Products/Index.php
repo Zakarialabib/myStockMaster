@@ -41,25 +41,25 @@ class Index extends Component
     }
 
     /** @var mixed */
-    public $productWarehouse;
+    public mixed $productWarehouse;
 
-    public $sendTelegram;
+    public mixed $sendTelegram;
 
-    public $promoAllProducts;
+    public mixed $promoAllProducts;
 
-    public $copyPriceToOldPrice;
+    public mixed $copyPriceToOldPrice;
 
-    public $copyOldPriceToPrice;
+    public mixed $copyOldPriceToPrice;
 
-    public $percentageMethod;
+    public mixed $percentageMethod;
 
-    public $percentage;
+    public mixed $percentage;
 
-    public $product;
+    public mixed $product;
 
-    public $category_id;
+    public mixed $category_id;
 
-    public $model = Product::class;
+    public string $model = Product::class;
 
     // Add these new filters
     #[Url(history: true)]
@@ -78,7 +78,7 @@ class Index extends Component
         return Category::all()->pluck('name', 'id')->toArray();
     }
 
-    public function deleteModal($product): void
+    public function deleteModal(int|string $product): void
     {
         $confirmationMessage = __('Are you sure you want to delete this product? if something happens you can be recover it.');
 
@@ -128,8 +128,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_delete'), 403);
 
-        Product::whereIn('id', $this->selected)->delete();
-        ProductWarehouse::whereIn('product_id', $this->selected)->delete();
+        Product::query()->whereIn('id', $this->selected)->delete();
+        ProductWarehouse::query()->whereIn('product_id', $this->selected)->delete();
 
         $deletedCount = count($this->selected);
 
@@ -148,8 +148,8 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_delete'), 403);
 
-        $product = Product::findOrFail($this->product);
-        $productWarehouse = ProductWarehouse::where('product_id', $product->id)->first();
+        $product = Product::query()->findOrFail($this->product);
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $product->id)->first();
 
         if ($productWarehouse) {
             $productWarehouse->delete();
@@ -159,7 +159,7 @@ class Index extends Component
         $this->alert('success', __('Product and related warehouse deleted successfully!'));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('product_access'), 403);
 
@@ -179,10 +179,10 @@ class Index extends Component
                 'order_column' => $this->sortBy,
                 'order_direction' => $this->sortDirection,
             ])
-            ->when($this->filterAvailability !== '', function ($query) {
+            ->when($this->filterAvailability !== '', function ($query): void {
                 $query->where('availability', $this->filterAvailability);
             })
-            ->when($this->filterSeasonality, function ($query) {
+            ->when($this->filterSeasonality, function ($query): void {
                 $query->where('seasonality', 'like', '%' . $this->filterSeasonality . '%');
             });
 
@@ -194,9 +194,9 @@ class Index extends Component
     }
 
     #[On('sendTelegram')]
-    public function sendToTelegram($product): void
+    public function sendToTelegram(mixed $product): void
     {
-        $this->productWarehouse = ProductWarehouse::find($product->id);
+        $this->productWarehouse = ProductWarehouse::query()->find($product->id);
 
         // Specify Telegram channel
         $telegramChannel = settings()->telegram_channel;
@@ -252,21 +252,21 @@ class Index extends Component
 
     public function discountSelected(): void
     {
-        $warehouseProducts = ProductWarehouse::whereIn('product_id', $this->selected)->get();
+        $warehouseProducts = ProductWarehouse::query()->whereIn('product_id', $this->selected)->get();
 
-        foreach ($warehouseProducts as $warehouse) {
+        foreach ($warehouseProducts as $warehouseProduct) {
             if ($this->copyPriceToOldPrice) {
-                $warehouse->old_price = $warehouse->price;
+                $warehouseProduct->old_price = $warehouseProduct->price;
             } elseif ($this->copyOldPriceToPrice) {
-                $warehouse->price = $warehouse->old_price;
-                $warehouse->old_price = null;
+                $warehouseProduct->price = $warehouseProduct->old_price;
+                $warehouseProduct->old_price = null;
             } elseif ($this->percentageMethod === '+') {
-                $warehouse->price = round((float) $warehouse->price * (1 + $this->percentage / 100));
+                $warehouseProduct->price = round((float) $warehouseProduct->price * (1 + $this->percentage / 100));
             } else {
-                $warehouse->price = round((float) $warehouse->price * (1 - $this->percentage / 100));
+                $warehouseProduct->price = round((float) $warehouseProduct->price * (1 - $this->percentage / 100));
             }
 
-            $warehouse->save();
+            $warehouseProduct->save();
         }
 
         $this->alert('success', __('Product Prices changed successfully!'));

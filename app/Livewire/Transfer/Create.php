@@ -23,9 +23,9 @@ class Create extends Component
 
     public TransferForm $form;
 
-    public $products;
+    public mixed $products;
 
-    public $hasTransfers;
+    public mixed $hasTransfers;
 
     public function mount(): void
     {
@@ -40,12 +40,12 @@ class Create extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.transfer.create');
     }
 
-    public function updatedFormFromWarehouseId($value): void
+    public function updatedFormFromWarehouseId(mixed $value): void
     {
         $this->form->from_warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->from_warehouse_id);
@@ -80,7 +80,7 @@ class Create extends Component
 
             $this->alert('success', __('Transfer created successfully'));
 
-            return redirect()->route('transfers.index');
+            return to_route('transfers.index');
         } catch (Throwable $throwable) {
             $this->alert('error', 'Error Occurred in ' . $throwable->getMessage());
         }
@@ -101,13 +101,13 @@ class Create extends Component
         $this->calculateTotal();
     }
 
-    public function removeProduct($key): void
+    public function removeProduct(int|string $key): void
     {
         unset($this->products[$key]);
         $this->calculateTotal();
     }
 
-    public function updateQuantity($key, $quantity): void
+    public function updateQuantity(int|string $key, int|float $quantity): void
     {
         $this->products[$key]['quantities'] = $quantity;
         $this->calculateTotal();

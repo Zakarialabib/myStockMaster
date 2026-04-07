@@ -37,8 +37,7 @@ final class CalculateBreakEvenAction
         // Calculate current performance vs break-even
         $currentPerformance = $this->analyzeCurrentPerformance(
             $saleMetrics,
-            $breakEvenAnalysis,
-            $analysisDate
+            $breakEvenAnalysis
         );
 
         return [
@@ -58,7 +57,7 @@ final class CalculateBreakEvenAction
         $endDate = $analysisDate->copy();
 
         // Get completed sales from last 30 days
-        $sales = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $sales = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get();
 
@@ -78,7 +77,7 @@ final class CalculateBreakEvenAction
         $averageSaleValue = $totalRevenue / $totalSales;
 
         // Calculate average variable cost per sale (COGS)
-        $totalVariableCosts = SaleDetails::whereIn('sale_id', $sales->pluck('id'))
+        $totalVariableCosts = SaleDetails::query()->whereIn('sale_id', $sales->pluck('id'))
             ->join('products', 'products.id', '=', 'sale_details.product_id')
             ->sum(DB::raw('sale_details.quantity * products.cost'));
 
@@ -153,7 +152,7 @@ final class CalculateBreakEvenAction
         ];
     }
 
-    private function analyzeCurrentPerformance(array $saleMetrics, array $breakEvenAnalysis, Carbon $analysisDate): array
+    private function analyzeCurrentPerformance(array $saleMetrics, array $breakEvenAnalysis): array
     {
         if ($breakEvenAnalysis['status'] === 'impossible') {
             return [

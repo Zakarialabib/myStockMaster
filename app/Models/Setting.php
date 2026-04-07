@@ -129,10 +129,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereWhatsappCustomMessage($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Setting extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $guarded = [];
 
     /**
@@ -140,6 +141,7 @@ class Setting extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -148,6 +150,9 @@ class Setting extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Currency, $this>
+     */
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');
@@ -156,7 +161,7 @@ class Setting extends Model
     protected function analyticsControl(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => json_decode($value, true),
+            get: fn ($value): mixed => json_decode((string) $value, true),
             set: fn ($value) => json_encode($value),
         );
     }
@@ -164,15 +169,15 @@ class Setting extends Model
     protected function invoiceControl(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => json_decode($value, true),
+            get: fn ($value): mixed => json_decode((string) $value, true),
             set: fn ($value) => json_encode($value),
         );
     }
 
     /** Set a specific setting value */
-    public static function set(string $key, $value): void
+    public static function set(string $key, mixed $value): void
     {
-        $setting = static::first();
+        $setting = static::query()->first();
 
         if ($setting) {
             $setting->update([$key => $value]);
@@ -181,7 +186,7 @@ class Setting extends Model
     }
 
     /** Get a specific setting value with default fallback */
-    public static function get(string $key, $default = null)
+    public static function get(string $key, mixed $default = null)
     {
         $settings = settings();
 

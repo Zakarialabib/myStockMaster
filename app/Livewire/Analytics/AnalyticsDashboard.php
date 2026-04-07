@@ -21,7 +21,7 @@ class AnalyticsDashboard extends Component
     use WithAlert;
     use WithPagination;
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
@@ -70,10 +70,10 @@ class AnalyticsDashboard extends Component
     {
 
         try {
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
-            $this->revenueData = app(GenerateRevenueReportAction::class)([
+            $this->revenueData = resolve(GenerateRevenueReportAction::class)([
                 'date_from' => $dateFrom,
                 'date_to' => $dateTo,
                 'include_products' => true,
@@ -81,12 +81,12 @@ class AnalyticsDashboard extends Component
             ]);
 
             if ($this->selectedProduct) {
-                $product = Product::find($this->selectedProduct);
+                $product = Product::query()->find($this->selectedProduct);
 
                 if ($product) {
-                    $this->analyticsData = app(GenerateProductAnalyticsAction::class)($product, $dateFrom, $dateTo);
+                    $this->analyticsData = resolve(GenerateProductAnalyticsAction::class)($product, $dateFrom, $dateTo);
 
-                    $this->priceTrends = app(AnalyzePriceTrendsAction::class)->getPriceHistory($product);
+                    $this->priceTrends = resolve(AnalyzePriceTrendsAction::class)->getPriceHistory($product);
                 }
             }
         } catch (Throwable $throwable) {
@@ -100,7 +100,7 @@ class AnalyticsDashboard extends Component
             $filename = $type . '_report_' . now()->format('Y-m-d_H-i-s') . '.json';
             $data = $type === 'revenue' ? $this->revenueData : $this->analyticsData;
 
-            return response()->streamDownload(function () use ($data) {
+            return response()->streamDownload(function () use ($data): void {
                 $generator = function () use ($data) {
                     yield '{';
                     $first = true;
@@ -108,9 +108,11 @@ class AnalyticsDashboard extends Component
                         if (! $first) {
                             yield ',';
                         }
+
                         yield '"' . $key . '":' . json_encode($value);
                         $first = false;
                     }
+
                     yield '}';
                 };
 
@@ -129,7 +131,7 @@ class AnalyticsDashboard extends Component
     public function products()
     {
         return Product::query()
-            ->when($this->search, function ($query) {
+            ->when($this->search, function ($query): void {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('code', 'like', '%' . $this->search . '%');
             })
@@ -137,7 +139,7 @@ class AnalyticsDashboard extends Component
             ->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.analytics.analytics-dashboard');
     }

@@ -37,7 +37,7 @@ class Register extends Component
     {
         $this->validate();
 
-        $user = User::create([
+        $user = User::query()->create([
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone !== '' ? $this->phone : null,
@@ -45,7 +45,7 @@ class Register extends Component
             'status' => 1,
         ]);
 
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::query()->firstOrCreate(['name' => 'admin']);
         $user->assignRole($adminRole);
 
         event(new Registered($user));
@@ -56,7 +56,7 @@ class Register extends Component
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pages.auth.register');
     }

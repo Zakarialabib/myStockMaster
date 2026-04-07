@@ -12,8 +12,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class SupplierImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
-    public function __construct() {}
-
     /**
      * @return Supplier
      * @return \Illuminate\Database\Eloquent\Model|null
@@ -23,7 +21,7 @@ class SupplierImport implements SkipsEmptyRows, ToModel, WithHeadingRow
         $name = $row['name'];
 
         // Check if a record with the same name already exists
-        $existingRecord = Supplier::where('name', $name)->first();
+        $existingRecord = Supplier::query()->where('name', $name)->first();
 
         // If it doesn't exist, create a new record
         if (! $existingRecord) {

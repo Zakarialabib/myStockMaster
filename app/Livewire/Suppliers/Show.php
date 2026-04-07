@@ -19,11 +19,11 @@ class Show extends Component
     public Supplier $supplier;
 
     #[On('showModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         abort_if(Gate::denies('supplier_show'), 403);
 
-        $this->supplier = Supplier::findOrFail($id);
+        $this->supplier = Supplier::query()->findOrFail($id);
 
         $this->resetErrorBag();
 
@@ -32,7 +32,7 @@ class Show extends Component
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.suppliers.show');
     }

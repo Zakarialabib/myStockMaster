@@ -14,12 +14,12 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $purchasereturn;
+    public mixed $purchasereturn;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     #[On('showModal')]
-    public function showModal($id): void
+    public function showModal(int|string $id): void
     {
         $this->resetErrorBag();
 
@@ -30,7 +30,7 @@ class Show extends Component
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('purchase_access'), 403);
 

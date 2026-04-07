@@ -26,9 +26,9 @@ class Edit extends Component
 
     public array $products = [];
 
-    public $hasTransfers;
+    public mixed $hasTransfers;
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
         $this->transfer = Transfer::with('transferDetails', 'transferDetails.product')
             ->where('id', $id)->first();
@@ -46,16 +46,14 @@ class Edit extends Component
         $this->form->document = $this->transfer->document;
         $this->form->user_id = $this->transfer->user_id;
 
-        $this->products = $this->transfer->transferDetails->map(function ($detail) {
-            return [
-                'id' => $detail->product_id,
-                'name' => $detail->product->name,
-                'code' => $detail->product->code,
-                'quantities' => $detail->quantity,
-                'price' => $detail->product->price ?? 0,
-                'cost' => $detail->product->cost ?? 0,
-            ];
-        })->toArray();
+        $this->products = $this->transfer->transferDetails->map(fn($detail) => [
+            'id' => $detail->product_id,
+            'name' => $detail->product->name,
+            'code' => $detail->product->code,
+            'quantities' => $detail->quantity,
+            'price' => $detail->product->price ?? 0,
+            'cost' => $detail->product->cost ?? 0,
+        ])->all();
     }
 
     public function update(TransferService $transferService)
@@ -66,7 +64,7 @@ class Edit extends Component
 
         $transferService->updateTransfer($this->transfer, $this->form->all(), $this->products);
 
-        return redirect()->route('transfers.index');
+        return to_route('transfers.index');
     }
 
     #[On('productSelected')]
@@ -84,13 +82,13 @@ class Edit extends Component
         $this->calculateTotal();
     }
 
-    public function removeProduct($key): void
+    public function removeProduct(int|string $key): void
     {
         unset($this->products[$key]);
         $this->calculateTotal();
     }
 
-    public function updateQuantity($key, $quantity): void
+    public function updateQuantity(int|string $key, int|float $quantity): void
     {
         $this->products[$key]['quantities'] = $quantity;
         $this->calculateTotal();
@@ -114,13 +112,13 @@ class Edit extends Component
     }
 
     #[On('warehouseSelected')]
-    public function updatedFormFromWarehouseId($value): void
+    public function updatedFormFromWarehouseId(mixed $value): void
     {
         $this->form->from_warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->from_warehouse_id);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.transfer.edit');
     }

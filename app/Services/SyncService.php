@@ -55,26 +55,26 @@ class SyncService
             cache(['last_synced_at' => now()->toIso8601String()]);
 
             return ['status' => 'success', 'message' => 'Sync completed successfully.'];
-        } catch (Exception $e) {
-            Log::error('Sync Exception: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Sync Exception: ' . $exception->getMessage());
 
-            return ['status' => 'error', 'message' => $e->getMessage()];
+            return ['status' => 'error', 'message' => $exception->getMessage()];
         }
     }
 
     /** Apply changes received from the cloud. */
     protected function applyRemoteChanges(array $data): void
     {
-        DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data): void {
             if (isset($data['products'])) {
                 foreach ($data['products'] as $item) {
-                    Product::updateOrCreate(['id' => $item['id']], $item);
+                    Product::query()->updateOrCreate(['id' => $item['id']], $item);
                 }
             }
 
             if (isset($data['customers'])) {
                 foreach ($data['customers'] as $item) {
-                    Customer::updateOrCreate(['id' => $item['id']], $item);
+                    Customer::query()->updateOrCreate(['id' => $item['id']], $item);
                 }
             }
 

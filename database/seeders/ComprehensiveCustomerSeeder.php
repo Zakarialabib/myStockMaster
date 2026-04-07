@@ -22,7 +22,7 @@ class ComprehensiveCustomerSeeder extends Seeder
         $this->createOnlineCustomers();
     }
 
-    private function createRetailCustomers()
+    private function createRetailCustomers(): void
     {
         $retailCustomers = [
             [
@@ -72,8 +72,8 @@ class ComprehensiveCustomerSeeder extends Seeder
             ],
         ];
 
-        foreach ($retailCustomers as $customer) {
-            $this->createCustomer($customer);
+        foreach ($retailCustomers as $retailCustomer) {
+            $this->createCustomer($retailCustomer);
         }
 
         // Create additional random retail customers
@@ -90,7 +90,7 @@ class ComprehensiveCustomerSeeder extends Seeder
         }
     }
 
-    private function createWholesaleCustomers()
+    private function createWholesaleCustomers(): void
     {
         $wholesaleCustomers = [
             [
@@ -140,12 +140,12 @@ class ComprehensiveCustomerSeeder extends Seeder
             ],
         ];
 
-        foreach ($wholesaleCustomers as $customer) {
-            $this->createCustomer($customer);
+        foreach ($wholesaleCustomers as $wholesaleCustomer) {
+            $this->createCustomer($wholesaleCustomer);
         }
     }
 
-    private function createCorporateCustomers()
+    private function createCorporateCustomers(): void
     {
         $corporateCustomers = [
             [
@@ -195,12 +195,12 @@ class ComprehensiveCustomerSeeder extends Seeder
             ],
         ];
 
-        foreach ($corporateCustomers as $customer) {
-            $this->createCustomer($customer);
+        foreach ($corporateCustomers as $corporateCustomer) {
+            $this->createCustomer($corporateCustomer);
         }
     }
 
-    private function createOnlineCustomers()
+    private function createOnlineCustomers(): void
     {
         $onlineCustomers = [
             [
@@ -250,8 +250,8 @@ class ComprehensiveCustomerSeeder extends Seeder
             ],
         ];
 
-        foreach ($onlineCustomers as $customer) {
-            $this->createCustomer($customer);
+        foreach ($onlineCustomers as $onlineCustomer) {
+            $this->createCustomer($onlineCustomer);
         }
 
         // Create additional random online customers
@@ -268,7 +268,7 @@ class ComprehensiveCustomerSeeder extends Seeder
         }
     }
 
-    private function createCustomer($customerData)
+    private function createCustomer(array $customerData): void
     {
         $customerId = (string) Str::uuid();
 
@@ -288,17 +288,12 @@ class ComprehensiveCustomerSeeder extends Seeder
         DB::table('customers')->insertOrIgnore($customer);
     }
 
-    private function generateTaxNumber($customerType)
+    private function generateTaxNumber(mixed $customerType): string
     {
-        switch ($customerType) {
-            case 'corporate':
-            case 'wholesale':
-                return 'TAX-' . fake()->numerify('##-#######');
-            case 'retail':
-            case 'online':
-                return fake()->boolean(30) ? 'TAX-' . fake()->numerify('##-#######') : null;
-            default:
-                return null;
-        }
+        return match ($customerType) {
+            'corporate', 'wholesale' => 'TAX-' . fake()->numerify('##-#######'),
+            'retail', 'online' => fake()->boolean(30) ? 'TAX-' . fake()->numerify('##-#######') : null,
+            default => null,
+        };
     }
 }

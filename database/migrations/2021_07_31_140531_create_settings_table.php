@@ -13,36 +13,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('company_logo');
-            $table->string('company_name');
-            $table->string('company_email');
-            $table->string('company_phone');
-            $table->text('company_address');
-            $table->string('company_tax', 192)->nullable();
-            $table->string('telegram_channel', 192)->nullable();
+        Schema::create('settings', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('company_logo');
+            $blueprint->string('company_name');
+            $blueprint->string('company_email');
+            $blueprint->string('company_phone');
+            $blueprint->text('company_address');
+            $blueprint->string('company_tax', 192)->nullable();
+            $blueprint->string('telegram_channel', 192)->nullable();
 
-            $table->integer('default_currency_id');
-            $table->string('default_currency_position');
-            $table->string('default_date_format');
+            $blueprint->integer('default_currency_id');
+            $blueprint->string('default_currency_position');
+            $blueprint->string('default_date_format');
 
-            $table->integer('default_client_id')->nullable();
-            $table->integer('default_warehouse_id')->nullable();
-            $table->string('default_language', 192)->default('fr');
-            $table->boolean('is_rtl')->default(1);
+            $blueprint->integer('default_client_id')->nullable();
+            $blueprint->integer('default_warehouse_id')->nullable();
+            $blueprint->string('default_language', 192)->default('fr');
+            $blueprint->boolean('is_rtl')->default(1);
 
-            $table->string('invoice_footer_text')->nullable();
-            $table->string('invoice_header')->nullable();
-            $table->string('invoice_footer')->nullable();
+            $blueprint->string('invoice_footer_text')->nullable();
+            $blueprint->string('invoice_header')->nullable();
+            $blueprint->string('invoice_footer')->nullable();
 
-            $table->string('sale_prefix', 25)->default('SA-');
-            $table->string('saleReturn_prefix', 25)->default('SRE-');
-            $table->string('purchase_prefix', 25)->default('PR-');
-            $table->string('purchaseReturn_prefix', 25)->default('PRE-');
-            $table->string('quotation_prefix', 25)->default('DE-');
-            $table->string('salePayment_prefix', 25)->default('SP-');
-            $table->string('purchasePayment_prefix', 25)->default('PR-');
+            $blueprint->string('sale_prefix', 25)->default('SA-');
+            $blueprint->string('saleReturn_prefix', 25)->default('SRE-');
+            $blueprint->string('purchase_prefix', 25)->default('PR-');
+            $blueprint->string('purchaseReturn_prefix', 25)->default('PRE-');
+            $blueprint->string('quotation_prefix', 25)->default('DE-');
+            $blueprint->string('salePayment_prefix', 25)->default('SP-');
+            $blueprint->string('purchasePayment_prefix', 25)->default('PR-');
 
             // $table->boolean('show_email')->default(1);
             // $table->boolean('show_address')->default(1);
@@ -50,16 +50,16 @@ return new class extends Migration
             // $table->boolean('show_discount')->default(1);
             // $table->boolean('show_shipping')->default(1);
 
-            $table->boolean('backup_status')->default(0);
-            $table->string('backup_schedule')->nullable();
+            $blueprint->boolean('backup_status')->default(0);
+            $blueprint->string('backup_schedule')->nullable();
 
-            $table->json('invoice_control')->nullable();
-            $table->json('analytics_control')->nullable();
+            $blueprint->json('invoice_control')->nullable();
+            $blueprint->json('analytics_control')->nullable();
 
-            $table->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
-            $table->integer('printer_id')->nullable();
+            $blueprint->enum('receipt_printer_type', ['browser', 'printer'])->default('browser');
+            $blueprint->integer('printer_id')->nullable();
 
-            $table->timestamps();
+            $blueprint->timestamps();
         });
     }
 

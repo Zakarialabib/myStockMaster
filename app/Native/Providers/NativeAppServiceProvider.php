@@ -28,8 +28,8 @@ class NativeAppServiceProvider extends ServiceProvider implements ProvidesPhpIni
             $this->configureWindow();
             $this->configureMenu();
             $this->configureShortcuts();
-        } catch (Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('NativePHP Desktop API not available: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            \Illuminate\Support\Facades\Log::warning('NativePHP Desktop API not available: ' . $exception->getMessage());
         }
     }
 
@@ -66,8 +66,8 @@ class NativeAppServiceProvider extends ServiceProvider implements ProvidesPhpIni
 
             GlobalShortcut::key('CmdOrCtrl+Shift+D')
                 ->event('shortcut:toggle-dev-tools');
-        } catch (Exception $e) {
-            \Illuminate\Support\Facades\Log::info('Desktop shortcuts not available: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            \Illuminate\Support\Facades\Log::info('Desktop shortcuts not available: ' . $exception->getMessage());
         }
     }
 

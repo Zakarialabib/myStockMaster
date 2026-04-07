@@ -30,7 +30,7 @@ class UsersSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            User::create($user);
+            User::query()->create($user);
         }
     }
 }

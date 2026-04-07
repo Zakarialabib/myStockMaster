@@ -41,9 +41,9 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCustomerRequest $request): CustomerResource
+    public function store(StoreCustomerRequest $storeCustomerRequest): CustomerResource
     {
-        $customer = Customer::create($request->all());
+        $customer = Customer::query()->create($storeCustomerRequest->all());
 
         return new CustomerResource($customer);
     }
@@ -53,10 +53,10 @@ class CustomerController extends Controller
      */
     public function show(int $id): CustomerResource|JsonResponse
     {
-        $customer = Customer::find($id);
+        $customer = Customer::query()->find($id);
 
         if ($customer === null) {
-            return response()->json(['message' => 'Customer not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Customer not found'], 404);
         }
 
         return new CustomerResource($customer);
@@ -65,10 +65,10 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerRequest $request, int $id): CustomerResource
+    public function update(UpdateCustomerRequest $updateCustomerRequest, int $id): CustomerResource
     {
-        $customer = Customer::findOrFail($id);
-        $customer->update($request->all());
+        $customer = Customer::query()->findOrFail($id);
+        $customer->update($updateCustomerRequest->all());
 
         return new CustomerResource($customer);
     }
@@ -78,9 +78,9 @@ class CustomerController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $customer = Customer::findOrFail($id);
+        $customer = Customer::query()->findOrFail($id);
         $customer->delete();
 
-        return response()->json(['message' => 'Customer deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Customer deleted successfully']);
     }
 }

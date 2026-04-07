@@ -31,15 +31,13 @@ class DesktopErrorLog extends Component
 
     public function boot(): void
     {
-        $this->errorHandler = app('App\Native\Services\DesktopErrorHandler');
+        $this->errorHandler = resolve(\App\Native\Services\DesktopErrorHandler::class);
     }
 
     public function mount(): void
     {
         // Only allow access in desktop mode
-        if (! $this->isDesktopMode()) {
-            abort(404);
-        }
+        abort_unless($this->isDesktopMode(), 404);
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
@@ -117,7 +115,7 @@ class DesktopErrorLog extends Component
 
         $filename = 'desktop_error_log_' . now()->format('Y-m-d_H-i-s') . '.json';
 
-        return response()->streamDownload(function () use ($errors) {
+        return response()->streamDownload(function () use ($errors): void {
             $generator = function () use ($errors) {
                 yield '[';
                 $first = true;
@@ -125,9 +123,11 @@ class DesktopErrorLog extends Component
                     if (! $first) {
                         yield ',';
                     }
+
                     yield json_encode($error, JSON_PRETTY_PRINT);
                     $first = false;
                 }
+
                 yield ']';
             };
 
@@ -144,7 +144,7 @@ class DesktopErrorLog extends Component
         $userId = Auth::id();
         $allErrors = $this->errorHandler->getErrorHistory($userId, 1000);
 
-        $filtered = array_filter($allErrors, function ($error) {
+        $filtered = array_filter($allErrors, function (array $error): bool {
             // Filter by severity
             if ($this->filterSeverity && ($error['severity'] ?? '') !== $this->filterSeverity) {
                 return false;
@@ -157,19 +157,19 @@ class DesktopErrorLog extends Component
 
             // Filter by date range
             if ($this->filterDateFrom || $this->filterDateTo) {
-                $errorDate = \Carbon\Carbon::parse($error['timestamp']);
+                $errorDate = \Illuminate\Support\Facades\Date::parse($error['timestamp']);
 
-                if ($this->filterDateFrom && $errorDate->lt(\Carbon\Carbon::parse($this->filterDateFrom))) {
+                if ($this->filterDateFrom && $errorDate->lt(\Illuminate\Support\Facades\Date::parse($this->filterDateFrom))) {
                     return false;
                 }
 
-                if ($this->filterDateTo && $errorDate->gt(\Carbon\Carbon::parse($this->filterDateTo)->endOfDay())) {
+                if ($this->filterDateTo && $errorDate->gt(\Illuminate\Support\Facades\Date::parse($this->filterDateTo)->endOfDay())) {
                     return false;
                 }
             }
 
             // Filter by search term
-            if ($this->searchTerm) {
+            if ($this->searchTerm !== '' && $this->searchTerm !== '0') {
                 $searchLower = strtolower($this->searchTerm);
                 $message = strtolower($error['message'] ?? '');
                 $file = strtolower($error['file'] ?? '');
@@ -183,9 +183,7 @@ class DesktopErrorLog extends Component
         });
 
         // Sort by timestamp (newest first)
-        usort($filtered, function ($a, $b) {
-            return strtotime($b['timestamp']) - strtotime($a['timestamp']);
-        });
+        usort($filtered, fn(array $a, array $b) => strtotime((string) $b['timestamp']) - strtotime((string) $a['timestamp']));
 
         return $filtered;
     }
@@ -204,7 +202,7 @@ class DesktopErrorLog extends Component
     {
         $categories = array_keys($statistics['by_category'] ?? []);
 
-        return array_combine($categories, array_map('ucfirst', $categories));
+        return array_combine($categories, array_map(ucfirst(...), $categories));
     }
 
     private function isDesktopMode(): bool
@@ -238,11 +236,11 @@ class DesktopErrorLog extends Component
 
     public function formatTimestamp(string $timestamp): string
     {
-        return \Carbon\Carbon::parse($timestamp)->format('M j, Y g:i A');
+        return \Illuminate\Support\Facades\Date::parse($timestamp)->format('M j, Y g:i A');
     }
 
     public function getRelativeTime(string $timestamp): string
     {
-        return \Carbon\Carbon::parse($timestamp)->diffForHumans();
+        return \Illuminate\Support\Facades\Date::parse($timestamp)->diffForHumans();
     }
 }

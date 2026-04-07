@@ -24,17 +24,14 @@ class ProductsSeeder extends Seeder
 
         if ($warehouses->isEmpty()) {
             $warehouses = collect([
-                Warehouse::firstOrCreate(
-                    ['email' => 'warehouse@example.com'],
-                    [
-                        'name' => 'Main Warehouse',
-                        'city' => 'Default City',
-                        'address' => '123 Main Street',
-                        'phone' => '+1234567890',
-                        'country' => 'USA',
-                        'status' => true,
-                    ]
-                ),
+                Warehouse::query()->firstOrCreate(['email' => 'warehouse@example.com'], [
+                    'name' => 'Main Warehouse',
+                    'city' => 'Default City',
+                    'address' => '123 Main Street',
+                    'phone' => '+1234567890',
+                    'country' => 'USA',
+                    'status' => true,
+                ]),
             ]);
         }
 
@@ -43,10 +40,7 @@ class ProductsSeeder extends Seeder
 
         if ($categories->isEmpty()) {
             $categories = collect([
-                Category::firstOrCreate(
-                    ['code' => 'GEN001'],
-                    ['name' => 'General']
-                ),
+                Category::query()->firstOrCreate(['code' => 'GEN001'], ['name' => 'General']),
             ]);
         }
 
@@ -75,7 +69,7 @@ class ProductsSeeder extends Seeder
         // Create product-warehouse relationships
         foreach ($products as $product) {
             foreach ($warehouses as $warehouse) {
-                ProductWarehouse::create([
+                ProductWarehouse::query()->create([
                     'product_id' => $product['id'],
                     'warehouse_id' => $warehouse->id,
                     'qty' => fake()->numberBetween(10, 100),

@@ -26,7 +26,7 @@ class RolesAndPermissionsSeeder extends Seeder
             DB::connection('nativephp')->statement('DELETE FROM permissions');
 
             // Reset cached roles and permissions
-            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
             Permission::create(['name' => 'user_access', 'guard_name' => 'web']);
             Permission::create(['name' => 'user_create', 'guard_name' => 'web']);
@@ -156,11 +156,11 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'language_update', 'guard_name' => 'web']);
             Permission::create(['name' => 'language_delete', 'guard_name' => 'web']);
 
-            $role = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+            $role = Role::query()->firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
             $role->syncPermissions(Permission::all());
-        } catch (Throwable $e) {
-            file_put_contents(storage_path('logs/debug_seeder.txt'), 'SEEDER ERROR: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-            throw $e;
+        } catch (Throwable $throwable) {
+            file_put_contents(storage_path('logs/debug_seeder.txt'), 'SEEDER ERROR: ' . $throwable->getMessage() . "\n" . $throwable->getTraceAsString());
+            throw $throwable;
         }
     }
 }

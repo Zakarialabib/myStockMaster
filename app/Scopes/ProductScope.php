@@ -6,12 +6,12 @@ namespace App\Scopes;
 
 trait ProductScope
 {
-    public function scopeActive($query)
+    protected function scopeActive($query)
     {
         return $query->where('status', true);
     }
 
-    public function scopeProductsByCategory($query, $category_id)
+    protected function scopeProductsByCategory($query, $category_id)
     {
         return $query->where('category_id', $category_id)->count();
     }

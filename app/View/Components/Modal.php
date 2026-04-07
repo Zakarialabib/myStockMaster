@@ -8,71 +8,11 @@ use Illuminate\View\Component;
 
 class Modal extends Component
 {
-    public $id;
-
-    public $name;
-
-    public $show;
-
-    public $maxWidth;
-
-    public $closeable;
-
-    public $focusable;
-
-    public $persistent;
-
-    public $backdrop;
-
-    public $animation;
-
-    public $zIndex;
-
-    public $closeOnEscape;
-
-    public $trapFocus;
-
-    public $restoreScroll;
-
-    public $lazy;
-
-    public $cacheContent;
-
-    public function __construct(
-        $id = null,
-        $name = 'modal',
-        $show = false,
-        $maxWidth = '2xl',
-        $closeable = true,
-        $focusable = true,
-        $persistent = false,
-        $backdrop = true,
-        $animation = 'fade',
-        $zIndex = 'z-50',
-        $closeOnEscape = true,
-        $trapFocus = true,
-        $restoreScroll = true,
-        $lazy = false,
-        $cacheContent = false
-    ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->show = $show;
-        $this->maxWidth = $maxWidth;
-        $this->closeable = $closeable;
-        $this->focusable = $focusable;
-        $this->persistent = $persistent;
-        $this->backdrop = $backdrop;
-        $this->animation = $animation;
-        $this->zIndex = $zIndex;
-        $this->closeOnEscape = $closeOnEscape;
-        $this->trapFocus = $trapFocus;
-        $this->restoreScroll = $restoreScroll;
-        $this->lazy = $lazy;
-        $this->cacheContent = $cacheContent;
+    public function __construct(public $id = null, public $name = 'modal', public $show = false, public $maxWidth = '2xl', public $closeable = true, public $focusable = true, public $persistent = false, public $backdrop = true, public $animation = 'fade', public $zIndex = 'z-50', public $closeOnEscape = true, public $trapFocus = true, public $restoreScroll = true, public $lazy = false, public $cacheContent = false)
+    {
     }
 
-    public function maxWidthClass()
+    public function maxWidthClass(): string
     {
         return [
             'xs' => 'sm:max-w-xs',
@@ -90,7 +30,7 @@ class Modal extends Component
         ][$this->maxWidth] ?? 'sm:max-w-2xl';
     }
 
-    public function animationClasses()
+    public function animationClasses(): string
     {
         return [
             'fade' => 'transition-opacity duration-300',

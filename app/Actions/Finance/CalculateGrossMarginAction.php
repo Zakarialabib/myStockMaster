@@ -20,13 +20,13 @@ final class CalculateGrossMarginAction
     public function __invoke(Carbon $dateFrom, Carbon $dateTo): array
     {
         // Get total revenue from completed sales
-        $totalRevenue = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $totalRevenue = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->where('status', '!=', 'cancelled')
             ->sum('total_amount');
 
         // Calculate total COGS (Cost of Goods Sold)
-        $totalCogs = SaleDetails::whereHas('sale', function ($query) use ($dateFrom, $dateTo) {
-            $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $totalCogs = SaleDetails::query()->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+            $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                 ->where('status', '!=', 'cancelled');
         })
             ->sum(DB::raw('cost * quantity'));

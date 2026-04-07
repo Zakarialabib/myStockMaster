@@ -52,14 +52,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Expense whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Expense whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Expense extends Model
 {
-    protected $casts = [
-        'date' => 'date',
-    ];
-
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     protected const ATTRIBUTES = [
@@ -96,18 +94,22 @@ class Expense extends Model
         'document',
     ];
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
         static::creating(static function ($expense): void {
             $prefix = settings()->expense_prefix;
-            $latestExpense = self::latest()->first();
+            $latestExpense = self::query()->latest()->first();
             $number = $latestExpense ? (int) substr((string) $latestExpense->reference, -3) + 1 : 1;
             $expense->reference = $prefix . str_pad((string) $number, 3, '0', STR_PAD_LEFT);
         });
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\ExpenseCategory, $this>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(
@@ -116,6 +118,9 @@ class Expense extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -124,6 +129,9 @@ class Expense extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(
@@ -132,6 +140,9 @@ class Expense extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
@@ -143,5 +154,12 @@ class Expense extends Model
             get: static fn ($value): int|float => $value / 100,
             set: static fn ($value): int|float => $value * 100,
         );
+    }
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }

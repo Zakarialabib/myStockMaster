@@ -27,11 +27,12 @@ final class UpdateSaleReturnAction
 
             foreach ($saleReturn->saleReturnDetails as $detail) {
                 if ($saleReturn->status === 'Completed') {
-                    $product = Product::findOrFail($detail->product_id);
+                    $product = Product::query()->findOrFail($detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity - $detail->quantity,
                     ]);
                 }
+
                 $detail->delete();
             }
 
@@ -67,7 +68,7 @@ final class UpdateSaleReturnAction
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleReturnDetail::create([
+                SaleReturnDetail::query()->create([
                     'sale_return_id' => $saleReturn->id,
                     'product_id' => $productId,
                     'name' => $productName,
@@ -82,7 +83,7 @@ final class UpdateSaleReturnAction
                 ]);
 
                 if ($data['status'] === 'Completed') {
-                    $product = Product::findOrFail($productId);
+                    $product = Product::query()->findOrFail($productId);
                     $product->update([
                         'quantity' => $product->quantity + $quantity,
                     ]);

@@ -13,19 +13,11 @@ class PaymentSaleMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $invoice;
-
-    public $pdf;
-
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct($invoice, $pdf)
+    public function __construct(public $invoice, public $pdf)
     {
-        $this->invoice = $invoice;
-        $this->pdf = $pdf;
     }
 
     /**

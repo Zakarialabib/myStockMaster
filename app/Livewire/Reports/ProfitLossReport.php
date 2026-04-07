@@ -70,16 +70,16 @@ class ProfitLossReport extends Component
     #[Computed]
     public function warehouses()
     {
-        return Warehouse::pluck('name', 'id')->toArray();
+        return Warehouse::query()->pluck('name', 'id')->toArray();
     }
 
-    public function filterByDate($type)
+    public function filterByDate(mixed $type): void
     {
         $this->setDefaultDates();
 
         switch ($type) {
             case 'day':
-                $this->setDateRange(now()->startOfDay(), now()->endOfDay());
+                $this->setDateRange(today(), now()->endOfDay());
 
                 break;
             case 'month':
@@ -93,66 +93,62 @@ class ProfitLossReport extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->setValues();
 
         return view('livewire.reports.profit-loss-report');
     }
 
-    public function generateReport()
+    public function generateReport(): void
     {
         $this->validate();
     }
 
-    public function setValues()
+    public function setValues(): void
     {
-        $this->total_sales = Sale::completed()
+        $this->total_sales = Sale::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->count();
 
-        $this->sales_amount = Sale::completed()
+        $this->sales_amount = Sale::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->sum('total_amount') / 100;
 
-        $this->total_purchases = Purchase::completed()
+        $this->total_purchases = Purchase::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->count();
 
-        $this->purchases_amount = Purchase::completed()
+        $this->purchases_amount = Purchase::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->sum('total_amount') / 100;
 
-        $this->total_sale_returns = SaleReturn::completed()
+        $this->total_sale_returns = SaleReturn::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->count();
 
-        $this->sale_returns_amount = SaleReturn::completed()
+        $this->sale_returns_amount = SaleReturn::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->sum('total_amount') / 100;
 
-        $this->total_purchase_returns = PurchaseReturn::completed()
+        $this->total_purchase_returns = PurchaseReturn::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->count();
 
-        $this->purchase_returns_amount = PurchaseReturn::completed()
+        $this->purchase_returns_amount = PurchaseReturn::query()->completed()
             ->whereBetween('date', [$this->start_date, $this->end_date])
             ->sum('total_amount') / 100;
 
-        $this->expenses_amount = Expense::when($this->start_date, function ($query) {
-            return $query->whereDate('date', '>=', $this->start_date);
-        })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+        $this->expenses_amount = Expense::query()->when($this->start_date, fn($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn($query) => $query->whereDate('date', '<=', $this->end_date))
             ->sum('amount') / 100;
 
-        $this->completed_purchases = Purchase::completed()
+        $this->completed_purchases = Purchase::query()->completed()
             ->when($this->start_date, fn ($query) => $query->whereDate('date', '>=', $this->start_date))
             ->when($this->end_date, fn ($query) => $query->whereDate('date', '<=', $this->end_date))
             ->count();
 
-        $this->pending_purchases = Purchase::pending()
+        $this->pending_purchases = Purchase::query()->pending()
             ->when($this->start_date, fn ($query) => $query->whereDate('date', '>=', $this->start_date))
             ->when($this->end_date, fn ($query) => $query->whereDate('date', '<=', $this->end_date))
             ->count();
@@ -169,11 +165,11 @@ class ProfitLossReport extends Component
 
         // Calculate product costs in a single query by joining product_warehouse
         $productCosts = \App\Models\SaleDetails::query()
-            ->whereHas('sale', function ($query) {
+            ->whereHas('sale', function ($query): void {
                 $query->completed()
                     ->whereBetween('date', [$this->start_date, $this->end_date]);
             })
-            ->join('product_warehouse', function ($join) {
+            ->join('product_warehouse', function ($join): void {
                 $join->on('sale_details.product_id', '=', 'product_warehouse.product_id')
                     ->on('sale_details.warehouse_id', '=', 'product_warehouse.warehouse_id');
             })
@@ -184,20 +180,12 @@ class ProfitLossReport extends Component
 
     public function calculatePaymentsReceived(): float
     {
-        $sale_payments = SalePayment::when($this->start_date, function ($query) {
-            return $query->whereDate('date', '>=', $this->start_date);
-        })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+        $sale_payments = SalePayment::query()->when($this->start_date, fn($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn($query) => $query->whereDate('date', '<=', $this->end_date))
             ->sum('amount') / 100;
 
-        $purchase_return_payments = PurchaseReturnPayment::when($this->start_date, function ($query) {
-            return $query->whereDate('date', '>=', $this->start_date);
-        })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+        $purchase_return_payments = PurchaseReturnPayment::query()->when($this->start_date, fn($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn($query) => $query->whereDate('date', '<=', $this->end_date))
             ->sum('amount') / 100;
 
         return $sale_payments + $purchase_return_payments;
@@ -205,32 +193,24 @@ class ProfitLossReport extends Component
 
     public function calculatePaymentsSent(): float
     {
-        $purchase_payments = PurchasePayment::when($this->start_date, function ($query) {
-            return $query->whereDate('date', '>=', $this->start_date);
-        })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+        $purchase_payments = PurchasePayment::query()->when($this->start_date, fn($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn($query) => $query->whereDate('date', '<=', $this->end_date))
             ->sum('amount') / 100;
 
-        $sale_return_payments = SaleReturnPayment::when($this->start_date, function ($query) {
-            return $query->whereDate('date', '>=', $this->start_date);
-        })
-            ->when($this->end_date, function ($query) {
-                return $query->whereDate('date', '<=', $this->end_date);
-            })
+        $sale_return_payments = SaleReturnPayment::query()->when($this->start_date, fn($query) => $query->whereDate('date', '>=', $this->start_date))
+            ->when($this->end_date, fn($query) => $query->whereDate('date', '<=', $this->end_date))
             ->sum('amount') / 100;
 
         return $purchase_payments + $sale_return_payments + $this->expenses_amount;
     }
 
-    private function setDefaultDates()
+    private function setDefaultDates(): void
     {
         $this->start_date = now()->startOfYear()->format('Y-m-d');
         $this->end_date = now()->endOfDay()->format('Y-m-d');
     }
 
-    private function setDateRange($startDate, $endDate)
+    private function setDateRange(mixed $startDate, mixed $endDate): void
     {
         $this->start_date = $startDate->format('Y-m-d');
         $this->end_date = $endDate->format('Y-m-d');

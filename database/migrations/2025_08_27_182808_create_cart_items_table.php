@@ -11,20 +11,20 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Cart::class)->constrained()->cascadeOnDelete();
-            $table->string('associable_type')->nullable();
-            $table->unsignedBigInteger('associable_id')->nullable();
-            $table->string('name');
-            $table->decimal('price', 15, 2);
-            $table->integer('quantity');
-            $table->json('attributes')->nullable();
-            $table->json('conditions')->nullable();
-            $table->timestamps();
+        Schema::create('cart_items', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(App\Models\Cart::class)->constrained()->cascadeOnDelete();
+            $blueprint->string('associable_type')->nullable();
+            $blueprint->unsignedBigInteger('associable_id')->nullable();
+            $blueprint->string('name');
+            $blueprint->decimal('price', 15, 2);
+            $blueprint->integer('quantity');
+            $blueprint->json('attributes')->nullable();
+            $blueprint->json('conditions')->nullable();
+            $blueprint->timestamps();
 
-            $table->index(['cart_id']);
-            $table->index(['associable_type', 'associable_id']);
+            $blueprint->index(['cart_id']);
+            $blueprint->index(['associable_type', 'associable_id']);
         });
     }
 

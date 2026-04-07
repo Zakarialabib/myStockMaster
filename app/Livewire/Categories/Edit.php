@@ -24,13 +24,13 @@ class Edit extends Component
 
     public CategoryForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.categories.edit');
     }
 
     #[On('openEditModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         abort_if(Gate::denies('category_update'), 403);
 
@@ -38,7 +38,7 @@ class Edit extends Component
 
         $this->form->reset();
 
-        $this->category = Category::where('id', $id)->firstOrFail();
+        $this->category = Category::query()->where('id', $id)->firstOrFail();
 
         $this->form->name = $this->category->name;
         $this->form->description = $this->category->description;
@@ -48,11 +48,11 @@ class Edit extends Component
         $this->editModal = true;
     }
 
-    public function update(CategoryService $service): void
+    public function update(CategoryService $categoryService): void
     {
         $this->form->validate();
 
-        $service->update($this->category, $this->form->all());
+        $categoryService->update($this->category, $this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 

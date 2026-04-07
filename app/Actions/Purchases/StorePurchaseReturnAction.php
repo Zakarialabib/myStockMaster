@@ -25,7 +25,7 @@ final class StorePurchaseReturnAction
                 $paymentStatus = PaymentStatus::PAID;
             }
 
-            $purchaseReturn = PurchaseReturn::create([
+            $purchaseReturn = PurchaseReturn::query()->create([
                 'date' => $data['date'],
                 'reference' => $data['reference'] ?? 'PRRN-' . date('YmdHis'),
                 'supplier_id' => $data['supplier_id'],
@@ -63,7 +63,7 @@ final class StorePurchaseReturnAction
                     ? $cartItem['attributes']['warehouse_id']
                     : $data['warehouse_id'];
 
-                PurchaseReturnDetail::create([
+                PurchaseReturnDetail::query()->create([
                     'purchase_return_id' => $purchaseReturn->id,
                     'warehouse_id' => $itemWarehouseId,
                     'product_id' => $productId,
@@ -79,7 +79,7 @@ final class StorePurchaseReturnAction
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {
-                    $productWarehouse = \App\Models\ProductWarehouse::where('product_id', $productId)
+                    $productWarehouse = \App\Models\ProductWarehouse::query()->where('product_id', $productId)
                         ->where('warehouse_id', $itemWarehouseId)
                         ->first();
 
@@ -92,7 +92,7 @@ final class StorePurchaseReturnAction
             }
 
             if ($data['paid_amount'] > 0) {
-                PurchaseReturnPayment::create([
+                PurchaseReturnPayment::query()->create([
                     'date' => $data['date'],
                     'reference' => 'INV/' . $purchaseReturn->reference,
                     'amount' => $data['paid_amount'] * 100,

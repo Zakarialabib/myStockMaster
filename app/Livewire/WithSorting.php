@@ -14,10 +14,8 @@ trait WithSorting
 
     /**
      * @param mixed $field
-     *
-     * @return void
      */
-    public function sortBy($field)
+    public function sortBy(mixed $field): void
     {
         $this->sortBy = $field;
 
@@ -26,8 +24,7 @@ trait WithSorting
             : 'asc';
     }
 
-    /** @return string */
-    public function reverseSort()
+    public function reverseSort(): string
     {
         return $this->sortDirection === 'asc'
             ? 'desc'

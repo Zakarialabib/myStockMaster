@@ -13,6 +13,7 @@ class SaleResource extends JsonResource
      *
      * @param \Illuminate\Http\Request $request
      * */
+    #[\Override]
     public function toArray($request)
     {
         return [

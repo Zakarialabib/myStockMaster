@@ -22,13 +22,13 @@ class Edit extends Component
 
     public WarehouseForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.warehouses.edit');
     }
 
     #[On('editModal')]
-    public function openModal($warehouse): void
+    public function openModal(int|string $warehouse): void
     {
         abort_if(Gate::denies('warehouse_update'), 403);
 
@@ -36,7 +36,7 @@ class Edit extends Component
 
         $this->form->reset();
 
-        $this->warehouse = Warehouse::findOrFail($warehouse);
+        $this->warehouse = Warehouse::query()->findOrFail($warehouse);
 
         $this->form->name = $this->warehouse->name;
         $this->form->phone = $this->warehouse->phone;
@@ -47,13 +47,13 @@ class Edit extends Component
         $this->editModal = true;
     }
 
-    public function update(WarehouseService $service): void
+    public function update(WarehouseService $warehouseService): void
     {
         abort_if(Gate::denies('warehouse_update'), 403);
 
         $this->form->validate();
 
-        $service->update($this->warehouse, $this->form->all());
+        $warehouseService->update($this->warehouse, $this->form->all());
 
         $this->editModal = false;
 

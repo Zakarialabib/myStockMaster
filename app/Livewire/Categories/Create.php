@@ -33,11 +33,11 @@ class Create extends Component
         $this->createModal = true;
     }
 
-    public function create(CategoryService $service): void
+    public function create(CategoryService $categoryService): void
     {
         $this->form->validate();
 
-        $service->create($this->form->all());
+        $categoryService->create($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
@@ -48,7 +48,7 @@ class Create extends Component
         $this->createModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('category_create'), 403);
 

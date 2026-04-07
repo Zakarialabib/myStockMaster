@@ -67,7 +67,7 @@ class CalculateExpansionReadinessAction
         $totalTables = Table::count();
         $totalCapacity = Table::sum('capacity');
 
-        $sales = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $sales = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', '!=', 'cancelled')
             ->get();
 
@@ -85,17 +85,17 @@ class CalculateExpansionReadinessAction
             'total_sales' => $totalSales,
             'average_sale_value' => round($averageSaleValue, 2),
             'utilization_trend' => $this->getUtilizationTrend($startDate, $endDate),
-            'bottlenecks' => $this->identifyBottlenecks($sales, $totalTables, $totalCapacity),
+            'bottlenecks' => $this->identifyBottlenecks($sales, $totalTables),
         ];
     }
 
     private function getProfitabilityMetrics(Carbon $startDate, Carbon $endDate): array
     {
-        $revenue = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $revenue = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', '!=', 'cancelled')
             ->sum('total_amount');
 
-        $expenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
+        $expenses = Expense::query()->whereBetween('date', [$startDate, $endDate])->sum('amount');
         $profit = $revenue - $expenses;
         $profitMargin = $revenue > 0 ? ($profit / $revenue) * 100 : 0;
 
@@ -116,7 +116,7 @@ class CalculateExpansionReadinessAction
             'revenue_growth_rate' => round($revenueGrowth, 2),
             'break_even_point' => $this->calculateBreakEvenPoint($expenses, $grossMargin),
             'profitability_trend' => $this->getProfitabilityTrend($startDate, $endDate),
-            'roi_projection' => $this->calculateROIProjection($profit, $revenue),
+            'roi_projection' => $this->calculateROIProjection($profit),
         ];
     }
 
@@ -144,13 +144,13 @@ class CalculateExpansionReadinessAction
 
     private function getOperationalMetrics(Carbon $startDate, Carbon $endDate): array
     {
-        $sales = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $sales = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', '!=', 'cancelled')
             ->get();
 
-        $averageServiceTime = $this->calculateAverageServiceTime($sales);
-        $customerSatisfaction = $this->getCustomerSatisfactionScore($sales);
-        $inventoryTurnover = $this->calculateInventoryTurnover($startDate, $endDate);
+        $averageServiceTime = $this->calculateAverageServiceTime();
+        $customerSatisfaction = $this->getCustomerSatisfactionScore();
+        $inventoryTurnover = $this->calculateInventoryTurnover();
 
         return [
             'average_service_time' => round($averageServiceTime, 2),
@@ -312,13 +312,13 @@ class CalculateExpansionReadinessAction
     private function getMarketAnalysis(Carbon $startDate, Carbon $endDate): array
     {
         $revenueGrowth = $this->getProfitabilityMetrics($startDate, $endDate)['revenue_growth_rate'];
-        $customerGrowth = $this->calculateCustomerGrowth($startDate, $endDate);
+        $customerGrowth = $this->calculateCustomerGrowth();
 
         return [
             'market_demand' => $this->assessMarketDemand($revenueGrowth, $customerGrowth),
             'competition_analysis' => $this->getCompetitionAnalysis(),
             'location_opportunities' => $this->getLocationOpportunities(),
-            'customer_demographics' => $this->getCustomerDemographics($startDate, $endDate),
+            'customer_demographics' => $this->getCustomerDemographics(),
             'market_saturation' => $this->assessMarketSaturation(),
         ];
     }
@@ -393,7 +393,7 @@ class CalculateExpansionReadinessAction
     }
 
     // Placeholder methods for complex calculations
-    private function calculateTableUtilization($sales, $totalTables, $startDate, $endDate): float
+    private function calculateTableUtilization($sales, $totalTables, \Carbon\Carbon $startDate, \Carbon\Carbon $endDate): float
     {
         $days = max(1, $startDate->diffInDays($endDate));
         $averageSalesPerDay = $sales->count() / $days;
@@ -402,7 +402,7 @@ class CalculateExpansionReadinessAction
         return ($averageTablesUsedPerDay / max(1, $totalTables)) * 100;
     }
 
-    private function calculateCapacityUtilization($sales, $totalCapacity, $startDate, $endDate): float
+    private function calculateCapacityUtilization($sales, $totalCapacity, \Carbon\Carbon $startDate, \Carbon\Carbon $endDate): float
     {
         $totalCustomers = $sales->sum('customer_count') ?: $sales->count() * 2; // Default 2 customers per sale
         $days = max(1, $startDate->diffInDays($endDate));
@@ -413,9 +413,7 @@ class CalculateExpansionReadinessAction
 
     private function getPeakHours($sales): array
     {
-        $hourlySales = $sales->groupBy(function ($sale) {
-            return $sale->created_at->format('H');
-        })->map->count()->sortDesc();
+        $hourlySales = $sales->groupBy(fn($sale) => $sale->created_at->format('H'))->map->count()->sortDesc();
 
         return [
             'peak_hour' => $hourlySales->keys()->first() ?? '12',
@@ -427,8 +425,8 @@ class CalculateExpansionReadinessAction
     private function getUtilizationTrend($startDate, $endDate): string
     {
         // Simplified trend calculation
-        $firstHalf = Sale::whereBetween('created_at', [$startDate, $startDate->copy()->addDays($startDate->diffInDays($endDate) / 2)])->count();
-        $secondHalf = Sale::whereBetween('created_at', [$startDate->copy()->addDays($startDate->diffInDays($endDate) / 2), $endDate])->count();
+        $firstHalf = Sale::query()->whereBetween('created_at', [$startDate, $startDate->copy()->addDays($startDate->diffInDays($endDate) / 2)])->count();
+        $secondHalf = Sale::query()->whereBetween('created_at', [$startDate->copy()->addDays($startDate->diffInDays($endDate) / 2), $endDate])->count();
 
         if ($secondHalf > $firstHalf * 1.1) {
             return 'increasing';
@@ -441,7 +439,7 @@ class CalculateExpansionReadinessAction
         return 'stable';
     }
 
-    private function identifyBottlenecks($sales, $totalTables, $totalCapacity): array
+    private function identifyBottlenecks($sales, $totalTables): array
     {
         $bottlenecks = [];
 
@@ -454,9 +452,9 @@ class CalculateExpansionReadinessAction
         return $bottlenecks;
     }
 
-    private function calculateCOGS($startDate, $endDate): float
+    private function calculateCOGS(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate): float
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['food_cost', 'beverage_cost'])
             ->sum('amount');
     }
@@ -466,16 +464,16 @@ class CalculateExpansionReadinessAction
         $yearSql = db_date_format('created_at', '%Y');
         $monthSql = db_date_format('created_at', '%m');
 
-        return Sale::whereBetween('created_at', [$startDate, $endDate])
+        return Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', '!=', 'cancelled')
-            ->selectRaw("{$yearSql} as year, {$monthSql} as month, SUM(total_amount) as revenue")
+            ->selectRaw(sprintf('%s as year, %s as month, SUM(total_amount) as revenue', $yearSql, $monthSql))
             ->groupBy('year', 'month')
             ->orderBy('year')
             ->orderBy('month')
             ->get();
     }
 
-    private function calculateRevenueGrowth($monthlyRevenue): float
+    private function calculateRevenueGrowth(\Illuminate\Support\Collection $monthlyRevenue): float
     {
         if ($monthlyRevenue->count() < 2) {
             return 0;
@@ -487,7 +485,7 @@ class CalculateExpansionReadinessAction
         return $first > 0 ? (($last - $first) / $first) * 100 : 0;
     }
 
-    private function calculateBreakEvenPoint($expenses, $grossMargin): array
+    private function calculateBreakEvenPoint($expenses, float|int $grossMargin): array
     {
         $fixedCosts = $expenses * 0.6; // Assume 60% are fixed costs
         $breakEvenRevenue = $grossMargin > 0 ? $fixedCosts / ($grossMargin / 100) : 0;
@@ -498,7 +496,7 @@ class CalculateExpansionReadinessAction
         ];
     }
 
-    private function getProfitabilityTrend($startDate, $endDate): string
+    private function getProfitabilityTrend(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate): string
     {
         $monthlyData = $this->getMonthlyRevenue($startDate, $endDate);
 
@@ -506,12 +504,10 @@ class CalculateExpansionReadinessAction
             return 'insufficient_data';
         }
 
-        $trend = $monthlyData->last()->revenue > $monthlyData->first()->revenue ? 'improving' : 'declining';
-
-        return $trend;
+        return $monthlyData->last()->revenue > $monthlyData->first()->revenue ? 'improving' : 'declining';
     }
 
-    private function calculateROIProjection($profit, $revenue): array
+    private function calculateROIProjection(float|int $profit): array
     {
         $investmentRequired = 340000; // From getInvestmentRequirements
         $annualProfit = $profit * 12; // Assuming monthly profit
@@ -529,10 +525,10 @@ class CalculateExpansionReadinessAction
         return 150000; // Placeholder value
     }
 
-    private function getAverageMonthlyExpenses($startDate, $endDate): float
+    private function getAverageMonthlyExpenses(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate): float
     {
         $months = max(1, $startDate->diffInMonths($endDate));
-        $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
+        $totalExpenses = Expense::query()->whereBetween('date', [$startDate, $endDate])->sum('amount');
 
         return $totalExpenses / $months;
     }
@@ -561,7 +557,7 @@ class CalculateExpansionReadinessAction
         return 75000; // Current assets - Current liabilities
     }
 
-    private function calculateFinancialStabilityScore($cashRunway, $debtToEquity, $currentRatio): float
+    private function calculateFinancialStabilityScore(float|int $cashRunway, float $debtToEquity, float $currentRatio): float
     {
         $cashScore = min(100, ($cashRunway / 12) * 100);
         $debtScore = max(0, 100 - ($debtToEquity * 100));
@@ -570,7 +566,7 @@ class CalculateExpansionReadinessAction
         return ($cashScore + $debtScore + $liquidityScore) / 3;
     }
 
-    private function assessCreditWorthiness($cashRunway, $debtToEquity): string
+    private function assessCreditWorthiness(float|int $cashRunway, float $debtToEquity): string
     {
         if ($cashRunway >= 12 && $debtToEquity <= 0.3) {
             return 'excellent';
@@ -587,25 +583,28 @@ class CalculateExpansionReadinessAction
         return 'poor';
     }
 
-    private function calculateAverageServiceTime($sales): float
+    private function calculateAverageServiceTime(): float
     {
         // Placeholder - would need actual service time tracking
-        return 25.5; // minutes
+        return 25.5;
+        // minutes
     }
 
-    private function getCustomerSatisfactionScore($sales): float
+    private function getCustomerSatisfactionScore(): float
     {
         // Placeholder - would need actual customer feedback system
-        return 4.2; // out of 5
+        return 4.2;
+        // out of 5
     }
 
-    private function calculateInventoryTurnover($startDate, $endDate): float
+    private function calculateInventoryTurnover(): float
     {
         // Placeholder calculation
-        return 12; // times per year
+        return 12;
+        // times per year
     }
 
-    private function calculateOperationalEfficiencyScore($serviceTime, $satisfaction): float
+    private function calculateOperationalEfficiencyScore(float $serviceTime, float $satisfaction): float
     {
         $serviceScore = max(0, 100 - (($serviceTime - 20) * 2)); // Penalty for service time > 20 min
         $satisfactionScore = ($satisfaction / 5) * 100;
@@ -613,9 +612,9 @@ class CalculateExpansionReadinessAction
         return ($serviceScore + $satisfactionScore) / 3;
     }
 
-    private function assessScalabilityReadiness($sales, $startDate, $endDate): array
+    private function assessScalabilityReadiness($sales, \Carbon\Carbon $startDate, \Carbon\Carbon $endDate): array
     {
-        $consistency = $this->calculateSaleConsistency($sales, $startDate, $endDate);
+        $consistency = $this->calculateSaleConsistency($sales);
         $growth = $this->getUtilizationTrend($startDate, $endDate);
 
         return [
@@ -625,20 +624,16 @@ class CalculateExpansionReadinessAction
         ];
     }
 
-    private function calculateSaleConsistency($sales, $startDate, $endDate): float
+    private function calculateSaleConsistency($sales): float
     {
-        $dailySales = $sales->groupBy(function ($sale) {
-            return $sale->created_at->format('Y-m-d');
-        })->map->count();
+        $dailySales = $sales->groupBy(fn($sale) => $sale->created_at->format('Y-m-d'))->map->count();
 
         if ($dailySales->count() < 2) {
             return 0;
         }
 
         $average = $dailySales->avg();
-        $variance = $dailySales->map(function ($count) use ($average) {
-            return pow($count - $average, 2);
-        })->avg();
+        $variance = $dailySales->map(fn($count) => ($count - $average) ** 2)->avg();
 
         $standardDeviation = sqrt($variance);
         $coefficientOfVariation = $average > 0 ? ($standardDeviation / $average) * 100 : 100;
@@ -646,13 +641,14 @@ class CalculateExpansionReadinessAction
         return max(0, 100 - $coefficientOfVariation);
     }
 
-    private function calculateCustomerGrowth($startDate, $endDate): float
+    private function calculateCustomerGrowth(): float
     {
         // Placeholder - would need actual customer tracking
-        return 15; // 15% growth
+        return 15;
+        // 15% growth
     }
 
-    private function assessMarketDemand($revenueGrowth, $customerGrowth): array
+    private function assessMarketDemand($revenueGrowth, float $customerGrowth): array
     {
         $demandScore = ($revenueGrowth + $customerGrowth) / 2;
 
@@ -681,7 +677,7 @@ class CalculateExpansionReadinessAction
         ];
     }
 
-    private function getCustomerDemographics($startDate, $endDate): array
+    private function getCustomerDemographics(): array
     {
         return [
             'primary_age_group' => '25-45',

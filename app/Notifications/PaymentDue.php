@@ -23,8 +23,6 @@ class PaymentDue extends Notification
     /**
      * Create a new notification instance.
      *
-     *
-     * @return void
      */
     public function __construct(Sale $sale)
     {
@@ -35,10 +33,8 @@ class PaymentDue extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
-     *
-     * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['database'];
     }
@@ -47,15 +43,13 @@ class PaymentDue extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
-     *
-     * @return array
      */
-    public function toDatabase($notifiable)
+    public function toDatabase($notifiable): array
     {
         $sale = $this->sale;
 
         if (! $sale->due_amount || ! $sale->payment_date) {
-            $payment_date = Carbon::parse($sale->date)->addDays(15);
+            $payment_date = \Illuminate\Support\Facades\Date::parse($sale->date)->addDays(15);
 
             if (now()->gt($payment_date)) {
                 return [

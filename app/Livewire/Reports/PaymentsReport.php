@@ -47,7 +47,7 @@ class PaymentsReport extends Component
         $this->query = null;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('report_access'), 403);
 
@@ -66,7 +66,7 @@ class PaymentsReport extends Component
         $this->render();
     }
 
-    public function updatedPayments($value): void
+    public function updatedPayments(mixed $value): void
     {
         $this->resetPage();
     }

@@ -18,27 +18,27 @@ class EditTranslation extends Component
     use WithAlert;
     use WithPagination;
 
-    public $language;
+    public mixed $language;
 
     public $search = '';
 
     #[Validate([
         'translations.*.value' => 'required',
     ])]
-    public $translations;
+    public mixed $translations;
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
-        $this->language = Language::where('code', $id)->firstOrFail();
+        $this->language = Language::query()->where('code', $id)->firstOrFail();
         // dd($this->all());
         $this->translations = $this->getTranslations();
         $this->translations = collect($this->translations)->map(static fn ($item, $key): array => [
             'key' => $key,
             'value' => $item,
-        ])->toArray();
+        ])->all();
     }
 
-    private function getTranslations()
+    private function getTranslations(): mixed
     {
         $path = lang_path($this->language->code . '.json');
         $content = file_get_contents($path);
@@ -64,19 +64,19 @@ class EditTranslation extends Component
         $this->alert('success', __('Data updated successfully!'));
     }
 
-    public function updatedSearch()
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $filtered = collect($this->translations)->filter(function ($translation) {
-            if (empty($this->search)) {
+        $filtered = collect($this->translations)->filter(function (array $translation): bool {
+            if (blank($this->search)) {
                 return true;
             }
 
-            $search = strtolower($this->search);
+            $search = strtolower((string) $this->search);
             $keyMatch = str_contains(strtolower((string) $translation['key']), $search);
             $valMatch = str_contains(strtolower((string) $translation['value']), $search);
 
@@ -86,8 +86,8 @@ class EditTranslation extends Component
         $page = $this->getPage();
         $perPage = 50;
 
-        $paginator = new LengthAwarePaginator(
-            $filtered->slice(($page - 1) * $perPage, $perPage, true)->all(),
+        $lengthAwarePaginator = new LengthAwarePaginator(
+            $filtered->slice(($page - 1) * $perPage, $perPage)->all(),
             $filtered->count(),
             $perPage,
             $page,
@@ -95,7 +95,7 @@ class EditTranslation extends Component
         );
 
         return view('livewire.language.edit-translation', [
-            'paginator' => $paginator,
+            'paginator' => $lengthAwarePaginator,
         ]);
     }
 }

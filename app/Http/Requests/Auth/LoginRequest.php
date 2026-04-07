@@ -15,20 +15,16 @@ class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => ['required', 'string', 'email'],
@@ -41,10 +37,8 @@ class LoginRequest extends FormRequest
      *
      *
      * @throws ValidationException
-     *
-     * @return void
      */
-    public function authenticate()
+    public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
@@ -64,10 +58,8 @@ class LoginRequest extends FormRequest
      *
      *
      * @throws ValidationException
-     *
-     * @return void
      */
-    public function ensureIsNotRateLimited()
+    public function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;

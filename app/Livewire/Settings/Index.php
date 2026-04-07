@@ -36,12 +36,12 @@ class Index extends Component
 
     public ?array $invoice_control = null;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.index');
     }
 
-    public function save()
+    public function save(): void
     {
         // Save updated analytics control settings
         // $updatedAnalyticsControl = json_encode($this->analyticsControl);
@@ -51,22 +51,22 @@ class Index extends Component
         // $this->dispatch('analyticsControlUpdated', $updatedAnalyticsControl);
     }
 
-    public function toggleStatus($index): void
+    public function toggleStatus(mixed $index): void
     {
         $this->analyticsControl[$index]['status'] = ! $this->analyticsControl[$index]['status'];
         $this->settings->save();
     }
 
-    public function changeColor($index, $color): void
+    public function changeColor(mixed $index, mixed $color): void
     {
         $this->analyticsControl[$index]['color'] = $color;
         $this->settings->save();
     }
 
-    public function updatedInvoiceControl($field)
+    public function updatedInvoiceControl(mixed $field): void
     {
         // Update settings when checkboxes are toggled
-        foreach ($this->invoice_control as $index => $control) {
+        foreach ($this->invoice_control as $control) {
             if ($control['name'] === $field) {
                 $this->settings->{$field} = $control['status'];
                 $this->settings->save();
@@ -83,14 +83,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('setting_access'), 403);
 
-        $this->settings = Setting::firstOrFail();
+        $this->settings = Setting::query()->firstOrFail();
         $this->form->setSetting($this->settings);
 
         $this->invoice_control = is_string($this->settings->invoice_control) ? json_decode($this->settings->invoice_control, true) : $this->settings->invoice_control;
         $this->analyticsControl = is_string($this->settings->analytics_control) ? json_decode($this->settings->analytics_control, true) : $this->settings->analytics_control;
     }
 
-    public function saveImage()
+    public function saveImage(): void
     {
         // Handle file uploads
         if ($this->form->invoice_header) {
@@ -118,7 +118,7 @@ class Index extends Component
         }
     }
 
-    private function storeImage($image, string $name): void
+    private function storeImage(mixed $image, string $name): void
     {
         $image->storeAs('settings', $name, 'public');
     }
@@ -159,9 +159,11 @@ class Index extends Component
         if ($this->form->site_logo && is_string($this->form->site_logo)) {
             $this->settings->site_logo = $this->form->site_logo;
         }
+
         if ($this->form->site_favicon && is_string($this->form->site_favicon)) {
             $this->settings->site_favicon = $this->form->site_favicon;
         }
+
         $this->settings->save();
 
         cache()->forget('settings');
@@ -171,7 +173,7 @@ class Index extends Component
         $this->dispatch('settings-saved');
     }
 
-    protected function createHTMLfile($file, string $name): string
+    protected function createHTMLfile(mixed $file, string $name): string
     {
         $extension = $file->extension();
         $data = File::get($file->getRealPath());

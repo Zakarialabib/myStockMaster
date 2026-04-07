@@ -34,10 +34,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Printer wherePort($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Printer whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Printer extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -47,9 +48,9 @@ class Printer extends Model
 
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $fillable = [
         'name',
@@ -61,7 +62,7 @@ class Printer extends Model
         'path',
     ];
 
-    public static function capabilityProfiles()
+    public static function capabilityProfiles(): array
     {
         return [
             'default' => 'Default',
@@ -72,14 +73,14 @@ class Printer extends Model
         ];
     }
 
-    public static function capabilityProfileSrt($profile)
+    public static function capabilityProfileSrt(mixed $profile)
     {
         $profiles = Printer::capabilityProfiles();
 
         return $profiles[$profile] ?? '';
     }
 
-    public static function connectionTypes()
+    public static function connectionTypes(): array
     {
         return [
             'network' => 'Network',
@@ -88,7 +89,7 @@ class Printer extends Model
         ];
     }
 
-    public static function connectionTypeStr($type)
+    public static function connectionTypeStr(mixed $type)
     {
         $types = Printer::connectionTypes();
 

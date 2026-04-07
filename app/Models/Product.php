@@ -105,7 +105,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withoutTrashed()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Product extends Model
 {
@@ -154,6 +154,7 @@ class Product extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -172,26 +173,38 @@ class Product extends Model
      *
      * @return string
      */
-    public function generateSlug($name)
+    public function generateSlug(mixed $name)
     {
         return Str::slug($name, '-');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, $this>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Brand, $this>
+     */
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<\App\Models\Movement, $this>
+     */
     public function movements(): MorphMany
     {
         return $this->morphMany(Movement::class, 'movable');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceHistory, $this>
+     */
     public function priceHistory(): HasMany
     {
         return $this->hasMany(PriceHistory::class);
@@ -199,8 +212,8 @@ class Product extends Model
 
     public static function ecommerceProducts()
     {
-        return static::whereHas('warehouses', static function ($query): void {
-            $query->where('is_ecommerce', 1);
+        return static::query()->whereHas('warehouses', static function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+            $builder->where('is_ecommerce', 1);
         })->with(['warehouses' => static function ($query): void {
             $query->select('product_id', 'qty', 'price', 'old_price', 'is_discount', 'discount_date');
         }]);
@@ -210,14 +223,14 @@ class Product extends Model
     protected function productCost(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
+            get: function ($value): int|float {
                 if (array_key_exists('pivot_cost', $this->attributes)) {
                     return $this->attributes['pivot_cost'] / 100;
                 }
 
                 return $value / 100;
             },
-            set: fn ($value) => $value * 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
@@ -225,18 +238,18 @@ class Product extends Model
     protected function productPrice(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
+            get: function ($value): int|float {
                 if (array_key_exists('pivot_price', $this->attributes)) {
                     return $this->attributes['pivot_price'] / 100;
                 }
 
                 return $value / 100;
             },
-            set: fn ($value) => $value * 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
-    /** @return BelongsToMany<Warehouse> */
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function warehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class)
@@ -312,7 +325,7 @@ class Product extends Model
     }
 
     // Add scope for stock alerts
-    public function scopeBelowStockAlert($query)
+    protected function scopeBelowStockAlert(mixed $query)
     {
         return $query->whereColumn('quantity', '<=', 'stock_alert');
     }
@@ -323,15 +336,15 @@ class Product extends Model
         return $this->total_quantity <= ($this->stock_alert ?? 0);
     }
 
-    public function scopeSearchByNameOrCode($query, $term)
+    protected function scopeSearchByNameOrCode(mixed $query, mixed $term)
     {
-        return $query->when(! empty($term), function ($query) use ($term) {
+        return $query->when(filled($term), function ($query) use ($term): void {
             $query->where('name', 'like', '%' . $term . '%')
                 ->orWhere('code', 'like', '%' . $term . '%');
         });
     }
 
-    public function isAvailable()
+    public function isAvailable(): bool
     {
         return $this->total_quantity > 0;
     }

@@ -34,8 +34,8 @@ class DatabaseSyncService
             Log::info('Desktop database initialized successfully');
 
             return true;
-        } catch (Exception $e) {
-            Log::error('Failed to initialize desktop database: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to initialize desktop database: ' . $exception->getMessage());
 
             return false;
         }
@@ -59,8 +59,8 @@ class DatabaseSyncService
             Log::info('Data synced to offline database successfully');
 
             return true;
-        } catch (Exception $e) {
-            Log::error('Failed to sync to offline database: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to sync to offline database: ' . $exception->getMessage());
 
             return false;
         }
@@ -83,8 +83,8 @@ class DatabaseSyncService
             Log::info('Data synced to online database successfully');
 
             return true;
-        } catch (Exception $e) {
-            Log::error('Failed to sync to online database: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to sync to online database: ' . $exception->getMessage());
 
             return false;
         }
@@ -125,7 +125,7 @@ class DatabaseSyncService
             $tables = Schema::connection($this->onlineConnection)->getTables();
 
             return array_column($tables, 'name');
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Fallback to basic table list if online is not available
             return $this->getSyncableTables();
         }
@@ -144,16 +144,16 @@ class DatabaseSyncService
             $columns = Schema::connection($this->onlineConnection)->getColumns($table);
 
             // Create table in desktop database
-            Schema::connection($this->offlineConnection)->create($table, function ($tableBuilder) use ($columns) {
+            Schema::connection($this->offlineConnection)->create($table, function ($tableBuilder) use ($columns): void {
                 foreach ($columns as $column) {
                     $this->addColumnToTable($tableBuilder, (object) $column);
                 }
             });
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             if (app()->runningUnitTests()) {
-                dump("Could not create table {$table} in desktop database: " . $e->getMessage());
             }
-            Log::warning("Could not create table {$table} in desktop database: " . $e->getMessage());
+
+            Log::warning(sprintf('Could not create table %s in desktop database: ', $table) . $exception->getMessage());
         }
     }
 
@@ -161,48 +161,20 @@ class DatabaseSyncService
     protected function addColumnToTable($tableBuilder, $column): void
     {
         $name = $column->name;
-        $type = strtolower($column->type_name);
+        $type = strtolower((string) $column->type_name);
 
-        switch ($type) {
-            case 'integer':
-            case 'int':
-                $col = $tableBuilder->integer($name);
-
-                break;
-            case 'bigint':
-                $col = $tableBuilder->bigInteger($name);
-
-                break;
-            case 'varchar':
-            case 'string':
-                // Laravel 11 Schema::getColumns doesn't always expose length directly, default to 255
-                $col = $tableBuilder->string($name);
-                break;
-            case 'text':
-                $col = $tableBuilder->text($name);
-
-                break;
-            case 'decimal':
-            case 'numeric':
-                $col = $tableBuilder->decimal($name, 8, 2);
-                break;
-            case 'datetime':
-            case 'timestamp':
-                $col = $tableBuilder->dateTime($name);
-
-                break;
-            case 'date':
-                $col = $tableBuilder->date($name);
-
-                break;
-            case 'boolean':
-            case 'tinyint':
-                $col = $tableBuilder->boolean($name);
-
-                break;
-            default:
-                $col = $tableBuilder->string($name);
-        }
+        $col = match ($type) {
+            'integer', 'int' => $tableBuilder->integer($name),
+            'bigint' => $tableBuilder->bigInteger($name),
+            // Laravel 11 Schema::getColumns doesn't always expose length directly, default to 255
+            'varchar', 'string' => $tableBuilder->string($name),
+            'text' => $tableBuilder->text($name),
+            'decimal', 'numeric' => $tableBuilder->decimal($name, 8, 2),
+            'datetime', 'timestamp' => $tableBuilder->dateTime($name),
+            'date' => $tableBuilder->date($name),
+            'boolean', 'tinyint' => $tableBuilder->boolean($name),
+            default => $tableBuilder->string($name),
+        };
 
         if ($column->nullable) {
             $col->nullable();
@@ -231,10 +203,9 @@ class DatabaseSyncService
             }
 
             if (app()->runningUnitTests() && $table === 'categories') {
-                dump('Online categories count: ' . $query->count());
             }
 
-            $query->chunk(100, function ($records) use ($table, $hasUpdatedAt) {
+            $query->chunk(100, function ($records) use ($table, $hasUpdatedAt): void {
                 foreach ($records as $record) {
                     $recordArray = (array) $record;
                     $id = $recordArray['id'] ?? null;
@@ -251,8 +222,8 @@ class DatabaseSyncService
                             ->first();
 
                         if ($existingOffline && isset($existingOffline->updated_at)) {
-                            $offlineTime = strtotime($existingOffline->updated_at);
-                            $onlineTime = strtotime($recordArray['updated_at']);
+                            $offlineTime = strtotime((string) $existingOffline->updated_at);
+                            $onlineTime = strtotime((string) $recordArray['updated_at']);
 
                             // If offline is newer, skip overwriting from online
                             if ($offlineTime > $onlineTime) {
@@ -270,17 +241,17 @@ class DatabaseSyncService
                             );
                     } catch (Exception $e) {
                         if (app()->runningUnitTests()) {
-                            dump('Error inserting: ' . $e->getMessage());
                         }
+
                         throw $e;
                     }
                 }
             });
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             if (app()->runningUnitTests()) {
-                dump('Outer exception: ' . $e->getMessage());
             }
-            Log::warning("Could not sync table {$table} to offline: " . $e->getMessage());
+
+            Log::warning(sprintf('Could not sync table %s to offline: ', $table) . $exception->getMessage());
         }
     }
 
@@ -320,7 +291,7 @@ class DatabaseSyncService
 
                     if ($existingOnline && isset($existingOnline->updated_at)) {
                         $onlineTime = strtotime($existingOnline->updated_at);
-                        $offlineTime = strtotime($recordArray['updated_at']);
+                        $offlineTime = strtotime((string) $recordArray['updated_at']);
 
                         // If online is newer, skip overwriting from offline
                         if ($onlineTime > $offlineTime) {
@@ -336,8 +307,8 @@ class DatabaseSyncService
                         $recordArray
                     );
             }
-        } catch (Exception $e) {
-            Log::warning("Could not sync table {$table} to online: " . $e->getMessage());
+        } catch (Exception $exception) {
+            Log::warning(sprintf('Could not sync table %s to online: ', $table) . $exception->getMessage());
         }
     }
 
@@ -360,7 +331,7 @@ class DatabaseSyncService
             DB::connection($this->onlineConnection)->getPdo();
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

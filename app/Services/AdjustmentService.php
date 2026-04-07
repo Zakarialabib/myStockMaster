@@ -14,7 +14,7 @@ class AdjustmentService
     public function createAdjustment(array $adjustmentData, iterable $products): Adjustment
     {
         return DB::transaction(function () use ($adjustmentData, $products): Adjustment {
-            $adjustment = Adjustment::create([
+            $adjustment = Adjustment::query()->create([
                 'reference' => $adjustmentData['reference'],
                 'date' => $adjustmentData['date'],
                 'note' => $adjustmentData['note'],
@@ -28,7 +28,7 @@ class AdjustmentService
                 $quantity = $product['quantities'] ?? $product['quantity'] ?? 1;
                 $type = $product['types'] ?? $product['type'] ?? 'add';
 
-                AdjustedProduct::create([
+                AdjustedProduct::query()->create([
                     'adjustment_id' => $adjustment->id,
                     'product_id' => $productId,
                     'warehouse_id' => $adjustmentData['warehouse_id'],
@@ -36,7 +36,7 @@ class AdjustmentService
                     'type' => $type,
                 ]);
 
-                $productWarehouse = ProductWarehouse::where('product_id', $productId)
+                $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
                     ->where('warehouse_id', $adjustmentData['warehouse_id'])
                     ->firstOrFail();
 
@@ -56,7 +56,7 @@ class AdjustmentService
         return DB::transaction(function () use ($adjustment, $adjustmentData, $products): Adjustment {
             // Revert previous stock changes
             foreach ($adjustment->adjustedProducts as $existingProduct) {
-                $productWarehouse = ProductWarehouse::where('product_id', $existingProduct->product_id)
+                $productWarehouse = ProductWarehouse::query()->where('product_id', $existingProduct->product_id)
                     ->where('warehouse_id', $existingProduct->warehouse_id)
                     ->first();
 
@@ -87,7 +87,7 @@ class AdjustmentService
                 $quantity = $product['quantities'] ?? $product['quantity'] ?? 1;
                 $type = $product['types'] ?? $product['type'] ?? 'add';
 
-                AdjustedProduct::create([
+                AdjustedProduct::query()->create([
                     'adjustment_id' => $adjustment->id,
                     'product_id' => $productId,
                     'warehouse_id' => $adjustmentData['warehouse_id'],
@@ -95,7 +95,7 @@ class AdjustmentService
                     'type' => $type,
                 ]);
 
-                $productWarehouse = ProductWarehouse::where('product_id', $productId)
+                $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
                     ->where('warehouse_id', $adjustmentData['warehouse_id'])
                     ->first();
 

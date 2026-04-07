@@ -28,27 +28,27 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $customer;
+    public mixed $customer;
 
-    public $customer_group_id;
+    public mixed $customer_group_id;
 
-    public $file;
+    public mixed $file = null;
 
-    public $importModal = false;
+    public bool $importModal = false;
 
-    public $model = Customer::class;
+    public string $model = Customer::class;
 
     #[Computed]
     public function customerGroups()
     {
-        return CustomerGroup::pluck('name', 'id')->toArray();
+        return CustomerGroup::query()->pluck('name', 'id')->toArray();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $query = Customer::when($this->customer_group_id, function ($query) {
+        $query = Customer::query()->when($this->customer_group_id, function ($query): void {
             $query->where('customer_group_id', $this->customer_group_id);
         })->advancedFilter([
             's' => $this->search ?: null,
@@ -65,7 +65,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_delete'), 403);
 
-        Customer::whereIn('id', $this->selected)->delete();
+        Customer::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
@@ -83,16 +83,16 @@ class Index extends Component
     {
         abort_if(Gate::denies('customer_export'), 403);
 
-        $customers = Customer::whereIn('id', $this->selected)->get();
+        $customers = Customer::query()->whereIn('id', $this->selected)->get();
 
         return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
-    public function downloadAll(Customer $customers): StreamedResponse|Response
+    public function downloadAll(Customer $customer): StreamedResponse|Response
     {
         abort_if(Gate::denies('customer_export'), 403);
 
-        return (new CustomerExport($customers))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
+        return (new CustomerExport($customer))->download('customers.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function exportSelected(): StreamedResponse|Response

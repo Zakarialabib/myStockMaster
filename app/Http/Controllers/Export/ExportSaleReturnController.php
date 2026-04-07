@@ -13,8 +13,8 @@ class ExportSaleReturnController extends Controller
 {
     public function __invoke(int|string $id): Response
     {
-        $saleReturn = SaleReturn::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id', $saleReturn->customer->id)->firstOrFail();
+        $saleReturn = SaleReturn::query()->where('id', $id)->firstOrFail();
+        $customer = Customer::query()->where('id', $saleReturn->customer->id)->firstOrFail();
 
         $data = [
             'sale_return' => $saleReturn,

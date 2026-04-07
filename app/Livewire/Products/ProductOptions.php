@@ -12,14 +12,14 @@ class ProductOptions extends Component
 {
     use WithAlert;
 
-    public $options;
+    public mixed $options;
 
-    public function updatedOptions($options): void
+    public function updatedOptions(mixed $options): void
     {
         $options = [];
 
         foreach ($options as $option) {
-            if (! empty($option['type']) && ! empty($option['value'])) {
+            if (filled($option['type']) && filled($option['value'])) {
                 $this->options[] = $option;
             }
         }
@@ -35,7 +35,7 @@ class ProductOptions extends Component
         ];
     }
 
-    public function removeOption($index): void
+    public function removeOption(mixed $index): void
     {
         unset($this->options[$index]);
         $this->options = array_values($this->options);

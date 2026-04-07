@@ -10,14 +10,14 @@ use Livewire\Form;
 class AdjustmentForm extends Form
 {
     #[Validate('required|date')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('nullable|string|max:1000')]
-    public $note;
+    public mixed $note;
 
     #[Validate('required|string|max:255')]
-    public $reference;
+    public mixed $reference;
 
     #[Validate('required', message: 'Please provide warehouse')]
-    public $warehouse_id;
+    public mixed $warehouse_id;
 }

@@ -28,17 +28,17 @@ class Index extends Component
     use WithModels;
 
     /** @var Sale|null */
-    public $sale;
+    public mixed $sale;
 
-    public $model = Sale::class;
+    public string $model = Sale::class;
 
-    public $startDate;
+    public ?string $startDate = null;
 
-    public $endDate;
+    public ?string $endDate = null;
 
-    public $importModal = false;
+    public bool $importModal = false;
 
-    // public $deleteModal = false;
+    // public bool $deleteModal = false;
 
     public function mount(): void
     {
@@ -46,11 +46,11 @@ class Index extends Component
         $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
-    public function filterByType($type): void
+    public function filterByType(mixed $type): void
     {
         switch ($type) {
             case 'day':
-                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->startDate = today()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
 
                 break;
@@ -67,7 +67,7 @@ class Index extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('sale_access'), 403);
 
@@ -89,7 +89,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_update'), 403);
 
-        $sale = Sale::findOrFail($id);
+        $sale = Sale::query()->findOrFail($id);
         $sale->update(['status' => $status]);
 
         $this->alert('success', __('Sale status updated successfully.'));
@@ -99,7 +99,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_update'), 403);
 
-        $sale = Sale::findOrFail($id);
+        $sale = Sale::query()->findOrFail($id);
         $sale->update(['payment_status' => $payment_status]);
 
         $this->alert('success', __('Sale payment status updated successfully.'));
@@ -117,7 +117,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $sales = Sale::whereIn('id', $this->selected)->get();
+        $sales = Sale::query()->whereIn('id', $this->selected)->get();
 
         return (new SaleExport($sales))->download('sales.xls', \Maatwebsite\Excel\Excel::XLS);
     }
@@ -159,7 +159,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_delete'), 403);
 
-        Sale::whereIn('id', $this->selected)->delete();
+        Sale::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
@@ -169,14 +169,14 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_delete'), 403);
 
-        Sale::findOrFail($this->sale)->delete();
+        Sale::query()->findOrFail($this->sale)->delete();
 
         $this->dispatch('refreshIndex');
 
         $this->alert('success', __('Sale deleted successfully.'));
     }
 
-    public function deleteModal($id): void
+    public function deleteModal(int|string $id): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
             'toast' => false,
@@ -188,9 +188,9 @@ class Index extends Component
         $this->sale = $id;
     }
 
-    public function sendWhatsapp($sale)
+    public function sendWhatsapp(mixed $sale)
     {
-        $this->sale = Sale::find($sale);
+        $this->sale = Sale::query()->find($sale);
 
         // Get the customer's phone number and due amount from the model.
         $phone = $this->sale->customer->phone;
@@ -222,7 +222,7 @@ class Index extends Component
         return redirect()->away($url);
     }
 
-    public function openWhatapp($url): void
+    public function openWhatapp(mixed $url): void
     {
         // open whatsapp url in another tab
     }

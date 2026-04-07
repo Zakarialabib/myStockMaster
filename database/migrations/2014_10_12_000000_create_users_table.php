@@ -11,40 +11,40 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name', 192);
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('avatar')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('city', 192)->nullable();
-            $table->string('address')->nullable();
-            $table->string('country', 192)->nullable();
-            $table->unsignedInteger('role_id')->nullable();
-            $table->boolean('status')->default(true);
-            $table->boolean('is_all_warehouses')->default(false);
-            $table->integer('default_client_id')->nullable();
-            $table->integer('default_warehouse_id')->nullable();
-            $table->foreignId('provider_id')->nullable();
-            $table->softDeletes();
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::create('users', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->string('name', 192);
+            $blueprint->string('email')->unique();
+            $blueprint->string('password');
+            $blueprint->string('avatar')->nullable();
+            $blueprint->string('phone')->nullable();
+            $blueprint->string('city', 192)->nullable();
+            $blueprint->string('address')->nullable();
+            $blueprint->string('country', 192)->nullable();
+            $blueprint->unsignedInteger('role_id')->nullable();
+            $blueprint->boolean('status')->default(true);
+            $blueprint->boolean('is_all_warehouses')->default(false);
+            $blueprint->integer('default_client_id')->nullable();
+            $blueprint->integer('default_warehouse_id')->nullable();
+            $blueprint->foreignId('provider_id')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->rememberToken();
+            $blueprint->timestamps();
         });
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::create('password_reset_tokens', function (Blueprint $blueprint): void {
+            $blueprint->string('email')->primary();
+            $blueprint->string('token');
+            $blueprint->timestamp('created_at')->nullable();
         });
 
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
+        Schema::create('sessions', function (Blueprint $blueprint): void {
+            $blueprint->string('id')->primary();
+            $blueprint->foreignId('user_id')->nullable()->index();
+            $blueprint->string('ip_address', 45)->nullable();
+            $blueprint->text('user_agent')->nullable();
+            $blueprint->longText('payload');
+            $blueprint->integer('last_activity')->index();
         });
     }
 

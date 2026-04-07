@@ -41,9 +41,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request): UserResource
+    public function store(StoreUserRequest $storeUserRequest): UserResource
     {
-        $user = User::create($request->all());
+        $user = User::query()->create($storeUserRequest->all());
 
         return new UserResource($user);
     }
@@ -53,10 +53,10 @@ class UserController extends Controller
      */
     public function show(int $id): UserResource|JsonResponse
     {
-        $user = User::find($id);
+        $user = User::query()->find($id);
 
         if ($user === null) {
-            return response()->json(['message' => 'User not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'User not found'], 404);
         }
 
         return new UserResource($user);
@@ -65,10 +65,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, int $id): UserResource
+    public function update(UpdateUserRequest $updateUserRequest, int $id): UserResource
     {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
+        $user = User::query()->findOrFail($id);
+        $user->update($updateUserRequest->all());
 
         return new UserResource($user);
     }
@@ -78,9 +78,9 @@ class UserController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::query()->findOrFail($id);
         $user->delete();
 
-        return response()->json(['message' => 'User deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'User deleted successfully']);
     }
 }

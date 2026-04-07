@@ -19,14 +19,14 @@ class Show extends Component
     public bool $showModal = false;
 
     #[On('showModal')]
-    public function showModal($id): void
+    public function showModal(int|string $id): void
     {
-        $this->purchase = Purchase::findOrFail($id);
+        $this->purchase = Purchase::query()->findOrFail($id);
 
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('purchase_show'), 403);
 

@@ -21,27 +21,27 @@ class Edit extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     /** @var mixed */
-    public $customer;
+    public mixed $customer;
 
     public CustomerForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.customers.edit');
     }
 
     #[On('showModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
         abort_if(Gate::denies('customer_update'), 403);
 
         $this->resetErrorBag();
         $this->form->reset();
 
-        $this->customer = Customer::findOrFail($id);
+        $this->customer = Customer::query()->findOrFail($id);
 
         $this->form->name = $this->customer->name;
         $this->form->email = $this->customer->email;
@@ -58,13 +58,13 @@ class Edit extends Component
     #[Computed]
     public function roles()
     {
-        return Role::pluck('name', 'id')->toArray();
+        return Role::query()->pluck('name', 'id')->toArray();
     }
 
     #[Computed]
     public function customerGroups()
     {
-        return CustomerGroup::pluck('name', 'id')->toArray();
+        return CustomerGroup::query()->pluck('name', 'id')->toArray();
     }
 
     public function update(CustomerService $customerService): void

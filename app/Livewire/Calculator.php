@@ -21,12 +21,12 @@ class Calculator extends Component
 
     public bool $disabled = true;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.calculator');
     }
 
-    public function calculate()
+    public function calculate(): void
     {
         $num1 = (float) $this->number1;
         $num2 = (float) $this->number2;
@@ -44,12 +44,8 @@ class Calculator extends Component
         }
     }
 
-    public function updated($property)
+    public function updated(mixed $property): void
     {
-        if ($this->number1 === '' || $this->number2 === '') {
-            $this->disabled = true;
-        } else {
-            $this->disabled = false;
-        }
+        $this->disabled = $this->number1 === '' || $this->number2 === '';
     }
 }

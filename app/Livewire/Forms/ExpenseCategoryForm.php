@@ -16,9 +16,9 @@ class ExpenseCategoryForm extends Form
     #[Validate('nullable|string')]
     public ?string $description = null;
 
-    public function setCategory(ExpenseCategory $category): void
+    public function setCategory(ExpenseCategory $expenseCategory): void
     {
-        $this->name = $category->name;
-        $this->description = $category->description;
+        $this->name = $expenseCategory->name;
+        $this->description = $expenseCategory->description;
     }
 }

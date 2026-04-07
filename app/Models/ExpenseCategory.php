@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ExpenseCategory whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ExpenseCategory whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class ExpenseCategory extends Model
 {
@@ -47,9 +47,9 @@ class ExpenseCategory extends Model
         'created_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -61,7 +61,7 @@ class ExpenseCategory extends Model
         'description',
     ];
 
-    /** @return HasMany<Expense> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Expense, $this> */
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class, 'category_id', 'id');

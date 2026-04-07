@@ -8,7 +8,7 @@ class ProductNotAvailableException extends CartException
 {
     public function __construct(int $productId, string $reason = 'Product is not available', array $context = [])
     {
-        $message = "Product ID {$productId} is not available: {$reason}";
+        $message = sprintf('Product ID %d is not available: %s', $productId, $reason);
         parent::__construct($message, 404, null, array_merge($context, ['product_id' => $productId]));
         $this->setErrorCode('PRODUCT_NOT_AVAILABLE');
     }

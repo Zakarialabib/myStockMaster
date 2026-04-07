@@ -35,7 +35,7 @@ class Update extends Component
         $this->message = $gitHandler->fetchAndPull();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.update');
     }

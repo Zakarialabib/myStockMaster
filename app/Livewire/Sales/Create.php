@@ -33,7 +33,7 @@ class Create extends Component
 
     public int|string|null $cash_register_id = null;
 
-    public function mount(string $cartInstance = 'sale', $quotationId = null): void
+    public function mount(string $cartInstance = 'sale', mixed $quotationId = null): void
     {
         abort_if(Gate::denies('sale_create'), 403);
 
@@ -42,10 +42,11 @@ class Create extends Component
 
         $this->form->payment_method = 'cash';
         $this->form->date = date('Y-m-d');
+
         $this->user_id = Auth::user()->id;
 
         if ($quotationId) {
-            $quotation = \App\Models\Quotation::findOrFail($quotationId);
+            $quotation = \App\Models\Quotation::query()->findOrFail($quotationId);
             $this->form->customer_id = $quotation->customer_id;
             $this->form->warehouse_id = $quotation->warehouse_id;
             $this->form->tax_percentage = $quotation->tax_percentage;
@@ -63,7 +64,7 @@ class Create extends Component
         }
 
         if ($this->user_id && $this->form->warehouse_id) {
-            $cashRegister = CashRegister::where('user_id', $this->user_id)
+            $cashRegister = CashRegister::query()->where('user_id', $this->user_id)
                 ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
@@ -87,7 +88,7 @@ class Create extends Component
         $this->form->total_amount = $this->calculateTotal();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.sales.create', [
             'cart_items' => $this->cartContent,
@@ -97,7 +98,7 @@ class Create extends Component
     public function proceed(): void
     {
         if ($this->user_id && $this->form->warehouse_id) {
-            $cashRegister = CashRegister::where('user_id', $this->user_id)
+            $cashRegister = CashRegister::query()->where('user_id', $this->user_id)
                 ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
@@ -116,7 +117,7 @@ class Create extends Component
 
     public function saveDraft(): void
     {
-        $saleService = app(SaleService::class);
+        $saleService = resolve(SaleService::class);
 
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
@@ -132,7 +133,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        $sale = $saleService->create(
+        $saleService->create(
             [
                 'date' => $this->form->date,
                 'customer_id' => $this->form->customer_id,
@@ -166,7 +167,7 @@ class Create extends Component
 
     public function store(): void
     {
-        $saleService = app(SaleService::class);
+        $saleService = resolve(SaleService::class);
 
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
@@ -210,7 +211,7 @@ class Create extends Component
 
         $this->clearCart();
 
-        PaymentNotification::dispatch($sale);
+        dispatch(new \App\Jobs\PaymentNotification($sale));
 
         $this->redirectRoute('sales.index', navigate: true);
     }
@@ -225,13 +226,13 @@ class Create extends Component
         $this->clearCart();
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function updatedFormStatus($value): void
+    public function updatedFormStatus(mixed $value): void
     {
         if ($value === (string) SaleStatus::COMPLETED->value || $value === SaleStatus::COMPLETED->value) {
             $this->form->paid_amount = $this->form->total_amount;

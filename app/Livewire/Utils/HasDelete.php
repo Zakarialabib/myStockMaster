@@ -12,7 +12,7 @@ trait HasDelete
 {
     use WithAlert;
 
-    public $value;
+    public mixed $value;
 
     public function confirmed(): void
     {
@@ -20,7 +20,7 @@ trait HasDelete
     }
 
     #[On('deleteModal')]
-    public function deleteModal($value): void
+    public function deleteModal(int|string $value): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
             'toast' => false,
@@ -42,8 +42,8 @@ trait HasDelete
             $modelClass::whereIn('id', $this->selected)->delete();
             $this->resetSelected();
             $this->alert('success', __('Items deleted successfully.'));
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() === '23000') {
+        } catch (\Illuminate\Database\QueryException $queryException) {
+            if ($queryException->getCode() === '23000') {
                 $this->alert('error', __('Some items cannot be deleted because they have related records.'));
             } else {
                 $this->alert('error', __('An error occurred while deleting the items.'));
@@ -59,8 +59,8 @@ trait HasDelete
         try {
             $this->model::findOrFail($this->value)->delete();
             $this->alert('success', __('Item deleted successfully.'));
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() === '23000') {
+        } catch (\Illuminate\Database\QueryException $queryException) {
+            if ($queryException->getCode() === '23000') {
                 $this->alert('error', __('Cannot delete this item because it has related records.'));
             } else {
                 $this->alert('error', __('An error occurred while deleting the item.'));

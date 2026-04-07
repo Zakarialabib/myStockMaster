@@ -62,7 +62,7 @@ class Create extends Component
         $this->email_setting->description = $this->description;
         $this->email_setting->message = $this->message;
 
-        EmailTemplate::create($this->all());
+        EmailTemplate::query()->create($this->all());
 
         $this->alert('success', __('Email template created successfully.'));
 

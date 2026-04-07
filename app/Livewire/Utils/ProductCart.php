@@ -72,11 +72,11 @@ class ProductCart extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected($productId, int $warehouseId): void
+    public function productSelected(mixed $productId, int $warehouseId): void
     {
         $this->warehouse_id = $warehouseId;
 
-        $product = Product::findOrFail($productId);
+        $product = Product::query()->findOrFail($productId);
 
         $exists = $this->getCart()->search(static fn ($cartItem): bool => $cartItem->id === $product->id);
 
@@ -86,7 +86,7 @@ class ProductCart extends Component
             return;
         }
 
-        $productWarehouse = ProductWarehouse::where('product_id', $productId)
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
             ->where('warehouse_id', $this->warehouse_id)
             ->first();
 
@@ -104,13 +104,13 @@ class ProductCart extends Component
             'id' => $product->id,
             'name' => $product->name,
             'quantity' => 1,
-            'price' => $productWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
+            'price' => $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
             'attributes' => array_merge($calculation, [
                 'product_discount' => 0.00,
                 'product_discount_type' => 'fixed',
                 'code' => $product->code,
                 'image' => $product->image,
-                'stock' => $productWarehouse ? $productWarehouse->qty : 0,
+                'stock' => $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->qty : 0,
                 'unit' => $product->unit,
                 'weight' => 1,
             ]),
@@ -119,7 +119,7 @@ class ProductCart extends Component
 
     private function calculatePrices(Product $product, ?ProductWarehouse $productWarehouse): array
     {
-        $price = $productWarehouse ? $productWarehouse->price : ($product->price ?? 0.00);
+        $price = $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00);
         $unit_price = $price;
         $product_tax = 0.00;
         $sub_total = $price;
@@ -143,7 +143,7 @@ class ProductCart extends Component
         ];
     }
 
-    private function updateQuantityAndCheckQuantity($productId, int $quantity, float $price = 0): void
+    private function updateQuantityAndCheckQuantity(mixed $productId, int $quantity, float $price = 0): void
     {
         $this->check_quantity[$productId] = $quantity;
         $this->quantity[$productId] = 1;
@@ -153,7 +153,7 @@ class ProductCart extends Component
     public function updatePrice(int|string $productId, ?string $rowId = null): void
     {
         if ($rowId === null) {
-            $cartItem = $this->getCart()->search(fn ($item) => $item->id == $productId)->first();
+            $cartItem = $this->getCart()->search(fn ($item): bool => $item->id == $productId)->first();
 
             if (! $cartItem) {
                 $this->alert('error', 'Product not found in cart!');
@@ -215,7 +215,7 @@ class ProductCart extends Component
     public function updateQuantity(string $rowId, int|string $productId): void
     {
         if ($rowId === null) {
-            $cartItem = $this->getCart()->search(fn ($item) => $item->id == $productId)->first();
+            $cartItem = $this->getCart()->search(fn ($item): bool => $item->id == $productId)->first();
 
             if (! $cartItem) {
                 $this->alert('error', 'Product not found in cart!');
@@ -273,7 +273,7 @@ class ProductCart extends Component
 
             $discount_amount = $this->item_discount[$productId];
 
-            $this->updateCartOptions($rowId, $productId, $cart_item, $discount_amount);
+            $this->updateCartOptions($rowId, $cart_item, $discount_amount);
         } elseif ($this->discount_type[$productId] === 'percentage') {
             $discount_amount = ($cart_item['price'] + $cart_item['attributes']['product_discount']) * $this->item_discount[$productId] / 100;
 
@@ -281,14 +281,14 @@ class ProductCart extends Component
                 'price' => $cart_item['price'] + $cart_item['attributes']['product_discount'] - $discount_amount,
             ]);
 
-            $this->updateCartOptions($rowId, $productId, $cart_item, $discount_amount);
+            $this->updateCartOptions($rowId, $cart_item, $discount_amount);
         }
 
         $this->alert('success', __('Product discount set successfully!'));
         $this->discountModal = false;
     }
 
-    private function updateCartOptions(string $rowId, int|string $productId, mixed $cartItem, float $discountAmount): void
+    private function updateCartOptions(string $rowId, mixed $cartItem, float $discountAmount): void
     {
         $this->updateCartItem($rowId, [
             'attributes' => [

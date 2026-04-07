@@ -9,8 +9,6 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class SaleImport implements ToModel
 {
-    public function __construct() {}
-
     /**
      * @return Sale
      * @return \Illuminate\Database\Eloquent\Model|null

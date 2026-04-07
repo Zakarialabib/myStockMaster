@@ -30,22 +30,22 @@ class PurchaseFactory extends Factory
      */
     public function definition(): array
     {
-        $subtotal = $this->faker->randomFloat(nbMaxDecimals: 2, min: 200, max: 2000);
-        $taxPercentage = $this->faker->numberBetween(int1: 0, int2: 25);
-        $discountPercentage = $this->faker->numberBetween(int1: 0, int2: 10);
+        $subtotal = fake()->randomFloat(nbMaxDecimals: 2, min: 200, max: 2000);
+        $taxPercentage = fake()->numberBetween(int1: 0, int2: 25);
+        $discountPercentage = fake()->numberBetween(int1: 0, int2: 10);
 
         $taxAmount = ($subtotal * $taxPercentage) / 100;
         $discountAmount = ($subtotal * $discountPercentage) / 100;
-        $shippingAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 0, max: 100);
+        $shippingAmount = fake()->randomFloat(nbMaxDecimals: 2, min: 0, max: 100);
 
         $totalAmount = $subtotal + $taxAmount - $discountAmount + $shippingAmount;
-        $paidAmount = $this->faker->randomFloat(nbMaxDecimals: 2, min: 0, max: $totalAmount);
+        $paidAmount = fake()->randomFloat(nbMaxDecimals: 2, min: 0, max: $totalAmount);
         $dueAmount = $totalAmount - $paidAmount;
 
         return [
             'id' => Str::uuid(),
-            'date' => $this->faker->date(),
-            'reference' => 'PU-' . str_pad($this->faker->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT),
+            'date' => fake()->date(),
+            'reference' => 'PU-' . str_pad((string) fake()->unique()->numberBetween(1, 999999), 6, '0', STR_PAD_LEFT),
             'supplier_id' => Supplier::factory(),
             'user_id' => User::factory(),
             'warehouse_id' => Warehouse::factory(),
@@ -57,17 +57,17 @@ class PurchaseFactory extends Factory
             'total_amount' => $totalAmount,
             'paid_amount' => $paidAmount,
             'due_amount' => $dueAmount,
-            'status' => $this->faker->randomElement(['pending', 'ordered', 'received']),
-            'payment_status' => $this->faker->randomElement(['pending', 'paid', 'partial']),
+            'status' => fake()->randomElement(['pending', 'ordered', 'received']),
+            'payment_status' => fake()->randomElement(['pending', 'paid', 'partial']),
             'document' => null,
-            'note' => $this->faker->optional()->sentence(),
+            'note' => fake()->optional()->sentence(),
         ];
     }
 
     /** Indicate that the purchase is received. */
     public function received(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'status' => 'received',
         ]);
     }
@@ -75,24 +75,20 @@ class PurchaseFactory extends Factory
     /** Indicate that the purchase is fully paid. */
     public function paid(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'payment_status' => 'paid',
-                'paid_amount' => $attributes['total_amount'],
-                'due_amount' => 0,
-            ];
-        });
+        return $this->state(fn(array $attributes) => [
+            'payment_status' => 'paid',
+            'paid_amount' => $attributes['total_amount'],
+            'due_amount' => 0,
+        ]);
     }
 
     /** Indicate that the purchase is pending payment. */
     public function pending(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'payment_status' => 'pending',
-                'paid_amount' => 0,
-                'due_amount' => $attributes['total_amount'],
-            ];
-        });
+        return $this->state(fn(array $attributes) => [
+            'payment_status' => 'pending',
+            'paid_amount' => 0,
+            'due_amount' => $attributes['total_amount'],
+        ]);
     }
 }

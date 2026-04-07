@@ -12,7 +12,7 @@ class Index extends Component
 {
     use WithAlert;
 
-    public $search;
+    public mixed $search;
 
     public $sortBy = 'created_at';
 
@@ -20,31 +20,31 @@ class Index extends Component
 
     public $perPage = 10;
 
-    public $job_id;
+    public mixed $job_id;
 
-    public $name;
+    public mixed $name;
 
-    public $queue;
+    public mixed $queue;
 
-    public $started_at;
+    public mixed $started_at;
 
-    public $finished_at;
+    public mixed $finished_at;
 
-    public $failed;
+    public mixed $failed;
 
-    public $attempt;
+    public mixed $attempt;
 
-    public $exception_message;
+    public mixed $exception_message;
 
-    public $aggregatedInfo;
+    public mixed $aggregatedInfo;
 
-    public $totalJobsExecuted;
+    public mixed $totalJobsExecuted;
 
-    public $totalExecutionTime;
+    public mixed $totalExecutionTime;
 
-    public $averageExecutionTime;
+    public mixed $averageExecutionTime;
 
-    public function mount()
+    public function mount(): void
     {
         $aggregationColumns = [
             DB::raw('COUNT(*) as count'),
@@ -61,25 +61,25 @@ class Index extends Component
         $this->averageExecutionTime = ceil((float) $this->aggregatedInfo->average_time_elapsed) . 's' ?? 0;
     }
 
-    public function delete()
+    public function delete(): void
     {
         $this->model->delete();
 
         $this->dispatch('refresh');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $query = DB::table('jobs');
+        $builder = DB::table('jobs');
 
         if ($this->search) {
-            $query->where('job_id', 'like', '%' . $this->search . '%');
+            $builder->whereLike('job_id', '%' . $this->search . '%');
         }
 
-        $query->orderBy($this->sortBy, $this->sortDirection);
+        $builder->orderBy($this->sortBy, $this->sortDirection);
 
-        $jobs = $query->paginate($this->perPage);
+        $jobs = $builder->paginate($this->perPage);
 
-        return view('livewire.tools.queue-monitor.index', compact('jobs'));
+        return view('livewire.tools.queue-monitor.index', ['jobs' => $jobs]);
     }
 }

@@ -13,18 +13,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('suppliers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
-            $table->string('city')->nullable();
-            $table->string('country')->nullable();
-            $table->text('address')->nullable();
-            $table->string('tax_number')->nullable();
-            $table->boolean('status')->default(1);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('suppliers', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->string('name');
+            $blueprint->string('phone')->nullable();
+            $blueprint->string('email')->nullable();
+            $blueprint->string('city')->nullable();
+            $blueprint->string('country')->nullable();
+            $blueprint->text('address')->nullable();
+            $blueprint->string('tax_number')->nullable();
+            $blueprint->boolean('status')->default(1);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

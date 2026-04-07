@@ -47,9 +47,9 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExpenseRequest $request): ExpenseResource
+    public function store(StoreExpenseRequest $storeExpenseRequest): ExpenseResource
     {
-        $expense = Expense::create($request->all());
+        $expense = Expense::query()->create($storeExpenseRequest->all());
 
         return new ExpenseResource($expense);
     }
@@ -59,10 +59,10 @@ class ExpenseController extends Controller
      */
     public function show(int $id): ExpenseResource|JsonResponse
     {
-        $expense = Expense::find($id);
+        $expense = Expense::query()->find($id);
 
         if ($expense === null) {
-            return response()->json(['message' => 'Expense not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Expense not found'], 404);
         }
 
         return new ExpenseResource($expense);
@@ -71,10 +71,10 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExpenseRequest $request, int $id): ExpenseResource
+    public function update(UpdateExpenseRequest $updateExpenseRequest, int $id): ExpenseResource
     {
-        $expense = Expense::findOrFail($id);
-        $expense->update($request->all());
+        $expense = Expense::query()->findOrFail($id);
+        $expense->update($updateExpenseRequest->all());
 
         return new ExpenseResource($expense);
     }
@@ -84,9 +84,9 @@ class ExpenseController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $expense = Expense::findOrFail($id);
+        $expense = Expense::query()->findOrFail($id);
         $expense->delete();
 
-        return response()->json(['message' => 'Expense deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Expense deleted successfully']);
     }
 }

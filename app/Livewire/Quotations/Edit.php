@@ -22,21 +22,21 @@ class Edit extends Component
 
     public QuotationForm $form;
 
-    public $quotation;
+    public mixed $quotation;
 
-    public $quotation_details;
+    public mixed $quotation_details;
 
-    public function mount($id, string $cartInstance = 'quotation'): void
+    public function mount(mixed $id, string $cartInstance = 'quotation'): void
     {
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->quotation = Quotation::findOrFail($id);
+        $this->quotation = Quotation::query()->findOrFail($id);
 
         $this->quotation_details = $this->quotation->quotationDetails;
 
         foreach ($this->quotation_details as $quotation_detail) {
-            $product = Product::findOrFail($quotation_detail->product_id);
+            $product = Product::query()->findOrFail($quotation_detail->product_id);
             $this->addToCart([
                 'id' => $quotation_detail->product_id,
                 'name' => $quotation_detail->name,
@@ -81,10 +81,10 @@ class Edit extends Component
 
         $this->alert('success', __('Quotation updated Successfully!'));
 
-        return redirect()->route('quotations.index');
+        return to_route('quotations.index');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('quotation update'), 403);
 
@@ -101,7 +101,7 @@ class Edit extends Component
         return $this->cartTotal + $this->form->shipping_amount;
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);

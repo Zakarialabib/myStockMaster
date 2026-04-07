@@ -22,7 +22,7 @@ class Edit extends Component
     public UserForm $form;
 
     #[On('editModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
         abort_if(Gate::denies('user_update'), 403);
 
@@ -30,7 +30,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $user = User::findOrfail($id);
+        $user = User::query()->findOrfail($id);
         $this->form->setUser($user);
 
         $this->form->showModal = true;

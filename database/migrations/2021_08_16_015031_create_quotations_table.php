@@ -16,25 +16,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quotations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Customer::class)->nullOnDelete();
-            $table->foreignIdFor(User::class)->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();
-            $table->date('date');
-            $table->string('reference');
-            $table->integer('tax_percentage')->default(0);
-            $table->integer('tax_amount')->default(0);
-            $table->integer('discount_percentage')->default(0);
-            $table->integer('discount_amount')->default(0);
-            $table->integer('shipping_amount')->default(0);
-            $table->integer('total_amount');
-            $table->string('status');
-            $table->timestamp('sent_on')->nullable();
-            $table->timestamp('expires_on')->nullable();
-            $table->text('note')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('quotations', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(Customer::class)->nullOnDelete();
+            $blueprint->foreignIdFor(User::class)->cascadeOnDelete();
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->cascadeOnDelete();
+            $blueprint->date('date');
+            $blueprint->string('reference');
+            $blueprint->integer('tax_percentage')->default(0);
+            $blueprint->integer('tax_amount')->default(0);
+            $blueprint->integer('discount_percentage')->default(0);
+            $blueprint->integer('discount_amount')->default(0);
+            $blueprint->integer('shipping_amount')->default(0);
+            $blueprint->integer('total_amount');
+            $blueprint->string('status');
+            $blueprint->timestamp('sent_on')->nullable();
+            $blueprint->timestamp('expires_on')->nullable();
+            $blueprint->text('note')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

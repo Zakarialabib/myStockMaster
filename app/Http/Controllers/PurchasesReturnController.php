@@ -12,23 +12,23 @@ use Illuminate\Support\Facades\Gate;
 
 class PurchasesReturnController extends Controller
 {
-    public function show(PurchaseReturn $purchase_return): View
+    public function show(PurchaseReturn $purchaseReturn): View
     {
         abort_if(Gate::denies('purchase_return_show'), 403);
 
-        $supplier = Supplier::findOrFail($purchase_return->supplier_id);
+        $supplier = Supplier::query()->findOrFail($purchaseReturn->supplier_id);
 
-        return view('admin.purchasesreturn.show', compact('purchase_return', 'supplier'));
+        return view('admin.purchasesreturn.show', ['purchase_return' => $purchase_return, 'supplier' => $supplier]);
     }
 
-    public function destroy(PurchaseReturn $purchase_return): RedirectResponse
+    public function destroy(PurchaseReturn $purchaseReturn): RedirectResponse
     {
         abort_if(Gate::denies('purchase_return_delete'), 403);
 
-        $purchase_return->delete();
+        $purchaseReturn->delete();
 
         // toast('Purchase Return Deleted!', 'warning');
 
-        return redirect()->route('purchase-returns.index');
+        return to_route('purchase-returns.index');
     }
 }

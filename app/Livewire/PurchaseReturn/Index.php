@@ -26,35 +26,35 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $purchasereturn;
+    public mixed $purchasereturn;
 
-    public $model = PurchaseReturn::class;
+    public string $model = PurchaseReturn::class;
 
-    public $purchase_id;
+    public mixed $purchase_id;
 
-    public $reference;
+    public mixed $reference;
 
-    public $due_amount;
+    public mixed $due_amount;
 
-    public $total_amount;
+    public mixed $total_amount;
 
-    public $paid_amount;
+    public mixed $paid_amount;
 
     #[Validate('required|string|max:255')]
-    public $payment_method;
+    public mixed $payment_method;
 
-    public $paymentModal = false;
+    public bool $paymentModal = false;
 
     #[Validate('required|date')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('required|numeric')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('nullable|string|max:1000')]
-    public $note = null;
+    public mixed $note;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $query = PurchaseReturn::with(['supplier', 'purchaseReturnPayments', 'purchaseReturnDetails'])
             ->advancedFilter([
@@ -72,7 +72,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
-        PurchaseReturn::whereIn('id', $this->selected)->delete();
+        PurchaseReturn::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
@@ -105,7 +105,7 @@ class Index extends Component
         try {
             $this->validate();
 
-            PurchasePayment::create([
+            PurchasePayment::query()->create([
                 'date' => $this->date,
                 'user_id' => Auth::user()->id,
                 'amount' => $this->amount,
@@ -114,7 +114,7 @@ class Index extends Component
                 'payment_method' => $this->payment_method,
             ]);
 
-            $purchasereturn = PurchaseReturn::findOrFail($this->purchase_id);
+            $purchasereturn = PurchaseReturn::query()->findOrFail($this->purchase_id);
 
             $due_amount = $purchasereturn->due_amount - $this->amount;
 

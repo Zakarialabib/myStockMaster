@@ -24,19 +24,19 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $purchase;
+    public mixed $purchase;
 
-    public $model = Purchase::class;
+    public string $model = Purchase::class;
 
     public string $startDate;
 
     public string $endDate;
 
-    public function filterByType($type): void
+    public function filterByType(mixed $type): void
     {
         switch ($type) {
             case 'day':
-                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->startDate = today()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
 
                 break;
@@ -65,7 +65,7 @@ class Index extends Component
         $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $query = Purchase::with(['supplier', 'user', 'purchaseDetails', 'purchasePayments', 'purchaseDetails.product'])
             ->whereBetween('date', [$this->startDate, $this->endDate])
@@ -84,7 +84,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_update'), 403);
 
-        $purchase = Purchase::findOrFail($id);
+        $purchase = Purchase::query()->findOrFail($id);
         $purchase->update(['status' => $status]);
 
         $this->alert('success', __('Purchase status updated successfully.'));
@@ -94,7 +94,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_update'), 403);
 
-        $purchase = Purchase::findOrFail($id);
+        $purchase = Purchase::query()->findOrFail($id);
         $purchase->update(['payment_status' => $payment_status]);
 
         $this->alert('success', __('Purchase payment status updated successfully.'));
@@ -104,12 +104,12 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
-        Purchase::whereIn('id', $this->selected)->delete();
+        Purchase::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
 
-    public function deleteModal($id): void
+    public function deleteModal(int|string $id): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
             'toast' => false,
@@ -126,7 +126,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_delete'), 403);
 
-        Purchase::findOrFail($this->purchase)->delete();
+        Purchase::query()->findOrFail($this->purchase)->delete();
 
         $this->alert('success', __('Purchase deleted successfully.'));
     }
@@ -135,7 +135,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase_export'), 403);
 
-        $purchases = Purchase::whereIn('id', $this->selected)->get();
+        $purchases = Purchase::query()->whereIn('id', $this->selected)->get();
 
         return (new PurchaseExport($purchases))->download('purchases.xls', \Maatwebsite\Excel\Excel::XLS);
     }

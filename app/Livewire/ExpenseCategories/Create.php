@@ -15,11 +15,11 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     public ExpenseCategoryForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('expense_categories_create'), 403);
 

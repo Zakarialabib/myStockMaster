@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Currency whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Currency whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Currency extends Model
 {
@@ -46,9 +46,9 @@ class Currency extends Model
         'created_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.

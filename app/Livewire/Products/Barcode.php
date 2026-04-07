@@ -21,7 +21,7 @@ class Barcode extends Component
     use WithAlert;
     use WithModels;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
     #[Validate([
         'products.*.quantity' => 'required|integer|min:1|max:100',
@@ -33,16 +33,16 @@ class Barcode extends Component
 
     public string $paperSize = 'A4';
 
-    public function updatedWarehouseId($value): void
+    public function updatedWarehouseId(mixed $value): void
     {
         $this->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->warehouse_id);
     }
 
     #[On('productSelected')]
-    public function productSelected($id): void
+    public function productSelected(mixed $id): void
     {
-        $productWarehouse = ProductWarehouse::where('product_id', $id)
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $id)
             ->where('warehouse_id', $this->warehouse_id)
             ->first();
 
@@ -61,7 +61,7 @@ class Barcode extends Component
 
     public function generateBarcodes(): void
     {
-        if (empty($this->products)) {
+        if ($this->products === []) {
             $this->alert('error', __('Please select at least one product to generate barcodes!'));
 
             return;
@@ -69,7 +69,7 @@ class Barcode extends Component
 
         $this->validate();
 
-        $this->barcodes = app(GenerateBarcodesAction::class)($this->products);
+        $this->barcodes = resolve(GenerateBarcodesAction::class)($this->products);
     }
 
     public function downloadBarcodes(): StreamedResponse
@@ -91,7 +91,7 @@ class Barcode extends Component
         }, 'barcodes-' . date('Y-m-d') . '.pdf');
     }
 
-    public function deleteProduct($productId): void
+    public function deleteProduct(mixed $productId): void
     {
         $index = null;
 
@@ -109,7 +109,7 @@ class Barcode extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.products.barcode');
     }

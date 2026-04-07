@@ -12,15 +12,15 @@ class SettingForm extends Form
 {
     public ?Setting $setting = null;
 
-    public $invoice_header;
+    public mixed $invoice_header;
 
-    public $invoice_footer;
+    public mixed $invoice_footer;
 
     public ?string $invoice_template = null;
 
-    public $image;
+    public mixed $image;
 
-    public $site_logo;
+    public mixed $site_logo;
 
     public ?string $site_title = null;
 
@@ -36,7 +36,7 @@ class SettingForm extends Form
 
     public ?string $social_tiktok = null;
 
-    public $site_favicon;
+    public mixed $site_favicon;
 
     #[Validate('required|string|min:1|max:255')]
     public string $company_name = '';

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
     }
 
     /** Run standard seeding (original behavior) */
-    private function runStandardSeeding()
+    private function runStandardSeeding(): void
     {
         $this->command->info('Running standard database seeding...');
 
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
     }
 
     /** Run comprehensive seeding with realistic data */
-    private function runComprehensiveSeeding()
+    private function runComprehensiveSeeding(): void
     {
         $this->command->info('Running comprehensive database seeding...');
 
@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ComprehensiveDataSeeder::class);
 
         // Finally run transaction seeders if they exist
-        if (class_exists('Database\\Seeders\\SalesAndPurchasesSeeder')) {
+        if (class_exists(\Database\Seeders\SalesAndPurchasesSeeder::class)) {
             $this->call(SalesAndPurchasesSeeder::class);
         }
     }

@@ -20,30 +20,30 @@ class Index extends Component
     use WithAlert;
 
     /** @var mixed */
-    public $expenseCategory;
+    public mixed $expenseCategory;
 
-    public $model = ExpenseCategory::class;
+    public string $model = ExpenseCategory::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('expense_categories_access'), 403);
 
-        $query = ExpenseCategory::advancedFilter([
+        $query = ExpenseCategory::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $expenseCategories = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.expense-categories.index', ['expenseCategories' => $expenseCategories]);
+        return view('livewire.expense-categories.index', ['expenseCategories' => $lengthAwarePaginator]);
     }
 
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('expense_categories_delete'), 403);
 
-        ExpenseCategory::whereIn('id', $this->selected)->delete();
+        ExpenseCategory::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

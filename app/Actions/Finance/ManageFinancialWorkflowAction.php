@@ -24,15 +24,15 @@ class ManageFinancialWorkflowAction
 
     private function getDailyTasks(): array
     {
-        $today = Carbon::today();
-        $yesterday = Carbon::yesterday();
+        $today = \Illuminate\Support\Facades\Date::today();
+        $yesterday = \Illuminate\Support\Facades\Date::yesterday();
 
         // Get yesterday's financial data
-        $yesterdayRevenue = Sale::whereDate('created_at', $yesterday)
+        $yesterdayRevenue = Sale::query()->whereDate('created_at')
             ->where('status', 'completed')
             ->sum('total_amount');
 
-        $yesterdayExpenses = Expense::whereDate('date', $yesterday)
+        $yesterdayExpenses = Expense::query()->whereDate('date')
             ->sum('amount');
 
         $cashFlowRecord = CashFlowRecord::whereDate('record_date', $yesterday)->first();
@@ -91,8 +91,8 @@ class ManageFinancialWorkflowAction
 
         // Categorize tasks based on completion status
         foreach ($dailyChecklist as $task) {
-            $isCompleted = $this->isTaskCompleted($task['id'], 'daily', $today);
-            $isOverdue = $this->isTaskOverdue($task['id'], 'daily', $today);
+            $isCompleted = $this->isTaskCompleted();
+            $isOverdue = $this->isTaskOverdue('daily', $today);
 
             if ($isCompleted) {
                 $tasks['completed_tasks'][] = $task;
@@ -108,7 +108,7 @@ class ManageFinancialWorkflowAction
             $tasks['reminders'][] = [
                 'type' => 'missing_data',
                 'title' => 'Cash Flow Not Recorded',
-                'message' => 'Yesterday\'s cash flow has not been recorded yet.',
+                'message' => "Yesterday's cash flow has not been recorded yet.",
                 'action' => 'record_cash_flow',
                 'priority' => 'high',
             ];
@@ -128,16 +128,16 @@ class ManageFinancialWorkflowAction
 
     private function getWeeklyTasks(): array
     {
-        $thisWeek = Carbon::now()->startOfWeek();
-        $lastWeek = Carbon::now()->subWeek()->startOfWeek();
+        $thisWeek = \Illuminate\Support\Facades\Date::now()->startOfWeek();
+        $lastWeek = \Illuminate\Support\Facades\Date::now()->subWeek()->startOfWeek();
 
         // Get last week's financial data
-        $weeklyRevenue = Sale::whereBetween('created_at', [
+        $weeklyRevenue = Sale::query()->whereBetween('created_at', [
             $lastWeek,
             $lastWeek->copy()->endOfWeek(),
         ])->where('status', 'completed')->sum('total_amount');
 
-        $weeklyExpenses = Expense::whereBetween('date', [
+        $weeklyExpenses = Expense::query()->whereBetween('date', [
             $lastWeek->format('Y-m-d'),
             $lastWeek->copy()->endOfWeek()->format('Y-m-d'),
         ])->sum('amount');
@@ -202,8 +202,8 @@ class ManageFinancialWorkflowAction
         ];
 
         foreach ($weeklyChecklist as $task) {
-            $isCompleted = $this->isTaskCompleted($task['id'], 'weekly', $thisWeek);
-            $isOverdue = $this->isTaskOverdue($task['id'], 'weekly', $thisWeek);
+            $isCompleted = $this->isTaskCompleted();
+            $isOverdue = $this->isTaskOverdue('weekly', $thisWeek);
 
             if ($isCompleted) {
                 $tasks['completed_tasks'][] = $task;
@@ -229,15 +229,15 @@ class ManageFinancialWorkflowAction
 
     private function getMonthlyTasks(): array
     {
-        $thisMonth = Carbon::now()->startOfMonth();
-        $lastMonth = Carbon::now()->subMonth()->startOfMonth();
+        $thisMonth = \Illuminate\Support\Facades\Date::now()->startOfMonth();
+        $lastMonth = \Illuminate\Support\Facades\Date::now()->subMonth()->startOfMonth();
 
-        $monthlyRevenue = Sale::whereBetween('created_at', [
+        $monthlyRevenue = Sale::query()->whereBetween('created_at', [
             $lastMonth,
             $lastMonth->copy()->endOfMonth(),
         ])->where('status', 'completed')->sum('total_amount');
 
-        $monthlyExpenses = Expense::whereBetween('date', [
+        $monthlyExpenses = Expense::query()->whereBetween('date', [
             $lastMonth->format('Y-m-d'),
             $lastMonth->copy()->endOfMonth()->format('Y-m-d'),
         ])->sum('amount');
@@ -270,7 +270,7 @@ class ManageFinancialWorkflowAction
             [
                 'id' => 'cash_flow_projection',
                 'title' => 'Cash Flow Projection',
-                'description' => 'Project next month\'s cash flow and identify potential issues',
+                'description' => "Project next month's cash flow and identify potential issues",
                 'priority' => 'high',
                 'estimated_time' => 45,
                 'category' => 'cash_management',
@@ -302,8 +302,8 @@ class ManageFinancialWorkflowAction
         ];
 
         foreach ($monthlyChecklist as $task) {
-            $isCompleted = $this->isTaskCompleted($task['id'], 'monthly', $thisMonth);
-            $isOverdue = $this->isTaskOverdue($task['id'], 'monthly', $thisMonth);
+            $isCompleted = $this->isTaskCompleted();
+            $isOverdue = $this->isTaskOverdue('monthly', $thisMonth);
 
             if ($isCompleted) {
                 $tasks['completed_tasks'][] = $task;
@@ -319,15 +319,15 @@ class ManageFinancialWorkflowAction
 
     private function getQuarterlyTasks(): array
     {
-        $thisQuarter = Carbon::now()->startOfQuarter();
-        $lastQuarter = Carbon::now()->subQuarter()->startOfQuarter();
+        $thisQuarter = \Illuminate\Support\Facades\Date::now()->startOfQuarter();
+        $lastQuarter = \Illuminate\Support\Facades\Date::now()->subQuarter()->startOfQuarter();
 
-        $quarterlyRevenue = Sale::whereBetween('created_at', [
+        $quarterlyRevenue = Sale::query()->whereBetween('created_at', [
             $lastQuarter,
             $lastQuarter->copy()->endOfQuarter(),
         ])->where('status', 'completed')->sum('total_amount');
 
-        $quarterlyExpenses = Expense::whereBetween('date', [
+        $quarterlyExpenses = Expense::query()->whereBetween('date', [
             $lastQuarter->format('Y-m-d'),
             $lastQuarter->copy()->endOfQuarter()->format('Y-m-d'),
         ])->sum('amount');
@@ -384,8 +384,8 @@ class ManageFinancialWorkflowAction
         ];
 
         foreach ($quarterlyChecklist as $task) {
-            $isCompleted = $this->isTaskCompleted($task['id'], 'quarterly', $thisQuarter);
-            $isOverdue = $this->isTaskOverdue($task['id'], 'quarterly', $thisQuarter);
+            $isCompleted = $this->isTaskCompleted();
+            $isOverdue = $this->isTaskOverdue('quarterly', $thisQuarter);
 
             if ($isCompleted) {
                 $tasks['completed_tasks'][] = $task;
@@ -399,14 +399,14 @@ class ManageFinancialWorkflowAction
         return $tasks;
     }
 
-    private function isTaskCompleted(string $taskId, string $period, Carbon $date): bool
+    private function isTaskCompleted(): bool
     {
         // This would typically check a task completion tracking table
         // For now, we'll return false to show all tasks as pending
         return false;
     }
 
-    private function isTaskOverdue(string $taskId, string $period, Carbon $date): bool
+    private function isTaskOverdue(string $period, Carbon $date): bool
     {
         $overdueThresholds = [
             'daily' => 1, // 1 day
@@ -418,7 +418,7 @@ class ManageFinancialWorkflowAction
         $threshold = $overdueThresholds[$period] ?? 1;
         $deadlineDate = $date->copy()->addDays($threshold);
 
-        return Carbon::now()->isAfter($deadlineDate);
+        return \Illuminate\Support\Facades\Date::now()->isAfter($deadlineDate);
     }
 
     private function calculateBreakEvenDays(float $revenue, float $expenses): int

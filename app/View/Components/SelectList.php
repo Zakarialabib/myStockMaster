@@ -8,16 +8,13 @@ use Illuminate\View\Component;
 
 class SelectList extends Component
 {
-    public $options;
-
     /**
      * Create a new component instance.
      *
      * @param mixed $options
      */
-    public function __construct($options)
+    public function __construct(public $options)
     {
-        $this->options = $options;
     }
 
     /**

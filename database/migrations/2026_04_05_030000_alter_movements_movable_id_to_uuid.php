@@ -19,14 +19,14 @@ return new class extends Migration
             return;
         }
 
-        Schema::table('movements', function (Blueprint $table): void {
-            $table->dropIndex('movements_movable_type_movable_id_index');
+        Schema::table('movements', function (Blueprint $blueprint): void {
+            $blueprint->dropIndex('movements_movable_type_movable_id_index');
         });
 
         DB::statement('ALTER TABLE `movements` MODIFY `movable_id` CHAR(36) NOT NULL');
 
-        Schema::table('movements', function (Blueprint $table): void {
-            $table->index(['movable_type', 'movable_id']);
+        Schema::table('movements', function (Blueprint $blueprint): void {
+            $blueprint->index(['movable_type', 'movable_id']);
         });
     }
 
@@ -40,14 +40,14 @@ return new class extends Migration
             return;
         }
 
-        Schema::table('movements', function (Blueprint $table): void {
-            $table->dropIndex('movements_movable_type_movable_id_index');
+        Schema::table('movements', function (Blueprint $blueprint): void {
+            $blueprint->dropIndex('movements_movable_type_movable_id_index');
         });
 
         DB::statement('ALTER TABLE `movements` MODIFY `movable_id` BIGINT UNSIGNED NOT NULL');
 
-        Schema::table('movements', function (Blueprint $table): void {
-            $table->index(['movable_type', 'movable_id']);
+        Schema::table('movements', function (Blueprint $blueprint): void {
+            $blueprint->index(['movable_type', 'movable_id']);
         });
     }
 };

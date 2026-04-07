@@ -15,25 +15,25 @@ class Edit extends Component
 {
     use WithAlert;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
     /** @var mixed */
-    public $currency;
+    public mixed $currency;
 
     #[Validate('required', message: 'The name field cannot be empty.')]
     #[Validate('min:3', message: 'The name must be at least 3 characters.')]
     #[Validate('max:255', message: 'The name may not be greater than 255 characters.')]
-    public $name;
+    public mixed $name;
 
     #[Validate('required', message: 'The code field cannot be empty.')]
     #[Validate('max:255', message: 'The code may not be greater than 255 characters.')]
-    public $code;
+    public mixed $code;
 
     #[Validate('required', message: 'The locale field cannot be empty.')]
     #[Validate('max:255', message: 'The locale may not be greater than 255 characters.')]
-    public $locale;
+    public mixed $locale;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('currency_update'), 403);
 
@@ -41,7 +41,7 @@ class Edit extends Component
     }
 
     #[On('editModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
         abort_if(Gate::denies('currency_create'), 403);
 
@@ -49,7 +49,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->currency = Currency::where('id', $id)->firstOrFail();
+        $this->currency = Currency::query()->where('id', $id)->firstOrFail();
 
         $this->name = $this->currency->name;
 

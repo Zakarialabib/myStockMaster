@@ -12,19 +12,13 @@ use Illuminate\Queue\SerializesModels;
 
 class UpdateProductCostHistory implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
-    protected $cart_item;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($cart_item)
+    public function __construct(protected $cart_item)
     {
-        $this->cart_item = $cart_item;
     }
 
     /**

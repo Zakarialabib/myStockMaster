@@ -16,8 +16,8 @@ class ManageCostTrackingAction
      */
     public function __invoke(array $params = []): array
     {
-        $startDate = $params['start_date'] ?? Carbon::now()->startOfMonth();
-        $endDate = $params['end_date'] ?? Carbon::now()->endOfMonth();
+        $startDate = $params['start_date'] ?? \Illuminate\Support\Facades\Date::now()->startOfMonth();
+        $endDate = $params['end_date'] ?? \Illuminate\Support\Facades\Date::now()->endOfMonth();
         $includeProjections = $params['include_projections'] ?? true;
 
         return [
@@ -45,37 +45,27 @@ class ManageCostTrackingAction
     private function calculateCogsAnalysis(Carbon $startDate, Carbon $endDate): array
     {
         // Get completed sales for the period
-        $sales = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $sales = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'completed')
             ->with(['items.menuItem'])
             ->get();
 
         $totalRevenue = $sales->sum('total_amount');
-        $totalCogs = $sales->sum(function ($sale) {
-            return $sale->items->sum(function ($item) {
-                return ($item->menuItem->cost_price ?? 0) * $item->quantity;
-            });
-        });
+        $totalCogs = $sales->sum(fn($sale) => $sale->items->sum(fn($item) => ($item->menuItem->cost_price ?? 0) * $item->quantity));
 
         // Calculate COGS by category
-        $cogsByCategory = $sales->flatMap(function ($sale) {
-            return $sale->items->map(function ($item) {
-                return [
-                    'category' => $item->menuItem->category ?? 'uncategorized',
-                    'cost' => ($item->menuItem->cost_price ?? 0) * $item->quantity,
-                    'revenue' => $item->price * $item->quantity,
-                ];
-            });
-        })->groupBy('category')->map(function ($items, $category) {
-            return [
-                'category' => $category,
-                'total_cost' => $items->sum('cost'),
-                'total_revenue' => $items->sum('revenue'),
-                'cost_percentage' => $items->sum('revenue') > 0
-                    ? ($items->sum('cost') / $items->sum('revenue')) * 100
-                    : 0,
-            ];
-        })->values();
+        $cogsByCategory = $sales->flatMap(fn($sale) => $sale->items->map(fn($item) => [
+            'category' => $item->menuItem->category ?? 'uncategorized',
+            'cost' => ($item->menuItem->cost_price ?? 0) * $item->quantity,
+            'revenue' => $item->price * $item->quantity,
+        ]))->groupBy('category')->map(fn($items, $category) => [
+            'category' => $category,
+            'total_cost' => $items->sum('cost'),
+            'total_revenue' => $items->sum('revenue'),
+            'cost_percentage' => $items->sum('revenue') > 0
+                ? ($items->sum('cost') / $items->sum('revenue')) * 100
+                : 0,
+        ])->values();
 
         $cogsPercentage = $totalRevenue > 0 ? ($totalCogs / $totalRevenue) * 100 : 0;
 
@@ -98,25 +88,23 @@ class ManageCostTrackingAction
     private function calculateWastageMetrics(Carbon $startDate, Carbon $endDate): array
     {
         // Get wastage expenses (assuming expense category 'wastage' or 'food_waste')
-        $wastageExpenses = Expense::whereBetween('date', [$startDate, $endDate])
+        $wastageExpenses = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['wastage', 'food_waste', 'spoilage'])
             ->get();
 
         $totalWastage = $wastageExpenses->sum('amount');
-        $totalRevenue = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $totalRevenue = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'completed')
             ->sum('total_amount');
 
         $wastagePercentage = $totalRevenue > 0 ? ($totalWastage / $totalRevenue) * 100 : 0;
 
         // Wastage by category/reason
-        $wastageByReason = $wastageExpenses->groupBy('subcategory')->map(function ($expenses, $reason) {
-            return [
-                'reason' => $reason ?: 'unspecified',
-                'amount' => $expenses->sum('amount'),
-                'count' => $expenses->count(),
-            ];
-        })->values();
+        $wastageByReason = $wastageExpenses->groupBy('subcategory')->map(fn($expenses, $reason) => [
+            'reason' => $reason ?: 'unspecified',
+            'amount' => $expenses->sum('amount'),
+            'count' => $expenses->count(),
+        ])->values();
 
         return [
             'total_wastage' => $totalWastage,
@@ -136,32 +124,30 @@ class ManageCostTrackingAction
     private function calculateMarketingSpend(Carbon $startDate, Carbon $endDate): array
     {
         // Get marketing expenses
-        $marketingExpenses = Expense::whereBetween('date', [$startDate, $endDate])
+        $marketingExpenses = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['marketing', 'advertising', 'promotions', 'social_media', 'ads'])
             ->get();
 
         $totalMarketingSpend = $marketingExpenses->sum('amount');
-        $totalRevenue = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $totalRevenue = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'completed')
             ->sum('total_amount');
 
         $marketingPercentage = $totalRevenue > 0 ? ($totalMarketingSpend / $totalRevenue) * 100 : 0;
 
         // Marketing spend by channel
-        $marketingByChannel = $marketingExpenses->groupBy('subcategory')->map(function ($expenses, $channel) use ($totalMarketingSpend) {
-            return [
-                'channel' => $channel ?: 'general',
-                'amount' => $expenses->sum('amount'),
-                'percentage_of_marketing' => $totalMarketingSpend > 0
-                    ? ($expenses->sum('amount') / $totalMarketingSpend) * 100
-                    : 0,
-            ];
-        })->values();
+        $marketingByChannel = $marketingExpenses->groupBy('subcategory')->map(fn($expenses, $channel) => [
+            'channel' => $channel ?: 'general',
+            'amount' => $expenses->sum('amount'),
+            'percentage_of_marketing' => $totalMarketingSpend > 0
+                ? ($expenses->sum('amount') / $totalMarketingSpend) * 100
+                : 0,
+        ])->values();
 
         // Calculate estimated ROI (simplified)
-        $newCustomers = Sale::whereBetween('created_at', [$startDate, $endDate])
-            ->whereHas('customer', function ($query) use ($startDate) {
-                $query->where('created_at', '>=', $startDate);
+        $newCustomers = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('customer', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($startDate): void {
+                $builder->where('created_at', '>=', $startDate);
             })
             ->distinct('customer_id')
             ->count();
@@ -187,11 +173,11 @@ class ManageCostTrackingAction
     /** Calculate overall cost ratios and efficiency metrics */
     private function calculateCostRatios(Carbon $startDate, Carbon $endDate): array
     {
-        $totalRevenue = Sale::whereBetween('created_at', [$startDate, $endDate])
+        $totalRevenue = Sale::query()->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'completed')
             ->sum('total_amount');
 
-        $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])
+        $totalExpenses = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->sum('amount');
 
         return [
@@ -209,8 +195,8 @@ class ManageCostTrackingAction
         $previousPeriodStart = $startDate->copy()->subDays($startDate->diffInDays($endDate) + 1);
         $previousPeriodEnd = $startDate->copy()->subDay();
 
-        $currentCosts = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
-        $previousCosts = Expense::whereBetween('date', [$previousPeriodStart, $previousPeriodEnd])->sum('amount');
+        $currentCosts = Expense::query()->whereBetween('date', [$startDate, $endDate])->sum('amount');
+        $previousCosts = Expense::query()->whereBetween('date', [$previousPeriodStart, $previousPeriodEnd])->sum('amount');
 
         $costChange = $previousCosts > 0 ? (($currentCosts - $previousCosts) / $previousCosts) * 100 : 0;
 
@@ -258,7 +244,7 @@ class ManageCostTrackingAction
     private function generateCostProjections(Carbon $startDate, Carbon $endDate): array
     {
         $daysInPeriod = $startDate->diffInDays($endDate) + 1;
-        $dailyAverageCosts = Expense::whereBetween('date', [$startDate, $endDate])
+        $dailyAverageCosts = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->sum('amount') / $daysInPeriod;
 
         $nextPeriodDays = 30; // Project for next 30 days
@@ -333,15 +319,15 @@ class ManageCostTrackingAction
         $wastageAnalysis = $this->calculateWastageMetrics($startDate, $endDate);
 
         // Score each component (0-100)
-        $cogsScore = $this->getComponentScore($cogsAnalysis['cogs_percentage'], 30, 25, 35);
-        $wastageScore = $this->getComponentScore($wastageAnalysis['wastage_percentage_of_revenue'], 1, 0, 2);
+        $cogsScore = $this->getComponentScore($cogsAnalysis['cogs_percentage'], 25, 35);
+        $wastageScore = $this->getComponentScore($wastageAnalysis['wastage_percentage_of_revenue'], 0, 2);
 
         // Weighted average (COGS 40%, Wastage 20%)
         return ($cogsScore * 0.4) + ($wastageScore * 0.2);
     }
 
     /** Get component score for efficiency calculation */
-    private function getComponentScore(float $actual, float $target, float $excellent, float $poor): float
+    private function getComponentScore(float $actual, float $excellent, float $poor): float
     {
         if ($actual <= $excellent) {
             return 100;

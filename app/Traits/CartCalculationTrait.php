@@ -34,7 +34,7 @@ trait CartCalculationTrait
         $subtotal = $item['price'] * $item['quantity'];
 
         // Apply item-specific conditions
-        if (! empty($item['conditions'])) {
+        if (filled($item['conditions'])) {
             $subtotal = $this->applyItemConditions($subtotal, $item['conditions']);
         }
 
@@ -82,22 +82,18 @@ trait CartCalculationTrait
     /** Apply conditions to an amount */
     protected function applyConditionsToAmount(float $amount, string $target): float
     {
-        $applicableConditions = array_filter($this->conditions, function ($condition) use ($target) {
-            return is_array($condition) && ($condition['target'] ?? 'subtotal') === $target;
-        });
+        $applicableConditions = array_filter($this->conditions, fn($condition) => is_array($condition) && ($condition['target'] ?? 'subtotal') === $target);
 
         // Sort conditions by order
-        usort($applicableConditions, function ($a, $b) {
-            return ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
-        });
+        usort($applicableConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
-        foreach ($applicableConditions as $condition) {
+        foreach ($applicableConditions as $applicableCondition) {
             // Ensure condition is an array
-            if (! is_array($condition)) {
+            if (! is_array($applicableCondition)) {
                 continue;
             }
 
-            $amount = $this->applyCondition($amount, $condition);
+            $amount = $this->applyCondition($amount, $applicableCondition);
         }
 
         return max(0, $amount); // Ensure amount is not negative
@@ -107,15 +103,13 @@ trait CartCalculationTrait
     protected function applyItemConditions(float $amount, array $conditions): float
     {
         // Filter out non-array conditions
-        $validConditions = array_filter($conditions, 'is_array');
+        $validConditions = array_filter($conditions, is_array(...));
 
         // Sort conditions by order
-        usort($validConditions, function ($a, $b) {
-            return ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
-        });
+        usort($validConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
-        foreach ($validConditions as $condition) {
-            $amount = $this->applyCondition($amount, $condition);
+        foreach ($validConditions as $validCondition) {
+            $amount = $this->applyCondition($amount, $validCondition);
         }
 
         return max(0, $amount); // Ensure amount is not negative
@@ -135,23 +129,15 @@ trait CartCalculationTrait
                 return $amount + ($amount * ($percentage / 100));
             }
 
-            // Handle fixed values with + or - prefix
-            if (str_starts_with($value, '+') || str_starts_with($value, '-')) {
-                return $amount + (float) $value;
-            }
-
             // Default to fixed value
             return $amount + (float) $value;
         }
 
         // Handle numeric values based on type
-        switch ($type) {
-            case 'percentage':
-                return $amount + ($amount * ($value / 100));
-            case 'fixed':
-            default:
-                return $amount + $value;
-        }
+        return match ($type) {
+            'percentage' => $amount + ($amount * ($value / 100)),
+            default => $amount + $value,
+        };
     }
 
     /** Add a condition to the cart */
@@ -172,9 +158,7 @@ trait CartCalculationTrait
     /** Remove a condition by name */
     public function removeCondition(string $name): self
     {
-        $this->conditions = array_filter($this->conditions, function ($condition) use ($name) {
-            return ($condition['name'] ?? '') !== $name;
-        });
+        $this->conditions = array_filter($this->conditions, fn(array $condition) => ($condition['name'] ?? '') !== $name);
 
         return $this;
     }
@@ -188,9 +172,7 @@ trait CartCalculationTrait
     /** Get conditions by type */
     public function getConditionsByType(string $type): array
     {
-        return array_filter($this->conditions, function ($condition) use ($type) {
-            return is_array($condition) && ($condition['type'] ?? '') === $type;
-        });
+        return array_filter($this->conditions, fn($condition) => is_array($condition) && ($condition['type'] ?? '') === $type);
     }
 
     /** Clear all conditions */
@@ -220,7 +202,7 @@ trait CartCalculationTrait
     {
         $price = $item['price'];
 
-        if (! empty($item['conditions'])) {
+        if (filled($item['conditions'])) {
             $price = $this->applyItemConditions($price, $item['conditions']);
         }
 
@@ -249,11 +231,12 @@ trait CartCalculationTrait
     public function getDiscountAmount(Collection $items): float
     {
         $discountConditions = $this->getConditionsByType('discount');
-        $subtotal = $items->sum(function ($item) {
+        $subtotal = $items->sum(function ($item): int|float {
             // Ignore non-item values (e.g., global settings stored as scalars)
             if (! is_array($item)) {
                 return 0;
             }
+
             $price = isset($item['price']) ? (float) $item['price'] : 0.0;
             $qty = isset($item['quantity']) ? (int) $item['quantity'] : 0;
 
@@ -262,13 +245,13 @@ trait CartCalculationTrait
 
         $totalDiscount = 0;
 
-        foreach ($discountConditions as $condition) {
+        foreach ($discountConditions as $discountCondition) {
             // Ensure condition is an array
-            if (! is_array($condition)) {
+            if (! is_array($discountCondition)) {
                 continue;
             }
 
-            $discount = $this->applyCondition($subtotal, $condition) - $subtotal;
+            $discount = $this->applyCondition($subtotal, $discountCondition) - $subtotal;
             $totalDiscount += abs($discount); // Make positive for display
         }
 

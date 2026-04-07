@@ -39,14 +39,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class PurchaseReturnPayment extends Model
 {
-    protected $casts = [
-        'date' => 'date',
-    ];
-
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -61,34 +59,38 @@ class PurchaseReturnPayment extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::created(function ($payment) {
+        static::created(function ($payment): void {
             $payment->purchaseReturn->syncTotals();
         });
 
-        static::deleted(function ($payment) {
+        static::deleted(function ($payment): void {
             $payment->purchaseReturn->syncTotals();
         });
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\PurchaseReturn, $this>
+     */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
 
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
@@ -97,7 +99,7 @@ class PurchaseReturnPayment extends Model
      *
      * @return mixed
      */
-    public function scopeByPurchaseReturn($query)
+    protected function scopeByPurchaseReturn(mixed $query)
     {
         return $query->wherePurchaseReturnId(request()->route('purchase_return_id'));
     }
@@ -108,8 +110,15 @@ class PurchaseReturnPayment extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
+    }
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }
