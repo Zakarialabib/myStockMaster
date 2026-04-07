@@ -32,7 +32,6 @@ class Create extends Component
     #[Validate('max:255', message: 'The symbol may not be greater than 255 characters.')]
     public mixed $locale;
 
-    /** @var array */
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('currency_create'), 403);

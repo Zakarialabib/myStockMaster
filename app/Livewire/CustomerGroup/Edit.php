@@ -16,15 +16,12 @@ class Edit extends Component
 {
     use WithAlert;
 
-    /** @var bool */
     public bool $editModal = false;
 
-    /** @var mixed */
     public mixed $customergroup;
 
     public CustomerGroupForm $form;
 
-    /** @var array */
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer-group_update'), 403);

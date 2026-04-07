@@ -8,6 +8,7 @@ use App\Livewire\Forms\QuotationForm;
 use App\Livewire\Utils\WithModels;
 use App\Services\QuotationService;
 use App\Traits\LivewireCartTrait;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -16,6 +17,7 @@ use Livewire\Component;
 class Create extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
 
     public QuotationForm $form;
@@ -23,7 +25,7 @@ class Create extends Component
     public function proceed(): void
     {
         if ($this->form->customer_id !== null) {
-            $this->store();
+            $this->store(app(QuotationService::class));
         } else {
             $this->alert('error', __('Please select a customer!'));
         }

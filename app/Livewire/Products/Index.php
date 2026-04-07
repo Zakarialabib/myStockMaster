@@ -14,7 +14,6 @@ use App\Traits\WithAlert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -22,8 +21,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
-#[Isolate]
 
 #[Layout('layouts.app')]
 #[Title('Products')]
@@ -40,7 +37,6 @@ class Index extends Component
         $this->perPage += 25;
     }
 
-    /** @var mixed */
     public mixed $productWarehouse;
 
     public mixed $sendTelegram;
@@ -61,12 +57,11 @@ class Index extends Component
 
     public string $model = Product::class;
 
-    // Add these new filters
     #[Url(history: true)]
-    public $filterAvailability = '';
+    public string $filterAvailability = '';
 
     #[Url(history: true)]
-    public $filterSeasonality = '';
+    public string $filterSeasonality = '';
 
     public bool $previewBulkAction = false;
 

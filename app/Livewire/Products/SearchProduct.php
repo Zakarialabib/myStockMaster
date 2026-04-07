@@ -19,7 +19,7 @@ class SearchProduct extends Component
     use WithPagination;
 
     #[Url(as: 'q')]
-    public $querySearch = '';
+    public string $querySearch = '';
 
     public mixed $category_id;
 
