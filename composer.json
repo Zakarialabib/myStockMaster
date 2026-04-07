@@ -30,6 +30,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.2",
         "barryvdh/laravel-ide-helper": "^3.7",
+        "driftingly/rector-laravel": "^2.2",
         "fakerphp/faker": "^1.9.1",
         "kkomelin/laravel-translatable-string-exporter": "^1.23",
         "larastan/larastan": "^3.6",
@@ -43,7 +44,6 @@
         "pestphp/pest": "^3.8",
         "pestphp/pest-plugin-laravel": "^3.2",
         "rector/rector": "^2.1",
-        "rector/rector-laravel": "^2.2",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {

@@ -67,7 +67,7 @@
                                     <label class="form-label">{{ __('Category') }}</label>
                                     <x-select class="form-select" wire:model.live="categoryFilter">
                                         <option value="">{{ __('All Categories') }}</option>
-                                        @foreach($categories as $category)
+                                        @foreach($this->categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </x-select>
@@ -76,7 +76,7 @@
                                     <label class="form-label">{{ __('Product') }}</label>
                                     <x-select class="form-select" wire:model.live="productFilter">
                                         <option value="">{{ __('All Products') }}</option>
-                                        @foreach($products as $product)
+                                        @foreach($this->products as $product)
                                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                                         @endforeach
                                     </x-select>
