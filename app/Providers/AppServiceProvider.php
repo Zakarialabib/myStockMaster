@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Language;
+use App\Models\Purchase;
+use App\Models\Sale;
 use App\Models\Setting;
+use App\Observers\PurchaseObserver;
+use App\Observers\SaleObserver;
 use App\Observers\SettingsObserver;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -14,16 +18,17 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
-        $this->app->singleton('cart', fn($app) => new \App\Support\Cart\CartManager($app));
+        $this->app->singleton('cart', fn ($app) => new \App\Support\Cart\CartManager($app));
 
         $this->app->alias('cart', \App\Support\Cart\CartManager::class);
     }
@@ -40,6 +45,8 @@ class AppServiceProvider extends ServiceProvider
         View::share('languages', $this->getLanguages());
 
         Setting::observe(SettingsObserver::class);
+        Sale::observe(SaleObserver::class);
+        Purchase::observe(PurchaseObserver::class);
 
         JsonResource::withoutWrapping();
 
@@ -71,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
 
-            return cache()->rememberForever('languages', fn() => Session::has('language')
+            return cache()->rememberForever('languages', fn () => Session::has('language')
                 ? Language::query()->pluck('name', 'code')->toArray()
                 : Language::query()->where('is_default', 1)->first());
         } catch (Exception) {
