@@ -60,6 +60,7 @@
                                     <button type="button" @click="subtab = 'channels'" :class="{ 'text-indigo-600 font-medium': subtab === 'channels', 'text-gray-600 hover:text-indigo-500': subtab !== 'channels' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Delivery Channels') }}</button>
                                     <button type="button" @click="subtab = 'triggers'" :class="{ 'text-indigo-600 font-medium': subtab === 'triggers', 'text-gray-600 hover:text-indigo-500': subtab !== 'triggers' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Event Triggers') }}</button>
                                     <button type="button" @click="subtab = 'logs'" :class="{ 'text-indigo-600 font-medium': subtab === 'logs', 'text-gray-600 hover:text-indigo-500': subtab !== 'logs' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Notification Logs') }}</button>
+                                    <button type="button" @click="subtab = 'email_templates'" :class="{ 'text-indigo-600 font-medium': subtab === 'email_templates', 'text-gray-600 hover:text-indigo-500': subtab !== 'email_templates' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Visual Email Templates') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -666,6 +667,11 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div x-show="subtab === 'email_templates'" class="p-6">
+                                <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('Visual Email Templates') }}</h2>
+                                <livewire:settings.visual-email-templates />
                             </div>
                         </div>
                     </div>
