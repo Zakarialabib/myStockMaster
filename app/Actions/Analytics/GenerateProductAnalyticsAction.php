@@ -128,12 +128,13 @@ final class GenerateProductAnalyticsAction
     private function getTrendAnalysis(Product $product, Carbon $dateFrom, Carbon $dateTo): array
     {
         // Get daily sales data
+        $dateFormatSql = db_date_format('sales.created_at', '%Y-%m-%d');
         $dailySales = SaleDetails::where('product_id', $product->id)
             ->whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
                 $query->whereBetween('created_at', [$dateFrom, $dateTo])
                     ->where('status', '!=', 'cancelled');
             })
-            ->selectRaw('DATE(sales.created_at) as sale_date, SUM(quantity) as daily_quantity, SUM(price * quantity) as daily_revenue')
+            ->selectRaw("{$dateFormatSql} as sale_date, SUM(sale_details.quantity) as daily_quantity, SUM(sale_details.price * sale_details.quantity) as daily_revenue")
             ->join('sales', 'sale_details.sale_id', '=', 'sales.id')
             ->groupBy('sale_date')
             ->orderBy('sale_date')

@@ -31,14 +31,16 @@ class Smtp extends Component
 
     public function mount(): void
     {
-        $this->mail_mailer = config('mail.mailer');
-        $this->mail_host = config('mail.host');
-        $this->mail_port = (string) config('mail.port');
-        $this->mail_from_address = config('mail.from.address');
-        $this->mail_from_name = config('mail.from.name');
-        $this->mail_username = config('mail.username');
-        $this->mail_password = config('mail.password');
-        $this->mail_encryption = config('mail.encryption');
+        $settings = \App\Models\Setting::first();
+        
+        $this->mail_mailer = $settings->mail_mailer ?? config('mail.mailer');
+        $this->mail_host = $settings->smtp_host ?? config('mail.host');
+        $this->mail_port = (string) ($settings->smtp_port ?? config('mail.port'));
+        $this->mail_from_address = $settings->mail_from_address ?? config('mail.from.address');
+        $this->mail_from_name = $settings->mail_from_name ?? config('mail.from.name');
+        $this->mail_username = $settings->smtp_username ?? config('mail.username');
+        $this->mail_password = $settings->smtp_password ?? config('mail.password');
+        $this->mail_encryption = $settings->smtp_encryption ?? config('mail.encryption');
     }
 
     public function render()
@@ -48,40 +50,20 @@ class Smtp extends Component
 
     public function update(): void
     {
-        $toReplace = [
-            'MAIL_MAILER=' . config('mail.mailer'),
-            'MAIL_HOST="' . config('mail.host') . '"',
-            'MAIL_PORT=' . config('mail.port'),
-            'MAIL_FROM_ADDRESS="' . config('mail.from.address') . '"',
-            'MAIL_FROM_NAME="' . config('mail.from.name') . '"',
-            'MAIL_USERNAME="' . config('mail.username') . '"',
-            'MAIL_PASSWORD="' . config('mail.password') . '"',
-            'MAIL_ENCRYPTION="' . config('mail.encryption') . '"',
-        ];
-
-        $replaceWith = [
-            'MAIL_MAILER=' . $this->mail_mailer,
-            'MAIL_HOST="' . $this->mail_host . '"',
-            'MAIL_PORT=' . $this->mail_port,
-            'MAIL_FROM_ADDRESS="' . $this->mail_from_address . '"',
-            'MAIL_FROM_NAME="' . $this->mail_from_name . '"',
-            'MAIL_USERNAME="' . $this->mail_username . '"',
-            'MAIL_PASSWORD="' . $this->mail_password . '"',
-            'MAIL_ENCRYPTION="' . $this->mail_encryption . '"',
-        ];
-
         try {
-            $envPath = base_path('.env');
-            $envContent = file_get_contents($envPath);
-
-            if ($envContent === false) {
-                throw new Exception('Unable to read .env file');
-            }
-
-            $newContent = str_replace($toReplace, $replaceWith, $envContent);
-
-            if (file_put_contents($envPath, $newContent) === false) {
-                throw new Exception('Unable to write .env file');
+            $settings = \App\Models\Setting::first();
+            
+            if ($settings) {
+                $settings->update([
+                    'mail_mailer' => $this->mail_mailer,
+                    'smtp_host' => $this->mail_host,
+                    'smtp_port' => $this->mail_port,
+                    'mail_from_address' => $this->mail_from_address,
+                    'mail_from_name' => $this->mail_from_name,
+                    'smtp_username' => $this->mail_username,
+                    'smtp_password' => $this->mail_password,
+                    'smtp_encryption' => $this->mail_encryption,
+                ]);
             }
 
             Artisan::call('cache:clear');

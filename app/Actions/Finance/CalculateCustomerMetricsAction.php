@@ -145,10 +145,11 @@ final class CalculateCustomerMetricsAction
         $cohorts = [];
 
         // Group customers by acquisition month
-        $customerCohorts = Customer::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as cohort_month, COUNT(*) as customers')
+        $dateFormatSql = db_date_format('created_at', '%Y-%m');
+        $customerCohorts = Customer::selectRaw("{$dateFormatSql} as cohort_month, COUNT(*) as customers")
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('cohort_month')
-            ->saleBy('cohort_month')
+            ->orderBy('cohort_month')
             ->get();
 
         foreach ($customerCohorts as $cohort) {
@@ -259,10 +260,12 @@ final class CalculateCustomerMetricsAction
             default => '%Y-%m',
         };
 
-        $trends = Customer::selectRaw("DATE_FORMAT(created_at, '{$dateFormat}') as period, COUNT(*) as new_customers")
+        $dateFormatSql = db_date_format('created_at', $dateFormat);
+
+        $trends = Customer::selectRaw("{$dateFormatSql} as period, COUNT(*) as new_customers")
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('period')
-            ->saleBy('period')
+            ->orderBy('period')
             ->get()
             ->map(function ($item) {
                 return [
