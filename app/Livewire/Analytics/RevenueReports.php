@@ -10,10 +10,12 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Lazy]
 class RevenueReports extends Component
 {
     use WithPagination;
@@ -34,8 +36,6 @@ class RevenueReports extends Component
     public ?int $productFilter = null;
 
     public array $revenueData = [];
-
-    public bool $loading = false;
 
     public bool $includeProductBreakdown = true;
 
@@ -100,8 +100,6 @@ class RevenueReports extends Component
 
     public function loadRevenueReport()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -131,8 +129,6 @@ class RevenueReports extends Component
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load revenue report: ' . $e->getMessage());
             $this->revenueData = [];
-        } finally {
-            $this->loading = false;
         }
     }
 

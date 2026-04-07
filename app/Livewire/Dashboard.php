@@ -7,13 +7,14 @@ namespace App\Livewire;
 use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 #[Title('Dashboard')]
-
+#[Lazy]
 class Dashboard extends Component
 {
     use WithAlert;

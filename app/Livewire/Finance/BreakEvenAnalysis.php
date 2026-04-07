@@ -13,9 +13,11 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+#[Lazy]
 class BreakEvenAnalysis extends Component
 {
     #[Validate('required|date')]
@@ -33,8 +35,6 @@ class BreakEvenAnalysis extends Component
     public array $breakEvenData = [];
 
     public array $scenarioAnalysis = [];
-
-    public bool $loading = false;
 
     // Scenario planning inputs
     #[Validate('numeric|min:-100|max:100')]
@@ -119,8 +119,6 @@ class BreakEvenAnalysis extends Component
 
     public function loadBreakEvenAnalysis()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -142,8 +140,6 @@ class BreakEvenAnalysis extends Component
             }
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load break-even analysis: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 
