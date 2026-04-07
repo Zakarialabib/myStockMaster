@@ -7,6 +7,7 @@ namespace App\Livewire\Finance;
 use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -15,6 +16,7 @@ use Livewire\WithPagination;
 #[Title('KPI Tracking')]
 
 #[Layout('layouts.app')]
+#[Lazy]
 class KpiTracking extends Component
 {
     use WithPagination;
@@ -34,8 +36,6 @@ class KpiTracking extends Component
     public array $kpiData = [];
 
     public array $comparisonData = [];
-
-    public bool $loading = false;
 
     public bool $autoRefresh = false;
 
@@ -74,8 +74,6 @@ class KpiTracking extends Component
 
     public function loadKpiData()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -103,8 +101,6 @@ class KpiTracking extends Component
             $this->loadComparisonData($dateFrom, $dateTo);
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load KPI data: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

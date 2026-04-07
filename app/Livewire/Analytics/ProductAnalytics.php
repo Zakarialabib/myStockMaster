@@ -11,12 +11,13 @@ use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-
+#[Lazy]
 class ProductAnalytics extends Component
 {
     use WithPagination;
@@ -39,8 +40,6 @@ class ProductAnalytics extends Component
         'comparisonProducts.*' => 'exists:products,id',
     ])]
     public array $comparisonProducts = [];
-
-    public bool $loading = false;
 
     public bool $showComparison = false;
 
@@ -85,8 +84,6 @@ class ProductAnalytics extends Component
             return;
         }
 
-        $this->loading = true;
-
         try {
             $product = Product::findOrFail($this->productId);
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -109,8 +106,6 @@ class ProductAnalytics extends Component
             }
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load product analytics: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

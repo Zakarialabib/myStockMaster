@@ -14,10 +14,12 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Lazy]
 class FinancialDashboard extends Component
 {
     use WithPagination;
@@ -45,8 +47,6 @@ class FinancialDashboard extends Component
     public array $breakEvenData = [];
 
     public array $grossMarginData = [];
-
-    public bool $loading = false;
 
     public string $search = '';
 
@@ -147,8 +147,6 @@ class FinancialDashboard extends Component
 
     public function loadFinancialData()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -193,8 +191,6 @@ class FinancialDashboard extends Component
             $this->grossMarginData = $grossMarginAction($dateFrom, $dateTo);
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load financial data: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

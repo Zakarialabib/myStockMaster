@@ -72,7 +72,7 @@ class Create extends Component
 
         $this->alert('success', __('Quotation created successfully!'));
 
-        return redirect()->route('quotations.index');
+        return redirect()->route('quotations.index')->navigate();
     }
 
     public function hydrate(): void

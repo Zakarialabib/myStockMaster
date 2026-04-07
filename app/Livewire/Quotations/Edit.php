@@ -81,7 +81,7 @@ class Edit extends Component
 
         $this->alert('success', __('Quotation updated Successfully!'));
 
-        return redirect()->route('quotations.index');
+        return redirect()->route('quotations.index')->navigate();
     }
 
     public function render()

@@ -11,11 +11,13 @@ use App\Models\Product;
 use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
 
+#[Lazy]
 class AnalyticsDashboard extends Component
 {
     use WithAlert;
@@ -39,8 +41,6 @@ class AnalyticsDashboard extends Component
     public array $revenueData = [];
 
     public array $priceTrends = [];
-
-    public bool $loading = false;
 
     public string $search = '';
 
@@ -70,8 +70,6 @@ class AnalyticsDashboard extends Component
 
     public function loadAnalytics(): void
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -94,8 +92,6 @@ class AnalyticsDashboard extends Component
             }
         } catch (Throwable $throwable) {
             $this->alert('error', __('Failed to load analytics.') . ' ' . $throwable->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

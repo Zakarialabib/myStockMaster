@@ -506,7 +506,7 @@ class StepManager extends Component
 
             $this->alert('success', __('Installation completed successfully!'));
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->navigate();
         } catch (Exception $e) {
             $this->alert('error', __('Installation failed: ') . $e->getMessage());
             Log::error('Installation completion failed', ['error' => $e->getMessage()]);

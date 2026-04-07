@@ -64,7 +64,7 @@ class Edit extends Component
             $this->products
         );
 
-        return redirect()->route('adjustments.index');
+        return redirect()->route('adjustments.index')->navigate();
     }
 
     #[On('productSelected')]

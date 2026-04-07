@@ -57,7 +57,7 @@ class MaintenanceMode extends Component
 
         $this->alert('success', implode(' ', ['status' => $this->status ? __('System turned on') : __('System turned off')]));
 
-        return redirect()->route('front.index', ['secret' => $this->secret]);
+        return redirect()->route('front.index', ['secret' => $this->secret])->navigate();
         // Send email notification
         // Mail::to($user)->send(new MaintenanceModeNotification(false));
     }

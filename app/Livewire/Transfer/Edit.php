@@ -66,7 +66,7 @@ class Edit extends Component
 
         $transferService->updateTransfer($this->transfer, $this->form->all(), $this->products);
 
-        return redirect()->route('transfers.index');
+        return redirect()->route('transfers.index')->navigate();
     }
 
     #[On('productSelected')]

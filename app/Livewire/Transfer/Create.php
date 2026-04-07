@@ -80,7 +80,7 @@ class Create extends Component
 
             $this->alert('success', __('Transfer created successfully'));
 
-            return redirect()->route('transfers.index');
+            return redirect()->route('transfers.index')->navigate();
         } catch (Throwable $throwable) {
             $this->alert('error', 'Error Occurred in ' . $throwable->getMessage());
         }

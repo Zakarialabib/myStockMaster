@@ -146,7 +146,7 @@ class NotificationBell extends Component
     {
         $this->closeDropdown();
 
-        return redirect()->route('notifications.index');
+        return redirect()->route('notifications.index')->navigate();
     }
 
     public function handleNotificationClick($notificationId)
@@ -170,28 +170,28 @@ class NotificationBell extends Component
             case 'sale_created':
             case 'sale_updated':
                 if (isset($data['sale_id'])) {
-                    return redirect()->route('sales.show', $data['sale_id']);
+                    return redirect()->route('sales.show', $data['sale_id'])->navigate();
                 }
 
                 break;
 
             case 'low_stock':
                 if (isset($data['product_id'])) {
-                    return redirect()->route('products.show', $data['product_id']);
+                    return redirect()->route('products.show', $data['product_id'])->navigate();
                 }
 
                 break;
 
             case 'expense_created':
                 if (isset($data['expense_id'])) {
-                    return redirect()->route('expenses.show', $data['expense_id']);
+                    return redirect()->route('expenses.show', $data['expense_id'])->navigate();
                 }
 
                 break;
 
             default:
                 // Default to notifications page
-                return redirect()->route('notifications.index');
+                return redirect()->route('notifications.index')->navigate();
         }
     }
 
