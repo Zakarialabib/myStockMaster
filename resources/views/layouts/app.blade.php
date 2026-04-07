@@ -24,7 +24,7 @@
     @include('includes.main-css')
 
     @if ($isDesktop)
-        @vite('resources/css/desktop.css')
+    @vite('resources/css/desktop.css')
     @endif
 
     @stack('styles')
@@ -39,7 +39,7 @@
     @livewireStyles
 
     @if ($isDesktop)
-        @vite('resources/js/desktop.js')
+    @vite('resources/js/desktop.js')
     @endif
 
     @stack('scripts')
@@ -48,56 +48,52 @@
 </head>
 
 <body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
+    <x-loading-mask />
 
-    <div @resize.window="handleWindowResize">
-        {{-- <div class="min-h-screen"> --}}
-            <!-- Sidebar -->
-            <x-sidebar.sidebar />
-            <!-- Page Wrapper -->
-            <div class="flex flex-col min-h-screen"
-                :class="{
-                    'lg:ml-64': isSidebarOpen,
-                    'lg:ml-16': !isSidebarOpen,
-                }"
-                style="transition-property: margin; transition-duration: 150ms;">
+    <div class="flex flex-col min-h-screen">
+        <!-- Sidebar -->
+        <x-sidebar.sidebar />
 
-                <!-- Navigation Bar-->
-                <x-navbar />
+        <!-- Page Wrapper -->
+        <div class="flex flex-col flex-1 transition-all duration-300 ease-in-out"
+            :class="{
+                'lg:ml-64': isSidebarOpen || isSidebarHovered,
+                'lg:ml-16': !isSidebarOpen && !isSidebarHovered,
+            }">
 
-                <!-- Desktop Mode Indicator -->
-                @if ($isDesktop)
-                    <livewire:desktop-mode-indicator />
-                @endif
+            <!-- Navigation Bar-->
+            <x-navbar />
 
-                <!-- Desktop Notifications -->
-                @if ($isDesktop)
-                    <livewire:desktop-notification />
-                    <livewire:sync-status />
-                @endif
+            <!-- Desktop Indicators & Notifications -->
+            @if ($isDesktop)
+            <div class="fixed top-20 right-6 z-40 flex flex-col gap-3 pointer-events-none">
+                <livewire:desktop-mode-indicator />
+                <livewire:desktop-notification />
+                <livewire:sync-status />
+            </div>
+            @endif
 
-                <main class="flex-1">
-
+            <main class="flex-1 p-6 lg:p-8">
+                <div class="max-w-7xl mx-auto space-y-6">
                     @yield('breadcrumb')
 
                     @yield('content')
 
-                    <x-card>
-                        @isset($slot)
-                            {{ $slot }}
-                        @endisset
-                    </x-card>
+                    @isset($slot)
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-soft p-6 border border-gray-100 dark:border-gray-800">
+                        {{ $slot }}
+                    </div>
+                    @endisset
 
                     {{-- <x-settings-bar /> --}}
 
-                </main>
+                </div>
+            </main>
 
-                <!-- Footer -->
-                <x-footer />
-
-            </div>
-        {{-- </div> --}}
+            <!-- Footer -->
+            <x-footer />
+        </div>
     </div>
-
 </body>
 
 </html>

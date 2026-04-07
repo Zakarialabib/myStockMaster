@@ -9,6 +9,7 @@
     style="transition-property: width, transform; transition-duration: 200ms; transition-timing-function: ease-out;"
     @mouseenter="handleSidebarHover(true)"
     @mouseleave="handleSidebarHover(false)"
+    x-cloak
 >
     <x-sidebar.header />
 

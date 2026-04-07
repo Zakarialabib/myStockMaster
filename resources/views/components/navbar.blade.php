@@ -3,7 +3,8 @@
     :class="{
         '-translate-y-full': scrollingDown,
         'translate-y-0': scrollingUp,
-    }">
+    }"
+    x-cloak>
 
     <div class="flex items-center gap-3">
         <button type="button" class="p-2 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="isSidebarOpen = !isSidebarOpen">
@@ -30,9 +31,9 @@
         </div>
 
         @can('show_notifications')
-            <div class="hidden md:flex items-center">
-                <livewire:notifications-bell />
-            </div>
+        <div class="hidden md:flex items-center">
+            <livewire:notification-bell />
+        </div>
         @endcan
 
         <a href="{{ route('pos.index') }}" wire:navigate class="flex items-center gap-2 bg-gradient-to-br from-primary-600 to-primary-500 text-white font-bold text-sm px-4 py-2 rounded-xl shadow-soft hover:shadow-lg hover:brightness-110 active:scale-[0.98] transition-all">
