@@ -34,7 +34,6 @@ use App\Livewire\ExpenseCategories\Index as ExpenseCategoriesIndex;
 use App\Livewire\Installation\StepManager;
 use App\Livewire\Language\EditTranslation;
 use App\Livewire\Language\Index as LanguageIndex;
-use App\Livewire\Notification\Index as NotificationIndex;
 use App\Livewire\Permission\Index as PermissionsIndex;
 use App\Livewire\Pos\Index as PosIndex;
 use App\Livewire\Printer\Index as PrinterIndex;
@@ -338,14 +337,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
         Route::livewire('/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('breakeven');
     });
 
-    // Notifications
+    // // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::livewire('/bell', App\Livewire\Notifications\NotificationBell::class)->name('bell');
         Route::livewire('/manager', App\Livewire\Notifications\NotificationManager::class)->name('manager');
     });
-
-    // Notification (Legacy)
-    Route::livewire('/notification', NotificationIndex::class)->name('notification');
 
     // Email Settings
     Route::livewire('/email-settings', EmailIndex::class)->name('email-settings');
