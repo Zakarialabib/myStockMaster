@@ -146,7 +146,10 @@ class Setting extends Model
     {
         return [
             'analytics_control' => 'array',
+            'invoice_control' => 'array',
             'installation_completed' => 'boolean',
+            'is_rtl' => 'boolean',
+            'backup_status' => 'boolean',
         ];
     }
 
@@ -156,22 +159,6 @@ class Setting extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');
-    }
-
-    protected function analyticsControl(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value): mixed => json_decode((string) $value, true),
-            set: fn ($value) => json_encode($value),
-        );
-    }
-
-    protected function invoiceControl(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value): mixed => json_decode((string) $value, true),
-            set: fn ($value) => json_encode($value),
-        );
     }
 
     /** Set a specific setting value */

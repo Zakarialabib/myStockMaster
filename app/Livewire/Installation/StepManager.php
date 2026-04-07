@@ -115,6 +115,9 @@ class StepManager extends Component
             $this->database['port'] = env('DB_PORT', '3306');
             $this->database['database'] = env('DB_DATABASE', '');
             $this->database['username'] = env('DB_USERNAME', 'root');
+            
+            $this->admin_email = 'admin@example.com';
+            
             $this->runPreflightChecks();
         }
     }
@@ -414,8 +417,8 @@ class StepManager extends Component
         $this->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'required|email',
-            'company_phone' => 'required|string',
-            'company_address' => 'required|string',
+            'company_phone' => 'nullable|string',
+            'company_address' => 'nullable|string',
         ]);
     }
 

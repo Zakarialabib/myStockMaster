@@ -149,8 +149,18 @@ if (! function_exists('db_date_format')) {
      * Get the database date format string based on the current driver.
      * Supports MySQL (DATE_FORMAT) and SQLite (strftime).
      */
-    function db_date_format($column, $format): string
+    function db_date_format($column, $format = null): string
     {
+        if ($format === null) {
+            $phpFormat = settings('default_date_format', 'Y-m-d');
+            // Map PHP format to SQL format
+            $format = str_replace(
+                ['Y', 'm', 'd', 'H', 'i', 's'],
+                ['%Y', '%m', '%d', '%H', '%i', '%s'],
+                $phpFormat
+            );
+        }
+
         $isSqlite = Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
 
         if ($isSqlite) {
