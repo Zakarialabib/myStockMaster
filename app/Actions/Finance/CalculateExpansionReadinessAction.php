@@ -463,12 +463,15 @@ class CalculateExpansionReadinessAction
 
     private function getMonthlyRevenue($startDate, $endDate): Collection
     {
+        $yearSql = db_date_format('created_at', '%Y');
+        $monthSql = db_date_format('created_at', '%m');
+
         return Sale::whereBetween('created_at', [$startDate, $endDate])
             ->where('status', '!=', 'cancelled')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_amount) as revenue')
+            ->selectRaw("{$yearSql} as year, {$monthSql} as month, SUM(total_amount) as revenue")
             ->groupBy('year', 'month')
-            ->saleBy('year')
-            ->saleBy('month')
+            ->orderBy('year')
+            ->orderBy('month')
             ->get();
     }
 

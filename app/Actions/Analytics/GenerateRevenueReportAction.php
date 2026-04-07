@@ -140,10 +140,12 @@ final class GenerateRevenueReportAction
             default => '%Y-%m-%d',
         };
 
+        $dateFormatSql = db_date_format('created_at', $dateFormat);
+
         $breakdown = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
             ->where('status', '!=', 'cancelled')
             ->selectRaw("
-                DATE_FORMAT(created_at, '{$dateFormat}') as period,
+                {$dateFormatSql} as period,
                 COUNT(*) as order_count,
                 SUM(total_amount) as revenue,
                 SUM(tax_amount) as tax,
