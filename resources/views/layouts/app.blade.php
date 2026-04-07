@@ -30,10 +30,14 @@
     @stack('styles')
     @php
         $appStyle = settings('app_style', []);
+        $primaryColor = $appStyle['primary_color'] ?? '#0061ff';
+        $palette = generate_color_palette($primaryColor);
     @endphp
     <style>
         :root {
-            --color-primary-500: {{ $appStyle['primary_color'] ?? '#0061ff' }};
+            @foreach($palette as $weight => $hex)
+            --color-primary-{{ $weight }}: {{ $hex }};
+            @endforeach
             --font-sans: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
             --font-body: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
         }

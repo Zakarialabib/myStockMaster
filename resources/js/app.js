@@ -17,6 +17,8 @@ window.ApexCharts = ApexCharts;
 import Sortable from 'sortablejs';
 window.Sortable = Sortable;
 
+import './theme-generator';
+
 import appModal from './components/modal';
 Alpine.data('appModal', appModal);
 
