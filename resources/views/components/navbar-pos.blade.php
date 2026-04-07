@@ -20,7 +20,7 @@
 
             @can('show_notifications')
                 <div class="md:flex hidden flex-wrap items-center">
-                    @livewire('notifications-bell')
+                    @livewire('notification-bell')
                 </div>
             @endcan
 

@@ -2,137 +2,85 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class RoleController extends BaseController
+class RoleController extends Controller
 {
-    /**
-     * Retrieve a list of Role with optional filters and pagination.
-     */
     /**
      * Retrieve a list of roles with optional filters and pagination.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
-
-                // capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
-
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit roles list
-                    $roles = Role::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit roles list
-                    $roles = Role::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all roles
-                $roles = Role::get();
-            }
-
-            return $this->sendResponse($roles, 'Role List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            $roles = Role::query()
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $roles = Role::query()->get();
         }
+
+        return RoleResource::collection($roles);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request): RoleResource
     {
-        DB::beginTransaction();
+        $role = Role::create($request->all());
 
-        try {
-            $input = $request->all();
-            $Role = Role::create($input);
-            DB::commit();
-
-            return $this->sendResponse($Role, 'Role created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new RoleResource($role);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): RoleResource|JsonResponse
     {
-        try {
-            $Role = Role::find($id);
+        $role = Role::find($id);
 
-            if (is_null($Role)) {
-                return $this->sendError('Role not found');
-            } else {
-                return $this->sendResponse($Role, 'Role retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if ($role === null) {
+            return response()->json(['message' => 'Role not found'], 404);
         }
+
+        return new RoleResource($role);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRoleRequest $request, int $id): RoleResource
     {
-        $Role = Role::findOrFail($id);
-        $Role->update($request->all());
+        $role = Role::findOrFail($id);
+        $role->update($request->all());
 
-        return new RoleResource($Role);
+        return new RoleResource($role);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $Role = Role::findOrFail($id);
-            $Role->delete();
+        $role = Role::findOrFail($id);
+        $role->delete();
 
-            return $this->sendResponse($Role, 'Role deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Role deleted successfully']);
     }
 }

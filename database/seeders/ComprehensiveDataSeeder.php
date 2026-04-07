@@ -13,10 +13,8 @@ class ComprehensiveDataSeeder extends Seeder
 {
     /**
      * Run the comprehensive database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->command->info('Starting comprehensive data seeding...');
 

@@ -8,4 +8,5 @@
     x-show="isSidebarOpen"
     @click="isSidebarOpen = false" 
     class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+    x-cloak
  ></div>

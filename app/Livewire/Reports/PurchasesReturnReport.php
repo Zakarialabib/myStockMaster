@@ -8,43 +8,48 @@ use App\Models\PurchaseReturn;
 use App\Models\Supplier;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+
 class PurchasesReturnReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public $suppliers;
+    public ?string $supplier_id = null;
 
-    public $supplier_id;
+    public ?string $purchase_return_status = null;
 
-    public $purchase_return_status;
-
-    public $payment_status;
+    public ?string $payment_status = null;
 
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public string $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public string $end_date;
 
     public function mount(): void
     {
-        $this->suppliers = Supplier::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->supplier_id = '';
         $this->purchase_return_status = '';
         $this->payment_status = '';
+    }
+
+    #[Computed]
+    public function suppliers()
+    {
+        return Supplier::select(['id', 'name'])->get();
     }
 
     public function render()

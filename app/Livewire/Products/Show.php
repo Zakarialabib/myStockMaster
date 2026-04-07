@@ -14,14 +14,14 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $product;
+    public ?Product $product = null;
 
     public $showModal = false;
 
     #[On('showModal')]
     public function openModal($id): void
     {
-        $this->product = Product::findOrFail($id);
+        $this->product = Product::with(['category', 'warehouses', 'movements'])->findOrFail($id);
 
         $this->showModal = true;
     }

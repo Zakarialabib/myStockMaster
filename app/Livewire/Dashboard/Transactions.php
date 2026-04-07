@@ -16,9 +16,9 @@ use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Lazy(isolate: false)]
@@ -26,27 +26,13 @@ class Transactions extends Component
 {
     use WithAlert;
 
-    public $typeChart = 'monthly';
+    public string $typeChart = 'monthly';
 
-    public $profit;
+    public string $charts = '';
 
-    public $purchase;
+    public string $startDate = '';
 
-    public $charts;
-
-    public $purchases;
-
-    public $sales;
-
-    public $startDate;
-
-    public $endDate;
-
-    public $purchasesCount;
-
-    public $salesTotal;
-
-    public $stockValue;
+    public string $endDate = '';
 
     public function mount(): void
     {
@@ -57,7 +43,7 @@ class Transactions extends Component
     }
 
     #[Computed]
-    public function lastSales()
+    public function lastSales(): Collection
     {
         return Sale::with('customer')
             ->latest()
@@ -66,7 +52,7 @@ class Transactions extends Component
     }
 
     #[Computed]
-    public function lastPurchases()
+    public function lastPurchases(): Collection
     {
         return Purchase::with('supplier')
             ->latest()
@@ -75,7 +61,7 @@ class Transactions extends Component
     }
 
     #[Computed]
-    public function bestSales()
+    public function bestSales(): Collection
     {
         return Sale::query()
             ->select('sales.*', 'customers.name')
@@ -88,7 +74,7 @@ class Transactions extends Component
     }
 
     #[Computed]
-    public function purchasesCount()
+    public function purchasesCount(): Collection
     {
         return Purchase::where('date', '>=', Carbon::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
@@ -97,7 +83,7 @@ class Transactions extends Component
     }
 
     #[Computed]
-    public function salesCount()
+    public function salesCount(): Collection
     {
         return Sale::whereDate('date', '>=', Carbon::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
@@ -183,7 +169,7 @@ class Transactions extends Component
     }
 
     #[Computed(persist: true, seconds: 7200)]
-    public function topProducts()
+    public function topProducts(): Collection
     {
         return SaleDetails::query()
             ->selectRaw('
@@ -204,7 +190,7 @@ class Transactions extends Component
     }
 
     #[Computed(persist: true, seconds: 7200)]
-    public function topCustomers()
+    public function topCustomers(): Collection
     {
         return Sale::query()
             ->selectRaw('

@@ -10,8 +10,43 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int         $id
+ * @property int         $purchase_return_id
+ * @property string|null $user_id
+ * @property int         $amount
+ * @property Carbon      $date
+ * @property string      $reference
+ * @property string      $payment_method
+ * @property string|null $note
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read PurchaseReturn $purchaseReturn
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment byPurchaseReturn()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment wherePurchaseReturnId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class PurchaseReturnPayment extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

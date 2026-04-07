@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Categories;
 
-use App\Models\Category;
+use App\Livewire\Forms\CategoryForm;
+use App\Services\CategoryService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -20,15 +19,7 @@ class Create extends Component
 
     public bool $createModal = false;
 
-    public Category $category;
-
-    #[Validate('required', message: 'Please provide a name')]
-    #[Validate('min:3', message: 'This name is too short')]
-    public string $name;
-
-    public ?string $description = null;
-
-    public $image;
+    public CategoryForm $form;
 
     #[On('createModal')]
     public function openCreateModal(): void
@@ -37,29 +28,22 @@ class Create extends Component
 
         $this->resetErrorBag();
 
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(CategoryService $service): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        if ($this->image && ! is_string($this->image)) {
-            // Call to a member function extension() on string
-            $imageName = Str::slug($this->name) . '-' . Str::random(3) . '.' . $this->image->extension();
-            $this->image->storeAs('categories', $imageName);
-            $this->image = $imageName;
-        }
-
-        Category::create($this->all());
+        $service->create($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', __('Category created successfully.'));
 
-        $this->reset(['name', 'description', 'image']);
+        $this->form->reset();
 
         $this->createModal = false;
     }

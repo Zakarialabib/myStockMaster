@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Categories;
 
+use App\Livewire\Forms\CategoryForm;
 use App\Models\Category;
+use App\Services\CategoryService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -22,15 +22,7 @@ class Edit extends Component
 
     public Category $category;
 
-    #[Validate('required', message: 'Please provide a name')]
-    #[Validate('min:3', message: 'This name is too short')]
-    public string $name;
-
-    public ?string $description = null;
-
-    public ?string $code = null;
-
-    public $image;
+    public CategoryForm $form;
 
     public function render()
     {
@@ -44,35 +36,29 @@ class Edit extends Component
 
         $this->resetErrorBag();
 
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->category = Category::where('id', $id)->firstOrFail();
-        $this->name = $this->category->name;
-        $this->description = $this->category->description;
-        $this->code = $this->category->code;
-        $this->image = $this->category->image ?? null;
+
+        $this->form->name = $this->category->name;
+        $this->form->description = $this->category->description;
+        $this->form->code = $this->category->code;
+        $this->form->image = $this->category->image ?? null;
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(CategoryService $service): void
     {
-        $this->validate();
+        $this->form->validate();
 
-        if ($this->image && ! is_string($this->image)) {
-            // Call to a member function extension() on string
-            $imageName = Str::slug($this->name) . '-' . Str::random(3) . '.' . $this->image->extension();
-            $this->image->storeAs('categories', $imageName);
-            $this->image = $imageName;
-        }
-
-        $this->category->update($this->all());
+        $service->update($this->category, $this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', __('Category updated successfully.'));
 
-        $this->reset(['name', 'description', 'code', 'image']);
+        $this->form->reset();
 
         $this->editModal = false;
     }

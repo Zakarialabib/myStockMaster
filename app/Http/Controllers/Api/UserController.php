@@ -2,115 +2,70 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class UserController extends BaseController
+class UserController extends Controller
 {
     /**
-     * Retrieve a list of User with optional filters and pagination.
+     * Retrieve a list of users with optional filters and pagination.
      */
-    /**
-     * Retrieve a list of expenses with optional filters and pagination.
-     */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
-
-                // capture category_id filter
-                $category_id = $request->get('category_id') ? $request->get('category_id') : '';
-
-                if ($category_id !== '') {
-                    $where_raw .= " AND (category_id =  $category_id)";
-                }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
-
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit expenses list
-                    $expenses = User::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit expenses list
-                    $expenses = User::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all expenses
-                $expenses = User::get();
-            }
-
-            return $this->sendResponse($expenses, 'User List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            $users = User::query()
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $users = User::query()->get();
         }
+
+        return UserResource::collection($users);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request): UserResource
     {
-        DB::beginTransaction();
+        $user = User::create($request->all());
 
-        try {
-            $input = $request->all();
-            $user = User::create($input);
-            DB::commit();
-
-            return $this->sendResponse($user, 'User created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new UserResource($user);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): UserResource|JsonResponse
     {
-        try {
-            $user = User::find($id);
+        $user = User::find($id);
 
-            if (is_null($user)) {
-                return $this->sendError('User not found');
-            } else {
-                return $this->sendResponse($user, 'User retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if ($user === null) {
+            return response()->json(['message' => 'User not found'], 404);
         }
+
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, int $id): UserResource
     {
         $user = User::findOrFail($id);
         $user->update($request->all());
@@ -120,20 +75,12 @@ class UserController extends BaseController
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $user = User::findOrFail($id);
-            $user->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
 
-            return $this->sendResponse($user, 'User deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }

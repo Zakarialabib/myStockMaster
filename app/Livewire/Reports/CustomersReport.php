@@ -16,37 +16,41 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+
 class CustomersReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public $customer_id;
-
-    public $customers;
+    public ?string $customer_id = null;
 
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public string $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public string $end_date;
 
-    public $payment_status;
+    public ?string $payment_status = null;
 
-    public $purchase_status;
+    public ?string $purchase_status = null;
 
     public function mount(): void
     {
-        $this->customers = Customer::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->customer_id = '';
         $this->purchase_status = '';
         $this->payment_status = '';
+    }
+
+    #[Computed]
+    public function customers()
+    {
+        return Customer::select(['id', 'name'])->get();
     }
 
     #[Computed]

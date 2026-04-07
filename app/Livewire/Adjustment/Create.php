@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
-use App\Actions\Adjustments\StoreAdjustmentAction;
+use App\Livewire\Forms\AdjustmentForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Product;
 use App\Models\ProductWarehouse;
+use App\Services\AdjustmentService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
@@ -19,22 +21,14 @@ use Throwable;
 #[Layout('layouts.app')]
 class Create extends Component
 {
+    use WithAlert;
     use WithModels;
 
-    #[Validate('required|date')]
-    public $date;
-
-    #[Validate('nullable|string|max:1000')]
-    public $note;
-
-    #[Validate('required|string|max:255')]
-    public $reference;
+    public AdjustmentForm $form;
 
     public $quantities;
 
     public $types;
-
-    public $warehouse_id;
 
     public $adjustment;
 
@@ -52,11 +46,11 @@ class Create extends Component
     {
         $this->products = [];
 
-        $this->reference = 'Adj-' . Str::random(5);
-        $this->date = date('Y-m-d');
+        $this->form->reference = 'Adj-' . Str::random(5);
+        $this->form->date = date('Y-m-d');
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
     }
 
@@ -65,33 +59,29 @@ class Create extends Component
         return view('livewire.adjustment.create');
     }
 
-    public function updatedWarehouseId($value): void
+    public function updatedFormWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function store(): void
+    public function store(AdjustmentService $adjustmentService): void
     {
         abort_if(Gate::denies('adjustment_create'), 403);
 
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
         try {
+            $this->form->validate();
             $this->validate();
 
-            app(StoreAdjustmentAction::class)(
-                [
-                    'date' => $this->date,
-                    'note' => $this->note,
-                    'user_id' => auth()->id(),
-                    'warehouse_id' => $this->warehouse_id,
-                ],
-                $this->products,
+            $adjustmentService->createAdjustment(
+                $this->form->all(),
+                $this->products
             );
 
             $this->alert('success', __('Adjustment created successfully'));
@@ -103,9 +93,9 @@ class Create extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected($id): void
+    public function productSelected($productId, $warehouseId = null): void
     {
-        $product = Product::find($id);
+        $product = Product::find($productId);
 
         switch ($this->hasAdjustments) {
             case true:
@@ -132,8 +122,8 @@ class Create extends Component
 
         // add default quantities and types to the product array
 
-        $productWarehouse = ProductWarehouse::where('product_id', $id)
-            ->where('warehouse_id', $this->warehouse_id)
+        $productWarehouse = ProductWarehouse::where('product_id', $productId)
+            ->where('warehouse_id', $this->form->warehouse_id)
             ->first();
 
         $calculation = $this->calculate($product);
@@ -166,7 +156,7 @@ class Create extends Component
     public function calculate($product): array
     {
         $productWarehouse = ProductWarehouse::where('product_id', $product->id)
-            ->where('warehouse_id', $this->warehouse_id)
+            ->where('warehouse_id', $this->form->warehouse_id)
             ->first();
 
         return $this->calculatePrices($product, $productWarehouse);

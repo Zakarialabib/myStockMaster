@@ -1,91 +1,97 @@
 <div>
     @section('title', __('Customer'))
 
-    <x-theme.breadcrumb :title="__('Customer List')" :parent="route('customers.index')" :parentName="__('Customer List')">
-        <x-dropdown align="right" width="48" class="w-auto mr-2">
-            <x-slot name="trigger" class="inline-flex">
-                <x-button secondary type="button" class="text-white flex items-center">
-                    <i class="fas fa-angle-double-down w-4 h-4"></i>
-                </x-button>
-            </x-slot>
-            <x-slot name="content">
-                <x-dropdown-link wire:click="importExcel" wire:loading.attr="disabled">
-                    {{ __('Excel Import') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
-                    {{ __('Export PDF') }}
-                </x-dropdown-link>
-                <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
-                    {{ __('Export Excel') }}
-                </x-dropdown-link>
-            </x-slot>
-        </x-dropdown>
-        @can('customer_create')
-            <x-button primary type="button" wire:click="dispatchTo('customers.create', 'createModal')">
-                {{ __('Create Customer') }}
-            </x-button>
-        @endcan
-    </x-theme.breadcrumb>
+    <x-page-container :title="__('Customer List')"
+        :breadcrumbs="[
+            ['label' => __('Dashboard'), 'url' => route('dashboard')],
+            ['label' => __('Customer List'), 'url' => route('customers.index')]
+        ]"
+        :show-filters="true">
 
-    <div class="flex flex-wrap justify-center items-center">
-        <div class="md:w-1/3 sm:w-full flex flex-wrap space-x-2">
-            <select wire:model.live="perPage"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
-                @foreach ($paginationOptions as $value)
-                    <option value="{{ $value }}">{{ $value }}</option>
-                @endforeach
-            </select>
+        <x-slot name="actions">
+            <x-dropdown align="right" width="48" class="w-auto mr-2">
+                <x-slot name="trigger" class="inline-flex">
+                    <x-button secondary type="button" class="text-white flex items-center">
+                        <i class="fas fa-angle-double-down w-4 h-4"></i>
+                    </x-button>
+                </x-slot>
+                <x-slot name="content">
+                    <x-dropdown-link wire:click="importExcel" wire:loading.attr="disabled">
+                        {{ __('Excel Import') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                        {{ __('Export PDF') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                        {{ __('Export Excel') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+            @can('customer_create')
+                <x-button primary type="button" wire:click="dispatchTo('customers.create', 'showModal')">
+                    <i class="fas fa-plus mr-2"></i>
+                    {{ __('Create Customer') }}
+                </x-button>
+            @endcan
+        </x-slot>
+
+        <x-slot name="filters">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <x-input.select wire:model.live="perPage" :label="__('Show')">
+                    @foreach ($paginationOptions as $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                    @endforeach
+                </x-input.select>
+
+                <x-input.text wire:model.live.debounce.500ms="search" :placeholder="__('Search')" icon="fas fa-search" />
+
+                <x-input.select wire:model.live="customer_group_id" :label="__('Customer Group')">
+                    <option value="">{{ __('Select group') }}</option>
+                    @foreach ($this->customerGroups as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                </x-input.select>
+            </div>
 
             @if ($selected)
-                <x-button danger type="button" wire:click="deleteSelected" class="ml-3">
-                    <i class="fas fa-trash"></i>
-                </x-button>
-                <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
-                    {{ __('EXCEL') }}
-                </x-button>
-                <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
-                    {{ __('PDF') }}
-                </x-button>
+                <div class="flex items-center space-x-4 mt-4">
+                    <x-button danger type="button" wire:click="deleteSelected">
+                        <i class="fas fa-trash mr-2"></i>
+                        {{ __('Delete Selected') }}
+                    </x-button>
+                    <x-button success type="button" wire:click="downloadSelected" wire:loading.attr="disabled">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        {{ __('EXCEL') }}
+                    </x-button>
+                    <x-button warning type="button" wire:click="exportSelected" wire:loading.attr="disabled">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        {{ __('PDF') }}
+                    </x-button>
+
+                    @if ($this->selectedCount)
+                        <div class="flex items-center space-x-3">
+                            <div class="flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded-lg">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span class="text-sm font-medium">{{ $this->selectedCount }} {{ __('Entries selected') }}</span>
+                            </div>
+                            <x-button secondary type="button" wire:click="resetSelected" wire:loading.attr="disabled">
+                                {{ __('Clear Selected') }}
+                            </x-button>
+                        </div>
+                    @endif
+                </div>
             @endif
+        </x-slot>
 
-            @if ($this->selectedCount)
-                <p class="text-sm leading-5">
-                    <span class="font-medium">
-                        {{ $this->selectedCount }}
-                    </span>
-                    {{ __('Entries selected') }}
-                </p>
-                <p wire:click="resetSelected" wire:loading.attr="disabled"
-                    class="text-sm leading-5 font-medium text-red-500 cursor-pointer ">
-                    {{ __('Clear Selected') }}
-                </p>
-            @endif
-
-        </div>
-        <div class="md:w-1/3 sm:w-full px-3">
-            <select required id="customer_group_id" name="customer_group_id" wire:model.live="customer_group_id"
-                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
-                <option value="">{{ __('Select group') }}</option>
-                @foreach ($this->customerGroups as $key => $value)
-                    <option value="{{ $key }}">{{ $value }}</option>
-                @endforeach
-            </select>
-            <x-input-error :messages="$errors->get('customer_group_id')" class="mt-2" />
-        </div>
-        <div class="md:w-1/3 sm:w-full">
-            <x-input wire:model.live="search" placeholder="{{ __('Search') }}" autofocus />
-        </div>
-    </div>
-
-    <x-table>
+        <x-table>
         <x-slot name="thead">
             <x-table.th>
                 <input wire:model.live="selectPage" type="checkbox" />
             </x-table.th>
-            <x-table.th sortable :direction="$sorts['name'] ?? null" field="name" wire:click="sortingBy('name')">
+            <x-table.th sortable :direction="$sortBy === 'name' ? $sortDirection : null" field="name" wire:click="sortingBy('name')">
                 {{ __('Name') }}
             </x-table.th>
-            <x-table.th sortable :direction="$sorts['phone'] ?? null" field="phone" wire:click="sortingBy('phone')">
+            <x-table.th sortable :direction="$sortBy === 'phone' ? $sortDirection : null" field="phone" wire:click="sortingBy('phone')">
                 {{ __('Phone') }}
             </x-table.th>
             <x-table.th>
@@ -141,7 +147,7 @@
                                         {{ __('Details') }}
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link wire:click="dispatchTo('customers.edit','editModal', { id : '{{ $customer->id }}'})"
+                                    <x-dropdown-link wire:click="dispatchTo('customers.edit','showModal', { id : '{{ $customer->id }}'})"
                                         wire:loading.attr="disabled">
                                         <i class="fas fa-edit"></i>
                                         {{ __('Edit') }}
@@ -173,6 +179,8 @@
     <div class="pt-3">
         {{ $customers->links() }}
     </div>
+
+    </x-page-container>
 
     <livewire:customers.show :customer="$customer" />
 

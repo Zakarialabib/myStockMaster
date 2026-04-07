@@ -9,10 +9,8 @@ use App\Models\Purchase;
 use App\Models\PurchasePayment;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
-#[Lazy]
 class Index extends Component
 {
     use Datatable;
@@ -27,7 +25,7 @@ class Index extends Component
 
     public $purchase_id;
 
-    public function mount($purchase): void
+    public function mount($purchase = null): void
     {
         $this->purchase = $purchase;
     }

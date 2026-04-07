@@ -4,44 +4,20 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
+use App\Livewire\Forms\UserForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\User;
-use App\Models\UserWarehouse;
+use App\Services\UserService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use WithAlert;
     use WithModels;
 
-    public $createModal = false;
-
-    public User $user;
-
-    #[Validate('required|string|max:255')]
-    public $name;
-
-    #[Validate('required|email|unique:users,email')]
-    public $email;
-
-    #[Validate('required|string|min:8')]
-    public $password;
-
-    #[Validate('required|numeric')]
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $warehouse_id = [];
-
-    public $role;
+    public UserForm $form;
 
     public function render()
     {
@@ -59,38 +35,24 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->form->showModal = true;
     }
 
-    public function create(): void
+    public function create(UserService $userService): void
     {
-        $this->validate();
-
-        $this->user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'phone' => $this->phone,
-            'city' => $this->city,
-            'country' => $this->country,
-            'address' => $this->address,
+        $this->form->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
-        $this->user->assignRole($this->role);
-
-        foreach ($this->warehouse_id as $warehouseId) {
-            UserWarehouse::create([
-                'user_id' => $this->user->id,
-                'warehouse_id' => $warehouseId,
-            ]);
-        }
+        $userService->createUser($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', 'User created successfully!');
 
-        $this->reset('name', 'email', 'password', 'phone', 'role', 'warehouse_id');
+        $this->form->reset();
 
-        $this->createModal = false;
+        $this->form->showModal = false;
     }
 }

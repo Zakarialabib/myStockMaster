@@ -48,12 +48,12 @@
                             <div class="row g-3">
                                 <div class="col-md-2">
                                     <label class="form-label">{{ __('Report Type') }}</label>
-                                    <select class="form-select" wire:model.live="reportType">
+                                    <x-select class="form-select" wire:model.live="reportType">
                                         <option value="daily">{{ __('Daily') }}</option>
                                         <option value="weekly">{{ __('Weekly') }}</option>
                                         <option value="monthly">{{ __('Monthly') }}</option>
                                         <option value="yearly">{{ __('Yearly') }}</option>
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label">{{ __('Date From') }}</label>
@@ -65,21 +65,21 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label">{{ __('Category') }}</label>
-                                    <select class="form-select" wire:model.live="categoryFilter">
+                                    <x-select class="form-select" wire:model.live="categoryFilter">
                                         <option value="">{{ __('All Categories') }}</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="form-label">{{ __('Product') }}</label>
-                                    <select class="form-select" wire:model.live="productFilter">
+                                    <x-select class="form-select" wire:model.live="productFilter">
                                         <option value="">{{ __('All Products') }}</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button type="button" class="btn btn-outline-secondary w-100" wire:click="resetFilters">

@@ -16,6 +16,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+
 class PaymentsReport extends Component
 {
     use WithAlert;
@@ -24,19 +25,19 @@ class PaymentsReport extends Component
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public string $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public string $end_date;
 
     #[Validate('required|string')]
-    public $payments;
+    public string $payments;
 
-    public $payment_method;
+    public ?string $payment_method = null;
 
-    protected $query;
+    protected mixed $query = null;
 
     public function mount(): void
     {

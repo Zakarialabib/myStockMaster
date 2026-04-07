@@ -12,10 +12,8 @@ class WarehouseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $warehouses = [
             ['name' => 'warehouse 1', 'city' => 'casablanca', 'phone' => '061234567896', 'email' => 'warehouse1@casa.ma', 'country' => 'morocco'],

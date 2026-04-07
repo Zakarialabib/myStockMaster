@@ -2,135 +2,85 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreWarehouseRequest;
+use App\Http\Requests\UpdateWarehouseRequest;
 use App\Http\Resources\WarehouseResource;
 use App\Models\Warehouse;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class WarehouseController extends BaseController
+class WarehouseController extends Controller
 {
     /**
      * Retrieve a list of Warehouse with optional filters and pagination.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
-
-                // capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
-
-                // capture sort fields
-                $sort_array = explode(',', $sort);
-
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit Warehouses list
-                    $Warehouses = Warehouse::whereRaw($where_raw)
-                         // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit Warehouses list
-                    $Warehouses = Warehouse::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all Warehouses
-                $Warehouses = Warehouse::get();
-            }
-
-            return $this->sendResponse($Warehouses, 'Warehouse List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            $warehouses = Warehouse::query()
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $warehouses = Warehouse::query()->get();
         }
+
+        return WarehouseResource::collection($warehouses);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWarehouseRequest $request): WarehouseResource
     {
-        DB::beginTransaction();
+        $warehouse = Warehouse::create($request->all());
 
-        try {
-            $input = $request->all();
-            $Warehouse = Warehouse::create($input);
-            DB::commit();
-
-            return $this->sendResponse($Warehouse, 'Warehouse created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new WarehouseResource($warehouse);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): WarehouseResource|JsonResponse
     {
-        try {
-            $Warehouse = Warehouse::find($id);
+        $warehouse = Warehouse::find($id);
 
-            if (is_null($Warehouse)) {
-                return $this->sendError('Warehouse not found');
-            } else {
-                return $this->sendResponse($Warehouse, 'Warehouse retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if ($warehouse === null) {
+            return response()->json(['message' => 'Warehouse not found'], 404);
         }
+
+        return new WarehouseResource($warehouse);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateWarehouseRequest $request, int $id): WarehouseResource
     {
-        $Warehouse = Warehouse::findOrFail($id);
-        $Warehouse->update($request->all());
+        $warehouse = Warehouse::findOrFail($id);
+        $warehouse->update($request->all());
 
-        return new WarehouseResource($Warehouse);
+        return new WarehouseResource($warehouse);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $Warehouse = Warehouse::findOrFail($id);
-            $Warehouse->delete();
+        $warehouse = Warehouse::findOrFail($id);
+        $warehouse->delete();
 
-            return $this->sendResponse($Warehouse, 'Warehouse deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Warehouse deleted successfully']);
     }
 }

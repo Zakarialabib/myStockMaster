@@ -10,8 +10,47 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int         $id
+ * @property string|null $sale_id
+ * @property string|null $user_id
+ * @property int|null    $cash_register_id
+ * @property numeric     $amount
+ * @property Carbon      $date
+ * @property string      $reference
+ * @property string      $payment_method
+ * @property string|null $note
+ * @property string|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Sale|null $sale
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment bySale()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereCashRegisterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereSaleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class SalePayment extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [

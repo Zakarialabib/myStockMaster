@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace App\Livewire\Notifications;
 
 use App\Models\Notification;
-use App\Services\NotificationService;
-use Exception;
-use Livewire\Attributes\On;
+use App\Models\ProductWarehouse;
+use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('layouts.app')]
+#[Title('Notifications')]
 class NotificationManager extends Component
 {
+    use WithAlert;
     use WithPagination;
 
     #[Url(except: 'all')]
@@ -23,24 +28,19 @@ class NotificationManager extends Component
     public $filterRead = 'all';
 
     #[Url(except: '')]
-    public $filterPriority = '';
-
-    #[Url(except: '')]
     public $searchTerm = '';
 
     public $selectedNotifications = [];
 
     public $selectAll = false;
 
-    public $showFilters = false;
-
-    public $notificationTypes = [];
-
-    public $loading = false;
-
-    public function mount()
+    #[Computed]
+    public function lowQuantity()
     {
-        $this->loadNotificationTypes();
+        return ProductWarehouse::with('product')
+            ->select('product_id', 'qty', 'stock_alert')
+            ->whereColumn('qty', '<=', 'stock_alert')
+            ->get();
     }
 
     public function updatedSearchTerm()
@@ -58,15 +58,10 @@ class NotificationManager extends Component
         $this->resetPage();
     }
 
-    public function updatedFilterPriority()
-    {
-        $this->resetPage();
-    }
-
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selectedNotifications = $this->getNotifications()->pluck('id')->toArray();
+            $this->selectedNotifications = $this->getNotificationsQuery()->pluck('id')->toArray();
         } else {
             $this->selectedNotifications = [];
         }
@@ -74,26 +69,15 @@ class NotificationManager extends Component
 
     public function updatedSelectedNotifications()
     {
-        $totalNotifications = $this->getNotifications()->count();
-        $this->selectAll = count($this->selectedNotifications) === $totalNotifications;
+        $this->selectAll = count($this->selectedNotifications) === $this->getNotificationsQuery()->count() && $this->selectedNotifications !== [];
     }
 
-    public function loadNotificationTypes()
-    {
-        $this->notificationTypes = Notification::select('type')
-            ->distinct()
-            ->orderBy('type')
-            ->pluck('type')
-            ->toArray();
-    }
-
-    public function getNotifications()
+    public function getNotificationsQuery()
     {
         $query = Notification::query()
-            ->with('notifiable')
+            ->where('notifiable_id', auth()->id())
             ->orderBy('created_at', 'desc');
 
-        // Apply filters
         if ($this->filterType !== 'all') {
             $query->where('type', $this->filterType);
         }
@@ -104,275 +88,63 @@ class NotificationManager extends Component
             $query->whereNull('read_at');
         }
 
-        if ($this->filterPriority !== '') {
-            $query->where('data->priority', $this->filterPriority);
-        }
-
-        // Apply search
-        if (! empty($this->searchTerm)) {
+        if ($this->searchTerm) {
             $query->where(function ($q) {
-                $q->where('type', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
+                $q->where('data', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('type', 'like', '%' . $this->searchTerm . '%');
             });
         }
 
-        return $query->paginate(20);
+        return $query;
     }
 
-    public function getNotificationsProperty()
+    public function markAsRead($id)
     {
-        return $this->getNotifications();
+        $notification = Notification::findOrFail($id);
+        $notification->markAsRead();
+        $this->success(__('Notification marked as read.'));
     }
 
-    public function markAsRead($notificationId)
+    public function markAsUnread($id)
     {
-        try {
-            $notification = Notification::findOrFail($notificationId);
-            $notification->markAsRead();
-
-            session()->flash('success', 'Notification marked as read.');
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notification as read: ' . $e->getMessage());
-        }
+        $notification = Notification::findOrFail($id);
+        $notification->read_at = null;
+        $notification->save();
+        $this->success(__('Notification marked as unread.'));
     }
 
-    public function markAsUnread($notificationId)
+    public function deleteNotification($id)
     {
-        try {
-            $notification = Notification::findOrFail($notificationId);
-            $notification->markAsUnread();
-
-            session()->flash('success', 'Notification marked as unread.');
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notification as unread: ' . $e->getMessage());
-        }
-    }
-
-    public function markSelectedAsRead()
-    {
-        if (empty($this->selectedNotifications)) {
-            session()->flash('warning', 'No notifications selected.');
-
-            return;
-        }
-
-        try {
-            $notificationService = new NotificationService;
-            $notificationService->markNotificationsAsRead($this->selectedNotifications);
-
-            $count = count($this->selectedNotifications);
-            session()->flash('success', "Marked {$count} notification(s) as read.");
-
-            $this->selectedNotifications = [];
-            $this->selectAll = false;
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark notifications as read: ' . $e->getMessage());
-        }
-    }
-
-    public function deleteSelected()
-    {
-        if (empty($this->selectedNotifications)) {
-            session()->flash('warning', 'No notifications selected.');
-
-            return;
-        }
-
-        try {
-            Notification::whereIn('id', $this->selectedNotifications)->delete();
-
-            $count = count($this->selectedNotifications);
-            session()->flash('success', "Deleted {$count} notification(s).");
-
-            $this->selectedNotifications = [];
-            $this->selectAll = false;
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to delete notifications: ' . $e->getMessage());
-        }
-    }
-
-    public function deleteNotification($notificationId)
-    {
-        try {
-            $notification = Notification::findOrFail($notificationId);
-            $notification->delete();
-
-            session()->flash('success', 'Notification deleted successfully.');
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to delete notification: ' . $e->getMessage());
-        }
+        Notification::findOrFail($id)->delete();
+        $this->success(__('Notification deleted.'));
     }
 
     public function markAllAsRead()
     {
-        try {
-            $query = Notification::whereNull('read_at');
-
-            // Apply same filters as the current view
-            if ($this->filterType !== 'all') {
-                $query->where('type', $this->filterType);
-            }
-
-            if ($this->filterPriority !== '') {
-                $query->where('data->priority', $this->filterPriority);
-            }
-
-            if (! empty($this->searchTerm)) {
-                $query->where(function ($q) {
-                    $q->where('type', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
-                });
-            }
-
-            $count = $query->count();
-            $query->update(['read_at' => now()]);
-
-            session()->flash('success', "Marked {$count} notification(s) as read.");
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to mark all notifications as read: ' . $e->getMessage());
-        }
+        $this->getNotificationsQuery()->whereNull('read_at')->update(['read_at' => now()]);
+        $this->success(__('All filtered notifications marked as read.'));
     }
 
-    public function clearAllRead()
+    public function deleteSelected()
     {
-        try {
-            $query = Notification::whereNotNull('read_at');
-
-            // Apply same filters as the current view
-            if ($this->filterType !== 'all') {
-                $query->where('type', $this->filterType);
-            }
-
-            if ($this->filterPriority !== '') {
-                $query->where('data->priority', $this->filterPriority);
-            }
-
-            if (! empty($this->searchTerm)) {
-                $query->where(function ($q) {
-                    $q->where('type', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('data', 'like', '%' . $this->searchTerm . '%');
-                });
-            }
-
-            $count = $query->count();
-            $query->delete();
-
-            session()->flash('success', "Deleted {$count} read notification(s).");
-            $this->dispatch('notificationUpdated');
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to clear read notifications: ' . $e->getMessage());
-        }
-    }
-
-    public function toggleFilters()
-    {
-        $this->showFilters = ! $this->showFilters;
-    }
-
-    public function resetFilters()
-    {
-        $this->filterType = 'all';
-        $this->filterRead = 'all';
-        $this->filterPriority = '';
-        $this->searchTerm = '';
+        Notification::whereIn('id', $this->selectedNotifications)->delete();
         $this->selectedNotifications = [];
         $this->selectAll = false;
-        $this->resetPage();
-    }
-
-    #[On('notificationCreated')]
-    #[On('notificationUpdated')]
-    public function refreshNotifications()
-    {
-        $this->loadNotificationTypes();
-        $this->selectedNotifications = [];
-        $this->selectAll = false;
-    }
-
-    public function getNotificationIcon($type)
-    {
-        $icons = [
-            'sale_created' => 'shopping-cart',
-            'sale_updated' => 'edit',
-            'low_stock' => 'exclamation-triangle',
-            'product_updated' => 'package',
-            'expense_created' => 'credit-card',
-            'system' => 'cog',
-            'user' => 'user',
-            'default' => 'bell',
-        ];
-
-        return $icons[$type] ?? $icons['default'];
-    }
-
-    public function getNotificationColor($type)
-    {
-        $colors = [
-            'sale_created' => 'green',
-            'sale_updated' => 'blue',
-            'low_stock' => 'red',
-            'product_updated' => 'purple',
-            'expense_created' => 'orange',
-            'system' => 'gray',
-            'user' => 'indigo',
-            'default' => 'gray',
-        ];
-
-        return $colors[$type] ?? $colors['default'];
-    }
-
-    public function formatNotificationData($notification)
-    {
-        $data = is_string($notification->data) ? json_decode($notification->data, true) : $notification->data;
-
-        if (! is_array($data)) {
-            return [];
-        }
-
-        // Format based on notification type
-        switch ($notification->type) {
-            case 'sale_created':
-                return [
-                    'title' => 'New Sale Created',
-                    'message' => "Sale #{$data['sale_id']} created for " . ($data['customer_name'] ?? 'Unknown Customer'),
-                    'amount' => $data['total_amount'] ?? null,
-                ];
-
-            case 'low_stock':
-                return [
-                    'title' => 'Low Stock Alert',
-                    'message' => "Product '{$data['product_name']}' is running low",
-                    'current_stock' => $data['current_stock'] ?? null,
-                    'minimum_stock' => $data['minimum_stock'] ?? null,
-                ];
-
-            case 'expense_created':
-                return [
-                    'title' => 'New Expense Recorded',
-                    'message' => "Expense for {$data['category']} recorded",
-                    'amount' => $data['amount'] ?? null,
-                ];
-
-            default:
-                return [
-                    'title' => ucfirst(str_replace('_', ' ', $notification->type)),
-                    'message' => $data['message'] ?? 'Notification received',
-                ];
-        }
+        $this->success(__('Selected notifications deleted.'));
     }
 
     public function render()
     {
-        $notifications = $this->getNotifications();
+        $notifications = $this->getNotificationsQuery()->paginate(15);
+
+        $notificationTypes = Notification::where('notifiable_id', auth()->id())
+            ->select('type')
+            ->distinct()
+            ->pluck('type');
 
         return view('livewire.notifications.notification-manager', [
             'notifications' => $notifications,
+            'notificationTypes' => $notificationTypes,
         ]);
     }
 }

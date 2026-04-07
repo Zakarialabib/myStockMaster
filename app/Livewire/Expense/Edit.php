@@ -4,48 +4,29 @@ declare(strict_types=1);
 
 namespace App\Livewire\Expense;
 
+use App\Livewire\Forms\ExpenseForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Services\ExpenseService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
+    use WithFileUploads;
     use WithModels;
 
     public $editModal = false;
 
     public $expense;
 
-    #[Validate('required|string|max:255')]
-    public $reference;
-
-    #[Validate('required|integer|exists:expense_categories,id')]
-    public $category_id;
-
-    #[Validate('required|date')]
-    public $date;
-
-    #[Validate('required|numeric')]
-    public $amount;
-
-    #[Validate('nullable|string|max:255')]
-    public $description;
-
-    #[Validate('nullable|date')]
-    public $start_date;
-
-    #[Validate('nullable|date')]
-    public $end_date;
-
-    #[Validate('required|in:none,daily,weekly,monthly,yearly')]
-    public $frequency = 'none';
-
-    public $warehouse_id;
+    public ExpenseForm $form;
 
     #[Computed]
     public function expenseCategories()
@@ -68,34 +49,24 @@ class Edit extends Component
 
         $this->expense = Expense::find($id);
 
-        $this->reference = $this->expense->reference;
-        $this->category_id = $this->expense->category_id;
-        $this->date = $this->expense->date;
-        $this->amount = $this->expense->amount;
-        $this->description = $this->expense->description;
-        $this->start_date = $this->expense->start_date;
-        $this->end_date = $this->expense->end_date;
-        $this->frequency = $this->expense->frequency;
-        $this->warehouse_id = $this->expense->warehouse_id;
+        $this->form->reference = $this->expense->reference;
+        $this->form->category_id = $this->expense->category_id;
+        $this->form->date = $this->expense->date;
+        $this->form->amount = $this->expense->amount;
+        $this->form->description = $this->expense->description;
+        $this->form->start_date = $this->expense->start_date;
+        $this->form->end_date = $this->expense->end_date;
+        $this->form->frequency = $this->expense->frequency;
+        $this->form->warehouse_id = $this->expense->warehouse_id;
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(ExpenseService $expenseService): void
     {
         $this->validate();
 
-        $this->expense->update([
-            'reference' => $this->reference,
-            'category_id' => $this->category_id,
-            'date' => $this->date,
-            'amount' => $this->amount,
-            'description' => $this->description,
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date,
-            'frequency' => $this->frequency,
-            'warehouse_id' => $this->warehouse_id,
-        ]);
+        $expenseService->update($this->expense, $this->form->all());
 
         $this->alert('success', __('Expense updated successfully.'));
 

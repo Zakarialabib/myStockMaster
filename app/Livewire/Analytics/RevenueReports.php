@@ -9,40 +9,37 @@ use App\Models\Category;
 use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
-use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Lazy]
 class RevenueReports extends Component
 {
     use WithPagination;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
     #[Validate('required|in:daily,weekly,monthly,yearly')]
-    public $reportType = 'daily';
+    public string $reportType = 'daily';
 
     #[Validate('nullable|exists:categories,id')]
-    public $categoryFilter = null;
+    public ?int $categoryFilter = null;
 
     #[Validate('nullable|exists:products,id')]
-    public $productFilter = null;
+    public ?int $productFilter = null;
 
-    public $revenueData = [];
+    public array $revenueData = [];
 
-    public $loading = false;
+    public bool $includeProductBreakdown = true;
 
-    public $includeProductBreakdown = true;
+    public bool $includeCategoryBreakdown = true;
 
-    public $includeCategoryBreakdown = true;
-
-    public $includeTimeBreakdown = true;
+    public bool $includeTimeBreakdown = true;
 
     public function placeholder()
     {
@@ -101,8 +98,6 @@ class RevenueReports extends Component
 
     public function loadRevenueReport()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -132,8 +127,6 @@ class RevenueReports extends Component
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load revenue report: ' . $e->getMessage());
             $this->revenueData = [];
-        } finally {
-            $this->loading = false;
         }
     }
 
@@ -167,7 +160,7 @@ class RevenueReports extends Component
     private function exportJSON($filename)
     {
         return response()->streamDownload(function () {
-            echo json_encode([
+            $exportData = [
                 'report_type' => $this->reportType,
                 'date_range' => [
                     'from' => $this->dateFrom,
@@ -184,7 +177,24 @@ class RevenueReports extends Component
                 ],
                 'data' => $this->revenueData,
                 'generated_at' => now()->toISOString(),
-            ], JSON_PRETTY_PRINT);
+            ];
+
+            $generator = function () use ($exportData) {
+                yield '{';
+                $first = true;
+                foreach ($exportData as $key => $value) {
+                    if (! $first) {
+                        yield ',';
+                    }
+                    yield '"' . $key . '":' . json_encode($value);
+                    $first = false;
+                }
+                yield '}';
+            };
+
+            foreach ($generator() as $chunk) {
+                echo $chunk;
+            }
         }, $filename . '.json', [
             'Content-Type' => 'application/json',
         ]);
@@ -198,16 +208,21 @@ class RevenueReports extends Component
             // Write headers
             fputcsv($output, ['Date', 'Total Revenue', 'Total Sales', 'Average Order Value']);
 
-            // Write time breakdown data if available
-            if (isset($this->revenueData['time_breakdown'])) {
-                foreach ($this->revenueData['time_breakdown'] as $period => $data) {
-                    fputcsv($output, [
-                        $period,
-                        $data['total_revenue'] ?? 0,
-                        $data['total_sales'] ?? 0,
-                        $data['average_order_value'] ?? 0,
-                    ]);
+            $generator = function () {
+                if (isset($this->revenueData['time_breakdown'])) {
+                    foreach ($this->revenueData['time_breakdown'] as $period => $data) {
+                        yield [
+                            $period,
+                            $data['total_revenue'] ?? 0,
+                            $data['total_sales'] ?? 0,
+                            $data['average_order_value'] ?? 0,
+                        ];
+                    }
                 }
+            };
+
+            foreach ($generator() as $row) {
+                fputcsv($output, $row);
             }
 
             fclose($output);
@@ -216,7 +231,8 @@ class RevenueReports extends Component
         ]);
     }
 
-    public function getChartData()
+    #[Computed]
+    public function chartData()
     {
         if (! isset($this->revenueData['time_breakdown'])) {
             return [];
@@ -252,20 +268,24 @@ class RevenueReports extends Component
         ];
     }
 
+    #[Computed]
+    public function categories()
+    {
+        return Category::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
+
+    #[Computed]
+    public function products()
+    {
+        return Product::select('id', 'name', 'code')
+            ->orderBy('name')
+            ->get();
+    }
+
     public function render()
     {
-        $categories = Category::select('id', 'name')
-            ->orderBy('name')
-            ->get();
-
-        $products = Product::select('id', 'name', 'code')
-            ->orderBy('name')
-            ->get();
-
-        return view('livewire.analytics.revenue-reports', [
-            'categories' => $categories,
-            'products' => $products,
-            'chartData' => $this->getChartData(),
-        ]);
+        return view('livewire.analytics.revenue-reports');
     }
 }

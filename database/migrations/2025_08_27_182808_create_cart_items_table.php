@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('cart_id');
+            $table->foreignIdFor(App\Models\Cart::class)->constrained()->cascadeOnDelete();
             $table->string('associable_type')->nullable();
             $table->unsignedBigInteger('associable_id')->nullable();
             $table->string('name');
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->json('conditions')->nullable();
             $table->timestamps();
 
-            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
             $table->index(['cart_id']);
             $table->index(['associable_type', 'associable_id']);
         });

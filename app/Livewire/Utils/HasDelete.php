@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Utils;
 
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 
 trait HasDelete
 {
+    use WithAlert;
+
     public $value;
 
     public function confirmed(): void

@@ -312,6 +312,26 @@ class ProductCart extends Component
         $this->warehouse_id = $warehouseId;
     }
 
+    protected function syncCartState(): void
+    {
+        $cart_items = $this->getCart()->content();
+
+        $currentIds = [];
+        foreach ($cart_items as $cart_item) {
+            $currentIds[] = $cart_item->id;
+        }
+
+        foreach (array_keys($this->quantity) as $productId) {
+            if (! in_array($productId, $currentIds)) {
+                unset($this->quantity[$productId]);
+                unset($this->price[$productId]);
+                unset($this->check_quantity[$productId]);
+                unset($this->discount_type[$productId]);
+                unset($this->item_discount[$productId]);
+            }
+        }
+    }
+
     public function render(): \Illuminate\View\View
     {
         $cart_items = $this->getCart()->content();

@@ -10,17 +10,14 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('product_warehouse', function (Blueprint $table) {
             $table->id();
 
-            $table->uuid('product_id');
-            $table->foreignId('warehouse_id')->constrained()->restrictOnDelete();
-            $table->foreign('product_id')->references('id')->on('products')->restrictOnDelete();
+            $table->foreignIdFor(App\Models\Product::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(App\Models\Warehouse::class)->constrained()->restrictOnDelete();
 
             $table->decimal('price', 8, 2);
             $table->decimal('cost', 8, 2)->nullable();
@@ -38,10 +35,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('product_warehouse');
     }

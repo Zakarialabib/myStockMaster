@@ -1,110 +1,168 @@
-<div>
+<div x-data="{ isCartOpen: false }" @keydown.window.ctrl.s.prevent="$wire.store()">
     @section('title', __('Create Purchase'))
 
     <x-theme.breadcrumb :title="__('Create Purchase')" :parent="route('purchases.index')" :parentName="__('Purchases List')" :childrenName="__('Create Purchase')">
-        <x-button primary
-            wire:click="dispatchTo('suppliers.create', 'createModal')">{{ __('Create Supplier') }}</x-button>
-
-    </x-theme.breadcrumb>
-    <div class="flex flex-wrap">
-
-        <div class="lg:w-1/2 sm:w-full h-full">
-            <livewire:search-product />
+        <div class="flex items-center gap-2">
+            @can('supplier_create')
+                <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'createModal')">
+                    <i class="fas fa-truck mr-2"></i>
+                    {{ __('Create Supplier') }}
+                </x-button>
+            @endcan
+            <x-button secondary type="button" wire:click="saveDraft">
+                <i class="fas fa-save mr-2"></i>
+                {{ __('Save Draft') }}
+            </x-button>
+            <x-button success type="button" wire:click.throttle="proceed" wire:loading.attr="disabled" :disabled="$form->total_amount == 0">
+                <i class="fas fa-check mr-2"></i>
+                {{ __('Complete Purchase') }} (Ctrl+S)
+            </x-button>
         </div>
+    </x-theme.breadcrumb>
 
-        <div class="lg:w-1/2 sm:w-full h-full">
-            <x-validation-errors class="mb-4" :errors="$errors" />
+    <!-- Split-Pane Layout -->
+    <div class="mt-4 grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-12rem)]">
+        
+        <!-- Left Pane: Order Context & Products (60%) -->
+        <div class="lg:col-span-7 flex flex-col gap-4 overflow-y-auto">
+            <!-- Order Metadata -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <x-label for="warehouse_id" :value="__('Warehouse')" required />
+                        <div class="relative mt-1">
+                            <x-select required id="warehouse_id" name="warehouse_id" wire:model.live="form.warehouse_id"
+                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md">
+                                <option value="">{{ __('Select Warehouse') }}</option>
+                                @foreach ($this->warehouses as $index => $warehouse)
+                                    <option value="{{ $index }}">{{ $warehouse }}</option>
+                                @endforeach
+                            </x-select>
+                        </div>
+                        <x-input-error :messages="$errors->get('form.warehouse_id')" class="mt-2" />
+                    </div>
 
-            <form wire:submit="store">
-                <div class="flex flex-wrap mb-3">
-                    <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+                    <div>
                         <x-label for='supplier_id' :value="__('Supplier')" required />
-                        <x-select-list
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            required id="supplier_id" name="supplier_id" wire:model.live="supplier_id"
-                            :options="$this->suppliers" />
-                        <x-input-error :messages="$errors->get('supplier_id')" class="mt-2" />
+                        <div class="mt-1">
+                            <x-searchable-select
+                                required id="supplier_id" name="supplier_id" wire:model.live="form.supplier_id"
+                                :options="$this->suppliers" />
+                        </div>
+                        <x-input-error :messages="$errors->get('form.supplier_id')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+
+                    <div>
                         <x-label for="date" :value="__('Date')" required />
-                        <input type="date" name="date" required wire:model="date"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                        <x-input-error :messages="$errors->get('date')" class="mt-2" />
+                        <x-input type="date" name="date" required wire:model="form.date" class="w-full mt-1" />
+                        <x-input-error :messages="$errors->get('form.date')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-                        <x-label for="warehouse" :value="__('Warehouse')" />
-                        <select required id="warehouse_id" name="warehouse_id" wire:model.live="warehouse_id"
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
-                            <option value="">
-                                {{ __('Select Warehouse') }}
-                            </option>
-                            @foreach ($this->warehouses as $index => $warehouse)
-                                <option value="{{ $index }}">{{ $warehouse }}</option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
-                    </div>
-                </div>
-
-                <livewire:utils.product-cart :cartInstance="'purchase'" />
-
-                <div class="flex flex-wrap mb-3">
-                    <div class="w-full md:w-1/3 px-2 mb-2">
+                    
+                    <div>
                         <x-label for="status" :value="__('Status')" required />
-                        <select
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            name="status" id="status" wire:model.live="status" required>
-                            <option>{{ __('Select Status') }}</option>
+                        <x-select
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md mt-1"
+                            name="status" id="status" wire:model.live="form.status" required>
+                            <option value="">{{ __('Select Status') }}</option>
                             @foreach (App\Enums\PurchaseStatus::cases() as $status)
                                 <option value="{{ $status->value }}">
                                     {{ __($status->name) }}
                                 </option>
                             @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                        </x-select>
+                        <x-input-error :messages="$errors->get('form.status')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/3 px-2 mb-2">
+                </div>
+            </div>
+
+            <!-- Product Search -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex-1">
+                @if (!$form->warehouse_id)
+                    <div class="h-full flex items-center justify-center text-gray-500 dark:text-gray-400 p-6 text-center">
+                        <div>
+                            <i class="fas fa-warehouse text-4xl mb-4"></i>
+                            <p>{{ __('Please select a warehouse first to load available products.') }}</p>
+                        </div>
+                    </div>
+                @else
+                    <livewire:products.search-product :warehouseId="$form->warehouse_id" />
+                @endif
+            </div>
+        </div>
+
+        <!-- Right Pane: Cart & Financial Summary (40%) -->
+        <div class="lg:col-span-5 flex flex-col gap-4 overflow-y-auto">
+            <!-- Cart Items -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 flex-1 flex flex-col min-h-[300px]">
+                <div class="bg-gray-50 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-md font-semibold text-gray-900 dark:text-gray-100">
+                        <i class="fas fa-shopping-cart mr-2 text-indigo-500"></i>
+                        {{ __('Order Items') }}
+                    </h3>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                        {{ $this->cartCount }} {{ __('Items') }}
+                    </span>
+                </div>
+                <div class="p-0 flex-1 overflow-y-auto">
+                    <livewire:utils.product-cart :cartInstance="'purchase'" :warehouseId="$form->warehouse_id" />
+                </div>
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
                         <x-label for="payment_method" :value="__('Payment Method')" required />
-                        <select
-                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                            wire:model.live="payment_method" name="payment_method" id="payment_method" required>
-                            <option>{{ __('Select Payment Method') }}</option>
+                        <x-select
+                            class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md mt-1"
+                            wire:model.live="form.payment_method" name="payment_method" id="payment_method" required>
+                            <option value="">{{ __('Select Payment Method') }}</option>
                             <option value="Cash">{{ __('Cash') }}</option>
                             <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                             <option value="Cheque">{{ __('Cheque') }}</option>
                             <option value="Other">{{ __('Other') }}</option>
-                        </select>
-                        <x-input-error :messages="$errors->get('payment_method')" class="mt-2" />
+                        </x-select>
+                        <x-input-error :messages="$errors->get('form.payment_method')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/3 px-2 mb-2">
+
+                    <div>
                         <x-label for="paid_amount" :value="__('Amount Paid')" required />
-                        <x-input id="paid_amount" type="text" wire:model="paid_amount" name="paid_amount" required />
-                        <x-input-error :messages="$errors->get('paid_amount')" class="mt-2" />
+                        <x-input id="paid_amount" type="number" step="0.01" wire:model.live.debounce.300ms="form.paid_amount" name="paid_amount" class="w-full mt-1" required />
+                        <x-input-error :messages="$errors->get('form.paid_amount')" class="mt-2" />
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="note">{{ __('Note (If Needed)') }}</label>
-                    <textarea name="note" id="note" rows="5" wire:model="note"
-                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"></textarea>
-                    <x-input-error :messages="$errors->get('note')" class="mt-2" />
+                <div class="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('Order Tax') }}</span>
+                        <span class="font-medium text-gray-900 dark:text-gray-100">+{{ format_currency($this->cartTax) }}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('Discount') }}</span>
+                        <span class="font-medium text-red-600 dark:text-red-400">-{{ format_currency($this->cartDiscount) }}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">{{ __('Shipping') }}</span>
+                        <span class="font-medium text-gray-900 dark:text-gray-100">+{{ format_currency($form->shipping_amount) }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-3 bg-gray-50 dark:bg-gray-900 px-3 rounded-lg mt-2">
+                        <span class="text-base font-bold text-gray-900 dark:text-gray-100">{{ __('Grand Total') }}</span>
+                        <span class="text-xl font-bold text-indigo-600 dark:text-indigo-400">
+                            {{ format_currency($form->total_amount) }}
+                        </span>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <x-button danger type="button" wire:click="resetCart" wire:loading.attr="disabled"
-                        class="ml-2 font-bold">
-                        {{ __('Reset') }}
-                    </x-button>
-
-                    <button type="button"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest active:bg-indigo-900 focus:outline-hidden focus:border-indigo-900 focus:ring-3 ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 bg-green-500 hover:bg-green-700"
-                        wire:click.throttle="proceed" wire:loading.attr="disabled"
-                        {{ $total_amount == 0 ? 'disabled' : '' }}>
-                        {{ __('Proceed') }}
-                    </button>
+                <div class="mt-4">
+                    <x-label for="note" :value="__('Note (If Needed)')" />
+                    <textarea name="note" id="note" rows="2" wire:model.live.debounce.300ms="form.note"
+                        class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md mt-1"></textarea>
+                    <x-input-error :messages="$errors->get('form.note')" class="mt-2" />
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+
     <livewire:suppliers.create />
 </div>

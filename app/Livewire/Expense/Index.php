@@ -8,20 +8,21 @@ use App\Exports\ExpenseExport;
 use App\Imports\ExpenseImport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Expense;
+use App\Traits\WithAlert;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     public $expense;
 

@@ -17,7 +17,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Lazy(isolate: false)]
@@ -87,7 +86,7 @@ class KpiCards extends Component
                 ->groupBy('product_id')
                 ->orderByDesc('total_quantity')
                 ->with('product:id,name')
-                ->first()?->product?->name ?? 'N/A';
+                ->first()?->product->name ?? 'N/A';
         });
     }
 

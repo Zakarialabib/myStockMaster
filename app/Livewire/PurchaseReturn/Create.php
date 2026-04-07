@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\PurchaseReturn;
 
-use App\Actions\Purchases\StorePurchaseReturnAction;
+use App\Livewire\Forms\PurchaseReturnForm;
 use App\Models\Supplier;
+use App\Services\PurchaseReturnService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -20,38 +20,7 @@ class Create extends Component
     use LivewireCartTrait;
     use WithAlert;
 
-    public $warehouse_id;
-
-    #[Validate('required')]
-    public $supplier_id;
-
-    public $reference;
-
-    #[Validate('required|numeric|min:0|max:100')]
-    public $tax_percentage;
-
-    #[Validate('required|numeric|min:0|max:100')]
-    public $discount_percentage;
-
-    #[Validate('required|numeric')]
-    public $shipping_amount;
-
-    #[Validate('required|numeric')]
-    public $total_amount;
-
-    #[Validate('required|numeric')]
-    public $paid_amount;
-
-    #[Validate('required|string|max:255')]
-    public $status;
-
-    #[Validate('required|string|max:255')]
-    public $payment_method;
-
-    #[Validate('nullable|string|max:1000')]
-    public $note;
-
-    public $date;
+    public PurchaseReturnForm $form;
 
     public function mount(string $cartInstance = 'purchase_return'): void
     {
@@ -60,32 +29,32 @@ class Create extends Component
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->tax_percentage = 0;
-        $this->discount_percentage = 0;
-        $this->shipping_amount = 0;
-        $this->paid_amount = 0;
-        $this->payment_method = 'Cash';
-        $this->status = 'Pending';
-        $this->date = date('Y-m-d');
+        $this->form->tax_percentage = 0;
+        $this->form->discount_percentage = 0;
+        $this->form->shipping_amount = 0;
+        $this->form->paid_amount = 0;
+        $this->form->payment_method = 'Cash';
+        $this->form->status = 'Pending';
+        $this->form->date = date('Y-m-d');
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
     }
 
     public function hydrate(): void
     {
-        $this->total_amount = $this->calculateTotal();
+        $this->form->total_amount = $this->calculateTotal();
     }
 
     public function calculateTotal(): float
     {
-        return $this->cartTotal + (float) $this->shipping_amount;
+        return $this->cartTotal + (float) $this->form->shipping_amount;
     }
 
     public function proceed(): void
     {
-        if ($this->supplier_id !== null) {
+        if ($this->form->supplier_id !== null) {
             $this->store();
         } else {
             $this->alert('error', __('Please select a supplier!'));
@@ -96,22 +65,23 @@ class Create extends Component
     {
         abort_if(Gate::denies('purchase_return_create'), 403);
 
-        $this->validate();
+        $this->form->validate();
 
-        app(StorePurchaseReturnAction::class)(
+        app(PurchaseReturnService::class)->create(
             [
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'supplier_id' => $this->supplier_id,
+                'date' => $this->form->date,
+                'reference' => $this->form->reference,
+                'supplier_id' => $this->form->supplier_id,
                 'user_id' => Auth::id(),
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'status' => $this->status,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'warehouse_id' => $this->form->warehouse_id,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'status' => $this->form->status,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
             ],
             $this->cartContent->toArray(),
             $this->cartTax,

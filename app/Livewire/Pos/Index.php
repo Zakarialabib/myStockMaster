@@ -7,32 +7,29 @@ namespace App\Livewire\Pos;
 use App\Actions\Sales\StorePosSaleAction;
 use App\Jobs\PaymentNotification;
 use App\Jobs\PrintReceiptJob;
-use App\Livewire\CashRegister\Create as CashRegisterCreate;
+use App\Livewire\Forms\PosCheckoutForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
-use App\Models\Customer;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Validate;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Isolate]
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
-#[Lazy]
 class Index extends Component
 {
     use LivewireCartTrait;
     use WithAlert;
     use WithModels;
+
+    public PosCheckoutForm $form;
 
     public bool $discountModal = false;
 
@@ -40,53 +37,9 @@ class Index extends Component
 
     public float|int $global_tax = 0;
 
-    public array $quantity = [];
-
-    public array $check_quantity = [];
-
-    public array $price = [];
-
-    public array $discount_type = [];
-
-    public array $item_discount = [];
-
-    public mixed $data = null;
-
     public bool $checkoutModal = false;
 
-    public mixed $product = null;
-
-    public float|int $discount_amount = 0;
-
-    public float|int $tax_amount = 0;
-
-    public string $payment_method = 'cash';
-
     public float|int $total_with_shipping = 0;
-
-    #[Validate('required', message: 'Please provide a customer ID')]
-    public int|string|null $customer_id = null;
-
-    #[Validate('required', message: 'Please provide a warehouse ID')]
-    public int|string|null $warehouse_id = null;
-
-    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a tax percentage'])]
-    public int $tax_percentage = 0;
-
-    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a discount percentage'])]
-    public int $discount_percentage = 0;
-
-    #[Validate('nullable|numeric', message: ['numeric' => 'Shipping amount must be a numeric value'])]
-    public float|int $shipping_amount = 0;
-
-    #[Validate('required|numeric', message: ['required' => 'Please provide a total amount'])]
-    public float|int $total_amount = 0;
-
-    #[Validate('nullable|numeric', message: ['numeric' => 'Paid amount must be a numeric value'])]
-    public float|int $paid_amount = 0;
-
-    #[Validate('nullable|string|max:1000', message: ['max' => 'Note must not exceed 1000 characters'])]
-    public ?string $note = null;
 
     #[Locked]
     public int|string|null $user_id = null;
@@ -94,70 +47,76 @@ class Index extends Component
     #[Locked]
     public int|string|null $cash_register_id = null;
 
-    #[On('refreshIndex')]
-    public function refreshCustomers(): void
-    {
-        unset($this->customers);
-    }
-
-    #[Computed]
-    public function customers()
-    {
-        return Customer::select(['id', 'name'])->get();
-    }
-
     public function mount(string $cartInstance = 'pos'): void
     {
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
         if (settings()->default_client_id !== null) {
-            $this->customer_id = settings()->default_client_id;
+            $this->form->customer_id = settings()->default_client_id;
         }
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
 
         $this->user_id = Auth::user()->id;
 
-        if ($this->user_id && $this->warehouse_id) {
+        if ($this->user_id && $this->form->warehouse_id) {
             $cashRegister = CashRegister::where('user_id', $this->user_id)
-                ->where('warehouse_id', $this->warehouse_id)
+                ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
 
             if ($cashRegister) {
                 $this->cash_register_id = $cashRegister->id;
             } else {
-                $this->dispatch('createModal')->to(CashRegisterCreate::class);
+                $this->initializeCashRegister();
             }
         }
 
-        $this->total_with_shipping = (float) $this->cartTotal + (float) $this->shipping_amount;
+        $this->total_with_shipping = (float) $this->cartTotal + (float) $this->form->shipping_amount;
+    }
+
+    protected function initializeCashRegister(): void
+    {
+        if (! $this->user_id || ! $this->form->warehouse_id) {
+            return;
+        }
+
+        $cashRegister = CashRegister::create([
+            'user_id' => $this->user_id,
+            'warehouse_id' => $this->form->warehouse_id,
+            'cash_in_hand' => 0,
+            'status' => true,
+        ]);
+
+        $this->cash_register_id = $cashRegister->id;
+
+        $this->dispatch('cash-register-opened', cashRegisterId: $cashRegister->id);
     }
 
     public function syncCartState(): void
     {
-        $this->total_amount = $this->calculateTotal();
-        if ($this->payment_method === 'cash') {
-            $this->paid_amount = $this->total_amount;
+        $this->form->total_amount = $this->calculateTotal();
+        if ($this->form->payment_method === 'cash') {
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
-    public function updatedShippingAmount(): void
+    public function updatedFormShippingAmount(): void
     {
-        $this->total_amount = $this->calculateTotal();
-        $this->total_with_shipping = $this->total_amount;
-        if ($this->payment_method === 'cash') {
-            $this->paid_amount = $this->total_amount;
+        $this->form->total_amount = $this->calculateTotal();
+        $this->total_with_shipping = $this->form->total_amount;
+        if ($this->form->payment_method === 'cash') {
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
-    public function updatedPaymentMethod($value): void
+    public function updatedFormPaymentMethod($value): void
     {
         if ($value === 'cash') {
-            $this->paid_amount = $this->total_amount;
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
@@ -170,28 +129,28 @@ class Index extends Component
 
     public function store(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        $this->validate();
+        $this->form->validate();
 
         $sale = app(StorePosSaleAction::class)(
             [
                 'date' => date('Y-m-d'),
-                'customer_id' => $this->customer_id,
-                'warehouse_id' => $this->warehouse_id,
+                'customer_id' => $this->form->customer_id,
+                'warehouse_id' => $this->form->warehouse_id,
                 'user_id' => $this->user_id,
                 'cash_register_id' => $this->cash_register_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount,
-                'paid_amount' => $this->paid_amount,
-                'total_amount' => $this->total_amount,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
             ],
             $this->cartContent,
             $this->cartTax,
@@ -228,7 +187,7 @@ class Index extends Component
             return;
         }
 
-        if ($this->customer_id !== null) {
+        if ($this->form->customer_id !== null) {
             $this->checkoutModal = true;
         } else {
             $this->alert('error', __('Please select a customer!'));
@@ -237,7 +196,7 @@ class Index extends Component
 
     public function calculateTotal(): mixed
     {
-        return $this->cartTotal + $this->shipping_amount;
+        return $this->cartTotal + $this->form->shipping_amount;
     }
 
     public function resetCart(): void
@@ -245,9 +204,9 @@ class Index extends Component
         $this->clearCart();
     }
 
-    public function updatedWarehouseId($value): void
+    public function updatedFormWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
+        $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', warehouseId: (int) $value);
     }
 }

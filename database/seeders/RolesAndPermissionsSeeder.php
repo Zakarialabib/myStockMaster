@@ -14,10 +14,8 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         try {
             // Force clear tables to avoid UNIQUE constraint issues in SQLite
@@ -161,7 +159,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $role = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
             $role->syncPermissions(Permission::all());
         } catch (Throwable $e) {
-            file_put_contents(base_path('debug_seeder.txt'), 'SEEDER ERROR: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            file_put_contents(storage_path('logs/debug_seeder.txt'), 'SEEDER ERROR: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             throw $e;
         }
     }

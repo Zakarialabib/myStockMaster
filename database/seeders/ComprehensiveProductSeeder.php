@@ -17,10 +17,8 @@ class ComprehensiveProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Ensure we have warehouses, categories, and brands
         $this->ensureBasicData();
@@ -402,7 +400,7 @@ class ComprehensiveProductSeeder extends Seeder
                 'updated_at' => now(),
             ];
 
-            DB::table('products')->insert($product);
+            DB::table('products')->insertOrIgnore($product);
 
             // Create warehouse relationships with realistic pricing variations
             foreach ($warehouses as $warehouseIndex => $warehouse) {

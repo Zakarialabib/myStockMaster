@@ -2,134 +2,85 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class CustomerController extends BaseController
+class CustomerController extends Controller
 {
     /**
-     * Retrieve a list of Customer with optional filters and pagination.
+     * Retrieve a list of customers with optional filters and pagination.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
-
-                // capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
-
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit customers list
-                    $customers = Customer::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit customers list
-                    $customers = Customer::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all customers
-                $customers = Customer::get();
-            }
-
-            return $this->sendResponse($customers, 'Customer List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            $customers = Customer::query()
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $customers = Customer::query()->get();
         }
+
+        return CustomerResource::collection($customers);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request): CustomerResource
     {
-        DB::beginTransaction();
+        $customer = Customer::create($request->all());
 
-        try {
-            $input = $request->all();
-            $customer = Customer::create($input);
-            DB::commit();
-
-            return $this->sendResponse($customer, 'Customer created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new CustomerResource($customer);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): CustomerResource|JsonResponse
     {
-        try {
-            $Customer = Customer::find($id);
+        $customer = Customer::find($id);
 
-            if (is_null($Customer)) {
-                return $this->sendError('Customer not found');
-            } else {
-                return $this->sendResponse($Customer, 'Customer retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if ($customer === null) {
+            return response()->json(['message' => 'Customer not found'], 404);
         }
+
+        return new CustomerResource($customer);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCustomerRequest $request, int $id): CustomerResource
     {
-        $Customer = Customer::findOrFail($id);
-        $Customer->update($request->all());
+        $customer = Customer::findOrFail($id);
+        $customer->update($request->all());
 
-        return new CustomerResource($Customer);
+        return new CustomerResource($customer);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $Customer = Customer::findOrFail($id);
-            $Customer->delete();
+        $customer = Customer::findOrFail($id);
+        $customer->delete();
 
-            return $this->sendResponse($Customer, 'Customer deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Customer deleted successfully']);
     }
 }

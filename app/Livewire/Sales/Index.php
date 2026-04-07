@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
+use App\Exports\SaleExport;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\WithModels;
 use App\Models\Sale;
@@ -13,13 +14,12 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use Datatable;
@@ -85,12 +85,69 @@ class Index extends Component
         return view('livewire.sales.index', ['sales' => $sales]);
     }
 
+    public function updateStatus(int $id, string $status): void
+    {
+        abort_if(Gate::denies('sale_update'), 403);
+
+        $sale = Sale::findOrFail($id);
+        $sale->update(['status' => $status]);
+
+        $this->alert('success', __('Sale status updated successfully.'));
+    }
+
+    public function updatePaymentStatus(int $id, string $payment_status): void
+    {
+        abort_if(Gate::denies('sale_update'), 403);
+
+        $sale = Sale::findOrFail($id);
+        $sale->update(['payment_status' => $payment_status]);
+
+        $this->alert('success', __('Sale payment status updated successfully.'));
+    }
+
     #[On('importModal')]
     public function openImportModal(): void
     {
         abort_if(Gate::denies('sale_create'), 403);
 
         $this->importModal = true;
+    }
+
+    public function downloadSelected()
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        $sales = Sale::whereIn('id', $this->selected)->get();
+
+        return (new SaleExport($sales))->download('sales.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    #[On('downloadAll')]
+    public function downloadAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->download('sales.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('sales.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    #[On('exportAll')]
+    public function exportAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('sale_access'), 403);
+
+        return $this->callExport()->download('sales.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SaleExport
+    {
+        return new SaleExport;
     }
 
     public function downloadSample(): StreamedResponse|Response

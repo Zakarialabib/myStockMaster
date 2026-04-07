@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace App\Livewire\Users;
 
 use App\Livewire\Utils\Datatable;
-use App\Livewire\Utils\WithModels;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use Datatable;
     use WithAlert;
-    use WithModels;
 
     public $showModal = false;
 

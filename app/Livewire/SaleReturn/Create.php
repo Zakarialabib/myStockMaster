@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\SaleReturn;
 
-use App\Actions\Sales\StoreSaleReturnAction;
+use App\Livewire\Forms\SaleReturnForm;
 use App\Models\Customer;
+use App\Services\SaleReturnService;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use App\Livewire\Forms\SaleReturnForm;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -22,26 +21,6 @@ class Create extends Component
     use WithAlert;
 
     public SaleReturnForm $form;
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     public function mount(string $cartInstance = 'sale_return'): void
     {
@@ -84,7 +63,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        app(StoreSaleReturnAction::class)(
+        app(SaleReturnService::class)->create(
             [
                 'date' => $this->form->date,
                 'reference' => $this->form->reference,

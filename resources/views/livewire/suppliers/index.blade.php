@@ -28,7 +28,7 @@
                     </x-dropdown-link>
                 </x-slot>
             </x-dropdown>
-            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'createModal')">
+            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
                 {{ __('Create Supplier') }}
             </x-button>
         </x-slot>
@@ -37,12 +37,12 @@
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center gap-2">
                     <label class="text-sm font-medium text-gray-700">{{ __('Per Page') }}</label>
-                    <select wire:model.live="perPage"
+                    <x-select wire:model.live="perPage"
                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-auto sm:text-sm border-gray-300 rounded-md focus:outline-hidden focus:shadow-outline-blue transition duration-150 ease-in-out">
                         @foreach ($paginationOptions as $value)
                             <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
                 
                 <div class="flex-1 max-w-md">
@@ -138,7 +138,7 @@
                                             {{ __('Details') }}
                                         </x-dropdown-link>
                                         <x-dropdown-link
-                                            wire:click="dispatchTo('suppliers.edit', 'editModal', { id : '{{ $supplier->id }}' })"
+                                            wire:click="dispatchTo('suppliers.edit', 'showModal', { id : '{{ $supplier->id }}' })"
                                             wire:loading.attr="disabled">
                                             <i class="fas fa-edit mr-2"></i>
                                             {{ __('Edit') }}

@@ -12,20 +12,21 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+
 class StockAlertReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public $thresholds = [];
+    public array $thresholds = [];
 
-    public $filterName = '';
+    public string $filterName = '';
 
-    public $filterCode = '';
+    public string $filterCode = '';
 
-    public $filterQuantityMin = null;
+    public ?int $filterQuantityMin = null;
 
-    public $filterQuantityMax = null;
+    public ?int $filterQuantityMax = null;
 
     #[Computed]
     public function stockAlert()

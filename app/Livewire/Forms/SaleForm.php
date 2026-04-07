@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Forms;
 
 use Livewire\Attributes\Validate;
@@ -7,47 +9,58 @@ use Livewire\Form;
 
 class SaleForm extends Form
 {
+    public ?\App\Models\Sale $sale = null;
+
     #[Validate('required', message: 'Please provide a customer ID')]
-    public $customer_id;
+    public int|string|null $customer_id = null;
 
     #[Validate('required', message: 'Please provide a warehouse ID')]
-    public $warehouse_id;
+    public int|string|null $warehouse_id = null;
 
-    #[Validate('required', message: 'Please provide a tax percentage')]
-    #[Validate('integer', message: 'The tax percentage must be an integer')]
-    #[Validate('min:0', message: 'The tax percentage must be at least 0')]
-    #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
-    public $tax_percentage = 0;
+    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a tax percentage'])]
+    public int $tax_percentage = 0;
 
-    #[Validate('required', message: 'Please provide a discount percentage')]
-    #[Validate('integer', message: 'The discount percentage must be an integer')]
-    #[Validate('min:0', message: 'The discount percentage must be at least 0')]
-    #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
-    public $discount_percentage = 0;
+    #[Validate('required|integer|min:0|max:100', message: ['required' => 'Please provide a discount percentage'])]
+    public int $discount_percentage = 0;
 
-    #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
-    public $shipping_amount = 0;
+    #[Validate('nullable|numeric', message: ['numeric' => 'Shipping amount must be a numeric value'])]
+    public float|int $shipping_amount = 0;
 
-    #[Validate('required', message: 'Please provide a total amount')]
-    #[Validate('numeric', message: 'The total amount must be a numeric value')]
-    public $total_amount = 0;
+    #[Validate('required|numeric', message: ['required' => 'Please provide a total amount'])]
+    public float|int $total_amount = 0;
 
-    #[Validate('nullable', message: 'Paid amount must be a numeric value')]
-    public $paid_amount = 0;
+    #[Validate('nullable|numeric', message: ['numeric' => 'Paid amount must be a numeric value'])]
+    public float|int $paid_amount = 0;
 
-    #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
-    #[Validate('string', message: 'Note must be a string')]
-    #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
-    public $note;
+    #[Validate('nullable|string|max:1000', message: ['max' => 'Note must not exceed 1000 characters'])]
+    public ?string $note = null;
 
     #[Validate('required|integer|max:255')]
-    public $status;
+    public int|string|null $status = null;
 
+    #[Validate('nullable|integer|max:255')]
+    public int|string|null $payment_status = null;
+
+    #[Validate('required|string|max:255')]
     public string $payment_method = 'cash';
 
-    public $date;
+    #[Validate('required|date')]
+    public ?string $date = null;
 
-    public $cash_register_id;
-
-    public $user_id;
+    public function setSale(\App\Models\Sale $sale): void
+    {
+        $this->sale = $sale;
+        $this->customer_id = $sale->customer_id;
+        $this->warehouse_id = $sale->warehouse_id;
+        $this->tax_percentage = $sale->tax_percentage;
+        $this->discount_percentage = $sale->discount_percentage;
+        $this->shipping_amount = $sale->shipping_amount / 100;
+        $this->total_amount = $sale->total_amount / 100;
+        $this->paid_amount = $sale->paid_amount / 100;
+        $this->note = $sale->note;
+        $this->status = $sale->status;
+        $this->payment_status = $sale->payment_status;
+        $this->payment_method = $sale->payment_method ?? 'cash';
+        $this->date = $sale->date;
+    }
 }

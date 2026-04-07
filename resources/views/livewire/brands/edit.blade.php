@@ -12,21 +12,21 @@
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="name" :value="__('Name')" />
-                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="name" />
-                    <x-input-error :messages="$errors->get('name')" for="name" class="mt-2" />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" wire:model="form.name" />
+                    <x-input-error :messages="$errors->get('form.name')" for="form.name" class="mt-2" />
                 </div>
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="description" :value="__('Description')" />
-                    <textarea id="description" class="block mt-1 w-full" type="text" name="description" wire:model="description"></textarea>
-                    <x-input-error :messages="$errors->get('description')" for="description" class="mt-2" />
+                    <textarea id="description" class="block mt-1 w-full" type="text" name="description" wire:model="form.description"></textarea>
+                    <x-input-error :messages="$errors->get('form.description')" for="form.description" class="mt-2" />
                 </div>
 
                 <div class="w-full px-3 mb-4">
                     <x-label for="image" :value="__('Image')" />
-                    <x-media-upload title="{{ __('Image') }}" name="image" wire:model="image" :file="$image"
+                    <x-media-upload title="{{ __('Image') }}" name="image" wire:model="form.image" :file="$form->image"
                         single types="PNG / JPEG / WEBP" fileTypes="image/*" />
-                    <x-input-error :messages="$errors->get('image')" for="image" class="mt-2" />
+                    <x-input-error :messages="$errors->get('form.image')" for="form.image" class="mt-2" />
                 </div>
 
                 <div class="w-full px-3">

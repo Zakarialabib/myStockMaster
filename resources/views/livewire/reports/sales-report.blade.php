@@ -26,7 +26,7 @@
                             <div class="w-full md:w-1/3 px-2 mb-2">
                                 <div class="mb-4">
                                     <label>{{ __('Customer') }}</label>
-                                    <x-select-list :options="$customers" name="customer_id" id="customer_id"
+                                    <x-select-list :options="$this->customers" name="customer_id" id="customer_id"
                                         wire:model.live="customer_id" />
                                 </div>
                             </div>
@@ -35,7 +35,7 @@
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{ __('Status') }}</label>
-                                    <select wire:model="sale_status"
+                                    <x-select wire:model="sale_status"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="sale_status">
                                         <option value="">{{ __('Select Status') }}</option>
@@ -44,13 +44,13 @@
                                                 {{ __($status->name) }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                             </div>
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <div class="mb-4">
                                     <label>{{ __('Payment Status') }}</label>
-                                    <select wire:model="payment_status"
+                                    <x-select wire:model="payment_status"
                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                         name="payment_status">
                                         <option value="">{{ __('Select Payment Status') }}</option>
@@ -59,7 +59,7 @@
                                                 {{ __($status->name) }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </x-select>
                                 </div>
                             </div>
                         </div>

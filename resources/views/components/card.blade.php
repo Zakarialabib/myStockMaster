@@ -5,7 +5,7 @@
         </div>
     @endif
     
-    <div class="w-full p-8 overflow-hidden">
+    <div class="w-full p-8 lg:p-6 overflow-hidden">
         {{ $slot }}
     </div>
 

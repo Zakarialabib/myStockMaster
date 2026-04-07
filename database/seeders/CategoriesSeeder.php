@@ -11,10 +11,8 @@ class CategoriesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         Category::factory()->count(30)->create();
     }

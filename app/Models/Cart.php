@@ -10,6 +10,50 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int                             $id
+ * @property string                          $instance_name
+ * @property string|null                     $user_id
+ * @property string|null                     $session_id
+ * @property array<array-key, mixed>|null    $conditions
+ * @property numeric                         $tax_rate
+ * @property \Illuminate\Support\Carbon|null $expires_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $discount
+ * @property-read mixed $formatted_discount
+ * @property-read mixed $formatted_sub_total
+ * @property-read mixed $formatted_tax
+ * @property-read mixed $formatted_total
+ * @property-read mixed $item_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, CartItem> $items
+ * @property-read int|null $items_count
+ * @property-read mixed $quantity_count
+ * @property-read mixed $sub_total
+ * @property-read mixed $sub_total_with_conditions
+ * @property-read mixed $tax
+ * @property-read mixed $total
+ * @property-read User|null $user
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart forInstance(string $instanceName)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart forSession(string $sessionId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart forUser(int $userId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereConditions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereInstanceName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereSessionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereTaxRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUserId($value)
+ *
+ * @mixin \Eloquent
+ */
 class Cart extends Model
 {
     use HasFactory;

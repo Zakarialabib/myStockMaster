@@ -9,8 +9,16 @@ use App\Models\Customer;
 use App\Models\Role;
 use App\Models\Supplier;
 use App\Models\Warehouse;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 
+/**
+ * @property Collection<int, Customer>  $customers
+ * @property Collection<int, Supplier>  $suppliers
+ * @property Collection<int, Warehouse> $warehouses
+ * @property int|float                  $tax_percentage
+ * @property int|float                  $discount_percentage
+ */
 trait WithModels
 {
     #[Computed]

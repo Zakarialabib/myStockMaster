@@ -22,9 +22,9 @@ class ProductFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
-        $name = $this->faker->unique()->words(3, true);
+        $name = $this->faker->unique()->words(nb: 3, asText: true);
 
         return [
             'id' => Str::uuid(),
@@ -74,7 +74,7 @@ class ProductFactory extends Factory
         ]);
     }
 
-    public function configure()
+    public function configure(): static
     {
         return $this->afterCreating(function (Product $product) {
             $warehouses = Warehouse::inRandomOrder()->limit(1)->get();

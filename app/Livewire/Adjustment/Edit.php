@@ -4,32 +4,26 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use App\Livewire\Forms\AdjustmentForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\AdjustedProduct;
 use App\Models\Adjustment;
-use App\Models\ProductWarehouse;
+use App\Services\AdjustmentService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
+    use WithAlert;
     use WithModels;
 
+    public AdjustmentForm $form;
+
     public $adjustment;
-
-    public $date;
-
-    #[Validate('nullable|string|max:1000')]
-    public $note;
-
-    #[Validate('required|string|max:255')]
-    public $reference;
-
-    #[Validate('required', message: 'Please provide warehouse')]
-    public $warehouse_id;
 
     public $quantity;
 
@@ -48,51 +42,27 @@ class Edit extends Component
         $this->adjustment = Adjustment::with('adjustedProducts', 'adjustedProducts.warehouse', 'adjustedProducts.product')
             ->where('id', $id)->first();
 
-        $this->date = $this->adjustment->date;
-        $this->warehouse_id = $this->adjustment->warehouse->id;
+        $this->form->date = $this->adjustment->date;
+        $this->form->warehouse_id = $this->adjustment->warehouse->id;
 
-        $this->reference = $this->adjustment->reference;
+        $this->form->reference = $this->adjustment->reference;
+        $this->form->note = $this->adjustment->note;
 
-        $this->products = $this->adjustment->adjustedProducts;
+        $this->products = $this->adjustment->adjustedProducts->toArray();
     }
 
-    public function update()
+    public function update(AdjustmentService $adjustmentService)
     {
         abort_if(Gate::denies('adjustment_update'), 403);
 
+        $this->form->validate();
         $this->validate();
 
-        $this->adjustment->update([
-            'reference' => $this->reference,
-            'note' => $this->note,
-            'date' => $this->date,
-            'user_id' => auth()->id(),
-            'warehouse_id' => $this->warehouse_id,
-        ]);
-
-        foreach ($this->products as $product) {
-            AdjustedProduct::updateOrCreate(
-                [
-                    'adjustment_id' => $this->adjustment->id,
-                    'product_id' => $product['product_id'],
-                    'warehouse_id' => $product['warehouse_id'],
-                ],
-                [
-                    'quantity' => $product['quantity'],
-                    'type' => $product['type'],
-                ]
-            );
-
-            $productWarehouse = ProductWarehouse::where('product_id', $product['product_id'])
-                ->where('warehouse_id', $product['warehouse_id'])
-                ->first();
-
-            if ($product['type'] === 'add') {
-                $productWarehouse->increment('qty', (int) $product['quantity']);
-            } elseif ($product['type'] === 'sub') {
-                $productWarehouse->decrement('qty', (int) $product['quantity']);
-            }
-        }
+        $adjustmentService->updateAdjustment(
+            $this->adjustment,
+            $this->form->all(),
+            $this->products
+        );
 
         return redirect()->route('adjustments.index');
     }
@@ -132,10 +102,10 @@ class Edit extends Component
     }
 
     #[On('warehouseSelected')]
-    public function updatedWarehouseId($value): void
+    public function updatedFormWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
     public function render()

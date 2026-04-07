@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Admin;
 
-use App\Native\Services\DesktopErrorHandler;
 use App\Services\EnvironmentService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -14,28 +13,28 @@ class DesktopErrorLog extends Component
 {
     use WithPagination;
 
-    public $showStatistics = true;
+    public bool $showStatistics = true;
 
-    public $selectedError = null;
+    public ?array $selectedError = null;
 
-    public $filterSeverity = '';
+    public string $filterSeverity = '';
 
-    public $filterCategory = '';
+    public string $filterCategory = '';
 
-    public $filterDateFrom = '';
+    public string $filterDateFrom = '';
 
-    public $filterDateTo = '';
+    public string $filterDateTo = '';
 
-    public $searchTerm = '';
+    public string $searchTerm = '';
 
-    protected $errorHandler;
+    protected mixed $errorHandler = null;
 
-    public function boot()
+    public function boot(): void
     {
-        $this->errorHandler = app(DesktopErrorHandler::class);
+        $this->errorHandler = app('App\Native\Services\DesktopErrorHandler');
     }
 
-    public function mount()
+    public function mount(): void
     {
         // Only allow access in desktop mode
         if (! $this->isDesktopMode()) {
@@ -43,7 +42,7 @@ class DesktopErrorLog extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
     {
         $userId = Auth::id();
         $statistics = $this->errorHandler->getErrorStatistics($userId);
@@ -57,24 +56,24 @@ class DesktopErrorLog extends Component
         ])->layout('layouts.app');
     }
 
-    public function toggleStatistics()
+    public function toggleStatistics(): void
     {
         $this->showStatistics = ! $this->showStatistics;
     }
 
-    public function viewErrorDetails($errorId)
+    public function viewErrorDetails(string $errorId): void
     {
         $this->selectedError = $this->errorHandler->getErrorDetails($errorId);
         $this->dispatch('show-error-modal');
     }
 
-    public function closeErrorDetails()
+    public function closeErrorDetails(): void
     {
         $this->selectedError = null;
         $this->dispatch('hide-error-modal');
     }
 
-    public function clearErrorHistory()
+    public function clearErrorHistory(): void
     {
         $userId = Auth::id();
 
@@ -86,7 +85,7 @@ class DesktopErrorLog extends Component
         }
     }
 
-    public function resetFilters()
+    public function resetFilters(): void
     {
         $this->filterSeverity = '';
         $this->filterCategory = '';
@@ -96,22 +95,22 @@ class DesktopErrorLog extends Component
         $this->resetPage();
     }
 
-    public function updatedFilterSeverity()
+    public function updatedFilterSeverity(): void
     {
         $this->resetPage();
     }
 
-    public function updatedFilterCategory()
+    public function updatedFilterCategory(): void
     {
         $this->resetPage();
     }
 
-    public function updatedSearchTerm()
+    public function updatedSearchTerm(): void
     {
         $this->resetPage();
     }
 
-    public function exportErrorLog()
+    public function exportErrorLog(): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $userId = Auth::id();
         $errors = $this->errorHandler->getErrorHistory($userId, 1000);
@@ -119,7 +118,22 @@ class DesktopErrorLog extends Component
         $filename = 'desktop_error_log_' . now()->format('Y-m-d_H-i-s') . '.json';
 
         return response()->streamDownload(function () use ($errors) {
-            echo json_encode($errors, JSON_PRETTY_PRINT);
+            $generator = function () use ($errors) {
+                yield '[';
+                $first = true;
+                foreach ($errors as $error) {
+                    if (! $first) {
+                        yield ',';
+                    }
+                    yield json_encode($error, JSON_PRETTY_PRINT);
+                    $first = false;
+                }
+                yield ']';
+            };
+
+            foreach ($generator() as $chunk) {
+                echo $chunk;
+            }
         }, $filename, [
             'Content-Type' => 'application/json',
         ]);

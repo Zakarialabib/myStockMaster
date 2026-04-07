@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -25,7 +24,7 @@ use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Isolate]
-#[Lazy]
+
 #[Layout('layouts.app')]
 #[Title('Products')]
 class Index extends Component
@@ -33,8 +32,6 @@ class Index extends Component
     use Datatable;
     use WithAlert;
     use WithFileUploads;
-
-    public int $perPage = 25;
 
     public bool $hasMorePages = true;
 
@@ -71,6 +68,10 @@ class Index extends Component
     #[Url(history: true)]
     public $filterSeasonality = '';
 
+    public bool $previewBulkAction = false;
+
+    public string $bulkActionType = '';
+
     #[Computed]
     public function categories()
     {
@@ -94,15 +95,32 @@ class Index extends Component
 
     public function deleteSelectedModal(): void
     {
-        $confirmationMessage = __('Are you sure you want to delete the selected products? items can be recovered.');
+        $this->bulkActionType = 'delete';
+        $this->previewBulkAction = true;
+    }
 
-        $this->confirm($confirmationMessage, [
-            'toast' => false,
-            'position' => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText' => __('Cancel'),
-            'onConfirmed' => 'deleteSelected',
-        ]);
+    public function printSelectedModal(): void
+    {
+        $this->bulkActionType = 'print';
+        $this->previewBulkAction = true;
+    }
+
+    public function confirmBulkAction()
+    {
+        $this->previewBulkAction = false;
+
+        if ($this->bulkActionType === 'delete') {
+            $this->deleteSelected();
+        } elseif ($this->bulkActionType === 'print') {
+            return $this->printSelected();
+        }
+    }
+
+    public function printSelected()
+    {
+        abort_if(Gate::denies('product_export'), 403);
+
+        return $this->callExport()->forModels($this->selected)->download('products.pdf', \Maatwebsite\Excel\Excel::MPDF);
     }
 
     #[On('deleteSelected')]
@@ -147,13 +165,15 @@ class Index extends Component
 
         $query = Product::query()
             ->with([
-                'warehouses' => static function ($query): void {
-                    $query->withPivot('qty', 'price', 'cost');
-                },
+                'warehouses',
                 'category',
                 'brand',
                 'movements',
-            ])->select('products.*')
+            ])
+            ->withSum('warehouses as total_qty', 'product_warehouse.qty')
+            ->withAvg('warehouses as avg_price', 'product_warehouse.price')
+            ->withAvg('warehouses as avg_cost', 'product_warehouse.cost')
+            ->select('products.*')
             ->advancedFilter([
                 's' => $this->search ?: null,
                 'order_column' => $this->sortBy,
@@ -222,9 +242,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('product_export'), 403);
 
-        $products = Product::whereIn('id', $this->selected)->get();
-
-        return (new ProductExport($products))->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
+        return $this->callExport()->forModels($this->selected)->download('products.xls', \Maatwebsite\Excel\Excel::XLS);
     }
 
     public function promoAllProducts(): void

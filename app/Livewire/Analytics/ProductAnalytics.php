@@ -9,40 +9,38 @@ use App\Actions\Analytics\GenerateProductAnalyticsAction;
 use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class ProductAnalytics extends Component
 {
     use WithPagination;
 
     #[Validate('required|exists:products,id')]
-    public $productId;
+    public int|string|null $productId = null;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom = '';
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo = '';
 
-    public $analyticsData = [];
+    public array $analyticsData = [];
 
-    public $priceTrends = [];
+    public array $priceTrends = [];
 
     #[Validate([
         'comparisonProducts' => 'array|max:3',
         'comparisonProducts.*' => 'exists:products,id',
     ])]
-    public $comparisonProducts = [];
+    public array $comparisonProducts = [];
 
-    public $loading = false;
-
-    public $showComparison = false;
+    public bool $showComparison = false;
 
     public function mount($productId = null)
     {
@@ -85,8 +83,6 @@ class ProductAnalytics extends Component
             return;
         }
 
-        $this->loading = true;
-
         try {
             $product = Product::findOrFail($this->productId);
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -109,8 +105,6 @@ class ProductAnalytics extends Component
             }
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load product analytics: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 
@@ -175,7 +169,7 @@ class ProductAnalytics extends Component
             $filename = 'product_analytics_' . $product->code . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
             return response()->streamDownload(function () {
-                echo json_encode([
+                $exportData = [
                     'product_id' => $this->productId,
                     'date_range' => [
                         'from' => $this->dateFrom,
@@ -183,7 +177,24 @@ class ProductAnalytics extends Component
                     ],
                     'analytics' => $this->analyticsData,
                     'price_trends' => $this->priceTrends,
-                ], JSON_PRETTY_PRINT);
+                ];
+
+                $generator = function () use ($exportData) {
+                    yield '{';
+                    $first = true;
+                    foreach ($exportData as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
@@ -192,16 +203,19 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function render()
+    #[Computed]
+    public function products()
     {
-        $products = Product::select('id', 'name', 'code')
+        return Product::select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
+    }
 
+    public function render()
+    {
         $selectedProduct = $this->productId ? Product::find($this->productId) : null;
 
         return view('livewire.analytics.product-analytics', [
-            'products' => $products,
             'selectedProduct' => $selectedProduct,
         ]);
     }

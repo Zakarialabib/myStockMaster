@@ -4,34 +4,39 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
-// use App\Models\Permission;
+use App\Livewire\Forms\RoleForm;
+use App\Models\Role;
 use App\Traits\WithAlert;
-use Livewire\Attributes\Validate;
-// use App\Models\Role;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
+/**
+ * @property \Illuminate\Support\Collection $permission_groups
+ */
 class Edit extends Component
 {
     use WithAlert;
 
-    #[Validate([
-        'role.title' => 'required|string',
-        'permissions' => 'required|array',
-        'permissions.*' => 'integer|exists:permissions,id',
-    ])]
-    public Role $role;
+    public bool $showModal = false;
 
-    public array $permissions = [];
+    public RoleForm $form;
 
-    public array $listsForFields = [];
-
-    public function mount(Role $role): void
+    #[On('editModal')]
+    public function openEditModal(int $id): void
     {
-        $this->role = $role;
-        $this->permissions = $this->role->permissions->pluck('id')->toArray();
-        $this->initListsForFields();
+        $role = Role::findOrFail($id);
+        $this->form->setRole($role);
+        $this->showModal = true;
+    }
+
+    #[Computed]
+    public function permission_groups()
+    {
+        return Permission::all()->groupBy(function ($permission) {
+            return explode('_', $permission->name)[0];
+        });
     }
 
     public function render()
@@ -39,20 +44,19 @@ class Edit extends Component
         return view('livewire.role.edit');
     }
 
-    public function submit()
+    public function update()
     {
-        $this->validate();
+        $this->validate([
+            'form.name' => 'required|string|unique:roles,name,' . $this->form->role->id,
+            'form.permissions' => 'array',
+        ]);
 
-        $this->role->save();
-        $this->role->syncPermissions($this->permissions);
+        $this->form->role->update(['name' => $this->form->name]);
+        $this->form->role->syncPermissions($this->form->permissions);
 
-        // $this->alert('success', __('Role updated successfully!') );
+        $this->alert('success', __('Role updated successfully!'));
 
-        return redirect()->route('roles.index');
-    }
-
-    protected function initListsForFields(): void
-    {
-        $this->listsForFields['permissions'] = Permission::pluck('title', 'id')->toArray();
+        $this->dispatch('refreshIndex')->to(Index::class);
+        $this->showModal = false;
     }
 }

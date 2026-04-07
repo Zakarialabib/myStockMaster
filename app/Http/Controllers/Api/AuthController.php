@@ -6,58 +6,37 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Request;
-use Throwable;
 
-/**
- * Undocumented class
- */
 class AuthController extends Controller
 {
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
-        try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
-            ]);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
 
-            $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
-            ]);
-            // creat new token each login
-            $token = $user->createToken('auth_token')->plainTextToken;
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
 
-            return response()->json([
-                'token' => $token,
-                'token_type' => 'Bearer',
-            ]);
-        } catch (Throwable $th) {
-            return response()->json([
-                'error' => $th->getMessage(),
+        $token = $user->createToken('auth_token')->accessToken;
 
-            ]);
-        }
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
-        // dd($request);
         if (! Auth::attempt($request->only(['email', 'password']))) {
             return response()->json([
                 'message' => 'Invalid login details',
@@ -66,7 +45,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request['email'])->firstOrFail();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->accessToken;
 
         return response()->json([
             'token' => $token,

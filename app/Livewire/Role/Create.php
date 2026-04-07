@@ -4,33 +4,28 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
-// use App\Models\Permission;
+use App\Livewire\Forms\RoleForm;
+use App\Models\Role;
 use App\Traits\WithAlert;
-use Livewire\Attributes\Validate;
-// use App\Models\Role;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class Create extends Component
 {
     use WithAlert;
 
-    #[Validate([
-        'role.title' => 'required|string',
-        'permissions' => 'required|array',
-        'permissions.*' => 'integer|exists:permissions,id',
-    ])]
-    public Role $role;
+    public bool $showModal = false;
 
-    public array $permissions = [];
+    public RoleForm $form;
 
-    public array $listsForFields = [];
-
-    public function mount(): void
+    #[Computed]
+    public function permission_groups()
     {
-        $this->role = new Role;
-        $this->initListsForFields();
+        return Permission::all()->groupBy(function ($permission) {
+            return explode('_', $permission->name)[0];
+        });
     }
 
     public function render()
@@ -38,21 +33,29 @@ class Create extends Component
         return view('livewire.role.create');
     }
 
-    public function submit()
+    #[On('createModal')]
+    public function createModal(): void
     {
-        $this->validate();
-
-        $this->role->save();
-
-        $this->role->givePermissionTo($this->permissions);
-
-        // $this->alert('success', __('Role created successfully!') );
-
-        return redirect()->route('roles.index');
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->form->reset();
+        $this->showModal = true;
     }
 
-    protected function initListsForFields(): void
+    public function store()
     {
-        $this->listsForFields['permissions'] = Permission::pluck('title', 'id')->toArray();
+        $this->form->validate([
+            'name' => 'required|string|unique:roles,name',
+            'permissions' => 'array',
+        ]);
+
+        $role = Role::create(['name' => $this->form->name]);
+        $role->syncPermissions($this->form->permissions);
+
+        $this->alert('success', __('Role created successfully!'));
+
+        $this->dispatch('refreshIndex')->to(Index::class);
+        $this->showModal = false;
+        $this->form->reset();
     }
 }

@@ -7,12 +7,12 @@ namespace App\Http\Controllers;
 use App\Facades\Cart;
 use App\Models\Product;
 use App\Models\Quotation;
-use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 
 class QuotationSalesController extends Controller
 {
-    public function __invoke(Quotation $quotation)
+    public function __invoke(Quotation $quotation): View
     {
         abort_if(Gate::denies('quotation_sale'), 403);
 

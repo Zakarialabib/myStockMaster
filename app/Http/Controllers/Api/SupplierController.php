@@ -2,129 +2,85 @@
 
 declare(strict_types=1);
 
-namespace app\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class SupplierController extends BaseController
+class SupplierController extends Controller
 {
     /**
      * Retrieve a list of suppliers with optional filters and pagination.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = (string) ($request->input('_order') ?? 'asc');
+            $sort = (string) ($request->input('_sort') ?? 'id');
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
-
-                // capture sort fields
-                $sort_array = explode(',', $sort);
-
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit suppliers list
-                    $suppliers = Supplier::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit suppliers list
-                    $suppliers = Supplier::orderBy($sort, $order)
-                        ->offset($offset)
-                        ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all suppliers
-                $suppliers = Supplier::get();
-            }
-
-            return $this->sendResponse($suppliers, 'Supplier List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            $suppliers = Supplier::query()
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $suppliers = Supplier::query()->get();
         }
+
+        return SupplierResource::collection($suppliers);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSupplierRequest $request): SupplierResource
     {
-        DB::beginTransaction();
+        $supplier = Supplier::create($request->all());
 
-        try {
-            $input = $request->all();
-            $Supplier = Supplier::create($input);
-            DB::commit();
-
-            return $this->sendResponse($Supplier, 'Supplier created successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new SupplierResource($supplier);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): SupplierResource|JsonResponse
     {
-        try {
-            $Supplier = Supplier::find($id);
+        $supplier = Supplier::find($id);
 
-            if (is_null($Supplier)) {
-                return $this->sendError('Supplier not found');
-            } else {
-                return $this->sendResponse($Supplier, 'Supplier retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if ($supplier === null) {
+            return response()->json(['message' => 'Supplier not found'], 404);
         }
+
+        return new SupplierResource($supplier);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSupplierRequest $request, int $id): SupplierResource
     {
-        $Supplier = Supplier::findOrFail($id);
-        $Supplier->update($request->all());
+        $supplier = Supplier::findOrFail($id);
+        $supplier->update($request->all());
 
-        return new SupplierResource($Supplier);
+        return new SupplierResource($supplier);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $Supplier = Supplier::findOrFail($id);
-            $Supplier->delete();
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
 
-            return $this->sendResponse($Supplier, 'Supplier deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Supplier deleted successfully']);
     }
 }

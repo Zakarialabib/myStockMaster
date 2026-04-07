@@ -307,7 +307,7 @@ class CartService
     }
 
     /** Get cart count */
-    public function count(): int
+    public function count(): float|int
     {
         return $this->getContent()->sum('quantity');
     }
@@ -492,7 +492,7 @@ class CartService
             throw new ProductNotAvailableException($productId, 'Product not found');
         }
 
-        if ($product->status !== 'active') {
+        if ($product->status === false || $product->status === 0) {
             throw new ProductNotAvailableException($productId, 'Product is not active');
         }
 

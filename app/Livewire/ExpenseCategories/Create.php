@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace App\Livewire\ExpenseCategories;
 
-use App\Models\ExpenseCategory;
+use App\Livewire\Forms\ExpenseCategoryForm;
+use App\Services\ExpenseCategoryService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Create extends Component
 {
     use WithAlert;
 
-    public $createModal = false;
+    public $showModal = false;
 
-    public ExpenseCategory $expenseCategory;
-
-    #[Validate('required|min:3|max:255')]
-    public string $name;
-
-    public ?string $description = null;
-
-    protected $messages = [
-        'expenseCategory.name.required' => 'The name field cannot be empty.',
-    ];
+    public ExpenseCategoryForm $form;
 
     public function render()
     {
@@ -42,21 +33,21 @@ class Create extends Component
 
         $this->resetValidation();
 
-        $this->createModal = true;
+        $this->showModal = true;
     }
 
-    public function create(): void
+    public function create(ExpenseCategoryService $expenseCategoryService): void
     {
         $this->validate();
 
-        ExpenseCategory::create($this->all());
+        $expenseCategoryService->create($this->form->all());
 
-        $this->alert('success', __('Expense created successfully.'));
+        $this->alert('success', __('Expense Category created successfully.'));
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
-        $this->reset(['name', 'description']);
+        $this->form->reset();
 
-        $this->createModal = false;
+        $this->showModal = false;
     }
 }

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Supplier;
-use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class SupplierExport implements FromView
+class SupplierExport implements FromQuery, WithHeadings, WithMapping
 {
     use Exportable;
     use ForModelsTrait;
@@ -26,10 +27,25 @@ class SupplierExport implements FromView
         return Supplier::query();
     }
 
-    public function view(): View
+    public function map($supplier): array
     {
-        return view('pdf.suppliers', [
-            'data' => $this->query()->get(),
-        ]);
+        return [
+            $supplier->name,
+            $supplier->email,
+            $supplier->phone,
+            $supplier->city,
+            $supplier->country,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            __('Name'),
+            __('Email'),
+            __('Phone'),
+            __('City'),
+            __('Country'),
+        ];
     }
 }

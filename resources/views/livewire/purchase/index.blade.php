@@ -1,12 +1,22 @@
 <div>
     @section('title', __('Purchases'))
 
-    <x-page-container>
-        <x-slot name="header">
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('Purchases List') }}</h1>
-        </x-slot>
+    <x-page-container :title="__('Purchases List')"
+        :breadcrumbs="[
+            ['label' => __('Dashboard'), 'url' => route('dashboard')],
+            ['label' => __('Purchases List'), 'url' => route('purchases.index')]
+        ]"
+        :show-filters="true">
 
         <x-slot name="actions">
+            @can('purchase_export')
+                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
+                    {{ __('PDF') }}
+                </x-button>
+                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
+                    {{ __('Excel') }}
+                </x-button>
+            @endcan
             @can('purchase_create')
                 <x-button href="{{ route('purchase.create') }}" primary>
                     <i class="fas fa-plus mr-2"></i>
@@ -53,10 +63,22 @@
 
             @if ($selected)
                 <div class="flex items-center space-x-4 mt-4">
+                    @can('purchase_delete')
                     <x-button type="button" wire:click="deleteSelected" danger>
                         <i class="fas fa-trash mr-2"></i>
                         {{ __('Delete Selected') }}
                     </x-button>
+                    @endcan
+                    @can('purchase_export')
+                    <x-button type="button" wire:click="downloadSelected" success>
+                        <i class="fas fa-file-excel mr-2"></i>
+                        {{ __('Excel Selected') }}
+                    </x-button>
+                    <x-button type="button" wire:click="exportSelected" warning>
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        {{ __('PDF Selected') }}
+                    </x-button>
+                    @endcan
                     @if ($this->selectedCount)
                         <div class="flex items-center space-x-3">
                             <div
@@ -97,6 +119,9 @@
                 <x-table.th sortable wire:click="sortingBy('due_amount')" :direction="$sortBy === 'due_amount' ? $sortDirection : null">
                     {{ __('Due amount') }}
                 </x-table.th>
+                <x-table.th sortable wire:click="sortingBy('status')" :direction="$sortBy === 'status' ? $sortDirection : null">
+                    {{ __('Status') }}
+                </x-table.th>
                 <x-table.th>
                     {{ __('Actions') }}
                 </x-table.th>
@@ -134,23 +159,41 @@
                                 </a>
                             @else
                                 <span
-                                    class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier->name }}</span>
+                                    class="text-sm text-gray-900 dark:text-gray-100">{{ $purchase->supplier?->name ?? '' }}</span>
                             @endif
                         </x-table.td>
                         <x-table.td>
-                            {{-- @php
-                            $badgeType = $purchase->status->getBadgeType();
-                        @endphp --}}
-                            {{-- <x-badge :type="$badgeType"> --}}
-                            {{ $purchase->payment_id }}
-                            {{-- {{ \app\Enums\PaymentStatus::getName($purchase->payment_id) }} --}}
-                            {{-- </x-badge> --}}
+                            <x-table.status-dropdown 
+                                :id="$purchase->id" 
+                                :value="$purchase->payment_status" 
+                                action="updatePaymentStatus"
+                                :options="[
+                                    ['value' => App\Enums\PaymentStatus::PENDING->value, 'label' => App\Enums\PaymentStatus::PENDING->getName()],
+                                    ['value' => App\Enums\PaymentStatus::PARTIAL->value, 'label' => App\Enums\PaymentStatus::PARTIAL->getName()],
+                                    ['value' => App\Enums\PaymentStatus::PAID->value, 'label' => App\Enums\PaymentStatus::PAID->getName()],
+                                    ['value' => App\Enums\PaymentStatus::DUE->value, 'label' => App\Enums\PaymentStatus::DUE->getName()]
+                                ]" 
+                            />
                         </x-table.td>
                         <x-table.td>
                             {{ format_currency($purchase->total_amount) }}
                         </x-table.td>
                         <x-table.td>
                             {{ format_currency($purchase->due_amount) }}
+                        </x-table.td>
+                        <x-table.td>
+                            <x-table.status-dropdown 
+                                :id="$purchase->id" 
+                                :value="$purchase->status->getName()" 
+                                action="updateStatus"
+                                :options="[
+                                    ['value' => App\Enums\PurchaseStatus::PENDING->value, 'label' => App\Enums\PurchaseStatus::PENDING->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::ORDERED->value, 'label' => App\Enums\PurchaseStatus::ORDERED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::COMPLETED->value, 'label' => App\Enums\PurchaseStatus::COMPLETED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::RETURNED->value, 'label' => App\Enums\PurchaseStatus::RETURNED->getName()],
+                                    ['value' => App\Enums\PurchaseStatus::CANCELED->value, 'label' => App\Enums\PurchaseStatus::CANCELED->getName()]
+                                ]" 
+                            />
                         </x-table.td>
                         <x-table.td>
                             <x-dropdown align="right" width="56">
@@ -217,7 +260,7 @@
                     </x-table.tr>
                 @empty
                     <tr>
-                        <x-table.td colspan="8">
+                        <x-table.td colspan="9">
                             <div class="flex flex-col items-center justify-center py-12">
                                 <div
                                     class="flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
@@ -259,6 +302,6 @@
     @livewire('purchase.payment-form', ['purchase' => $purchase])
 
     {{-- @if (empty($showPayments))
-        <livewire:purchase.payment.index :purchase="$purchase" />
+        <livewire:purchase.payment.index />
       @endif --}}
 </div>

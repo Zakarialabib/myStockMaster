@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller;
+use Illuminate\Http\RedirectResponse;
 
 class ProductController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): RedirectResponse
     {
-        return view('admin.products.index');
+        return redirect()->route('products.index');
     }
 }

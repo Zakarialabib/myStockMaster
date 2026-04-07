@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ExportController;
+use App\Http\Controllers\Export\ExportPurchaseController;
+use App\Http\Controllers\Export\ExportPurchaseReturnController;
+use App\Http\Controllers\Export\ExportQuotationController;
+use App\Http\Controllers\Export\ExportSaleController;
+use App\Http\Controllers\Export\ExportSalePosController;
+use App\Http\Controllers\Export\ExportSaleReturnController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\PurchasePaymentsController;
@@ -29,7 +34,6 @@ use App\Livewire\ExpenseCategories\Index as ExpenseCategoriesIndex;
 use App\Livewire\Installation\StepManager;
 use App\Livewire\Language\EditTranslation;
 use App\Livewire\Language\Index as LanguageIndex;
-use App\Livewire\Notification\Index as NotificationIndex;
 use App\Livewire\Permission\Index as PermissionsIndex;
 use App\Livewire\Pos\Index as PosIndex;
 use App\Livewire\Printer\Index as PrinterIndex;
@@ -42,6 +46,7 @@ use App\Livewire\Purchase\Index as PurchasesIndex;
 use App\Livewire\Purchase\Invoice as PurchaseInvoice;
 use App\Livewire\PurchaseReturn\Create as CreatePurchaseReturn;
 use App\Livewire\PurchaseReturn\Edit as EditPurchaseReturn;
+use App\Livewire\PurchaseReturn\Index as PurchaseReturnIndex;
 use App\Livewire\Quotations\Create as CreateQuotation;
 use App\Livewire\Quotations\Edit as EditQuotation;
 use App\Livewire\Quotations\Index as QuotationsIndex;
@@ -56,6 +61,7 @@ use App\Livewire\Reports\StockAlertReport;
 use App\Livewire\Role\Index as RolesIndex;
 use App\Livewire\SaleReturn\Create as CreateSaleReturn;
 use App\Livewire\SaleReturn\Edit as EditSaleReturn;
+use App\Livewire\SaleReturn\Index as SaleReturnIndex;
 use App\Livewire\Sales\Create as CreateSale;
 use App\Livewire\Sales\Edit as EditSale;
 use App\Livewire\Sales\Index as SalesIndex;
@@ -113,7 +119,7 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'role:admin']], function () {
     // Change lang
-    Route::get('/lang/{lang}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
+    Route::get('/lang/{locale}', [HomeController::class, 'changeLanguage'])->name('changelanguage');
 
     Route::livewire('/dashboard', Dashboard::class)->name('dashboard');
 
@@ -156,8 +162,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::livewire('/currencies', CurrencyIndex::class)->name('currencies.index');
 
     // Charts
-    Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
     Route::get('/current-month/chart-data', [HomeController::class, 'currentMonthChart'])->name('current-month.chart');
+    Route::get('/sales-purchases/chart-data', [HomeController::class, 'salesPurchasesChart'])->name('sales-purchases.chart');
     Route::get('/payment-flow/chart-data', [HomeController::class, 'paymentChart'])->name('payment-flow.chart');
 
     // Expense Category
@@ -181,18 +187,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Quotations
     Route::prefix('quotations')->name('quotations.')->group(function () {
         Route::livewire('/', QuotationsIndex::class)->name('index');
-        Route::get('/pdf/{id}', [ExportController::class, 'quotation'])->name('pdf');
+        Route::get('/pdf/{id}', ExportQuotationController::class)->name('pdf');
     });
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::livewire('/create', CreateQuotation::class)->name('create');
         Route::livewire('/update/{id}', EditQuotation::class)->name('edit');
-        Route::get('/mail/{quotation}', SendQuotationEmailController::class)->name('email');
     });
+
+    Route::get('/quotation-sales/{quotation}', QuotationSalesController::class)->name('quotation-sales.create');
+    Route::get('/quotation/mail/{quotation}', SendQuotationEmailController::class)->name('quotation.email');
 
     // Purchases
     Route::prefix('purchases')->name('purchases.')->group(function () {
         Route::livewire('/purchases', PurchasesIndex::class)->name('index');
-        Route::get('/purchases/pdf/{id}', [ExportController::class, 'purchase'])->name('pdf');
+        Route::get('/purchases/pdf/{id}', ExportPurchaseController::class)->name('pdf');
     });
     Route::prefix('purchase')->name('purchase.')->group(function () {
         Route::livewire('/purchase/create', CreatePurchase::class)->name('create');
@@ -202,7 +210,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     });
 
     // Sales Form Quotation
-    Route::get('/quotation-sales/{quotation}', QuotationSalesController::class)->name('quotation-sales.create');
 
     // Purchase Returns Payments
     // Route::get('/purchase-return-payments/{purchaseReturn_id}', [PurchaseReturnPaymentsController::class, 'index'])->name('purchase-return-payments.index');
@@ -225,8 +232,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     // Sales
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::livewire('/', SalesIndex::class)->name('index');
-        Route::get('/pdf/{id}', [ExportController::class, 'sale'])->name('pdf');
-        Route::get('/pos/pdf/{id}', [ExportController::class, 'salePos'])->name('pos.pdf');
+        Route::get('/pdf/{id}', ExportSaleController::class)->name('pdf');
+        Route::get('/pos/pdf/{id}', ExportSalePosController::class)->name('pos.pdf');
     });
 
     Route::prefix('sale')->name('sale.')->group(function () {
@@ -279,18 +286,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
     // Purchase Returns
     Route::prefix('purchase-returns')->name('purchase-returns.')->group(function () {
-        Route::resource('/', PurchasesReturnController::class)->except(['create', 'edit', 'store', 'update']);
+        Route::livewire('/', PurchaseReturnIndex::class)->name('index');
         Route::livewire('/create', CreatePurchaseReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditPurchaseReturn::class)->name('edit');
-        Route::get('/pdf/{id}', [ExportController::class, 'purchaseReturns'])->name('pdf');
+        Route::get('/pdf/{id}', ExportPurchaseReturnController::class)->name('pdf');
+        Route::get('/{purchase_return}', [PurchasesReturnController::class, 'show'])->name('show');
+        Route::delete('/{purchase_return}', [PurchasesReturnController::class, 'destroy'])->name('destroy');
     });
 
     // Generate Sale Returns PDF
     Route::prefix('sale-returns')->name('sale-returns.')->group(function () {
-        Route::resource('/', SalesReturnController::class)->except(['create', 'edit', 'store', 'update']);
+        Route::livewire('/', SaleReturnIndex::class)->name('index');
         Route::livewire('/create', CreateSaleReturn::class)->name('create');
         Route::livewire('/{id}/edit', EditSaleReturn::class)->name('edit');
-        Route::get('/pdf/{id}', [ExportController::class, 'saleReturns'])->name('pdf');
+        Route::get('/pdf/{id}', ExportSaleReturnController::class)->name('pdf');
+        Route::get('/{sale_return}', [SalesReturnController::class, 'show'])->name('show');
+        Route::delete('/{sale_return}', [SalesReturnController::class, 'destroy'])->name('destroy');
     });
 
     // Transfers
@@ -326,14 +337,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
         Route::livewire('/breakeven', App\Livewire\Finance\BreakEvenAnalysis::class)->name('breakeven');
     });
 
-    // Notifications
+    // // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::livewire('/bell', App\Livewire\Notifications\NotificationBell::class)->name('bell');
         Route::livewire('/manager', App\Livewire\Notifications\NotificationManager::class)->name('manager');
     });
-
-    // Notification (Legacy)
-    Route::livewire('/notification', NotificationIndex::class)->name('notification');
 
     // Email Settings
     Route::livewire('/email-settings', EmailIndex::class)->name('email-settings');

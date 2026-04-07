@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Models\Role;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @param Role $resource
-     *
-     * @return array
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
-        $role = parent::toArray($request);
-
         return [
             'id' => (int) $this->resource->id,
             'name' => $this->resource->name,

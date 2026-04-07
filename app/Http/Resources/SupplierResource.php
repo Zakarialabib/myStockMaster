@@ -4,33 +4,29 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Models\Supplier;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SupplierResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @param Supplier $resource
-     *
-     * @return array
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         return [
-            'id' => $this->resource->id,
-            'uuid' => $this->resource->uuid,
-            'name' => $this->resource->name,
-            'email' => $this->resource->email,
-            'phone' => $this->resource->phone,
-            'address' => $this->resource->address,
-            'city' => $this->resource->city,
-            'country' => $this->resource->country,
-            'tax_number' => $this->resource->tax_number,
-            'deleted_at' => $this->resource->deleted_at ? $this->resource->deleted_at->format('Y-m-d H:i:s') : null,
-            'created_at' => $this->resource->created_at->format('Y-m-d H:i:s'),
-            'updated_by' => $this->resource->updated_by->format('Y-m-d H:i:s'),
+            'id' => $this->id,
+            'uuid' => $this->uuid,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'city' => $this->city,
+            'country' => $this->country,
+            'tax_number' => $this->tax_number,
+            'deleted_at' => $this->deleted_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

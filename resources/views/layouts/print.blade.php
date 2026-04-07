@@ -1,170 +1,54 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>@yield('title') || {{ config('app.name') }}</title>
-
+    <title>@yield('title') | {{ config('app.name') }}</title>
+    @vite(['resources/css/app.css'])
     <style>
-        @font-face {
-            font-family: 'Cairo';
-            src: url('./fonts/cairo.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+            @page { margin: 15mm; }
         }
-
-        * {
-            font-family: 'Cairo' !important;
-        }
-
-        body {
-            margin: 0;
-            padding: 10px 25px 0px 25px;
-            background: #ffffff;
-            font-size: 13px;
-            line-height: 15px;
-            position: relative;
-            width: 80%;
-            height: 100%;
-            -webkit-font-smoothing: antialiased;
-            background-size: cover;
-        }
-
-        div,
-        p,
-        a,
-        li,
-        td {
-            -webkit-text-size-adjust: none;
-        }
-
-
-        p {
-            padding: 0 !important;
-            margin-top: 0 !important;
-            margin-right: 0 !important;
-            margin-bottom: 0 !important;
-            margin-left: 0 !important;
-            font-size: 11px;
-            line-height: 13px;
-        }
-
-        .row {
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-        }
-
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: none;
-            padding-top: 4px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        }
-
-        thead th {
-            background-color: #2980b9;
-            color: #ffffff;
-            text-align: left;
-            border: none;
-            padding: 8px;
-        }
-
-        tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
-        }
-
-        td {
-            border: none;
-            padding: 8px;
-            text-align: left;
-        }
-
-        tfoot tr th:first-child {
-            text-align: left;
-        }
-
-        tr {
-            border: none;
-        }
-
-        .col {
-            -ms-flex-preferred-size: 0;
-            flex-basis: 0;
-            -webkit-box-flex: 1;
-            -ms-flex-positive: 1;
-            flex-grow: 1;
-            max-width: 100%;
-        }
-
-        .col-12 {
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 100%;
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-
-        .col-6 {
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 50%;
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
-        .text-center {
-            text-align: center;
-            margin: 0 10px;
-            align-content: center;
-        }
-
-        .text-right {
-            text-align: right;
-            align-content: right;
-        }
-
-        @page {
-            header: myheader;
-            footer: myfooter;
-        }
+        body { background: #f9fafb; font-family: 'Inter', sans-serif; color: #374151; }
+        .print-container { max-width: 210mm; margin: 2rem auto; background: white; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        @media print { .print-container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; } }
     </style>
-
 </head>
-
-<body>
-
-
-    <div class="pageStyle">
-        @yield('content')
-    </div>
-    
-    <!--mpdf 
-    <htmlpageheader name="myheader">
-        @if(settings()->invoice_header)
-        {!! File::get(public_path('print/invoice-header.html')) !!}
-        @endif
-    </htmlpageheader>
-
-    <htmlpagefooter name="myfooter">
-        <div style="text-align:center; font-size:10pt;">
-             {{ settings()->company_name ?? config('app.name') }} &copy;
-            {{ date('Y') }} - {{ __('Page') }} {PAGENO} {{ __('of') }} {nbpg}
-            @if(settings()->invoice_footer)
-            {{-- {!! File::get(public_path('print/invoice-footer.html')) !!} --}}
-            @endif
+<body class="antialiased">
+    <div class="print-container">
+        <!-- Print Header -->
+        <div class="flex justify-between items-start mb-8 pb-6 border-b border-gray-200">
+            <div class="w-1/2">
+                @if(isset($logo) && $logo)
+                    <img src="{{ $logo }}" alt="Logo" class="h-16 object-contain mb-4">
+                @endif
+                <h2 class="text-xl font-bold text-gray-900">{{ settings()->company_name ?? config('app.name') }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ settings()->company_address }}</p>
+                <p class="text-sm text-gray-500">{{ settings()->company_phone }}</p>
+                <p class="text-sm text-gray-500">{{ settings()->company_email }}</p>
+            </div>
+            <div class="w-1/2 text-right">
+                <h1 class="text-3xl font-extrabold text-gray-800 uppercase tracking-wider mb-2">@yield('title')</h1>
+                @yield('header_right')
+            </div>
         </div>
-    </htmlpagefooter>
 
-    <sethtmlpageheader name="myheader" show-this-page="1" />
-    <sethtmlpagefooter name="myfooter" page="O" value="on" show-this-page="1" />
-    mpdf-->
+        <!-- Print Content -->
+        @yield('content')
 
+        <!-- Print Footer -->
+        <div class="mt-12 pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
+            <p>{{ settings()->footer_text ?? 'Thank you for your business!' }}</p>
+            <p class="mt-1">{{ settings()->company_name ?? config('app.name') }} &copy; {{ date('Y') }}</p>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            setTimeout(function() { window.print(); }, 500);
+        }
+    </script>
 </body>
-
 </html>

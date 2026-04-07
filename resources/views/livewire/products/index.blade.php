@@ -1,6 +1,6 @@
 <div>
 
-    <x-page-container title="{{ __('Products') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Products')]]" :show-filters="true">
+    <x-page-container title="{{ __('Products') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Products'), 'url' => route('products.index')]]" :show-filters="true">
         <x-slot name="actions">
             @can('product_import')
                 <x-button wire:click="importModal" secondary icon="fas fa-upload">
@@ -40,76 +40,55 @@
 
             <x-table>
                 <x-slot name="thead">
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-hashtag text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('ID') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th sortable wire:click="sortBy('name')" :direction="$sorts['name'] ?? null"
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th sortable wire:click="sortingBy('name')" :direction="$sortBy === 'name' ? $sortDirection : null">
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-tag text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Name') }}</span>
-                            @if ($sorts['name'] ?? null)
-                                <i
-                                    class="fas fa-sort-{{ $sorts['name'] === 'asc' ? 'up' : 'down' }} text-blue-500 w-3 h-3"></i>
-                            @else
-                                <i class="fas fa-sort text-gray-400 w-3 h-3"></i>
-                            @endif
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-boxes text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Quantity') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-dollar-sign text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Price') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-coins text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Cost') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-percentage text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Discounted Price') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th sortable wire:click="sortBy('category_id')" :direction="$sorts['category_id'] ?? null"
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th sortable wire:click="sortingBy('category_id')" :direction="$sortBy === 'category_id' ? $sortDirection : null">
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-folder text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Category') }}</span>
-                            @if ($sorts['category_id'] ?? null)
-                                <i
-                                    class="fas fa-sort-{{ $sorts['category_id'] === 'asc' ? 'up' : 'down' }} text-blue-500 w-3 h-3"></i>
-                            @else
-                                <i class="fas fa-sort text-gray-400 w-3 h-3"></i>
-                            @endif
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-warehouse text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Warehouse') }}</span>
                         </div>
                     </x-table.th>
-                    <x-table.th
-                        class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600">
+                    <x-table.th>
                         <div class="flex items-center space-x-2">
                             <i class="fas fa-cogs text-gray-400 dark:text-gray-500 w-3 h-3"></i>
                             <span>{{ __('Actions') }}</span>
@@ -324,11 +303,37 @@
                 </div>
             </div>
 
-            <livewire:products.show :product="$product" />
+            <livewire:products.show />
 
             <livewire:products.create />
 
             <livewire:products.import />
+
+            <!-- Bulk Action Preview Modal -->
+            <x-modal wire:model="previewBulkAction">
+                <x-slot name="title">
+                    {{ __('Confirm Bulk Action') }}
+                </x-slot>
+                <x-slot name="content">
+                    <div class="space-y-4">
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {{ __('You are about to perform a bulk') }} <strong>{{ $bulkActionType }}</strong> {{ __('action on') }} 
+                            <strong>{{ count($selected) }}</strong> {{ __('selected item(s).') }}
+                        </p>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            {{ __('Are you sure you want to proceed?') }}
+                        </p>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <x-button variant="secondary" wire:click="$set('previewBulkAction', false)">
+                            {{ __('Cancel') }}
+                        </x-button>
+                        <x-button :variant="$bulkActionType === 'delete' ? 'danger' : 'primary'" wire:click="confirmBulkAction">
+                            {{ __('Confirm') }}
+                        </x-button>
+                    </div>
+                </x-slot>
+            </x-modal>
         </div>
     </x-page-container>
 </div>

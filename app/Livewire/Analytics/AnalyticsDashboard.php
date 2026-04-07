@@ -11,13 +11,11 @@ use App\Models\Product;
 use App\Traits\WithAlert;
 use Carbon\Carbon;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
 
-#[Lazy]
 class AnalyticsDashboard extends Component
 {
     use WithAlert;
@@ -29,22 +27,20 @@ class AnalyticsDashboard extends Component
     }
 
     #[Validate('required|date')]
-    public $dateFrom = '';
+    public string $dateFrom = '';
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo = '';
+    public string $dateTo = '';
 
-    public $selectedProduct = null;
+    public ?int $selectedProduct = null;
 
-    public $analyticsData = [];
+    public array $analyticsData = [];
 
-    public $revenueData = [];
+    public array $revenueData = [];
 
-    public $priceTrends = [];
+    public array $priceTrends = [];
 
-    public $loading = false;
-
-    public $search = '';
+    public string $search = '';
 
     public function mount(): void
     {
@@ -72,7 +68,6 @@ class AnalyticsDashboard extends Component
 
     public function loadAnalytics(): void
     {
-        $this->loading = true;
 
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -96,8 +91,6 @@ class AnalyticsDashboard extends Component
             }
         } catch (Throwable $throwable) {
             $this->alert('error', __('Failed to load analytics.') . ' ' . $throwable->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 
@@ -108,7 +101,22 @@ class AnalyticsDashboard extends Component
             $data = $type === 'revenue' ? $this->revenueData : $this->analyticsData;
 
             return response()->streamDownload(function () use ($data) {
-                echo json_encode($data, JSON_PRETTY_PRINT);
+                $generator = function () use ($data) {
+                    yield '{';
+                    $first = true;
+                    foreach ($data as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);

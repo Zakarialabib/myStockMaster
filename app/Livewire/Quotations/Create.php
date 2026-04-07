@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
+use App\Livewire\Forms\QuotationForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\Quotation;
-use App\Models\QuotationDetails;
+use App\Services\QuotationService;
 use App\Traits\LivewireCartTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
-use App\Livewire\Forms\QuotationForm;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -23,22 +19,6 @@ class Create extends Component
     use WithModels;
 
     public QuotationForm $form;
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     public function proceed(): void
     {
@@ -71,7 +51,7 @@ class Create extends Component
         $this->form->date = date('Y-m-d');
     }
 
-    public function store()
+    public function store(QuotationService $quotationService)
     {
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
@@ -79,42 +59,16 @@ class Create extends Component
             return;
         }
 
-        DB::transaction(function (): void {
-            $this->form->validate();
+        $this->form->validate();
 
-            $quotation = Quotation::create([
-                'date' => $this->form->date,
-                'customer_id' => $this->form->customer_id,
-                'warehouse_id' => $this->form->warehouse_id,
-                'user_id' => Auth::user()->id,
-                'tax_percentage' => $this->form->tax_percentage,
-                'discount_percentage' => $this->form->discount_percentage,
-                'shipping_amount' => $this->form->shipping_amount * 100,
-                'total_amount' => $this->form->total_amount * 100,
-                'status' => $this->form->status,
-                'note' => $this->form->note,
-                'tax_amount' => (int) $this->cartTax * 100,
-                'discount_amount' => (int) $this->cartDiscount * 100,
-            ]);
+        $quotationService->create(
+            $this->form->all(),
+            $this->cartContent,
+            $this->cartTax,
+            $this->cartDiscount
+        );
 
-            foreach ($this->cartContent as $cart_item) {
-                QuotationDetails::create([
-                    'quotation_id' => $quotation->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
-                ]);
-            }
-
-            $this->clearCart();
-        });
+        $this->clearCart();
 
         $this->alert('success', __('Quotation created successfully!'));
 

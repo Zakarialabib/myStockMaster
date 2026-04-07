@@ -103,6 +103,10 @@ if (! function_exists('format_date')) {
         $settings = settings();
         $date_format = $settings->default_date_format;
 
+        if ($date instanceof Illuminate\Support\Carbon) {
+            return $date->format($date_format);
+        }
+
         return date($date_format, strtotime($date));
     }
 }

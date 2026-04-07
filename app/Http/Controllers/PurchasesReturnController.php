@@ -6,12 +6,13 @@ namespace App\Http\Controllers;
 
 use App\Models\PurchaseReturn;
 use App\Models\Supplier;
-use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 class PurchasesReturnController extends Controller
 {
-    public function show(PurchaseReturn $purchase_return)
+    public function show(PurchaseReturn $purchase_return): View
     {
         abort_if(Gate::denies('purchase_return_show'), 403);
 
@@ -20,7 +21,7 @@ class PurchasesReturnController extends Controller
         return view('admin.purchasesreturn.show', compact('purchase_return', 'supplier'));
     }
 
-    public function destroy(PurchaseReturn $purchase_return)
+    public function destroy(PurchaseReturn $purchase_return): RedirectResponse
     {
         abort_if(Gate::denies('purchase_return_delete'), 403);
 

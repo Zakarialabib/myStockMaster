@@ -4,108 +4,78 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class CategoryController extends BaseController
+class CategoryController extends Controller
 {
     /**
      * Retrieve a list of categories with optional filters and pagination.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        try {
-            if ($request->get('_end') !== null) {
-                $limit = $request->get('_end') ? $request->get('_end') : 10;
-                $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                $order = $request->get('_order') ? $request->get('_order') : 'asc';
-                $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
-                // Filters
-                $where_raw = ' 1=1 ';
+        if ($request->get('_end') !== null) {
+            $limit = $request->get('_end') ? $request->get('_end') : 10;
+            $offset = $request->get('_start') ? $request->get('_start') : 0;
 
-                // capture brand_id filter
-                // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-                // if ($brand_id !== '') {
-                //     $where_raw .= " AND (brand_id =  $brand_id)";
-                // }
-                // capture sort fields
-                $sort_array = explode(',', $sort);
+            $order = $request->get('_order') ? $request->get('_order') : 'asc';
+            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
+            // Filters
+            $where_raw = ' 1=1 ';
 
-                if (count($sort_array) > 0) {
-                    // retireve ordered and limit categories list
-                    $categories = Category::whereRaw($where_raw)
-                        // ->orderByRaw("COALESCE($sort)")
-                        // ->offset($offset)
-                        // ->limit($limit)
-                        ->get();
-                } else {
-                    // retireve ordered and limit categories list
-                    $categories = Category::orderBy($sort, $order)
-                        // ->offset($offset)
-                        // ->limit($limit)
-                        ->get();
-                }
-            } else {
-                // retireve all categories
-                $categories = Category::get();
-            }
-
-            return $this->sendResponse($categories, 'Category List');
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+            // capture brand_id filter
+            // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
+            // if ($brand_id !== '') {
+            //     $where_raw .= " AND (brand_id =  $brand_id)";
+            // }
+            $categories = Category::whereRaw($where_raw)
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            // retireve all categories
+            $categories = Category::get();
         }
+
+        return CategoryResource::collection($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request): CategoryResource
     {
-        DB::beginTransaction();
+        $category = Category::create($request->all());
 
-        try {
-            $input = $request->all();
-            $category = Category::create($input);
-            DB::commit();
-
-            return $this->sendResponse($category, 'Category updated successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return new CategoryResource($category);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
      */
-    public function show($id)
+    public function show(int $id): CategoryResource|JsonResponse
     {
-        try {
-            $category = Category::find($id);
+        $category = Category::find($id);
 
-            if (is_null($category)) {
-                return $this->sendError('Category not found');
-            } else {
-                return $this->sendResponse($category, 'Category retrieved successfully');
-            }
-        } catch (Exception $e) {
-            return $this->sendError($e->getMessage());
+        if (is_null($category)) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
+
+        return new CategoryResource($category);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param int $id
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, int $id): CategoryResource
     {
         $category = Category::findOrFail($id);
         $category->update($request->all());
@@ -115,20 +85,12 @@ class CategoryController extends BaseController
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param int $id
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        try {
-            $category = Category::findorFail($id);
-            $category->delete();
+        $category = Category::findOrFail($id);
+        $category->delete();
 
-            return $this->sendResponse($category, 'Category deleted successfully');
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return $this->sendError($e->getMessage());
-        }
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }

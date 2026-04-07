@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
-use App\Enums\MovementType;
-use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
+use App\Livewire\Forms\SaleForm;
 use App\Livewire\Utils\WithModels;
-use App\Models\Movement;
 use App\Models\Product;
-use App\Models\ProductWarehouse;
 use App\Models\Sale;
-use App\Models\SaleDetails;
+use App\Services\SaleService;
 use App\Traits\LivewireCartTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Edit extends Component
 {
     use LivewireCartTrait;
+    use WithAlert;
     use WithModels;
+
+    public SaleForm $form;
 
     public Sale $sale;
 
@@ -40,37 +38,6 @@ class Edit extends Component
     public $check_quantity;
 
     public $price;
-
-    #[Validate('integer|min:0|max:100')]
-    public $tax_percentage;
-
-    #[Validate('integer|min:0|max:100')]
-    public $discount_percentage;
-
-    #[Validate('required|integer')]
-    public $customer_id;
-
-    #[Validate('required|integer')]
-    public $warehouse_id;
-
-    #[Validate('required|numeric')]
-    public $total_amount;
-
-    #[Validate('numeric')]
-    public $paid_amount;
-
-    #[Validate('numeric')]
-    public $shipping_amount;
-
-    public $note;
-
-    #[Validate('required|integer|max:255')]
-    public $status;
-
-    #[Validate('required|string|max:255')]
-    public string $payment_method;
-
-    public $date;
 
     public $discount_type;
 
@@ -109,23 +76,14 @@ class Edit extends Component
         }
 
         $this->reference = $this->sale->reference;
-        $this->date = $this->sale->date;
-        $this->customer_id = $this->sale->customer_id;
-        $this->warehouse_id = $this->sale->warehouse_id;
-        $this->status = $this->sale->status;
-        $this->payment_method = $this->sale->payment_method;
-        $this->paid_amount = $this->sale->paid_amount;
-        $this->note = $this->sale->note;
-        $this->tax_percentage = $this->sale->tax_percentage;
-        $this->discount_percentage = $this->sale->discount_percentage;
-        $this->shipping_amount = $this->sale->shipping_amount;
-        $this->total_amount = $this->sale->total_amount;
+
+        $this->form->setSale($this->sale);
     }
 
     public function proceed(): void
     {
-        if ($this->customer_id !== null) {
-            $this->store();
+        if ($this->form->customer_id !== null) {
+            $this->update();
         } else {
             $this->alert('error', __('Please select a customer!'));
         }
@@ -133,104 +91,45 @@ class Edit extends Component
 
     public function update(): void
     {
-        if (! $this->warehouse_id) {
+        if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
 
             return;
         }
 
-        DB::transaction(function () {
-            $this->validate();
+        $this->form->validate();
 
-            if (in_array($this->sale->status, [SaleStatus::COMPLETED, SaleStatus::RETURNED, SaleStatus::CANCELED])) {
-                $this->alert('error', __('Cannot update a completed, returned or canceled sale.'));
+        if (in_array($this->sale->status, [SaleStatus::COMPLETED, SaleStatus::RETURNED, SaleStatus::CANCELED])) {
+            $this->alert('error', __('Cannot update a completed, returned or canceled sale.'));
 
-                return redirect()->back();
-            }
+            return;
+        }
 
-            // Determine payment status
-            $due_amount = $this->total_amount - $this->paid_amount;
+        $saleService = app(SaleService::class);
+        $saleService->update(
+            $this->sale,
+            [
+                'date' => $this->form->date,
+                'customer_id' => $this->form->customer_id,
+                'warehouse_id' => $this->form->warehouse_id,
+                'tax_percentage' => $this->form->tax_percentage,
+                'discount_percentage' => $this->form->discount_percentage,
+                'shipping_amount' => $this->form->shipping_amount,
+                'paid_amount' => $this->form->paid_amount,
+                'total_amount' => $this->form->total_amount,
+                'payment_method' => $this->form->payment_method,
+                'note' => $this->form->note,
+            ],
+            $this->cartContent->toArray(),
+            $this->cartTax,
+            $this->cartDiscount
+        );
 
-            if ($due_amount === $this->total_amount) {
-                $payment_status = PaymentStatus::PENDING;
-                $this->status = SaleStatus::PENDING;
-            } elseif ($due_amount > 0) {
-                $payment_status = PaymentStatus::PARTIAL;
-                $this->status = SaleStatus::PENDING;
-            } else {
-                $payment_status = PaymentStatus::PAID;
-                $this->status = SaleStatus::COMPLETED;
-            }
+        $this->clearCart();
 
-            // Delete previous sale details
-            foreach ($this->sale->saleDetails as $sale_detail) {
-                $sale_detail->delete();
-            }
+        $this->alert('success', __('Sale Updated succesfully !'));
 
-            $this->sale->update([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'customer_id' => $this->customer_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount * 100,
-                'paid_amount' => $this->paid_amount * 100,
-                'total_amount' => $this->total_amount * 100,
-                'due_amount' => $due_amount * 100,
-                'status' => $this->status,
-                'payment_status' => $payment_status,
-                'payment_method' => $this->payment_method,
-                'note' => $this->note,
-                'tax_amount' => (int) ($this->cartTax * 100),
-                'discount_amount' => (int) ($this->cartDiscount * 100),
-            ]);
-
-            foreach ($this->cartContent as $cart_item) {
-                SaleDetails::create([
-                    'sale_id' => $this->sale->id,
-                    'product_id' => $cart_item['id'],
-                    'warehouse_id' => $this->warehouse_id,
-                    'name' => $cart_item['name'],
-                    'code' => $cart_item['attributes']['code'],
-                    'quantity' => $cart_item['quantity'],
-                    'price' => $cart_item['price'] * 100,
-                    'unit_price' => $cart_item['attributes']['unit_price'] * 100,
-                    'sub_total' => $cart_item['attributes']['sub_total'] * 100,
-                    'product_discount_amount' => $cart_item['attributes']['product_discount'] * 100,
-                    'product_discount_type' => $cart_item['attributes']['product_discount_type'],
-                    'product_tax_amount' => $cart_item['attributes']['product_tax'] * 100,
-                ]);
-
-                $product = Product::findOrFail($cart_item['id']);
-                $product_warehouse = ProductWarehouse::where('product_id', $product->id)
-                    ->where('warehouse_id', $this->warehouse_id)
-                    ->first();
-
-                $new_quantity = $product_warehouse->qty + $cart_item['quantity'];
-
-                $product_warehouse->update([
-                    'qty' => $new_quantity,
-                ]);
-
-                $movement = new Movement([
-                    'type' => MovementType::PURCHASE,
-                    'quantity' => $cart_item['quantity'],
-                    'price' => $cart_item['price'] * 100,
-                    'date' => date('Y-m-d'),
-                    'movable_type' => $product::class,
-                    'movable_id' => $product->id,
-                    'user_id' => Auth::user()->id,
-                ]);
-
-                $movement->save();
-            }
-
-            $this->clearCart();
-
-            $this->alert('success', __('Sale Updated succesfully !'));
-
-            return redirect()->route('sales.index');
-        });
+        $this->redirectRoute('sales.index', navigate: true);
     }
 
     public function render()
@@ -238,16 +137,16 @@ class Edit extends Component
         return view('livewire.sales.edit');
     }
 
-    public function updatedWarehouseId($value): void
+    public function updatedFormWarehouseId($value): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function updatedStatus($value): void
+    public function updatedFormStatus($value): void
     {
-        if ($value === SaleStatus::COMPLETED->value) {
-            $this->paid_amount = $this->total_amount;
+        if ($value === (string) SaleStatus::COMPLETED->value || $value === SaleStatus::COMPLETED->value) {
+            $this->form->paid_amount = $this->form->total_amount;
         }
     }
 }

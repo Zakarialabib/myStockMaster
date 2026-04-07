@@ -12,10 +12,8 @@ class ComprehensiveCustomerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         // Create different types of customers
         $this->createRetailCustomers();
@@ -287,7 +285,7 @@ class ComprehensiveCustomerSeeder extends Seeder
             'updated_at' => now(),
         ];
 
-        DB::table('customers')->insert($customer);
+        DB::table('customers')->insertOrIgnore($customer);
     }
 
     private function generateTaxNumber($customerType)

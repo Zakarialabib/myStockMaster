@@ -23,51 +23,54 @@ class ProfitLossReport extends Component
     use WithAlert;
 
     #[Validate('required|date|before:end_date')]
-    public $start_date;
+    public string $start_date;
 
     #[Validate('required|date|after:start_date')]
-    public $end_date;
+    public string $end_date;
 
-    public $total_sales = 0;
+    public int $total_sales = 0;
 
-    public $sales_amount = 0;
+    public float|int $sales_amount = 0;
 
-    public $total_purchases = 0;
+    public int $total_purchases = 0;
 
-    public $purchases_amount = 0;
+    public float|int $purchases_amount = 0;
 
-    public $total_sale_returns = 0;
+    public int $total_sale_returns = 0;
 
-    public $sale_returns_amount = 0;
+    public float|int $sale_returns_amount = 0;
 
-    public $total_purchase_returns = 0;
+    public int $total_purchase_returns = 0;
 
-    public $purchase_returns_amount = 0;
+    public float|int $purchase_returns_amount = 0;
 
-    public $expenses_amount = 0;
+    public float|int $expenses_amount = 0;
 
-    public $profit_amount = 0;
+    public float|int $profit_amount = 0;
 
-    public $payments_received_amount = 0;
+    public float|int $payments_received_amount = 0;
 
-    public $payments_sent_amount = 0;
+    public float|int $payments_sent_amount = 0;
 
-    public $payments_net_amount = 0;
+    public float|int $payments_net_amount = 0;
 
-    public $warehouse_id;
+    public ?int $warehouse_id = null;
 
-    public $warehouses;
+    public int $completed_purchases = 0;
 
-    public $completed_purchases;
+    public int $pending_purchases = 0;
 
-    public $pending_purchases;
-
-    public $top_selling_products;
+    public array $top_selling_products = [];
 
     public function mount(): void
     {
         $this->setDefaultDates();
-        $this->warehouses = Warehouse::pluck('name', 'id')->toArray();
+    }
+
+    #[Computed]
+    public function warehouses()
+    {
+        return Warehouse::pluck('name', 'id')->toArray();
     }
 
     public function filterByDate($type)

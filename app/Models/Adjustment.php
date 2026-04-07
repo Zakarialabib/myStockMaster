@@ -12,8 +12,46 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int         $id
+ * @property Carbon      $date
+ * @property string      $reference
+ * @property string|null $user_id
+ * @property int|null    $warehouse_id
+ * @property string|null $note
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, AdjustedProduct> $adjustedProducts
+ * @property-read int|null $adjusted_products_count
+ * @property-read User|null $user
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereReference($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment whereWarehouseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment withoutTrashed()
+ *
+ * @mixin \Eloquent
+ */
 class Adjustment extends Model
 {
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     use HasAdvancedFilter;
     use SoftDeletes;
 

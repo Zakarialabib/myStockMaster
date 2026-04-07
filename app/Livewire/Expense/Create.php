@@ -4,52 +4,32 @@ declare(strict_types=1);
 
 namespace App\Livewire\Expense;
 
-use App\Livewire\CashRegister\Create as CashRegisterCreate;
+use App\Livewire\Forms\ExpenseForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\CashRegister;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Services\ExpenseService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
+    use WithAlert;
+    use WithFileUploads;
     use WithModels;
 
     public $createModal = false;
 
     public Expense $expense;
 
-    #[Validate('required|string|max:255')]
-    public $reference;
-
-    #[Validate('required|integer|exists:expense_categories,id')]
-    public $category_id;
-
-    #[Validate('required|date')]
-    public $date;
-
-    #[Validate('required|numeric')]
-    public $amount;
-
-    #[Validate('nullable|min:3')]
-    public $description;
-
-    #[Validate('nullable|date')]
-    public $start_date;
-
-    #[Validate('nullable|date')]
-    public $end_date;
-
-    #[Validate('required|in:none,daily,weekly,monthly,yearly')]
-    public $frequency = 'none';
+    public ExpenseForm $form;
 
     public $user_id;
-
-    public $warehouse_id;
 
     public $cash_register_id;
 
@@ -65,38 +45,37 @@ class Create extends Component
     {
         $this->resetErrorBag();
         $this->resetValidation();
-        $this->date = date('Y-m-d');
+        $this->form->date = date('Y-m-d');
         $this->user_id = auth()->user()->id;
 
         if (settings()->default_warehouse_id !== null) {
-            $this->warehouse_id = settings()->default_warehouse_id;
+            $this->form->warehouse_id = settings()->default_warehouse_id;
         }
 
-        if ($this->user_id && $this->warehouse_id) {
+        if ($this->user_id && $this->form->warehouse_id) {
             $cashRegister = CashRegister::where('user_id', $this->user_id)
-                ->where('warehouse_id', $this->warehouse_id)
+                ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
 
             if ($cashRegister) {
                 $this->cash_register_id = $cashRegister->id;
-            } else {
-                $this->dispatch('createModal')->to(CashRegisterCreate::class);
-
-                return;
             }
         }
 
         $this->createModal = true;
     }
 
-    public function create(): void
+    public function create(ExpenseService $expenseService): void
     {
         $this->validate();
 
-        $this->expense = Expense::create($this->all());
+        $data = $this->form->all();
 
-        $this->expense->user()->associate(auth()->user());
+        $data['user_id'] = $this->user_id;
+        $data['cash_register_id'] = $this->cash_register_id;
+
+        $this->expense = $expenseService->create($data);
 
         $this->alert('success', __('Expense created successfully.'));
 
@@ -104,7 +83,8 @@ class Create extends Component
 
         $this->createModal = false;
 
-        $this->reset(['reference', 'category_id', 'date', 'amount', 'description', 'start_date', 'end_date', 'frequency', 'user_id', 'warehouse_id', 'cash_register_id']);
+        $this->form->reset();
+        $this->reset(['user_id', 'cash_register_id']);
     }
 
     #[Computed]

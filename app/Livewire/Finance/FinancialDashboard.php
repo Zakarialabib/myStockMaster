@@ -14,45 +14,41 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Lazy]
 class FinancialDashboard extends Component
 {
     use WithPagination;
 
     #[Validate('required|date')]
-    public $dateFrom;
+    public string $dateFrom;
 
     #[Validate('required|date|after_or_equal:dateFrom')]
-    public $dateTo;
+    public string $dateTo;
 
-    public $dateRange = 'month';
+    public string $dateRange = 'month';
 
     #[Validate('nullable|date')]
-    public $startDate;
+    public ?string $startDate = null;
 
     #[Validate('nullable|date|after_or_equal:startDate')]
-    public $endDate;
+    public ?string $endDate = null;
 
-    public $kpiData = [];
+    public array $kpiData = [];
 
-    public $profitLossData = [];
+    public array $profitLossData = [];
 
-    public $cashFlowData = [];
+    public array $cashFlowData = [];
 
-    public $breakEvenData = [];
+    public array $breakEvenData = [];
 
-    public $grossMarginData = [];
+    public array $grossMarginData = [];
 
-    public $loading = false;
+    public string $search = '';
 
-    public $search = '';
-
-    public $refreshInterval = 300; // 5 minutes
+    public int $refreshInterval = 300; // 5 minutes
 
     public function placeholder()
     {
@@ -149,7 +145,6 @@ class FinancialDashboard extends Component
 
     public function loadFinancialData()
     {
-        $this->loading = true;
 
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -195,8 +190,6 @@ class FinancialDashboard extends Component
             $this->grossMarginData = $grossMarginAction($dateFrom, $dateTo);
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load financial data: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 
@@ -274,7 +267,22 @@ class FinancialDashboard extends Component
             }
 
             return response()->streamDownload(function () use ($exportData) {
-                echo json_encode($exportData, JSON_PRETTY_PRINT);
+                $generator = function () use ($exportData) {
+                    yield '{';
+                    $first = true;
+                    foreach ($exportData as $key => $value) {
+                        if (! $first) {
+                            yield ',';
+                        }
+                        yield '"' . $key . '":' . json_encode($value);
+                        $first = false;
+                    }
+                    yield '}';
+                };
+
+                foreach ($generator() as $chunk) {
+                    echo $chunk;
+                }
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);

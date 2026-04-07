@@ -7,10 +7,10 @@
 ])
 
 <!-- Page Header -->
-<div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+<div class="max-w-7xl mx-auto px-2 lg:px-4">
     <div class="flex items-center justify-between h-16">
         <!-- Title and Breadcrumbs -->
-        <div class="flex flex-col items-center justify-start">
+        <div class="flex flex-col items-start justify-start">
             @if ($title)
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $title }}</h1>
             @endif

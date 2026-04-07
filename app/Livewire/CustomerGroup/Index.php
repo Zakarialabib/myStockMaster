@@ -6,16 +6,17 @@ namespace App\Livewire\CustomerGroup;
 
 use App\Livewire\Utils\Datatable;
 use App\Models\CustomerGroup;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class Index extends Component
 {
     use Datatable;
+    use WithAlert;
 
     /** @var mixed */
     public $customergroup;

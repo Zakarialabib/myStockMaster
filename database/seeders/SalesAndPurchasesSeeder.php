@@ -110,7 +110,7 @@ class SalesAndPurchasesSeeder extends Seeder
             foreach ($selectedProducts as $product) {
                 $quantity = rand(1, 10);
                 $price = $product->price ?? rand(10, 500);
-                DB::table('sale_details')->insert([
+                DB::table('sale_details')->insertOrIgnore([
                     'sale_id' => $sale->id,
                     'product_id' => $product->id,
                     'name' => $product->name,
@@ -189,7 +189,7 @@ class SalesAndPurchasesSeeder extends Seeder
             foreach ($selectedProducts as $product) {
                 $quantity = rand(5, 50);
                 $price = $product->cost ?? rand(5, 300);
-                DB::table('purchase_details')->insert([
+                DB::table('purchase_details')->insertOrIgnore([
                     'purchase_id' => $purchase->id,
                     'product_id' => $product->id,
                     'name' => $product->name,

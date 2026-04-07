@@ -10,10 +10,8 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('movements', function (Blueprint $table) {
             $table->id();
@@ -21,7 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->decimal('price', 10, 2);
             $table->dateTime('date');
-            $table->morphs('movable');
+            $table->uuidMorphs('movable');
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -29,10 +27,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('movements');
     }

@@ -1,12 +1,12 @@
 <div>
     <div class="flex flex-wrap justify-center">
         <div class="lg:w-1/2 md:w-1/2 sm:w-full flex flex-wrap my-2">
-            <select wire:model.live="perPage"
+            <x-select wire:model.live="perPage"
                 class="w-20 block p-3 leading-5 bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm focus:shadow-outline-blue focus:border-blue-300 mr-3">
                 @foreach ($paginationOptions as $value)
                     <option value="{{ $value }}">{{ $value }}</option>
                 @endforeach
-            </select>
+            </x-select>
         </div>
         <div class="lg:w-1/2 md:w-1/2 sm:w-full my-2">
             <div class="my-2">
@@ -349,14 +349,14 @@
 
                             <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
                                 <x-label for="payment_method" :value="__('Payment Method')" required />
-                                <select wire:model.live="payment_method"
+                                <x-select wire:model.live="payment_method"
                                     class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
                                     name="payment_method" id="payment_method" required>
                                     <option value="Cash">{{ __('Cash') }}</option>
                                     <option value="Bank Transfer">{{ __('Bank Transfer') }}</option>
                                     <option value="Cheque">{{ __('Cheque') }}</option>
                                     <option value="Other">{{ __('Other') }}</option>
-                                </select>
+                                </x-select>
                                 <x-input-error :messages="$errors->first('payment_method')" />
                             </div>
                         </div>

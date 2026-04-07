@@ -7,45 +7,48 @@ namespace App\Livewire\Reports;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Traits\WithAlert;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-#[Lazy]
+
 class SalesReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public $customers;
-
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public string $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public string $end_date;
 
-    public $customer_id;
+    public ?string $customer_id = null;
 
-    public $sale_status;
+    public ?string $sale_status = null;
 
-    public $payment_status;
+    public ?string $payment_status = null;
 
     public function mount(): void
     {
-        $this->customers = Customer::select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->customer_id = '';
         $this->sale_status = '';
         $this->payment_status = '';
+    }
+
+    #[Computed]
+    public function customers()
+    {
+        return Customer::select(['id', 'name'])->get();
     }
 
     public function placeholder()

@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
+use App\Livewire\Forms\QuotationForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Product;
 use App\Models\Quotation;
-use App\Models\QuotationDetails;
+use App\Services\QuotationService;
 use App\Traits\LivewireCartTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -22,37 +20,11 @@ class Edit extends Component
     use LivewireCartTrait;
     use WithModels;
 
+    public QuotationForm $form;
+
     public $quotation;
 
     public $quotation_details;
-
-    public $reference;
-
-    #[Validate('required')]
-    public $customer_id;
-
-    #[Validate('required')]
-    public $warehouse_id;
-
-    #[Validate('required|numeric')]
-    public $total_amount;
-
-    #[Validate('numeric')]
-    public $shipping_amount;
-
-    public $note;
-
-    #[Validate('required|integer|max:255')]
-    public $status;
-
-    #[Validate('required')]
-    public $date;
-
-    #[Validate('integer|min:0|max:100')]
-    public $tax_percentage;
-
-    #[Validate('integer|min:0|max:100')]
-    public $discount_percentage;
 
     public function mount($id, string $cartInstance = 'quotation'): void
     {
@@ -81,59 +53,31 @@ class Edit extends Component
             ]);
         }
 
-        $this->reference = $this->quotation->reference;
-        $this->date = $this->quotation->date;
-        $this->customer_id = $this->quotation->customer_id;
-        $this->warehouse_id = $this->quotation->warehouse_id;
-        $this->status = $this->quotation->status;
-        $this->note = $this->quotation->note;
-        $this->tax_percentage = $this->quotation->tax_percentage;
-        $this->discount_percentage = $this->quotation->discount_percentage;
-        $this->shipping_amount = $this->quotation->shipping_amount;
-        $this->total_amount = $this->quotation->total_amount;
+        $this->form->reference = $this->quotation->reference;
+        $this->form->date = $this->quotation->getAttributes()['date'];
+        $this->form->customer_id = $this->quotation->customer_id;
+        $this->form->warehouse_id = $this->quotation->warehouse_id;
+        $this->form->status = $this->quotation->status;
+        $this->form->note = $this->quotation->note;
+        $this->form->tax_percentage = $this->quotation->tax_percentage;
+        $this->form->discount_percentage = $this->quotation->discount_percentage;
+        $this->form->shipping_amount = $this->quotation->shipping_amount;
+        $this->form->total_amount = $this->quotation->total_amount;
     }
 
-    public function update()
+    public function update(QuotationService $quotationService)
     {
-        DB::transaction(function (): void {
-            foreach ($this->quotation->quotationDetails as $quotation_detail) {
-                $quotation_detail->delete();
-            }
+        $this->form->validate();
 
-            $this->quotation->update([
-                'date' => $this->date,
-                'reference' => $this->reference,
-                'customer_id' => $this->customer_id,
-                'user_id' => Auth::user()->id,
-                'warehouse_id' => $this->warehouse_id,
-                'tax_percentage' => $this->tax_percentage,
-                'discount_percentage' => $this->discount_percentage,
-                'shipping_amount' => $this->shipping_amount * 100,
-                'total_amount' => $this->total_amount * 100,
-                'status' => $this->status,
-                'note' => $this->note,
-                'tax_amount' => $this->cartTax * 100,
-                'discount_amount' => $this->cartDiscount * 100,
-            ]);
+        $quotationService->update(
+            $this->quotation,
+            $this->form->all(),
+            $this->cartContent,
+            $this->cartTax,
+            $this->cartDiscount
+        );
 
-            foreach ($this->cartContent as $cart_item) {
-                QuotationDetails::create([
-                    'quotation_id' => $this->quotation->id,
-                    'product_id' => $cart_item->id,
-                    'name' => $cart_item->name,
-                    'code' => $cart_item->options->code,
-                    'quantity' => $cart_item->qty,
-                    'price' => $cart_item->price * 100,
-                    'unit_price' => $cart_item->options->unit_price * 100,
-                    'sub_total' => $cart_item->options->sub_total * 100,
-                    'product_discount_amount' => $cart_item->options->product_discount * 100,
-                    'product_discount_type' => $cart_item->options->product_discount_type,
-                    'product_tax_amount' => $cart_item->options->product_tax * 100,
-                ]);
-            }
-
-            $this->clearCart();
-        });
+        $this->clearCart();
 
         $this->alert('success', __('Quotation updated Successfully!'));
 
@@ -147,9 +91,19 @@ class Edit extends Component
         return view('livewire.quotations.edit');
     }
 
-    public function updatedWarehouseId($value): void
+    public function hydrate(): void
     {
-        $this->warehouse_id = $value;
-        $this->dispatch('warehouseSelected', $this->warehouse_id);
+        $this->form->total_amount = $this->calculateTotal();
+    }
+
+    public function calculateTotal(): float|int|array
+    {
+        return $this->cartTotal + $this->form->shipping_amount;
+    }
+
+    public function updatedFormWarehouseId($value): void
+    {
+        $this->form->warehouse_id = $value;
+        $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 }

@@ -9,6 +9,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property-read Product|null $product
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TransferDetails advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TransferDetails newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TransferDetails newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TransferDetails query()
+ *
+ * @mixin \Eloquent
+ */
 class TransferDetails extends Model
 {
     use HasAdvancedFilter;

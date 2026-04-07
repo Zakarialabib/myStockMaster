@@ -1,32 +1,25 @@
-@props(['options', 'name', 'label', 'value', 'placeholder' => 'Select an option', 'required' => false, 'disabled' => false, 'multiple' => false, 'error' => false])
+@props([
+    'id' => null,
+    'name' => null,
+    'disabled' => false,
+    'required' => false,
+    'autofocus' => false,
+])
 
 @php
-    $id = Str::random(10);
+    $attributes = $attributes->class([
+        'block w-full text-sm py-2.5 px-3 rounded-xl border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-soft focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:focus:border-primary-500 transition-all duration-200',
+        'disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:cursor-not-allowed' => $disabled,
+        'border-error-300 dark:border-error-700 text-error-900 dark:text-error-100 focus:border-error-500 focus:ring-error-500/20' => $errors->has($name),
+    ])->merge([
+        'id' => $id,
+        'name' => $name,
+        'disabled' => $disabled,
+        'required' => $required,
+        'autofocus' => $autofocus,
+    ]);
 @endphp
 
-<div class="mb-4">
-    <label for="{{ $id }}" class="block text-sm font-medium text-gray-700">
-        {{ $label }}
-        @if($required)
-            <span class="text-red-500">*</span>
-        @endif
-    </label>
-    <select
-        id="{{ $id }}"
-        name="{{ $name }}"
-        {{ $attributes->merge(['class' => 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-hidden focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm']) }}
-        @if($required) required @endif
-        @if($disabled) disabled @endif
-        @if($multiple) multiple @endif
-    >
-        @if(!$multiple)
-            <option value="">{{ $placeholder }}</option>
-        @endif
-        @foreach($options as $option)
-            <option value="{{ $option['value'] }}" @if($option['value'] == $value) selected @endif>{{ $option['label'] }}</option>
-        @endforeach
-    </select>
-    @if($error)
-        <p class="mt-2 text-sm text-red-600" id="email-error">{{ $error }}</p>
-    @endif
-</div>
+<select {{ $attributes }}>
+    {{ $slot }}
+</select>

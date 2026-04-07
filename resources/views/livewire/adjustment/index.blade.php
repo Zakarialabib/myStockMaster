@@ -10,41 +10,18 @@
         </x-slot>
 
         <x-slot name="filters">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Show') }}</label>
-                    <x-input.select wire:model.live="perPage">
-                        @foreach ($paginationOptions as $value)
-                            <option value="{{ $value }}">{{ $value }}</option>
-                        @endforeach
-                    </x-input.select>
-                </div>
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Search') }}</label>
-                    <x-input.text wire:model.live.debounce.500ms="search"
-                        placeholder="{{ __('Search adjustments...') }}" icon="fas fa-search" />
-                </div>
-            </div>
-            @if ($selected)
-                <div
-                    class="flex items-center space-x-2 mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <div class="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
-                        <i class="fas fa-info-circle w-4 h-4"></i>
-                        <span class="text-sm font-medium">{{ $this->selectedCount ?? count($selected) }}
-                            {{ __('selected') }}</span>
-                    </div>
-                    @can('adjustment_delete')
-                        <x-button wire:click="deleteSelected" variant="danger" size="sm" icon="fas fa-trash">
-                            {{ __('Delete Selected') }}
-                        </x-button>
-                    @endcan
-                    <x-button wire:click="$set('selected', [])" variant="secondary" size="sm" icon="fas fa-times">
-                        {{ __('Clear Selected') }}
-                    </x-button>
-                </div>
-            @endif
+            <x-datatable.filters 
+                :per-page="$perPage" 
+                :pagination-options="$paginationOptions" 
+                :selected-count="$this->selectedCount" 
+                :search="$search"
+                search-placeholder="{{ __('Search adjustments...') }}" 
+                wire:model.live.perPage="perPage"
+                wire:model.live.search="search" 
+                wire:click.deleteSelected="deleteSelected"
+                wire:click.resetSelected="$set('selected', [])" 
+                :can-delete="auth()->user()->can('adjustment_delete')" 
+            />
         </x-slot>
 
         <x-table>
@@ -154,19 +131,19 @@
                                 @can('adjustment_show')
                                     <x-button
                                         wire:click="$dispatchTo('adjustment.show', 'showModal', { adjustment: {{ $adjustment->id }} })"
-                                        variant="info" size="sm" icon="fas fa-eye">
+                                        variant="info" size="xs" icon="fas fa-eye">
                                         <span class="sr-only">{{ __('View') }}</span>
                                     </x-button>
                                 @endcan
                                 @can('adjustment_update')
                                     <x-button href="{{ route('adjustments.edit', $adjustment) }}" variant="warning"
-                                        size="sm" icon="fas fa-edit">
+                                        size="xs" icon="fas fa-edit">
                                         <span class="sr-only">{{ __('Edit') }}</span>
                                     </x-button>
                                 @endcan
                                 @can('adjustment_delete')
                                     <x-button wire:click="deleteModal({{ $adjustment->id }})" variant="danger"
-                                        size="sm" icon="fas fa-trash">
+                                        size="xs" icon="fas fa-trash">
                                         <span class="sr-only">{{ __('Delete') }}</span>
                                     </x-button>
                                 @endcan

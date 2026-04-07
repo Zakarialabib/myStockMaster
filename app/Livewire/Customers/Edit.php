@@ -4,81 +4,55 @@ declare(strict_types=1);
 
 namespace App\Livewire\Customers;
 
+use App\Livewire\Forms\CustomerForm;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Models\Role;
+use App\Services\CustomerService;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
-    public $editModal = false;
+    public $showModal = false;
 
     /** @var mixed */
     public $customer;
 
-    #[Validate('required', message: 'The name field is required')]
-    #[Validate('min:3', message: 'The name field must be more than 3 characters.')]
-    #[Validate('max:255', message: 'The name field must be less 255 characters.')]
-    public string $name;
-
-    public $email;
-
-    #[Validate('required', message: 'The phone field is required')]
-    #[Validate('numeric', message: 'The phone field must be a numeric value.')]
-    public $phone;
-
-    public $city;
-
-    public $country;
-
-    public $address;
-
-    public $tax_number;
-
-    public $role;
-
-    public $customer_group_id;
+    public CustomerForm $form;
 
     public function render()
     {
         return view('livewire.customers.edit');
     }
 
-    #[On('editModal')]
+    #[On('showModal')]
     public function openEditModal($id): void
     {
         abort_if(Gate::denies('customer_update'), 403);
 
         $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->customer = Customer::findOrFail($id);
 
-        $this->name = $this->customer->name;
+        $this->form->name = $this->customer->name;
+        $this->form->email = $this->customer->email;
+        $this->form->phone = $this->customer->phone;
+        $this->form->city = $this->customer->city;
+        $this->form->country = $this->customer->country;
+        $this->form->address = $this->customer->address;
+        $this->form->customer_group_id = $this->customer->customer_group_id;
+        $this->form->tax_number = $this->customer->tax_number;
 
-        $this->email = $this->customer->email;
-
-        $this->phone = $this->customer->phone;
-
-        $this->city = $this->customer->city;
-
-        $this->country = $this->customer->country;
-
-        $this->address = $this->customer->address;
-
-        $this->customer_group_id = $this->customer->customer_group_id;
-
-        $this->tax_number = $this->customer->tax_number;
-
-        $this->editModal = true;
+        $this->showModal = true;
     }
 
     #[Computed]
@@ -93,16 +67,15 @@ class Edit extends Component
         return CustomerGroup::pluck('name', 'id')->toArray();
     }
 
-    public function update(): void
+    public function update(CustomerService $customerService): void
     {
         $this->validate();
 
-        // dd($validatedf)
-        $this->customer->update($this->all());
+        $customerService->update($this->customer, $this->form->all());
 
         $this->alert('success', __('Customer updated successfully.'));
 
-        $this->editModal = false;
+        $this->showModal = false;
 
         $this->dispatch('refreshIndex')->to(Index::class);
     }

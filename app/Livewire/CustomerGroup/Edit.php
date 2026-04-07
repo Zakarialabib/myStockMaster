@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\CustomerGroup;
 
+use App\Livewire\Forms\CustomerGroupForm;
 use App\Models\CustomerGroup;
+use App\Services\CustomerGroupService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Edit extends Component
@@ -21,13 +22,7 @@ class Edit extends Component
     /** @var mixed */
     public $customergroup;
 
-    #[Validate('required', message: 'The name field cannot be empty.')]
-    #[Validate('min:3', message: 'The name must be at least 3 characters.')]
-    #[Validate('max:255', message: 'The name may not be greater than 255 characters.')]
-    public $name;
-
-    #[Validate('required', message: 'The percentage field cannot be empty.')]
-    public $percentage;
+    public CustomerGroupForm $form;
 
     /** @var array */
     public function render()
@@ -41,24 +36,23 @@ class Edit extends Component
     public function openModal($id): void
     {
         $this->resetErrorBag();
-
-        $this->resetValidation();
+        $this->form->reset();
 
         $this->customergroup = CustomerGroup::where('id', $id)->firstOrFail();
 
-        $this->name = $this->customergroup->name;
-
-        $this->percentage = $this->customergroup->percentage;
+        $this->form->name = $this->customergroup->name;
+        $this->form->percentage = $this->customergroup->percentage;
 
         $this->editModal = true;
     }
 
-    public function update(): void
+    public function update(CustomerGroupService $customerGroupService): void
     {
         $this->validate();
 
-        $this->customergroup->update(
-            $this->all(),
+        $customerGroupService->update(
+            $this->customergroup,
+            $this->form->all()
         );
 
         $this->alert('success', __('Customer group Updated Successfully.'));

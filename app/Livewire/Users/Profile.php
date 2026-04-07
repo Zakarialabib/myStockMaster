@@ -10,6 +10,7 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -18,20 +19,27 @@ class Profile extends Component
 {
     use WithAlert;
 
-    /** @var mixed */
-    public $user;
+    #[Locked]
+    public ?User $user = null;
 
     #[Validate('required|string|max:255')]
-    public $name;
+    public string $name = '';
 
-    #[Validate('required|email|unique:users,email')]
-    public $email;
+    #[Validate('required|email')]
+    public string $email = '';
 
     #[Validate('required|numeric')]
-    public $phone;
+    public string $phone = '';
 
-    #[Validate('required|string|min:8')]
-    public $password;
+    public string $password = '';
+
+    public string $current_password = '';
+
+    public string $password_confirmation = '';
+
+    public $role;
+
+    public $is_active;
 
     public function mount(): void
     {
@@ -41,6 +49,7 @@ class Profile extends Component
         $this->name = $this->user->name;
         $this->email = $this->user->email;
         $this->phone = $this->user->phone;
+        $this->is_active = $this->user->is_active;
     }
 
     public function render()
@@ -50,9 +59,17 @@ class Profile extends Component
 
     public function update(): void
     {
-        $this->validate();
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $this->user->id,
+            'phone' => 'required|numeric',
+        ]);
 
-        $this->user->update($this->all());
+        $this->user->update([
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ]);
 
         $this->alert('success', __('Profile updated successfully!'));
     }

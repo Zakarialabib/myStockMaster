@@ -4,30 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use App\Models\Quotation;
-use Illuminate\Routing\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 class QuotationController extends Controller
 {
-    public function index()
+    public function index(): RedirectResponse
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
-        return view('admin.quotation.index');
+        return redirect()->route('quotations.index');
     }
 
-    public function show(Quotation $quotation)
+    public function show(Quotation $quotation): RedirectResponse
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
-        $customer = Customer::findOrFail($quotation->customer_id);
-
-        return view('admin.quotation.show', compact('quotation', 'customer'));
+        return redirect()->route('quotation.edit', ['id' => $quotation->id]);
     }
 
-    public function destroy(Quotation $quotation)
+    public function destroy(Quotation $quotation): RedirectResponse
     {
         abort_if(Gate::denies('quotation_delete'), 403);
 
