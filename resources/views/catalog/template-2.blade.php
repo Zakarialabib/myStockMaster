@@ -1,5 +1,19 @@
 @section('title', $entity)
 
+@php
+    $templateStyles = settings('template_styles', []);
+    $primaryColor = $templateStyles['primary_color'] ?? '#557497';
+    $secondaryColor = $templateStyles['secondary_color'] ?? '#BED5EF';
+    $fontFamily = $templateStyles['font_family'] ?? 'sans-serif';
+@endphp
+<style>
+    :root {
+        --theme-primary: {{ $primaryColor }};
+        --theme-secondary: {{ $secondaryColor }};
+        --theme-font: {{ $fontFamily }};
+    }
+</style>
+
 <body class="it-template">
 
     <!--[if lte IE 9]>
@@ -93,31 +107,10 @@
                         </table>
 
                         <div class="body-shape1">
-                            <svg width="416" height="139" viewBox="0 0 416 139" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M366.015 139H0L61.7157 0H416L366.015 139Z"
-                                    fill="url(#paint0_linear_307_104)" />
-                                <defs>
-                                    <linearGradient id="paint0_linear_307_104" x1="280.311" y1="-75.7221"
-                                        x2="280.311" y2="120.434" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0.1344" stop-color="#BED5EF" />
-                                        <stop offset="1" stop-color="#557497" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <x-svg-pattern type="triangle-top" color="var(--theme-primary)" />
                         </div>
                         <div class="body-shape2">
-                            <svg width="498" height="405" viewBox="0 0 498 405" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M309.963 405H0V0H498L309.963 405Z" fill="url(#paint0_linear_307_1187)" />
-                                <defs>
-                                    <linearGradient id="paint0_linear_307_1187" x1="335.564" y1="-220.629"
-                                        x2="335.564" y2="350.906" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0.1344" stop-color="#BED5EF" />
-                                        <stop offset="1" stop-color="#557497" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <x-svg-pattern type="triangle-bottom" color="var(--theme-primary)" />
                         </div>
                     </div>
                     <div class="invoice-buttons">

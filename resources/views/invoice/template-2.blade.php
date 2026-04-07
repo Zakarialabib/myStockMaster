@@ -4,27 +4,55 @@
     <meta charset="UTF-8">
     <title>Invoice {{ $data->reference ?? 'Preview' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @php
+        $templateStyles = settings('template_styles', []);
+        $primaryColor = $templateStyles['primary_color'] ?? '#2563eb';
+        $secondaryColor = $templateStyles['secondary_color'] ?? '#eff6ff';
+        $fontFamily = $templateStyles['font_family'] ?? 'sans-serif';
+    @endphp
     <style>
+        :root {
+            --theme-primary: {{ $primaryColor }};
+            --theme-secondary: {{ $secondaryColor }};
+            --theme-font: {{ $fontFamily }};
+        }
         @media print {
             body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
             .no-print { display: none; }
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            primary: 'var(--theme-primary)',
+                            secondary: 'var(--theme-secondary)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['var(--theme-font)', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen py-10 px-4">
     <div class="no-print max-w-4xl mx-auto flex justify-end mb-4 space-x-4">
-        <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Print Invoice</button>
+        <button onclick="window.print()" class="px-4 py-2 bg-theme-primary text-white rounded hover:opacity-90 transition">Print Invoice</button>
         <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition">Back</a>
     </div>
 
     <div class="max-w-4xl mx-auto bg-white p-10 shadow-lg rounded-lg border border-gray-200">
         <!-- Header Section -->
-        <div class="flex justify-between items-center border-b-4 border-blue-600 pb-8 mb-8">
+        <div class="flex justify-between items-center border-b-4 border-theme-primary pb-8 mb-8">
             <div class="w-1/2">
                 @if(settings('site_logo'))
                     <img src="{{ asset('images/' . settings('site_logo')) }}" alt="Company Logo" class="h-20 object-contain mb-4">
                 @endif
-                <h1 class="text-4xl font-extrabold text-blue-600 uppercase tracking-wider">{{ $entity ?? 'INVOICE' }}</h1>
+                <h1 class="text-4xl font-extrabold text-theme-primary uppercase tracking-wider">{{ $entity ?? 'INVOICE' }}</h1>
             </div>
             <div class="w-1/2 text-right">
                 <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ settings('company_name') }}</h2>
@@ -32,7 +60,7 @@
                     <p class="text-sm text-gray-500 whitespace-pre-line leading-relaxed">{{ settings('company_address') }}</p>
                 @endif
                 @if(checkInvoiceControl('show_email'))
-                    <p class="text-sm text-blue-500 mt-1 font-medium">{{ settings('company_email') }}</p>
+                    <p class="text-sm text-theme-primary opacity-80 mt-1 font-medium">{{ settings('company_email') }}</p>
                 @endif
                 @if(settings('company_tax'))
                     <p class="text-sm text-gray-500 mt-1">Tax ID: <span class="font-medium text-gray-700">{{ settings('company_tax') }}</span></p>
@@ -41,7 +69,7 @@
         </div>
 
         <!-- Meta Information -->
-        <div class="flex justify-between bg-blue-50 p-6 rounded-lg mb-8">
+        <div class="flex justify-between bg-theme-secondary p-6 rounded-lg mb-8">
             <div>
                 <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">Invoice Number</p>
                 <p class="text-lg font-bold text-gray-900">{{ $data->reference ?? 'REF-XXXX' }}</p>
@@ -60,7 +88,7 @@
                 <p class="text-sm text-gray-600 w-2/3 leading-relaxed">{{ $data->customer->address }}</p>
             @endif
             @if(checkInvoiceControl('show_email') && isset($data->customer->email))
-                <p class="text-sm text-blue-500 font-medium mt-2">{{ $data->customer->email }}</p>
+                <p class="text-sm text-theme-primary opacity-80 font-medium mt-2">{{ $data->customer->email }}</p>
             @endif
             @if(isset($data->customer->tax_number))
                 <p class="text-sm text-gray-600 mt-1">Tax ID: {{ $data->customer->tax_number }}</p>
@@ -70,7 +98,7 @@
         <!-- Invoice Table -->
         <div class="overflow-hidden rounded-lg border border-gray-200 mb-8">
             <table class="w-full text-left bg-white">
-                <thead class="bg-blue-600 text-white">
+                <thead class="bg-theme-primary text-white">
                     <tr>
                         <th class="py-4 px-6 font-semibold text-sm tracking-wide">Item Description</th>
                         <th class="py-4 px-6 font-semibold text-sm tracking-wide text-center">Qty</th>
@@ -133,7 +161,7 @@
                 
                 <div class="flex justify-between items-center border-t border-gray-300 pt-4 mb-4">
                     <span class="text-lg font-bold text-gray-900">Total Amount</span>
-                    <span class="text-2xl font-black text-blue-600">{{ format_currency($data->total_amount ?? 0) }}</span>
+                    <span class="text-2xl font-black text-theme-primary">{{ format_currency($data->total_amount ?? 0) }}</span>
                 </div>
 
                 @if(isset($data->paid_amount))

@@ -4,17 +4,42 @@
     <meta charset="UTF-8">
     <title>Invoice {{ $data->reference ?? 'Preview' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @php
+        $templateStyles = settings('template_styles', []);
+        $primaryColor = $templateStyles['primary_color'] ?? '#2563eb';
+        $fontFamily = $templateStyles['font_family'] ?? 'sans-serif';
+    @endphp
     <style>
+        :root {
+            --theme-primary: {{ $primaryColor }};
+            --theme-font: {{ $fontFamily }};
+        }
         @media print {
             body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
             .no-print { display: none; }
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            primary: 'var(--theme-primary)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['var(--theme-font)', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="bg-white text-gray-900 p-8 max-w-4xl mx-auto font-sans">
     <!-- Action Buttons -->
     <div class="no-print flex justify-end mb-8 space-x-4">
-        <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700">Print</button>
+        <button onclick="window.print()" class="px-4 py-2 bg-theme-primary text-white rounded shadow hover:opacity-90">Print</button>
         <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded shadow hover:bg-gray-300">Back</a>
     </div>
 
@@ -118,7 +143,7 @@
             @endif
             <div class="flex justify-between py-4 text-xl font-bold border-b-2 border-gray-800">
                 <span class="text-gray-800">Grand Total:</span>
-                <span class="text-blue-600">{{ format_currency($data->total_amount ?? 0) }}</span>
+                <span class="text-theme-primary">{{ format_currency($data->total_amount ?? 0) }}</span>
             </div>
             @if(isset($data->paid_amount))
             <div class="flex justify-between py-2 text-md">

@@ -494,31 +494,46 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
-                                                    @foreach ($analyticsControl as $index => $control)
-                                                    <tr>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {{ $control['name'] }}
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <button wire:click="toggleStatus({{ $index }})"
-                                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $control['status'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                                {{ $control['status'] ? __('Active') : __('Inactive') }}
-                                                            </button>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <x-select wire:model="analyticsControl.{{ $index }}.color"
-                                                                wire:change="changeColor({{ $index }}, $event.target.value)"
-                                                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
-                                                                @foreach ($colors as $color)
-                                                                <option value="{{ $color }}"
-                                                                    @if ($control['color']===$color) selected @endif>
-                                                                    {{ ucfirst($color) }}
-                                                                </option>
-                                                                @endforeach
-                                                            </x-select>
-                                                        </td>
-                                                    </tr>
+                                                    @php
+                                                        $groupedControls = collect($analyticsControl)->groupBy(function ($item) {
+                                                            return $item['location'] ?? 'Dashboard';
+                                                        }, true);
+                                                    @endphp
+                                                    @foreach ($groupedControls as $location => $controls)
+                                                        <tr>
+                                                            <td colspan="3" class="px-6 py-3 bg-gray-100 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                                                {{ $location }}
+                                                            </td>
+                                                        </tr>
+                                                        @foreach ($controls as $index => $control)
+                                                        <tr>
+                                                            <td
+                                                                class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900">
+                                                                <div>{{ $control['name'] }}</div>
+                                                                @if(!empty($control['description']))
+                                                                    <div class="text-xs text-gray-500 mt-1 font-normal">{{ $control['description'] }}</div>
+                                                                @endif
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <button type="button" wire:click="toggleStatus('{{ $index }}')"
+                                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $control['status'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                                    {{ $control['status'] ? __('Active') : __('Inactive') }}
+                                                                </button>
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <x-select wire:model="analyticsControl.{{ $index }}.color"
+                                                                    wire:change="changeColor('{{ $index }}', $event.target.value)"
+                                                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                                                    @foreach ($colors as $color)
+                                                                    <option value="{{ $color }}"
+                                                                        @if ($control['color']===$color) selected @endif>
+                                                                        {{ ucfirst($color) }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </x-select>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>

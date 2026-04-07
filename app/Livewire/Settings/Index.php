@@ -55,12 +55,14 @@ class Index extends Component
     public function toggleStatus(mixed $index): void
     {
         $this->analyticsControl[$index]['status'] = ! $this->analyticsControl[$index]['status'];
+        $this->settings->analytics_control = $this->analyticsControl;
         $this->settings->save();
     }
 
     public function changeColor(mixed $index, mixed $color): void
     {
         $this->analyticsControl[$index]['color'] = $color;
+        $this->settings->analytics_control = $this->analyticsControl;
         $this->settings->save();
     }
 
