@@ -79,7 +79,8 @@ final class CalculateBreakEvenAction
 
         // Calculate average variable cost per sale (COGS)
         $totalVariableCosts = SaleDetails::whereIn('sale_id', $sales->pluck('id'))
-            ->sum(DB::raw('quantity * (SELECT cost FROM products WHERE products.id = sale_details.product_id)'));
+            ->join('products', 'products.id', '=', 'sale_details.product_id')
+            ->sum(DB::raw('sale_details.quantity * products.cost'));
 
         $averageVariableCostPerSale = $totalVariableCosts / $totalSales;
         $contributionMarginPerSale = $averageSaleValue - $averageVariableCostPerSale;

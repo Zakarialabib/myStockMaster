@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Native\Desktop\Facades\Window;
+use Native\Laravel\Facades\Menu;
+use Native\Laravel\Menu\Menu as NativeMenu;
 
 class DesktopServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,20 @@ class DesktopServiceProvider extends ServiceProvider
         if (EnvironmentService::isDesktop() && ! app()->runningInConsole() && ! app()->runningUnitTests()) {
             try {
                 $this->configureDesktopEvents();
+                
+                if (class_exists(Menu::class)) {
+                    Menu::new()
+                        ->appMenu()
+                        ->submenu('View', NativeMenu::new()
+                            ->event(\Native\Laravel\Events\App\WindowToggled::class, 'Toggle Fullscreen', 'CmdOrCtrl+F')
+                            ->event('native.navigate.dashboard', 'Dashboard', 'CmdOrCtrl+D')
+                            ->event('native.navigate.settings', 'Settings', 'CmdOrCtrl+,')
+                        )
+                        ->submenu('Data', NativeMenu::new()
+                            ->event('native.sync.trigger', 'Sync with Cloud', 'CmdOrCtrl+S')
+                        )
+                        ->register();
+                }
             } catch (Exception $e) {
                 Log::warning('Failed to configure NativePHP desktop features: ' . $e->getMessage());
             }
