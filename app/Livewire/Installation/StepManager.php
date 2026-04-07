@@ -18,6 +18,9 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+/**
+ * @property array $steps
+ */
 #[Layout('layouts.guest')]
 class StepManager extends Component
 {
@@ -69,9 +72,9 @@ class StepManager extends Component
     public mixed $company_tax;
 
     // ── Demo selection ──
-    public $selected_business_line = '';
+    public string $selected_business_line = '';
 
-    public $install_demo_data = true;
+    public bool $install_demo_data = true;
 
     public bool $retailQuickStart = false;
 
@@ -101,9 +104,9 @@ class StepManager extends Component
                 $this->company_phone = settings('company_phone', '');
                 $this->company_address = settings('company_address', '');
                 $this->company_tax = settings('company_tax', '');
-                $this->selected_business_line = settings('selected_business_line', '');
-                $this->install_demo_data = settings('install_demo_data', true);
             }
+            $this->selected_business_line = session('selected_business_line', '');
+            $this->install_demo_data = session('install_demo_data', true);
         } catch (Exception) {
             // Ignore if DB not ready
         }
@@ -115,6 +118,9 @@ class StepManager extends Component
             $this->database['port'] = env('DB_PORT', '3306');
             $this->database['database'] = env('DB_DATABASE', '');
             $this->database['username'] = env('DB_USERNAME', 'root');
+            
+            $this->admin_email = 'admin@example.com';
+            
             $this->runPreflightChecks();
         }
     }
@@ -243,7 +249,7 @@ class StepManager extends Component
         $this->requirementErrors = [];
 
         // PHP version
-        $phpOk = PHP_VERSION_ID >= 80200;
+        $phpOk = version_compare(PHP_VERSION, '8.2.0', '>=');
         $this->preflightResults['php_version'] = [
             'label' => 'PHP Version (≥ 8.2)',
             'value' => PHP_VERSION,
@@ -414,8 +420,8 @@ class StepManager extends Component
         $this->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'required|email',
-            'company_phone' => 'required|string',
-            'company_address' => 'required|string',
+            'company_phone' => 'nullable|string',
+            'company_address' => 'nullable|string',
         ]);
     }
 
@@ -521,10 +527,11 @@ class StepManager extends Component
                 'company_phone' => $this->company_phone,
                 'company_address' => $this->company_address,
                 'company_tax' => $this->company_tax,
-                'install_demo_data' => $this->install_demo_data,
-                'selected_business_line' => $this->selected_business_line,
             ]);
         }
+        
+        session(['selected_business_line' => $this->selected_business_line]);
+        session(['install_demo_data' => $this->install_demo_data]);
     }
 
     private function setupDesktopDatabase(): void

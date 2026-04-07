@@ -1,6 +1,20 @@
 @section('title', $entity)
 
 
+@php
+    $templateStyles = settings('template_styles', []);
+    $primaryColor = $templateStyles['primary_color'] ?? '#557497';
+    $secondaryColor = $templateStyles['secondary_color'] ?? '#BED5EF';
+    $fontFamily = $templateStyles['font_family'] ?? 'sans-serif';
+@endphp
+<style>
+    :root {
+        --theme-primary: {{ $primaryColor }};
+        --theme-secondary: {{ $secondaryColor }};
+        --theme-font: {{ $fontFamily }};
+    }
+</style>
+
 <body class="electronics-template">
 
 
@@ -118,34 +132,10 @@
 
                     
                         <div class="body-shape1">
-                            <svg width="850" height="145" viewBox="0 0 850 145" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M102.94 144.999C96.6306 145.048 0 142.432 0 135.175V0H850V47.7965C711.227 15.8466 566.86 11.4548 433.319 62.3735C377.8 83.5416 326.217 100.145 269.824 118.94C217.429 136.403 158.779 144.576 102.94 144.999Z"
-                                    fill="url(#paint0_linear_310_4187)" />
-                                <defs>
-                                    <linearGradient id="paint0_linear_310_4187" x1="572.75" y1="-78.9907"
-                                        x2="572.75" y2="125.633" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0.1344" stop-color="#BED5EF" />
-                                        <stop offset="1" stop-color="#557497" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <x-svg-pattern type="waves" color="var(--theme-primary)" />
                         </div>
                         <div class="body-shape2">
-                            <svg width="850" height="130" viewBox="0 0 850 130" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M747.06 0.000656128C753.369 -0.0479126 850 2.56776 850 9.825V130H0V97.2035C138.773 129.153 283.14 133.545 416.681 82.6265C472.2 61.4584 523.783 44.8554 580.176 26.0601C632.571 8.59695 691.221 0.423874 747.06 0.000656128Z"
-                                    fill="url(#paint0_linear_310_4323)" />
-                                <defs>
-                                    <linearGradient id="paint0_linear_310_4323" x1="277.25" y1="200.819"
-                                        x2="277.25" y2="17.3636" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0.1344" stop-color="#BED5EF" />
-                                        <stop offset="1" stop-color="#557497" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                            <x-svg-pattern type="waves-bottom" color="var(--theme-primary)" />
                         </div>
                         <div class="footer-info">
                             <p class="mb-0">

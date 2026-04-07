@@ -154,18 +154,13 @@ class Quotation extends Model
     }
 
     #[\Override]
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($quotation): void {
-            $prefix = settings()->quotation_prefix;
-
-            $latestQuotation = self::query()->latest()->first();
-
-            $number = $latestQuotation ? intval(substr((string) $latestQuotation->reference, -3)) + 1 : 1;
-
-            $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $prefix = settings('quotation_prefix', 'QT');
+            $quotation->reference = make_reference_id($prefix, self::class);
         });
     }
 

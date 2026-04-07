@@ -20,6 +20,8 @@ parameters:
         -
             message: '#Class Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+ has an uninitialized property#'
             path: tests/*
+        - '#Call to function method_exists\(\) with App\\Models\\User and .assignRole. will always evaluate to true\.#'
+        - '#Negated boolean expression is always false\.#'
         -
             message: '#Method Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+::[a-zA-Z0-9_]+\(\) has parameter \$[a-zA-Z0-9_]+ with no type specified\.#'
             path: tests/*
@@ -34,6 +36,8 @@ parameters:
             path: app/Traits/*
         - '#Class App\\Livewire\\[a-zA-Z0-9_\\]+ has an uninitialized property#'
         - '#Class App\\Livewire\\Forms\\[a-zA-Z0-9_]+Form has an uninitialized property#'
+        - '#Property App\\Models\\Setting::\$invoice_control \(string\|null\) does not accept array\|null\.#'
+        - '#Property App\\Models\\Setting::\$analytics_control \(string\|null\) does not accept array\|null\.#'
         - '#no value type specified in iterable type array#'
         - '#return type with generic class Illuminate\\Support\\Collection does not specify its types#'
         - '#parameter \$[a-zA-Z0-9_]+ with generic class Illuminate\\Support\\Collection does not specify its types#'

@@ -38,6 +38,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null                     $backup_schedule
  * @property string|null                     $invoice_control
  * @property array<array-key, mixed>|null    $analytics_control
+ * @property array<array-key, mixed>|null    $template_styles
+ * @property array<array-key, mixed>|null    $app_style
  * @property string                          $receipt_printer_type
  * @property int|null                        $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -145,8 +147,13 @@ class Setting extends Model
     protected function casts(): array
     {
         return [
+            'app_style' => 'array',
             'analytics_control' => 'array',
+            'template_styles' => 'array',
+            'invoice_control' => 'array',
             'installation_completed' => 'boolean',
+            'is_rtl' => 'boolean',
+            'backup_status' => 'boolean',
         ];
     }
 
@@ -156,22 +163,6 @@ class Setting extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'default_currency_id', 'id');
-    }
-
-    protected function analyticsControl(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value): mixed => json_decode((string) $value, true),
-            set: fn ($value) => json_encode($value),
-        );
-    }
-
-    protected function invoiceControl(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value): mixed => json_decode((string) $value, true),
-            set: fn ($value) => json_encode($value),
-        );
     }
 
     /** Set a specific setting value */

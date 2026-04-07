@@ -112,8 +112,8 @@ class Adjustment extends Model
         parent::boot();
 
         static::creating(static function ($model): void {
-            $number = Adjustment::query()->max('id') + 1;
-            $model->reference = make_reference_id('ADJ', $number);
+            $prefix = settings('adjustment_prefix', 'AD');
+            $model->reference = make_reference_id($prefix, self::class);
         });
     }
     #[\Override]

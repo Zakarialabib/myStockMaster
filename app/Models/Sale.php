@@ -168,13 +168,8 @@ class Sale extends Model
         parent::boot();
 
         static::creating(function ($sale): void {
-            $prefix = settings()->sale_prefix;
-
-            $latestSale = self::query()->latest()->first();
-
-            $number = $latestSale ? intval(substr((string) $latestSale->reference, -3)) + 1 : 1;
-
-            $sale->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $prefix = settings('sale_prefix', 'SL');
+            $sale->reference = make_reference_id($prefix, self::class);
         });
     }
 

@@ -1,5 +1,16 @@
 @section('title', $entity)
 
+@php
+    $templateStyles = settings('template_styles', []);
+    $primaryColor = $templateStyles['primary_color'] ?? '#2563eb';
+    $fontFamily = $templateStyles['font_family'] ?? 'sans-serif';
+@endphp
+<style>
+    :root {
+        --theme-primary: {{ $primaryColor }};
+        --theme-font: {{ $fontFamily }};
+    }
+</style>
 
 <body class="hospital-template">
 

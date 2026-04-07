@@ -207,18 +207,13 @@ class Purchase extends Model
     }
 
     #[\Override]
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($purchase): void {
-            $prefix = settings()->purchase_prefix;
-
-            $latestPurchase = self::query()->latest()->first();
-
-            $number = $latestPurchase ? intval(substr((string) $latestPurchase->reference, -3)) + 1 : 1;
-
-            $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $prefix = settings('purchase_prefix', 'PR');
+            $purchase->reference = make_reference_id($prefix, self::class);
         });
     }
 

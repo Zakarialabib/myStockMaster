@@ -112,9 +112,27 @@ if (! function_exists('format_date')) {
 }
 
 if (! function_exists('make_reference_id')) {
-    function make_reference_id(string $prefix, $number): string
+    /**
+     * Generate a sequential reference ID for a given model.
+     * Extracts the trailing digits from the last created record safely using regex.
+     *
+     * @param string $prefix
+     * @param string $modelClass
+     * @return string
+     */
+    function make_reference_id(string $prefix, string $modelClass): string
     {
-        return $prefix . '-' . str_pad((string) $number, 5, '0', STR_PAD_LEFT);
+        $latest = $modelClass::query()->latest('created_at')->first();
+
+        $number = 1;
+        if ($latest && $latest->reference) {
+            // Extract trailing digits safely (e.g., SL-1000 -> 1000)
+            if (preg_match('/(\d+)$/', (string) $latest->reference, $matches)) {
+                $number = (int)$matches[1] + 1;
+            }
+        }
+
+        return $prefix . '-' . str_pad((string) $number, 3, '0', STR_PAD_LEFT);
     }
 }
 
@@ -149,8 +167,18 @@ if (! function_exists('db_date_format')) {
      * Get the database date format string based on the current driver.
      * Supports MySQL (DATE_FORMAT) and SQLite (strftime).
      */
-    function db_date_format($column, $format): string
+    function db_date_format($column, $format = null): string
     {
+        if ($format === null) {
+            $phpFormat = settings('default_date_format', 'Y-m-d');
+            // Map PHP format to SQL format
+            $format = str_replace(
+                ['Y', 'm', 'd', 'H', 'i', 's'],
+                ['%Y', '%m', '%d', '%H', '%i', '%s'],
+                $phpFormat
+            );
+        }
+
         $isSqlite = Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
 
         if ($isSqlite) {

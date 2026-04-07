@@ -52,9 +52,15 @@
                             </button>
                             <button @click="tab = 'siteConfig'"
                                 :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'siteConfig', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'siteConfig' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2">
+                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
                                 <i class="fas fa-globe w-4 h-4"></i>
                                 <span>{{ __('Site Configuration') }}</span>
+                            </button>
+                            <button @click="tab = 'appearance'"
+                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'appearance', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'appearance' }"
+                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2">
+                                <i class="fas fa-paint-brush w-4 h-4"></i>
+                                <span>{{ __('Appearance') }}</span>
                             </button>
                         </div>
                     </div>
@@ -215,10 +221,12 @@
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         @foreach ($invoice_control as $index => $control)
                                         <div class="flex items-center space-x-2">
-                                            <input type="checkbox" id="{{ $control['name'] }}"
-                                                wire:model="invoice_control.{{ $index }}.status"
-                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                            <x-label :for="$control['name']" :value="__($control['name'])" class="text-sm" />
+                                            <x-checkbox 
+                                                id="invoice_control_{{ $index }}" 
+                                                wire:model.live="invoice_control.{{ $index }}.status" 
+                                                wire:change="updatedInvoiceControl('{{ $control['name'] }}')"
+                                            />
+                                            <x-label for="invoice_control_{{ $index }}" :value="__(str_replace('_', ' ', ucfirst($control['name'])))" class="text-sm" />
                                         </div>
                                         @endforeach
                                     </div>
@@ -492,31 +500,46 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
-                                                    @foreach (settings()->analytics_control as $index => $control)
-                                                    <tr>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {{ $control['name'] }}
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <button wire:click="toggleStatus({{ $index }})"
-                                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $control['status'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                                {{ $control['status'] ? __('Active') : __('Inactive') }}
-                                                            </button>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <x-select wire:model="analyticsControl.{{ $index }}.color"
-                                                                wire:change="changeColor({{ $index }}, $event.target.value)"
-                                                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
-                                                                @foreach ($colors as $color)
-                                                                <option value="{{ $color }}"
-                                                                    @if ($control['color']===$color) selected @endif>
-                                                                    {{ ucfirst($color) }}
-                                                                </option>
-                                                                @endforeach
-                                                            </x-select>
-                                                        </td>
-                                                    </tr>
+                                                    @php
+                                                        $groupedControls = collect($analyticsControl)->groupBy(function ($item) {
+                                                            return $item['location'] ?? 'Dashboard';
+                                                        }, true);
+                                                    @endphp
+                                                    @foreach ($groupedControls as $location => $controls)
+                                                        <tr>
+                                                            <td colspan="3" class="px-6 py-3 bg-gray-100 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                                                {{ $location }}
+                                                            </td>
+                                                        </tr>
+                                                        @foreach ($controls as $index => $control)
+                                                        <tr>
+                                                            <td
+                                                                class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900">
+                                                                <div>{{ $control['name'] }}</div>
+                                                                @if(!empty($control['description']))
+                                                                    <div class="text-xs text-gray-500 mt-1 font-normal">{{ $control['description'] }}</div>
+                                                                @endif
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <button type="button" wire:click="toggleStatus('{{ $index }}')"
+                                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $control['status'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                                    {{ $control['status'] ? __('Active') : __('Inactive') }}
+                                                                </button>
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <x-select wire:model="analyticsControl.{{ $index }}.color"
+                                                                    wire:change="changeColor('{{ $index }}', $event.target.value)"
+                                                                    class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                                                    @foreach ($colors as $color)
+                                                                    <option value="{{ $color }}"
+                                                                        @if ($control['color']===$color) selected @endif>
+                                                                        {{ ucfirst($color) }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </x-select>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -534,6 +557,19 @@
                                     </div>
                                     <div class="p-6">
                                         <livewire:settings.messaging />
+                                    </div>
+                                </div>
+                            </div>
+                            <div x-show="tab === 'appearance'">
+                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                                    <div class="bg-linear-to-r from-teal-500 to-cyan-600 px-6 py-4 border-b border-gray-200">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-paint-brush text-white text-lg"></i>
+                                            <h2 class="text-lg font-semibold text-white">{{ __('Appearance') }}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <livewire:settings.app-customizer />
                                     </div>
                                 </div>
                             </div>
