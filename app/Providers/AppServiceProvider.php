@@ -43,6 +43,26 @@ class AppServiceProvider extends ServiceProvider
         Setting::observe(SettingsObserver::class);
 
         JsonResource::withoutWrapping();
+
+        try {
+            if (Schema::hasTable('settings')) {
+                $settings = Setting::first();
+                if ($settings && $settings->smtp_host) {
+                    config([
+                        'mail.mailer' => $settings->mail_mailer ?? config('mail.mailer'),
+                        'mail.mailers.smtp.host' => $settings->smtp_host,
+                        'mail.mailers.smtp.port' => $settings->smtp_port,
+                        'mail.mailers.smtp.username' => $settings->smtp_username,
+                        'mail.mailers.smtp.password' => $settings->smtp_password,
+                        'mail.mailers.smtp.encryption' => $settings->smtp_encryption,
+                        'mail.from.address' => $settings->mail_from_address,
+                        'mail.from.name' => $settings->mail_from_name ?? config('mail.from.name'),
+                    ]);
+                }
+            }
+        } catch (Exception $e) {
+            // Log or ignore
+        }
     }
 
     private function getLanguages()
