@@ -40,8 +40,6 @@ class ProductAnalytics extends Component
     ])]
     public array $comparisonProducts = [];
 
-    public bool $loading = false;
-
     public bool $showComparison = false;
 
     public function mount($productId = null)
@@ -85,8 +83,6 @@ class ProductAnalytics extends Component
             return;
         }
 
-        $this->loading = true;
-
         try {
             $product = Product::findOrFail($this->productId);
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -109,8 +105,6 @@ class ProductAnalytics extends Component
             }
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load product analytics: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

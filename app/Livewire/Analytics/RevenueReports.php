@@ -35,8 +35,6 @@ class RevenueReports extends Component
 
     public array $revenueData = [];
 
-    public bool $loading = false;
-
     public bool $includeProductBreakdown = true;
 
     public bool $includeCategoryBreakdown = true;
@@ -100,8 +98,6 @@ class RevenueReports extends Component
 
     public function loadRevenueReport()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -131,8 +127,6 @@ class RevenueReports extends Component
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load revenue report: ' . $e->getMessage());
             $this->revenueData = [];
-        } finally {
-            $this->loading = false;
         }
     }
 

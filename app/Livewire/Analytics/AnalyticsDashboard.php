@@ -40,8 +40,6 @@ class AnalyticsDashboard extends Component
 
     public array $priceTrends = [];
 
-    public bool $loading = false;
-
     public string $search = '';
 
     public function mount(): void
@@ -70,7 +68,6 @@ class AnalyticsDashboard extends Component
 
     public function loadAnalytics(): void
     {
-        $this->loading = true;
 
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -94,8 +91,6 @@ class AnalyticsDashboard extends Component
             }
         } catch (Throwable $throwable) {
             $this->alert('error', __('Failed to load analytics.') . ' ' . $throwable->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

@@ -34,8 +34,6 @@ class BreakEvenAnalysis extends Component
 
     public array $scenarioAnalysis = [];
 
-    public bool $loading = false;
-
     // Scenario planning inputs
     #[Validate('numeric|min:-100|max:100')]
     public float|int $fixedCostAdjustment = 0;
@@ -119,7 +117,6 @@ class BreakEvenAnalysis extends Component
 
     public function loadBreakEvenAnalysis()
     {
-        $this->loading = true;
 
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -142,8 +139,6 @@ class BreakEvenAnalysis extends Component
             }
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load break-even analysis: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

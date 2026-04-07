@@ -94,6 +94,10 @@
             <x-footer />
         </div>
     </div>
+
+    @if ($isDesktop)
+        <livewire:native-event-listener />
+    @endif
 </body>
 
 </html>

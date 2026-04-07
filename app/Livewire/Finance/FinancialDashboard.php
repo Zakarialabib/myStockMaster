@@ -46,8 +46,6 @@ class FinancialDashboard extends Component
 
     public array $grossMarginData = [];
 
-    public bool $loading = false;
-
     public string $search = '';
 
     public int $refreshInterval = 300; // 5 minutes
@@ -147,7 +145,6 @@ class FinancialDashboard extends Component
 
     public function loadFinancialData()
     {
-        $this->loading = true;
 
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
@@ -193,8 +190,6 @@ class FinancialDashboard extends Component
             $this->grossMarginData = $grossMarginAction($dateFrom, $dateTo);
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load financial data: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 

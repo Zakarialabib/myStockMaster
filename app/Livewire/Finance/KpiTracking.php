@@ -74,8 +74,6 @@ class KpiTracking extends Component
 
     public function loadKpiData()
     {
-        $this->loading = true;
-
         try {
             $dateFrom = Carbon::parse($this->dateFrom);
             $dateTo = Carbon::parse($this->dateTo);
@@ -103,8 +101,6 @@ class KpiTracking extends Component
             $this->loadComparisonData($dateFrom, $dateTo);
         } catch (Exception $e) {
             session()->flash('error', 'Failed to load KPI data: ' . $e->getMessage());
-        } finally {
-            $this->loading = false;
         }
     }
 
