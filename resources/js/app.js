@@ -41,13 +41,18 @@ const Theme = {
     },
     setRtl(value) {
         window.localStorage.setItem('rtl', value);
+        document.documentElement.dir = value ? 'rtl' : 'ltr';
         document.body.dir = value ? 'rtl' : 'ltr';
     },
 };
 
 // Initialize Theme
-Theme.setDark(Theme.getDark());
-Theme.setRtl(Theme.getRtl());
+if (window.localStorage.getItem('dark') !== null) {
+    Theme.setDark(Theme.getDark());
+}
+if (window.localStorage.getItem('rtl') !== null) {
+    Theme.setRtl(Theme.getRtl());
+}
 
 // Global Alpine Components
 Alpine.data('loadingMask', () => ({
@@ -75,18 +80,21 @@ Alpine.data('loadingMask', () => ({
     },
 }));
 
-Alpine.data('mainState', () => {
+Alpine.data('mainState', (backendRtl = false) => {
     let lastScrollTop = 0;
+    const hasLocalRtl = window.localStorage.getItem('rtl') !== null;
+    const initialRtl = hasLocalRtl ? Theme.getRtl() : backendRtl;
 
     return {
         isDarkMode: Theme.getDark(),
-        isRtl: Theme.getRtl(),
+        isRtl: initialRtl,
         isSidebarOpen: window.innerWidth > 1024,
         isSidebarHovered: false,
         scrollingDown: false,
         scrollingUp: false,
 
         init() {
+            Theme.setRtl(this.isRtl);
             window.addEventListener('scroll', () => {
                 let st = window.pageYOffset || document.documentElement.scrollTop;
                 if (st > lastScrollTop) {

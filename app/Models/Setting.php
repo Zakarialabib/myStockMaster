@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null                     $invoice_control
  * @property array<array-key, mixed>|null    $analytics_control
  * @property array<array-key, mixed>|null    $template_styles
+ * @property array<array-key, mixed>|null    $app_style
  * @property string                          $receipt_printer_type
  * @property int|null                        $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -146,6 +147,7 @@ class Setting extends Model
     protected function casts(): array
     {
         return [
+            'app_style' => 'array',
             'analytics_control' => 'array',
             'template_styles' => 'array',
             'invoice_control' => 'array',

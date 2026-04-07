@@ -25,7 +25,15 @@
     @livewireStyles
 
     @stack('styles')
+    @php
+        $appStyle = settings('app_style', []);
+    @endphp
     <style>
+        :root {
+            --color-primary-500: {{ $appStyle['primary_color'] ?? '#0061ff' }};
+            --font-sans: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
+            --font-body: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
+        }
         [x-cloak] {
             display: none;
         }

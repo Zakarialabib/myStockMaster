@@ -52,9 +52,15 @@
                             </button>
                             <button @click="tab = 'siteConfig'"
                                 :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'siteConfig', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'siteConfig' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2">
+                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
                                 <i class="fas fa-globe w-4 h-4"></i>
                                 <span>{{ __('Site Configuration') }}</span>
+                            </button>
+                            <button @click="tab = 'appearance'"
+                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'appearance', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'appearance' }"
+                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2">
+                                <i class="fas fa-paint-brush w-4 h-4"></i>
+                                <span>{{ __('Appearance') }}</span>
                             </button>
                         </div>
                     </div>
@@ -551,6 +557,19 @@
                                     </div>
                                     <div class="p-6">
                                         <livewire:settings.messaging />
+                                    </div>
+                                </div>
+                            </div>
+                            <div x-show="tab === 'appearance'">
+                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                                    <div class="bg-linear-to-r from-teal-500 to-cyan-600 px-6 py-4 border-b border-gray-200">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-paint-brush text-white text-lg"></i>
+                                            <h2 class="text-lg font-semibold text-white">{{ __('Appearance') }}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <livewire:settings.app-customizer />
                                     </div>
                                 </div>
                             </div>

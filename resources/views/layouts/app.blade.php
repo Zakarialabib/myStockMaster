@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html x-data="mainState" :class="{ rtl: isRtl, dark: isDarkMode }" class="scroll-smooth"
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html x-data="mainState({{ settings('is_rtl', false) ? 'true' : 'false' }})" :class="{ rtl: isRtl, dark: isDarkMode }" class="scroll-smooth"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ settings('is_rtl', false) ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8">
@@ -28,7 +28,15 @@
     @endif
 
     @stack('styles')
+    @php
+        $appStyle = settings('app_style', []);
+    @endphp
     <style>
+        :root {
+            --color-primary-500: {{ $appStyle['primary_color'] ?? '#0061ff' }};
+            --font-sans: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
+            --font-body: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
+        }
         [x-cloak] {
             display: none;
         }
@@ -47,7 +55,7 @@
 
 </head>
 
-<body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}" dir="ltr">
+<body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}">
     <x-loading-mask />
 
     <div class="flex flex-col min-h-screen">
