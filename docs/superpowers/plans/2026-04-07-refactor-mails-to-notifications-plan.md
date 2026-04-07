@@ -246,7 +246,7 @@ git commit -m "refactor(notifications): migrate payment mails to notifications"
 - Delete: `app/Mail/ReturnSaleMail.php`
 - Delete: `app/Mail/ReturnPurchaseMail.php`
 
-- [ ] **Step 1: Create PurchaseNotification**
+- [x] **Step 1: Create PurchaseNotification**
 
 Create `app/Notifications/PurchaseNotification.php`:
 ```php
@@ -278,7 +278,7 @@ class PurchaseNotification extends BaseSystemNotification
 }
 ```
 
-- [ ] **Step 2: Create ReturnSaleNotification**
+- [x] **Step 2: Create ReturnSaleNotification**
 
 Create `app/Notifications/ReturnSaleNotification.php`:
 ```php
@@ -310,7 +310,7 @@ class ReturnSaleNotification extends BaseSystemNotification
 }
 ```
 
-- [ ] **Step 3: Create ReturnPurchaseNotification**
+- [x] **Step 3: Create ReturnPurchaseNotification**
 
 Create `app/Notifications/ReturnPurchaseNotification.php`:
 ```php
@@ -342,11 +342,11 @@ class ReturnPurchaseNotification extends BaseSystemNotification
 }
 ```
 
-- [ ] **Step 4: Clean up old classes**
+- [x] **Step 4: Clean up old classes**
 
 Run: `rm app/Mail/PurchaseMail.php app/Mail/ReturnSaleMail.php app/Mail/ReturnPurchaseMail.php`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/Notifications/PurchaseNotification.php app/Notifications/ReturnSaleNotification.php app/Notifications/ReturnPurchaseNotification.php app/Mail/PurchaseMail.php app/Mail/ReturnSaleMail.php app/Mail/ReturnPurchaseMail.php
