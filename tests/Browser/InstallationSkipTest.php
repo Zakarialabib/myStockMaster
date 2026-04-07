@@ -43,7 +43,6 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with completed installation
         Setting::create([
-            'company_logo' => 'logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@company.com',
             'company_phone' => '123-456-7890',
@@ -72,7 +71,6 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo' => 'logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@company.com',
             'company_phone' => '123-456-7890',
@@ -102,7 +100,6 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo' => 'logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@company.com',
             'company_phone' => '123-456-7890',
@@ -145,7 +142,6 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with incomplete installation
         Setting::create([
-            'company_logo' => 'logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@company.com',
             'company_phone' => '123-456-7890',
@@ -183,7 +179,6 @@ class InstallationSkipTest extends DuskTestCase
 
         // Create settings with completed installation
         Setting::create([
-            'company_logo' => 'logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@company.com',
             'company_phone' => '123-456-7890',

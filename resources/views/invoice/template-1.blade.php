@@ -44,6 +44,18 @@
     </div>
 
     <!-- Header -->
+    @if(settings('invoice_header'))
+    <div class="mb-6">
+        <img src="{{ asset('storage/settings/' . settings('invoice_header')) }}" alt="Invoice Header" class="w-full h-auto">
+    </div>
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <h1 class="text-3xl font-bold uppercase tracking-widest text-gray-800">{{ $entity ?? 'INVOICE' }}</h1>
+            <p class="text-sm text-gray-500 font-semibold mt-1">Reference: {{ $data->reference ?? 'REF-XXXX' }}</p>
+            <p class="text-sm text-gray-500 mt-1">Date: {{ isset($data->date) ? \Carbon\Carbon::parse($data->date)->format(settings('default_date_format', 'Y-m-d')) : date('Y-m-d') }}</p>
+        </div>
+    </div>
+    @else
     <div class="flex justify-between items-start border-b-2 border-gray-800 pb-6 mb-6">
         <div>
             @if(settings('site_logo'))
@@ -66,6 +78,7 @@
             @endif
         </div>
     </div>
+    @endif
 
     <!-- Customer Details -->
     <div class="mb-8">
@@ -159,7 +172,11 @@
     </div>
 
     <!-- Footer -->
-    @if(settings('invoice_footer_text'))
+    @if(settings('invoice_footer'))
+    <div class="mt-16">
+        <img src="{{ asset('storage/settings/' . settings('invoice_footer')) }}" alt="Invoice Footer" class="w-full h-auto">
+    </div>
+    @elseif(settings('invoice_footer_text'))
     <div class="mt-16 pt-8 border-t border-gray-300 text-center text-sm text-gray-500">
         {{ settings('invoice_footer_text') }}
     </div>

@@ -82,7 +82,6 @@ it('completes installation successfully', function () {
     // Create settings table
     Setting::query()->delete();
     $initialSetting = Setting::create([
-        'company_logo' => 'logo.png',
         'company_name' => 'Test Company',
         'company_email' => 'test@company.com',
         'company_phone' => '123-456-7890',
@@ -140,7 +139,6 @@ it('renders already installed message when completed', function () {
     // Create settings table with completed installation
     Setting::query()->delete();
     Setting::create([
-        'company_logo' => 'logo.png',
         'company_name' => 'Test Company',
         'company_email' => 'test@company.com',
         'company_phone' => '123-456-7890',
@@ -164,7 +162,6 @@ it('renders installation process when needed', function () {
     // Create settings table with incomplete installation
     Setting::query()->delete();
     Setting::create([
-        'company_logo' => 'logo.png',
         'company_name' => 'Test Company',
         'company_email' => 'test@company.com',
         'company_phone' => '123-456-7890',
@@ -199,7 +196,6 @@ it('handles force installation with string true value', function () {
     // Create settings table with completed installation
     Setting::query()->delete();
     Setting::create([
-        'company_logo' => 'logo.png',
         'company_name' => 'Test Company',
         'company_email' => 'test@company.com',
         'company_phone' => '123-456-7890',

@@ -20,7 +20,6 @@ class SettingsSeeder extends Seeder
                 'company_name' => 'Mystock',
                 'company_email' => 'contact@hotech.ma',
                 'company_phone' => '212 5 22 22 22 22',
-                'company_logo' => 'logo.png',
                 'company_address' => 'Rue 1, Casablanca, Maroc',
                 'company_tax' => '0',
                 'telegram_channel' => '',

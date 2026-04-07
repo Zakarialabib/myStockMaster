@@ -106,7 +106,6 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         // Create settings table and data
         Setting::create([
-            'company_logo' => 'test-logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@example.com',
             'company_phone' => '123-456-7890',
@@ -133,7 +132,6 @@ class CheckInstallationMiddlewareTest extends TestCase
     {
         // Create settings table and record
         $setting = Setting::create([
-            'company_logo' => 'test-logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@example.com',
             'company_phone' => '123-456-7890',
@@ -173,7 +171,6 @@ class CheckInstallationMiddlewareTest extends TestCase
 
         // Create settings table with incomplete installation
         Setting::create([
-            'company_logo' => 'test-logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@example.com',
             'company_phone' => '123-456-7890',
@@ -201,7 +198,6 @@ class CheckInstallationMiddlewareTest extends TestCase
 
         // Create settings table with completed installation
         Setting::create([
-            'company_logo' => 'test-logo.png',
             'company_name' => 'Test Company',
             'company_email' => 'test@example.com',
             'company_phone' => '123-456-7890',

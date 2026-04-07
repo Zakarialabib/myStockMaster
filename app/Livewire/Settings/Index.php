@@ -10,7 +10,6 @@ use App\Models\Setting;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -36,6 +35,38 @@ class Index extends Component
     public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
 
     public ?array $invoice_control = null;
+
+    public $invoice_header;
+
+    public $invoice_footer;
+
+    public function updatedInvoiceHeader()
+    {
+        $this->validate([
+            'invoice_header' => 'image|max:1024',
+        ]);
+
+        $imageName = 'invoice-header.' . $this->invoice_header->extension();
+        $this->invoice_header->storeAs('settings', $imageName, 'public');
+        $this->settings->invoice_header = $imageName;
+        $this->settings->save();
+
+        $this->alert('success', __('Invoice header updated successfully!'));
+    }
+
+    public function updatedInvoiceFooter()
+    {
+        $this->validate([
+            'invoice_footer' => 'image|max:1024',
+        ]);
+
+        $imageName = 'invoice-footer.' . $this->invoice_footer->extension();
+        $this->invoice_footer->storeAs('settings', $imageName, 'public');
+        $this->settings->invoice_footer = $imageName;
+        $this->settings->save();
+
+        $this->alert('success', __('Invoice footer updated successfully!'));
+    }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
