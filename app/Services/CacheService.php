@@ -28,10 +28,10 @@ class CacheService
     {
         try {
             return Cache::remember($key, $timeout, $callback);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache remember failed', [
                 'key' => $key,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             // Fallback to direct execution
@@ -53,12 +53,12 @@ class CacheService
         try {
             $prefixedKey = self::getPrefixedKey($type, $key);
 
-            return Cache::put($prefixedKey, $value, $timeout);
-        } catch (Exception $e) {
+            return Cache::put($prefixedKey, $value, $timeout * 60);
+        } catch (Exception $exception) {
             Log::warning('Cache put failed', [
                 'type' => $type,
                 'key' => $key,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -72,11 +72,11 @@ class CacheService
             $prefixedKey = self::getPrefixedKey($type, $key);
 
             return Cache::forget($prefixedKey);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache forget failed', [
                 'type' => $type,
                 'key' => $key,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -92,14 +92,14 @@ class CacheService
             // Get all keys with the prefix
             $keys = Cache::getRedis()->keys($prefix . '*');
 
-            if (! empty($keys)) {
+            if (filled($keys)) {
                 Cache::getRedis()->del($keys);
                 Log::info('Cache cleared for type', ['type' => $type, 'keys_count' => count($keys)]);
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache clear type failed', [
                 'type' => $type,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }
@@ -110,9 +110,9 @@ class CacheService
         try {
             Cache::flush();
             Log::info('All cache cleared');
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache clear all failed', [
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }
@@ -129,9 +129,9 @@ class CacheService
             }
 
             return $stats;
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache stats failed', [
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return [];
@@ -181,23 +181,19 @@ class CacheService
     {
         try {
             // Warm up categories
-            self::cacheCategories('all', function () {
-                return \App\Models\Category::active()->get();
-            });
+            self::cacheCategories('all', fn() => \App\Models\Category::query()->active()->get());
 
             // Warm up product counts
-            self::cacheProducts('counts', function () {
-                return [
-                    'total' => \App\Models\Product::count(),
-                    'active' => \App\Models\Product::where('status', true)->count(),
-                    'low_stock' => \App\Models\Product::where('quantity', '<', 10)->count(),
-                ];
-            });
+            self::cacheProducts('counts', fn() => [
+                'total' => \App\Models\Product::query()->count(),
+                'active' => \App\Models\Product::query()->where('status', true)->count(),
+                'low_stock' => \App\Models\Product::query()->where('quantity', '<', 10)->count(),
+            ]);
 
             Log::info('Cache warmed up successfully');
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::warning('Cache warm up failed', [
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }

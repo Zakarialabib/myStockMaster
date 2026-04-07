@@ -41,24 +41,24 @@ class CheckInstallation
 
         // Force installation if configured
         if (config('installation.force', false)) {
-            return redirect()->route('installation.index');
+            return to_route('installation.index');
         }
 
         try {
             // Check if settings table exists
             if (! Schema::hasTable('settings')) {
-                return redirect()->route('installation.index');
+                return to_route('installation.index');
             }
 
             // Check if installation is completed
             $installationCompleted = settings('installation_completed', false);
 
             if (! $installationCompleted) {
-                return redirect()->route('installation.index');
+                return to_route('installation.index');
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // If anything goes wrong (e.g. DB not connected), redirect to installer
-            return redirect()->route('installation.index');
+            return to_route('installation.index');
         }
 
         return $next($request);

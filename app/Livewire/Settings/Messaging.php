@@ -48,13 +48,13 @@ class Messaging extends Component
     #[Computed]
     public function products()
     {
-        return Product::select('id', 'name', 'image')->take(10)->get();
+        return Product::query()->select('id', 'name', 'image')->take(10)->get();
     }
 
     #[Computed]
     public function customers()
     {
-        return Customer::select('id', 'name', 'phone')
+        return Customer::query()->select('id', 'name', 'phone')
             ->orderBy('id', 'desc')
             ->take(10)
             ->get();
@@ -63,7 +63,7 @@ class Messaging extends Component
     #[Computed]
     public function sales()
     {
-        return Sale::select('id', 'customer_id', 'due_amount')
+        return Sale::query()->select('id', 'customer_id', 'due_amount')
             ->where('due_amount', '>', 0)
             ->orderBy('id', 'desc')
             ->take(10)
@@ -76,7 +76,7 @@ class Messaging extends Component
         $this->chatId = '';
     }
 
-    public function fillMessage($template): void
+    public function fillMessage(mixed $template): void
     {
         switch ($template) {
             case 'productMessage':
@@ -101,9 +101,9 @@ class Messaging extends Component
         }
     }
 
-    public function sendDueAmount($saleId): void
+    public function sendDueAmount(mixed $saleId): void
     {
-        $sale = Sale::findOrFail($saleId);
+        $sale = Sale::query()->findOrFail($saleId);
 
         $message = sprintf('Due Amount for Sale %s: ', $sale->id) . format_currency($sale->due_amount);
 
@@ -129,25 +129,25 @@ class Messaging extends Component
         $this->openTemplate = true;
     }
 
-    public function insertProduct($id): void
+    public function insertProduct(mixed $id): void
     {
-        $product = Product::findOrFail($id);
+        $product = Product::query()->findOrFail($id);
 
         $this->message .= ' ' . $product->name . ' : ' . format_currency($product->price);
         $this->openProductModal = false;
     }
 
-    public function insertSale($id): void
+    public function insertSale(mixed $id): void
     {
-        $sale = Sale::findOrFail($id);
+        $sale = Sale::query()->findOrFail($id);
 
         $this->message .= ' ' . $sale->id . ' : ' . format_currency($sale->due_amount);
         $this->openProductModal = false;
     }
 
-    public function selectCustomer($customerId): void
+    public function selectCustomer(mixed $customerId): void
     {
-        $customer = Customer::findOrFail($customerId);
+        $customer = Customer::query()->findOrFail($customerId);
 
         $phone = $customer->phone;
 
@@ -188,7 +188,7 @@ class Messaging extends Component
         $this->alert('success', __('Message sent successfully'));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.messaging');
     }

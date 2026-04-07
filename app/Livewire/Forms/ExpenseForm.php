@@ -10,32 +10,32 @@ use Livewire\Form;
 class ExpenseForm extends Form
 {
     #[Validate('required|string|max:255')]
-    public $reference;
+    public mixed $reference;
 
     #[Validate('required|integer|exists:expense_categories,id')]
-    public $category_id;
+    public mixed $category_id;
 
     #[Validate('required|date')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('required|numeric')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('nullable|string|max:255')]
-    public $description;
+    public mixed $description;
 
     #[Validate('nullable|date')]
-    public $start_date;
+    public mixed $start_date;
 
     #[Validate('nullable|date')]
-    public $end_date;
+    public mixed $end_date;
 
     #[Validate('required|in:none,daily,weekly,monthly,yearly')]
-    public $frequency = 'none';
+    public mixed $frequency = 'none';
 
     #[Validate('nullable|integer')]
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
     #[Validate('nullable|file|mimes:pdf,jpg,jpeg,png|max:2048')]
-    public $document;
+    public mixed $document;
 }

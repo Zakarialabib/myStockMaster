@@ -17,7 +17,7 @@ class SyncDesktopDatabase extends Command
     protected $description = 'Sync data between online and offline databases';
 
     /** Execute the console command. */
-    public function handle(DatabaseSyncService $syncService): int
+    public function handle(DatabaseSyncService $databaseSyncService): int
     {
         if (! EnvironmentService::isDesktop()) {
             $this->error('This command can only be run in desktop mode.');
@@ -34,13 +34,13 @@ class SyncDesktopDatabase extends Command
         }
 
         // Check online availability
-        if (! $syncService->isOnlineAvailable()) {
+        if (! $databaseSyncService->isOnlineAvailable()) {
             $this->error('Online database is not available. Cannot perform sync.');
 
             return self::FAILURE;
         }
 
-        $this->info("Starting database sync ({$direction})...");
+        $this->info(sprintf('Starting database sync (%s)...', $direction));
 
         $success = true;
 
@@ -48,7 +48,7 @@ class SyncDesktopDatabase extends Command
         if ($direction === 'to-offline' || $direction === 'both') {
             $this->info('📥 Syncing data to offline database...');
 
-            if ($syncService->syncToOffline()) {
+            if ($databaseSyncService->syncToOffline()) {
                 $this->info('✅ Data synced to offline database successfully!');
             } else {
                 $this->error('❌ Failed to sync data to offline database.');
@@ -60,7 +60,7 @@ class SyncDesktopDatabase extends Command
         if ($direction === 'to-online' || $direction === 'both') {
             $this->info('📤 Syncing data to online database...');
 
-            if ($syncService->syncToOnline()) {
+            if ($databaseSyncService->syncToOnline()) {
                 $this->info('✅ Data synced to online database successfully!');
             } else {
                 $this->error('❌ Failed to sync data to online database.');
@@ -69,15 +69,15 @@ class SyncDesktopDatabase extends Command
         }
 
         // Show sync status
-        $this->showSyncStatus($syncService);
+        $this->showSyncStatus($databaseSyncService);
 
         return $success ? self::SUCCESS : self::FAILURE;
     }
 
     /** Show current sync status */
-    protected function showSyncStatus(DatabaseSyncService $syncService): void
+    protected function showSyncStatus(DatabaseSyncService $databaseSyncService): void
     {
-        $status = $syncService->getSyncStatus();
+        $status = $databaseSyncService->getSyncStatus();
 
         $this->newLine();
         $this->info('📊 Sync Status:');

@@ -10,7 +10,7 @@ class CustomerGroupService
 {
     public function create(array $data): CustomerGroup
     {
-        return CustomerGroup::create($data);
+        return CustomerGroup::query()->create($data);
     }
 
     public function update(CustomerGroup $customerGroup, array $data): CustomerGroup

@@ -16,13 +16,13 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
     public CustomerGroup $customergroup;
 
     public CustomerGroupForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer-group_create'), 403);
 

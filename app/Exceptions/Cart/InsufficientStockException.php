@@ -8,7 +8,7 @@ class InsufficientStockException extends CartException
 {
     public function __construct(int $productId, int $warehouseId, int $requestedQty, int $availableQty, array $context = [])
     {
-        $message = "Insufficient stock for product ID {$productId} in warehouse {$warehouseId}. Requested: {$requestedQty}, Available: {$availableQty}";
+        $message = sprintf('Insufficient stock for product ID %d in warehouse %d. Requested: %d, Available: %d', $productId, $warehouseId, $requestedQty, $availableQty);
         parent::__construct($message, 400, null, array_merge($context, [
             'product_id' => $productId,
             'warehouse_id' => $warehouseId,

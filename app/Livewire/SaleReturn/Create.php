@@ -63,7 +63,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        app(SaleReturnService::class)->create(
+        resolve(SaleReturnService::class)->create(
             [
                 'date' => $this->form->date,
                 'reference' => $this->form->reference,
@@ -89,9 +89,9 @@ class Create extends Component
         $this->redirectRoute('sale-returns.index', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $customers = Customer::select(['id', 'name'])->get();
+        $customers = Customer::query()->select(['id', 'name'])->get();
 
         return view('livewire.sale-return.create', [
             'cart_items' => $this->cartContent,

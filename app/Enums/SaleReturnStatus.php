@@ -30,7 +30,7 @@ enum SaleReturnStatus: int
         return $this->value;
     }
 
-    public static function getLabel($value)
+    public static function getLabel($value): ?string
     {
         foreach (self::cases() as $case) {
             if ($case->getValue() === $value) {
@@ -43,21 +43,14 @@ enum SaleReturnStatus: int
 
     public function getBadgeType(): string
     {
-        switch ($this) {
-            case self::PENDING:
-                return 'warning';
-            case self::ORDERED:
-                return 'info';
-            case self::COMPLETED:
-                return 'success';
-            case self::SHIPPED:
-                return 'primary';
-            case self::RETURNED:
-                return 'alert';
-            case self::CANCELED:
-                return 'danger';
-            default:
-                return 'secondary';
-        }
+        return match ($this) {
+            self::PENDING => 'warning',
+            self::ORDERED => 'info',
+            self::COMPLETED => 'success',
+            self::SHIPPED => 'primary',
+            self::RETURNED => 'alert',
+            self::CANCELED => 'danger',
+            default => 'secondary',
+        };
     }
 }

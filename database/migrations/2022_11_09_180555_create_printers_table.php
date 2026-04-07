@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('printers', function (Blueprint $table) {
-            $table->id();
+        Schema::create('printers', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->string('name');
-            $table->enum('connection_type', ['network', 'windows', 'linux']);
-            $table->enum('capability_profile', ['default', 'simple', 'SP2000', 'TEP-200M', 'P822D'])->default('default');
-            $table->string('char_per_line')->nullable();
-            $table->string('ip_address')->nullable();
-            $table->string('port')->nullable();
-            $table->string('path')->nullable();
-            $table->timestamps();
+            $blueprint->string('name');
+            $blueprint->enum('connection_type', ['network', 'windows', 'linux']);
+            $blueprint->enum('capability_profile', ['default', 'simple', 'SP2000', 'TEP-200M', 'P822D'])->default('default');
+            $blueprint->string('char_per_line')->nullable();
+            $blueprint->string('ip_address')->nullable();
+            $blueprint->string('port')->nullable();
+            $blueprint->string('path')->nullable();
+            $blueprint->timestamps();
         });
     }
 

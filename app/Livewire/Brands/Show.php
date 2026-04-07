@@ -16,16 +16,16 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $brand;
+    public mixed $brand;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     #[On('showModal')]
-    public function openShowModal($id): void
+    public function openShowModal(mixed $id): void
     {
         abort_if(Gate::denies('brand_show'), 403);
 
-        $this->brand = Brand::findOrFail($id);
+        $this->brand = Brand::query()->findOrFail($id);
 
         $this->showModal = true;
     }

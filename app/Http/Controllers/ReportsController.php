@@ -13,41 +13,41 @@ class ReportsController extends Controller
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('profit-loss-report.index');
+        return to_route('profit-loss-report.index');
     }
 
     public function paymentsReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('payments-report.index');
+        return to_route('payments-report.index');
     }
 
     public function salesReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('sales-report.index');
+        return to_route('sales-report.index');
     }
 
     public function purchasesReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('purchases-report.index');
+        return to_route('purchases-report.index');
     }
 
     public function salesReturnReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('sales-return-report.index');
+        return to_route('sales-return-report.index');
     }
 
     public function purchasesReturnReport(): RedirectResponse
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        return redirect()->route('purchases-return-report.index');
+        return to_route('purchases-return-report.index');
     }
 }

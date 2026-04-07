@@ -24,23 +24,23 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public $expense;
+    public mixed $expense;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $showFilters = false;
+    public bool $showFilters = false;
 
-    public $startDate;
+    public ?string $startDate = null;
 
-    public $endDate;
+    public ?string $endDate = null;
 
-    public $filterType;
+    public mixed $filterType;
 
-    public $file;
+    public mixed $file = null;
 
-    public $importModal = false;
+    public bool $importModal = false;
 
-    public $model = Expense::class;
+    public string $model = Expense::class;
 
     public function mount(): void
     {
@@ -48,11 +48,11 @@ class Index extends Component
         $this->endDate = now()->endOfDay()->format('Y-m-d');
     }
 
-    public function filterByType($type): void
+    public function filterByType(mixed $type): void
     {
         switch ($type) {
             case 'day':
-                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->startDate = today()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
 
                 break;
@@ -69,7 +69,7 @@ class Index extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('expense_access'), 403);
 
@@ -90,7 +90,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('expense_delete'), 403);
 
-        Expense::whereIn('id', $this->selected)->delete();
+        Expense::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
@@ -102,11 +102,11 @@ class Index extends Component
         $expense->delete();
     }
 
-    public function showModal($id): void
+    public function showModal(int|string $id): void
     {
         abort_if(Gate::denies('expense_show'), 403);
 
-        $this->expense = Expense::find($id);
+        $this->expense = Expense::query()->find($id);
 
         $this->showModal = true;
     }
@@ -164,7 +164,7 @@ class Index extends Component
         return Storage::disk('exports')->download('expenses_import_sample.xls');
     }
 
-    public function deleteModal($expense): void
+    public function deleteModal(int|string $expense): void
     {
         $confirmationMessage = __('Are you sure you want to delete this expense? if something happens you can be recover it.');
 

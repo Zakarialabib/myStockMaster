@@ -43,14 +43,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SalePayment whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class SalePayment extends Model
 {
-    protected $casts = [
-        'date' => 'date',
-    ];
-
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -64,9 +62,9 @@ class SalePayment extends Model
 
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -85,6 +83,9 @@ class SalePayment extends Model
         'cash_register_id',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Sale, $this>
+     */
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class, 'sale_id', 'id');
@@ -93,27 +94,24 @@ class SalePayment extends Model
     /**
      * Get ajustement date.
      */
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($salePayment) {
+        static::creating(function ($salePayment): void {
             $prefix = settings()->salePayment_prefix;
 
-            $latestSalePayment = self::latest()->first();
+            $latestSalePayment = self::query()->latest()->first();
 
-            if ($latestSalePayment) {
-                $number = intval(substr($latestSalePayment->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestSalePayment ? intval(substr($latestSalePayment->reference, -3)) + 1 : 1;
 
             $salePayment->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
@@ -124,7 +122,7 @@ class SalePayment extends Model
      *
      * @return mixed
      */
-    public function scopeBySale($query)
+    protected function scopeBySale(mixed $query)
     {
         return $query->whereSaleId(request()->route('sale_id'));
     }
@@ -135,8 +133,15 @@ class SalePayment extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
+    }
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }

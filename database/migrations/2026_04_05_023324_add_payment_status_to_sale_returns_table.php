@@ -10,15 +10,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('sale_returns', function (Blueprint $table) {
-            $table->string('payment_status')->default('pending')->after('status');
+        Schema::table('sale_returns', function (Blueprint $blueprint): void {
+            $blueprint->string('payment_status')->default('pending')->after('status');
         });
     }
 
     public function down(): void
     {
-        Schema::table('sale_returns', function (Blueprint $table) {
-            $table->dropColumn('payment_status');
+        Schema::table('sale_returns', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn('payment_status');
         });
     }
 };

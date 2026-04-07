@@ -28,11 +28,12 @@ final class UpdatePurchaseReturnAction
             // Delete previous details and restore stock if previously completed/shipped
             foreach ($purchaseReturn->purchaseReturnDetails as $detail) {
                 if ($purchaseReturn->status === 'Shipped' || $purchaseReturn->status === 'Completed') {
-                    $product = Product::findOrFail($detail->product_id);
+                    $product = Product::query()->findOrFail($detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity + $detail->quantity,
                     ]);
                 }
+
                 $detail->delete();
             }
 
@@ -68,7 +69,7 @@ final class UpdatePurchaseReturnAction
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                PurchaseReturnDetail::create([
+                PurchaseReturnDetail::query()->create([
                     'purchase_return_id' => $purchaseReturn->id,
                     'product_id' => $productId,
                     'name' => $productName,
@@ -83,7 +84,7 @@ final class UpdatePurchaseReturnAction
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {
-                    $product = Product::findOrFail($productId);
+                    $product = Product::query()->findOrFail($productId);
                     $product->update([
                         'quantity' => $product->quantity - $quantity,
                     ]);

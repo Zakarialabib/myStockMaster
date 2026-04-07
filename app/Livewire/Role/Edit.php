@@ -26,7 +26,7 @@ class Edit extends Component
     #[On('editModal')]
     public function openEditModal(int $id): void
     {
-        $role = Role::findOrFail($id);
+        $role = Role::query()->findOrFail($id);
         $this->form->setRole($role);
         $this->showModal = true;
     }
@@ -34,17 +34,15 @@ class Edit extends Component
     #[Computed]
     public function permission_groups()
     {
-        return Permission::all()->groupBy(function ($permission) {
-            return explode('_', $permission->name)[0];
-        });
+        return Permission::all()->groupBy(fn($permission) => explode('_', (string) $permission->name)[0]);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.role.edit');
     }
 
-    public function update()
+    public function update(): void
     {
         $this->validate([
             'form.name' => 'required|string|unique:roles,name,' . $this->form->role->id,

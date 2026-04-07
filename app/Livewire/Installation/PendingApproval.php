@@ -19,23 +19,23 @@ class PendingApproval extends Component
 
             // Redirect based on user role
             if ($user->hasRole('admin') || $user->hasRole('manager') || $user->hasRole('staff')) {
-                return redirect()->route('dashboard');
+                return to_route('dashboard');
             }
 
             if ($user->hasRole('customer')) {
-                return redirect()->route('menu.index');
+                return to_route('menu.index');
             }
         }
 
         // Check if admin is authenticated
         if (Auth::guard('admin')->check()) {
-            return redirect()->route('dashboard');
+            return to_route('dashboard');
         }
 
         return null;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.installation.pending-approval');
     }

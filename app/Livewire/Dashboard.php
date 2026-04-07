@@ -24,8 +24,8 @@ class Dashboard extends Component
 
     public function mount(): void
     {
-        $this->startDate = Carbon::now()->startOfMonth()->toDateString();
-        $this->endDate = Carbon::now()->endOfMonth()->toDateString();
+        $this->startDate = \Illuminate\Support\Facades\Date::now()->startOfMonth()->toDateString();
+        $this->endDate = \Illuminate\Support\Facades\Date::now()->endOfMonth()->toDateString();
     }
 
     #[On('dashboard-date-range-updated')]
@@ -39,12 +39,12 @@ class Dashboard extends Component
         $this->endDate = $endDate;
     }
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.dashboard');
     }

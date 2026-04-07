@@ -52,7 +52,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereTotalTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Transfer whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Transfer extends Model
 {
@@ -74,9 +74,9 @@ class Transfer extends Model
         'note',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $fillable = [
         'reference',
@@ -93,6 +93,9 @@ class Transfer extends Model
         'note',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function fromWarehouse(): BelongsTo
     {
         return $this->belongsTo(
@@ -101,6 +104,9 @@ class Transfer extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function toWarehouse(): BelongsTo
     {
         return $this->belongsTo(
@@ -109,6 +115,9 @@ class Transfer extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(

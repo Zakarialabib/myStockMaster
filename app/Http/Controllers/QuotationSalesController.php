@@ -20,11 +20,11 @@ class QuotationSalesController extends Controller
 
         Cart::instance('sale')->destroy();
 
-        $cart = Cart::instance('sale');
+        $cartService = Cart::instance('sale');
 
         foreach ($quotation_details as $quotation_detail) {
-            $product = Product::findOrFail($quotation_detail->product_id);
-            $cart->add([
+            $product = Product::query()->findOrFail($quotation_detail->product_id);
+            $cartService->add([
                 'id' => $quotation_detail->product_id,
                 'name' => $quotation_detail->name,
                 'quantity' => $quotation_detail->quantity,

@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string                          $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|Eloquent $movable
+ * @property-read Model|\Illuminate\Database\Eloquent\Model $movable
  * @property-read ProductWarehouse|null $productWarehouse
  * @property-read User $user
  *
@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Movement whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Movement whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Movement extends Model
 {
@@ -64,6 +64,7 @@ class Movement extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -76,6 +77,9 @@ class Movement extends Model
         return $this->morphTo();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -84,6 +88,9 @@ class Movement extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\ProductWarehouse, $this>
+     */
     public function productWarehouse(): BelongsTo
     {
         return $this->belongsTo(ProductWarehouse::class);

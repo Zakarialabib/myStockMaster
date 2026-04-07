@@ -17,7 +17,7 @@ class InitializeDesktopDatabase extends Command
     protected $description = 'Initialize desktop SQLite database for offline mode';
 
     /** Execute the console command. */
-    public function handle(DatabaseSyncService $syncService): int
+    public function handle(DatabaseSyncService $databaseSyncService): int
     {
         if (! EnvironmentService::isDesktop()) {
             $this->error('This command can only be run in desktop mode.');
@@ -30,12 +30,9 @@ class InitializeDesktopDatabase extends Command
         // Check if database already exists
         $dbPath = storage_path('database/desktop.sqlite');
 
-        if (file_exists($dbPath) && ! $this->option('force')) {
-            if (! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
-                $this->info('Database initialization cancelled.');
-
-                return self::SUCCESS;
-            }
+        if (file_exists($dbPath) && !$this->option('force') && ! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
+            $this->info('Database initialization cancelled.');
+            return self::SUCCESS;
         }
 
         // Create database file if it doesn't exist
@@ -45,20 +42,21 @@ class InitializeDesktopDatabase extends Command
             if (! is_dir(dirname($dbPath))) {
                 mkdir(dirname($dbPath), 0755, true);
             }
+
             touch($dbPath);
         }
 
         // Initialize database schema
         $this->info('Setting up database schema...');
 
-        if ($syncService->initializeDesktopDatabase()) {
+        if ($databaseSyncService->initializeDesktopDatabase()) {
             $this->info('✅ Desktop database initialized successfully!');
 
             // Offer to sync data
-            if ($syncService->isOnlineAvailable() && $this->confirm('Do you want to sync data from online database?')) {
+            if ($databaseSyncService->isOnlineAvailable() && $this->confirm('Do you want to sync data from online database?')) {
                 $this->info('Syncing data from online database...');
 
-                if ($syncService->syncToOffline()) {
+                if ($databaseSyncService->syncToOffline()) {
                     $this->info('✅ Data synced successfully!');
                 } else {
                     $this->warn('⚠️  Data sync failed. Check logs for details.');

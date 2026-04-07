@@ -17,5 +17,5 @@ class CategoryForm extends Form
 
     public ?string $code = null;
 
-    public $image;
+    public mixed $image;
 }

@@ -11,8 +11,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CustomerImport implements SkipsEmptyRows, ToModel, WithHeadingRow
 {
-    public function __construct() {}
-
     /**
      * @return Customer
      * @return \Illuminate\Database\Eloquent\Model|null

@@ -31,10 +31,11 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserWarehouse whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserWarehouse whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class UserWarehouse extends Pivot
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $table = 'user_warehouse';
 
     /**
@@ -53,6 +54,7 @@ class UserWarehouse extends Pivot
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -61,7 +63,7 @@ class UserWarehouse extends Pivot
         ];
     }
 
-    /** @return HasMany<Warehouse> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Warehouse, $this> */
     public function assignedWarehouses(): HasMany
     {
         return $this->hasMany(Warehouse::class, 'id', 'warehouse_id');

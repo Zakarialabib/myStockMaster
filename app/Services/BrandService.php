@@ -17,7 +17,7 @@ class BrandService
             $data['image'] = $imageName;
         }
 
-        return Brand::create($data);
+        return Brand::query()->create($data);
     }
 
     public function update(Brand $brand, array $data): Brand

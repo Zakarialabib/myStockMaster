@@ -32,17 +32,17 @@ class Index extends Component
 
     public string $model = Permission::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $query = Permission::advancedFilter([
+        $query = Permission::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $permissions = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.permission.index', ['permissions' => $permissions]);
+        return view('livewire.permission.index', ['permissions' => $lengthAwarePaginator]);
     }
 
     #[On('createModal')]
@@ -75,7 +75,7 @@ class Index extends Component
         $this->resetErrorBag();
         $this->resetValidation();
 
-        $this->permission = Permission::findOrFail($id);
+        $this->permission = Permission::query()->findOrFail($id);
         $this->name = $this->permission->name;
 
         $this->editModal = true;
@@ -104,7 +104,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('permission_delete'), 403);
 
-        Permission::whereIn('id', $this->selected)->delete();
+        Permission::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuotationResource extends JsonResource
 {
+    #[\Override]
     public function toArray($request)
     {
         return [

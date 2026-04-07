@@ -84,7 +84,7 @@ class EnvironmentService
                 'desktop_offline_mode',
                 env('DESKTOP_OFFLINE_MODE', true)
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return env('DESKTOP_OFFLINE_MODE', true);
         }
     }

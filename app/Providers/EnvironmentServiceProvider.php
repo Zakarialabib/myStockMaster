@@ -15,6 +15,7 @@ use Throwable;
 class EnvironmentServiceProvider extends ServiceProvider
 {
     /** Register services. */
+    #[\Override]
     public function register(): void
     {
         $this->app->singleton(EnvironmentService::class);
@@ -126,17 +127,17 @@ class EnvironmentServiceProvider extends ServiceProvider
             Artisan::call('migrate', ['--database' => 'sqlite_desktop', '--force' => true]);
 
             $seeders = [
-                'Database\\Seeders\\RolesAndPermissionsSeeder',
-                'Database\\Seeders\\CurrencySeeder',
-                'Database\\Seeders\\SettingsSeeder',
-                'Database\\Seeders\\LanguagesSeeder',
+                \Database\Seeders\RolesAndPermissionsSeeder::class,
+                \Database\Seeders\CurrencySeeder::class,
+                \Database\Seeders\SettingsSeeder::class,
+                \Database\Seeders\LanguagesSeeder::class,
             ];
 
             foreach ($seeders as $seeder) {
                 Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
             }
-        } catch (Throwable $e) {
-            Log::warning('Desktop first-run setup failed: ' . $e->getMessage());
+        } catch (Throwable $throwable) {
+            Log::warning('Desktop first-run setup failed: ' . $throwable->getMessage());
         }
     }
 }

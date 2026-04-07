@@ -49,14 +49,14 @@ class PurchasesReturnReport extends Component
     #[Computed]
     public function suppliers()
     {
-        return Supplier::select(['id', 'name'])->get();
+        return Supplier::query()->select(['id', 'name'])->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $purchase_returns = PurchaseReturn::whereDate('date', '>=', $this->start_date)
+        $lengthAwarePaginator = PurchaseReturn::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, fn ($q) => $q->where('supplier_id', $this->supplier_id))
             ->when($this->purchase_return_status, fn ($q) => $q->where('purchase_return_status', $this->purchase_return_status))
@@ -64,7 +64,7 @@ class PurchasesReturnReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.purchases-return-report', [
-            'purchase_returns' => $purchase_returns,
+            'purchase_returns' => $lengthAwarePaginator,
         ]);
     }
 

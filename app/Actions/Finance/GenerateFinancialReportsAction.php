@@ -53,7 +53,7 @@ class GenerateFinancialReportsAction
         $operatingMargin = $totalRevenue > 0 ? ($operatingIncome / $totalRevenue) * 100 : 0;
 
         // Other Income/Expenses
-        $otherIncome = $this->calculateOtherIncome($startDate, $endDate);
+        $otherIncome = $this->calculateOtherIncome();
         $otherExpenses = $this->calculateOtherExpenses($startDate, $endDate);
 
         // Net Income
@@ -61,7 +61,7 @@ class GenerateFinancialReportsAction
         $netMargin = $totalRevenue > 0 ? ($netIncome / $totalRevenue) * 100 : 0;
 
         // Previous period comparison
-        $previousPeriod = $this->getPreviousPeriodComparison($startDate, $endDate, $period);
+        $previousPeriod = $this->getPreviousPeriodComparison($startDate, $endDate);
 
         return [
             'report_type' => 'profit_loss',
@@ -121,7 +121,7 @@ class GenerateFinancialReportsAction
         $investingCashFlow = $this->calculateInvestingCashFlow($startDate, $endDate);
 
         // Financing Cash Flow
-        $financingCashFlow = $this->calculateFinancingCashFlow($startDate, $endDate);
+        $financingCashFlow = $this->calculateFinancingCashFlow();
 
         // Net Cash Flow
         $netCashFlow = $operatingCashFlow['total'] + $investingCashFlow['total'] + $financingCashFlow['total'];
@@ -142,8 +142,8 @@ class GenerateFinancialReportsAction
             'financing_activities' => $financingCashFlow,
             'net_cash_flow' => $netCashFlow,
             'ending_cash' => $endingCash,
-            'cash_flow_by_period' => $this->getCashFlowByPeriod($startDate, $endDate, $period),
-            'cash_conversion_cycle' => $this->calculateCashConversionCycle($startDate, $endDate),
+            'cash_flow_by_period' => $this->getCashFlowByPeriod(),
+            'cash_conversion_cycle' => $this->calculateCashConversionCycle(),
             'generated_at' => now()->toISOString(),
         ];
     }
@@ -152,12 +152,12 @@ class GenerateFinancialReportsAction
     {
         // Assets
         $currentAssets = $this->calculateCurrentAssets($endDate);
-        $fixedAssets = $this->calculateFixedAssets($endDate);
+        $fixedAssets = $this->calculateFixedAssets();
         $totalAssets = $currentAssets['total'] + $fixedAssets['total'];
 
         // Liabilities
-        $currentLiabilities = $this->calculateCurrentLiabilities($endDate);
-        $longTermLiabilities = $this->calculateLongTermLiabilities($endDate);
+        $currentLiabilities = $this->calculateCurrentLiabilities();
+        $longTermLiabilities = $this->calculateLongTermLiabilities();
         $totalLiabilities = $currentLiabilities['total'] + $longTermLiabilities['total'];
 
         // Equity
@@ -216,7 +216,7 @@ class GenerateFinancialReportsAction
 
     private function generateExpenseReport(Carbon $startDate, Carbon $endDate, string $period): array
     {
-        $expenses = Expense::whereBetween('date', [$startDate, $endDate])->get();
+        $expenses = Expense::query()->whereBetween('date', [$startDate, $endDate])->get();
 
         $expensesByCategory = $expenses->groupBy('category')
             ->map(fn ($group) => $group->sum('amount'))
@@ -238,20 +238,20 @@ class GenerateFinancialReportsAction
             'average_expense' => $expenses->count() > 0 ? $expenses->sum('amount') / $expenses->count() : 0,
             'expenses_by_category' => $expensesByCategory->toArray(),
             'expenses_by_period' => $expensesByMonth->toArray(),
-            'top_expenses' => $topExpenses->map(fn ($expense) => [
+            'top_expenses' => $topExpenses->map(fn ($expense): array => [
                 'description' => $expense->description,
                 'amount' => $expense->amount,
                 'category' => $expense->category,
                 'date' => $expense->date->format('Y-m-d'),
             ])->toArray(),
-            'expense_trends' => $this->calculateExpenseTrends($startDate, $endDate, $period),
+            'expense_trends' => $this->calculateExpenseTrends(),
             'generated_at' => now()->toISOString(),
         ];
     }
 
     private function generateRevenueAnalysis(Carbon $startDate, Carbon $endDate, string $period): array
     {
-        $sales = Sale::whereBetween('date', [$startDate, $endDate])
+        $sales = Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get();
 
@@ -271,7 +271,7 @@ class GenerateFinancialReportsAction
             'revenue_by_day' => $this->getRevenueByDay($startDate, $endDate),
             'revenue_by_hour' => $this->getRevenueByHour($startDate, $endDate),
             'revenue_by_payment_method' => $this->getRevenueByPaymentMethod($startDate, $endDate),
-            'top_selling_items' => $this->getTopSellingItems($startDate, $endDate),
+            'top_selling_items' => $this->getTopSellingItems(),
             'revenue_trends' => $this->calculateRevenueTrends($startDate, $endDate, $period),
             'generated_at' => now()->toISOString(),
         ];
@@ -316,21 +316,21 @@ class GenerateFinancialReportsAction
 
     private function calculateTotalRevenue(Carbon $startDate, Carbon $endDate): float
     {
-        return Sale::whereBetween('date', [$startDate, $endDate])
+        return Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->sum('total_amount');
     }
 
     private function calculateCOGS(Carbon $startDate, Carbon $endDate): float
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['beverages', 'inventory', 'supplies'])
             ->sum('amount');
     }
 
     private function calculateOperatingExpenses(Carbon $startDate, Carbon $endDate): array
     {
-        $expenses = Expense::whereBetween('date', [$startDate, $endDate])
+        $expenses = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['rent', 'utilities', 'marketing', 'maintenance', 'insurance', 'licenses'])
             ->get();
 
@@ -343,7 +343,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateOtherIncome(Carbon $startDate, Carbon $endDate): float
+    private function calculateOtherIncome(): float
     {
         // This could include interest income, investment gains, etc.
         // For now, we'll return 0 as this would need additional models
@@ -352,7 +352,7 @@ class GenerateFinancialReportsAction
 
     private function calculateOtherExpenses(Carbon $startDate, Carbon $endDate): float
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['interest', 'taxes', 'depreciation', 'other'])
             ->sum('amount');
     }
@@ -378,7 +378,7 @@ class GenerateFinancialReportsAction
             default => 'Y-m-d'
         };
 
-        return Sale::whereBetween('date', [$startDate, $endDate])
+        return Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get()
             ->groupBy(fn ($sale) => $sale->date->format($format))
@@ -386,7 +386,7 @@ class GenerateFinancialReportsAction
             ->toArray();
     }
 
-    private function getPreviousPeriodComparison(Carbon $startDate, Carbon $endDate, string $period): array
+    private function getPreviousPeriodComparison(Carbon $startDate, Carbon $endDate): array
     {
         $periodLength = $startDate->diffInDays($endDate);
         $previousEndDate = $startDate->copy()->subDay();
@@ -445,7 +445,7 @@ class GenerateFinancialReportsAction
 
     private function calculateInvestingCashFlow(Carbon $startDate, Carbon $endDate): array
     {
-        $equipmentPurchases = Expense::whereBetween('date', [$startDate, $endDate])
+        $equipmentPurchases = Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['equipment', 'furniture', 'technology'])
             ->sum('amount');
 
@@ -456,7 +456,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateFinancingCashFlow(Carbon $startDate, Carbon $endDate): array
+    private function calculateFinancingCashFlow(): array
     {
         // This would require loan and investment tracking
         return [
@@ -470,17 +470,17 @@ class GenerateFinancialReportsAction
 
     private function getBeginningCashPosition(Carbon $startDate): float
     {
-        return CashRegister::where('date', '<', $startDate)
+        return CashRegister::query()->where('date', '<', $startDate)
             ->sum('closing_balance') ?? 0;
     }
 
-    private function getCashFlowByPeriod(Carbon $startDate, Carbon $endDate, string $period): array
+    private function getCashFlowByPeriod(): array
     {
         // Simplified cash flow by period
         return [];
     }
 
-    private function calculateCashConversionCycle(Carbon $startDate, Carbon $endDate): array
+    private function calculateCashConversionCycle(): array
     {
         // Simplified cash conversion cycle
         return [
@@ -493,7 +493,7 @@ class GenerateFinancialReportsAction
 
     private function calculateCurrentAssets(Carbon $asOfDate): array
     {
-        $cash = CashRegister::where('date', '<=', $asOfDate)
+        $cash = CashRegister::query()->where('date', '<=', $asOfDate)
             ->sum('closing_balance');
 
         return [
@@ -504,7 +504,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateFixedAssets(Carbon $asOfDate): array
+    private function calculateFixedAssets(): array
     {
         // This would require asset tracking
         return [
@@ -515,7 +515,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateCurrentLiabilities(Carbon $asOfDate): array
+    private function calculateCurrentLiabilities(): array
     {
         // This would require liability tracking
         return [
@@ -526,7 +526,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateLongTermLiabilities(Carbon $asOfDate): array
+    private function calculateLongTermLiabilities(): array
     {
         return [
             'total' => 0,
@@ -538,8 +538,8 @@ class GenerateFinancialReportsAction
     private function calculateEquity(Carbon $asOfDate): array
     {
         // Simplified equity calculation
-        $totalAssets = $this->calculateCurrentAssets($asOfDate)['total'] + $this->calculateFixedAssets($asOfDate)['total'];
-        $totalLiabilities = $this->calculateCurrentLiabilities($asOfDate)['total'] + $this->calculateLongTermLiabilities($asOfDate)['total'];
+        $totalAssets = $this->calculateCurrentAssets($asOfDate)['total'] + $this->calculateFixedAssets()['total'];
+        $totalLiabilities = $this->calculateCurrentLiabilities()['total'] + $this->calculateLongTermLiabilities()['total'];
 
         return [
             'total' => $totalAssets - $totalLiabilities,
@@ -557,7 +557,7 @@ class GenerateFinancialReportsAction
 
     private function calculateTotalExpenses(Carbon $startDate, Carbon $endDate): float
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->sum('amount');
     }
 
@@ -568,7 +568,7 @@ class GenerateFinancialReportsAction
 
     private function getExpenseBreakdown(Carbon $startDate, Carbon $endDate): array
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->get()
             ->groupBy('category')
             ->map(fn ($group) => $group->sum('amount'))
@@ -577,7 +577,7 @@ class GenerateFinancialReportsAction
 
     private function getCOGSBreakdown(Carbon $startDate, Carbon $endDate): array
     {
-        return Expense::whereBetween('date', [$startDate, $endDate])
+        return Expense::query()->whereBetween('date', [$startDate, $endDate])
             ->whereIn('category', ['beverages', 'inventory', 'supplies'])
             ->get()
             ->groupBy('category')
@@ -587,7 +587,7 @@ class GenerateFinancialReportsAction
 
     private function getRevenueByDay(Carbon $startDate, Carbon $endDate): array
     {
-        return Sale::whereBetween('date', [$startDate, $endDate])
+        return Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get()
             ->groupBy(fn ($sale) => $sale->date->format('Y-m-d'))
@@ -597,7 +597,7 @@ class GenerateFinancialReportsAction
 
     private function getRevenueByHour(Carbon $startDate, Carbon $endDate): array
     {
-        return Sale::whereBetween('date', [$startDate, $endDate])
+        return Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get()
             ->groupBy(fn ($sale) => $sale->date->format('H:00'))
@@ -607,7 +607,7 @@ class GenerateFinancialReportsAction
 
     private function getRevenueByPaymentMethod(Carbon $startDate, Carbon $endDate): array
     {
-        return Sale::whereBetween('date', [$startDate, $endDate])
+        return Sale::query()->whereBetween('date', [$startDate, $endDate])
             ->where('status', 'completed')
             ->get()
             ->groupBy('payment_method')
@@ -615,7 +615,7 @@ class GenerateFinancialReportsAction
             ->toArray();
     }
 
-    private function getTopSellingItems(Carbon $startDate, Carbon $endDate): array
+    private function getTopSellingItems(): array
     {
         // This would require sale items tracking
         return [];
@@ -623,7 +623,7 @@ class GenerateFinancialReportsAction
 
     private function calculateRevenueTrends(Carbon $startDate, Carbon $endDate, string $period): array
     {
-        $revenueByPeriod = $this->getRevenueByPeriod($startDate, $endDate, $period);
+        $this->getRevenueByPeriod($startDate, $endDate, $period);
 
         return [
             'trend_direction' => 'up', // Simplified
@@ -632,7 +632,7 @@ class GenerateFinancialReportsAction
         ];
     }
 
-    private function calculateExpenseTrends(Carbon $startDate, Carbon $endDate, string $period): array
+    private function calculateExpenseTrends(): array
     {
         return [
             'trend_direction' => 'stable',

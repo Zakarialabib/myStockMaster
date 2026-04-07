@@ -18,27 +18,27 @@ class SuppliersReport extends Component
     use WithAlert;
     use WithPagination;
 
-    public $supplier_id;
+    public mixed $supplier_id;
 
-    public $suppliers;
+    public mixed $suppliers;
 
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public mixed $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public mixed $end_date;
 
-    public $payment_status;
+    public mixed $payment_status;
 
-    public $purchase_status;
+    public mixed $purchase_status;
 
     public function mount(): void
     {
-        $this->suppliers = Supplier::select(['id', 'name'])->get();
+        $this->suppliers = Supplier::query()->select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->supplier_id = '';
@@ -48,14 +48,14 @@ class SuppliersReport extends Component
 
     public function getPurchasesProperty()
     {
-        return Purchase::whereDate('date', '>=', $this->start_date)
+        return Purchase::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, fn ($query) => $query->where('supplier_id', $this->supplier_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
             ->orderBy('date', 'desc')->paginate(10);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.reports.suppliers-report', [
         ]);

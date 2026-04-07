@@ -16,12 +16,12 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
-        $user = User::create([
+        $user = User::query()->create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'token' => $token,
             'token_type' => 'Bearer',
         ]);
@@ -38,16 +38,16 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         if (! Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'message' => 'Invalid login details',
             ], 401);
         }
 
-        $user = User::where('email', $request['email'])->firstOrFail();
+        $user = User::query()->where('email', $request['email'])->firstOrFail();
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'token' => $token,
             'token_type' => 'Bearer',
         ]);

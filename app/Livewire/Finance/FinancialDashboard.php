@@ -50,24 +50,24 @@ class FinancialDashboard extends Component
 
     public int $refreshInterval = 300; // 5 minutes
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->setDateRange();
         $this->loadFinancialData();
     }
 
-    public function updatedDateRange()
+    public function updatedDateRange(): void
     {
         $this->setDateRange();
         $this->loadFinancialData();
     }
 
-    public function updatedStartDate()
+    public function updatedStartDate(): void
     {
         if ($this->dateRange === 'custom') {
             $this->validateOnly('startDate');
@@ -76,7 +76,7 @@ class FinancialDashboard extends Component
         }
     }
 
-    public function updatedEndDate()
+    public function updatedEndDate(): void
     {
         if ($this->dateRange === 'custom') {
             $this->validateOnly('endDate');
@@ -85,7 +85,7 @@ class FinancialDashboard extends Component
         }
     }
 
-    private function setDateRange()
+    private function setDateRange(): void
     {
         switch ($this->dateRange) {
             case 'today':
@@ -121,6 +121,7 @@ class FinancialDashboard extends Component
                 if (! $this->endDate) {
                     $this->endDate = now()->format('Y-m-d');
                 }
+
                 $this->dateFrom = $this->startDate;
                 $this->dateTo = $this->endDate;
 
@@ -131,37 +132,37 @@ class FinancialDashboard extends Component
         }
     }
 
-    public function updatedDateFrom()
+    public function updatedDateFrom(): void
     {
         $this->validateOnly('dateFrom');
         $this->loadFinancialData();
     }
 
-    public function updatedDateTo()
+    public function updatedDateTo(): void
     {
         $this->validateOnly('dateTo');
         $this->loadFinancialData();
     }
 
-    public function loadFinancialData()
+    public function loadFinancialData(): void
     {
 
         try {
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
             // Load KPI data using action
-            $kpiAction = new GenerateFinancialKpiReportAction(
+            $generateFinancialKpiReportAction = new GenerateFinancialKpiReportAction(
                 new CalculateGrossMarginAction,
                 new CalculateNetMarginAction,
                 new CalculateCashFlowAction,
                 new CalculateBreakEvenAction
             );
-            $this->kpiData = $kpiAction($dateFrom, $dateTo);
+            $this->kpiData = $generateFinancialKpiReportAction($dateFrom, $dateTo);
 
             // Generate profit & loss report
-            $profitLossAction = new GenerateFinancialReportsAction;
-            $this->profitLossData = $profitLossAction([
+            $generateFinancialReportsAction = new GenerateFinancialReportsAction;
+            $this->profitLossData = $generateFinancialReportsAction([
                 'report_type' => 'profit_loss',
                 'start_date' => $dateFrom,
                 'end_date' => $dateTo,
@@ -169,12 +170,12 @@ class FinancialDashboard extends Component
             ]);
 
             // Generate cash flow report
-            $cashFlowAction = new CalculateCashFlowAction;
-            $this->cashFlowData = $cashFlowAction($dateFrom, $dateTo);
+            $calculateCashFlowAction = new CalculateCashFlowAction;
+            $this->cashFlowData = $calculateCashFlowAction($dateFrom, $dateTo);
 
             // Calculate break-even analysis
-            $breakEvenAction = new CalculateBreakEvenAction;
-            $this->breakEvenData = $breakEvenAction([
+            $calculateBreakEvenAction = new CalculateBreakEvenAction;
+            $this->breakEvenData = $calculateBreakEvenAction([
                 'rent' => 0,
                 'salaries' => 0,
                 'insurance' => 0,
@@ -186,10 +187,10 @@ class FinancialDashboard extends Component
             ], $dateTo);
 
             // Calculate gross margin
-            $grossMarginAction = new CalculateGrossMarginAction;
-            $this->grossMarginData = $grossMarginAction($dateFrom, $dateTo);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to load financial data: ' . $e->getMessage());
+            $calculateGrossMarginAction = new CalculateGrossMarginAction;
+            $this->grossMarginData = $calculateGrossMarginAction($dateFrom, $dateTo);
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to load financial data: ' . $exception->getMessage());
         }
     }
 
@@ -197,7 +198,7 @@ class FinancialDashboard extends Component
     public function filteredProducts()
     {
         return Product::query()
-            ->when($this->search, function ($query) {
+            ->when($this->search, function ($query): void {
                 $query->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('sku', 'like', '%' . $this->search . '%');
             })
@@ -217,18 +218,18 @@ class FinancialDashboard extends Component
     }
 
     #[Computed]
-    public function netProfit()
+    public function netProfit(): int|float
     {
         return $this->totalRevenue - $this->totalExpenses;
     }
 
-    public function refreshData()
+    public function refreshData(): void
     {
         $this->loadFinancialData();
         $this->dispatch('financial-data-refreshed');
     }
 
-    public function exportFinancialReport($type = 'complete')
+    public function exportFinancialReport(string $type = 'complete')
     {
         try {
             $filename = 'financial_report_' . $type . '_' . now()->format('Y-m-d_H-i-s') . '.json';
@@ -266,7 +267,7 @@ class FinancialDashboard extends Component
                     break;
             }
 
-            return response()->streamDownload(function () use ($exportData) {
+            return response()->streamDownload(function () use ($exportData): void {
                 $generator = function () use ($exportData) {
                     yield '{';
                     $first = true;
@@ -274,9 +275,11 @@ class FinancialDashboard extends Component
                         if (! $first) {
                             yield ',';
                         }
+
                         yield '"' . $key . '":' . json_encode($value);
                         $first = false;
                     }
+
                     yield '}';
                 };
 
@@ -286,13 +289,16 @@ class FinancialDashboard extends Component
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to export financial report: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to export financial report: ' . $exception->getMessage());
         }
     }
 
+    /**
+     * @return mixed[]|array<'labels', list>
+     */
     #[Computed]
-    public function chartData()
+    public function chartData(): array
     {
         if (! isset($this->profitLossData['monthly_breakdown'])) {
             return [];
@@ -335,7 +341,7 @@ class FinancialDashboard extends Component
         ];
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.finance.financial-dashboard');
     }

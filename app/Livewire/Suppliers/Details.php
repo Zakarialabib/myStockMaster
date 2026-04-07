@@ -21,19 +21,19 @@ class Details extends Component
     use WithAlert;
 
     #[Locked]
-    public $supplier_id;
+    public mixed $supplier_id;
 
-    public $model = Supplier::class;
+    public string $model = Supplier::class;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
-    public $supplier;
+    public mixed $supplier;
 
-    public $purchases;
+    public mixed $purchases;
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
-        $this->supplier = Supplier::findOrFail($id);
+        $this->supplier = Supplier::query()->findOrFail($id);
         $this->supplier_id = $this->supplier->id;
     }
 
@@ -46,7 +46,7 @@ class Details extends Component
     #[Computed]
     public function TotalPurchaseReturns(): float
     {
-        return PurchaseReturn::where('supplier_id', $this->supplier_id)
+        return PurchaseReturn::query()->where('supplier_id', $this->supplier_id)
             ->sum('total_amount') / 100;
     }
 
@@ -66,12 +66,12 @@ class Details extends Component
     public function Debit(): float
     {
         // Step 1: Calculate total purchases revenue for completed purchases
-        $purchasesTotal = Purchase::where('supplier_id', $this->supplier_id)
+        $purchasesTotal = Purchase::query()->where('supplier_id', $this->supplier_id)
             ->completed()
             ->sum('total_amount') / 100;
 
         // Step 2: Calculate total purchases returns
-        $purchaseReturnsTotal = PurchaseReturn::where('supplier_id', $this->supplier_id)
+        $purchaseReturnsTotal = PurchaseReturn::query()->where('supplier_id', $this->supplier_id)
             ->completed()
             ->sum('total_amount') / 100;
 
@@ -98,7 +98,7 @@ class Details extends Component
     #[Computed]
     public function purchases()
     {
-        $query = Purchase::where('supplier_id', $this->supplier_id)
+        $query = Purchase::query()->where('supplier_id', $this->supplier_id)
             ->with('supplier')
             ->advancedFilter([
                 's' => $this->search ?: null,
@@ -112,7 +112,7 @@ class Details extends Component
     #[Computed]
     public function supplierPayments()
     {
-        $query = Purchase::where('supplier_id', $this->supplier_id)
+        $query = Purchase::query()->where('supplier_id', $this->supplier_id)
             ->with('purchasepayments.purchase')
             ->advancedFilter([
                 's' => $this->search ?: null,
@@ -123,13 +123,13 @@ class Details extends Component
         return $query->paginate($this->perPage);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.suppliers.details');
     }
 
     private function supplierSum(string $field): int|float
     {
-        return Purchase::whereBelongsTo($this->supplier)->sum($field) / 100;
+        return Purchase::query()->whereBelongsTo($this->supplier)->sum($field) / 100;
     }
 }

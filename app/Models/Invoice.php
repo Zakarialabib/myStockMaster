@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invoice extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     public const SALE_TYPE = 1;
 
     public const POS_TYPE = 2;

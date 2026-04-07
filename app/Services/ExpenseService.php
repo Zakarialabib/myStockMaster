@@ -16,9 +16,9 @@ class ExpenseService
                 $data['document'] = $data['document']->store('expenses', 'public');
             }
 
-            $expense = Expense::create($data);
+            $expense = Expense::query()->create($data);
 
-            if (! isset($data['user_id']) || empty($data['user_id'])) {
+            if (! isset($data['user_id']) || blank($data['user_id'])) {
                 $expense->user()->associate(auth()->user());
             }
 
@@ -28,7 +28,7 @@ class ExpenseService
 
     public function update(Expense $expense, array $data): Expense
     {
-        return DB::transaction(function () use ($expense, $data) {
+        return DB::transaction(function () use ($expense, $data): \App\Models\Expense {
             if (isset($data['document']) && ! is_string($data['document'])) {
                 $data['document'] = $data['document']->store('expenses', 'public');
             } else {

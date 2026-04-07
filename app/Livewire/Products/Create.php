@@ -35,12 +35,10 @@ class Create extends Component
     #[Computed]
     public function productAttributes()
     {
-        return ProductAttribute::all()->mapWithKeys(function ($attr) {
-            return [$attr->id => ''];
-        })->toArray();
+        return ProductAttribute::all()->mapWithKeys(fn($attr) => [$attr->id => ''])->all();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('product_create'), 403);
 
@@ -55,6 +53,7 @@ class Create extends Component
         $this->step = 1;
         $this->form->unit = 'pcs';
         $this->form->barcode_symbology = 'C128';
+
         $this->createModal = true;
     }
 
@@ -77,18 +76,18 @@ class Create extends Component
     #[Computed]
     public function warehouse()
     {
-        return Warehouse::select('name', 'id')->first();
+        return Warehouse::query()->select('name', 'id')->first();
     }
 
     #[Computed]
     public function categories()
     {
-        return Category::pluck('name', 'id')->toArray();
+        return Category::query()->pluck('name', 'id')->toArray();
     }
 
     #[Computed]
     public function brands()
     {
-        return Brand::pluck('name', 'id')->toArray();
+        return Brand::query()->pluck('name', 'id')->toArray();
     }
 }

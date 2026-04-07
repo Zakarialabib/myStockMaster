@@ -18,17 +18,17 @@ class Edit extends Component
 
     public bool $showModal = false;
 
-    public $expenseCategory;
+    public mixed $expenseCategory;
 
     public ExpenseCategoryForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.expense-categories.edit');
     }
 
     #[On('editModal')]
-    public function editModal($id): void
+    public function editModal(mixed $id): void
     {
         abort_if(Gate::denies('expense category_update'), 403);
 
@@ -36,7 +36,7 @@ class Edit extends Component
 
         $this->resetValidation();
 
-        $this->expenseCategory = ExpenseCategory::where('id', $id)->firstOrFail();
+        $this->expenseCategory = ExpenseCategory::query()->where('id', $id)->firstOrFail();
 
         $this->form->setCategory($this->expenseCategory);
 

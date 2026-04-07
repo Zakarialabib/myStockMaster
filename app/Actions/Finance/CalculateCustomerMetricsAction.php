@@ -15,12 +15,12 @@ final class CalculateCustomerMetricsAction
     public function __invoke(array $params = []): array
     {
         $period = $params['period'] ?? 'monthly';
-        $startDate = $params['start_date'] ?? Carbon::now()->subMonths(12);
-        $endDate = $params['end_date'] ?? Carbon::now();
+        $startDate = $params['start_date'] ?? \Illuminate\Support\Facades\Date::now()->subMonths(12);
+        $endDate = $params['end_date'] ?? \Illuminate\Support\Facades\Date::now();
         $segmentBy = $params['segment_by'] ?? null; // 'acquisition_channel', 'customer_type', etc.
 
         return [
-            'clv_metrics' => $this->calculateCLVMetrics($startDate, $endDate, $period),
+            'clv_metrics' => $this->calculateCLVMetrics($startDate, $endDate),
             'cac_metrics' => $this->calculateCACMetrics($startDate, $endDate, $period),
             'customer_segments' => $this->calculateSegmentMetrics($startDate, $endDate, $segmentBy),
             'cohort_analysis' => $this->calculateCohortAnalysis($startDate, $endDate),
@@ -33,21 +33,21 @@ final class CalculateCustomerMetricsAction
             'period' => $period,
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
-            'generated_at' => Carbon::now()->toISOString(),
+            'generated_at' => \Illuminate\Support\Facades\Date::now()->toISOString(),
         ];
     }
 
     /** Calculate Customer Lifetime Value (CLV) metrics */
-    private function calculateCLVMetrics(Carbon $startDate, Carbon $endDate, string $period): array
+    private function calculateCLVMetrics(Carbon $startDate, Carbon $endDate): array
     {
         // Get customer data with sales
-        $customers = Customer::with(['sales' => function ($query) use ($startDate, $endDate) {
+        $customers = Customer::with(['sales' => function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
         }])->get();
 
         $totalCustomers = $customers->count();
-        $activeCustomers = $customers->filter(fn ($c) => $c->sales->count() > 0)->count();
+        $activeCustomers = $customers->filter(fn ($c): bool => $c->sales->count() > 0)->count();
 
         // Calculate average sale value (AOV)
         $totalRevenue = $customers->sum(fn ($c) => $c->sales->sum('total_amount'));
@@ -75,7 +75,7 @@ final class CalculateCustomerMetricsAction
             'average_clv' => round($averageCLV, 2),
             'total_customer_value' => round($totalRevenue, 2),
             'clv_segments' => $clvSegments,
-            'clv_distribution' => $this->calculateCLVDistribution($customers, $averageSaleValue, $averagePurchaseFrequency),
+            'clv_distribution' => $this->calculateCLVDistribution($customers, $averagePurchaseFrequency),
         ];
     }
 
@@ -83,19 +83,19 @@ final class CalculateCustomerMetricsAction
     private function calculateCACMetrics(Carbon $startDate, Carbon $endDate, string $period): array
     {
         // Get marketing spend data
-        $marketingSpend = $this->getMarketingSpend($startDate, $endDate);
+        $marketingSpend = $this->getMarketingSpend();
 
         // Get new customers acquired in the period
-        $newCustomers = Customer::whereBetween('created_at', [$startDate, $endDate])->count();
+        $newCustomers = Customer::query()->whereBetween('created_at', [$startDate, $endDate])->count();
 
         // Calculate CAC
         $totalCAC = $newCustomers > 0 ? $marketingSpend['total'] / $newCustomers : 0;
 
         // Calculate CAC by channel
-        $cacByChannel = $this->calculateCACByChannel($startDate, $endDate);
+        $cacByChannel = $this->calculateCACByChannel();
 
         // Calculate CAC trends
-        $cacTrends = $this->calculateCACTrends($startDate, $endDate, $period);
+        $cacTrends = $this->calculateCACTrends();
 
         return [
             'total_marketing_spend' => round($marketingSpend['total'], 2),
@@ -104,7 +104,7 @@ final class CalculateCustomerMetricsAction
             'cac_by_channel' => $cacByChannel,
             'cac_trends' => $cacTrends,
             'marketing_spend_breakdown' => $marketingSpend['breakdown'],
-            'cac_payback_period' => $this->calculateCACPaybackPeriod($totalCAC, $startDate, $endDate),
+            'cac_payback_period' => $this->calculateCACPaybackPeriod($totalCAC),
         ];
     }
 
@@ -117,26 +117,13 @@ final class CalculateCustomerMetricsAction
 
         $segments = [];
 
-        switch ($segmentBy) {
-            case 'acquisition_channel':
-                $segments = $this->segmentByAcquisitionChannel($startDate, $endDate);
-
-                break;
-            case 'customer_type':
-                $segments = $this->segmentByCustomerType($startDate, $endDate);
-
-                break;
-            case 'sale_frequency':
-                $segments = $this->segmentBySaleFrequency($startDate, $endDate);
-
-                break;
-            case 'spending_level':
-                $segments = $this->segmentBySpendingLevel($startDate, $endDate);
-
-                break;
-        }
-
-        return $segments;
+        return match ($segmentBy) {
+            'acquisition_channel' => $this->segmentByAcquisitionChannel(),
+            'customer_type' => $this->segmentByCustomerType(),
+            'sale_frequency' => $this->segmentBySaleFrequency(),
+            'spending_level' => $this->segmentBySpendingLevel(),
+            default => $segments,
+        };
     }
 
     /** Calculate cohort analysis */
@@ -146,15 +133,15 @@ final class CalculateCustomerMetricsAction
 
         // Group customers by acquisition month
         $dateFormatSql = db_date_format('created_at', '%Y-%m');
-        $customerCohorts = Customer::selectRaw("{$dateFormatSql} as cohort_month, COUNT(*) as customers")
+        $customerCohorts = Customer::query()->selectRaw($dateFormatSql . ' as cohort_month, COUNT(*) as customers')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('cohort_month')
             ->orderBy('cohort_month')
             ->get();
 
-        foreach ($customerCohorts as $cohort) {
-            $cohortStart = Carbon::createFromFormat('Y-m', $cohort->cohort_month)->startOfMonth();
-            $cohortCustomers = Customer::whereMonth('created_at', $cohortStart->month)
+        foreach ($customerCohorts as $customerCohort) {
+            $cohortStart = \Illuminate\Support\Facades\Date::createFromFormat('Y-m', $customerCohort->cohort_month)->startOfMonth();
+            $cohortCustomers = Customer::query()->whereMonth('created_at', $cohortStart->month)
                 ->whereYear('created_at', $cohortStart->year)
                 ->pluck('id');
 
@@ -165,18 +152,18 @@ final class CalculateCustomerMetricsAction
                 $periodStart = $cohortStart->copy()->addMonths($i);
                 $periodEnd = $periodStart->copy()->endOfMonth();
 
-                $activeCustomers = Sale::whereIn('customer_id', $cohortCustomers)
+                $activeCustomers = Sale::query()->whereIn('customer_id', $cohortCustomers)
                     ->whereBetween('created_at', [$periodStart, $periodEnd])
                     ->where('status', 'completed')
                     ->distinct('customer_id')
                     ->count();
 
-                $retentionRates[$i] = $cohort->customers > 0 ? round(($activeCustomers / $cohort->customers) * 100, 2) : 0;
+                $retentionRates[$i] = $customerCohort->customers > 0 ? round(($activeCustomers / $customerCohort->customers) * 100, 2) : 0;
             }
 
             $cohorts[] = [
-                'cohort_month' => $cohort->cohort_month,
-                'customers' => $cohort->customers,
+                'cohort_month' => $customerCohort->cohort_month,
+                'customers' => $customerCohort->customers,
                 'retention_rates' => $retentionRates,
             ];
         }
@@ -187,11 +174,11 @@ final class CalculateCustomerMetricsAction
     /** Calculate retention metrics */
     private function calculateRetentionMetrics(Carbon $startDate, Carbon $endDate): array
     {
-        $totalCustomers = Customer::where('created_at', '<', $startDate)->count();
+        $totalCustomers = Customer::query()->where('created_at', '<', $startDate)->count();
 
         // Customers who made purchases in the period
-        $activeCustomers = Customer::whereHas('sales', function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate])
+        $activeCustomers = Customer::query()->whereHas('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($startDate, $endDate): void {
+            $builder->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
         })->where('created_at', '<', $startDate)->count();
 
@@ -199,13 +186,13 @@ final class CalculateCustomerMetricsAction
         $churnRate = 100 - $retentionRate;
 
         // Calculate repeat purchase rate
-        $customersWithMultipleSales = Customer::whereHas('sales', function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate])
+        $customersWithMultipleSales = Customer::query()->whereHas('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($startDate, $endDate): void {
+            $builder->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
         }, '>=', 2)->count();
 
-        $customersWithSales = Customer::whereHas('sales', function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate])
+        $customersWithSales = Customer::query()->whereHas('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($startDate, $endDate): void {
+            $builder->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
         })->count();
 
@@ -224,7 +211,7 @@ final class CalculateCustomerMetricsAction
     /** Calculate LTV:CAC ratio */
     private function calculateLTVCACRatio(Carbon $startDate, Carbon $endDate): array
     {
-        $clvMetrics = $this->calculateCLVMetrics($startDate, $endDate, 'monthly');
+        $clvMetrics = $this->calculateCLVMetrics($startDate, $endDate);
         $cacMetrics = $this->calculateCACMetrics($startDate, $endDate, 'monthly');
 
         $ltvCacRatio = $cacMetrics['average_cac'] > 0 ? $clvMetrics['average_clv'] / $cacMetrics['average_cac'] : 0;
@@ -262,37 +249,31 @@ final class CalculateCustomerMetricsAction
 
         $dateFormatSql = db_date_format('created_at', $dateFormat);
 
-        $trends = Customer::selectRaw("{$dateFormatSql} as period, COUNT(*) as new_customers")
+        return Customer::query()->selectRaw($dateFormatSql . ' as period, COUNT(*) as new_customers')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('period')
             ->orderBy('period')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'period' => $item->period,
-                    'new_customers' => $item->new_customers,
-                ];
-            })
+            ->map(fn($item) => [
+                'period' => $item->period,
+                'new_customers' => $item->new_customers,
+            ])
             ->toArray();
-
-        return $trends;
     }
 
     /** Calculate revenue per customer */
     private function calculateRevenuePerCustomer(Carbon $startDate, Carbon $endDate): array
     {
-        $customerRevenue = Customer::with(['sales' => function ($query) use ($startDate, $endDate) {
+        $customerRevenue = Customer::with(['sales' => function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
-        }])->get()->map(function ($customer) {
-            return [
-                'customer_id' => $customer->id,
-                'customer_name' => $customer->name,
-                'total_revenue' => $customer->sales->sum('total_amount'),
-                'sale_count' => $customer->sales->count(),
-                'average_sale_value' => $customer->sales->count() > 0 ? $customer->sales->sum('total_amount') / $customer->sales->count() : 0,
-            ];
-        })->sortByDesc('total_revenue');
+        }])->get()->map(fn($customer) => [
+            'customer_id' => $customer->id,
+            'customer_name' => $customer->name,
+            'total_revenue' => $customer->sales->sum('total_amount'),
+            'sale_count' => $customer->sales->count(),
+            'average_sale_value' => $customer->sales->count() > 0 ? $customer->sales->sum('total_amount') / $customer->sales->count() : 0,
+        ])->sortByDesc('total_revenue');
 
         $totalRevenue = $customerRevenue->sum('total_revenue');
         $totalCustomers = $customerRevenue->where('total_revenue', '>', 0)->count();
@@ -302,7 +283,7 @@ final class CalculateCustomerMetricsAction
             'total_revenue' => round($totalRevenue, 2),
             'total_customers' => $totalCustomers,
             'average_revenue_per_customer' => round($averageRevenuePerCustomer, 2),
-            'top_customers' => $customerRevenue->take(10)->values()->toArray(),
+            'top_customers' => $customerRevenue->take(10)->values()->all(),
             'revenue_distribution' => $this->calculateRevenueDistribution($customerRevenue),
         ];
     }
@@ -311,18 +292,18 @@ final class CalculateCustomerMetricsAction
     private function calculateChurnAnalysis(Carbon $startDate, Carbon $endDate): array
     {
         // Define churn as customers who haven't made a purchase in the last 90 days
-        $churnThreshold = Carbon::now()->subDays(90);
+        $churnThreshold = \Illuminate\Support\Facades\Date::now()->subDays(90);
 
-        $churnedCustomers = Customer::whereDoesntHave('sales', function ($query) use ($churnThreshold) {
-            $query->where('created_at', '>=', $churnThreshold)
+        $churnedCustomers = Customer::query()->whereDoesntHave('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($churnThreshold): void {
+            $builder->where('created_at', '>=', $churnThreshold)
                 ->where('status', 'completed');
         })->where('created_at', '<', $churnThreshold)->count();
 
-        $totalCustomers = Customer::where('created_at', '<', $churnThreshold)->count();
+        $totalCustomers = Customer::query()->where('created_at', '<', $churnThreshold)->count();
         $churnRate = $totalCustomers > 0 ? ($churnedCustomers / $totalCustomers) * 100 : 0;
 
         // Calculate churn reasons (if available)
-        $churnReasons = $this->analyzeChurnReasons($startDate, $endDate);
+        $churnReasons = $this->analyzeChurnReasons();
 
         return [
             'churned_customers' => $churnedCustomers,
@@ -337,12 +318,10 @@ final class CalculateCustomerMetricsAction
     /** Calculate customer value distribution */
     private function calculateValueDistribution(Carbon $startDate, Carbon $endDate): array
     {
-        $customerValues = Customer::with(['sales' => function ($query) use ($startDate, $endDate) {
+        $customerValues = Customer::with(['sales' => function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
-        }])->get()->map(function ($customer) {
-            return $customer->sales->sum('total_amount');
-        })->filter(fn ($value) => $value > 0)->sort();
+        }])->get()->map(fn($customer) => $customer->sales->sum('total_amount'))->filter(fn ($value): bool => $value > 0)->sort();
 
         $total = $customerValues->count();
 
@@ -364,9 +343,9 @@ final class CalculateCustomerMetricsAction
         ];
 
         // Segment customers by value
-        $lowValue = $customerValues->filter(fn ($v) => $v <= $percentiles['p25'])->count();
-        $mediumValue = $customerValues->filter(fn ($v) => $v > $percentiles['p25'] && $v <= $percentiles['p75'])->count();
-        $highValue = $customerValues->filter(fn ($v) => $v > $percentiles['p75'])->count();
+        $lowValue = $customerValues->filter(fn ($v): bool => $v <= $percentiles['p25'])->count();
+        $mediumValue = $customerValues->filter(fn ($v): bool => $v > $percentiles['p25'] && $v <= $percentiles['p75'])->count();
+        $highValue = $customerValues->filter(fn ($v): bool => $v > $percentiles['p75'])->count();
 
         return [
             'low_value' => $lowValue,
@@ -381,7 +360,7 @@ final class CalculateCustomerMetricsAction
 
     private function calculateAverageCustomerLifespan(Collection $customers): float
     {
-        $lifespans = $customers->map(function ($customer) {
+        $lifespans = $customers->map(function ($customer): int|float {
             if ($customer->sales->isEmpty()) {
                 return 0;
             }
@@ -389,10 +368,10 @@ final class CalculateCustomerMetricsAction
             $firstSale = $customer->sales->min('created_at');
             $lastSale = $customer->sales->max('created_at');
 
-            return Carbon::parse($firstSale)->diffInMonths(Carbon::parse($lastSale)) + 1;
-        })->filter(fn ($lifespan) => $lifespan > 0);
+            return \Illuminate\Support\Facades\Date::parse($firstSale)->diffInMonths(\Illuminate\Support\Facades\Date::parse($lastSale)) + 1;
+        })->filter(fn ($lifespan): bool => $lifespan > 0);
 
-        return $lifespans->isEmpty() ? 1 : $lifespans->average();
+        return $lifespans->isEmpty() ? 1 : $lifespans->avg();
     }
 
     private function segmentCustomersByCLV(Collection $customers, float $aov, float $frequency): array
@@ -416,14 +395,14 @@ final class CalculateCustomerMetricsAction
         return $segments;
     }
 
-    private function calculateCLVDistribution(Collection $customers, float $aov, float $frequency): array
+    private function calculateCLVDistribution(Collection $customers, float $frequency): array
     {
-        $clvValues = $customers->map(function ($customer) use ($frequency) {
+        $clvValues = $customers->map(function ($customer) use ($frequency): float|int {
             $customerSales = $customer->sales->count();
             $customerRevenue = $customer->sales->sum('total_amount');
 
             return $customerSales > 0 ? ($customerRevenue / $customerSales) * $frequency * 12 : 0;
-        })->filter(fn ($clv) => $clv > 0)->sort();
+        })->filter(fn ($clv): bool => $clv > 0)->sort();
 
         $total = $clvValues->count();
 
@@ -435,16 +414,16 @@ final class CalculateCustomerMetricsAction
             'min' => round($clvValues->min(), 2),
             'max' => round($clvValues->max(), 2),
             'median' => round($clvValues->values()[intval($total * 0.5)] ?? 0, 2),
-            'average' => round($clvValues->average(), 2),
+            'average' => round($clvValues->avg(), 2),
         ];
     }
 
-    private function getMarketingSpend(Carbon $startDate, Carbon $endDate): array
+    private function getMarketingSpend(): array
     {
         // This would typically come from a marketing_campaigns or marketing_spend table
         // For now, we'll use a placeholder calculation
-        $totalSpend = 10000; // Placeholder
-
+        $totalSpend = 10000;
+        // Placeholder
         return [
             'total' => $totalSpend,
             'breakdown' => [
@@ -457,7 +436,7 @@ final class CalculateCustomerMetricsAction
         ];
     }
 
-    private function calculateCACByChannel(Carbon $startDate, Carbon $endDate): array
+    private function calculateCACByChannel(): array
     {
         // Placeholder implementation - would need actual channel tracking
         return [
@@ -469,13 +448,13 @@ final class CalculateCustomerMetricsAction
         ];
     }
 
-    private function calculateCACTrends(Carbon $startDate, Carbon $endDate, string $period): array
+    private function calculateCACTrends(): array
     {
         // Placeholder implementation
         return [];
     }
 
-    private function calculateCACPaybackPeriod(float $cac, Carbon $startDate, Carbon $endDate): array
+    private function calculateCACPaybackPeriod(float $cac): array
     {
         // Calculate average monthly revenue per customer
         $monthlyRevenuePerCustomer = 150; // Placeholder
@@ -487,25 +466,25 @@ final class CalculateCustomerMetricsAction
         ];
     }
 
-    private function segmentByAcquisitionChannel(Carbon $startDate, Carbon $endDate): array
+    private function segmentByAcquisitionChannel(): array
     {
         // Placeholder implementation
         return [];
     }
 
-    private function segmentByCustomerType(Carbon $startDate, Carbon $endDate): array
+    private function segmentByCustomerType(): array
     {
         // Placeholder implementation
         return [];
     }
 
-    private function segmentBySaleFrequency(Carbon $startDate, Carbon $endDate): array
+    private function segmentBySaleFrequency(): array
     {
         // Placeholder implementation
         return [];
     }
 
-    private function segmentBySpendingLevel(Carbon $startDate, Carbon $endDate): array
+    private function segmentBySpendingLevel(): array
     {
         // Placeholder implementation
         return [];
@@ -513,7 +492,7 @@ final class CalculateCustomerMetricsAction
 
     private function calculateRevenueDistribution(Collection $customerRevenue): array
     {
-        $revenues = $customerRevenue->pluck('total_revenue')->filter(fn ($r) => $r > 0)->sort();
+        $revenues = $customerRevenue->pluck('total_revenue')->filter(fn ($r): bool => $r > 0)->sort();
         $total = $revenues->count();
 
         if ($total === 0) {
@@ -527,7 +506,7 @@ final class CalculateCustomerMetricsAction
         ];
     }
 
-    private function analyzeChurnReasons(Carbon $startDate, Carbon $endDate): array
+    private function analyzeChurnReasons(): array
     {
         // Placeholder implementation - would analyze sale patterns, feedback, etc.
         return [
@@ -542,14 +521,14 @@ final class CalculateCustomerMetricsAction
     private function identifyAtRiskCustomers(): array
     {
         // Customers who haven't saleed in 30-60 days
-        $atRiskThreshold = Carbon::now()->subDays(30);
-        $churnThreshold = Carbon::now()->subDays(60);
+        $atRiskThreshold = \Illuminate\Support\Facades\Date::now()->subDays(30);
+        $churnThreshold = \Illuminate\Support\Facades\Date::now()->subDays(60);
 
-        $atRiskCustomers = Customer::whereHas('sales', function ($query) use ($churnThreshold) {
-            $query->where('created_at', '>=', $churnThreshold)
+        $atRiskCustomers = Customer::query()->whereHas('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($churnThreshold): void {
+            $builder->where('created_at', '>=', $churnThreshold)
                 ->where('status', 'completed');
-        })->whereDoesntHave('sales', function ($query) use ($atRiskThreshold) {
-            $query->where('created_at', '>=', $atRiskThreshold)
+        })->whereDoesntHave('sales', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($atRiskThreshold): void {
+            $builder->where('created_at', '>=', $atRiskThreshold)
                 ->where('status', 'completed');
         })->count();
 

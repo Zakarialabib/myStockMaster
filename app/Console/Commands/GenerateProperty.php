@@ -73,18 +73,14 @@ class GenerateProperty extends Command
 
     protected function formatProperties(array $columns): string
     {
-        $properties = array_map(static function ($type, $name): string {
-            return sprintf("'%s'", $name);
-        }, $columns, array_keys($columns));
+        $properties = array_map(static fn($type, int|string $name): string => sprintf("'%s'", $name), $columns, array_keys($columns));
 
         return implode(', ', $properties);
     }
 
     protected function getPropertyTypes(array $columns): string
     {
-        $propertyTypes = array_map(static function ($type, $name): string {
-            return sprintf('protected %s $%s;', $type, $name);
-        }, $columns, array_keys($columns));
+        $propertyTypes = array_map(static fn($type, int|string $name): string => sprintf('protected %s $%s;', $type, $name), $columns, array_keys($columns));
 
         return implode("\n", $propertyTypes);
     }

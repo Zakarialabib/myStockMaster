@@ -26,7 +26,7 @@ enum PaymentStatus: int
         return $this->value;
     }
 
-    public static function getLabel($value)
+    public static function getLabel($value): ?string
     {
         foreach (self::cases() as $case) {
             if ($case->getValue() === $value) {
@@ -39,15 +39,11 @@ enum PaymentStatus: int
 
     public function getBadgeType(): string
     {
-        switch ($this) {
-            case self::PENDING:
-                return 'warning';
-            case self::PARTIAL:
-                return 'info';
-            case self::PAID:
-                return 'success';
-            default:
-                return 'secondary';
-        }
+        return match ($this) {
+            self::PENDING => 'warning',
+            self::PARTIAL => 'info',
+            self::PAID => 'success',
+            default => 'secondary',
+        };
     }
 }

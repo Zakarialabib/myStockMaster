@@ -38,10 +38,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class CashRegister extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     /** @var array<int, string> */
@@ -49,20 +50,26 @@ class CashRegister extends Model
         'id', 'cash_in_hand', 'user_id', 'warehouse_id', 'status', 'recieved', 'sent',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /** @var array<int, string> */
     protected $fillable = [
         'cash_in_hand', 'user_id', 'warehouse_id', 'status', 'recieved', 'sent',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
@@ -98,7 +105,7 @@ class CashRegister extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeStatus($query, $status)
+    protected function scopeStatus(mixed $query, mixed $status)
     {
         return $query->where('status', $status);
     }
@@ -111,7 +118,7 @@ class CashRegister extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeUser($query, $userId)
+    protected function scopeUser(mixed $query, mixed $userId)
     {
         return $query->where('user_id', $userId);
     }

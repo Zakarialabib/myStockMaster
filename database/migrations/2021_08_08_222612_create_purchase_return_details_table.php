@@ -14,23 +14,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchase_return_details', function (Blueprint $table) {
-            $table->id();
+        Schema::create('purchase_return_details', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->foreignIdFor(PurchaseReturn::class)->constrained()->cascadeOnDelete();
-            $table->foreignUuid('product_id')->nullable()->constrained('products')->cascadeOnDelete();
+            $blueprint->foreignIdFor(PurchaseReturn::class)->constrained()->cascadeOnDelete();
+            $blueprint->foreignUuid('product_id')->nullable()->constrained('products')->cascadeOnDelete();
 
-            $table->string('name');
-            $table->string('code');
-            $table->integer('quantity');
-            $table->decimal('price', 8, 2);
-            $table->decimal('unit_price', 8, 2);
-            $table->decimal('sub_total', 15, 2);
-            $table->decimal('discount_amount', 15, 2);
-            $table->string('discount_type')->default('fixed');
-            $table->decimal('tax_amount', 15, 2);
+            $blueprint->string('name');
+            $blueprint->string('code');
+            $blueprint->integer('quantity');
+            $blueprint->decimal('price', 8, 2);
+            $blueprint->decimal('unit_price', 8, 2);
+            $blueprint->decimal('sub_total', 15, 2);
+            $blueprint->decimal('discount_amount', 15, 2);
+            $blueprint->string('discount_type')->default('fixed');
+            $blueprint->decimal('tax_amount', 15, 2);
 
-            $table->timestamps();
+            $blueprint->timestamps();
         });
     }
 

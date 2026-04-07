@@ -67,10 +67,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturn whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class SaleReturn extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $casts = [
         'date' => 'date',
     ];
@@ -96,9 +97,9 @@ class SaleReturn extends Model
 
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -131,6 +132,7 @@ class SaleReturn extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -139,42 +141,45 @@ class SaleReturn extends Model
         ];
     }
 
-    /** @return HasMany<SaleReturnDetail> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleReturnDetail, $this> */
     public function saleReturnDetails(): HasMany
     {
         return $this->hasMany(SaleReturnDetail::class, 'sale_return_id', 'id');
     }
 
-    /** @return HasMany<SaleReturnPayment> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleReturnPayment, $this> */
     public function saleReturnPayments(): HasMany
     {
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($saleReturn) {
+        static::creating(function ($saleReturn): void {
             $prefix = settings()->saleReturn_prefix;
 
-            $latestSaleReturn = self::latest()->first();
+            $latestSaleReturn = self::query()->latest()->first();
 
-            if ($latestSaleReturn) {
-                $number = intval(substr($latestSaleReturn->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestSaleReturn ? intval(substr((string) $latestSaleReturn->reference, -3)) + 1 : 1;
 
             $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
@@ -185,7 +190,7 @@ class SaleReturn extends Model
      *
      * @return mixed
      */
-    public function scopeCompleted($query)
+    protected function scopeCompleted(mixed $query)
     {
         return $query->whereStatus(2);
     }
@@ -196,7 +201,7 @@ class SaleReturn extends Model
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -206,7 +211,7 @@ class SaleReturn extends Model
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -216,7 +221,7 @@ class SaleReturn extends Model
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -226,7 +231,7 @@ class SaleReturn extends Model
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -236,7 +241,7 @@ class SaleReturn extends Model
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -246,7 +251,7 @@ class SaleReturn extends Model
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 }

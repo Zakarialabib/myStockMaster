@@ -72,7 +72,7 @@ class Create extends Component
 
         $this->alert('success', __('Quotation created successfully!'));
 
-        return redirect()->route('quotations.index');
+        return to_route('quotations.index');
     }
 
     public function hydrate(): void
@@ -92,7 +92,7 @@ class Create extends Component
         return view('livewire.quotations.create', ['cart_items' => $this->cartContent]);
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);

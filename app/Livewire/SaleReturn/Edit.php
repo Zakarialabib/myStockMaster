@@ -23,16 +23,16 @@ class Edit extends Component
 
     public SaleReturnForm $form;
 
-    public $salereturn;
+    public mixed $salereturn;
 
-    public function mount($id, string $cartInstance = 'sale_return'): void
+    public function mount(mixed $id, string $cartInstance = 'sale_return'): void
     {
         abort_if(Gate::denies('sale_return_update'), 403);
 
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->salereturn = SaleReturn::findOrFail($id);
+        $this->salereturn = SaleReturn::query()->findOrFail($id);
 
         $this->form->customer_id = $this->salereturn->customer_id;
         $this->form->reference = $this->salereturn->reference;
@@ -49,7 +49,7 @@ class Edit extends Component
         $this->clearCart();
 
         foreach ($this->salereturn->saleReturnDetails as $detail) {
-            $product = Product::findOrFail($detail->product_id);
+            $product = Product::query()->findOrFail($detail->product_id);
             $this->addToCart([
                 'id' => $detail->product_id,
                 'name' => $detail->name,
@@ -93,7 +93,7 @@ class Edit extends Component
 
         $this->form->validate();
 
-        app(SaleReturnService::class)->update(
+        resolve(SaleReturnService::class)->update(
             $this->salereturn,
             [
                 'date' => $this->form->date,
@@ -119,9 +119,9 @@ class Edit extends Component
         $this->redirectRoute('sale-returns.index', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $customers = Customer::select(['id', 'name'])->get();
+        $customers = Customer::query()->select(['id', 'name'])->get();
 
         return view('livewire.sale-return.edit', [
             'cart_items' => $this->cartContent,

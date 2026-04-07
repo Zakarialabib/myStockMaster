@@ -35,7 +35,7 @@ class SaleService
                 $paymentStatus = PaymentStatus::PENDING;
             }
 
-            $sale = Sale::create([
+            $sale = Sale::query()->create([
                 'date' => $saleData['date'],
                 'customer_id' => $saleData['customer_id'],
                 'warehouse_id' => $saleData['warehouse_id'],
@@ -71,7 +71,7 @@ class SaleService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleDetails::create([
+                SaleDetails::query()->create([
                     'sale_id' => $sale->id,
                     'warehouse_id' => $saleData['warehouse_id'],
                     'product_id' => $productId,
@@ -96,12 +96,12 @@ class SaleService
                 }
             }
 
-            if (! empty($inventoryItems)) {
-                SyncInventoryJob::dispatch($inventoryItems, $saleData['warehouse_id'], $saleData['user_id'], 'sale');
+            if ($inventoryItems !== []) {
+                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], $saleData['user_id'], 'sale'));
             }
 
             if ($saleData['paid_amount'] > 0 && ! $isDraft) {
-                SalePayment::create([
+                SalePayment::query()->create([
                     'date' => date('Y-m-d'),
                     'amount' => $saleData['paid_amount'] * 100,
                     'sale_id' => $sale->id,
@@ -170,7 +170,7 @@ class SaleService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleDetails::create([
+                SaleDetails::query()->create([
                     'sale_id' => $sale->id,
                     'warehouse_id' => $saleData['warehouse_id'],
                     'product_id' => $productId,
@@ -195,8 +195,8 @@ class SaleService
                 ];
             }
 
-            if (! empty($inventoryItems)) {
-                SyncInventoryJob::dispatch($inventoryItems, $saleData['warehouse_id'], auth()->id(), 'sale');
+            if ($inventoryItems !== []) {
+                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], auth()->id(), 'sale'));
             }
 
             return $sale;
@@ -205,10 +205,11 @@ class SaleService
 
     public function delete(Sale $sale): void
     {
-        DB::transaction(function () use ($sale) {
+        DB::transaction(function () use ($sale): void {
             foreach ($sale->saleDetails as $detail) {
                 $detail->delete();
             }
+
             $sale->delete();
         });
     }

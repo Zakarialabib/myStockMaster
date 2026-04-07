@@ -12,7 +12,7 @@ class UserService
 {
     public function createUser(array $data): User
     {
-        $user = User::create([
+        $user = User::query()->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -22,13 +22,13 @@ class UserService
             'address' => $data['address'] ?? null,
         ]);
 
-        if (! empty($data['role'])) {
+        if (filled($data['role'])) {
             $user->assignRole($data['role']);
         }
 
-        if (! empty($data['warehouse_id'])) {
+        if (filled($data['warehouse_id'])) {
             foreach ($data['warehouse_id'] as $warehouseId) {
-                UserWarehouse::create([
+                UserWarehouse::query()->create([
                     'user_id' => $user->id,
                     'warehouse_id' => $warehouseId,
                 ]);
@@ -49,7 +49,7 @@ class UserService
             'address' => $data['address'] ?? null,
         ];
 
-        if (! empty($data['password']) && $data['password'] !== $user->password) {
+        if (filled($data['password']) && $data['password'] !== $user->password) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
@@ -59,7 +59,7 @@ class UserService
             $user->warehouses()->sync($data['warehouse_id']);
         }
 
-        if (! empty($data['role'])) {
+        if (filled($data['role'])) {
             $user->syncRoles($data['role']);
         }
 

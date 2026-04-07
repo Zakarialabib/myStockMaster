@@ -17,7 +17,7 @@ class SuperUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
+        $user = User::query()->create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
@@ -30,9 +30,9 @@ class SuperUserSeeder extends Seeder
             'created_at' => now(),
         ]);
 
-        $role = Role::where('name', 'admin')->first();
+        $role = Role::query()->where('name', 'admin')->first();
 
-        $permissions = Permission::pluck('id', 'id')->all();
+        $permissions = Permission::query()->pluck('id', 'id')->all();
 
         $role->syncPermissions($permissions);
 

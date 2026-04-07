@@ -15,8 +15,8 @@ use Livewire\WithFileUploads;
 
 class Edit extends Component
 {
-    use WithAlert, WithFileUploads;
-
+    use WithAlert;
+    use WithFileUploads;
     public bool $editModal = false;
 
     public Brand $brand;
@@ -24,7 +24,7 @@ class Edit extends Component
     public BrandForm $form;
 
     #[On('editModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
         abort_if(Gate::denies('brand_update'), 403);
 
@@ -32,7 +32,7 @@ class Edit extends Component
 
         $this->form->reset();
 
-        $this->brand = Brand::where('id', $id)->firstOrFail();
+        $this->brand = Brand::query()->where('id', $id)->firstOrFail();
 
         $this->form->name = $this->brand->name;
         $this->form->description = $this->brand->description;
@@ -42,11 +42,11 @@ class Edit extends Component
         $this->editModal = true;
     }
 
-    public function update(BrandService $service): void
+    public function update(BrandService $brandService): void
     {
         $this->form->validate();
 
-        $service->update($this->brand, $this->form->all());
+        $brandService->update($this->brand, $this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
@@ -57,7 +57,7 @@ class Edit extends Component
         $this->editModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.brands.edit');
     }

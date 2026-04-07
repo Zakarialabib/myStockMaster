@@ -15,26 +15,26 @@ class Index extends Component
 {
     use Datatable;
 
-    public $purchase;
+    public mixed $purchase;
 
-    public $model = PurchasePayment::class;
+    public string $model = PurchasePayment::class;
 
-    public $showPayments;
+    public mixed $showPayments;
 
     public $listsForFields = [];
 
-    public $purchase_id;
+    public mixed $purchase_id;
 
-    public function mount($purchase = null): void
+    public function mount(mixed $purchase = null): void
     {
         $this->purchase = $purchase;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('purchase payment_access'), 403);
 
-        $query = PurchasePayment::where('purchase_id', $this->purchase->id)->advancedFilter([
+        $query = PurchasePayment::query()->where('purchase_id', $this->purchase->id)->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
@@ -46,11 +46,11 @@ class Index extends Component
     }
 
     #[On('showPayments')]
-    public function showPayments($purchase_id): void
+    public function showPayments(mixed $purchase_id): void
     {
         abort_if(Gate::denies('purchase payment_access'), 403);
 
-        $this->purchase = Purchase::findOrFail($purchase_id);
+        $this->purchase = Purchase::query()->findOrFail($purchase_id);
 
         $this->showPayments = true;
     }

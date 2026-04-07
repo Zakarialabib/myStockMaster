@@ -27,27 +27,27 @@ class Edit extends Component
 
     public Sale $sale;
 
-    public $products;
+    public mixed $products;
 
-    public $product;
+    public mixed $product;
 
-    public $quantity;
+    public mixed $quantity;
 
-    public $reference;
+    public mixed $reference;
 
-    public $check_quantity;
+    public mixed $check_quantity;
 
-    public $price;
+    public mixed $price;
 
-    public $discount_type;
+    public mixed $discount_type;
 
-    public $item_discount;
+    public mixed $item_discount;
 
-    public $sale_details;
+    public mixed $sale_details;
 
-    public function mount($id, string $cartInstance = 'sale'): void
+    public function mount(mixed $id, string $cartInstance = 'sale'): void
     {
-        $this->sale = Sale::findOrFail($id);
+        $this->sale = Sale::query()->findOrFail($id);
 
         abort_if(Gate::denies('sale update'), 403);
 
@@ -57,7 +57,7 @@ class Edit extends Component
         $this->initializeCart($cartInstance);
 
         foreach ($this->sale_details as $sale_detail) {
-            $product = Product::findOrFail($sale_detail->product_id);
+            $product = Product::query()->findOrFail($sale_detail->product_id);
             $this->addToCart([
                 'id' => $sale_detail->product_id,
                 'name' => $sale_detail->name,
@@ -105,7 +105,7 @@ class Edit extends Component
             return;
         }
 
-        $saleService = app(SaleService::class);
+        $saleService = resolve(SaleService::class);
         $saleService->update(
             $this->sale,
             [
@@ -132,18 +132,18 @@ class Edit extends Component
         $this->redirectRoute('sales.index', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.sales.edit');
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function updatedFormStatus($value): void
+    public function updatedFormStatus(mixed $value): void
     {
         if ($value === (string) SaleStatus::COMPLETED->value || $value === SaleStatus::COMPLETED->value) {
             $this->form->paid_amount = $this->form->total_amount;

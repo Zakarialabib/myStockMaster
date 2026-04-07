@@ -41,9 +41,9 @@ class WarehouseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWarehouseRequest $request): WarehouseResource
+    public function store(StoreWarehouseRequest $storeWarehouseRequest): WarehouseResource
     {
-        $warehouse = Warehouse::create($request->all());
+        $warehouse = Warehouse::query()->create($storeWarehouseRequest->all());
 
         return new WarehouseResource($warehouse);
     }
@@ -53,10 +53,10 @@ class WarehouseController extends Controller
      */
     public function show(int $id): WarehouseResource|JsonResponse
     {
-        $warehouse = Warehouse::find($id);
+        $warehouse = Warehouse::query()->find($id);
 
         if ($warehouse === null) {
-            return response()->json(['message' => 'Warehouse not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Warehouse not found'], 404);
         }
 
         return new WarehouseResource($warehouse);
@@ -65,10 +65,10 @@ class WarehouseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWarehouseRequest $request, int $id): WarehouseResource
+    public function update(UpdateWarehouseRequest $updateWarehouseRequest, int $id): WarehouseResource
     {
-        $warehouse = Warehouse::findOrFail($id);
-        $warehouse->update($request->all());
+        $warehouse = Warehouse::query()->findOrFail($id);
+        $warehouse->update($updateWarehouseRequest->all());
 
         return new WarehouseResource($warehouse);
     }
@@ -78,9 +78,9 @@ class WarehouseController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $warehouse = Warehouse::findOrFail($id);
+        $warehouse = Warehouse::query()->findOrFail($id);
         $warehouse->delete();
 
-        return response()->json(['message' => 'Warehouse deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Warehouse deleted successfully']);
     }
 }

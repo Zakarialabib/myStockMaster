@@ -26,21 +26,9 @@ class BackupCommand extends Command
     protected $description = 'This command will generate backups of the system according to specified in configs';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         if (settings()->backup_status === 1) {
             $artisan_command = '';

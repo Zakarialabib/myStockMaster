@@ -14,21 +14,21 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $currency;
+    public mixed $currency;
 
     #[On('showModal')]
-    public function openShowModal($id): void
+    public function openShowModal(mixed $id): void
     {
         abort_if(Gate::denies('currency_show'), 403);
 
-        $this->currency = Currency::find($id);
+        $this->currency = Currency::query()->find($id);
 
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.currency.show');
     }

@@ -12,29 +12,29 @@ class UserForm extends Form
 {
     public ?User $user = null;
 
-    public $showModal = false;
+    public mixed $showModal = false;
 
     #[Validate('required|string|max:255')]
-    public $name;
+    public mixed $name;
 
     #[Validate('required|email')]
-    public $email;
+    public mixed $email;
 
     #[Validate('nullable|string|min:8')]
-    public $password;
+    public mixed $password;
 
     #[Validate('required|numeric')]
-    public $phone;
+    public mixed $phone;
 
-    public $city;
+    public mixed $city;
 
-    public $country;
+    public mixed $country;
 
-    public $address;
+    public mixed $address;
 
-    public $warehouse_id = [];
+    public mixed $warehouse_id = [];
 
-    public $role;
+    public mixed $role;
 
     public function setUser(User $user): void
     {

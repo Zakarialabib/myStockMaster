@@ -14,11 +14,11 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $transfer;
+    public mixed $transfer;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('transfer_show'), 403);
 
@@ -26,7 +26,7 @@ class Show extends Component
     }
 
     #[On('showModal')]
-    public function showModal($transfer): void
+    public function showModal(int|string $transfer): void
     {
         $this->transfer = Transfer::with('transferDetails')
             ->where('id', $transfer)->first();

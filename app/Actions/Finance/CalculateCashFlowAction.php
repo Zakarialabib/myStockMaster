@@ -61,12 +61,12 @@ final class CalculateCashFlowAction
     private function calculateCashInflows(Carbon $dateFrom, Carbon $dateTo): array
     {
         // Revenue from completed sales
-        $saleRevenue = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $saleRevenue = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->where('status', 'completed')
             ->sum('total_amount');
 
         // Revenue from paid sales (including partial payments)
-        $paidRevenue = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $paidRevenue = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->whereIn('payment_status', ['paid', 'partially_paid'])
             ->sum('total_amount');
 

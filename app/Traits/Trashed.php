@@ -13,13 +13,13 @@ trait Trashed
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTrashed($query)
+    protected function scopeTrashed($query)
     {
-        if (! empty(request()->get('trashed')) && request()->get('trashed') === 'with') {
+        if (filled(request()->get('trashed')) && request()->get('trashed') === 'with') {
             return $query->withTrashed();
         }
 
-        if (! empty(request()->get('trashed')) && request()->get('trashed') === 'only') {
+        if (filled(request()->get('trashed')) && request()->get('trashed') === 'only') {
             return $query->onlyTrashed();
         }
 

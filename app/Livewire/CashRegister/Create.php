@@ -18,7 +18,7 @@ class Create extends Component
     use WithAlert;
 
     /** @var bool */
-    public $createModal = false;
+    public bool $createModal = false;
 
     public CashRegister $cashRegister;
 
@@ -55,7 +55,7 @@ class Create extends Component
         return auth()->user()->warehouses;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('cashRegister_create'), 403);
 

@@ -15,16 +15,16 @@ class Invoice extends Component
 {
     use WithAlert;
 
-    public $data;
+    public mixed $data;
 
     public $entity = 'Supplier';
 
-    public function mount($id)
+    public function mount(int|string $id): void
     {
-        $this->data = Purchase::findOrFail($id);
+        $this->data = Purchase::query()->findOrFail($id);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('purchase_show'), 403);
 

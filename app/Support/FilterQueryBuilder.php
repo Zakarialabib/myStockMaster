@@ -21,7 +21,7 @@ class FilterQueryBuilder
      *
      * @return mixed
      */
-    public function apply($query, $data)
+    public function apply($query, array $data)
     {
         $this->model = $query->getModel();
         $this->table = $this->model->getTable();
@@ -44,9 +44,9 @@ class FilterQueryBuilder
      *
      * @return mixed
      */
-    public function contains($filter, $query)
+    public function contains(array $filter, $query)
     {
-        $filter['query_1'] = addslashes($filter['query_1']);
+        $filter['query_1'] = addslashes((string) $filter['query_1']);
 
         return $query->where($filter['column'], 'like', '%' . $filter['query_1'] . '%', $filter['match']);
     }
@@ -57,34 +57,34 @@ class FilterQueryBuilder
      *
      * @return mixed
      */
-    protected function makeOrder($query, $data)
+    protected function makeOrder($query, array $data)
     {
         if ($this->isNestedColumn($data['order_column'])) {
-            [$relationship, $column] = explode('.', $data['order_column']);
+            [$relationship, $column] = explode('.', (string) $data['order_column']);
             $callable = Str::camel($relationship);
             $belongs = $this->model->{$callable}(
             );
             $relatedModel = $belongs->getModel();
             $relatedTable = $relatedModel->getTable();
-            $as = "prefix_{$relatedTable}";
+            $as = 'prefix_' . $relatedTable;
 
             if (! $belongs instanceof BelongsTo) {
                 return;
             }
 
             $query->leftJoin(
-                "{$relatedTable} as {$as}",
-                "{$as}.id",
+                sprintf('%s as %s', $relatedTable, $as),
+                $as . '.id',
                 '=',
-                "{$this->table}.{$relationship}_id"
+                sprintf('%s.%s_id', $this->table, $relationship)
             );
 
-            $data['order_column'] = "{$as}.{$column}";
+            $data['order_column'] = sprintf('%s.%s', $as, $column);
         }
 
         $query
             ->orderBy($data['order_column'], $data['order_direction'])
-            ->select("{$this->table}.*");
+            ->select($this->table . '.*');
     }
 
     /**
@@ -93,22 +93,22 @@ class FilterQueryBuilder
      *
      * @return mixed
      */
-    protected function makeFilter($query, $filter)
+    protected function makeFilter($query, array $filter)
     {
         if ($this->isNestedColumn($filter['column'])) {
-            [$relation, $filter['column']] = explode('.', $filter['column']);
+            [$relation, $filter['column']] = explode('.', (string) $filter['column']);
             $callable = Str::camel($relation);
             $filter['match'] = 'and';
 
             // Use the `remember` method to cache the query.
-            $query->orWhereHas(Str::camel($callable), function ($q) use ($filter) {
+            $query->orWhereHas(Str::camel($callable), function ($q) use ($filter): void {
                 $this->{Str::camel($filter['operator'])}(
                     $filter,
                     $q
                 );
             })->remember(10); // Cache the result for 10 minutes.
         } else {
-            $filter['column'] = "{$this->table}.{$filter['column']}";
+            $filter['column'] = sprintf('%s.%s', $this->table, $filter['column']);
             $this->{Str::camel($filter['operator'])}(
                 $filter,
                 $query
@@ -118,11 +118,9 @@ class FilterQueryBuilder
 
     /**
      * @param mixed $column
-     *
-     * @return bool
      */
-    protected function isNestedColumn($column)
+    protected function isNestedColumn($column): bool
     {
-        return strpos($column, '.') !== false;
+        return str_contains((string) $column, '.');
     }
 }

@@ -20,11 +20,10 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    #[\Override]
     public function register(): void
     {
-        $this->app->singleton('cart', function ($app) {
-            return new \App\Support\Cart\CartManager($app);
-        });
+        $this->app->singleton('cart', fn($app) => new \App\Support\Cart\CartManager($app));
 
         $this->app->alias('cart', \App\Support\Cart\CartManager::class);
     }
@@ -46,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
 
         try {
             if (Schema::hasTable('settings')) {
-                $settings = Setting::first();
+                $settings = Setting::query()->first();
                 if ($settings && $settings->smtp_host) {
                     config([
                         'mail.mailer' => $settings->mail_mailer ?? config('mail.mailer'),
@@ -60,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
                     ]);
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Log or ignore
         }
     }
@@ -72,12 +71,10 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
 
-            return cache()->rememberForever('languages', function () {
-                return Session::has('language')
-                    ? Language::pluck('name', 'code')->toArray()
-                    : Language::where('is_default', 1)->first();
-            });
-        } catch (Exception $e) {
+            return cache()->rememberForever('languages', fn() => Session::has('language')
+                ? Language::query()->pluck('name', 'code')->toArray()
+                : Language::query()->where('is_default', 1)->first());
+        } catch (Exception) {
             return;
         }
     }

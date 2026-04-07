@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Notification;
 class NotificationService
 {
     /** Notify customer about order status changes */
-    public function notifyCustomer(Sale $order, SaleStatus $status): void
+    public function notifyCustomer(Sale $sale, SaleStatus $saleStatus): void
     {
         try {
-            if (! $order->customer_email) {
+            if (! $sale->customer_email) {
                 Log::info('No customer email available for notification', [
-                    'order_id' => $order->id,
+                    'order_id' => $sale->id,
                 ]);
 
                 return;
@@ -30,77 +30,77 @@ class NotificationService
             // Notification::route('mail', $order->customer_email)->notify($notification);
 
             Log::info('Customer notified about order status change', [
-                'order_id' => $order->id,
-                'order_reference' => $order->reference,
-                'customer_email' => $order->customer_email,
-                'status' => $status->value,
+                'order_id' => $sale->id,
+                'order_reference' => $sale->reference,
+                'customer_email' => $sale->customer_email,
+                'status' => $saleStatus->value,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to notify customer', [
-                'order_id' => $order->id,
-                'customer_email' => $order->customer_email,
-                'status' => $status->value,
-                'error' => $e->getMessage(),
+                'order_id' => $sale->id,
+                'customer_email' => $sale->customer_email,
+                'status' => $saleStatus->value,
+                'error' => $exception->getMessage(),
             ]);
         }
     }
 
     /** Notify about delayed orders */
-    public function notifyDelayedSale(Sale $order): void
+    public function notifyDelayedSale(Sale $sale): void
     {
         try {
             // Notify customer if they provided contact info
-            if ($order->customer_email) {
-                $this->notifyCustomer($order, SaleStatus::SHIPPED);
+            if ($sale->customer_email) {
+                $this->notifyCustomer($sale, SaleStatus::SHIPPED);
             }
 
             Log::info('Delayed order notifications sent', [
-                'order_id' => $order->id,
-                'order_reference' => $order->reference,
+                'order_id' => $sale->id,
+                'order_reference' => $sale->reference,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send delayed order notifications', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage(),
+                'order_id' => $sale->id,
+                'error' => $exception->getMessage(),
             ]);
         }
     }
 
     /** Notify about order completion */
-    public function notifySaleCompletion(Sale $order): void
+    public function notifySaleCompletion(Sale $sale): void
     {
         try {
             // Notify customer
-            $this->notifyCustomer($order, SaleStatus::COMPLETED);
+            $this->notifyCustomer($sale, SaleStatus::COMPLETED);
 
             Log::info('Sale completion notifications sent', [
-                'order_id' => $order->id,
-                'order_reference' => $order->reference,
+                'order_id' => $sale->id,
+                'order_reference' => $sale->reference,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send order completion notifications', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage(),
+                'order_id' => $sale->id,
+                'error' => $exception->getMessage(),
             ]);
         }
     }
 
     /** Notify about order cancellation */
-    public function notifySaleCancellation(Sale $order, string $reason = ''): void
+    public function notifySaleCancellation(Sale $sale, string $reason = ''): void
     {
         try {
             // Notify customer
-            $this->notifyCustomer($order, SaleStatus::CANCELED);
+            $this->notifyCustomer($sale, SaleStatus::CANCELED);
 
             Log::info('Sale cancellation notifications sent', [
-                'order_id' => $order->id,
-                'order_reference' => $order->reference,
+                'order_id' => $sale->id,
+                'order_reference' => $sale->reference,
                 'reason' => $reason,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send order cancellation notifications', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage(),
+                'order_id' => $sale->id,
+                'error' => $exception->getMessage(),
             ]);
         }
     }
@@ -118,7 +118,7 @@ class NotificationService
     /** Get unread notifications for a customer */
     public function getUnreadNotifications($customer): array
     {
-        return NotificationModel::where('notifiable_type', get_class($customer))
+        return NotificationModel::query()->where('notifiable_type', $customer::class)
             ->where('notifiable_id', $customer->id)
             ->whereNull('read_at')
             ->orderBy('created_at', 'desc')
@@ -148,17 +148,17 @@ class NotificationService
     public function markNotificationsAsRead($customer, array $notificationIds): bool
     {
         try {
-            NotificationModel::where('notifiable_type', get_class($customer))
+            NotificationModel::query()->where('notifiable_type', $customer::class)
                 ->where('notifiable_id', $customer->id)
                 ->whereIn('id', $notificationIds)
                 ->update(['read_at' => now()]);
 
             return true;
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to mark notifications as read', [
                 'customer_id' => $customer->id,
                 'notification_ids' => $notificationIds,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return false;
@@ -179,10 +179,10 @@ class NotificationService
                 'channel' => $channel,
                 'data' => $data,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send real-time notification', [
                 'channel' => $channel,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }
@@ -202,10 +202,10 @@ class NotificationService
                 'phone_number' => $phoneNumber,
                 'message' => $message,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send SMS notification', [
                 'phone_number' => $phoneNumber,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }

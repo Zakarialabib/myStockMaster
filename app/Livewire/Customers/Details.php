@@ -20,27 +20,27 @@ class Details extends Component
     use Datatable;
     use WithAlert;
 
-    public $model = Customer::class;
+    public string $model = Customer::class;
 
     #[Locked]
-    public $customer_id;
+    public mixed $customer_id;
 
-    public $customer;
+    public mixed $customer;
 
-    public $sales;
+    public mixed $sales;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
-        $this->customer = Customer::where('id', $id)->firstOrFail();
+        $this->customer = Customer::query()->where('id', $id)->firstOrFail();
         $this->customer_id = $this->customer->id;
     }
 
     #[Computed]
     public function sales()
     {
-        $query = Sale::where('customer_id', $this->customer_id)
+        $query = Sale::query()->where('customer_id', $this->customer_id)
             ->with('customer')
             ->advancedFilter([
                 's' => $this->search ?: null,
@@ -54,7 +54,7 @@ class Details extends Component
     #[Computed]
     public function customerPayments()
     {
-        $query = Sale::where('customer_id', $this->customer_id)
+        $query = Sale::query()->where('customer_id', $this->customer_id)
             ->with('salepayments.sale')
             ->advancedFilter([
                 's' => $this->search ?: null,
@@ -74,7 +74,7 @@ class Details extends Component
     #[Computed]
     public function totalSaleReturns(): int|float
     {
-        return SaleReturn::whereBelongsTo($this->customer)
+        return SaleReturn::query()->whereBelongsTo($this->customer)
             ->completed()->sum('total_amount') / 100;
     }
 
@@ -95,12 +95,12 @@ class Details extends Component
     public function profit(): int|float
     {
         // Step 1: Calculate total sales revenue for completed sales
-        $salesTotal = Sale::where('customer_id', $this->customer_id)
+        $salesTotal = Sale::query()->where('customer_id', $this->customer_id)
             ->completed()
             ->sum('total_amount') / 100;
 
         // Step 2: Calculate total sales returns
-        $saleReturnsTotal = SaleReturn::where('customer_id', $this->customer_id)
+        $saleReturnsTotal = SaleReturn::query()->where('customer_id', $this->customer_id)
             ->completed()
             ->sum('total_amount') / 100;
 
@@ -124,13 +124,13 @@ class Details extends Component
         return $profit;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.customers.details');
     }
 
     private function customerSum(string $field): int|float
     {
-        return Sale::whereBelongsTo($this->customer)->sum($field) / 100;
+        return Sale::query()->whereBelongsTo($this->customer)->sum($field) / 100;
     }
 }

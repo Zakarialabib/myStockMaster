@@ -41,70 +41,70 @@ class KpiTracking extends Component
 
     public int $refreshInterval = 60; // seconds
 
-    public function mount()
+    public function mount(): void
     {
         $this->dateFrom = now()->subDays(30)->format('Y-m-d');
         $this->dateTo = now()->format('Y-m-d');
         $this->loadKpiData();
     }
 
-    public function updatedDateFrom()
+    public function updatedDateFrom(): void
     {
         $this->validateOnly('dateFrom');
         $this->loadKpiData();
     }
 
-    public function updatedDateTo()
+    public function updatedDateTo(): void
     {
         $this->validateOnly('dateTo');
         $this->loadKpiData();
     }
 
-    public function updatedKpiType()
+    public function updatedKpiType(): void
     {
         $this->validateOnly('kpiType');
         $this->loadKpiData();
     }
 
-    public function updatedComparisonPeriod()
+    public function updatedComparisonPeriod(): void
     {
         $this->validateOnly('comparisonPeriod');
         $this->loadKpiData();
     }
 
-    public function loadKpiData()
+    public function loadKpiData(): void
     {
         try {
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
             switch ($this->kpiType) {
                 case 'revenue':
-                    $this->kpiData = app(\App\Services\AnalyticsService::class)->getRevenueKpis($dateFrom, $dateTo);
+                    $this->kpiData = resolve(\App\Services\AnalyticsService::class)->getRevenueKpis($dateFrom, $dateTo);
 
                     break;
                 case 'profitability':
-                    $this->kpiData = app(\App\Services\AnalyticsService::class)->getProfitabilityKpis($dateFrom, $dateTo);
+                    $this->kpiData = resolve(\App\Services\AnalyticsService::class)->getProfitabilityKpis($dateFrom, $dateTo);
 
                     break;
                 case 'efficiency':
-                    $this->kpiData = app(\App\Services\AnalyticsService::class)->getEfficiencyKpis($dateFrom, $dateTo);
+                    $this->kpiData = resolve(\App\Services\AnalyticsService::class)->getEfficiencyKpis($dateFrom, $dateTo);
 
                     break;
                 case 'growth':
-                    $this->kpiData = app(\App\Services\AnalyticsService::class)->getGrowthKpis($dateFrom, $dateTo);
+                    $this->kpiData = resolve(\App\Services\AnalyticsService::class)->getGrowthKpis($dateFrom, $dateTo);
 
                     break;
             }
 
             // Load comparison data
             $this->loadComparisonData($dateFrom, $dateTo);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to load KPI data: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to load KPI data: ' . $exception->getMessage());
         }
     }
 
-    private function loadComparisonData($dateFrom, $dateTo)
+    private function loadComparisonData(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
     {
         $periodDays = $dateFrom->diffInDays($dateTo);
 
@@ -125,23 +125,16 @@ class KpiTracking extends Component
 
         $cacheKey = 'kpi_compare_' . $this->kpiType . '_' . $this->comparisonPeriod . '_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        $this->comparisonData = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, function () use ($comparisonDateFrom, $comparisonDateTo) {
-            switch ($this->kpiType) {
-                case 'revenue':
-                    return app(\App\Services\AnalyticsService::class)->getRevenueKpis($comparisonDateFrom, $comparisonDateTo);
-                case 'profitability':
-                    return app(\App\Services\AnalyticsService::class)->getProfitabilityKpis($comparisonDateFrom, $comparisonDateTo);
-                case 'efficiency':
-                    return app(\App\Services\AnalyticsService::class)->getEfficiencyKpis($comparisonDateFrom, $comparisonDateTo);
-                case 'growth':
-                    return app(\App\Services\AnalyticsService::class)->getGrowthKpis($comparisonDateFrom, $comparisonDateTo);
-                default:
-                    return [];
-            }
+        $this->comparisonData = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, fn() => match ($this->kpiType) {
+            'revenue' => resolve(\App\Services\AnalyticsService::class)->getRevenueKpis($comparisonDateFrom, $comparisonDateTo),
+            'profitability' => resolve(\App\Services\AnalyticsService::class)->getProfitabilityKpis($comparisonDateFrom, $comparisonDateTo),
+            'efficiency' => resolve(\App\Services\AnalyticsService::class)->getEfficiencyKpis($comparisonDateFrom, $comparisonDateTo),
+            'growth' => resolve(\App\Services\AnalyticsService::class)->getGrowthKpis($comparisonDateFrom, $comparisonDateTo),
+            default => [],
         });
     }
 
-    public function toggleAutoRefresh()
+    public function toggleAutoRefresh(): void
     {
         $this->autoRefresh = ! $this->autoRefresh;
 
@@ -152,7 +145,7 @@ class KpiTracking extends Component
         }
     }
 
-    public function refreshKpis()
+    public function refreshKpis(): void
     {
         $this->loadKpiData();
         $this->dispatch('kpi-data-refreshed');
@@ -163,7 +156,7 @@ class KpiTracking extends Component
         try {
             $filename = 'kpi_' . $this->kpiType . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
-            return response()->streamDownload(function () {
+            return response()->streamDownload(function (): void {
                 $exportData = [
                     'kpi_type' => $this->kpiType,
                     'date_range' => [
@@ -183,9 +176,11 @@ class KpiTracking extends Component
                         if (! $first) {
                             yield ',';
                         }
+
                         yield '"' . $key . '":' . json_encode($value);
                         $first = false;
                     }
+
                     yield '}';
                 };
 
@@ -195,12 +190,12 @@ class KpiTracking extends Component
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to export KPI data: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to export KPI data: ' . $exception->getMessage());
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.finance.kpi-tracking');
     }

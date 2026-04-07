@@ -23,21 +23,21 @@ class Edit extends Component
 
     public AdjustmentForm $form;
 
-    public $adjustment;
+    public mixed $adjustment;
 
-    public $quantity;
+    public mixed $quantity;
 
-    public $type;
+    public mixed $type;
 
     #[Validate([
         'products.*.quantity' => 'required|integer|min:1',
         'products.*.type' => 'required|in:add,sub',
     ])]
-    public $products;
+    public mixed $products;
 
-    public $hasAdjustments;
+    public mixed $hasAdjustments;
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
         $this->adjustment = Adjustment::with('adjustedProducts', 'adjustedProducts.warehouse', 'adjustedProducts.product')
             ->where('id', $id)->first();
@@ -64,7 +64,7 @@ class Edit extends Component
             $this->products
         );
 
-        return redirect()->route('adjustments.index');
+        return to_route('adjustments.index');
     }
 
     #[On('productSelected')]
@@ -72,7 +72,7 @@ class Edit extends Component
     {
         switch ($this->hasAdjustments) {
             case true:
-                if (in_array($product, array_map(static fn ($adjustment) => $adjustment['product'], $this->products))) {
+                if (in_array($product, array_map(static fn (array $adjustment) => $adjustment['product'], $this->products))) {
                     $this->alert('error', __('Product added succesfully'));
 
                     return;
@@ -96,19 +96,19 @@ class Edit extends Component
         $this->products[] = $product;
     }
 
-    public function removeProduct($key): void
+    public function removeProduct(int|string $key): void
     {
         unset($this->products[$key]);
     }
 
     #[On('warehouseSelected')]
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', $this->form->warehouse_id);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.adjustment.edit');
     }

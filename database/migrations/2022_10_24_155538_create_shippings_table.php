@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shippings', function (Blueprint $table) {
-            $table->id();
-            $table->boolean('is_pickup')->default(false);
-            $table->string('title');
-            $table->string('subtitle')->nullable();
-            $table->decimal('cost', 8, 2)->default(0);
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('shippings', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->boolean('is_pickup')->default(false);
+            $blueprint->string('title');
+            $blueprint->string('subtitle')->nullable();
+            $blueprint->decimal('cost', 8, 2)->default(0);
+            $blueprint->boolean('status')->default(true);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

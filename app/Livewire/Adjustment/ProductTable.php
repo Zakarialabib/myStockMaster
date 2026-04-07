@@ -12,11 +12,11 @@ class ProductTable extends Component
 {
     use WithAlert;
 
-    public $products;
+    public mixed $products;
 
-    public $hasAdjustments;
+    public mixed $hasAdjustments;
 
-    public function mount($adjustedProducts = null): void
+    public function mount(mixed $adjustedProducts = null): void
     {
         $this->products = [];
 
@@ -28,17 +28,17 @@ class ProductTable extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.adjustment.product-table');
     }
 
     #[On('productSelected')]
-    public function productSelected($product): void
+    public function productSelected(mixed $product): void
     {
         switch ($this->hasAdjustments) {
             case true:
-                if (in_array($product, array_map(static fn ($adjustment) => $adjustment['product'], $this->products))) {
+                if (in_array($product, array_map(static fn (array $adjustment) => $adjustment['product'], $this->products))) {
                     $this->alert('error', __('Product added succesfully'));
 
                     return;
@@ -62,7 +62,7 @@ class ProductTable extends Component
         $this->products[] = $product;
     }
 
-    public function removeProduct($key): void
+    public function removeProduct(int|string $key): void
     {
         unset($this->products[$key]);
     }

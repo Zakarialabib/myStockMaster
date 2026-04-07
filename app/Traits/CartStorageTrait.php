@@ -72,25 +72,22 @@ trait CartStorageTrait
     /** Store content in database */
     protected function storeInDatabase(Collection $content): void
     {
-        CartStorage::updateOrCreate(
-            ['session_key' => $this->sessionKey],
-            [
-                'cart_data' => $content->toJson(),
-                'updated_at' => now(),
-            ]
-        );
+        CartStorage::query()->updateOrCreate(['session_key' => $this->sessionKey], [
+            'cart_data' => $content->toJson(),
+            'updated_at' => now(),
+        ]);
     }
 
     /** Retrieve content from database */
     protected function retrieveFromDatabase(): Collection
     {
-        $cartStorage = CartStorage::where('session_key', $this->sessionKey)->first();
+        $cartStorage = CartStorage::query()->where('session_key', $this->sessionKey)->first();
 
         if (! $cartStorage) {
             return collect();
         }
 
-        return collect(json_decode($cartStorage->cart_data, true) ?: []);
+        return collect(json_decode((string) $cartStorage->cart_data, true) ?: []);
     }
 
     /** Store content in cache */
@@ -108,59 +105,39 @@ trait CartStorageTrait
     /** Store content in primary storage */
     protected function storeInPrimaryStorage(Collection $content): void
     {
-        switch ($this->primaryStorage) {
-            case 'cache':
-                $this->storeInCache($content);
-
-                break;
-            default:
-                $this->storeInSession($content);
-
-                break;
-        }
+        match ($this->primaryStorage) {
+            'cache' => $this->storeInCache($content),
+            default => $this->storeInSession($content),
+        };
     }
 
     /** Retrieve content from primary storage */
     protected function retrieveFromPrimaryStorage(): Collection
     {
-        switch ($this->primaryStorage) {
-            case 'cache':
-                return $this->retrieveFromCache();
-            default:
-                return $this->retrieveFromSession();
-        }
+        return match ($this->primaryStorage) {
+            'cache' => $this->retrieveFromCache(),
+            default => $this->retrieveFromSession(),
+        };
     }
 
     /** Store content in secondary storage */
     protected function storeInSecondaryStorage(Collection $content): void
     {
-        switch ($this->secondaryStorage) {
-            case 'database':
-                $this->storeInDatabase($content);
-
-                break;
-            case 'session':
-                $this->storeInSession($content);
-
-                break;
-            default:
-                $this->storeInCache($content);
-
-                break;
-        }
+        match ($this->secondaryStorage) {
+            'database' => $this->storeInDatabase($content),
+            'session' => $this->storeInSession($content),
+            default => $this->storeInCache($content),
+        };
     }
 
     /** Retrieve content from secondary storage */
     protected function retrieveFromSecondaryStorage(): Collection
     {
-        switch ($this->secondaryStorage) {
-            case 'database':
-                return $this->retrieveFromDatabase();
-            case 'session':
-                return $this->retrieveFromSession();
-            default:
-                return $this->retrieveFromCache();
-        }
+        return match ($this->secondaryStorage) {
+            'database' => $this->retrieveFromDatabase(),
+            'session' => $this->retrieveFromSession(),
+            default => $this->retrieveFromCache(),
+        };
     }
 
     /** Set primary storage driver */
@@ -222,35 +199,20 @@ trait CartStorageTrait
     /** Clear primary storage */
     protected function clearPrimaryStorage(): void
     {
-        switch ($this->primaryStorage) {
-            case 'cache':
-                Cache::forget($this->sessionKey);
-
-                break;
-            default:
-                Session::forget($this->sessionKey);
-
-                break;
-        }
+        match ($this->primaryStorage) {
+            'cache' => Cache::forget($this->sessionKey),
+            default => Session::forget($this->sessionKey),
+        };
     }
 
     /** Clear secondary storage */
     protected function clearSecondaryStorage(): void
     {
-        switch ($this->secondaryStorage) {
-            case 'database':
-                CartStorage::where('session_key', $this->sessionKey)->delete();
-
-                break;
-            case 'session':
-                Session::forget($this->sessionKey);
-
-                break;
-            default:
-                Cache::forget($this->sessionKey);
-
-                break;
-        }
+        match ($this->secondaryStorage) {
+            'database' => CartStorage::query()->where('session_key', $this->sessionKey)->delete(),
+            'session' => Session::forget($this->sessionKey),
+            default => Cache::forget($this->sessionKey),
+        };
     }
 
     /** Check if storage has content */
@@ -272,39 +234,32 @@ trait CartStorageTrait
     /** Check if primary storage has content */
     protected function hasPrimaryStorageContent(): bool
     {
-        switch ($this->primaryStorage) {
-            case 'cache':
-                return Cache::has($this->sessionKey);
-            default:
-                return Session::has($this->sessionKey);
-        }
+        return match ($this->primaryStorage) {
+            'cache' => Cache::has($this->sessionKey),
+            default => Session::has($this->sessionKey),
+        };
     }
 
     /** Check if secondary storage has content */
     protected function hasSecondaryStorageContent(): bool
     {
-        switch ($this->secondaryStorage) {
-            case 'database':
-                return CartStorage::where('session_key', $this->sessionKey)->exists();
-            case 'session':
-                return Session::has($this->sessionKey);
-            default:
-                return Cache::has($this->sessionKey);
-        }
+        return match ($this->secondaryStorage) {
+            'database' => CartStorage::query()->where('session_key', $this->sessionKey)->exists(),
+            'session' => Session::has($this->sessionKey),
+            default => Cache::has($this->sessionKey),
+        };
     }
 
     /** Migrate cart from one storage configuration to another */
     public function migrateStorage(string $fromPrimary, string $toPrimary, ?string $fromSecondary = null, ?string $toSecondary = null): bool
     {
-        $originalPrimary = $this->primaryStorage;
-        $originalSecondary = $this->secondaryStorage;
-
         // Get content from source storage
         $this->primaryStorage = $fromPrimary;
 
         if ($fromSecondary) {
             $this->secondaryStorage = $fromSecondary;
         }
+
         $content = $this->retrieveContent();
 
         if ($content->isEmpty()) {
@@ -317,6 +272,7 @@ trait CartStorageTrait
         if ($toSecondary) {
             $this->secondaryStorage = $toSecondary;
         }
+
         $this->storeContent($content);
 
         // Clear source storage
@@ -325,6 +281,7 @@ trait CartStorageTrait
         if ($fromSecondary) {
             $this->secondaryStorage = $fromSecondary;
         }
+
         $this->clearStorage();
 
         // Set final storage configuration

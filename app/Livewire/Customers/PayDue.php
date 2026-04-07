@@ -18,30 +18,30 @@ class PayDue extends Component
     use WithAlert;
 
     #[Validate('required|numeric|min:0')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('required|array')]
-    public $selectedSales;
+    public mixed $selectedSales;
 
-    public $due_amount;
+    public mixed $due_amount;
 
-    public $paid_amount;
+    public mixed $paid_amount;
 
-    public $payment_id;
+    public mixed $payment_id;
 
-    public $customer_id;
+    public mixed $customer_id;
 
-    public $payModal = false;
+    public bool $payModal = false;
 
     public function getSalesCustomerDueProperty()
     {
-        return Sale::where('customer_id', $this->customer_id)
+        return Sale::query()->where('customer_id', $this->customer_id)
             ->where('due_amount', '>', 0)
             ->get();
     }
 
     #[On('payModal')]
-    public function payModal($customer): void
+    public function payModal(mixed $customer): void
     {
         $this->payModal = true;
         $this->customer_id = $customer;
@@ -51,12 +51,12 @@ class PayDue extends Component
     {
         $this->validate();
 
-        foreach ($this->selectedSales as $saleId) {
-            $sale = Sale::findOrFail($saleId);
+        foreach ($this->selectedSales as $selectedSale) {
+            $sale = Sale::query()->findOrFail($selectedSale);
             $dueAmount = $sale->due_amount;
             $paidAmount = min($this->amount, $dueAmount);
 
-            SalePayment::create([
+            SalePayment::query()->create([
                 'date' => date('Y-m-d'),
                 'amount' => $paidAmount,
                 'sale_id' => $sale->id,
@@ -81,7 +81,7 @@ class PayDue extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.customers.pay-due');
     }

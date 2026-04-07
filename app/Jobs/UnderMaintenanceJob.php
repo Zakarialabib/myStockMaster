@@ -13,10 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class UnderMaintenanceJob implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     public function __construct(private $secret = null, private $refresh = false) {}
 

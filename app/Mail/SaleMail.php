@@ -13,19 +13,11 @@ class SaleMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $sale;
-
-    public $pdf;
-
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct($sale, $pdf)
+    public function __construct(public $sale, public $pdf)
     {
-        $this->sale = $sale;
-        $this->pdf = $pdf;
     }
 
     /**

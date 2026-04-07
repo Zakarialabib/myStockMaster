@@ -10,45 +10,45 @@ use Livewire\Form;
 class PurchaseReturnForm extends Form
 {
     #[Validate('required', message: 'Please provide a supplier ID')]
-    public $supplier_id;
+    public mixed $supplier_id;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
     #[Validate('required', message: 'Please provide a tax percentage')]
     #[Validate('integer', message: 'The tax percentage must be an integer')]
     #[Validate('min:0', message: 'The tax percentage must be at least 0')]
     #[Validate('max:100', message: 'The tax percentage must not exceed 100')]
-    public $tax_percentage = 0;
+    public mixed $tax_percentage = 0;
 
     #[Validate('required', message: 'Please provide a discount percentage')]
     #[Validate('integer', message: 'The discount percentage must be an integer')]
     #[Validate('min:0', message: 'The discount percentage must be at least 0')]
     #[Validate('max:100', message: 'The discount percentage must not exceed 100')]
-    public $discount_percentage = 0;
+    public mixed $discount_percentage = 0;
 
     #[Validate('nullable', message: 'Shipping amount must be a numeric value')]
-    public $shipping_amount = 0;
+    public mixed $shipping_amount = 0;
 
     #[Validate('required', message: 'Please provide a total amount')]
     #[Validate('numeric', message: 'The total amount must be a numeric value')]
-    public $total_amount = 0;
+    public mixed $total_amount = 0;
 
     #[Validate('nullable', message: 'Paid amount must be a numeric value')]
-    public $paid_amount = 0;
+    public mixed $paid_amount = 0;
 
     #[Validate('nullable', message: 'Note must be a string with a maximum length of 1000')]
     #[Validate('string', message: 'Note must be a string')]
     #[Validate('max:1000', message: 'Note must not exceed 1000 characters')]
-    public $note;
+    public mixed $note;
 
     #[Validate('required|integer|max:255')]
-    public $status;
+    public mixed $status;
 
     #[Validate('required|string|max:255')]
-    public $payment_method = 'Cash';
+    public mixed $payment_method = 'Cash';
 
     #[Validate('required')]
-    public $date;
+    public ?string $date = null;
 
-    public $reference;
+    public mixed $reference;
 }

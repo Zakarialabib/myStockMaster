@@ -10,7 +10,7 @@ class CustomerService
 {
     public function create(array $data): Customer
     {
-        return Customer::create($data);
+        return Customer::query()->create($data);
     }
 
     public function update(Customer $customer, array $data): Customer

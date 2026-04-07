@@ -20,14 +20,14 @@ class Index extends Component
     use WithAlert;
 
     #[Validate('required')]
-    public $backup_status;
+    public mixed $backup_status;
 
     #[Validate('nullable')]
-    public $backup_schedule;
+    public mixed $backup_schedule;
 
-    public $backup_include;
+    public mixed $backup_include;
 
-    public $settingsModal = false;
+    public bool $settingsModal = false;
 
     public function settingsModal(): void
     {
@@ -90,7 +90,7 @@ class Index extends Component
         $this->alert('success', __('Backup deleted successfully.'));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $files = Storage::allFiles(env('APP_NAME'));
 

@@ -15,33 +15,25 @@ use Illuminate\Queue\SerializesModels;
 
 class PaymentNotification implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
-
-    protected $sale;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Sale $sale)
+    public function __construct(protected \App\Models\Sale $sale)
     {
-        $this->sale = $sale;
     }
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         if (! $this->sale->due_amount || ! $this->sale->payment_date) {
             // $payment_date = Carbon::parse($this->sale->date)->addDays(15);
 
             // if (now()->gt($payment_date)) {
-            $user = User::find(1);
+            $user = User::query()->find(1);
 
             $user->notify(new PaymentDue($this->sale));
             // }

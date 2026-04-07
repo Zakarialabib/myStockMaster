@@ -21,9 +21,9 @@ class SearchProduct extends Component
     #[Url(as: 'q')]
     public $querySearch = '';
 
-    public $category_id;
+    public mixed $category_id;
 
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
     public int $showCount = 9;
 
@@ -36,7 +36,7 @@ class SearchProduct extends Component
         $this->showCount += 5;
     }
 
-    public function selectProduct($id): void
+    public function selectProduct(mixed $id): void
     {
         if ($this->warehouse_id !== null) {
             $this->dispatch('productSelected', productId: $id, warehouseId: $this->warehouse_id);
@@ -55,7 +55,7 @@ class SearchProduct extends Component
     #[Computed]
     public function categories()
     {
-        return Category::pluck('name', 'id');
+        return Category::query()->pluck('name', 'id');
     }
 
     public function mount(int|string|null $warehouseId = null): void
@@ -73,7 +73,7 @@ class SearchProduct extends Component
     #[On('barcodeScanned')]
     public function handleBarcodeScan(string $barcode): void
     {
-        $product = Product::where('code', $barcode)->first();
+        $product = Product::query()->where('code', $barcode)->first();
         if ($product) {
             $this->selectProduct($product->id);
             $this->querySearch = '';
@@ -84,34 +84,34 @@ class SearchProduct extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $query = Product::with(['warehouses' => static function ($query): void {
             $query->withPivot('qty', 'price', 'cost');
         }, 'category'])
             ->when($this->querySearch, function ($query): void {
-                $query->where(function ($query): void {
-                    $query->where('name', 'like', '%' . $this->querySearch . '%')
-                        ->orWhere('code', 'like', '%' . $this->querySearch . '%');
+                $query->where(function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+                    $builder->whereLike('name', '%' . $this->querySearch . '%')
+                        ->orWhereLike('code', '%' . $this->querySearch . '%');
                 });
             })
             ->when($this->category_id, function ($query): void {
                 $query->where('category_id', $this->category_id);
             })
             ->when($this->warehouse_id, function ($query): void {
-                $query->whereHas('warehouses', function ($q): void {
-                    $q->where('warehouse_id', $this->warehouse_id);
+                $query->whereHas('warehouses', function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+                    $builder->where('warehouse_id', $this->warehouse_id);
                 });
             })
             ->when($this->featured, static function ($query): void {
                 $query->where('featured', true);
             });
 
-        $products = $query->paginate($this->showCount);
-        $this->hasMorePages = $products->hasMorePages();
+        $lengthAwarePaginator = $query->paginate($this->showCount);
+        $this->hasMorePages = $lengthAwarePaginator->hasMorePages();
 
         return view('livewire.products.search-product', [
-            'products' => $products,
+            'products' => $lengthAwarePaginator,
         ]);
     }
 }

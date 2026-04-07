@@ -12,7 +12,7 @@ class ExportSalePosController extends Controller
 {
     public function __invoke(int|string $id): Response
     {
-        $sale = Sale::where('id', $id)->firstOrFail();
+        $sale = Sale::query()->where('id', $id)->firstOrFail();
 
         $data = [
             'sale' => $sale,

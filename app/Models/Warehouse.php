@@ -54,12 +54,12 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Warehouse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Warehouse whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Warehouse extends Model
 {
-    use HasAdvancedFilter, HasFactory;
-
+    use HasAdvancedFilter;
+    use HasFactory;
     protected const ATTRIBUTES = [
         'id',
         'name',
@@ -71,9 +71,9 @@ class Warehouse extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -89,7 +89,7 @@ class Warehouse extends Model
         return $this->belongsToMany(User::class, 'user_warehouse', 'warehouse_id', 'user_id');
     }
 
-    /** @return BelongsToMany<Product> */
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Product, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_warehouse', 'warehouse_id', 'product_id')
@@ -111,7 +111,7 @@ class Warehouse extends Model
     protected function stockValue(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->productWarehouse()->sum(DB::raw('qty * cost')) / 100,
+            get: fn (): int|float => $this->productWarehouse()->sum(DB::raw('qty * cost')) / 100,
         );
     }
 

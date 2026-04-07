@@ -9,10 +9,7 @@ use Illuminate\Support\Carbon;
 
 trait SaleScope
 {
-    /**
-     * @return mixed
-     */
-    public function scopeSalesTotal(Builder $builder, Carbon $date, int $dividedNumber = 100)
+    protected function scopeSalesTotal(Builder $builder, Carbon $date, int $dividedNumber = 100): int|float
     {
         return $builder->whereDate('created_at', '>=', $date)->sum('total_amount') / $dividedNumber;
     }

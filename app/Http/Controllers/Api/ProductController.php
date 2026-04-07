@@ -22,20 +22,21 @@ class ProductController extends Controller
     {
 
         if ($request->get('_end') !== null) {
-            $limit = $request->get('_end') ? $request->get('_end') : 10;
-            $offset = $request->get('_start') ? $request->get('_start') : 0;
+            $limit = $request->get('_end') ?: 10;
+            $offset = $request->get('_start') ?: 0;
 
-            $order = $request->get('_order') ? $request->get('_order') : 'asc';
-            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
+            $order = $request->get('_order') ?: 'asc';
+            $sort = $request->get('_sort') ?: 'id';
             // Filters
             $where_raw = ' 1=1 ';
 
             // capture brand_id filter
-            $brand_id = $request->get('brand_id') ? $request->get('brand_id') : '';
+            $brand_id = $request->get('brand_id') ?: '';
 
             if ($brand_id !== '') {
-                $where_raw .= " AND (brand_id =  $brand_id)";
+                $where_raw .= sprintf(' AND (brand_id =  %s)', $brand_id);
             }
+
             $products = Product::with(['category', 'brand'])
                 ->whereRaw($where_raw)
                 ->orderBy($sort, $order)
@@ -53,9 +54,9 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request): ProductResource
+    public function store(StoreProductRequest $storeProductRequest): ProductResource
     {
-        $product = Product::create($request->all());
+        $product = Product::query()->create($storeProductRequest->all());
 
         return new ProductResource($product);
     }
@@ -65,10 +66,10 @@ class ProductController extends Controller
      */
     public function show(int $id): ProductResource|JsonResponse
     {
-        $product = Product::find($id);
+        $product = Product::query()->find($id);
 
         if (is_null($product)) {
-            return response()->json(['message' => 'Product not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Product not found'], 404);
         }
 
         return new ProductResource($product);
@@ -77,10 +78,10 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, int $id): ProductResource
+    public function update(UpdateProductRequest $updateProductRequest, int $id): ProductResource
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $product = Product::query()->findOrFail($id);
+        $product->update($updateProductRequest->all());
 
         return new ProductResource($product);
     }
@@ -90,9 +91,9 @@ class ProductController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $product = Product::findOrFail($id);
+        $product = Product::query()->findOrFail($id);
         $product->delete();
 
-        return response()->json(['message' => 'Product deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Product deleted successfully']);
     }
 }

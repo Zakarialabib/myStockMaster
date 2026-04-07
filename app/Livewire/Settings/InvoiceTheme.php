@@ -27,7 +27,7 @@ class InvoiceTheme extends Component
 
     public function mount(): void
     {
-        $this->templates = config('invoice.templates') ?? [];
+        $this->templates = config('invoice.templates', []);
     }
 
     private function updateTemplatePreview(): void
@@ -39,38 +39,38 @@ class InvoiceTheme extends Component
         // Apply theme-specific changes to the header and footer HTML
         if ($this->selectedTheme === 'blue') {
             // Customize the header and footer for the "blue" theme
-            $headerHtml = <<<'HTML'
-                    <!-- Blue Theme Header HTML -->
-                    <header style="background-color: #007bff; color: white;">
-                        <!-- Customize header content for the "blue" theme -->
-                        <h1>Blue Theme Header</h1>
-                    </header>
-                HTML;
+            $headerHtml = <<<'HTML_WRAP'
+                <!-- Blue Theme Header HTML -->
+                <header style="background-color: #007bff; color: white;">
+                    <!-- Customize header content for the "blue" theme -->
+                    <h1>Blue Theme Header</h1>
+                </header>
+            HTML_WRAP;
 
-            $footerHtml = <<<'HTML'
-                    <!-- Blue Theme Footer HTML -->
-                    <footer style="background-color: #007bff; color: white;">
-                        <!-- Customize footer content for the "blue" theme -->
-                        <p>Blue Theme Footer</p>
-                    </footer>
-                HTML;
+            $footerHtml = <<<'HTML_WRAP'
+                <!-- Blue Theme Footer HTML -->
+                <footer style="background-color: #007bff; color: white;">
+                    <!-- Customize footer content for the "blue" theme -->
+                    <p>Blue Theme Footer</p>
+                </footer>
+            HTML_WRAP;
         } elseif ($this->selectedTheme === 'orange') {
             // Customize the header and footer for the "orange" theme
-            $headerHtml = <<<'HTML'
-                    <!-- Orange Theme Header HTML -->
-                    <header style="background-color: #ff6600; color: white;">
-                        <!-- Customize header content for the "orange" theme -->
-                        <h1>Orange Theme Header</h1>
-                    </header>
-                HTML;
+            $headerHtml = <<<'HTML_WRAP'
+                <!-- Orange Theme Header HTML -->
+                <header style="background-color: #ff6600; color: white;">
+                    <!-- Customize header content for the "orange" theme -->
+                    <h1>Orange Theme Header</h1>
+                </header>
+            HTML_WRAP;
 
-            $footerHtml = <<<'HTML'
-                    <!-- Orange Theme Footer HTML -->
-                    <footer style="background-color: #ff6600; color: white;">
-                        <!-- Customize footer content for the "orange" theme -->
-                        <p>Orange Theme Footer</p>
-                    </footer>
-                HTML;
+            $footerHtml = <<<'HTML_WRAP'
+                <!-- Orange Theme Footer HTML -->
+                <footer style="background-color: #ff6600; color: white;">
+                    <!-- Customize footer content for the "orange" theme -->
+                    <p>Orange Theme Footer</p>
+                </footer>
+            HTML_WRAP;
         }
 
         // Pass the updated HTML to the view
@@ -83,12 +83,12 @@ class InvoiceTheme extends Component
         return 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/logo.png')));
     }
 
-    private function setWaterMark($model)
+    private function setWaterMark(mixed $model)
     {
         return $model && $model->status ? $model->status : '';
     }
 
-    public function sale($id): Response
+    public function sale(mixed $id): Response
     {
         // Load the selected template's header and footer HTML files
         $headerHtml = File::get(config('invoice.templates.' . $this->selectedTemplate . '.header_html'));
@@ -104,21 +104,21 @@ class InvoiceTheme extends Component
             'footerHtml' => $footerHtml,
         ];
 
-        $pdf = new Mpdf([
+        $mpdf = new Mpdf([
             'format' => 'A4',
             'watermark' => $this->setWaterMark($sale),
         ]);
 
         $html = view('admin.sale.print', $data)->render();
-        $pdf->WriteHTML($html);
+        $mpdf->WriteHTML($html);
 
-        return response($pdf->Output(), 200, [
+        return response($mpdf->Output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . __('Sale') . $sale->reference . '.pdf"',
         ]);
     }
 
-    protected function createHTMLfile($file, string $name): string
+    protected function createHTMLfile(mixed $file, string $name): string
     {
         $extension = $file->extension();
         $data = File::get($file->getRealPath());
@@ -135,7 +135,7 @@ class InvoiceTheme extends Component
         return $base64;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.invoice-theme');
     }

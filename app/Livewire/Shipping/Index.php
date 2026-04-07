@@ -21,9 +21,9 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public $shipping;
+    public mixed $shipping;
 
-    public $model = Shipping::class;
+    public string $model = Shipping::class;
 
     public function confirmed(): void
     {
@@ -34,18 +34,18 @@ class Index extends Component
     {
         abort_if(Gate::denies('shipping_access'), 403);
 
-        $query = Shipping::advancedFilter([
+        $query = Shipping::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $shippings = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.shipping.index', ['shippings' => $shippings]);
+        return view('livewire.shipping.index', ['shippings' => $lengthAwarePaginator]);
     }
 
-    public function deleteModal($shipping): void
+    public function deleteModal(int|string $shipping): void
     {
         $this->confirm(__('Are you sure you want to delete this?'), [
             'toast' => false,
@@ -62,7 +62,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('shipping_delete'), 403);
 
-        Shipping::findOrFail($this->shipping)->delete();
+        Shipping::query()->findOrFail($this->shipping)->delete();
 
         $this->alert('success', __('Shipping deleted successfully.'));
     }

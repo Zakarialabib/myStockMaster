@@ -19,7 +19,7 @@ class Create extends Component
 
     public UserForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('user_create'), 403);
 

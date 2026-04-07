@@ -16,17 +16,17 @@ class Show extends Component
 
     public ?Product $product = null;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     #[On('showModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         $this->product = Product::with(['category', 'warehouses', 'movements'])->findOrFail($id);
 
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('product_show'), 403);
 

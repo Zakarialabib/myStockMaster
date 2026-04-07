@@ -58,7 +58,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Customer extends Model
 {
@@ -80,9 +80,9 @@ class Customer extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -100,6 +100,7 @@ class Customer extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -107,12 +108,15 @@ class Customer extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Sale, $this>
+     */
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'customer_id', 'id');
     }
 
-    private function customerSum($column, $model)
+    private function customerSum(mixed $column, mixed $model)
     {
         return $model::where('customer_id', $this->id)->sum($column);
     }
@@ -130,27 +134,25 @@ class Customer extends Model
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->first_name ?? '') . ' ' . ($this->last_name ?? ''),
+            get: fn (): string => ($this->first_name ?? '') . ' ' . ($this->last_name ?? ''),
         );
     }
 
     protected function phone(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => preg_replace('/[^0-9]/', '', $value),
+            set: fn ($value): ?string => preg_replace('/[^0-9]/', '', (string) $value),
         );
     }
 
-    public function scopeActive($query)
+    protected function scopeActive(mixed $query)
     {
         return $query->where('active', true);
     }
 
-    public function scopeSearchByName($query, $name)
+    protected function scopeSearchByName(mixed $query, mixed $name)
     {
-        return $query->when(! empty($name), function ($query) use ($name) {
-            return $query->where('name', 'like', '%' . $name . '%');
-        });
+        return $query->when(filled($name), fn($query) => $query->where('name', 'like', '%' . $name . '%'));
     }
 
     public function getTotalSalesAmount(): float

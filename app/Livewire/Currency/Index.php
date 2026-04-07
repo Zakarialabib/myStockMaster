@@ -19,23 +19,23 @@ class Index extends Component
     use WithAlert;
 
     /** @var mixed */
-    public $currency;
+    public mixed $currency;
 
-    public $model = Currency::class;
+    public string $model = Currency::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('currency_access'), 403);
 
-        $query = Currency::advancedFilter([
+        $query = Currency::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $currencies = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.currency.index', ['currencies' => $currencies]);
+        return view('livewire.currency.index', ['currencies' => $lengthAwarePaginator]);
     }
 
     public function delete(Currency $currency): void

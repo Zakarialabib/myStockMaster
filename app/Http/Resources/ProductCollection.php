@@ -15,6 +15,7 @@ class ProductCollection extends ResourceCollection
      *
      * @return array
      */
+    #[\Override]
     public function toArray($request)
     {
         return [

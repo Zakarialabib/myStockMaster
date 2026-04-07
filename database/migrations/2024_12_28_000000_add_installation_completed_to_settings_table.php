@@ -11,16 +11,16 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->boolean('installation_completed')->default(false);
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->boolean('installation_completed')->default(false);
         });
     }
 
     /** Reverse the migrations. */
     public function down(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('installation_completed');
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn('installation_completed');
         });
     }
 };

@@ -19,7 +19,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     public Customer $customer;
 
@@ -49,16 +49,16 @@ class Create extends Component
     #[Computed]
     public function customerGroups()
     {
-        return CustomerGroup::pluck('name', 'id')->toArray();
+        return CustomerGroup::query()->pluck('name', 'id')->toArray();
     }
 
     #[Computed]
     public function roles()
     {
-        return Role::pluck('name', 'id')->toArray();
+        return Role::query()->pluck('name', 'id')->toArray();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer_create'), 403);
 

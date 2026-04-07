@@ -50,13 +50,13 @@ class CustomersReport extends Component
     #[Computed]
     public function customers()
     {
-        return Customer::select(['id', 'name'])->get();
+        return Customer::query()->select(['id', 'name'])->get();
     }
 
     #[Computed]
     public function sales()
     {
-        return Sale::whereDate('date', '>=', $this->start_date)
+        return Sale::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
@@ -66,7 +66,7 @@ class CustomersReport extends Component
     #[Computed]
     public function saleReturns()
     {
-        return SaleReturn::whereDate('date', '>=', $this->start_date)
+        return SaleReturn::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
@@ -76,14 +76,14 @@ class CustomersReport extends Component
     #[Computed]
     public function quotations()
     {
-        return Quotation::whereDate('date', '>=', $this->start_date)
+        return Quotation::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
             ->orderBy('date', 'desc')->paginate(10);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.reports.customers-report');
     }

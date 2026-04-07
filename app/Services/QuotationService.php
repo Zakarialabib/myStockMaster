@@ -14,7 +14,7 @@ class QuotationService
     public function create(array $data, $cartContent, $cartTax, $cartDiscount): Quotation
     {
         return DB::transaction(function () use ($data, $cartContent, $cartTax, $cartDiscount) {
-            $quotation = Quotation::create([
+            $quotation = Quotation::query()->create([
                 'date' => $data['date'],
                 'customer_id' => $data['customer_id'],
                 'warehouse_id' => $data['warehouse_id'],
@@ -30,7 +30,7 @@ class QuotationService
             ]);
 
             foreach ($cartContent as $cart_item) {
-                QuotationDetails::create([
+                QuotationDetails::query()->create([
                     'quotation_id' => $quotation->id,
                     'product_id' => $cart_item->id,
                     'name' => $cart_item->name,
@@ -51,7 +51,7 @@ class QuotationService
 
     public function update(Quotation $quotation, array $data, $cartContent, $cartTax, $cartDiscount): Quotation
     {
-        return DB::transaction(function () use ($quotation, $data, $cartContent, $cartTax, $cartDiscount) {
+        return DB::transaction(function () use ($quotation, $data, $cartContent, $cartTax, $cartDiscount): \App\Models\Quotation {
             foreach ($quotation->quotationDetails as $quotation_detail) {
                 $quotation_detail->delete();
             }
@@ -73,7 +73,7 @@ class QuotationService
             ]);
 
             foreach ($cartContent as $cart_item) {
-                QuotationDetails::create([
+                QuotationDetails::query()->create([
                     'quotation_id' => $quotation->id,
                     'product_id' => $cart_item->id,
                     'name' => $cart_item->name,
@@ -94,10 +94,11 @@ class QuotationService
 
     public function delete(Quotation $quotation): void
     {
-        DB::transaction(function () use ($quotation) {
+        DB::transaction(function () use ($quotation): void {
             foreach ($quotation->quotationDetails as $quotation_detail) {
                 $quotation_detail->delete();
             }
+
             $quotation->delete();
         });
     }

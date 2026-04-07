@@ -15,32 +15,32 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignIdFor(Category::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Brand::class)->nullable()->constrained()->nullOnDelete();
+        Schema::create('products', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->foreignIdFor(Category::class)->constrained()->restrictOnDelete();
+            $blueprint->foreignIdFor(Brand::class)->nullable()->constrained()->nullOnDelete();
 
-            $table->string('name');
-            $table->string('code')->nullable();
-            $table->string('slug')->unique();
-            $table->string('barcode_symbology')->nullable();
-            $table->integer('quantity')->default(0);
-            $table->string('image')->nullable();
-            $table->string('gallery')->nullable();
-            $table->string('unit')->nullable();
-            $table->integer('tax_amount')->default(0);
-            $table->text('description')->nullable();
-            $table->boolean('status')->default(true);
-            $table->tinyInteger('tax_type')->default(0);
-            $table->text('embeded_video')->nullable();
-            $table->json('options')->nullable();
-            $table->text('usage')->nullable();
-            $table->boolean('featured')->default(false);
-            $table->boolean('best')->default(false);
-            $table->boolean('hot')->default(false);
+            $blueprint->string('name');
+            $blueprint->string('code')->nullable();
+            $blueprint->string('slug')->unique();
+            $blueprint->string('barcode_symbology')->nullable();
+            $blueprint->integer('quantity')->default(0);
+            $blueprint->string('image')->nullable();
+            $blueprint->string('gallery')->nullable();
+            $blueprint->string('unit')->nullable();
+            $blueprint->integer('tax_amount')->default(0);
+            $blueprint->text('description')->nullable();
+            $blueprint->boolean('status')->default(true);
+            $blueprint->tinyInteger('tax_type')->default(0);
+            $blueprint->text('embeded_video')->nullable();
+            $blueprint->json('options')->nullable();
+            $blueprint->text('usage')->nullable();
+            $blueprint->boolean('featured')->default(false);
+            $blueprint->boolean('best')->default(false);
+            $blueprint->boolean('hot')->default(false);
 
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

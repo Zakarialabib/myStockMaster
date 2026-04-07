@@ -10,23 +10,23 @@ class NativeEventListener extends Component
     #[On('native.navigate.dashboard')]
     public function goToDashboard()
     {
-        return redirect()->route('dashboard')->navigate();
+        return to_route('dashboard')->navigate();
     }
 
     #[On('native.navigate.settings')]
     public function goToSettings()
     {
-        return redirect()->route('settings.index')->navigate();
+        return to_route('settings.index')->navigate();
     }
 
     #[On('native.sync.trigger')]
-    public function triggerSync()
+    public function triggerSync(): void
     {
         // Trigger local sync service...
         $this->dispatch('alert', ['type' => 'success', 'message' => 'Sync triggered!']);
     }
 
-    public function render()
+    public function render(): string
     {
         return <<<'HTML'
             <div style="display:none;"></div>

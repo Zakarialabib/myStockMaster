@@ -23,12 +23,10 @@ class Create extends Component
     #[Computed]
     public function permission_groups()
     {
-        return Permission::all()->groupBy(function ($permission) {
-            return explode('_', $permission->name)[0];
-        });
+        return Permission::all()->groupBy(fn($permission) => explode('_', (string) $permission->name)[0]);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.role.create');
     }
@@ -42,7 +40,7 @@ class Create extends Component
         $this->showModal = true;
     }
 
-    public function store()
+    public function store(): void
     {
         $this->form->validate([
             'name' => 'required|string|unique:roles,name',

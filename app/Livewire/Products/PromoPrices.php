@@ -15,11 +15,11 @@ class PromoPrices extends Component
 {
     use WithAlert;
 
-    public $percentage;
+    public mixed $percentage;
 
-    public $copyPriceToOldPrice;
+    public mixed $copyPriceToOldPrice;
 
-    public $promoModal = false;
+    public bool $promoModal = false;
 
     #[On('promoModal')]
     public function promoModal(): void
@@ -31,14 +31,14 @@ class PromoPrices extends Component
 
     public function update(): void
     {
-        $warehouseProducts = ProductWarehouse::where('is_ecommerce', true)->get();
+        $warehouseProducts = ProductWarehouse::query()->where('is_ecommerce', true)->get();
 
-        foreach ($warehouseProducts as $warehouse) {
+        foreach ($warehouseProducts as $warehouseProduct) {
             if ($this->copyPriceToOldPrice) {
-                $warehouse->old_price = $warehouse->price;
+                $warehouseProduct->old_price = $warehouseProduct->price;
             } else {
-                $warehouse->price *= 1 - $this->percentage / 100;
-                $warehouse->save();
+                $warehouseProduct->price *= 1 - $this->percentage / 100;
+                $warehouseProduct->save();
             }
         }
     }

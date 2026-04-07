@@ -14,19 +14,19 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $sale;
+    public mixed $sale;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
     #[On('showModal')]
-    public function showModal($id): void
+    public function showModal(int|string $id): void
     {
-        $this->sale = Sale::findOrFail($id);
+        $this->sale = Sale::query()->findOrFail($id);
 
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('sale_show'), 403);
 

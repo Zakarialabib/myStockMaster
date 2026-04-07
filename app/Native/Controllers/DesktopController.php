@@ -20,7 +20,7 @@ class DesktopController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if (! EnvironmentService::isDesktop()) {
-                return response()->json([
+                return new \Illuminate\Http\JsonResponse([
                     'success' => false,
                     'message' => 'Desktop features are only available in desktop mode',
                 ], 403);
@@ -34,7 +34,7 @@ class DesktopController extends Controller
     public function executeShortcut(Request $request): JsonResponse
     {
         $request->validate([
-            'shortcut' => 'required|string',
+            'shortcut' => ['required', 'string'],
         ]);
 
         $shortcut = $request->input('shortcut');
@@ -47,7 +47,7 @@ class DesktopController extends Controller
 
         $result = $this->shortcutService->executeShortcut($shortcut);
 
-        return response()->json($result);
+        return new \Illuminate\Http\JsonResponse($result);
     }
 
     /** Get all available shortcuts */
@@ -67,7 +67,7 @@ class DesktopController extends Controller
             }
         }
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'success' => true,
             'shortcuts' => $shortcuts,
             'total' => count($shortcuts),
@@ -78,14 +78,14 @@ class DesktopController extends Controller
     public function checkShortcut(Request $request): JsonResponse
     {
         $request->validate([
-            'shortcut' => 'required|string',
+            'shortcut' => ['required', 'string'],
         ]);
 
         $shortcut = $request->input('shortcut');
         $available = $this->shortcutService->isShortcutAvailable($shortcut);
         $description = $this->shortcutService->getShortcutDescription($shortcut);
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'success' => true,
             'shortcut' => $shortcut,
             'available' => $available,
@@ -99,19 +99,19 @@ class DesktopController extends Controller
         try {
             $this->shortcutService->registerShortcuts();
 
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'success' => true,
                 'message' => 'Desktop shortcuts registered successfully',
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to register desktop shortcuts', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
             ]);
 
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'success' => false,
-                'message' => 'Failed to register shortcuts: ' . $e->getMessage(),
+                'message' => 'Failed to register shortcuts: ' . $exception->getMessage(),
             ], 500);
         }
     }
@@ -119,7 +119,7 @@ class DesktopController extends Controller
     /** Get desktop environment status */
     public function getDesktopStatus(): JsonResponse
     {
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'success' => true,
             'desktop_mode' => EnvironmentService::isDesktop(),
             'environment' => EnvironmentService::getEnvironmentType(),
@@ -141,9 +141,9 @@ class DesktopController extends Controller
     public function handleAction(Request $request): JsonResponse
     {
         $request->validate([
-            'action' => 'required|string',
-            'params' => 'sometimes|array',
-            'data' => 'sometimes|array',
+            'action' => ['required', 'string'],
+            'params' => ['sometimes', 'array'],
+            'data' => ['sometimes', 'array'],
         ]);
 
         $action = $request->input('action');
@@ -152,17 +152,17 @@ class DesktopController extends Controller
         try {
             $result = $this->executeDesktopAction($action, $params);
 
-            return response()->json($result);
-        } catch (Exception $e) {
+            return new \Illuminate\Http\JsonResponse($result);
+        } catch (Exception $exception) {
             Log::error('Desktop action failed', [
                 'action' => $action,
                 'params' => $params,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'success' => false,
-                'message' => 'Action failed: ' . $e->getMessage(),
+                'message' => 'Action failed: ' . $exception->getMessage(),
             ], 500);
         }
     }
@@ -170,28 +170,15 @@ class DesktopController extends Controller
     /** Execute a desktop-specific action */
     protected function executeDesktopAction(string $action, array $params = []): array
     {
-        switch ($action) {
-            case 'show_notification':
-                return $this->showNotification($params);
-
-            case 'update_window_title':
-                return $this->updateWindowTitle($params);
-
-            case 'set_window_size':
-                return $this->setWindowSize($params);
-
-            case 'toggle_always_on_top':
-                return $this->toggleAlwaysOnTop($params);
-
-            case 'show_context_menu':
-                return $this->showContextMenu($params);
-
-            case 'handle_file_drop':
-                return $this->handleFileDrop($params);
-
-            default:
-                throw new InvalidArgumentException("Unknown desktop action: {$action}");
-        }
+        return match ($action) {
+            'show_notification' => $this->showNotification($params),
+            'update_window_title' => $this->updateWindowTitle($params),
+            'set_window_size' => $this->setWindowSize($params),
+            'toggle_always_on_top' => $this->toggleAlwaysOnTop($params),
+            'show_context_menu' => $this->showContextMenu($params),
+            'handle_file_drop' => $this->handleFileDrop($params),
+            default => throw new InvalidArgumentException('Unknown desktop action: ' . $action),
+        };
     }
 
     /** Show a desktop notification */
@@ -310,31 +297,31 @@ class DesktopController extends Controller
     public function handleJavaScriptError(Request $request): JsonResponse
     {
         $request->validate([
-            'message' => 'required|string',
-            'source' => 'sometimes|string',
-            'line' => 'sometimes|integer',
-            'column' => 'sometimes|integer',
-            'stack' => 'sometimes|string',
-            'userAgent' => 'sometimes|string',
-            'url' => 'sometimes|string',
+            'message' => ['required', 'string'],
+            'source' => ['sometimes', 'string'],
+            'line' => ['sometimes', 'integer'],
+            'column' => ['sometimes', 'integer'],
+            'stack' => ['sometimes', 'string'],
+            'userAgent' => ['sometimes', 'string'],
+            'url' => ['sometimes', 'string'],
         ]);
 
         try {
-            $errorHandler = app(\App\Native\Services\DesktopErrorHandler::class);
+            $errorHandler = resolve(\App\Native\Services\DesktopErrorHandler::class);
             $result = $errorHandler->handleJavaScriptError($request->all());
 
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'success' => true,
                 'error_id' => $result['error_id'],
                 'message' => 'JavaScript error logged successfully',
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to handle JavaScript error', [
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
                 'request_data' => $request->all(),
             ]);
 
-            return response()->json([
+            return new \Illuminate\Http\JsonResponse([
                 'success' => false,
                 'message' => 'Failed to log JavaScript error',
             ], 500);

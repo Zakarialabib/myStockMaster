@@ -13,23 +13,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_warehouse', function (Blueprint $table) {
-            $table->id();
+        Schema::create('product_warehouse', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->foreignIdFor(App\Models\Product::class)->constrained()->restrictOnDelete();
-            $table->foreignIdFor(App\Models\Warehouse::class)->constrained()->restrictOnDelete();
+            $blueprint->foreignIdFor(App\Models\Product::class)->constrained()->restrictOnDelete();
+            $blueprint->foreignIdFor(App\Models\Warehouse::class)->constrained()->restrictOnDelete();
 
-            $table->decimal('price', 8, 2);
-            $table->decimal('cost', 8, 2)->nullable();
-            $table->decimal('old_price', 8, 2)->nullable();
-            $table->integer('qty');
-            $table->integer('stock_alert');
-            $table->boolean('is_ecommerce')->default(false);
-            $table->tinyInteger('is_discount')->default(false);
-            $table->date('discount_date')->nullable();
+            $blueprint->decimal('price', 8, 2);
+            $blueprint->decimal('cost', 8, 2)->nullable();
+            $blueprint->decimal('old_price', 8, 2)->nullable();
+            $blueprint->integer('qty');
+            $blueprint->integer('stock_alert');
+            $blueprint->boolean('is_ecommerce')->default(false);
+            $blueprint->tinyInteger('is_discount')->default(false);
+            $blueprint->date('discount_date')->nullable();
 
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

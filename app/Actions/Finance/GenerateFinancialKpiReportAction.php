@@ -17,13 +17,13 @@ use Illuminate\Support\Facades\Cache;
  * - Break-Even Analysis
  * - Additional KPIs: AOV, Labor Cost Ratio, Food Cost Ratio
  */
-final class GenerateFinancialKpiReportAction
+final readonly class GenerateFinancialKpiReportAction
 {
     public function __construct(
-        private CalculateGrossMarginAction $grossMarginAction,
-        private CalculateNetMarginAction $netMarginAction,
-        private CalculateCashFlowAction $cashFlowAction,
-        private CalculateBreakEvenAction $breakEvenAction
+        private CalculateGrossMarginAction $calculateGrossMarginAction,
+        private CalculateNetMarginAction $calculateNetMarginAction,
+        private CalculateCashFlowAction $calculateCashFlowAction,
+        private CalculateBreakEvenAction $calculateBreakEvenAction
     ) {}
 
     public function __invoke(
@@ -41,13 +41,13 @@ final class GenerateFinancialKpiReportAction
         }
 
         // Calculate all KPIs
-        $grossMargin = ($this->grossMarginAction)($dateFrom, $dateTo);
-        $netMargin = ($this->netMarginAction)($dateFrom, $dateTo, $expenses);
-        $cashFlow = ($this->cashFlowAction)($dateFrom, $dateTo, $expenses, $currentCashBalance);
-        $breakEven = ($this->breakEvenAction)($fixedCosts);
+        $grossMargin = ($this->calculateGrossMarginAction)($dateFrom, $dateTo);
+        $netMargin = ($this->calculateNetMarginAction)($dateFrom, $dateTo, $expenses);
+        $cashFlow = ($this->calculateCashFlowAction)($dateFrom, $dateTo, $expenses, $currentCashBalance);
+        $breakEven = ($this->calculateBreakEvenAction)($fixedCosts);
 
         // Calculate additional KPIs
-        $additionalKpis = $this->calculateAdditionalKpis($grossMargin, $netMargin, $expenses);
+        $additionalKpis = $this->calculateAdditionalKpis($grossMargin, $expenses);
 
         // Generate overall financial health score
         $healthScore = $this->calculateFinancialHealthScore([
@@ -108,7 +108,7 @@ final class GenerateFinancialKpiReportAction
         return $report;
     }
 
-    private function calculateAdditionalKpis(array $grossMargin, array $netMargin, array $expenses): array
+    private function calculateAdditionalKpis(array $grossMargin, array $expenses): array
     {
         $totalRevenue = $grossMargin['total_revenue'];
 
@@ -211,6 +211,7 @@ final class GenerateFinancialKpiReportAction
                 default => 50
             };
         }
+
         $scores['break_even'] = $breakEvenScore;
         $weights['break_even'] = 0.20;
 

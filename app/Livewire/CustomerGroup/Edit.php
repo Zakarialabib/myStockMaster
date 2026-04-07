@@ -17,15 +17,15 @@ class Edit extends Component
     use WithAlert;
 
     /** @var bool */
-    public $editModal = false;
+    public bool $editModal = false;
 
     /** @var mixed */
-    public $customergroup;
+    public mixed $customergroup;
 
     public CustomerGroupForm $form;
 
     /** @var array */
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('customer-group_update'), 403);
 
@@ -33,12 +33,12 @@ class Edit extends Component
     }
 
     #[On('editModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         $this->resetErrorBag();
         $this->form->reset();
 
-        $this->customergroup = CustomerGroup::where('id', $id)->firstOrFail();
+        $this->customergroup = CustomerGroup::query()->where('id', $id)->firstOrFail();
 
         $this->form->name = $this->customergroup->name;
         $this->form->percentage = $this->customergroup->percentage;

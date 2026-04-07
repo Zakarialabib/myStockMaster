@@ -28,7 +28,7 @@ class SaleReturnService
                 $paymentStatus = PaymentStatus::PAID;
             }
 
-            $saleReturn = SaleReturn::create([
+            $saleReturn = SaleReturn::query()->create([
                 'date' => $data['date'],
                 'reference' => $data['reference'] ?? 'SLRN-' . date('YmdHis'),
                 'customer_id' => $data['customer_id'],
@@ -61,7 +61,7 @@ class SaleReturnService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleReturnDetail::create([
+                SaleReturnDetail::query()->create([
                     'sale_return_id' => $saleReturn->id,
                     'product_id' => $productId,
                     'name' => $productName,
@@ -76,7 +76,7 @@ class SaleReturnService
                 ]);
 
                 if ($data['status'] === SaleReturnStatus::COMPLETED) {
-                    $product = Product::findOrFail($productId);
+                    $product = Product::query()->findOrFail($productId);
                     $product->update([
                         'quantity' => $product->quantity + $quantity,
                     ]);
@@ -84,7 +84,7 @@ class SaleReturnService
             }
 
             if ($data['paid_amount'] > 0) {
-                SaleReturnPayment::create([
+                SaleReturnPayment::query()->create([
                     'date' => $data['date'],
                     'reference' => 'INV/' . $saleReturn->reference,
                     'amount' => $data['paid_amount'] * 100,
@@ -112,11 +112,12 @@ class SaleReturnService
 
             foreach ($saleReturn->saleReturnDetails as $detail) {
                 if ($saleReturn->status === SaleReturnStatus::COMPLETED) {
-                    $product = Product::findOrFail($detail->product_id);
+                    $product = Product::query()->findOrFail($detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity - $detail->quantity,
                     ]);
                 }
+
                 $detail->delete();
             }
 
@@ -152,7 +153,7 @@ class SaleReturnService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleReturnDetail::create([
+                SaleReturnDetail::query()->create([
                     'sale_return_id' => $saleReturn->id,
                     'product_id' => $productId,
                     'name' => $productName,
@@ -167,7 +168,7 @@ class SaleReturnService
                 ]);
 
                 if ($data['status'] === SaleReturnStatus::COMPLETED) {
-                    $product = Product::findOrFail($productId);
+                    $product = Product::query()->findOrFail($productId);
                     $product->update([
                         'quantity' => $product->quantity + $quantity,
                     ]);

@@ -14,6 +14,7 @@ class WarehouseResource extends JsonResource
      *
      * @param \App\Models\Warehouse $resource
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

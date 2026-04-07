@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('movements', function (Blueprint $table) {
-            $table->id();
-            $table->string('type');
-            $table->unsignedInteger('quantity');
-            $table->decimal('price', 10, 2);
-            $table->dateTime('date');
-            $table->uuidMorphs('movable');
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+        Schema::create('movements', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('type');
+            $blueprint->unsignedInteger('quantity');
+            $blueprint->decimal('price', 10, 2);
+            $blueprint->dateTime('date');
+            $blueprint->uuidMorphs('movable');
+            $blueprint->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+            $blueprint->timestamps();
         });
     }
 

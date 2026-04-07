@@ -20,11 +20,11 @@ class WarehouseSeeder extends Seeder
             ['name' => 'warehouse 2', 'city' => 'casablanca', 'phone' => '061234567898', 'email' => 'warehouse2@casa.ma', 'country' => 'morocco'],
         ];
 
-        collect($warehouses)->each(function ($warehouse) {
-            $ware = Warehouse::create($warehouse);
+        collect($warehouses)->each(function ($warehouse): void {
+            $ware = Warehouse::query()->create($warehouse);
 
-            if (User::first()) {
-                $ware->users()->attach(User::first()->id);
+            if (User::query()->first()) {
+                $ware->users()->attach(User::query()->first()->id);
             }
         });
     }

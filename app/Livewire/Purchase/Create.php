@@ -38,7 +38,7 @@ class Create extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('purchase_create'), 403);
 
@@ -63,7 +63,7 @@ class Create extends Component
 
     public function saveDraft(): void
     {
-        $purchaseService = app(PurchaseService::class);
+        $purchaseService = resolve(PurchaseService::class);
 
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
@@ -79,7 +79,7 @@ class Create extends Component
 
         $this->form->validate();
 
-        $purchase = $purchaseService->create(
+        $purchaseService->create(
             [
                 'date' => $this->form->date,
                 'supplier_id' => $this->form->supplier_id,
@@ -112,7 +112,7 @@ class Create extends Component
 
     public function store(): void
     {
-        $purchaseService = app(PurchaseService::class);
+        $purchaseService = resolve(PurchaseService::class);
 
         if (! $this->form->warehouse_id) {
             $this->alert('error', __('Please select a warehouse'));
@@ -162,20 +162,20 @@ class Create extends Component
         $this->clearCart();
     }
 
-    public function updatedFormWarehouseId($warehouse_id): void
+    public function updatedFormWarehouseId(mixed $warehouse_id): void
     {
         $this->form->warehouse_id = $warehouse_id;
         $this->dispatch('warehouseSelected', $warehouse_id);
     }
 
-    public function updatedFormStatus($status): void
+    public function updatedFormStatus(mixed $status): void
     {
         if ($status === (string) PurchaseStatus::COMPLETED->value || $status === PurchaseStatus::COMPLETED->value) {
             $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
-    public function updatedFormPaymentMethod($payment_status): void
+    public function updatedFormPaymentMethod(mixed $payment_status): void
     {
         if ($payment_status === 'cash') {
             $this->form->paid_amount = $this->form->total_amount;

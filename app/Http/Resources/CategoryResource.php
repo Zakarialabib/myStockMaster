@@ -16,6 +16,7 @@ class CategoryResource extends JsonResource
      *
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      */
+    #[\Override]
     public function toArray($request)
     {
         return [

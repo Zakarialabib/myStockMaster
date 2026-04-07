@@ -15,25 +15,25 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Currency $currency;
 
     #[Validate('required', message: 'The name field cannot be empty.')]
     #[Validate('min:3', message: 'The name must be at least 3 characters.')]
     #[Validate('max:255', message: 'The name may not be greater than 255 characters.')]
-    public $name;
+    public mixed $name;
 
     #[Validate('required', message: 'The code field cannot be empty.')]
     #[Validate('max:255', message: 'The code may not be greater than 255 characters.')]
-    public $code;
+    public mixed $code;
 
     #[Validate('required', message: 'The symbol field cannot be empty.')]
     #[Validate('max:255', message: 'The symbol may not be greater than 255 characters.')]
-    public $locale;
+    public mixed $locale;
 
     /** @var array */
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('currency_create'), 403);
 
@@ -56,9 +56,7 @@ class Create extends Component
     {
         $this->validate();
 
-        $this->currency = Currency::create(
-            $this->all()
-        );
+        $this->currency = Currency::query()->create($this->all());
 
         $this->alert('success', __('Currency created successfully.'));
 

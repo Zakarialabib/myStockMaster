@@ -10,19 +10,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('expenses', function (Blueprint $table) {
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->enum('frequency', ['none', 'daily', 'weekly', 'monthly', 'yearly'])->default('none');
+        Schema::table('expenses', function (Blueprint $blueprint): void {
+            $blueprint->date('start_date')->nullable();
+            $blueprint->date('end_date')->nullable();
+            $blueprint->enum('frequency', ['none', 'daily', 'weekly', 'monthly', 'yearly'])->default('none');
         });
     }
 
     public function down(): void
     {
-        Schema::table('expenses', function (Blueprint $table) {
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
-            $table->dropColumn('frequency');
+        Schema::table('expenses', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn('start_date');
+            $blueprint->dropColumn('end_date');
+            $blueprint->dropColumn('frequency');
         });
     }
 };

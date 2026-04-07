@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('languages', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->boolean('rtl')->default(false);
-            $table->integer('status')->default(1);
-            $table->boolean('is_default')->default(false);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('languages', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('name');
+            $blueprint->string('code');
+            $blueprint->boolean('rtl')->default(false);
+            $blueprint->integer('status')->default(1);
+            $blueprint->boolean('is_default')->default(false);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

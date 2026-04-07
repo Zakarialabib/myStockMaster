@@ -29,27 +29,27 @@ class Index extends Component
         'printer.port' => 'required|string|max:255',
         'printer.path' => 'required|string|max:255',
     ])]
-    public $printer;
+    public mixed $printer;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $openModal = false;
+    public bool $openModal = false;
 
-    public $model = Printer::class;
+    public string $model = Printer::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('printer_access'), 403);
 
-        $query = Printer::advancedFilter([
+        $query = Printer::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $printers = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.printer.index', ['printers' => $printers]);
+        return view('livewire.printer.index', ['printers' => $lengthAwarePaginator]);
     }
 
     #[On('showModal')]

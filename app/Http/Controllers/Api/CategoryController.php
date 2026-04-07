@@ -22,11 +22,11 @@ class CategoryController extends Controller
     {
 
         if ($request->get('_end') !== null) {
-            $limit = $request->get('_end') ? $request->get('_end') : 10;
-            $offset = $request->get('_start') ? $request->get('_start') : 0;
+            $limit = $request->get('_end') ?: 10;
+            $offset = $request->get('_start') ?: 0;
 
-            $order = $request->get('_order') ? $request->get('_order') : 'asc';
-            $sort = $request->get('_sort') ? $request->get('_sort') : 'id';
+            $order = $request->get('_order') ?: 'asc';
+            $sort = $request->get('_sort') ?: 'id';
             // Filters
             $where_raw = ' 1=1 ';
 
@@ -35,14 +35,14 @@ class CategoryController extends Controller
             // if ($brand_id !== '') {
             //     $where_raw .= " AND (brand_id =  $brand_id)";
             // }
-            $categories = Category::whereRaw($where_raw)
+            $categories = Category::query()->whereRaw($where_raw)
                 ->orderBy($sort, $order)
                 ->offset($offset)
                 ->limit($limit)
                 ->get();
         } else {
             // retireve all categories
-            $categories = Category::get();
+            $categories = Category::query()->get();
         }
 
         return CategoryResource::collection($categories);
@@ -51,9 +51,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCategoryRequest $request): CategoryResource
+    public function store(StoreCategoryRequest $storeCategoryRequest): CategoryResource
     {
-        $category = Category::create($request->all());
+        $category = Category::query()->create($storeCategoryRequest->all());
 
         return new CategoryResource($category);
     }
@@ -63,10 +63,10 @@ class CategoryController extends Controller
      */
     public function show(int $id): CategoryResource|JsonResponse
     {
-        $category = Category::find($id);
+        $category = Category::query()->find($id);
 
         if (is_null($category)) {
-            return response()->json(['message' => 'Category not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Category not found'], 404);
         }
 
         return new CategoryResource($category);
@@ -75,10 +75,10 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, int $id): CategoryResource
+    public function update(UpdateCategoryRequest $updateCategoryRequest, int $id): CategoryResource
     {
-        $category = Category::findOrFail($id);
-        $category->update($request->all());
+        $category = Category::query()->findOrFail($id);
+        $category->update($updateCategoryRequest->all());
 
         return new CategoryResource($category);
     }
@@ -88,9 +88,9 @@ class CategoryController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $category = Category::findOrFail($id);
+        $category = Category::query()->findOrFail($id);
         $category->delete();
 
-        return response()->json(['message' => 'Category deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Category deleted successfully']);
     }
 }

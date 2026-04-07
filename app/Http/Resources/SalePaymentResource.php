@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SalePaymentResource extends JsonResource
 {
+    #[\Override]
     public function toArray($request)
     {
         return [
@@ -16,12 +17,12 @@ class SalePaymentResource extends JsonResource
             'sale_id' => $request->sale_id,
             'user_id' => $request->user_id,
             'amount' => $request->amount,
-            'date' => Carbon::parse($request->date)->format('Y-M-D'),
+            'date' => \Illuminate\Support\Facades\Date::parse($request->date)->format('Y-M-D'),
             'reference' => $request->reference,
             'payment_method' => $request->payment_method,
-            'note' => optional($request)->note,
-            'created_at' => Carbon::parse($request->created_at)->format('Y-M-D H:i:s'),
-            'updated_at' => optional($request)->updated_at ? Carbon::parse(optional($request)->updated_at) : Carbon::now(),
+            'note' => $request?->note,
+            'created_at' => \Illuminate\Support\Facades\Date::parse($request->created_at)->format('Y-M-D H:i:s'),
+            'updated_at' => $request?->updated_at ? \Illuminate\Support\Facades\Date::parse($request?->updated_at) : \Illuminate\Support\Facades\Date::now(),
         ];
     }
 }

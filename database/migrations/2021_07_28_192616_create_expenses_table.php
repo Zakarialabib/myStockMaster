@@ -16,20 +16,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table) {
-            $table->id();
+        Schema::create('expenses', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->foreignIdFor(ExpenseCategory::class, 'category_id')->constrained()->restrictOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(CashRegister::class)->nullable()->constrained()->nullOnDelete();
-            $table->date('date');
-            $table->string('reference', 192);
-            $table->string('description', 192)->nullable();
-            $table->decimal('amount', 8, 2);
-            $table->string('document')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->foreignIdFor(ExpenseCategory::class, 'category_id')->constrained()->restrictOnDelete();
+            $blueprint->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
+            $blueprint->foreignIdFor(CashRegister::class)->nullable()->constrained()->nullOnDelete();
+            $blueprint->date('date');
+            $blueprint->string('reference', 192);
+            $blueprint->string('description', 192)->nullable();
+            $blueprint->decimal('amount', 8, 2);
+            $blueprint->string('document')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

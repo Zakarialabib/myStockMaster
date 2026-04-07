@@ -41,7 +41,7 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Category extends Model
 {
@@ -52,9 +52,9 @@ class Category extends Model
         'id', 'code', 'name',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -75,18 +75,21 @@ class Category extends Model
         parent::__construct($attributes);
     }
 
-    public function scopeActive($query)
+    protected function scopeActive(mixed $query)
     {
         return $query->where('status', true);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, $this>
+     */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'id');
     }
 
-    public function getProductsCountAttribute(): int
+    protected function productsCount(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        return $this->products()->count();
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: fn() => $this->products()->count());
     }
 }

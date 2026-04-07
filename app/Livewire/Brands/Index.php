@@ -28,28 +28,28 @@ class Index extends Component
     use WithFileUploads;
 
     /** @var mixed */
-    public $brand;
+    public mixed $brand;
 
-    public $file;
+    public mixed $file = null;
 
     /** @var bool */
-    public $importModal = false;
+    public bool $importModal = false;
 
-    public $model = Brand::class;
+    public string $model = Brand::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('brand_access'), 403);
 
-        $query = Brand::advancedFilter([
+        $query = Brand::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $brands = $query->paginate($this->perPage);
+        $query->paginate($this->perPage);
 
-        return view('livewire.brands.index', compact('brands'));
+        return view('livewire.brands.index', ['brands' => $brands]);
     }
 
     #[On('importModal')]

@@ -30,7 +30,7 @@ final class StorePosSaleAction
                 $paymentStatus = PaymentStatus::PAID;
             }
 
-            $sale = Sale::create([
+            $sale = Sale::query()->create([
                 'date' => $saleData['date'],
                 'customer_id' => $saleData['customer_id'],
                 'warehouse_id' => $saleData['warehouse_id'],
@@ -65,7 +65,7 @@ final class StorePosSaleAction
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                SaleDetails::create([
+                SaleDetails::query()->create([
                     'sale_id' => $sale->id,
                     'warehouse_id' => $saleData['warehouse_id'],
                     'product_id' => $productId,
@@ -80,9 +80,9 @@ final class StorePosSaleAction
                     'product_tax_amount' => $taxAmount * 100,
                 ]);
 
-                $product = Product::findOrFail($productId);
+                $product = Product::query()->findOrFail($productId);
 
-                $productWarehouse = ProductWarehouse::where('product_id', $product->id)
+                $productWarehouse = ProductWarehouse::query()->where('product_id', $product->id)
                     ->where('warehouse_id', $saleData['warehouse_id'])
                     ->firstOrFail();
 
@@ -90,19 +90,19 @@ final class StorePosSaleAction
                     'qty' => $productWarehouse->qty - $quantity,
                 ]);
 
-                Movement::create([
+                Movement::query()->create([
                     'type' => MovementType::SALE,
                     'quantity' => $quantity,
                     'price' => $price * 100,
                     'date' => date('Y-m-d'),
-                    'movable_type' => get_class($product),
+                    'movable_type' => $product::class,
                     'movable_id' => $product->id,
                     'user_id' => $saleData['user_id'],
                 ]);
             }
 
             if ($saleData['paid_amount'] > 0) {
-                SalePayment::create([
+                SalePayment::query()->create([
                     'date' => date('Y-m-d'),
                     'amount' => $saleData['paid_amount'],
                     'cash_register_id' => $saleData['cash_register_id'],

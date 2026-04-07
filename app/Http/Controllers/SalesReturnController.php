@@ -12,23 +12,23 @@ use Illuminate\Support\Facades\Gate;
 
 class SalesReturnController extends Controller
 {
-    public function show(SaleReturn $sale_return): View
+    public function show(SaleReturn $saleReturn): View
     {
         abort_if(Gate::denies('show_sale_returns'), 403);
 
-        $customer = Customer::findOrFail($sale_return->customer_id);
+        $customer = Customer::query()->findOrFail($saleReturn->customer_id);
 
-        return view('admin.salesreturn.show', compact('sale_return', 'customer'));
+        return view('admin.salesreturn.show', ['sale_return' => $sale_return, 'customer' => $customer]);
     }
 
-    public function destroy(SaleReturn $sale_return): RedirectResponse
+    public function destroy(SaleReturn $saleReturn): RedirectResponse
     {
         abort_if(Gate::denies('sale_return_delete'), 403);
 
-        $sale_return->delete();
+        $saleReturn->delete();
 
         // toast('Sale Return Deleted!', 'warning');
 
-        return redirect()->route('sale-returns.index');
+        return to_route('sale-returns.index');
     }
 }

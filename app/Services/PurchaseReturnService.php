@@ -27,7 +27,7 @@ class PurchaseReturnService
                 $paymentStatus = PaymentStatus::PAID;
             }
 
-            $purchaseReturn = PurchaseReturn::create([
+            $purchaseReturn = PurchaseReturn::query()->create([
                 'date' => $data['date'],
                 'reference' => $data['reference'] ?? 'PRRN-' . date('YmdHis'),
                 'supplier_id' => $data['supplier_id'],
@@ -64,7 +64,7 @@ class PurchaseReturnService
                     ? $cartItem['attributes']['warehouse_id']
                     : $data['warehouse_id'];
 
-                PurchaseReturnDetail::create([
+                PurchaseReturnDetail::query()->create([
                     'purchase_return_id' => $purchaseReturn->id,
                     'warehouse_id' => $itemWarehouseId,
                     'product_id' => $productId,
@@ -80,7 +80,7 @@ class PurchaseReturnService
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {
-                    $productWarehouse = ProductWarehouse::where('product_id', $productId)
+                    $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
                         ->where('warehouse_id', $itemWarehouseId)
                         ->first();
 
@@ -93,7 +93,7 @@ class PurchaseReturnService
             }
 
             if ($data['paid_amount'] > 0) {
-                PurchaseReturnPayment::create([
+                PurchaseReturnPayment::query()->create([
                     'date' => $data['date'],
                     'reference' => 'INV/' . $purchaseReturn->reference,
                     'amount' => $data['paid_amount'] * 100,
@@ -123,11 +123,12 @@ class PurchaseReturnService
 
             foreach ($purchaseReturn->purchaseReturnDetails as $detail) {
                 if ($purchaseReturn->status === 'Shipped' || $purchaseReturn->status === 'Completed') {
-                    $product = Product::findOrFail($detail->product_id);
+                    $product = Product::query()->findOrFail($detail->product_id);
                     $product->update([
                         'quantity' => $product->quantity + $detail->quantity,
                     ]);
                 }
+
                 $detail->delete();
             }
 
@@ -163,7 +164,7 @@ class PurchaseReturnService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                PurchaseReturnDetail::create([
+                PurchaseReturnDetail::query()->create([
                     'purchase_return_id' => $purchaseReturn->id,
                     'product_id' => $productId,
                     'name' => $productName,
@@ -178,7 +179,7 @@ class PurchaseReturnService
                 ]);
 
                 if ($data['status'] === 'Shipped' || $data['status'] === 'Completed') {
-                    $product = Product::findOrFail($productId);
+                    $product = Product::query()->findOrFail($productId);
                     $product->update([
                         'quantity' => $product->quantity - $quantity,
                     ]);

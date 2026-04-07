@@ -13,28 +13,25 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncDatabaseJob implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use \Illuminate\Foundation\Queue\Queueable;
 
     public function __construct(public string $direction = 'both') {}
 
-    public function handle(DatabaseSyncService $syncService): void
+    public function handle(DatabaseSyncService $databaseSyncService): void
     {
         if ($this->direction === 'to-offline') {
-            $syncService->syncToOffline();
+            $databaseSyncService->syncToOffline();
 
             return;
         }
 
         if ($this->direction === 'to-online') {
-            $syncService->syncToOnline();
+            $databaseSyncService->syncToOnline();
 
             return;
         }
 
-        $syncService->syncToOffline();
-        $syncService->syncToOnline();
+        $databaseSyncService->syncToOffline();
+        $databaseSyncService->syncToOnline();
     }
 }
