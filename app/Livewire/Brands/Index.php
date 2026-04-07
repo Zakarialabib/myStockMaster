@@ -12,14 +12,14 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('layouts.app')]
-#[Lazy]
+#[Title('Brands')]
 class Index extends Component
 {
     use Datatable;

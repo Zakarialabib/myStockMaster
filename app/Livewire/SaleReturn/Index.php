@@ -10,13 +10,15 @@ use App\Models\SaleReturn;
 use App\Models\SaleReturnPayment;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
-#[Lazy]
+#[Layout('layouts.app')]
+#[Title('Sale Returns')]
 class Index extends Component
 {
     use Datatable;

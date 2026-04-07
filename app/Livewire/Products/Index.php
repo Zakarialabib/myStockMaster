@@ -33,8 +33,6 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public int $perPage = 25;
-
     public bool $hasMorePages = true;
 
     public function loadMore(): void

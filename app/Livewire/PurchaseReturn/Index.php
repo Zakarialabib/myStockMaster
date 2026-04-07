@@ -11,13 +11,15 @@ use App\Models\PurchaseReturn;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Throwable;
 
-#[Lazy]
+#[Layout('layouts.app')]
+#[Title('Purchase Returns')]
 class Index extends Component
 {
     use Datatable;
