@@ -2,6 +2,7 @@
     $id = $id ?? ($name ?? md5($attributes->wire('model')));
 @endphp
 
+@teleport('#modals-container')
 <div x-data="appModal({
     show: @entangle($attributes->wire('model')),
     lazy: {{ $lazy ? 'true' : 'false' }},
@@ -74,3 +75,4 @@
         </div>
     </div>
 </div>
+@endteleport
