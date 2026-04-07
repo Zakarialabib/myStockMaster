@@ -682,6 +682,10 @@
                                 </div>
                             </div>
 
+                            <div x-show="subtab === 'logs'" class="p-6">
+                                <livewire:settings.notification-logs />
+                            </div>
+
                             <div x-show="subtab === 'email_templates'" class="p-6">
                                 <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('Visual Email Templates') }}</h2>
                                 <livewire:settings.visual-email-templates />
