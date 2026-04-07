@@ -95,15 +95,13 @@ class Expense extends Model
     ];
 
     #[\Override]
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(static function ($expense): void {
-            $prefix = settings()->expense_prefix;
-            $latestExpense = self::query()->latest()->first();
-            $number = $latestExpense ? (int) substr((string) $latestExpense->reference, -3) + 1 : 1;
-            $expense->reference = $prefix . str_pad((string) $number, 3, '0', STR_PAD_LEFT);
+        static::creating(function ($expense): void {
+            $prefix = settings('expense_prefix', 'EXP');
+            $expense->reference = make_reference_id($prefix, self::class);
         });
     }
 

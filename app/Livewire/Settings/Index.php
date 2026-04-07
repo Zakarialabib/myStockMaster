@@ -68,6 +68,7 @@ class Index extends Component
     {
         foreach ($this->invoice_control as $index => $control) {
             if ($control['name'] === $field) {
+                // The binding already updates $this->invoice_control
                 $this->settings->invoice_control = $this->invoice_control;
                 $this->settings->save();
                 break;

@@ -170,18 +170,13 @@ class SaleReturn extends Model
     }
 
     #[\Override]
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($saleReturn): void {
-            $prefix = settings()->saleReturn_prefix;
-
-            $latestSaleReturn = self::query()->latest()->first();
-
-            $number = $latestSaleReturn ? intval(substr((string) $latestSaleReturn->reference, -3)) + 1 : 1;
-
-            $saleReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $prefix = settings('saleReturn_prefix', 'SLR');
+            $saleReturn->reference = make_reference_id($prefix, self::class);
         });
     }
 

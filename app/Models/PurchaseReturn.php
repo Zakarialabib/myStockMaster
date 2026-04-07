@@ -133,18 +133,13 @@ class PurchaseReturn extends Model
     }
 
     #[\Override]
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
         static::creating(function ($purchaseReturn): void {
-            $prefix = settings()->purchaseReturn_prefix;
-
-            $latestPurchaseReturn = self::query()->latest()->first();
-
-            $number = $latestPurchaseReturn ? intval(substr((string) $latestPurchaseReturn->reference, -3)) + 1 : 1;
-
-            $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
+            $prefix = settings('purchaseReturn_prefix', 'PRR');
+            $purchaseReturn->reference = make_reference_id($prefix, self::class);
         });
     }
 

@@ -215,10 +215,12 @@
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         @foreach ($invoice_control as $index => $control)
                                         <div class="flex items-center space-x-2">
-                                            <input type="checkbox" id="{{ $control['name'] }}"
-                                                wire:model="invoice_control.{{ $index }}.status"
-                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                            <x-label :for="$control['name']" :value="__($control['name'])" class="text-sm" />
+                                            <x-checkbox 
+                                                id="invoice_control_{{ $index }}" 
+                                                wire:model.live="invoice_control.{{ $index }}.status" 
+                                                wire:change="updatedInvoiceControl('{{ $control['name'] }}')"
+                                            />
+                                            <x-label for="invoice_control_{{ $index }}" :value="__(str_replace('_', ' ', ucfirst($control['name'])))" class="text-sm" />
                                         </div>
                                         @endforeach
                                     </div>
@@ -492,7 +494,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
-                                                    @foreach (settings()->analytics_control as $index => $control)
+                                                    @foreach ($analyticsControl as $index => $control)
                                                     <tr>
                                                         <td
                                                             class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
