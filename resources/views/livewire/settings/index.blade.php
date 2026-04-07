@@ -212,12 +212,21 @@
                                             id="default_warehouse_id" name="default_warehouse_id"
                                             :options="$this->warehouses" />
                                     </div>
+
+                                    <div>
+                                        <div class="flex items-center space-x-2 mt-6">
+                                            <x-checkbox id="is_rtl" wire:model="form.is_rtl" />
+                                            <x-label for="is_rtl" :value="__('Enable RTL')" />
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">{{ __('Toggle Right-to-Left layout for Arabic, Hebrew, or Urdu languages.') }}</p>
+                                    </div>
                                 </div>
 
                                 <div class="mt-6 pt-6 border-t border-gray-200">
                                     <h3 class="text-sm font-medium text-gray-900 mb-4">
                                         {{ __('Invoice Control Settings') }}
                                     </h3>
+                                    <p class="text-xs text-gray-500 mb-4">{{ __('Toggle specific fields to show or hide them on your generated invoices.') }}</p>
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         @foreach ($invoice_control as $index => $control)
                                         <div class="flex items-center space-x-2">
@@ -245,6 +254,7 @@
                                             <i class="fas fa-file-invoice text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Invoice Configuration') }}</h2>
                                         </div>
+                                        <p class="text-sm text-green-100 mt-2">{{ __('Customize your invoice templates, document prefixes, and default footer text.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <div class="mb-8">
@@ -348,6 +358,7 @@
                                             <i class="fas fa-globe text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Site Configuration') }}</h2>
                                         </div>
+                                        <p class="text-sm text-blue-100 mt-2">{{ __('Manage your website title, SEO settings, social media links, and custom scripts.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <div class="mb-8">
@@ -466,6 +477,7 @@
                                             <i class="fas fa-envelope text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Mail Configuration') }}</h2>
                                         </div>
+                                        <p class="text-sm text-purple-100 mt-2">{{ __('Configure SMTP settings for outgoing emails.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <livewire:settings.smtp />
@@ -479,6 +491,7 @@
                                             <i class="fas fa-chart-bar text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Analytics Configuration') }}</h2>
                                         </div>
+                                        <p class="text-sm text-teal-100 mt-2">{{ __('Manage analytics dashboard cards and tracking visibility.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <div class="overflow-x-auto">
@@ -554,6 +567,7 @@
                                             <i class="fas fa-comments text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Messaging') }}</h2>
                                         </div>
+                                        <p class="text-sm text-orange-100 mt-2">{{ __('Configure SMS and WhatsApp messaging provider settings.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <livewire:settings.messaging />
@@ -567,6 +581,7 @@
                                             <i class="fas fa-paint-brush text-white text-lg"></i>
                                             <h2 class="text-lg font-semibold text-white">{{ __('Appearance') }}</h2>
                                         </div>
+                                        <p class="text-sm text-teal-100 mt-2">{{ __('Customize the visual style and layout of your application.') }}</p>
                                     </div>
                                     <div class="p-6">
                                         <livewire:settings.app-customizer />

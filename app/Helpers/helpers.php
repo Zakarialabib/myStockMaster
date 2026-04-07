@@ -195,3 +195,49 @@ if (! function_exists('db_date_format')) {
         return sprintf("DATE_FORMAT(%s, '%s')", $column, $format);
     }
 }
+
+if (! function_exists('generate_color_palette')) {
+    /**
+     * Generate an array of hex colors from 50 to 950 using basic lightness adjustment.
+     *
+     * @param string $hex
+     * @return array<int, string>
+     */
+    function generate_color_palette(string $hex): array
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $baseRgb = [$r, $g, $b];
+        $white = [255, 255, 255];
+        $black = [0, 0, 0];
+
+        $mix = function ($color1, $color2, $weight) {
+            $w = $weight / 100;
+            $r = (int) round($color1[0] * $w + $color2[0] * (1 - $w));
+            $g = (int) round($color1[1] * $w + $color2[1] * (1 - $w));
+            $b = (int) round($color1[2] * $w + $color2[2] * (1 - $w));
+            return sprintf("#%02x%02x%02x", $r, $g, $b);
+        };
+
+        return [
+            50  => $mix($baseRgb, $white, 10),
+            100 => $mix($baseRgb, $white, 20),
+            200 => $mix($baseRgb, $white, 40),
+            300 => $mix($baseRgb, $white, 60),
+            400 => $mix($baseRgb, $white, 80),
+            500 => sprintf("#%02x%02x%02x", $r, $g, $b),
+            600 => $mix($baseRgb, $black, 80),
+            700 => $mix($baseRgb, $black, 60),
+            800 => $mix($baseRgb, $black, 40),
+            900 => $mix($baseRgb, $black, 20),
+            950 => $mix($baseRgb, $black, 10),
+        ];
+    }
+}

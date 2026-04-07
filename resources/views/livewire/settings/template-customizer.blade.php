@@ -1,4 +1,12 @@
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6" x-data="{
+    init() {
+        this.$watch('$wire.primary_color', value => {
+            if (typeof window.updateThemePalette === 'function') {
+                window.updateThemePalette(value);
+            }
+        });
+    }
+}">
     <!-- Sidebar Controls -->
     <div class="md:col-span-1 space-y-4 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('Template Customizer') }}</h3>
@@ -9,6 +17,7 @@
                 <input type="color" id="primary_color" wire:model.live="primary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
                 <x-input type="text" wire:model.live="primary_color" class="flex-1" />
             </div>
+            <p class="text-xs text-gray-500 mt-1">{{ __('Choose the main brand color used for headings, borders, and total amounts.') }}</p>
         </div>
 
         <div>
@@ -17,6 +26,7 @@
                 <input type="color" id="secondary_color" wire:model.live="secondary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
                 <x-input type="text" wire:model.live="secondary_color" class="flex-1" />
             </div>
+            <p class="text-xs text-gray-500 mt-1">{{ __('Select a complementary color used for backgrounds and subtle highlights.') }}</p>
         </div>
 
         <div>
@@ -28,6 +38,7 @@
                 <option value="'Courier New', monospace">Courier New</option>
                 <option value="Tahoma, sans-serif">Tahoma</option>
             </x-select>
+            <p class="text-xs text-gray-500 mt-1">{{ __('Select the typography style for your documents.') }}</p>
         </div>
 
         <div>
@@ -38,6 +49,7 @@
                 <option value="stripes">Stripes</option>
                 <option value="grid">Grid</option>
             </x-select>
+            <p class="text-xs text-gray-500 mt-1">{{ __('Add a subtle background texture to your documents.') }}</p>
         </div>
     </div>
 
@@ -49,17 +61,17 @@
          ">
          
         @if($pattern_style === 'dots')
-            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient({{ $primary_color }} 2px, transparent 2px); background-size: 20px 20px;"></div>
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(var(--color-primary-500) 2px, transparent 2px); background-size: 20px 20px;"></div>
         @elseif($pattern_style === 'stripes')
-            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, {{ $primary_color }} 10px, {{ $primary_color }} 20px);"></div>
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, var(--color-primary-500) 10px, var(--color-primary-500) 20px);"></div>
         @elseif($pattern_style === 'grid')
-            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient({{ $primary_color }} 1px, transparent 1px), linear-gradient(90deg, {{ $primary_color }} 1px, transparent 1px); background-size: 20px 20px;"></div>
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(var(--color-primary-500) 1px, transparent 1px), linear-gradient(90deg, var(--color-primary-500) 1px, transparent 1px); background-size: 20px 20px;"></div>
         @endif
         
-        <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-2xl border-t-8 relative z-10" style="border-top-color: {{ $primary_color }};">
+        <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-2xl border-t-8 border-t-primary-500 relative z-10">
             <div class="flex justify-between items-start mb-8">
                 <div>
-                    <h2 class="text-4xl font-black tracking-tight" style="color: {{ $primary_color }};">INVOICE</h2>
+                    <h2 class="text-4xl font-black tracking-tight text-primary-500">INVOICE</h2>
                     <p class="text-gray-500 mt-1 font-medium">#INV-2023-001</p>
                 </div>
                 <div class="text-right">
@@ -69,14 +81,14 @@
             </div>
 
             <div class="mb-10">
-                <div class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2" style="color: {{ $primary_color }};">Bill To:</div>
+                <div class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2 text-primary-500">Bill To:</div>
                 <div class="font-bold text-gray-800 text-lg">Client Name</div>
                 <div class="text-gray-500 text-sm">client@example.com</div>
             </div>
 
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr style="border-bottom: 2px solid {{ $primary_color }};">
+                    <tr class="border-b-2 border-primary-500">
                         <th class="py-3 text-gray-700 font-bold uppercase text-xs tracking-wider">Description</th>
                         <th class="py-3 text-gray-700 font-bold uppercase text-xs tracking-wider text-right">Amount</th>
                     </tr>
@@ -94,12 +106,12 @@
                 <tfoot>
                     <tr>
                         <td class="py-6 text-right font-bold text-gray-700 uppercase text-sm tracking-wider">Total Due</td>
-                        <td class="py-6 text-right font-black text-2xl" style="color: {{ $primary_color }};">$1,650.00</td>
+                        <td class="py-6 text-right font-black text-2xl text-primary-500">$1,650.00</td>
                     </tr>
                 </tfoot>
             </table>
 
-            <div class="mt-16 text-center text-sm font-medium px-4 py-3 rounded-lg" style="background-color: {{ $secondary_color }}; color: {{ $primary_color }}; border: 1px solid {{ $primary_color }}33;">
+            <div class="mt-16 text-center text-sm font-medium px-4 py-3 rounded-lg text-primary-500 border border-primary-500/20" style="background-color: {{ $secondary_color }};">
                 Thank you for your business!
             </div>
         </div>
