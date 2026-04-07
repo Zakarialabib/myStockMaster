@@ -3,15 +3,15 @@
         <div class="flex flex-wrap -mx-2 mb-3">
             <div class="w-full md:w-1/3 px-2 mb-2">
                 <label for="mail_mailer">{{ __('MAIL MAILER') }} <span class="text-red-500">*</span></label>
-                <x-input type="text" wire:model.live="mail_mailer" name="mail_mailer" required />
+                <x-input type="text" wire:model.live="mail_mailer" name="mail_mailer" @focus="infoTitle = 'Mail Mailer'; infoDesc = 'The mail driver to use for sending emails. Commonly \'smtp\', \'sendmail\', or \'mailgun\'.'; infoPrivacy = 'Internal'" required />
             </div>
             <div class="w-full md:w-1/3 px-2 mb-2">
                 <label for="mail_host">{{ __('MAIL HOST') }} <span class="text-red-500">*</span></label>
-                <x-input type="text" wire:model.live="mail_host" name="mail_host" required />
+                <x-input type="text" wire:model.live="mail_host" name="mail_host" @focus="infoTitle = 'Mail Host'; infoDesc = 'The hostname of your SMTP server. For example, smtp.mailtrap.org or smtp.gmail.com.'; infoPrivacy = 'Internal'" required />
             </div>
             <div class="w-full md:w-1/3 px-2 mb-2">
                 <label for="mail_port">{{ __('MAIL PORT') }} <span class="text-red-500">*</span></label>
-                <x-input type="number" wire:model.live="mail_port" name="mail_port" required />
+                <x-input type="number" wire:model.live="mail_port" name="mail_port" @focus="infoTitle = 'Mail Port'; infoDesc = 'The port used to connect to your SMTP server. Typically 587 or 465.'; infoPrivacy = 'Internal'" required />
             </div>
 
             <div class="w-full md:w-1/3 px-2 mb-2">

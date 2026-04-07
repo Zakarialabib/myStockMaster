@@ -117,6 +117,8 @@ class SettingForm extends Form
 
     public ?string $printer_id = null;
 
+    public ?array $notification_triggers = [];
+
     public function setSetting(Setting $setting): void
     {
         $this->setting = $setting;
@@ -162,6 +164,10 @@ class SettingForm extends Form
         $this->is_ecommerce_active = (bool) $setting->is_ecommerce_active;
         $this->receipt_printer_type = $setting->receipt_printer_type;
         $this->printer_id = $setting->printer_id;
+        $this->notification_triggers = $setting->notification_triggers ?? [
+            'sale_created' => ['mail', 'database'],
+            'payment_received' => ['mail', 'database'],
+        ];
     }
 
     public function update(): void
@@ -212,6 +218,7 @@ class SettingForm extends Form
             'is_ecommerce_active' => $this->is_ecommerce_active,
             'receipt_printer_type' => $this->receipt_printer_type,
             'printer_id' => $this->printer_id,
+            'notification_triggers' => $this->notification_triggers,
         ]);
 
         $this->setting->save();

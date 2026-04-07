@@ -38,7 +38,9 @@ use Override;
  * @property string|null                     $invoice_control
  * @property array<array-key, mixed>|null    $analytics_control
  * @property array<array-key, mixed>|null    $template_styles
+ * @property array<array-key, mixed>|null    $mail_styles
  * @property array<array-key, mixed>|null    $app_style
+ * @property array<array-key, mixed>|null    $notification_triggers
  * @property string                          $receipt_printer_type
  * @property int|null                        $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -149,7 +151,9 @@ class Setting extends Model
             'app_style' => 'array',
             'analytics_control' => 'array',
             'template_styles' => 'array',
+            'mail_styles' => 'array',
             'invoice_control' => 'array',
+            'notification_triggers' => 'array',
             'installation_completed' => 'boolean',
             'is_rtl' => 'boolean',
             'backup_status' => 'boolean',

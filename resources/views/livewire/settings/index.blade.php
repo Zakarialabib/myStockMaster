@@ -15,60 +15,61 @@
                 </x-button>
             </div>
 
-            <div x-data="{ tab: 'company' }" class="space-y-6">
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <div class="lg:col-span-1">
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <button @click="tab = 'company'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'company', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'company' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-building w-4 h-4"></i>
-                                <span>{{ __('Company Info') }}</span>
-                            </button>
-                            <button @click="tab = 'system'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'system', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'system' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-cogs w-4 h-4"></i>
-                                <span>{{ __('System Configuration') }}</span>
-                            </button>
-                            <button @click="tab = 'invoice'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'invoice', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'invoice' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-file-invoice w-4 h-4"></i>
-                                <span>{{ __('Invoice Configuration') }}</span>
-                            </button>
-                            <button @click="tab = 'mail'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'mail', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'mail' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-envelope w-4 h-4"></i>
-                                <span>{{ __('Mail Configuration') }}</span>
-                            </button>
-                            <button @click="tab = 'analyticsConfig'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'analyticsConfig', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'analyticsConfig' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium border-b border-gray-200 dark:border-gray-700 transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-chart-bar w-4 h-4"></i>
-                                <span>{{ __('Analytics Configuration') }}</span>
-                            </button>
-                            <button @click="tab = 'siteConfig'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'siteConfig', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'siteConfig' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
-                                <i class="fas fa-globe w-4 h-4"></i>
-                                <span>{{ __('Site Configuration') }}</span>
-                            </button>
-                            <button @click="tab = 'appearance'"
-                                :class="{ 'bg-indigo-600 text-white border-indigo-600': tab === 'appearance', 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700': tab !== 'appearance' }"
-                                class="w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-200 flex items-center space-x-2">
-                                <i class="fas fa-paint-brush w-4 h-4"></i>
-                                <span>{{ __('Appearance') }}</span>
-                            </button>
+            <div x-data="{ 
+                tab: 'general', 
+                subtab: 'company',
+                infoTitle: '{{ __('Settings') }}', 
+                infoDesc: '{{ __('Hover or click on any setting field to see detailed information about what it does and where it is used.') }}',
+                infoPrivacy: ''
+            }" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left Sidebar (Nested) -->
+                    <div class="lg:col-span-3">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <!-- General Section -->
+                            <div class="border-b border-gray-200 dark:border-gray-700">
+                                <button type="button" @click="tab = 'general'; subtab = 'company'" class="w-full px-4 py-3 text-left text-sm font-bold bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-between">
+                                    <span class="flex items-center space-x-2"><i class="fas fa-cog w-4 h-4"></i> <span>{{ __('General') }}</span></span>
+                                    <i class="fas fa-chevron-down text-xs" x-show="tab === 'general'"></i>
+                                </button>
+                                <div x-show="tab === 'general'" class="flex flex-col py-1">
+                                    <button type="button" @click="subtab = 'company'" :class="{ 'text-indigo-600 font-medium': subtab === 'company', 'text-gray-600 hover:text-indigo-500': subtab !== 'company' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Company Info') }}</button>
+                                    <button type="button" @click="subtab = 'system'" :class="{ 'text-indigo-600 font-medium': subtab === 'system', 'text-gray-600 hover:text-indigo-500': subtab !== 'system' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('System Config') }}</button>
+                                    <button type="button" @click="subtab = 'siteConfig'" :class="{ 'text-indigo-600 font-medium': subtab === 'siteConfig', 'text-gray-600 hover:text-indigo-500': subtab !== 'siteConfig' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Site Config') }}</button>
+                                    <button type="button" @click="subtab = 'analyticsConfig'" :class="{ 'text-indigo-600 font-medium': subtab === 'analyticsConfig', 'text-gray-600 hover:text-indigo-500': subtab !== 'analyticsConfig' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Analytics Config') }}</button>
+                                    <button type="button" @click="subtab = 'appearance'" :class="{ 'text-indigo-600 font-medium': subtab === 'appearance', 'text-gray-600 hover:text-indigo-500': subtab !== 'appearance' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Appearance') }}</button>
+                                </div>
+                            </div>
+                            <!-- Invoicing Section -->
+                            <div class="border-b border-gray-200 dark:border-gray-700">
+                                <button type="button" @click="tab = 'invoicing'; subtab = 'invoice'" class="w-full px-4 py-3 text-left text-sm font-bold bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-between">
+                                    <span class="flex items-center space-x-2"><i class="fas fa-file-invoice w-4 h-4"></i> <span>{{ __('Invoicing') }}</span></span>
+                                    <i class="fas fa-chevron-down text-xs" x-show="tab === 'invoicing'"></i>
+                                </button>
+                                <div x-show="tab === 'invoicing'" class="flex flex-col py-1">
+                                    <button type="button" @click="subtab = 'invoice'" :class="{ 'text-indigo-600 font-medium': subtab === 'invoice', 'text-gray-600 hover:text-indigo-500': subtab !== 'invoice' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Templates & Prefixes') }}</button>
+                                </div>
+                            </div>
+                            <!-- Notifications Section -->
+                            <div>
+                                <button type="button" @click="tab = 'notifications'; subtab = 'channels'" class="w-full px-4 py-3 text-left text-sm font-bold bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-between">
+                                    <span class="flex items-center space-x-2"><i class="fas fa-bell w-4 h-4"></i> <span>{{ __('Notifications') }}</span></span>
+                                    <i class="fas fa-chevron-down text-xs" x-show="tab === 'notifications'"></i>
+                                </button>
+                                <div x-show="tab === 'notifications'" class="flex flex-col py-1">
+                                    <button type="button" @click="subtab = 'channels'" :class="{ 'text-indigo-600 font-medium': subtab === 'channels', 'text-gray-600 hover:text-indigo-500': subtab !== 'channels' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Delivery Channels') }}</button>
+                                    <button type="button" @click="subtab = 'triggers'" :class="{ 'text-indigo-600 font-medium': subtab === 'triggers', 'text-gray-600 hover:text-indigo-500': subtab !== 'triggers' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Event Triggers') }}</button>
+                                    <button type="button" @click="subtab = 'logs'" :class="{ 'text-indigo-600 font-medium': subtab === 'logs', 'text-gray-600 hover:text-indigo-500': subtab !== 'logs' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Notification Logs') }}</button>
+                                    <button type="button" @click="subtab = 'email_templates'" :class="{ 'text-indigo-600 font-medium': subtab === 'email_templates', 'text-gray-600 hover:text-indigo-500': subtab !== 'email_templates' }" class="pl-10 pr-4 py-2 text-sm text-left transition-colors">{{ __('Visual Email Templates') }}</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="lg:col-span-3">
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                    <!-- Center Form Content -->
+                    <div class="lg:col-span-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                             <x-validation-errors class="mb-4" :errors="$errors" />
-                            <div x-show="tab === 'company'" class="p-6">
+                            <div x-show="subtab === 'company'" class="p-6">
                                 <div class="mb-6">
                                     <h2
                                         class="text-lg font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
@@ -82,13 +83,13 @@
                                 <div class="grid grid-cols-3 gap-4 mb-3">
                                     <div class="w-full">
                                         <x-label for="company_name" :value="__('Company Name')" required />
-                                        <x-input type="text" wire:model="form.company_name" id="company_name"
+                                        <x-input type="text" wire:model="form.company_name" id="company_name" @focus="infoTitle = 'Company Name'; infoDesc = 'Your official business name. This is displayed on the login screen, dashboard header, and is printed on all generated invoices, quotations, and reports.'; infoPrivacy = 'Public'"
                                             name="company_name" required />
                                         <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
                                     </div>
                                     <div class="w-full">
                                         <x-label for="company_email" :value="__('Company Email')" required />
-                                        <x-input type="email" wire:model="form.company_email" id="company_email"
+                                        <x-input type="email" wire:model="form.company_email" id="company_email" @focus="infoTitle = 'Company Email'; infoDesc = 'The primary contact email for your business. Used as the reply-to address for system emails.'; infoPrivacy = 'Public'"
                                             name="company_email" required />
                                         <x-input-error :messages="$errors->get('company_email')" class="mt-2" />
                                     </div>
@@ -144,7 +145,7 @@
                                     </x-button>
                                 </div>
                             </div>
-                            <div x-show="tab === 'system'" class="p-6">
+                            <div x-show="subtab === 'system'" class="p-6">
                                 <div class="mb-6">
                                     <h2
                                         class="text-lg font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
@@ -161,7 +162,7 @@
                                         <x-select-list
                                             class="block bg-white text-gray-700 rounded-sm border border-gray-300 mb-1 text-sm w-full focus:shadow-outline-blue focus:border-blue-500"
                                             id="default_currency_id" name="default_currency_id"
-                                            wire:model="form.default_currency_id" :options="$this->currencies" required />
+                                            wire:model="form.default_currency_id" @focus="infoTitle = 'Default Currency'; infoDesc = 'The base currency used for all transactions, reports, and dashboard totals.'; infoPrivacy = 'Internal'" :options="$this->currencies" required />
                                     </div>
 
                                     <div>
@@ -215,7 +216,7 @@
 
                                     <div>
                                         <div class="flex items-center space-x-2 mt-6">
-                                            <x-input.checkbox id="is_rtl" wire:model="form.is_rtl" />
+                                            <x-input.checkbox id="is_rtl" wire:model="form.is_rtl" @focus="infoTitle = 'Enable RTL'; infoDesc = 'Toggle Right-to-Left layout for Arabic, Hebrew, or Urdu languages.'; infoPrivacy = 'Internal'" />
                                             <x-label for="is_rtl" :value="__('Enable RTL')" />
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1">{{ __('Toggle Right-to-Left layout for Arabic, Hebrew, or Urdu languages.') }}</p>
@@ -276,7 +277,7 @@
                                     </x-button>
                                 </div>
                             </div>
-                            <div x-show="tab === 'invoice'">
+                            <div x-show="subtab === 'invoice'">
                                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                                     <div class="bg-linear-to-r from-green-600 to-emerald-600 px-6 py-4 border-b border-gray-200">
                                         <div class="flex items-center space-x-3">
@@ -292,7 +293,7 @@
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <x-label for="invoice_template" :value="__('Invoice Template')" />
-                                                    <x-select wire:model.live="form.invoice_template" id="invoice_template"
+                                                    <x-select wire:model.live="form.invoice_template" id="invoice_template" @focus="infoTitle = 'Invoice Template'; infoDesc = 'Select the visual design template for all generated invoices and quotations.'; infoPrivacy = 'Public'"
                                                         name="invoice_template"
                                                         class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
                                                         @for ($i = 1; $i <= 5; $i++)
@@ -413,7 +414,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div x-show="tab === 'siteConfig'">
+                            <div x-show="subtab === 'siteConfig'">
                                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                                     <div class="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4 border-b border-gray-200">
                                         <div class="flex items-center space-x-3">
@@ -428,7 +429,7 @@
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <x-label for="site_title" :value="__('Website title')" />
-                                                    <x-input type="text" wire:model="form.site_title" id="site_title" />
+                                                    <x-input type="text" wire:model="form.site_title" id="site_title" @focus="infoTitle = 'Website Title'; infoDesc = 'The main title of your application displayed in the browser tab and search engines.'; infoPrivacy = 'Public'" />
                                                     <x-input-error for="site_title" :messages="$errors->first('site_title')" />
                                                 </div>
                                             </div>
@@ -532,21 +533,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div x-show="tab === 'mail'">
-                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                                    <div class="bg-linear-to-r from-purple-600 to-pink-600 px-6 py-4 border-b border-gray-200">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-envelope text-white text-lg"></i>
-                                            <h2 class="text-lg font-semibold text-white">{{ __('Mail Configuration') }}</h2>
-                                        </div>
-                                        <p class="text-sm text-purple-100 mt-2">{{ __('Configure SMTP settings for outgoing emails.') }}</p>
-                                    </div>
-                                    <div class="p-6">
-                                        <livewire:settings.smtp />
-                                    </div>
-                                </div>
-                            </div>
-                            <div x-show="tab === 'analyticsConfig'">
+
+                            <div x-show="subtab === 'analyticsConfig'">
                                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                                     <div class="bg-linear-to-r from-green-600 to-teal-600 px-6 py-4 border-b border-gray-200">
                                         <div class="flex items-center space-x-3">
@@ -622,21 +610,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div x-show="tab === 'messaging'">
-                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                                    <div class="bg-linear-to-r from-orange-600 to-red-600 px-6 py-4 border-b border-gray-200">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-comments text-white text-lg"></i>
-                                            <h2 class="text-lg font-semibold text-white">{{ __('Messaging') }}</h2>
-                                        </div>
-                                        <p class="text-sm text-orange-100 mt-2">{{ __('Configure SMS and WhatsApp messaging provider settings.') }}</p>
-                                    </div>
-                                    <div class="p-6">
-                                        <livewire:settings.messaging />
-                                    </div>
-                                </div>
-                            </div>
-                            <div x-show="tab === 'appearance'">
+
+                            <div x-show="subtab === 'appearance'">
                                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                                     <div class="bg-linear-to-r from-teal-500 to-cyan-600 px-6 py-4 border-b border-gray-200">
                                         <div class="flex items-center space-x-3">
@@ -649,6 +624,85 @@
                                         <livewire:settings.app-customizer />
                                     </div>
                                 </div>
+                            </div>
+                            <!-- Unified Notification Hub -->
+                            <div x-show="subtab === 'channels'" class="space-y-8 p-6">
+                                <div>
+                                    <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('SMTP Configuration') }}</h2>
+                                    <livewire:settings.smtp />
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('Messaging (WhatsApp/Telegram)') }}</h2>
+                                    <livewire:settings.messaging />
+                                </div>
+                            </div>
+                            
+                            <div x-show="subtab === 'triggers'" class="p-6">
+                                <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('Automated Event Triggers') }}</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ __('Sale Created') }}</h4>
+                                            <p class="text-sm text-gray-500">{{ __('Send a notification when a new sale is completed.') }}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.sale_created" value="mail" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ __('Purchase Created') }}</h4>
+                                            <p class="text-sm text-gray-500">{{ __('Send a notification when a new purchase is completed.') }}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.purchase_created" value="mail" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <h4 class="font-medium text-gray-900 dark:text-white">{{ __('Payment Received') }}</h4>
+                                            <p class="text-sm text-gray-500">{{ __('Send a notification when a payment is received.') }}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <label class="inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.payment_received" value="mail" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div x-show="subtab === 'logs'" class="p-6">
+                                <livewire:settings.notification-logs />
+                            </div>
+
+                            <div x-show="subtab === 'email_templates'" class="p-6">
+                                <h2 class="text-lg font-semibold mb-4 border-b pb-2">{{ __('Visual Email Templates') }}</h2>
+                                <livewire:settings.visual-email-templates />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Info Panel -->
+                    <div class="lg:col-span-3">
+                        <div class="sticky top-24 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg shadow-sm border border-indigo-100 dark:border-indigo-800 p-6">
+                            <div class="flex items-center space-x-2 mb-4 text-indigo-700 dark:text-indigo-300">
+                                <i class="fas fa-info-circle text-lg"></i>
+                                <h3 class="text-lg font-bold" x-text="infoTitle"></h3>
+                            </div>
+                            <p class="text-sm text-gray-700 dark:text-gray-300 mb-4" x-text="infoDesc"></p>
+                            <div x-show="infoPrivacy" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100">
+                                <i class="fas fa-shield-alt mr-1.5"></i>
+                                <span x-text="infoPrivacy"></span>
                             </div>
                         </div>
                     </div>
