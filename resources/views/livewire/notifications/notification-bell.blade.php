@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.60s>
     <x-dropdown align="right" width="80">
         <x-slot name="trigger">
             <button type="button" class="relative text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors focus:outline-none">

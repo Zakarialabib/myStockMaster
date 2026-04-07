@@ -30,7 +30,7 @@ new class extends Component
 
     public function refreshStatus(): void
     {
-        if (!EnvironmentService::isDesktop()) {
+        if (! EnvironmentService::isDesktop()) {
             return;
         }
 
@@ -49,14 +49,15 @@ new class extends Component
     #[Async]
     public function triggerSync(): void
     {
-        if (!EnvironmentService::isDesktop()) {
+        if (! EnvironmentService::isDesktop()) {
             return;
         }
 
         $this->refreshStatus();
 
-        if (!$this->isOnline) {
+        if (! $this->isOnline) {
             $this->syncMessage = (string) __('Server database is not reachable.');
+
             return;
         }
 
@@ -71,7 +72,7 @@ new class extends Component
 };
 ?>
 
-<div>
+<div wire:poll.120s>
     @if (\App\Services\EnvironmentService::isDesktop())
         <div x-data="{ open: @entangle('showModal') }" class="fixed bottom-6 right-6 z-50">
             <button @click="open = true"
