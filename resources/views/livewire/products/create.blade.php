@@ -125,12 +125,12 @@
                     <div class="flex flex-wrap mb-4">
                         <div class="w-full px-2 my-2">
                             <x-label for="image" :value="__('Product Image')" />
-                            <x-media-upload title="{{ __('Image') }}" name="image" wire:model="form.image" :file="$form->image ?? null" single types="PNG / JPEG / WEBP" fileTypes="image/*" />
+                            <x-media-upload title="{{ __('Image') }}" name="form.image" wire:model="form.image" :file="$form->image ?? null" single types="PNG / JPEG / WEBP" fileTypes="image/*" />
                             <x-input-error :messages="$errors->get('form.image')" for="form.image" class="mt-2" />
                         </div>
                         <div class="w-full px-2 my-2">
                             <x-label for="gallery" :value="__('Product Gallery')" />
-                            <x-media-upload title="{{ __('Gallery') }}" name="gallery" wire:model="form.gallery" :file="$form->gallery" multiple types="PNG / JPEG / WEBP" fileTypes="image/*" />
+                            <x-media-upload title="{{ __('Gallery') }}" name="form.gallery" wire:model="form.gallery" :file="$form->gallery" multiple types="PNG / JPEG / WEBP" fileTypes="image/*" />
                             <x-input-error :messages="$errors->get('form.gallery')" for="form.gallery" class="mt-2" />
                         </div>
                         <div class="w-full px-2 mt-4">

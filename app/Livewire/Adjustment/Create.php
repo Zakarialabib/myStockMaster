@@ -40,7 +40,7 @@ class Create extends Component
         'products.*.quantities' => 'required|integer|min:1',
         'products.*.types' => 'required|in:add,sub',
     ])]
-    public $products = [];
+    public array $products = [];
 
     public function mount(): void
     {

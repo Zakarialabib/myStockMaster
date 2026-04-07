@@ -27,12 +27,10 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    /** @var mixed */
     public mixed $brand;
 
     public mixed $file = null;
 
-    /** @var bool */
     public bool $importModal = false;
 
     public string $model = Brand::class;
@@ -47,9 +45,9 @@ class Index extends Component
             'order_direction' => $this->sortDirection,
         ]);
 
-        $query->paginate($this->perPage);
+        $brands = $query->paginate($this->perPage);
 
-        return view('livewire.brands.index', ['brands' => $brands]);
+        return view('livewire.brands.index', compact('brands'));
     }
 
     #[On('importModal')]

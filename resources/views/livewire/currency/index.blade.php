@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Currency'))
     <x-page-container title="{{ __('Currency List') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Currency List')]]" :show-filters="true">
         <x-slot name="actions">
             @can('currency_create')

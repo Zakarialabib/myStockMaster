@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Categories;
 
 use App\Imports\CategoriesImport;
+use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
@@ -14,11 +15,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Import extends Component
 {
+    use WithAlert;
     use WithFileUploads;
 
     public mixed $file = null;
 
-    /** @var bool */
     public bool $importModal = false;
 
     #[On('importModal')]

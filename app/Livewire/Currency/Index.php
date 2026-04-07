@@ -9,16 +9,16 @@ use App\Models\Currency;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-
+#[Title('Currency')]
 class Index extends Component
 {
     use Datatable;
     use WithAlert;
 
-    /** @var mixed */
     public mixed $currency;
 
     public string $model = Currency::class;
