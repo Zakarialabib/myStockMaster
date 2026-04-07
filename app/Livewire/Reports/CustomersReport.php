@@ -56,7 +56,7 @@ class CustomersReport extends Component
     #[Computed]
     public function sales()
     {
-        return Sale::query()->whereDate('date')
+        return Sale::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
@@ -66,7 +66,7 @@ class CustomersReport extends Component
     #[Computed]
     public function saleReturns()
     {
-        return SaleReturn::query()->whereDate('date')
+        return SaleReturn::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
@@ -76,7 +76,7 @@ class CustomersReport extends Component
     #[Computed]
     public function quotations()
     {
-        return Quotation::query()->whereDate('date')
+        return Quotation::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))

@@ -215,7 +215,7 @@
 
                                     <div>
                                         <div class="flex items-center space-x-2 mt-6">
-                                            <x-checkbox id="is_rtl" wire:model="form.is_rtl" />
+                                            <x-input.checkbox id="is_rtl" wire:model="form.is_rtl" />
                                             <x-label for="is_rtl" :value="__('Enable RTL')" />
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1">{{ __('Toggle Right-to-Left layout for Arabic, Hebrew, or Urdu languages.') }}</p>

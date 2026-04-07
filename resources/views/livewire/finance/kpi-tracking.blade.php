@@ -73,13 +73,6 @@
                 </div>
             </div>
 
-            @if($loading)
-                <div class="flex justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" role="status">
-                        <span class="sr-only">{{ __('Loading...') }}</span>
-                    </div>
-                </div>
-            @else
                 <!-- Revenue KPIs -->
                 @if($kpiType === 'all' || $kpiType === 'revenue')
                     <div class="mb-6">
@@ -651,7 +644,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            
         </div>
     </div>
 

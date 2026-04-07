@@ -53,13 +53,7 @@
                 @endif
             </div>
 
-            @if($loading)
-                <div class="flex justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" role="status">
-                        <span class="sr-only">{{ __('Loading...') }}</span>
-                    </div>
-                </div>
-            @else
+     
                 <!-- KPI Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white rounded-lg shadow p-6">
@@ -374,7 +368,7 @@
                         </div>
                     </div>
                 @endif
-            @endif
+            
         </div>
     </div>
 
@@ -382,7 +376,7 @@
         @if(!empty($this->financialReports['monthly_data']))
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const monthlyData = @json($this->financialReports['monthly_data']);
+                    const monthlyData = @js($this->financialReports['monthly_data']);
                     const months = Object.keys(monthlyData);
                     const revenues = months.map(month => monthlyData[month].revenue || 0);
                     const expenses = months.map(month => monthlyData[month].expenses || 0);

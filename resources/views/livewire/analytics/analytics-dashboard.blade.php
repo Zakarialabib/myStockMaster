@@ -55,13 +55,7 @@
                 </div>
             </div>
 
-            @if($loading)
-                <div class="flex justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" role="status">
-                        <span class="sr-only">{{ __('Loading...') }}</span>
-                    </div>
-                </div>
-            @else
+          
                 <!-- Analytics Overview Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white rounded-lg shadow p-6">
@@ -264,7 +258,7 @@
                         </div>
                     </div>
                 @endif
-            @endif
+           
         </div>
     </div>
 
@@ -272,7 +266,7 @@
         @if(!empty($revenueData['daily_revenue']))
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const revenueData = @json($revenueData['daily_revenue']);
+                    const revenueData = @js($revenueData['daily_revenue']);
                     const dates = Object.keys(revenueData);
                     const revenues = Object.values(revenueData);
 

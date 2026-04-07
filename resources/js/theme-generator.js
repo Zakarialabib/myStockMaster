@@ -1,143 +1,108 @@
 /**
- * Lightweight Color Utility
- * Converts HEX to RGB and generates a shade scale 50-950
+ * Color Utility for Theme Generation
+ * Matches the PHP generate_color_palette logic for consistency
  */
 
 // Convert HEX to RGB
-export function hexToRgb(hex) {
+function hexToRgb(hex) {
     hex = hex.replace(/^#/, '');
     if (hex.length === 3) {
-        hex = hex.split('').map(c => c + c).join('');
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    return { r, g, b };
+    return [r, g, b];
 }
 
-// Convert RGB to HSL
-export function rgbToHsl(r, g, b) {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-    
-    if (max === min) {
-        h = s = 0; 
-    } else {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-    }
-    
-    return { h: h * 360, s: s * 100, l: l * 100 };
+// Mix two colors based on weight
+function mixColors(color1, color2, weight) {
+    const w = weight / 100;
+    const r = Math.round(color1[0] * w + color2[0] * (1 - w));
+    const g = Math.round(color1[1] * w + color2[1] * (1 - w));
+    const b = Math.round(color1[2] * w + color2[2] * (1 - w));
+
+    return (
+        '#' +
+        [r, g, b]
+            .map((x) => {
+                const hex = x.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            })
+            .join('')
+    );
 }
 
-// Convert HSL to RGB
-export function hslToRgb(h, s, l) {
-    h /= 360;
-    s /= 100;
-    l /= 100;
-    
-    let r, g, b;
-    
-    if (s === 0) {
-        r = g = b = l; 
-    } else {
-        const hue2rgb = (p, q, t) => {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (t < 1/6) return p + (q - p) * 6 * t;
-            if (t < 1/2) return q;
-            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-        };
-        
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-    }
-    
-    return {
-        r: Math.round(r * 255),
-        g: Math.round(g * 255),
-        b: Math.round(b * 255)
-    };
-}
-
-// Convert RGB to HEX
-export function rgbToHex(r, g, b) {
-    return "#" + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
-}
-
-// Generate palette using lightness scaling
+// Generate palette using the same logic as PHP generate_color_palette
 export function generatePalette(baseHex) {
-    const rgb = hexToRgb(baseHex);
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-    
-    const baseL = hsl.l;
-    const lerp = (start, end, t) => start + (end - start) * t;
-    
-    const palette = {};
-    
-    // 50 to 400 (lighter)
-    palette[50] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(96, baseL, 0))));
-    palette[100] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(96, baseL, 0.2))));
-    palette[200] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(96, baseL, 0.4))));
-    palette[300] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(96, baseL, 0.6))));
-    palette[400] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(96, baseL, 0.8))));
-    
-    // 500 is base
-    palette[500] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, baseL)));
-    
-    // 600 to 950 (darker)
-    palette[600] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(baseL, 10, 0.2))));
-    palette[700] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(baseL, 10, 0.4))));
-    palette[800] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(baseL, 10, 0.6))));
-    palette[900] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(baseL, 10, 0.8))));
-    palette[950] = rgbToHex(...Object.values(hslToRgb(hsl.h, hsl.s, lerp(baseL, 10, 0.9))));
-    
-    return palette;
+    const baseRgb = hexToRgb(baseHex);
+    const white = [255, 255, 255];
+    const black = [0, 0, 0];
+
+    return {
+        50: mixColors(baseRgb, white, 10),
+        100: mixColors(baseRgb, white, 20),
+        200: mixColors(baseRgb, white, 40),
+        300: mixColors(baseRgb, white, 60),
+        400: mixColors(baseRgb, white, 80),
+        500: baseHex.startsWith('#') ? baseHex : '#' + baseHex,
+        600: mixColors(baseRgb, black, 80),
+        700: mixColors(baseRgb, black, 60),
+        800: mixColors(baseRgb, black, 40),
+        900: mixColors(baseRgb, black, 20),
+        950: mixColors(baseRgb, black, 10),
+    };
 }
 
-// Register global function
+// Global function to update theme
 if (typeof window !== 'undefined') {
-    window.updateThemePalette = function(hexColor) {
-        if (!hexColor) return;
-        try {
-            const palette = generatePalette(hexColor);
-            const root = document.documentElement;
-            
-            Object.entries(palette).forEach(([shade, hex]) => {
-                root.style.setProperty(`--color-primary-${shade}`, hex);
-            });
-        } catch (e) {
-            console.error('Invalid color format provided to updateThemePalette', e);
+    window.updateTheme = function (settings) {
+        if (!settings) return;
+
+        const root = document.documentElement;
+
+        // Update Colors
+        if (settings.primary_color) {
+            try {
+                const palette = generatePalette(settings.primary_color);
+                Object.entries(palette).forEach(([shade, hex]) => {
+                    root.style.setProperty(`--color-primary-${shade}`, hex);
+                });
+            } catch (e) {
+                console.error('Theme: Error generating palette', e);
+            }
+        }
+
+        // Update Fonts
+        if (settings.font_family) {
+            root.style.setProperty('--font-sans', settings.font_family);
+            root.style.setProperty('--font-body', settings.font_family);
+            document.body.style.fontFamily = settings.font_family;
         }
     };
 }
 
-// Auto-initialize based on CSS variable set in blade
+// Initialize based on window.themeSettings
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
-        const root = document.documentElement;
-        const primaryColor = getComputedStyle(root).getPropertyValue('--color-primary-500').trim();
-        if (primaryColor && primaryColor.startsWith('#')) {
-            window.updateThemePalette(primaryColor);
+        if (window.themeSettings) {
+            window.updateTheme(window.themeSettings);
+        }
+    });
+
+    // Support Livewire updates
+    document.addEventListener('livewire:navigated', () => {
+        if (window.themeSettings) {
+            window.updateTheme(window.themeSettings);
+        }
+    });
+
+    // Handle real-time theme updates from Livewire
+    window.addEventListener('theme-updated', (event) => {
+        if (event.detail && event.detail.settings) {
+            window.updateTheme(event.detail.settings);
+            // Also update global window.themeSettings to persist across navigation
+            window.themeSettings = event.detail.settings;
         }
     });
 }
