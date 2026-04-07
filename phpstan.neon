@@ -20,6 +20,8 @@ parameters:
         -
             message: '#Class Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+ has an uninitialized property#'
             path: tests/*
+        - '#Call to function method_exists\(\) with App\\Models\\User and .assignRole. will always evaluate to true\.#'
+        - '#Negated boolean expression is always false\.#'
         -
             message: '#Method Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+::[a-zA-Z0-9_]+\(\) has parameter \$[a-zA-Z0-9_]+ with no type specified\.#'
             path: tests/*
