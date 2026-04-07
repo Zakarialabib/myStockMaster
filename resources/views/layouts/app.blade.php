@@ -28,19 +28,16 @@
     @endif
 
     @stack('styles')
-    @php
-        $appStyle = settings('app_style', []);
-        $primaryColor = $appStyle['primary_color'] ?? '#0061ff';
-        $palette = generate_color_palette($primaryColor);
-    @endphp
+
+    <script>
+        window.themeSettings = <?php echo json_encode(settings('app_style', [
+            'primary_color' => '#0061ff',
+            'font_family' => "'Inter', sans-serif",
+        ]));
+        ?>;
+    </script>
+
     <style>
-        :root {
-            @foreach($palette as $weight => $hex)
-            --color-primary-{{ $weight }}: {{ $hex }};
-            @endforeach
-            --font-sans: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
-            --font-body: {{ $appStyle['font_family'] ?? "'Inter', sans-serif" }};
-        }
         [x-cloak] {
             display: none;
         }
@@ -59,7 +56,8 @@
 
 </head>
 
-<body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}">
+<body class="antialiased bg-gray-50 text-body font-body {{ $isDesktop ? 'desktop-app' : '' }}"
+    dir="{{ settings('is_rtl', false) ? 'rtl' : 'ltr' }}">
     <x-loading-mask />
 
     <div class="flex flex-col min-h-screen">
@@ -108,7 +106,7 @@
     </div>
 
     @if ($isDesktop)
-        <livewire:native-event-listener />
+    <livewire:native-event-listener />
     @endif
 </body>
 

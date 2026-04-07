@@ -7,6 +7,7 @@ namespace App\Livewire\Users;
 use App\Livewire\Utils\Datatable;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Warehouse;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -24,13 +25,13 @@ class Index extends Component
 
     public string $model = User::class;
 
-    public mixed $user;
+    public mixed $user = null;
 
-    public mixed $role;
+    public mixed $role = null;
 
-    public mixed $warehouse_id;
+    public mixed $warehouse_id = null;
 
-    public mixed $filterRole;
+    public mixed $filterRole = null;
 
     public function filterRole(mixed $role): void
     {
@@ -64,6 +65,12 @@ class Index extends Component
     public function roles()
     {
         return Role::query()->pluck('name', 'id');
+    }
+
+    #[Computed]
+    public function warehouses()
+    {
+        return Warehouse::query()->pluck('name', 'id');
     }
 
     // assign or change user role

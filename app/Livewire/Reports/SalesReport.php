@@ -23,12 +23,12 @@ class SalesReport extends Component
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public string $start_date;
+    public ?string $start_date = null;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public string $end_date;
+    public ?string $end_date = null;
 
     public ?string $customer_id = null;
 

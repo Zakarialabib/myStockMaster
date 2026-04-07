@@ -53,12 +53,7 @@
                     </div>
                 </div>
             </div>
-
-            @if($loading)
-                <div class="flex justify-center py-12">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                </div>
-            @elseif($productId && !empty($analyticsData))
+            @if($productId && !empty($analyticsData))
                 <!-- Product Overview Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -343,7 +338,7 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     // Sales Trend Chart
-                    const salesData = @json($analyticsData['daily_sales']);
+                    const salesData = @js($analyticsData['daily_sales']);
                     const salesDates = Object.keys(salesData);
                     const salesValues = Object.values(salesData);
 
@@ -378,7 +373,7 @@
 
                     @if(!empty($priceTrends['price_history']))
                         // Price History Chart
-                        const priceData = @json($priceTrends['price_history']);
+                        const priceData = @js($priceTrends['price_history']);
                         const priceDates = Object.keys(priceData);
                         const priceValues = Object.values(priceData);
 

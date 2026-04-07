@@ -9,16 +9,16 @@ use App\Models\CustomerGroup;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
-
+#[Title('Customer Group')]
 class Index extends Component
 {
     use Datatable;
     use WithAlert;
 
-    /** @var mixed */
     public mixed $customergroup;
 
     public mixed $customer_group_id;

@@ -1,13 +1,5 @@
-<div>
-    @section('title', __('Supplier'))
-    
-    <x-page-container>
-        <x-slot name="breadcrumbs">
-            <x-breadcrumb :items="[
-                ['label' => __('Dashboard'), 'url' => route('dashboard')],
-                ['label' => __('Supplier List'), 'url' => route('suppliers.index')]
-            ]" />
-        </x-slot>
+<div>    
+    <x-page-container title="{{ __('Suppliers') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Suppliers'), 'url' => route('suppliers.index')]]" :show-filters="true">
 
         <x-slot name="actions">
             <x-dropdown align="right" width="48" class="w-auto mr-2">

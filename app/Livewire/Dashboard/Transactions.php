@@ -13,15 +13,14 @@ use App\Models\SaleDetails;
 use App\Models\SalePayment;
 use App\Models\SaleReturnPayment;
 use App\Traits\WithAlert;
-use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-#[Lazy(isolate: false)]
 class Transactions extends Component
 {
     use WithAlert;
@@ -36,8 +35,8 @@ class Transactions extends Component
 
     public function mount(): void
     {
-        $this->startDate = \Illuminate\Support\Facades\Date::now()->startOfMonth()->toDateString();
-        $this->endDate = \Illuminate\Support\Facades\Date::now()->endOfMonth()->toDateString();
+        $this->startDate = Date::now()->startOfMonth()->toDateString();
+        $this->endDate = Date::now()->endOfMonth()->toDateString();
 
         $this->chart();
     }
@@ -67,7 +66,7 @@ class Transactions extends Component
             ->select('sales.*', 'customers.name')
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
             ->with('user', 'customer')
-            ->whereMonth('sales.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
+            ->whereMonth('sales.created_at', Date::now()->startOfMonth())
             ->orderBy('sales.total_amount', 'desc')
             ->take(5)
             ->get();
@@ -76,7 +75,7 @@ class Transactions extends Component
     #[Computed]
     public function purchasesCount(): Collection
     {
-        return Purchase::query()->where('date', '>=', \Illuminate\Support\Facades\Date::now()->subWeek())
+        return Purchase::query()->where('date', '>=', Date::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
             ->groupBy('date')
             ->pluck('purchases');
@@ -85,7 +84,7 @@ class Transactions extends Component
     #[Computed]
     public function salesCount(): Collection
     {
-        return Sale::query()->whereDate('date')
+        return Sale::query()->whereDate('date', '>=', Date::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
             ->pluck('sales');
@@ -182,7 +181,7 @@ class Transactions extends Component
             ')
             ->join('products', 'products.id', '=', 'sale_details.product_id')
             ->join('sales', 'sales.id', '=', 'sale_details.sale_id')
-            ->whereMonth('sale_details.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
+            ->whereMonth('sale_details.created_at', Date::now()->startOfMonth())
             ->groupBy(['sale_details.id', 'sale_details.product_id', 'products.name', 'products.code', 'sales.warehouse_id'])
             ->orderByDesc('qtyItem')
             ->limit(5)
@@ -203,7 +202,7 @@ class Transactions extends Component
             ')
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->leftJoin('warehouses', 'warehouses.id', '=', 'sales.warehouse_id')
-            ->whereMonth('sales.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
+            ->whereMonth('sales.created_at', Date::now()->startOfMonth())
             ->groupBy(['sales.id', 'sales.customer_id', 'customers.name', 'customers.id', 'sales.warehouse_id', 'warehouses.name'])
             ->orderByDesc('totalSalesAmount')
             ->limit(5)
@@ -213,8 +212,8 @@ class Transactions extends Component
     #[Computed(persist: true, seconds: 7200)]
     public function monthlyChartOptions(): array
     {
-        $startDate = \Illuminate\Support\Facades\Date::now()->startOfMonth();
-        $endDate = \Illuminate\Support\Facades\Date::now()->endOfMonth();
+        $startDate = Date::now()->startOfMonth();
+        $endDate = Date::now()->endOfMonth();
 
         $customerNameTotal = DB::table('sale_payments')
             ->join('sales', 'sale_payments.sale_id', '=', 'sales.id')
@@ -278,10 +277,10 @@ class Transactions extends Component
     #[Computed(persist: true, seconds: 7200)]
     public function dailyChartOptions(): array
     {
-        $currentMonth = \Illuminate\Support\Facades\Date::now()->startOfMonth();
+        $currentMonth = Date::now()->startOfMonth();
 
         $daysInMonth = [];
-        $currentDay = \Illuminate\Support\Facades\Date::now()->startOfMonth();
+        $currentDay = Date::now()->startOfMonth();
 
         while ($currentDay->month === $currentMonth->month) {
             $daysInMonth[] = $currentDay->format('Y-m-d');
@@ -289,13 +288,13 @@ class Transactions extends Component
         }
 
         $salesData = Sale::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
-            ->whereBetween('date', [$currentMonth, \Illuminate\Support\Facades\Date::now()->endOfMonth()])
+            ->whereBetween('date', [$currentMonth, Date::now()->endOfMonth()])
             ->groupBy('day')
             ->orderBy('day', 'ASC')
             ->get();
 
         $purchasesData = Purchase::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
-            ->whereBetween('date', [$currentMonth, \Illuminate\Support\Facades\Date::now()->endOfMonth()])
+            ->whereBetween('date', [$currentMonth, Date::now()->endOfMonth()])
             ->groupBy('day')
             ->orderBy('day', 'ASC')
             ->get();
@@ -365,12 +364,12 @@ class Transactions extends Component
         $paymentReceivedData = [];
 
         foreach (range(-11, 0) as $i) {
-            $date = \Illuminate\Support\Facades\Date::now()->addMonths($i);
+            $date = Date::now()->addMonths($i);
             $dateLabels[] = $date->format('M Y');
             $dates->put($date->format('Y-m'), 0);
         }
 
-        $date_range = \Illuminate\Support\Facades\Date::today()->subYear()->format('Y-m-d');
+        $date_range = Date::today()->subYear()->format('Y-m-d');
 
         $monthRaw = db_date_format('date', '%Y-%m');
 
@@ -405,7 +404,7 @@ class Transactions extends Component
             ->get();
 
         foreach ($dateLabels as $dateLabel) {
-            $month = \Illuminate\Support\Facades\Date::createFromFormat('M Y', $dateLabel);
+            $month = Date::createFromFormat('M Y', $dateLabel);
             $monthKey = $month->format('Y-m');
 
             $paymentSentData[] = ($purchase_payments->where('month', $monthKey)->first()->amount ?? 0)
@@ -420,7 +419,7 @@ class Transactions extends Component
 
         foreach ($dates as $month => $value) {
             if ($value === 0) {
-                $dateLabels[] = \Illuminate\Support\Facades\Date::createFromFormat('Y-m', $month)->format('M Y');
+                $dateLabels[] = Date::createFromFormat('Y-m', $month)->format('M Y');
                 $paymentSentData[] = 0;
                 $paymentReceivedData[] = 0;
             }

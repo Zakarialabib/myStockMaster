@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import "@fortawesome/fontawesome-free/css/fontawesome.css";
-@import "@fortawesome/fontawesome-free/css/solid.css";
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms' {
@@ -71,18 +71,18 @@
     --color-orange-600: #ea580c;
     --color-orange-700: #c2410c;
 
-    --shadow-soft: 0 4px 12px -2px rgba(0,0,0,0.05);
+    --shadow-soft: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
     body {
-        font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+        font-family: var(--font-body), 'Noto Sans Arabic', sans-serif;
         font-size: 16px;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
     input {
-        font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+        font-family: var(--font-sans), Arial, Helvetica, sans-serif !important;
     }
 }
 
@@ -99,4 +99,3 @@
 [data-loading] .spinner {
     display: block !important;
 }
-

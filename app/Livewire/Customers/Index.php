@@ -30,7 +30,7 @@ class Index extends Component
 
     public mixed $customer;
 
-    public mixed $customer_group_id;
+    public mixed $customer_group_id = null;
 
     public mixed $file = null;
 

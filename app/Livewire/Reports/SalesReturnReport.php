@@ -24,12 +24,12 @@ class SalesReturnReport extends Component
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public string $start_date;
+    public ?string $start_date = null;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public string $end_date;
+    public ?string $end_date = null;
 
     public ?string $customer_id = null;
 
@@ -56,7 +56,7 @@ class SalesReturnReport extends Component
     {
         abort_if(Gate::denies('report_access'), 403);
 
-        $lengthAwarePaginator = SaleReturn::query()->whereDate('date')
+        $lengthAwarePaginator = SaleReturn::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_return_status, fn ($q) => $q->where('sale_return_status', $this->sale_return_status))

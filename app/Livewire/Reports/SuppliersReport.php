@@ -18,23 +18,23 @@ class SuppliersReport extends Component
     use WithAlert;
     use WithPagination;
 
-    public mixed $supplier_id;
+    public mixed $supplier_id = null;
 
-    public mixed $suppliers;
+    public mixed $suppliers = null;
 
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public mixed $start_date;
+    public mixed $start_date = null;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public mixed $end_date;
+    public mixed $end_date = null;
 
-    public mixed $payment_status;
+    public mixed $payment_status = null;
 
-    public mixed $purchase_status;
+    public mixed $purchase_status = null;
 
     public function mount(): void
     {
@@ -48,7 +48,7 @@ class SuppliersReport extends Component
 
     public function getPurchasesProperty()
     {
-        return Purchase::query()->whereDate('date')
+        return Purchase::query()->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, fn ($query) => $query->where('supplier_id', $this->supplier_id))
             ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))

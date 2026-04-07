@@ -24,10 +24,10 @@ class ProfitLossReport extends Component
     use WithAlert;
 
     #[Validate('required|date|before:end_date')]
-    public string $start_date;
+    public ?string $start_date = null;
 
     #[Validate('required|date|after:start_date')]
-    public string $end_date;
+    public ?string $end_date = null;
 
     public int $total_sales = 0;
 
