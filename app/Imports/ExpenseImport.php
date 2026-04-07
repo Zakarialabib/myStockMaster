@@ -16,9 +16,9 @@ class ExpenseImport implements SkipsEmptyRows, ToModel, WithHeadingRow
     public function model(array $row): Expense
     {
         return new Expense([
-            'category_id' => ExpenseCategory::where('name', $row['category'])->first()->id ?? ExpenseCategory::create(['name' => $row['category']])->id ?? null,
+            'category_id' => ExpenseCategory::query()->where('name', $row['category'])->first()->id ?? ExpenseCategory::query()->create(['name' => $row['category']])->id ?? null,
             'user_id' => auth()->user()->id,
-            'warehouse_id' => Warehouse::where('name', $row['warehouse'])->first()->id ?? Warehouse::create(['name' => $row['warehouse']])->id ?? null,
+            'warehouse_id' => Warehouse::query()->where('name', $row['warehouse'])->first()->id ?? Warehouse::query()->create(['name' => $row['warehouse']])->id ?? null,
             'date' => $row['date'] ?? date('Y-m-d'),
             // 'reference'    => settings()->expense_prefix,
             'description' => $row['description'] ?? null,

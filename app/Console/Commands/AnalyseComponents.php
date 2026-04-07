@@ -22,7 +22,7 @@ class AnalyseComponents extends Command
         $outputFile = base_path($this->option('output'));
 
         if (! File::isDirectory($path)) {
-            $this->error("Path {$path} not found.");
+            $this->error(sprintf('Path %s not found.', $path));
 
             return;
         }
@@ -34,13 +34,13 @@ class AnalyseComponents extends Command
 
         $stats = [];
 
-        foreach ($components as $file) {
-            $relative = Str::after($file->getPathname(), base_path() . '/');
-            $content = File::get($file->getPathname());
+        foreach ($components as $component) {
+            $relative = Str::after($component->getPathname(), base_path() . '/');
+            $content = File::get($component->getPathname());
             $lines = substr_count($content, "\n") + 1;
 
             // Check usage in project (naive search for <x-ComponentName>)
-            $componentName = Str::of($file->getFilenameWithoutExtension())
+            $componentName = Str::of($component->getFilenameWithoutExtension())
                 ->replace('.', '-')
                 ->lower();
 
@@ -66,13 +66,13 @@ class AnalyseComponents extends Command
         $report .= "| File | LOC | Usage | Theme | Dusk/ID |\n";
         $report .= "|------|-----|-------|-------|---------|\n";
 
-        foreach ($stats as $s) {
-            $report .= "| {$s['file']} | {$s['lines']} | {$s['used']} | {$s['theming_ready']} | {$s['dusk_ready']} |\n";
+        foreach ($stats as $stat) {
+            $report .= "| {$stat['file']} | {$stat['lines']} | {$stat['used']} | {$stat['theming_ready']} | {$stat['dusk_ready']} |\n";
         }
 
         File::put($outputFile, $report);
 
-        $this->info("Analysis saved to {$outputFile}");
+        $this->info('Analysis saved to ' . $outputFile);
     }
 
     private function countUsage(string $componentName): int
@@ -84,7 +84,7 @@ class AnalyseComponents extends Command
 
         foreach ($views as $view) {
             $content = File::get($view->getPathname());
-            $count += substr_count($content, "<x-{$componentName}");
+            $count += substr_count($content, '<x-' . $componentName);
         }
 
         return $count;

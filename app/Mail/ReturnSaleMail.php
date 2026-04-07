@@ -13,19 +13,11 @@ class ReturnSaleMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $returnSaleMail;
-
-    public $pdf;
-
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct($returnSaleMail, $pdf)
+    public function __construct(public $returnSaleMail, public $pdf)
     {
-        $this->returnSaleMail = $returnSaleMail;
-        $this->pdf = $pdf;
     }
 
     /**

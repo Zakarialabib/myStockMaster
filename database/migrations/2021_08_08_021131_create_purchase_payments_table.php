@@ -14,18 +14,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchase_payments', function (Blueprint $table) {
-            $table->id();
+        Schema::create('purchase_payments', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->foreignIdFor(Purchase::class)->constrained()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->decimal('amount', 8, 2);
-            $table->date('date');
-            $table->string('reference');
-            $table->string('payment_method');
-            $table->text('note')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->foreignIdFor(Purchase::class)->constrained()->cascadeOnDelete();
+            $blueprint->foreignUuid('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $blueprint->decimal('amount', 8, 2);
+            $blueprint->date('date');
+            $blueprint->string('reference');
+            $blueprint->string('payment_method');
+            $blueprint->text('note')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

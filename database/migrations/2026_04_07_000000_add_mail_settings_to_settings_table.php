@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->string('mail_mailer')->nullable();
-            $table->string('smtp_host')->nullable();
-            $table->string('smtp_port')->nullable();
-            $table->string('smtp_username')->nullable();
-            $table->string('smtp_password')->nullable();
-            $table->string('smtp_encryption')->nullable();
-            $table->string('mail_from_address')->nullable();
-            $table->string('mail_from_name')->nullable();
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->string('mail_mailer')->nullable();
+            $blueprint->string('smtp_host')->nullable();
+            $blueprint->string('smtp_port')->nullable();
+            $blueprint->string('smtp_username')->nullable();
+            $blueprint->string('smtp_password')->nullable();
+            $blueprint->string('smtp_encryption')->nullable();
+            $blueprint->string('mail_from_address')->nullable();
+            $blueprint->string('mail_from_name')->nullable();
         });
     }
 
@@ -28,8 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn([
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn([
                 'mail_mailer',
                 'smtp_host',
                 'smtp_port',

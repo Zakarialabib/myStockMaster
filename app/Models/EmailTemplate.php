@@ -39,10 +39,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static Builder<static>|EmailTemplate whereType($value)
  * @method static Builder<static>|EmailTemplate whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class EmailTemplate extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     protected const ATTRIBUTES = [
@@ -58,9 +59,9 @@ class EmailTemplate extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -82,12 +83,12 @@ class EmailTemplate extends Model
     /**
      * Scope a query to only include default email templates.
      */
-    public function scopeDefault(Builder $query): Builder
+    protected function scopeDefault(Builder $builder): Builder
     {
-        return $query->where('default', true);
+        return $builder->where('default', true);
     }
 
-    public function scopeActive($query)
+    protected function scopeActive(mixed $query)
     {
         return $query->where('status', true);
     }

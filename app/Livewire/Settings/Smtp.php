@@ -31,7 +31,7 @@ class Smtp extends Component
 
     public function mount(): void
     {
-        $settings = \App\Models\Setting::first();
+        $settings = \App\Models\Setting::query()->first();
         
         $this->mail_mailer = $settings->mail_mailer ?? config('mail.mailer');
         $this->mail_host = $settings->smtp_host ?? config('mail.host');
@@ -43,7 +43,7 @@ class Smtp extends Component
         $this->mail_encryption = $settings->smtp_encryption ?? config('mail.encryption');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.smtp');
     }
@@ -51,7 +51,7 @@ class Smtp extends Component
     public function update(): void
     {
         try {
-            $settings = \App\Models\Setting::first();
+            $settings = \App\Models\Setting::query()->first();
             
             if ($settings) {
                 $settings->update([

@@ -45,15 +45,15 @@ class SalesAndPurchasesSeeder extends Seeder
         $this->command->info('Sales and Purchases data seeded successfully!');
     }
 
-    private function createSalesData($customers, $products, $warehouses, $users): void
+    private function createSalesData(mixed $customers, mixed $products, mixed $warehouses, mixed $users): void
     {
-        $startDate = Carbon::now()->subMonths(12);
-        $endDate = Carbon::now()->subDays(1); // Ensure we don't use future dates
+        $startDate = \Illuminate\Support\Facades\Date::now()->subMonths(12);
+        $endDate = \Illuminate\Support\Facades\Date::now()->subDays(1); // Ensure we don't use future dates
 
         // Create 200 sales records
         for ($i = 0; $i < 200; $i++) {
-            $date = Carbon::createFromTimestamp(
-                rand($startDate->timestamp, $endDate->timestamp)
+            $date = \Illuminate\Support\Facades\Date::createFromTimestamp(
+                random_int($startDate->timestamp, $endDate->timestamp)
             )->startOfDay(); // Normalize to start of day
 
             $customer = $customers->random();
@@ -61,13 +61,13 @@ class SalesAndPurchasesSeeder extends Seeder
             $user = $users->random();
 
             // Calculate amounts
-            $taxPercentage = rand(0, 20);
-            $discountPercentage = rand(0, 15);
-            $subtotal = rand(100, 5000);
+            $taxPercentage = random_int(0, 20);
+            $discountPercentage = random_int(0, 15);
+            $subtotal = random_int(100, 5000);
             $discountAmount = ($subtotal * $discountPercentage) / 100;
             $taxableAmount = $subtotal - $discountAmount;
             $taxAmount = ($taxableAmount * $taxPercentage) / 100;
-            $shippingAmount = rand(0, 100);
+            $shippingAmount = random_int(0, 100);
             $totalAmount = $taxableAmount + $taxAmount + $shippingAmount;
 
             // Random payment status
@@ -76,13 +76,13 @@ class SalesAndPurchasesSeeder extends Seeder
 
             $paidAmount = match ($paymentStatus) {
                 PaymentStatus::PAID => $totalAmount,
-                PaymentStatus::PARTIAL => rand(1, (int) ($totalAmount * 0.8)),
+                PaymentStatus::PARTIAL => random_int(1, (int) ($totalAmount * 0.8)),
                 PaymentStatus::PENDING => 0,
             };
 
             $dueAmount = $totalAmount - $paidAmount;
 
-            $sale = Sale::create([
+            $sale = Sale::query()->create([
                 'id' => \Illuminate\Support\Str::uuid(),
                 'date' => $date->format('Y-m-d'),
                 'reference' => 'SL-' . str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
@@ -104,17 +104,17 @@ class SalesAndPurchasesSeeder extends Seeder
             ]);
 
             // Create sale details (products)
-            $numProducts = rand(1, 5);
+            $numProducts = random_int(1, 5);
             $selectedProducts = $products->random($numProducts);
 
-            foreach ($selectedProducts as $product) {
-                $quantity = rand(1, 10);
-                $price = $product->price ?? rand(10, 500);
+            foreach ($selectedProducts as $selectedProduct) {
+                $quantity = random_int(1, 10);
+                $price = $selectedProduct->price ?? random_int(10, 500);
                 DB::table('sale_details')->insertOrIgnore([
                     'sale_id' => $sale->id,
-                    'product_id' => $product->id,
-                    'name' => $product->name,
-                    'code' => $product->code,
+                    'product_id' => $selectedProduct->id,
+                    'name' => $selectedProduct->name,
+                    'code' => $selectedProduct->code,
                     'quantity' => $quantity,
                     'price' => $price,
                     'unit_price' => $price,
@@ -128,27 +128,27 @@ class SalesAndPurchasesSeeder extends Seeder
         }
     }
 
-    private function createPurchaseData($suppliers, $products): void
+    private function createPurchaseData(mixed $suppliers, mixed $products): void
     {
-        $startDate = Carbon::now()->subMonths(12);
-        $endDate = Carbon::now()->subDays(1); // Ensure we don't use future dates
+        $startDate = \Illuminate\Support\Facades\Date::now()->subMonths(12);
+        $endDate = \Illuminate\Support\Facades\Date::now()->subDays(1); // Ensure we don't use future dates
 
         // Create 150 purchase records
         for ($i = 0; $i < 150; $i++) {
-            $date = Carbon::createFromTimestamp(
-                rand($startDate->timestamp, $endDate->timestamp)
+            $date = \Illuminate\Support\Facades\Date::createFromTimestamp(
+                random_int($startDate->timestamp, $endDate->timestamp)
             )->startOfDay(); // Normalize to start of day
 
             $supplier = $suppliers->random();
 
             // Calculate amounts
-            $taxPercentage = rand(0, 20);
-            $discountPercentage = rand(0, 10);
-            $subtotal = rand(200, 8000);
+            $taxPercentage = random_int(0, 20);
+            $discountPercentage = random_int(0, 10);
+            $subtotal = random_int(200, 8000);
             $discountAmount = ($subtotal * $discountPercentage) / 100;
             $taxableAmount = $subtotal - $discountAmount;
             $taxAmount = ($taxableAmount * $taxPercentage) / 100;
-            $shippingAmount = rand(0, 200);
+            $shippingAmount = random_int(0, 200);
             $totalAmount = $taxableAmount + $taxAmount + $shippingAmount;
 
             // Random payment status
@@ -157,13 +157,13 @@ class SalesAndPurchasesSeeder extends Seeder
 
             $paidAmount = match ($paymentStatus) {
                 PaymentStatus::PAID => $totalAmount,
-                PaymentStatus::PARTIAL => rand(1, (int) ($totalAmount * 0.7)),
+                PaymentStatus::PARTIAL => random_int(1, (int) ($totalAmount * 0.7)),
                 PaymentStatus::PENDING => 0,
             };
 
             $dueAmount = $totalAmount - $paidAmount;
 
-            $purchase = Purchase::create([
+            $purchase = Purchase::query()->create([
                 'id' => \Illuminate\Support\Str::uuid(),
                 'date' => $date->format('Y-m-d'),
                 'reference' => 'PU-' . str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
@@ -183,17 +183,17 @@ class SalesAndPurchasesSeeder extends Seeder
             ]);
 
             // Create purchase details (products)
-            $numProducts = rand(1, 4);
+            $numProducts = random_int(1, 4);
             $selectedProducts = $products->random($numProducts);
 
-            foreach ($selectedProducts as $product) {
-                $quantity = rand(5, 50);
-                $price = $product->cost ?? rand(5, 300);
+            foreach ($selectedProducts as $selectedProduct) {
+                $quantity = random_int(5, 50);
+                $price = $selectedProduct->cost ?? random_int(5, 300);
                 DB::table('purchase_details')->insertOrIgnore([
                     'purchase_id' => $purchase->id,
-                    'product_id' => $product->id,
-                    'name' => $product->name,
-                    'code' => $product->code,
+                    'product_id' => $selectedProduct->id,
+                    'name' => $selectedProduct->name,
+                    'code' => $selectedProduct->code,
                     'quantity' => $quantity,
                     'price' => $price,
                     'unit_price' => $price,

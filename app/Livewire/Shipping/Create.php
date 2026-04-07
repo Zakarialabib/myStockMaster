@@ -15,7 +15,7 @@ class Create extends Component
 {
     use WithAlert;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Shipping $shipping;
 
@@ -28,9 +28,9 @@ class Create extends Component
     public string $subtitle;
 
     #[Validate('required|numeric')]
-    public $cost;
+    public mixed $cost;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('shipping_create'), 403);
 
@@ -51,7 +51,7 @@ class Create extends Component
     {
         $this->validate();
 
-        Shipping::create($this->all());
+        Shipping::query()->create($this->all());
 
         $this->alert('success', __('Shipping created successfully.'));
 

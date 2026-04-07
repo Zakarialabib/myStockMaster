@@ -28,7 +28,7 @@ enum QuotationStatus: int
         return $this->value;
     }
 
-    public static function getLabel($value)
+    public static function getLabel($value): ?string
     {
         foreach (self::cases() as $case) {
             if ($case->getValue() === $value) {
@@ -41,19 +41,13 @@ enum QuotationStatus: int
 
     public function getBadgeType(): string
     {
-        switch ($this) {
-            case self::PENDING:
-                return 'warning';
-            case self::SENT:
-                return 'info';
-            case self::ACCEPTED:
-                return 'success';
-            case self::EXPIRED:
-                return 'danger';
-            case self::REJECTED:
-                return 'alert';
-            default:
-                return 'secondary';
-        }
+        return match ($this) {
+            self::PENDING => 'warning',
+            self::SENT => 'info',
+            self::ACCEPTED => 'success',
+            self::EXPIRED => 'danger',
+            self::REJECTED => 'alert',
+            default => 'secondary',
+        };
     }
 }

@@ -35,7 +35,7 @@ class PurchaseService
                 $paymentStatus = PaymentStatus::PENDING;
             }
 
-            $purchase = Purchase::create([
+            $purchase = Purchase::query()->create([
                 'date' => $purchaseData['date'],
                 'supplier_id' => $purchaseData['supplier_id'],
                 'warehouse_id' => $purchaseData['warehouse_id'],
@@ -70,7 +70,7 @@ class PurchaseService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                PurchaseDetail::create([
+                PurchaseDetail::query()->create([
                     'purchase_id' => $purchase->id,
                     'warehouse_id' => $purchaseData['warehouse_id'],
                     'product_id' => $productId,
@@ -95,12 +95,12 @@ class PurchaseService
                 }
             }
 
-            if (! empty($inventoryItems)) {
-                SyncInventoryJob::dispatch($inventoryItems, $purchaseData['warehouse_id'], $purchaseData['user_id'], 'purchase');
+            if ($inventoryItems !== []) {
+                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], $purchaseData['user_id'], 'purchase'));
             }
 
             if ($purchaseData['paid_amount'] > 0 && ! $isDraft) {
-                PurchasePayment::create([
+                PurchasePayment::query()->create([
                     'date' => date('Y-m-d'),
                     'user_id' => $purchaseData['user_id'],
                     'amount' => $purchase->paid_amount,
@@ -168,7 +168,7 @@ class PurchaseService
                 $discountType = $isObject ? $cartItem->options->product_discount_type : $cartItem['attributes']['product_discount_type'];
                 $taxAmount = $isObject ? $cartItem->options->product_tax : $cartItem['attributes']['product_tax'];
 
-                PurchaseDetail::create([
+                PurchaseDetail::query()->create([
                     'purchase_id' => $purchase->id,
                     'warehouse_id' => $purchaseData['warehouse_id'],
                     'product_id' => $productId,
@@ -191,8 +191,8 @@ class PurchaseService
                 ];
             }
 
-            if (! empty($inventoryItems)) {
-                SyncInventoryJob::dispatch($inventoryItems, $purchaseData['warehouse_id'], auth()->id(), 'purchase');
+            if ($inventoryItems !== []) {
+                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], auth()->id(), 'purchase'));
             }
 
             return $purchase;
@@ -201,10 +201,11 @@ class PurchaseService
 
     public function delete(Purchase $purchase): void
     {
-        DB::transaction(function () use ($purchase) {
+        DB::transaction(function () use ($purchase): void {
             foreach ($purchase->purchaseDetails as $detail) {
                 $detail->delete();
             }
+
             $purchase->delete();
         });
     }

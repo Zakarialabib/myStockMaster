@@ -27,29 +27,29 @@ class Edit extends Component
 
     public Purchase $purchase;
 
-    public $purchase_details;
+    public mixed $purchase_details;
 
-    public $products;
+    public mixed $products;
 
-    public $product;
+    public mixed $product;
 
-    public $quantity;
+    public mixed $quantity;
 
-    public $reference;
+    public mixed $reference;
 
-    public $check_quantity;
+    public mixed $check_quantity;
 
-    public $price;
+    public mixed $price;
 
-    public $discount_type;
+    public mixed $discount_type;
 
-    public $item_discount;
+    public mixed $item_discount;
 
     public array $listsForFields = [];
 
-    public function mount($id, string $cartInstance = 'purchase'): void
+    public function mount(mixed $id, string $cartInstance = 'purchase'): void
     {
-        $this->purchase = Purchase::findOrFail($id);
+        $this->purchase = Purchase::query()->findOrFail($id);
 
         $this->purchase_details = $this->purchase->purchaseDetails;
 
@@ -57,7 +57,7 @@ class Edit extends Component
         $this->initializeCart($cartInstance);
 
         foreach ($this->purchase_details as $purchase_detail) {
-            $product = Product::findOrFail($purchase_detail->product_id);
+            $product = Product::query()->findOrFail($purchase_detail->product_id);
             $this->addToCart([
                 'id' => $purchase_detail->product_id,
                 'name' => $purchase_detail->name,
@@ -96,7 +96,7 @@ class Edit extends Component
             return;
         }
 
-        $purchaseService = app(PurchaseService::class);
+        $purchaseService = resolve(PurchaseService::class);
         $purchaseService->update(
             $this->purchase,
             [
@@ -123,7 +123,7 @@ class Edit extends Component
         $this->redirectRoute('purchases.index', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('purchase update'), 403);
 
@@ -145,13 +145,13 @@ class Edit extends Component
         $this->clearCart();
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', warehouseId: (int) $value);
     }
 
-    public function updatedFormStatus($value): void
+    public function updatedFormStatus(mixed $value): void
     {
         $this->form->status = $value;
     }

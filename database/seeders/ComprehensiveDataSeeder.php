@@ -29,17 +29,17 @@ class ComprehensiveDataSeeder extends Seeder
             $this->seedComprehensiveData();
 
             $this->command->info('Comprehensive data seeding completed successfully!');
-        } catch (Exception $e) {
-            $this->command->error('Error during seeding: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            $this->command->error('Error during seeding: ' . $exception->getMessage());
 
-            throw $e;
+            throw $exception;
         } finally {
             // Re-enable foreign key checks
             Schema::enableForeignKeyConstraints();
         }
     }
 
-    private function clearExistingData()
+    private function clearExistingData(): void
     {
         $this->command->info('Clearing existing data...');
 
@@ -56,12 +56,12 @@ class ComprehensiveDataSeeder extends Seeder
         foreach ($tables as $table) {
             if (Schema::hasTable($table)) {
                 DB::table($table)->truncate();
-                $this->command->info("Cleared {$table} table");
+                $this->command->info(sprintf('Cleared %s table', $table));
             }
         }
     }
 
-    private function seedComprehensiveData()
+    private function seedComprehensiveData(): void
     {
         $this->command->info('Seeding comprehensive suppliers...');
         $this->call(ComprehensiveSupplierSeeder::class);
@@ -76,7 +76,7 @@ class ComprehensiveDataSeeder extends Seeder
         $this->createSampleTransactions();
     }
 
-    private function createSampleTransactions()
+    private function createSampleTransactions(): void
     {
         // This method can be expanded to create sample sales, purchases, etc.
         // For now, we'll just log that this step is available for future enhancement
@@ -89,7 +89,7 @@ class ComprehensiveDataSeeder extends Seeder
     }
 
     /** Get seeding statistics */
-    public function getStatistics()
+    public function getStatistics(): array
     {
         $stats = [
             'categories' => DB::table('categories')->count(),
@@ -104,7 +104,7 @@ class ComprehensiveDataSeeder extends Seeder
         $this->command->info('Seeding Statistics:');
 
         foreach ($stats as $table => $count) {
-            $this->command->info("  {$table}: {$count} records");
+            $this->command->info(sprintf('  %s: %d records', $table, $count));
         }
 
         return $stats;

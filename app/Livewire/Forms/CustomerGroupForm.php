@@ -15,5 +15,5 @@ class CustomerGroupForm extends Form
     public string $name = '';
 
     #[Validate('required', message: 'The percentage field cannot be empty.')]
-    public $percentage;
+    public mixed $percentage;
 }

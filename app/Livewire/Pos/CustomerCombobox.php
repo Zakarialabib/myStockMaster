@@ -69,16 +69,16 @@ class CustomerCombobox extends Component
     #[Computed]
     public function customers(): Collection
     {
-        $query = Customer::query()->select(['id', 'name', 'phone']);
+        $builder = Customer::query()->select(['id', 'name', 'phone']);
 
         if (strlen($this->search) >= 2) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('phone', 'like', '%' . $this->search . '%');
+            $builder->where(function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+                $builder->whereLike('name', '%' . $this->search . '%')
+                    ->orWhereLike('phone', '%' . $this->search . '%');
             });
         }
 
-        return $query->limit(10)->get();
+        return $builder->limit(10)->get();
     }
 
     #[Computed]
@@ -93,7 +93,7 @@ class CustomerCombobox extends Component
         return null;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pos.customer-combobox');
     }

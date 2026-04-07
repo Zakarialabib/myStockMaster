@@ -13,16 +13,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('title')->nullable();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(true);
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('categories', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('code')->unique();
+            $blueprint->string('name');
+            $blueprint->string('description')->nullable();
+            $blueprint->string('title')->nullable();
+            $blueprint->string('image')->nullable();
+            $blueprint->boolean('status')->default(true);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

@@ -44,14 +44,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Adjustment withoutTrashed()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Adjustment extends Model
 {
-    protected $casts = [
-        'date' => 'date',
-    ];
-
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
     use SoftDeletes;
 
@@ -64,20 +62,23 @@ class Adjustment extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
     /** Get ajustement date attribute */
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => Carbon::parse($value)->format('d M, Y'),
+            get: static fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -86,6 +87,9 @@ class Adjustment extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(
@@ -94,18 +98,29 @@ class Adjustment extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\AdjustedProduct, $this>
+     */
     public function adjustedProducts(): HasMany
     {
         return $this->hasMany(AdjustedProduct::class, 'adjustment_id', 'id');
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
         static::creating(static function ($model): void {
-            $number = Adjustment::max('id') + 1;
+            $number = Adjustment::query()->max('id') + 1;
             $model->reference = make_reference_id('ADJ', $number);
         });
+    }
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }

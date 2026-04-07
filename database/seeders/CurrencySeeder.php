@@ -44,7 +44,7 @@ class CurrencySeeder extends Seeder
         ];
 
         foreach ($currencies as $currency) {
-            Currency::create($currency);
+            Currency::query()->create($currency);
         }
     }
 }

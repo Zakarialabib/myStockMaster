@@ -53,11 +53,11 @@ class MaintenanceMode extends Component
 
         Setting::set('site_maintenance_secret', $this->secret);
 
-        UnderMaintenanceJob::dispatch($this->secret, $this->refresh);
+        dispatch(new \App\Jobs\UnderMaintenanceJob($this->secret, $this->refresh));
 
         $this->alert('success', implode(' ', ['status' => $this->status ? __('System turned on') : __('System turned off')]));
 
-        return redirect()->route('front.index', ['secret' => $this->secret]);
+        return to_route('front.index', ['secret' => $this->secret]);
         // Send email notification
         // Mail::to($user)->send(new MaintenanceModeNotification(false));
     }
@@ -75,7 +75,7 @@ class MaintenanceMode extends Component
         // Mail::to($user)->send(new MaintenanceModeNotification(true));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.settings.maintenance-mode');
     }

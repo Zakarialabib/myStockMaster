@@ -10,7 +10,7 @@ class SupplierService
 {
     public function create(array $data): Supplier
     {
-        return Supplier::create($data);
+        return Supplier::query()->create($data);
     }
 
     public function update(Supplier $supplier, array $data): Supplier

@@ -15,16 +15,16 @@ class CatalogPrint extends Component
 {
     use WithAlert;
 
-    public $data;
+    public mixed $data;
 
     public $entity = 'Catalogue des produits Tahe Cosmetics';
 
-    public function mount()
+    public function mount(): void
     {
-        $this->data = Product::select('id', 'name')->get();
+        $this->data = Product::query()->select('id', 'name')->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('Product_show'), 403);
 

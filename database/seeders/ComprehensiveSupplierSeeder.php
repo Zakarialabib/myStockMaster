@@ -23,7 +23,7 @@ class ComprehensiveSupplierSeeder extends Seeder
         $this->createLocalSuppliers();
     }
 
-    private function createManufacturingSuppliers()
+    private function createManufacturingSuppliers(): void
     {
         $manufacturingSuppliers = [
             [
@@ -78,12 +78,12 @@ class ComprehensiveSupplierSeeder extends Seeder
             ],
         ];
 
-        foreach ($manufacturingSuppliers as $supplier) {
-            $this->createSupplier($supplier);
+        foreach ($manufacturingSuppliers as $manufacturingSupplier) {
+            $this->createSupplier($manufacturingSupplier);
         }
     }
 
-    private function createDistributionSuppliers()
+    private function createDistributionSuppliers(): void
     {
         $distributionSuppliers = [
             [
@@ -128,12 +128,12 @@ class ComprehensiveSupplierSeeder extends Seeder
             ],
         ];
 
-        foreach ($distributionSuppliers as $supplier) {
-            $this->createSupplier($supplier);
+        foreach ($distributionSuppliers as $distributionSupplier) {
+            $this->createSupplier($distributionSupplier);
         }
     }
 
-    private function createServiceSuppliers()
+    private function createServiceSuppliers(): void
     {
         $serviceSuppliers = [
             [
@@ -168,12 +168,12 @@ class ComprehensiveSupplierSeeder extends Seeder
             ],
         ];
 
-        foreach ($serviceSuppliers as $supplier) {
-            $this->createSupplier($supplier);
+        foreach ($serviceSuppliers as $serviceSupplier) {
+            $this->createSupplier($serviceSupplier);
         }
     }
 
-    private function createInternationalSuppliers()
+    private function createInternationalSuppliers(): void
     {
         $internationalSuppliers = [
             [
@@ -228,12 +228,12 @@ class ComprehensiveSupplierSeeder extends Seeder
             ],
         ];
 
-        foreach ($internationalSuppliers as $supplier) {
-            $this->createSupplier($supplier);
+        foreach ($internationalSuppliers as $internationalSupplier) {
+            $this->createSupplier($internationalSupplier);
         }
     }
 
-    private function createLocalSuppliers()
+    private function createLocalSuppliers(): void
     {
         $localSuppliers = [
             [
@@ -278,8 +278,8 @@ class ComprehensiveSupplierSeeder extends Seeder
             ],
         ];
 
-        foreach ($localSuppliers as $supplier) {
-            $this->createSupplier($supplier);
+        foreach ($localSuppliers as $localSupplier) {
+            $this->createSupplier($localSupplier);
         }
 
         // Create additional random local suppliers
@@ -302,7 +302,7 @@ class ComprehensiveSupplierSeeder extends Seeder
         }
     }
 
-    private function createSupplier($supplierData)
+    private function createSupplier(array $supplierData): void
     {
         $supplierId = (string) Str::uuid();
 
@@ -322,7 +322,7 @@ class ComprehensiveSupplierSeeder extends Seeder
         DB::table('suppliers')->insertOrIgnore($supplier);
     }
 
-    private function generateTaxNumber($country)
+    private function generateTaxNumber(string $country): string
     {
         $formats = [
             'USA' => 'US-' . fake()->numerify('##-#######'),

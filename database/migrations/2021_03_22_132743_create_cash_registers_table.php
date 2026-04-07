@@ -14,15 +14,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cash_registers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
-            $table->decimal('cash_in_hand', 8, 2);
-            $table->decimal('recieved', 8, 2)->nullable();
-            $table->decimal('sent', 8, 2)->nullable();
-            $table->boolean('status');
-            $table->timestamps();
+        Schema::create('cash_registers', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignIdFor(App\Models\User::class)->constrained()->cascadeOnDelete();
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->constrained()->restrictOnDelete();
+            $blueprint->decimal('cash_in_hand', 8, 2);
+            $blueprint->decimal('recieved', 8, 2)->nullable();
+            $blueprint->decimal('sent', 8, 2)->nullable();
+            $blueprint->boolean('status');
+            $blueprint->timestamps();
         });
     }
 

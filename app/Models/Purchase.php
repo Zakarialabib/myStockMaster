@@ -82,10 +82,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Purchase withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Purchase withoutTrashed()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Purchase extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $casts = [
         'date' => 'date',
     ];
@@ -113,9 +114,9 @@ class Purchase extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -151,6 +152,7 @@ class Purchase extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -158,16 +160,25 @@ class Purchase extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchaseDetail, $this>
+     */
     public function purchaseDetails(): HasMany
     {
         return $this->hasMany(PurchaseDetail::class, 'purchase_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchasePayment, $this>
+     */
     public function purchasePayments(): HasMany
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Supplier, $this>
+     */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(
@@ -176,6 +187,9 @@ class Purchase extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -184,43 +198,43 @@ class Purchase extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($purchase) {
+        static::creating(function ($purchase): void {
             $prefix = settings()->purchase_prefix;
 
-            $latestPurchase = self::latest()->first();
+            $latestPurchase = self::query()->latest()->first();
 
-            if ($latestPurchase) {
-                $number = intval(substr($latestPurchase->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestPurchase ? intval(substr((string) $latestPurchase->reference, -3)) + 1 : 1;
 
             $purchase->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
     /** @param mixed $query */
-    public function scopePending($query)
+    protected function scopePending(mixed $query)
     {
         return $query->whereStatus(PurchaseStatus::PENDING);
     }
 
     /** @param mixed $query */
-    public function scopeCompleted($query)
+    protected function scopeCompleted(mixed $query)
     {
         return $query->whereStatus(PurchaseStatus::COMPLETED);
     }
 
-    public function scopeThisMonth($query)
+    protected function scopeThisMonth(mixed $query)
     {
         return $query->whereMonth('date', now()->month);
     }
@@ -229,7 +243,7 @@ class Purchase extends Model
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -237,7 +251,7 @@ class Purchase extends Model
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -245,7 +259,7 @@ class Purchase extends Model
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -253,7 +267,7 @@ class Purchase extends Model
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -261,7 +275,7 @@ class Purchase extends Model
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -269,13 +283,13 @@ class Purchase extends Model
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
-    public function scopeSearchByReference($query, $term)
+    protected function scopeSearchByReference(mixed $query, mixed $term)
     {
-        return $query->when(! empty($term), function ($query) use ($term) {
+        return $query->when(filled($term), function ($query) use ($term): void {
             $query->where('reference', 'like', '%' . $term . '%');
         });
     }

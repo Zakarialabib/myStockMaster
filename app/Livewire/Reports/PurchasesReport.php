@@ -19,27 +19,27 @@ class PurchasesReport extends Component
     use WithAlert;
     use WithPagination;
 
-    public $suppliers;
+    public mixed $suppliers;
 
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public $start_date;
+    public mixed $start_date;
 
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public $end_date;
+    public mixed $end_date;
 
-    public $supplier_id;
+    public mixed $supplier_id;
 
-    public $purchase_status;
+    public mixed $purchase_status;
 
-    public $payment_status;
+    public mixed $payment_status;
 
     public function mount(): void
     {
-        $this->suppliers = Supplier::select(['id', 'name'])->get();
+        $this->suppliers = Supplier::query()->select(['id', 'name'])->get();
         $this->start_date = today()->subDays(30)->format('Y-m-d');
         $this->end_date = today()->format('Y-m-d');
         $this->supplier_id = '';
@@ -47,14 +47,14 @@ class PurchasesReport extends Component
         $this->payment_status = '';
     }
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $purchases = Purchase::whereDate('date', '>=', $this->start_date)
+        $lengthAwarePaginator = Purchase::query()->whereDate('date')
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->supplier_id, fn ($query) => $query->where('supplier_id', $this->supplier_id))
             ->when($this->purchase_status, fn ($query) => $query->where('status', $this->purchase_status))
@@ -62,7 +62,7 @@ class PurchasesReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.purchases-report', [
-            'purchases' => $purchases,
+            'purchases' => $lengthAwarePaginator,
         ]);
     }
 

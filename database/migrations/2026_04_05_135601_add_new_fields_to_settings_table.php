@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->string('notification_email')->nullable();
-            $table->string('footer_text')->nullable();
-            $table->boolean('is_ecommerce_active')->default(false);
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->string('notification_email')->nullable();
+            $blueprint->string('footer_text')->nullable();
+            $blueprint->boolean('is_ecommerce_active')->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn(['notification_email', 'footer_text', 'is_ecommerce_active']);
+        Schema::table('settings', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn(['notification_email', 'footer_text', 'is_ecommerce_active']);
         });
     }
 };

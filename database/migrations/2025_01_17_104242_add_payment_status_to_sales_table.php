@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->string('payment_status')->default('pending')->after('status');
+        Schema::table('sales', function (Blueprint $blueprint): void {
+            $blueprint->string('payment_status')->default('pending')->after('status');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sales', function (Blueprint $table) {
-            $table->dropColumn('payment_status');
+        Schema::table('sales', function (Blueprint $blueprint): void {
+            $blueprint->dropColumn('payment_status');
         });
     }
 };

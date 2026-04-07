@@ -25,39 +25,39 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $salereturn;
+    public mixed $salereturn;
 
-    public $model = SaleReturn::class;
+    public string $model = SaleReturn::class;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $importModal = false;
+    public bool $importModal = false;
 
-    public $paymentModal = false;
+    public bool $paymentModal = false;
 
-    public $salereturn_id;
+    public mixed $salereturn_id;
 
-    public $reference;
+    public mixed $reference;
 
-    public $total_amount;
+    public mixed $total_amount;
 
-    public $due_amount;
+    public mixed $due_amount;
 
-    public $paid_amount;
+    public mixed $paid_amount;
 
     #[Validate('required|date')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('required|numeric')]
-    public $amount;
+    public mixed $amount;
 
     #[Validate('required|string|max:255')]
-    public $payment_method;
+    public mixed $payment_method;
 
     #[Validate('nullable|string|max:1000')]
-    public $note = null;
+    public mixed $note;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('sale_access'), 403);
 
@@ -77,7 +77,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_access'), 403);
 
-        $this->salereturn = SaleReturn::find($salereturn->id);
+        $this->salereturn = SaleReturn::query()->find($salereturn->id);
 
         $this->showModal = true;
     }
@@ -86,7 +86,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('sale_delete'), 403);
 
-        SaleReturn::whereIn('id', $this->selected)->delete();
+        SaleReturn::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }
@@ -119,7 +119,7 @@ class Index extends Component
         try {
             $this->validate();
 
-            SaleReturnPayment::create([
+            SaleReturnPayment::query()->create([
                 'date' => $this->date,
                 'amount' => $this->amount,
                 'note' => $this->note ?? null,
@@ -128,7 +128,7 @@ class Index extends Component
                 // 'user_id'        => Auth::user()->id,
             ]);
 
-            $salereturn = SaleReturn::findOrFail($this->salereturn_id);
+            $salereturn = SaleReturn::query()->findOrFail($this->salereturn_id);
 
             $due_amount = $salereturn->due_amount - $this->amount;
 

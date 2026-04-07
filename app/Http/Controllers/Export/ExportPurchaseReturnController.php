@@ -13,8 +13,8 @@ class ExportPurchaseReturnController extends Controller
 {
     public function __invoke(int|string $id): Response
     {
-        $purchaseReturn = PurchaseReturn::where('id', $id)->firstOrFail();
-        $supplier = Supplier::where('id', $purchaseReturn->supplier->id)->firstOrFail();
+        $purchaseReturn = PurchaseReturn::query()->where('id', $id)->firstOrFail();
+        $supplier = Supplier::query()->where('id', $purchaseReturn->supplier->id)->firstOrFail();
 
         $data = [
             'purchase_return' => $purchaseReturn,

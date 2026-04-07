@@ -25,10 +25,10 @@ use Illuminate\Support\Facades\Log;
  * Ensure all notification channels are properly configured before use.
  * Handle notification failures gracefully to avoid blocking sale processing.
  */
-final class NotifySaleStatusChangeAction
+final readonly class NotifySaleStatusChangeAction
 {
     public function __construct(
-        private readonly NotificationService $notificationService,
+        private NotificationService $notificationService,
     ) {}
 
     public function __invoke(Sale $sale, SaleStatus $newStatus, ?SaleStatus $oldStatus = null): void
@@ -62,43 +62,32 @@ final class NotifySaleStatusChangeAction
                 'old_status' => $oldStatus?->value,
                 'new_status' => $newStatus->value,
             ]);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Failed to send sale status change notifications', [
                 'order_id' => $sale->id,
                 'new_status' => $newStatus->value,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
     }
 
-    private function sendSMSStatusUpdate(Sale $sale, SaleStatus $status): void
-    {
-        $message = match ($status) {
-            SaleStatus::SHIPPED => "Your sale #{$sale->reference} has been shipped!",
-            SaleStatus::COMPLETED => "Your sale #{$sale->reference} has been completed. Thank you!",
-            default => "Your sale #{$sale->reference} status: {$status->value}",
-        };
-
-        $this->notificationService->sendSmsNotification($sale->customer_phone, $message);
-    }
-
-    private function sendEmailStatusUpdate(Sale $sale, SaleStatus $status): void
+    private function sendEmailStatusUpdate(Sale $sale, SaleStatus $saleStatus): void
     {
         // This would typically use a specific notification class for emails
         Log::info('Email status update sent', [
             'order_id' => $sale->id,
             'email' => $sale->customer_email,
-            'status' => $status->value,
+            'status' => $saleStatus->value,
         ]);
     }
 
-    private function sendPushNotificationStatusUpdate(Sale $sale, SaleStatus $status): void
+    private function sendPushNotificationStatusUpdate(Sale $sale, SaleStatus $saleStatus): void
     {
         // This would integrate with push notification service
         $this->notificationService->sendRealTimeNotification('sale-updates', [
             'order_id' => $sale->id,
-            'status' => $status->value,
-            'message' => "Sale #{$sale->reference} is now {$status->value}",
+            'status' => $saleStatus->value,
+            'message' => sprintf('Sale #%s is now %s', $sale->reference, $saleStatus->value),
         ]);
     }
 }

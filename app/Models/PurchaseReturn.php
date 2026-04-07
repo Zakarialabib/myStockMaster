@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseReturn extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -33,9 +34,9 @@ class PurchaseReturn extends Model
         'supplier_id',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -67,6 +68,7 @@ class PurchaseReturn extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -74,7 +76,7 @@ class PurchaseReturn extends Model
         ];
     }
 
-    /** @return HasMany<PurchaseReturnDetail> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchaseReturnDetail, $this> */
     public function purchaseReturnDetails(): HasMany
     {
         return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
@@ -103,11 +105,17 @@ class PurchaseReturn extends Model
         ]);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchaseReturnPayment, $this>
+     */
     public function purchaseReturnPayments(): HasMany
     {
         return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Supplier, $this>
+     */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(
@@ -116,25 +124,25 @@ class PurchaseReturn extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($purchaseReturn) {
+        static::creating(function ($purchaseReturn): void {
             $prefix = settings()->purchaseReturn_prefix;
 
-            $latestPurchaseReturn = self::latest()->first();
+            $latestPurchaseReturn = self::query()->latest()->first();
 
-            if ($latestPurchaseReturn) {
-                $number = intval(substr($latestPurchaseReturn->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestPurchaseReturn ? intval(substr((string) $latestPurchaseReturn->reference, -3)) + 1 : 1;
 
             $purchaseReturn->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
@@ -145,7 +153,8 @@ class PurchaseReturn extends Model
      *
      * @return mixed
      */
-    public function scopeCompleted($query)
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function completed(mixed $query)
     {
         return $query->whereStatus(2);
     }
@@ -158,7 +167,7 @@ class PurchaseReturn extends Model
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -168,7 +177,7 @@ class PurchaseReturn extends Model
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -178,7 +187,7 @@ class PurchaseReturn extends Model
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -188,7 +197,7 @@ class PurchaseReturn extends Model
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -198,14 +207,14 @@ class PurchaseReturn extends Model
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 }

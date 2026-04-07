@@ -22,32 +22,32 @@ class Edit extends Component
     use WithFileUploads;
     use WithModels;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
-    public $expense;
+    public mixed $expense;
 
     public ExpenseForm $form;
 
     #[Computed]
     public function expenseCategories()
     {
-        return ExpenseCategory::select('name', 'id')->get();
+        return ExpenseCategory::query()->select('name', 'id')->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.expense.edit');
     }
 
     #[On('editModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
         abort_if(Gate::denies('expense_update'), 403);
 
         $this->resetErrorBag();
         $this->resetValidation();
 
-        $this->expense = Expense::find($id);
+        $this->expense = Expense::query()->find($id);
 
         $this->form->reference = $this->expense->reference;
         $this->form->category_id = $this->expense->category_id;

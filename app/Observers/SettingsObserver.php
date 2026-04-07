@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class SettingsObserver
 {
-    /**
-     * @return void
-     */
-    public function updated(Setting $settings)
+    public function updated(Setting $setting): void
     {
         // Refresh the cached list of settings
         Cache::forget('settings');

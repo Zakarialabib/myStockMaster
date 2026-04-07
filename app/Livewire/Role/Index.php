@@ -16,26 +16,26 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public $model = Role::class;
+    public string $model = Role::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $query = Role::advancedFilter([
+        $query = Role::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $roles = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.role.index', ['roles' => $roles]);
+        return view('livewire.role.index', ['roles' => $lengthAwarePaginator]);
     }
 
     public function deleteSelected(): void
     {
         abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        Role::whereIn('id', $this->selected)->delete();
+        Role::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

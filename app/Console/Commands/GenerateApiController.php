@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 
 class GenerateApiController extends Command
 {
+    public $controller;
+    public $model;
+    public $resource;
     /**
      * The name and signature of the console command.
      *
@@ -29,10 +32,8 @@ class GenerateApiController extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): void
     {
         $this->controller = $this->getControllerName();
         $this->model = $this->getModelName();
@@ -96,10 +97,10 @@ class GenerateApiController extends Command
         $this->createDirectoryIfNeeded(dirname($path));
 
         // Initialize the $file property
-        $file = new Filesystem;
+        $filesystem = new Filesystem;
 
         // Check if the class file already exists
-        if ($file->exists($path)) {
+        if ($filesystem->exists($path)) {
             $this->info('Class file already exists: ' . $this->controller);
             $this->info('Skipping class file creation.');
 
@@ -116,7 +117,7 @@ class GenerateApiController extends Command
         );
 
         // Write the API Controller class file
-        $file->put($path, $stubContents);
+        $filesystem->put($path, $stubContents);
 
         $this->info('API Controller class file generated successfully: ' . $path);
     }
@@ -139,10 +140,8 @@ class GenerateApiController extends Command
      * Gets the namespace from a fully qualified class name.
      *
      * @param string $controller
-     *
-     * @return string
      */
-    protected function getNamespace($controller)
+    protected function getNamespace($controller): string
     {
         return implode('\\', array_slice(explode('\\', $controller), 0, -1));
     }

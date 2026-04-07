@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('email_templates', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->text('message')->nullable();
-            $table->text('default')->nullable();
-            $table->json('placeholders')->nullable();
-            $table->string('type')->nullable();
-            $table->string('subject')->nullable();
-            $table->string('status')->default(true);
-            $table->timestamps();
+        Schema::create('email_templates', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->string('name');
+            $blueprint->text('description')->nullable();
+            $blueprint->text('message')->nullable();
+            $blueprint->text('default')->nullable();
+            $blueprint->json('placeholders')->nullable();
+            $blueprint->string('type')->nullable();
+            $blueprint->string('subject')->nullable();
+            $blueprint->string('status')->default(true);
+            $blueprint->timestamps();
         });
     }
 

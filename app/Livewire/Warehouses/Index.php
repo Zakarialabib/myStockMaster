@@ -23,14 +23,14 @@ class Index extends Component
     use WithFileUploads;
 
     /** @var mixed */
-    public $warehouse;
+    public mixed $warehouse;
 
     /** @var bool */
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $model = Warehouse::class;
+    public string $model = Warehouse::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('warehouse_access'), 403);
 
@@ -50,7 +50,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_show'), 403);
 
-        $this->warehouse = Warehouse::find($warehouse->id);
+        $this->warehouse = Warehouse::query()->find($warehouse->id);
 
         $this->showModal = true;
     }
@@ -73,7 +73,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('warehouse_delete'), 403);
 
-        Warehouse::whereIn('id', $this->selected)->delete();
+        Warehouse::query()->whereIn('id', $this->selected)->delete();
 
         $deletedCount = count($this->selected);
 

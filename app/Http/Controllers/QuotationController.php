@@ -14,14 +14,14 @@ class QuotationController extends Controller
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
-        return redirect()->route('quotations.index');
+        return to_route('quotations.index');
     }
 
     public function show(Quotation $quotation): RedirectResponse
     {
         abort_if(Gate::denies('quotation_access'), 403);
 
-        return redirect()->route('quotation.edit', ['id' => $quotation->id]);
+        return to_route('quotation.edit', ['id' => $quotation->id]);
     }
 
     public function destroy(Quotation $quotation): RedirectResponse
@@ -32,6 +32,6 @@ class QuotationController extends Controller
 
         // toast('Quotation Deleted!', 'warning');
 
-        return redirect()->route('quotations.index');
+        return to_route('quotations.index');
     }
 }

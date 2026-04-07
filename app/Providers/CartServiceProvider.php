@@ -15,21 +15,19 @@ use Illuminate\Support\ServiceProvider;
 class CartServiceProvider extends ServiceProvider
 {
     /** Register services. */
+    #[\Override]
     public function register(): void
     {
-        $this->app->singleton('cart', function ($app) {
-            return new CartService;
-        });
+        $this->app->singleton('cart', fn($app) => new CartService);
 
-        $this->app->bind(CartService::class, function ($app) {
-            return $app->make('cart');
-        });
+        $this->app->bind(fn($app): \App\Services\CartService => $app->make('cart'));
     }
 
     /** Bootstrap services. */
     public function boot(): void {}
 
     /** Get the services provided by the provider. */
+    #[\Override]
     public function provides(): array
     {
         return ['cart', CartService::class];

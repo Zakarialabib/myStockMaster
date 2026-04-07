@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property \Illuminate\Support\Carbon|null $read_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|Eloquent $notifiable
+ * @property-read Model|\Illuminate\Database\Eloquent\Model $notifiable
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newQuery()
@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Notification extends Model
 {
@@ -54,6 +54,7 @@ class Notification extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -103,13 +104,13 @@ class Notification extends Model
     }
 
     /** Scope a query to only include unread notifications. */
-    public function scopeUnread($query)
+    protected function scopeUnread(mixed $query)
     {
         return $query->whereNull('read_at');
     }
 
     /** Scope a query to only include read notifications. */
-    public function scopeRead($query)
+    protected function scopeRead(mixed $query)
     {
         return $query->whereNotNull('read_at');
     }

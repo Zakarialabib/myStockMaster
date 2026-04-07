@@ -16,38 +16,38 @@ class Highlighted extends Component
 {
     use WithAlert;
 
-    public $product;
+    public mixed $product;
 
-    public $hot;
+    public mixed $hot;
 
-    public $featured;
+    public mixed $featured;
 
-    public $best;
+    public mixed $best;
 
-    public $top;
+    public mixed $top;
 
-    public $latest;
+    public mixed $latest;
 
-    public $big;
+    public mixed $big;
 
-    public $trending;
+    public mixed $trending;
 
-    public $sale;
+    public mixed $sale;
 
-    public $is_discount;
+    public mixed $is_discount;
 
-    public $discount_date;
+    public mixed $discount_date;
 
-    public $highlightModal = false;
+    public bool $highlightModal = false;
 
     #[On('highlightModal')]
-    public function highlightModal($id): void
+    public function highlightModal(mixed $id): void
     {
         $this->resetErrorBag();
 
         $this->resetValidation();
 
-        $this->product = Product::findOrFail($id);
+        $this->product = Product::query()->findOrFail($id);
 
         $this->highlightModal = true;
     }

@@ -11,17 +11,15 @@ class ExpenseCategoryService
 {
     public function create(array $data): ExpenseCategory
     {
-        return DB::transaction(function () use ($data) {
-            return ExpenseCategory::create($data);
-        });
+        return DB::transaction(fn() => ExpenseCategory::query()->create($data));
     }
 
-    public function update(ExpenseCategory $category, array $data): ExpenseCategory
+    public function update(ExpenseCategory $expenseCategory, array $data): ExpenseCategory
     {
-        return DB::transaction(function () use ($category, $data) {
-            $category->update($data);
+        return DB::transaction(function () use ($expenseCategory, $data): \App\Models\ExpenseCategory {
+            $expenseCategory->update($data);
 
-            return $category;
+            return $expenseCategory;
         });
     }
 }

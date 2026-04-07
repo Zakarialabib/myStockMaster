@@ -24,20 +24,17 @@ class CartService
 
     protected string $sessionKey;
 
-    protected string $instanceName;
-
     protected array $config;
 
     protected static array $instances = [];
 
-    public function __construct(string $instanceName = 'default')
+    public function __construct(protected string $instanceName = 'default')
     {
-        $this->instanceName = $instanceName;
-        $this->sessionKey = 'cart_' . $instanceName;
+        $this->sessionKey = 'cart_' . $this->instanceName;
         $this->config = config('cart', []);
 
         // Configure storage based on instance context
-        $this->configureStorageForInstance($instanceName);
+        $this->configureStorageForInstance($this->instanceName);
     }
 
     /** Get or create a cart instance */
@@ -53,46 +50,28 @@ class CartService
     /** Configure storage strategy based on instance context */
     protected function configureStorageForInstance(string $instanceName): void
     {
-        switch (strtolower($instanceName)) {
-            case 'pos':
-            case 'sale':
-                // POS needs fast access, use session + cache
-                $this->setPrimaryStorage('session')
-                    ->setSecondaryStorage('cache')
-                    ->setHybridStorage(true)
-                    ->setCacheDuration(60); // 1 hour for POS sessions
-
-                break;
-
-            case 'purchase':
-            case 'purchases':
-                // Purchases might need longer persistence
-                $this->setPrimaryStorage('session')
-                    ->setSecondaryStorage('cache')
-                    ->setHybridStorage(true)
-                    ->setCacheDuration(480); // 8 hours for purchase sessions
-
-                break;
-
-            case 'quote':
-            case 'quotation':
-                // Quotes need longer persistence, use cache + database
-                $this->setPrimaryStorage('cache')
-                    ->setSecondaryStorage('database')
-                    ->setHybridStorage(true)
-                    ->setCacheDuration(1440); // 24 hours
-
-                break;
-
-            default:
-                // Default: session + cache hybrid
-                $this->setPrimaryStorage('session')
-                    ->setSecondaryStorage('cache')
-                    ->setHybridStorage(true)
-                    ->setCacheDuration(720); // 12 hours
-
-                break;
-        }
+        match (strtolower($instanceName)) {
+            // POS needs fast access, use session + cache
+            'pos', 'sale' => $this->setPrimaryStorage('session')
+                ->setSecondaryStorage('cache')
+                ->setHybridStorage(true)
+                ->setCacheDuration(60),
+            // Purchases might need longer persistence
+            'purchase', 'purchases' => $this->setPrimaryStorage('session')
+                ->setSecondaryStorage('cache')
+                ->setHybridStorage(true)
+                ->setCacheDuration(480),
+            // Quotes need longer persistence, use cache + database
+            'quote', 'quotation' => $this->setPrimaryStorage('cache')
+                ->setSecondaryStorage('database')
+                ->setHybridStorage(true)
+                ->setCacheDuration(1440),
+            // Default: session + cache hybrid
+            default => $this->setPrimaryStorage('session')
+                ->setSecondaryStorage('cache')
+                ->setHybridStorage(true)
+                ->setCacheDuration(720),
+        };
     }
 
     /** Configure storage for Livewire components */
@@ -105,21 +84,11 @@ class CartService
             ->setHybridStorage(true);
 
         // Adjust cache duration based on component type
-        switch (strtolower($componentType)) {
-            case 'pos':
-                $this->setCacheDuration(60); // Short duration for POS
-
-                break;
-            case 'sales':
-            case 'purchases':
-                $this->setCacheDuration(240); // 4 hours for sales/purchases
-
-                break;
-            default:
-                $this->setCacheDuration(120); // 2 hours default
-
-                break;
-        }
+        match (strtolower($componentType)) {
+            'pos' => $this->setCacheDuration(60),
+            'sales', 'purchases' => $this->setCacheDuration(240),
+            default => $this->setCacheDuration(120),
+        };
 
         return $this;
     }
@@ -203,7 +172,7 @@ class CartService
 
         // Update allowed fields
         foreach ($data as $key => $value) {
-            if (in_array($key, ['quantity', 'price', 'name', 'attributes'])) {
+            if (in_array($key, ['quantity', 'price', 'name', 'attributes'], true)) {
                 $item[$key] = $value;
             }
         }
@@ -274,12 +243,9 @@ class CartService
     /** Get cart content (alias for getContent) */
     public function content(): Collection
     {
-        return $this->getContent()->filter(function ($item, $rowId) {
+        return $this->getContent()->filter(
             // Filter out global settings (they are not arrays)
-            return is_array($item) && isset($item['id']);
-        })->map(function ($item, $rowId) {
-            return new CartItem($item, $rowId);
-        });
+            fn($item, $rowId) => is_array($item) && isset($item['id']))->map(fn($item, $rowId) => new CartItem($item, $rowId));
     }
 
     /** Get cart subtotal (alias for getSubTotal) */
@@ -339,12 +305,9 @@ class CartService
     /** Search for items in the cart */
     public function search(callable $callback): Collection
     {
-        return $this->getContent()->filter(function ($item, $rowId) {
+        return $this->getContent()->filter(
             // Filter out global settings (they are not arrays)
-            return is_array($item) && isset($item['id']);
-        })->map(function ($item, $rowId) {
-            return new CartItem($item, $rowId);
-        })->filter($callback);
+            fn($item, $rowId) => is_array($item) && isset($item['id']))->map(fn($item, $rowId) => new CartItem($item, $rowId))->filter($callback);
     }
 
     /** Associate a model with cart items */
@@ -453,10 +416,8 @@ class CartService
         // Required fields validation
         $requiredFields = ['id', 'name', 'price'];
 
-        foreach ($requiredFields as $field) {
-            if (! isset($item[$field])) {
-                throw new CartException("Missing required field: {$field}", 400);
-            }
+        foreach ($requiredFields as $requiredField) {
+            throw_unless(isset($item[$requiredField]), CartException::class, 'Missing required field: ' . $requiredField, 400);
         }
 
         // Validate quantity
@@ -466,51 +427,37 @@ class CartService
         // $this->validateProductAvailability($item['id']);
 
         // Validate price
-        if (! is_numeric($item['price']) || $item['price'] < 0) {
-            throw new CartException('Price must be a positive number', 400);
-        }
+        throw_if(! is_numeric($item['price']) || $item['price'] < 0, CartException::class, 'Price must be a positive number', 400);
     }
 
     /** Validate quantity */
     protected function validateQuantity($quantity): void
     {
-        if ($quantity <= 0) {
-            throw new InvalidQuantityException($quantity, 'Quantity must be greater than zero');
-        }
+        throw_if($quantity <= 0, InvalidQuantityException::class, $quantity, 'Quantity must be greater than zero');
 
-        if ($quantity > 10000) {
-            throw new InvalidQuantityException($quantity, 'Quantity cannot exceed 10,000 items');
-        }
+        throw_if($quantity > 10000, InvalidQuantityException::class, $quantity, 'Quantity cannot exceed 10,000 items');
     }
 
     /** Validate product availability */
     protected function validateProductAvailability(int $productId): void
     {
-        $product = Product::find($productId);
+        $product = Product::query()->find($productId);
 
-        if (! $product) {
-            throw new ProductNotAvailableException($productId, 'Product not found');
-        }
+        throw_unless($product, ProductNotAvailableException::class, $productId, 'Product not found');
 
-        if ($product->status === false || $product->status === 0) {
-            throw new ProductNotAvailableException($productId, 'Product is not active');
-        }
+        throw_if($product->status === false || $product->status === 0, ProductNotAvailableException::class, $productId, 'Product is not active');
 
-        if (isset($product->availability) && $product->availability === 'unavailable') {
-            throw new ProductNotAvailableException($productId, 'Product is marked as unavailable');
-        }
+        throw_if(isset($product->availability) && $product->availability === 'unavailable', ProductNotAvailableException::class, $productId, 'Product is marked as unavailable');
     }
 
     /** Validate stock availability */
     protected function validateStock(int $productId, int $warehouseId, int $requestedQuantity): void
     {
-        $productWarehouse = ProductWarehouse::where('product_id', $productId)
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
             ->where('warehouse_id', $warehouseId)
             ->first();
 
-        if (! $productWarehouse) {
-            throw new InsufficientStockException($productId, $warehouseId, $requestedQuantity, 0);
-        }
+        throw_unless($productWarehouse, InsufficientStockException::class, $productId, $warehouseId, $requestedQuantity, 0);
 
         if ($productWarehouse->qty < $requestedQuantity) {
             throw new InsufficientStockException(
@@ -549,10 +496,10 @@ class CartService
             ]);
 
             // TODO: Implement actual cleanup logic based on storage type
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Cart cleanup failed', [
                 'instance' => $this->instanceName,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
         }
 
@@ -563,7 +510,7 @@ class CartService
     public function getCartStatistics(): array
     {
         $content = $this->getContent();
-        $items = $content->filter(fn ($item) => is_array($item) && isset($item['id']));
+        $items = $content->filter(fn ($item): bool => is_array($item) && isset($item['id']));
 
         return [
             'total_items' => $items->count(),

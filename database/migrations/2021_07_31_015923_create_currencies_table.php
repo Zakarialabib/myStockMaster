@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
-            $table->id();
+        Schema::create('currencies', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->string('name');
-            $table->string('code');
-            $table->string('locale');
+            $blueprint->string('name');
+            $blueprint->string('code');
+            $blueprint->string('locale');
 
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

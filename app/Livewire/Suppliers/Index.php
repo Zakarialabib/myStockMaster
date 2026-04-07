@@ -28,27 +28,27 @@ class Index extends Component
     use WithFileUploads;
 
     /** @var mixed */
-    public $supplier;
+    public mixed $supplier;
 
-    public $file;
+    public mixed $file = null;
 
-    public $model = Supplier::class;
+    public string $model = Supplier::class;
 
     public bool $importModal = false;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        $query = Supplier::advancedFilter([
+        $query = Supplier::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $suppliers = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.suppliers.index', ['suppliers' => $suppliers]);
+        return view('livewire.suppliers.index', ['suppliers' => $lengthAwarePaginator]);
     }
 
     public function delete(Supplier $supplier): void
@@ -64,7 +64,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_delete'), 403);
 
-        Supplier::whereIn('id', $this->selected)->delete();
+        Supplier::query()->whereIn('id', $this->selected)->delete();
 
         $this->selected = [];
     }
@@ -102,7 +102,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('supplier_access'), 403);
 
-        $suppliers = Supplier::whereIn('id', $this->selected)->get();
+        $suppliers = Supplier::query()->whereIn('id', $this->selected)->get();
 
         return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
     }

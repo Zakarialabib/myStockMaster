@@ -11,16 +11,16 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->uuid('user_id')->nullable()->change();
+        Schema::table('sessions', function (Blueprint $blueprint): void {
+            $blueprint->uuid('user_id')->nullable()->change();
         });
     }
 
     /** Reverse the migrations. */
     public function down(): void
     {
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->change();
+        Schema::table('sessions', function (Blueprint $blueprint): void {
+            $blueprint->foreignId('user_id')->nullable()->change();
         });
     }
 };

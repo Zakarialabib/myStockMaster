@@ -19,8 +19,8 @@ class AnalyticsService
     {
         $cacheKey = 'kpi_revenue_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo) {
-            $salesData = Sale::whereBetween('date', [$dateFrom, $dateTo])
+        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo): array {
+            $salesData = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->selectRaw('SUM(total_amount) as total_revenue, COUNT(id) as total_sales')
                 ->first();
 
@@ -29,15 +29,15 @@ class AnalyticsService
 
             $averageOrderValue = $totalSales > 0 ? $totalRevenue / $totalSales : 0;
 
-            $dailyRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            $dailyRevenue = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->selectRaw('DATE(date) as sale_date, SUM(total_amount) as daily_total')
                 ->groupBy('sale_date')
-                ->orderBy('sale_date')
+                ->oldest('sale_date')
                 ->get();
 
             $averageDailyRevenue = $dailyRevenue->avg('daily_total') ?? 0;
 
-            $topProducts = SaleDetails::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+            $topProducts = SaleDetails::query()->join('sales', 'sale_details.sale_id', '=', 'sales.id')
                 ->join('products', 'sale_details.product_id', '=', 'products.id')
                 ->whereBetween('sales.date', [$dateFrom, $dateTo])
                 ->selectRaw('products.name, products.code, SUM(sale_details.price * sale_details.quantity) as total_revenue')
@@ -61,14 +61,14 @@ class AnalyticsService
     {
         $cacheKey = 'kpi_profitability_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo) {
-            $grossMarginAction = new CalculateGrossMarginAction;
-            $grossMarginData = $grossMarginAction($dateFrom, $dateTo);
+        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo): array {
+            $calculateGrossMarginAction = new CalculateGrossMarginAction;
+            $grossMarginData = $calculateGrossMarginAction($dateFrom, $dateTo);
 
-            $totalRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            $totalRevenue = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->sum('total_amount');
 
-            $expensesData = Expense::whereBetween('date', [$dateFrom, $dateTo])
+            $expensesData = Expense::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->selectRaw("SUM(amount) as total_expenses, SUM(CASE WHEN category NOT IN ('depreciation', 'interest') THEN amount ELSE 0 END) as operating_expenses")
                 ->first();
 
@@ -98,10 +98,10 @@ class AnalyticsService
     {
         $cacheKey = 'kpi_efficiency_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo) {
-            $totalProducts = Product::count();
+        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo): array {
+            $totalProducts = Product::query()->count();
 
-            $efficiencyData = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            $efficiencyData = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->leftJoin('sale_details', 'sales.id', '=', 'sale_details.sale_id')
                 ->selectRaw('COUNT(DISTINCT sales.id) as total_sales, COUNT(DISTINCT sale_details.product_id) as active_products')
                 ->first();
@@ -111,12 +111,12 @@ class AnalyticsService
 
             $productTurnoverRate = $totalProducts > 0 ? ($activeSoldProducts / $totalProducts) * 100 : 0;
 
-            $totalCogs = SaleDetails::join('sales', 'sale_details.sale_id', '=', 'sales.id')
+            $totalCogs = SaleDetails::query()->join('sales', 'sale_details.sale_id', '=', 'sales.id')
                 ->join('products', 'sale_details.product_id', '=', 'products.id')
                 ->whereBetween('sales.date', [$dateFrom, $dateTo])
                 ->sum(DB::raw('sale_details.quantity * products.cost'));
 
-            $averageInventoryValue = Product::sum(DB::raw('stock * cost'));
+            $averageInventoryValue = Product::query()->sum(DB::raw('stock * cost'));
             $inventoryTurnover = $averageInventoryValue > 0 ? $totalCogs / $averageInventoryValue : 0;
 
             $daysDiff = $dateFrom->diffInDays($dateTo) + 1;
@@ -138,30 +138,30 @@ class AnalyticsService
     {
         $cacheKey = 'kpi_growth_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo) {
-            $currentRevenue = Sale::whereBetween('date', [$dateFrom, $dateTo])
+        return Cache::remember($cacheKey, 3600, function () use ($dateFrom, $dateTo): array {
+            $currentRevenue = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->sum('total_amount');
 
-            $currentSales = Sale::whereBetween('date', [$dateFrom, $dateTo])
+            $currentSales = Sale::query()->whereBetween('date', [$dateFrom, $dateTo])
                 ->count();
 
             $periodDays = $dateFrom->diffInDays($dateTo);
             $previousDateFrom = $dateFrom->copy()->subDays($periodDays + 1);
             $previousDateTo = $dateFrom->copy()->subDay();
 
-            $previousRevenue = Sale::whereBetween('date', [$previousDateFrom, $previousDateTo])
+            $previousRevenue = Sale::query()->whereBetween('date', [$previousDateFrom, $previousDateTo])
                 ->sum('total_amount');
 
-            $previousSales = Sale::whereBetween('date', [$previousDateFrom, $previousDateTo])
+            $previousSales = Sale::query()->whereBetween('date', [$previousDateFrom, $previousDateTo])
                 ->count();
 
             $yearAgoDateFrom = $dateFrom->copy()->subYear();
             $yearAgoDateTo = $dateTo->copy()->subYear();
 
-            $yearAgoRevenue = Sale::whereBetween('date', [$yearAgoDateFrom, $yearAgoDateTo])
+            $yearAgoRevenue = Sale::query()->whereBetween('date', [$yearAgoDateFrom, $yearAgoDateTo])
                 ->sum('total_amount');
 
-            $yearAgoSales = Sale::whereBetween('date', [$yearAgoDateFrom, $yearAgoDateTo])
+            $yearAgoSales = Sale::query()->whereBetween('date', [$yearAgoDateFrom, $yearAgoDateTo])
                 ->count();
 
             $revenueGrowth = $previousRevenue > 0

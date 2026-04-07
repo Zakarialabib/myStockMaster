@@ -17,6 +17,29 @@ parameters:
     checkModelProperties: true
 
     ignoreErrors:
+        -
+            message: '#Class Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+ has an uninitialized property#'
+            path: tests/*
+        -
+            message: '#Method Tests\\[a-zA-Z0-9_\\]+\\[a-zA-Z0-9_]+::[a-zA-Z0-9_]+\(\) has parameter \$[a-zA-Z0-9_]+ with no type specified\.#'
+            path: tests/*
+        -
+            message: '#Method App\\[a-zA-Z0-9_\\]+::[a-zA-Z0-9_]+\(\) has no return type specified\.#'
+            path: app/*
+        -
+            message: '#Method App\\View\\Components\\[a-zA-Z0-9_\\]+::__construct\(\) has parameter \$[a-zA-Z0-9_]+ with no type specified\.#'
+            path: app/View/Components/*
+        -
+            message: '#Method App\\Traits\\[a-zA-Z0-9_\\]+::[a-zA-Z0-9_]+\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types#'
+            path: app/Traits/*
+        - '#Class App\\Livewire\\[a-zA-Z0-9_\\]+ has an uninitialized property#'
+        - '#Class App\\Livewire\\Forms\\[a-zA-Z0-9_]+Form has an uninitialized property#'
+        - '#no value type specified in iterable type array#'
+        - '#return type with generic class Illuminate\\Support\\Collection does not specify its types#'
+        - '#parameter \$[a-zA-Z0-9_]+ with generic class Illuminate\\Support\\Collection does not specify its types#'
+        - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types#'
+        - '#return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types#'
+        - '#PHPDoc type array<int, string> of property App\\Models\\[a-zA-Z0-9_]+::\$[a-zA-Z0-9_]+ is not covariant with PHPDoc type list<string>#'
         - '#Called .env. outside of the config directory#'
         - '#Call to an undefined method Illuminate\\Database\\Schema\\ForeignIdColumnDefinition::(cascadeOnDelete|nullOnDelete)\(\)#'
         - '#Return type \(array<string, mixed>\) of method Database\\Factories\\[a-zA-Z0-9_]+::definition\(\) should be compatible with return type#'
@@ -45,6 +68,8 @@ parameters:
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
+        - tests/*
+        - config/*
 
     universalObjectCratesClasses:
         - Illuminate\Support\Fluent

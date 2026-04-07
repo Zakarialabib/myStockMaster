@@ -10,6 +10,6 @@ class ProductController extends Controller
 {
     public function __invoke(): RedirectResponse
     {
-        return redirect()->route('products.index');
+        return to_route('products.index');
     }
 }

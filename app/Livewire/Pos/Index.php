@@ -63,7 +63,7 @@ class Index extends Component
         $this->user_id = Auth::user()->id;
 
         if ($this->user_id && $this->form->warehouse_id) {
-            $cashRegister = CashRegister::where('user_id', $this->user_id)
+            $cashRegister = CashRegister::query()->where('user_id', $this->user_id)
                 ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
@@ -84,7 +84,7 @@ class Index extends Component
             return;
         }
 
-        $cashRegister = CashRegister::create([
+        $cashRegister = CashRegister::query()->create([
             'user_id' => $this->user_id,
             'warehouse_id' => $this->form->warehouse_id,
             'cash_in_hand' => 0,
@@ -113,14 +113,14 @@ class Index extends Component
         }
     }
 
-    public function updatedFormPaymentMethod($value): void
+    public function updatedFormPaymentMethod(mixed $value): void
     {
         if ($value === 'cash') {
             $this->form->paid_amount = $this->form->total_amount;
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pos.index', [
             'cart_items' => $this->cartContent,
@@ -137,7 +137,7 @@ class Index extends Component
 
         $this->form->validate();
 
-        $sale = app(StorePosSaleAction::class)(
+        $sale = resolve(StorePosSaleAction::class)(
             [
                 'date' => date('Y-m-d'),
                 'customer_id' => $this->form->customer_id,
@@ -161,10 +161,10 @@ class Index extends Component
         $this->alert('success', __('Sale created successfully!'));
         $this->checkoutModal = false;
 
-        PaymentNotification::dispatch($sale);
+        dispatch(new \App\Jobs\PaymentNotification($sale));
 
         // Dispatch physical print job if applicable
-        PrintReceiptJob::dispatch($sale->id);
+        dispatch(new \App\Jobs\PrintReceiptJob($sale->id));
 
         // Tell browser to open PDF receipt
         $this->dispatch('open-print-window', url: route('sales.pos.pdf', $sale->id));
@@ -175,7 +175,7 @@ class Index extends Component
     #[On('printReceipt')]
     public function printReceipt(string $saleId): void
     {
-        PrintReceiptJob::dispatch($saleId);
+        dispatch(new \App\Jobs\PrintReceiptJob($saleId));
         $this->dispatch('open-print-window', url: route('sales.pos.pdf', $saleId));
     }
 
@@ -204,7 +204,7 @@ class Index extends Component
         $this->clearCart();
     }
 
-    public function updatedFormWarehouseId($value): void
+    public function updatedFormWarehouseId(mixed $value): void
     {
         $this->form->warehouse_id = $value;
         $this->dispatch('warehouseSelected', warehouseId: (int) $value);

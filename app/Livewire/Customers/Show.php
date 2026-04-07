@@ -14,21 +14,21 @@ class Show extends Component
 {
     use WithAlert;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $customer;
+    public mixed $customer;
 
     #[On('showModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         abort_if(Gate::denies('customer_access'), 403);
 
-        $this->customer = Customer::find($id);
+        $this->customer = Customer::query()->find($id);
 
         $this->showModal = true;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.customers.show');
     }

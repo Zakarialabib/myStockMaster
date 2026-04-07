@@ -31,11 +31,11 @@ class HomeController extends Controller
         $currentMonthPurchases = Purchase::whereStatus('Completed')->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
             ->sum('total_amount') / 100;
-        $currentMonthExpenses = Expense::whereMonth('date', date('m'))
+        $currentMonthExpenses = Expense::query()->whereMonth('date', date('m'))
             ->whereYear('date', date('Y'))
             ->sum('amount') / 100;
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'sales' => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
             'expenses' => $currentMonthExpenses,
@@ -46,10 +46,10 @@ class HomeController extends Controller
     {
         abort_if(! request()->ajax(), 404);
 
-        $sales = $this->salesChartData();
+        $jsonResponse = $this->salesChartData();
         $purchases = $this->purchasesChartData();
 
-        return response()->json(['sales' => $sales, 'purchases' => $purchases]);
+        return new \Illuminate\Http\JsonResponse(['sales' => $jsonResponse, 'purchases' => $purchases]);
     }
 
     public function paymentChart(): JsonResponse
@@ -59,13 +59,13 @@ class HomeController extends Controller
         $dates = collect();
 
         foreach (range(-11, 0) as $i) {
-            $date = Carbon::now()->addMonths($i)->format('m-Y');
+            $date = \Illuminate\Support\Facades\Date::now()->addMonths($i)->format('m-Y');
             $dates->put($date, 0);
         }
 
-        $date_range = Carbon::today()->subYear()->format('Y-m-d');
+        $date_range = \Illuminate\Support\Facades\Date::today()->subYear()->format('Y-m-d');
 
-        $sale_payments = SalePayment::where('date', '>=', $date_range)
+        $sale_payments = SalePayment::query()->where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
                 DB::raw('SUM(amount) as amount'),
@@ -73,7 +73,7 @@ class HomeController extends Controller
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
 
-        $sale_return_payments = SaleReturnPayment::where('date', '>=', $date_range)
+        $sale_return_payments = SaleReturnPayment::query()->where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
                 DB::raw('SUM(amount) as amount'),
@@ -81,7 +81,7 @@ class HomeController extends Controller
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
 
-        $purchase_payments = PurchasePayment::where('date', '>=', $date_range)
+        $purchase_payments = PurchasePayment::query()->where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
                 DB::raw('SUM(amount) as amount'),
@@ -89,7 +89,7 @@ class HomeController extends Controller
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
 
-        $purchase_return_payments = PurchaseReturnPayment::where('date', '>=', $date_range)
+        $purchase_return_payments = PurchaseReturnPayment::query()->where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
                 DB::raw('SUM(amount) as amount'),
@@ -97,7 +97,7 @@ class HomeController extends Controller
             ->groupBy('month')->orderBy('month')
             ->get()->pluck('amount', 'month');
 
-        $expenses = Expense::where('date', '>=', $date_range)
+        $expenses = Expense::query()->where('date', '>=', $date_range)
             ->select([
                 DB::raw("DATE_FORMAT(date, '%m-%Y') as month"),
                 DB::raw('SUM(amount) as amount'),
@@ -120,11 +120,11 @@ class HomeController extends Controller
             $months[] = $key;
         }
 
-        foreach ($dates_sent as $key => $value) {
-            $sent_payments[] = $value;
+        foreach ($dates_sent as $date_sent) {
+            $sent_payments[] = $date_sent;
         }
 
-        return response()->json([
+        return new \Illuminate\Http\JsonResponse([
             'payment_sent' => $sent_payments,
             'payment_received' => $received_payments,
             'months' => $months,
@@ -136,11 +136,11 @@ class HomeController extends Controller
         $dates = collect();
 
         foreach (range(-6, 0) as $i) {
-            $date = Carbon::now()->addDays($i)->format('d-m-y');
+            $date = \Illuminate\Support\Facades\Date::now()->addDays($i)->format('d-m-y');
             $dates->put($date, 0);
         }
 
-        $date_range = Carbon::today()->subDays(6);
+        $date_range = \Illuminate\Support\Facades\Date::today()->subDays(6);
 
         $sales = Sale::whereStatus(SaleStatus::COMPLETED)
             ->where('date', '>=', $date_range)
@@ -162,7 +162,7 @@ class HomeController extends Controller
             $days[] = $key;
         }
 
-        return response()->json(['data' => $data, 'days' => $days]);
+        return new \Illuminate\Http\JsonResponse(['data' => $data, 'days' => $days]);
     }
 
     public function purchasesChartData(): JsonResponse
@@ -170,11 +170,11 @@ class HomeController extends Controller
         $dates = collect();
 
         foreach (range(-6, 0) as $i) {
-            $date = Carbon::now()->addDays($i)->format('d-m-y');
+            $date = \Illuminate\Support\Facades\Date::now()->addDays($i)->format('d-m-y');
             $dates->put($date, 0);
         }
 
-        $date_range = Carbon::today()->subDays(6);
+        $date_range = \Illuminate\Support\Facades\Date::today()->subDays(6);
 
         $purchases = Purchase::whereStatus(PurchaseStatus::COMPLETED)
             ->where('date', '>=', $date_range)
@@ -196,13 +196,13 @@ class HomeController extends Controller
             $days[] = $key;
         }
 
-        return response()->json(['data' => $data, 'days' => $days]);
+        return new \Illuminate\Http\JsonResponse(['data' => $data, 'days' => $days]);
     }
 
     public function changeLanguage(string $locale): RedirectResponse
     {
         Cookie::queue('lang', $locale);
 
-        return redirect()->back();
+        return back();
     }
 }

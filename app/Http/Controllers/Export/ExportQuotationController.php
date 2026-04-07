@@ -13,8 +13,8 @@ class ExportQuotationController extends Controller
 {
     public function __invoke(int|string $id): Response
     {
-        $quotation = Quotation::where('id', $id)->firstOrFail();
-        $customer = Customer::where('id', $quotation->customer->id)->firstOrFail();
+        $quotation = Quotation::query()->where('id', $id)->firstOrFail();
+        $customer = Customer::query()->where('id', $quotation->customer->id)->firstOrFail();
 
         $data = [
             'quotation' => $quotation,

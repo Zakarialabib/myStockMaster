@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property array<array-key, mixed>|null    $conditions
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|Eloquent|null $associable
+ * @property-read Model|\Illuminate\Database\Eloquent\Model|null $associable
  * @property-read Cart $cart
  * @property-read mixed $formatted_price
  * @property-read mixed $formatted_price_with_conditions
@@ -50,7 +50,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CartItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CartItem whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class CartItem extends Model
 {
@@ -72,6 +72,7 @@ class CartItem extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -82,7 +83,8 @@ class CartItem extends Model
         ];
     }
 
-    /** Get the cart that owns this item */
+    /** Get the cart that owns this item
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Cart, $this> */
     public function cart(): BelongsTo
     {
         return $this->belongsTo(Cart::class);
@@ -98,7 +100,7 @@ class CartItem extends Model
     protected function subTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->price * $this->quantity,
+            get: fn (): int|float => $this->price * $this->quantity,
         );
     }
 
@@ -109,7 +111,7 @@ class CartItem extends Model
             get: function () {
                 $price = $this->price;
 
-                if (! empty($this->conditions)) {
+                if (filled($this->conditions)) {
                     foreach ($this->conditions as $condition) {
                         $price = $this->applyCondition($price, $condition);
                     }
@@ -124,7 +126,7 @@ class CartItem extends Model
     protected function subTotalWithConditions(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->price_with_conditions * $this->quantity,
+            get: fn (): int|float => $this->price_with_conditions * $this->quantity,
         );
     }
 
@@ -142,23 +144,15 @@ class CartItem extends Model
                 return $amount + ($amount * ($percentage / 100));
             }
 
-            // Handle fixed values with + or - prefix
-            if (str_starts_with($value, '+') || str_starts_with($value, '-')) {
-                return $amount + (float) $value;
-            }
-
             // Default to fixed value
             return $amount + (float) $value;
         }
 
         // Handle numeric values based on type
-        switch ($type) {
-            case 'percentage':
-                return $amount + ($amount * ($value / 100));
-            case 'fixed':
-            default:
-                return $amount + $value;
-        }
+        return match ($type) {
+            'percentage' => $amount + ($amount * ($value / 100)),
+            default => $amount + $value,
+        };
     }
 
     /** Add a condition to this item */
@@ -181,9 +175,7 @@ class CartItem extends Model
     public function removeCondition(string $name): self
     {
         $conditions = $this->conditions ?? [];
-        $this->conditions = array_filter($conditions, function ($condition) use ($name) {
-            return ($condition['name'] ?? '') !== $name;
-        });
+        $this->conditions = array_filter($conditions, fn(array $condition) => ($condition['name'] ?? '') !== $name);
 
         return $this;
     }
@@ -192,7 +184,7 @@ class CartItem extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format((float) $this->price, 2),
+            get: fn (): string => '$' . number_format((float) $this->price, 2),
         );
     }
 
@@ -200,7 +192,7 @@ class CartItem extends Model
     protected function formattedSubTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format((float) $this->sub_total, 2),
+            get: fn (): string => '$' . number_format((float) $this->sub_total, 2),
         );
     }
 
@@ -208,7 +200,7 @@ class CartItem extends Model
     protected function formattedPriceWithConditions(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->price_with_conditions, 2),
+            get: fn (): string => '$' . number_format($this->price_with_conditions, 2),
         );
     }
 
@@ -216,18 +208,18 @@ class CartItem extends Model
     protected function formattedSubTotalWithConditions(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->sub_total_with_conditions, 2),
+            get: fn (): string => '$' . number_format($this->sub_total_with_conditions, 2),
         );
     }
 
     /** Scope to filter by cart */
-    public function scopeForCart($query, string $cartId)
+    protected function scopeForCart(mixed $query, string $cartId)
     {
         return $query->where('cart_id', $cartId);
     }
 
     /** Scope to filter by associable model */
-    public function scopeForModel($query, string $type, int $id)
+    protected function scopeForModel(mixed $query, string $type, int $id)
     {
         return $query->where('associable_type', $type)
             ->where('associable_id', $id);

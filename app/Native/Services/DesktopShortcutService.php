@@ -36,7 +36,6 @@ class DesktopShortcutService
         // POS shortcuts
         'ctrl+shift+p' => 'openPOS',
         'ctrl+shift+i' => 'addProduct',
-        'ctrl+shift+u' => 'showUsers',
         'ctrl+shift+w' => 'showWarehouses',
 
         // Quick actions
@@ -75,17 +74,17 @@ class DesktopShortcutService
 
         try {
             return $this->$action();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             Log::error('Desktop shortcut error', [
                 'shortcut' => $shortcut,
                 'action' => $action,
-                'error' => $e->getMessage(),
+                'error' => $exception->getMessage(),
             ]);
 
             return [
                 'success' => false,
                 'action' => $action,
-                'message' => 'Failed to execute shortcut: ' . $e->getMessage(),
+                'message' => 'Failed to execute shortcut: ' . $exception->getMessage(),
             ];
         }
     }
@@ -175,7 +174,7 @@ class DesktopShortcutService
     protected function syncData(): array
     {
         try {
-            $syncService = app(DatabaseSyncService::class);
+            $syncService = resolve(DatabaseSyncService::class);
 
             if (! $syncService->isOnlineAvailable()) {
                 return ['success' => false, 'message' => 'Cannot sync: No internet connection'];
@@ -193,8 +192,8 @@ class DesktopShortcutService
                     'to_online' => $toOnlineResult,
                 ],
             ];
-        } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Sync failed: ' . $e->getMessage()];
+        } catch (Exception $exception) {
+            return ['success' => false, 'message' => 'Sync failed: ' . $exception->getMessage()];
         }
     }
 
@@ -227,8 +226,8 @@ class DesktopShortcutService
             Artisan::call('route:clear');
 
             return ['success' => true, 'action' => 'clearCache', 'message' => 'All caches cleared successfully'];
-        } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Failed to clear cache: ' . $e->getMessage()];
+        } catch (Exception $exception) {
+            return ['success' => false, 'message' => 'Failed to clear cache: ' . $exception->getMessage()];
         }
     }
 
@@ -326,7 +325,7 @@ class DesktopShortcutService
     {
         $shortcuts = $this->getShortcuts();
 
-        foreach ($shortcuts as $category => $categoryShortcuts) {
+        foreach ($shortcuts as $categoryShortcuts) {
             if (isset($categoryShortcuts[$shortcut])) {
                 return $categoryShortcuts[$shortcut];
             }

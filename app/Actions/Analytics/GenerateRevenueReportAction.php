@@ -13,8 +13,8 @@ final class GenerateRevenueReportAction
 {
     public function __invoke(array $options = []): array
     {
-        $dateFrom = $options['date_from'] ?? Carbon::now()->subDays(30);
-        $dateTo = $options['date_to'] ?? Carbon::now();
+        $dateFrom = $options['date_from'] ?? \Illuminate\Support\Facades\Date::now()->subDays(30);
+        $dateTo = $options['date_to'] ?? \Illuminate\Support\Facades\Date::now();
         $groupBy = $options['group_by'] ?? 'day'; // day, week, month, year
         $includeProducts = $options['include_products'] ?? false;
         $includeCategories = $options['include_categories'] ?? false;
@@ -91,7 +91,7 @@ final class GenerateRevenueReportAction
 
     private function getOverallStatistics(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $stats = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $stats = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->selectRaw('
                 COUNT(*) as total_orders,
                 COUNT(CASE WHEN status != "cancelled" THEN 1 END) as completed_orders,
@@ -105,8 +105,8 @@ final class GenerateRevenueReportAction
             ')
             ->first();
 
-        $totalItems = SaleDetails::whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
-            $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $totalItems = SaleDetails::query()->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+            $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                 ->where('status', '!=', 'cancelled');
         })->sum('quantity');
 
@@ -123,8 +123,8 @@ final class GenerateRevenueReportAction
             'average_order_value' => (float) ($stats->average_order_value ?? 0),
             'min_order_value' => (float) ($stats->min_order_value ?? 0),
             'max_order_value' => (float) ($stats->max_order_value ?? 0),
-            'daily_average_revenue' => (float) (($stats->total_revenue ?? 0) / $daysDiff),
-            'daily_average_orders' => (float) (($stats->completed_orders ?? 0) / $daysDiff),
+            'daily_average_revenue' => ($stats->total_revenue ?? 0) / $daysDiff,
+            'daily_average_orders' => ($stats->completed_orders ?? 0) / $daysDiff,
             'cancellation_rate' => $stats->total_orders > 0 ? round(($stats->cancelled_orders / $stats->total_orders) * 100, 2) : 0,
         ];
     }
@@ -142,7 +142,7 @@ final class GenerateRevenueReportAction
 
         $dateFormatSql = db_date_format('created_at', $dateFormat);
 
-        $breakdown = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $breakdown = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->where('status', '!=', 'cancelled')
             ->selectRaw("
                 {$dateFormatSql} as period,
@@ -154,15 +154,13 @@ final class GenerateRevenueReportAction
             ->groupBy('period')
             ->orderBy('period')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'period' => $item->period,
-                    'order_count' => (int) $item->order_count,
-                    'revenue' => (float) $item->revenue,
-                    'tax' => (float) $item->tax,
-                    'avg_order_value' => (float) $item->avg_order_value,
-                ];
-            })
+            ->map(fn($item) => [
+                'period' => $item->period,
+                'order_count' => (int) $item->order_count,
+                'revenue' => (float) $item->revenue,
+                'tax' => (float) $item->tax,
+                'avg_order_value' => (float) $item->avg_order_value,
+            ])
             ->toArray();
 
         return [
@@ -178,7 +176,7 @@ final class GenerateRevenueReportAction
 
     private function getPaymentMethodBreakdown(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $breakdown = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $breakdown = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->where('status', '!=', 'cancelled')
             ->where('is_paid', true)
             ->selectRaw('
@@ -190,20 +188,18 @@ final class GenerateRevenueReportAction
             ->groupBy('payment_method')
             ->orderByDesc('revenue')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'payment_method' => $item->payment_method,
-                    'order_count' => (int) $item->order_count,
-                    'revenue' => (float) $item->revenue,
-                    'avg_order_value' => (float) $item->avg_order_value,
-                ];
-            })
+            ->map(fn($item) => [
+                'payment_method' => $item->payment_method,
+                'order_count' => (int) $item->order_count,
+                'revenue' => (float) $item->revenue,
+                'avg_order_value' => (float) $item->avg_order_value,
+            ])
             ->toArray();
 
         $totalRevenue = collect($breakdown)->sum('revenue');
 
         return [
-            'data' => collect($breakdown)->map(function ($item) use ($totalRevenue) {
+            'data' => collect($breakdown)->map(function (array $item) use ($totalRevenue): array {
                 $item['percentage'] = $totalRevenue > 0 ? round(($item['revenue'] / $totalRevenue) * 100, 2) : 0;
 
                 return $item;
@@ -215,7 +211,7 @@ final class GenerateRevenueReportAction
 
     private function getSaleStatusBreakdown(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $breakdown = Sale::whereBetween('created_at', [$dateFrom, $dateTo])
+        $breakdown = Sale::query()->whereBetween('created_at', [$dateFrom, $dateTo])
             ->selectRaw('
                 status,
                 COUNT(*) as order_count,
@@ -224,19 +220,17 @@ final class GenerateRevenueReportAction
             ->groupBy('status')
             ->orderByDesc('order_count')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'status' => $item->status,
-                    'order_count' => (int) $item->order_count,
-                    'revenue' => (float) $item->revenue,
-                ];
-            })
+            ->map(fn($item) => [
+                'status' => $item->status,
+                'order_count' => (int) $item->order_count,
+                'revenue' => (float) $item->revenue,
+            ])
             ->toArray();
 
         $totalSales = collect($breakdown)->sum('order_count');
 
         return [
-            'data' => collect($breakdown)->map(function ($item) use ($totalSales) {
+            'data' => collect($breakdown)->map(function (array $item) use ($totalSales): array {
                 $item['percentage'] = $totalSales > 0 ? round(($item['order_count'] / $totalSales) * 100, 2) : 0;
 
                 return $item;
@@ -246,8 +240,8 @@ final class GenerateRevenueReportAction
 
     private function getProductBreakdown(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $breakdown = SaleDetails::whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
-            $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $breakdown = SaleDetails::query()->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+            $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                 ->where('status', '!=', 'cancelled');
         })
             ->with('product')
@@ -262,16 +256,14 @@ final class GenerateRevenueReportAction
             ->orderByDesc('revenue')
             ->limit(20) // Top 20 products
             ->get()
-            ->map(function ($item) {
-                return [
-                    'product_id' => $item->product_id,
-                    'product_name' => $item->product?->name ?? 'Unknown Product',
-                    'total_quantity' => (int) $item->total_quantity,
-                    'revenue' => (float) $item->revenue,
-                    'order_count' => (int) $item->order_count,
-                    'avg_price' => (float) $item->avg_price,
-                ];
-            })
+            ->map(fn($item) => [
+                'product_id' => $item->product_id,
+                'product_name' => $item->product?->name ?? 'Unknown Product',
+                'total_quantity' => (int) $item->total_quantity,
+                'revenue' => (float) $item->revenue,
+                'order_count' => (int) $item->order_count,
+                'avg_price' => (float) $item->avg_price,
+            ])
             ->toArray();
 
         return [
@@ -282,8 +274,8 @@ final class GenerateRevenueReportAction
 
     private function getCategoryBreakdown(Carbon $dateFrom, Carbon $dateTo): array
     {
-        $breakdown = SaleDetails::whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
-            $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $breakdown = SaleDetails::query()->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+            $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                 ->where('status', '!=', 'cancelled');
         })
             ->join('products', 'sale_details.product_id', '=', 'products.id')
@@ -298,21 +290,19 @@ final class GenerateRevenueReportAction
             ->groupBy('categories.id', 'categories.name')
             ->orderByDesc('revenue')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'category_id' => $item->category_id,
-                    'category_name' => $item->category_name,
-                    'total_quantity' => (int) $item->total_quantity,
-                    'revenue' => (float) $item->revenue,
-                    'order_count' => (int) $item->order_count,
-                ];
-            })
+            ->map(fn($item) => [
+                'category_id' => $item->category_id,
+                'category_name' => $item->category_name,
+                'total_quantity' => (int) $item->total_quantity,
+                'revenue' => (float) $item->revenue,
+                'order_count' => (int) $item->order_count,
+            ])
             ->toArray();
 
         $totalRevenue = collect($breakdown)->sum('revenue');
 
         return [
-            'data' => collect($breakdown)->map(function ($item) use ($totalRevenue) {
+            'data' => collect($breakdown)->map(function (array $item) use ($totalRevenue): array {
                 $item['percentage'] = $totalRevenue > 0 ? round(($item['revenue'] / $totalRevenue) * 100, 2) : 0;
 
                 return $item;
@@ -328,7 +318,7 @@ final class GenerateRevenueReportAction
         bool $includeProducts,
         bool $includeCategories,
     ): string {
-        $key = "revenue_report:{$dateFrom->format('Y-m-d')}:{$dateTo->format('Y-m-d')}:{$groupBy}";
+        $key = sprintf('revenue_report:%s:%s:%s', $dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'), $groupBy);
 
         if ($includeProducts) {
             $key .= ':products';

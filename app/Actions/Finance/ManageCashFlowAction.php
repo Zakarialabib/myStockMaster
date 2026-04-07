@@ -35,7 +35,6 @@ final class ManageCashFlowAction
 
         // Determine surplus allocation if applicable
         $surplusAllocation = $this->calculateSurplusAllocation(
-            $currentCashBalance,
             $bufferAnalysis,
             $cashFlowTrends
         );
@@ -43,14 +42,12 @@ final class ManageCashFlowAction
         // Generate management recommendations
         $recommendations = $this->generateCashFlowRecommendations(
             $bufferAnalysis,
-            $cashFlowTrends,
-            $projections
+            $cashFlowTrends
         );
 
         // Create alerts for critical situations
         $alerts = $this->generateCashFlowAlerts(
             $bufferAnalysis,
-            $cashFlowTrends,
             $projections
         );
 
@@ -67,7 +64,7 @@ final class ManageCashFlowAction
             'surplus_allocation' => $surplusAllocation,
             'recommendations' => $recommendations,
             'alerts' => $alerts,
-            'management_actions' => $this->suggestManagementActions($bufferAnalysis, $cashFlowTrends),
+            'management_actions' => $this->suggestManagementActions($bufferAnalysis),
             'calculated_at' => now()->toISOString(),
         ];
     }
@@ -95,8 +92,8 @@ final class ManageCashFlowAction
 
         return [
             'monthly_expenses' => round($totalMonthlyExpenses, 2),
-            'expense_breakdown' => array_map(fn ($expense) => round($expense, 2), $monthlyExpenses),
-            'buffer_requirements' => array_map(fn ($req) => round($req, 2), $bufferRequirements),
+            'expense_breakdown' => array_map(fn ($expense): float => round($expense, 2), $monthlyExpenses),
+            'buffer_requirements' => array_map(fn (float|int $req): float => round($req, 2), $bufferRequirements),
             'current_buffer' => round($currentBalance, 2),
             'buffer_months' => round($bufferMonths, 1),
             'status' => $status,
@@ -120,11 +117,11 @@ final class ManageCashFlowAction
         $trends = [];
 
         foreach ($periods as $period => $startDate) {
-            $revenue = Sale::whereBetween('created_at', [$startDate, $analysisDate])
+            $revenue = Sale::query()->whereBetween('created_at', [$startDate, $analysisDate])
                 ->whereIn('payment_status', ['paid', 'partially_paid'])
                 ->sum('total_amount');
 
-            $orderCount = Sale::whereBetween('created_at', [$startDate, $analysisDate])
+            $orderCount = Sale::query()->whereBetween('created_at', [$startDate, $analysisDate])
                 ->where('status', 'completed')
                 ->count();
 
@@ -196,7 +193,7 @@ final class ManageCashFlowAction
         for ($month = 1; $month <= 6; $month++) {
             $balance += $monthlyNetCashFlow;
 
-            $projections["month_{$month}"] = [
+            $projections['month_' . $month] = [
                 'projected_balance' => round($balance, 2),
                 'net_cash_flow' => round($monthlyNetCashFlow, 2),
                 'buffer_months' => $monthlyExpenseTotal > 0 ? round($balance / $monthlyExpenseTotal, 1) : 0,
@@ -228,7 +225,7 @@ final class ManageCashFlowAction
         };
     }
 
-    private function calculateSurplusAllocation(float $currentBalance, array $bufferAnalysis, array $trends): ?array
+    private function calculateSurplusAllocation(array $bufferAnalysis, array $trends): ?array
     {
         // Only allocate surplus if we have excess above optimal buffer
         if ($bufferAnalysis['excess'] <= 0) {
@@ -247,14 +244,13 @@ final class ManageCashFlowAction
 
         // Suggest specific reinvestment opportunities
         $allocation['reinvestment_suggestions'] = $this->suggestReinvestmentOpportunities(
-            $allocation['reinvestment'],
-            $trends
+            $allocation['reinvestment']
         );
 
         return $allocation;
     }
 
-    private function suggestReinvestmentOpportunities(float $reinvestmentAmount, array $trends): array
+    private function suggestReinvestmentOpportunities(float $reinvestmentAmount): array
     {
         $suggestions = [];
 
@@ -295,7 +291,7 @@ final class ManageCashFlowAction
         return $suggestions;
     }
 
-    private function generateCashFlowRecommendations(array $bufferAnalysis, array $trends, array $projections): array
+    private function generateCashFlowRecommendations(array $bufferAnalysis, array $trends): array
     {
         $recommendations = [];
 
@@ -348,7 +344,7 @@ final class ManageCashFlowAction
         return $recommendations;
     }
 
-    private function generateCashFlowAlerts(array $bufferAnalysis, array $trends, array $projections): array
+    private function generateCashFlowAlerts(array $bufferAnalysis, array $projections): array
     {
         $alerts = [];
 
@@ -388,7 +384,7 @@ final class ManageCashFlowAction
         return $alerts;
     }
 
-    private function suggestManagementActions(array $bufferAnalysis, array $trends): array
+    private function suggestManagementActions(array $bufferAnalysis): array
     {
         $actions = [];
 

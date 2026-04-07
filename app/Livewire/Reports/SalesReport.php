@@ -48,17 +48,17 @@ class SalesReport extends Component
     #[Computed]
     public function customers()
     {
-        return Customer::select(['id', 'name'])->get();
+        return Customer::query()->select(['id', 'name'])->get();
     }
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $sales = Sale::with('customer')->whereDate('date', '>=', $this->start_date)
+        $lengthAwarePaginator = Sale::with('customer')->whereDate('date', '>=', $this->start_date)
             ->whereDate('date', '<=', $this->end_date)
             ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
             ->when($this->sale_status, fn ($q) => $q->where('sale_status', $this->sale_status))
@@ -66,7 +66,7 @@ class SalesReport extends Component
             ->orderBy('date', 'desc')->paginate(10);
 
         return view('livewire.reports.sales-report', [
-            'sales' => $sales,
+            'sales' => $lengthAwarePaginator,
         ]);
     }
 

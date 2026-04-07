@@ -21,20 +21,29 @@ use Livewire\Attributes\Computed;
  */
 trait WithModels
 {
+    /**
+     * @return array<int, string>
+     */
     #[Computed]
     public function customers(): array
     {
-        return Customer::pluck('name', 'id')->toArray();
+        return Customer::query()->pluck('name', 'id')->toArray();
     }
 
+    /**
+     * @return array<int, string>
+     */
     #[Computed]
     public function suppliers(): array
     {
-        return Supplier::pluck('name', 'id')->toArray();
+        return Supplier::query()->pluck('name', 'id')->toArray();
     }
 
+    /**
+     * @return array<int, string>
+     */
     #[Computed]
-    public function warehouses()
+    public function warehouses(): array
     {
         $user = auth()->user();
 
@@ -44,18 +53,24 @@ trait WithModels
             return $warehouses->pluck('name', 'id')->toArray();
         }
 
-        return Warehouse::pluck('name', 'id')->toArray();
+        return Warehouse::query()->pluck('name', 'id')->toArray();
     }
 
+    /**
+     * @return array<int, string>
+     */
     #[Computed]
-    public function roles()
+    public function roles(): array
     {
-        return Role::pluck('name', 'id')->toArray();
+        return Role::query()->pluck('name', 'id')->toArray();
     }
 
+    /**
+     * @return array<int, string>
+     */
     #[Computed]
-    public function currencies()
+    public function currencies(): array
     {
-        return Currency::pluck('name', 'id')->toArray();
+        return Currency::query()->pluck('name', 'id')->toArray();
     }
 }

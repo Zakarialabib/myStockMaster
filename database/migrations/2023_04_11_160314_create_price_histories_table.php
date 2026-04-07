@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('price_histories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignUuid('product_id')->nullable()->constrained('products')->cascadeOnDelete();
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->cascadeOnDelete();
-            $table->integer('cost');
-            $table->date('effective_date')->nullable();
-            $table->date('expiry_date')->nullable();
-            $table->timestamps();
+        Schema::create('price_histories', function (Blueprint $blueprint): void {
+            $blueprint->id();
+            $blueprint->foreignUuid('product_id')->nullable()->constrained('products')->cascadeOnDelete();
+            $blueprint->foreignId('warehouse_id')->nullable()->constrained('warehouses')->cascadeOnDelete();
+            $blueprint->integer('cost');
+            $blueprint->date('effective_date')->nullable();
+            $blueprint->date('expiry_date')->nullable();
+            $blueprint->timestamps();
         });
     }
 

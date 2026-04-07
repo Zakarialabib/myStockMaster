@@ -13,8 +13,8 @@ final class GenerateProductAnalyticsAction
 {
     public function __invoke(Product $product, array $options = []): array
     {
-        $dateFrom = $options['date_from'] ?? Carbon::now()->subDays(30);
-        $dateTo = $options['date_to'] ?? Carbon::now();
+        $dateFrom = $options['date_from'] ?? \Illuminate\Support\Facades\Date::now()->subDays(30);
+        $dateTo = $options['date_to'] ?? \Illuminate\Support\Facades\Date::now();
         $useCache = $options['use_cache'] ?? true;
         $cacheTtl = $options['cache_ttl'] ?? 3600; // 1 hour
 
@@ -34,35 +34,34 @@ final class GenerateProductAnalyticsAction
     }
 
     /** Clear analytics cache for a specific product */
-    public function clearCache(Product $product): void
+    public function clearCache(): void
     {
-        $pattern = "product_analytics:{$product->id}:*";
-
         // This is a simplified cache clearing - in production you might want
         // to use a more sophisticated cache tagging system
-        Cache::flush(); // Or implement pattern-based cache clearing
+        Cache::flush();
+        // Or implement pattern-based cache clearing
     }
 
     private function calculateAnalytics(Product $product, Carbon $dateFrom, Carbon $dateTo): array
     {
         // Base query for sale items within date range
-        $baseQuery = SaleDetails::where('product_id', $product->id)
-            ->whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
-                $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $builder = SaleDetails::query()->where('product_id', $product->id)
+            ->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+                $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                     ->where('status', '!=', 'cancelled');
             });
 
         // Get basic sales statistics
-        $salesStats = $this->getSalesStatistics($baseQuery);
+        $salesStats = $this->getSalesStatistics($builder);
 
         // Get performance metrics
-        $performanceMetrics = $this->getPerformanceMetrics($product, $baseQuery, $dateFrom, $dateTo);
+        $performanceMetrics = $this->getPerformanceMetrics($product, $builder, $dateFrom, $dateTo);
 
         // Get trend analysis
         $trendAnalysis = $this->getTrendAnalysis($product, $dateFrom, $dateTo);
 
         // Get profitability analysis
-        $profitabilityAnalysis = $this->getProfitabilityAnalysis($baseQuery, $product);
+        $profitabilityAnalysis = $this->getProfitabilityAnalysis($builder, $product);
 
         return [
             'product_id' => $product->id,
@@ -129,15 +128,15 @@ final class GenerateProductAnalyticsAction
     {
         // Get daily sales data
         $dateFormatSql = db_date_format('sales.created_at', '%Y-%m-%d');
-        $dailySales = SaleDetails::where('product_id', $product->id)
-            ->whereHas('sale', function ($query) use ($dateFrom, $dateTo): void {
-                $query->whereBetween('created_at', [$dateFrom, $dateTo])
+        $dailySales = SaleDetails::query()->where('product_id', $product->id)
+            ->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder) use ($dateFrom, $dateTo): void {
+                $builder->whereBetween('created_at', [$dateFrom, $dateTo])
                     ->where('status', '!=', 'cancelled');
             })
-            ->selectRaw("{$dateFormatSql} as sale_date, SUM(sale_details.quantity) as daily_quantity, SUM(sale_details.price * sale_details.quantity) as daily_revenue")
+            ->selectRaw($dateFormatSql . ' as sale_date, SUM(sale_details.quantity) as daily_quantity, SUM(sale_details.price * sale_details.quantity) as daily_revenue')
             ->join('sales', 'sale_details.sale_id', '=', 'sales.id')
             ->groupBy('sale_date')
-            ->orderBy('sale_date')
+            ->oldest('sale_date')
             ->get();
 
         $trend = $this->calculateTrend($dailySales->pluck('daily_quantity')->toArray());
@@ -155,8 +154,8 @@ final class GenerateProductAnalyticsAction
     {
         $items = $baseQuery->get();
 
-        $totalRevenue = $items->sum(fn ($item) => $item->price * $item->quantity);
-        $totalCost = $items->sum(fn ($item) => ($item->cost ?? $product->cost) * $item->quantity);
+        $totalRevenue = $items->sum(fn ($item): int|float => $item->price * $item->quantity);
+        $totalCost = $items->sum(fn ($item): int|float => ($item->cost ?? $product->cost) * $item->quantity);
         $totalProfit = $totalRevenue - $totalCost;
 
         $profitMargin = $totalRevenue > 0 ? ($totalProfit / $totalRevenue) * 100 : 0;
@@ -232,7 +231,7 @@ final class GenerateProductAnalyticsAction
 
     private function generateCacheKey(int $productId, Carbon $dateFrom, Carbon $dateTo): string
     {
-        return "product_analytics:{$productId}:{$dateFrom->format('Y-m-d')}:{$dateTo->format('Y-m-d')}";
+        return sprintf('product_analytics:%d:%s:%s', $productId, $dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'));
     }
 }
 

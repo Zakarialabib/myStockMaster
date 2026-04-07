@@ -48,10 +48,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnDetail whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SaleReturnDetail whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class SaleReturnDetail extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -66,17 +67,23 @@ class SaleReturnDetail extends Model
 
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     protected $guarded = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\SaleReturnPayment, $this>
+     */
     public function saleReturn(): BelongsTo
     {
         return $this->belongsTo(SaleReturnPayment::class, 'sale_return_id', 'id');
@@ -88,8 +95,8 @@ class SaleReturnDetail extends Model
     protected function price(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
@@ -99,8 +106,8 @@ class SaleReturnDetail extends Model
     protected function unitPrice(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
@@ -110,8 +117,8 @@ class SaleReturnDetail extends Model
     protected function subTotal(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
@@ -121,8 +128,8 @@ class SaleReturnDetail extends Model
     protected function productDiscountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 
@@ -132,8 +139,8 @@ class SaleReturnDetail extends Model
     protected function productTaxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn ($value): int|float => $value / 100,
+            set: fn ($value): int|float => $value * 100,
         );
     }
 }

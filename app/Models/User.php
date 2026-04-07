@@ -83,7 +83,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder<static>|User            withoutPermission($permissions)
  * @method static Builder<static>|User            withoutRole($roles, $guard = null)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class User extends Authenticatable
 {
@@ -100,9 +100,9 @@ class User extends Authenticatable
         'created_at', 'updated_at', 'provider_id', 'provider_name',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -130,6 +130,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -141,18 +142,18 @@ class User extends Authenticatable
     }
 
     /** @return mixed */
-    public function scopeIsActive(Builder $builder)
+    protected function scopeIsActive(Builder $builder)
     {
         return $builder->whereIsActive(true);
     }
 
-    /** @return BelongsToMany<Warehouse> */
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class);
     }
 
-    /** @return BelongsToMany<Warehouse> */
+    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function warehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class, 'user_warehouse', 'user_id', 'warehouse_id')

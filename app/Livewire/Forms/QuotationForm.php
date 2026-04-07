@@ -9,31 +9,31 @@ use Livewire\Form;
 
 class QuotationForm extends Form
 {
-    public $reference;
+    public mixed $reference;
 
     #[Validate('required')]
-    public $customer_id;
+    public mixed $customer_id;
 
     #[Validate('required')]
-    public $warehouse_id;
+    public mixed $warehouse_id;
 
     #[Validate('required|numeric')]
-    public $total_amount = 0;
+    public mixed $total_amount = 0;
 
     #[Validate('numeric')]
-    public $shipping_amount = 0;
+    public mixed $shipping_amount = 0;
 
-    public $note;
+    public mixed $note;
 
     #[Validate('required|integer|max:255')]
-    public $status;
+    public mixed $status;
 
     #[Validate('required')]
-    public $date;
+    public ?string $date = null;
 
     #[Validate('integer|min:0|max:100')]
-    public $tax_percentage = 0;
+    public mixed $tax_percentage = 0;
 
     #[Validate('integer|min:0|max:100')]
-    public $discount_percentage = 0;
+    public mixed $discount_percentage = 0;
 }

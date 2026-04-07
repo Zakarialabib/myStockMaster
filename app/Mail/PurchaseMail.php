@@ -13,19 +13,11 @@ class PurchaseMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $purchase;
-
-    public $pdf;
-
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct($purchase, $pdf)
+    public function __construct(public $purchase, public $pdf)
     {
-        $this->purchase = $purchase;
-        $this->pdf = $pdf;
     }
 
     /**

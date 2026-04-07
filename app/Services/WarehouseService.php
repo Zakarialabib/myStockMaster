@@ -10,7 +10,7 @@ class WarehouseService
 {
     public function create(array $data): Warehouse
     {
-        return Warehouse::create($data);
+        return Warehouse::query()->create($data);
     }
 
     public function update(Warehouse $warehouse, array $data): Warehouse

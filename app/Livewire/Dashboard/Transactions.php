@@ -36,8 +36,8 @@ class Transactions extends Component
 
     public function mount(): void
     {
-        $this->startDate = Carbon::now()->startOfMonth()->toDateString();
-        $this->endDate = Carbon::now()->endOfMonth()->toDateString();
+        $this->startDate = \Illuminate\Support\Facades\Date::now()->startOfMonth()->toDateString();
+        $this->endDate = \Illuminate\Support\Facades\Date::now()->endOfMonth()->toDateString();
 
         $this->chart();
     }
@@ -67,7 +67,7 @@ class Transactions extends Component
             ->select('sales.*', 'customers.name')
             ->join('customers', 'sales.customer_id', '=', 'customers.id')
             ->with('user', 'customer')
-            ->whereMonth('sales.created_at', Carbon::now()->startOfMonth())
+            ->whereMonth('sales.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
             ->orderBy('sales.total_amount', 'desc')
             ->take(5)
             ->get();
@@ -76,7 +76,7 @@ class Transactions extends Component
     #[Computed]
     public function purchasesCount(): Collection
     {
-        return Purchase::where('date', '>=', Carbon::now()->subWeek())
+        return Purchase::query()->where('date', '>=', \Illuminate\Support\Facades\Date::now()->subWeek())
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
             ->groupBy('date')
             ->pluck('purchases');
@@ -85,7 +85,7 @@ class Transactions extends Component
     #[Computed]
     public function salesCount(): Collection
     {
-        return Sale::whereDate('date', '>=', Carbon::now()->subWeek())
+        return Sale::query()->whereDate('date')
             ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
             ->groupBy('date')
             ->pluck('sales');
@@ -96,13 +96,13 @@ class Transactions extends Component
         $monthRaw = db_date_format('date', '%m');
         $yearRaw = db_date_format('date', '%Y');
 
-        $query = Sale::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+        $query = Sale::query()->selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
             ->when(
                 $this->typeChart === 'monthly',
-                static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as sales")
+                static fn ($q) => $q->selectRaw($monthRaw . ' as labels, COUNT(*) as sales')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('labels'),
-                static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as sales")
+                static fn ($q) => $q->selectRaw($yearRaw . ' as labels, COUNT(*) as sales')
                     ->groupByRaw('labels')
             )
             ->get()
@@ -114,13 +114,13 @@ class Transactions extends Component
             'labels' => array_column($query, 'labels'),
         ];
 
-        $query = Purchase::selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+        $query = Purchase::query()->selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
             ->when(
                 $this->typeChart === 'monthly',
-                static fn ($q) => $q->selectRaw("$monthRaw as labels, COUNT(*) as purchases")
+                static fn ($q) => $q->selectRaw($monthRaw . ' as labels, COUNT(*) as purchases')
                     ->whereYear('date', '=', date('Y'))
                     ->groupByRaw('labels'),
-                static fn ($q) => $q->selectRaw("$yearRaw as labels, COUNT(*) as purchases")
+                static fn ($q) => $q->selectRaw($yearRaw . ' as labels, COUNT(*) as purchases')
                     ->groupByRaw('labels')
             )
             ->get()
@@ -145,7 +145,7 @@ class Transactions extends Component
         ], JSON_THROW_ON_ERROR);
     }
 
-    protected function getChart($sales, $purchases): string
+    protected function getChart(mixed $sales, mixed $purchases): string
     {
         $dataarray = [];
         $i = 0;
@@ -182,7 +182,7 @@ class Transactions extends Component
             ')
             ->join('products', 'products.id', '=', 'sale_details.product_id')
             ->join('sales', 'sales.id', '=', 'sale_details.sale_id')
-            ->whereMonth('sale_details.created_at', Carbon::now()->startOfMonth())
+            ->whereMonth('sale_details.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
             ->groupBy(['sale_details.id', 'sale_details.product_id', 'products.name', 'products.code', 'sales.warehouse_id'])
             ->orderByDesc('qtyItem')
             ->limit(5)
@@ -203,7 +203,7 @@ class Transactions extends Component
             ')
             ->join('customers', 'customers.id', '=', 'sales.customer_id')
             ->leftJoin('warehouses', 'warehouses.id', '=', 'sales.warehouse_id')
-            ->whereMonth('sales.created_at', Carbon::now()->startOfMonth())
+            ->whereMonth('sales.created_at', \Illuminate\Support\Facades\Date::now()->startOfMonth())
             ->groupBy(['sales.id', 'sales.customer_id', 'customers.name', 'customers.id', 'sales.warehouse_id', 'warehouses.name'])
             ->orderByDesc('totalSalesAmount')
             ->limit(5)
@@ -213,8 +213,8 @@ class Transactions extends Component
     #[Computed(persist: true, seconds: 7200)]
     public function monthlyChartOptions(): array
     {
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
+        $startDate = \Illuminate\Support\Facades\Date::now()->startOfMonth();
+        $endDate = \Illuminate\Support\Facades\Date::now()->endOfMonth();
 
         $customerNameTotal = DB::table('sale_payments')
             ->join('sales', 'sale_payments.sale_id', '=', 'sales.id')
@@ -278,35 +278,35 @@ class Transactions extends Component
     #[Computed(persist: true, seconds: 7200)]
     public function dailyChartOptions(): array
     {
-        $currentMonth = Carbon::now()->startOfMonth();
+        $currentMonth = \Illuminate\Support\Facades\Date::now()->startOfMonth();
 
         $daysInMonth = [];
-        $currentDay = Carbon::now()->startOfMonth();
+        $currentDay = \Illuminate\Support\Facades\Date::now()->startOfMonth();
 
         while ($currentDay->month === $currentMonth->month) {
             $daysInMonth[] = $currentDay->format('Y-m-d');
             $currentDay->addDay();
         }
 
-        $salesData = Sale::selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
-            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+        $salesData = Sale::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
+            ->whereBetween('date', [$currentMonth, \Illuminate\Support\Facades\Date::now()->endOfMonth()])
             ->groupBy('day')
             ->orderBy('day', 'ASC')
             ->get();
 
-        $purchasesData = Purchase::selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
-            ->whereBetween('date', [$currentMonth, Carbon::now()->endOfMonth()])
+        $purchasesData = Purchase::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
+            ->whereBetween('date', [$currentMonth, \Illuminate\Support\Facades\Date::now()->endOfMonth()])
             ->groupBy('day')
             ->orderBy('day', 'ASC')
             ->get();
 
         $chartData = [];
 
-        foreach ($daysInMonth as $day) {
-            $sale = $salesData->where('day', $day)->first();
-            $purchase = $purchasesData->where('day', $day)->first();
+        foreach ($daysInMonth as $dayInMonth) {
+            $sale = $salesData->where('day', $dayInMonth)->first();
+            $purchase = $purchasesData->where('day', $dayInMonth)->first();
             $chartData[] = [
-                'day' => $day,
+                'day' => $dayInMonth,
                 'sales' => ($sale) ? $sale->total_sales : 0,
                 'purchases' => ($purchase) ? $purchase->total_purchases : 0,
             ];
@@ -365,47 +365,47 @@ class Transactions extends Component
         $paymentReceivedData = [];
 
         foreach (range(-11, 0) as $i) {
-            $date = Carbon::now()->addMonths($i);
+            $date = \Illuminate\Support\Facades\Date::now()->addMonths($i);
             $dateLabels[] = $date->format('M Y');
             $dates->put($date->format('Y-m'), 0);
         }
 
-        $date_range = Carbon::today()->subYear()->format('Y-m-d');
+        $date_range = \Illuminate\Support\Facades\Date::today()->subYear()->format('Y-m-d');
 
         $monthRaw = db_date_format('date', '%Y-%m');
 
-        $sale_payments = SalePayment::where('date', '>=', $date_range)
-            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
+        $sale_payments = SalePayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        $sale_return_payments = SaleReturnPayment::where('date', '>=', $date_range)
-            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
+        $sale_return_payments = SaleReturnPayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        $purchase_payments = PurchasePayment::where('date', '>=', $date_range)
-            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
+        $purchase_payments = PurchasePayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        $purchase_return_payments = PurchaseReturnPayment::where('date', '>=', $date_range)
-            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
+        $purchase_return_payments = PurchaseReturnPayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        $expenses = Expense::where('date', '>=', $date_range)
-            ->selectRaw("$monthRaw as month, SUM(amount) as amount")
+        $expenses = Expense::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
 
-        foreach ($dateLabels as $label) {
-            $month = Carbon::createFromFormat('M Y', $label);
+        foreach ($dateLabels as $dateLabel) {
+            $month = \Illuminate\Support\Facades\Date::createFromFormat('M Y', $dateLabel);
             $monthKey = $month->format('Y-m');
 
             $paymentSentData[] = ($purchase_payments->where('month', $monthKey)->first()->amount ?? 0)
@@ -420,7 +420,7 @@ class Transactions extends Component
 
         foreach ($dates as $month => $value) {
             if ($value === 0) {
-                $dateLabels[] = Carbon::createFromFormat('Y-m', $month)->format('M Y');
+                $dateLabels[] = \Illuminate\Support\Facades\Date::createFromFormat('Y-m', $month)->format('M Y');
                 $paymentSentData[] = 0;
                 $paymentReceivedData[] = 0;
             }

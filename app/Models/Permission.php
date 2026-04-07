@@ -34,10 +34,11 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission withoutRole($roles, $guard = null)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Permission extends SpatiePermission
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
 
     public const ATTRIBUTES = [
@@ -46,9 +47,9 @@ class Permission extends SpatiePermission
         'guard_name',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -64,7 +65,7 @@ class Permission extends SpatiePermission
      *
      * @return bool
      */
-    public function inRole($role)
+    public function inRole(mixed $role)
     {
         if (is_string($role)) {
             return $this->roles->contains('name', $role);

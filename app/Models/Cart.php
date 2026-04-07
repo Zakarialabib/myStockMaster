@@ -52,7 +52,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart whereUserId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Cart extends Model
 {
@@ -72,6 +72,7 @@ class Cart extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -81,13 +82,15 @@ class Cart extends Model
         ];
     }
 
-    /** Get the user that owns this cart */
+    /** Get the user that owns this cart
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** Get all items in this cart */
+    /** Get all items in this cart
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\CartItem, $this> */
     public function items(): HasMany
     {
         return $this->hasMany(CartItem::class);
@@ -105,7 +108,7 @@ class Cart extends Model
     protected function subTotalWithConditions(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): float {
                 $subtotal = $this->items->sum('sub_total');
 
                 return $this->applyConditionsToAmount($subtotal, 'subtotal');
@@ -117,7 +120,7 @@ class Cart extends Model
     protected function tax(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): float {
                 if ($this->tax_rate <= 0) {
                     return 0.0;
                 }
@@ -144,7 +147,7 @@ class Cart extends Model
     protected function total(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): float {
                 $total = $this->sub_total_with_conditions + $this->tax;
 
                 return $this->applyConditionsToAmount($total, 'total');
@@ -172,14 +175,14 @@ class Cart extends Model
     protected function discount(): Attribute
     {
         return Attribute::make(
-            get: function () {
+            get: function (): float|int {
                 $discountConditions = $this->getConditionsByType('discount');
                 $subtotal = $this->sub_total;
 
                 $totalDiscount = 0;
 
-                foreach ($discountConditions as $condition) {
-                    $discount = $this->applyCondition($subtotal, $condition) - $subtotal;
+                foreach ($discountConditions as $discountCondition) {
+                    $discount = $this->applyCondition($subtotal, $discountCondition) - $subtotal;
                     $totalDiscount += abs($discount); // Make positive for display
                 }
 
@@ -192,17 +195,13 @@ class Cart extends Model
     protected function applyConditionsToAmount(float $amount, string $target): float
     {
         $conditions = $this->conditions ?? [];
-        $applicableConditions = array_filter($conditions, function ($condition) use ($target) {
-            return ($condition['target'] ?? 'subtotal') === $target;
-        });
+        $applicableConditions = array_filter($conditions, fn(array $condition) => ($condition['target'] ?? 'subtotal') === $target);
 
         // Sort conditions by order
-        usort($applicableConditions, function ($a, $b) {
-            return ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
-        });
+        usort($applicableConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
-        foreach ($applicableConditions as $condition) {
-            $amount = $this->applyCondition($amount, $condition);
+        foreach ($applicableConditions as $applicableCondition) {
+            $amount = $this->applyCondition($amount, $applicableCondition);
         }
 
         return max(0, $amount); // Ensure amount is not negative
@@ -222,23 +221,15 @@ class Cart extends Model
                 return $amount + ($amount * ($percentage / 100));
             }
 
-            // Handle fixed values with + or - prefix
-            if (str_starts_with($value, '+') || str_starts_with($value, '-')) {
-                return $amount + (float) $value;
-            }
-
             // Default to fixed value
             return $amount + (float) $value;
         }
 
         // Handle numeric values based on type
-        switch ($type) {
-            case 'percentage':
-                return $amount + ($amount * ($value / 100));
-            case 'fixed':
-            default:
-                return $amount + $value;
-        }
+        return match ($type) {
+            'percentage' => $amount + ($amount * ($value / 100)),
+            default => $amount + $value,
+        };
     }
 
     /** Add a condition to the cart */
@@ -263,9 +254,7 @@ class Cart extends Model
     public function removeCondition(string $name): self
     {
         $conditions = $this->conditions ?? [];
-        $this->conditions = array_filter($conditions, function ($condition) use ($name) {
-            return ($condition['name'] ?? '') !== $name;
-        });
+        $this->conditions = array_filter($conditions, fn(array $condition) => ($condition['name'] ?? '') !== $name);
 
         return $this;
     }
@@ -281,9 +270,7 @@ class Cart extends Model
     {
         $conditions = $this->conditions ?? [];
 
-        return array_filter($conditions, function ($condition) use ($type) {
-            return ($condition['type'] ?? '') === $type;
-        });
+        return array_filter($conditions, fn(array $condition) => ($condition['type'] ?? '') === $type);
     }
 
     /** Clear all conditions */
@@ -311,7 +298,7 @@ class Cart extends Model
     protected function formattedSubTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->sub_total_with_conditions, 2),
+            get: fn (): string => '$' . number_format($this->sub_total_with_conditions, 2),
         );
     }
 
@@ -319,7 +306,7 @@ class Cart extends Model
     protected function formattedTax(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->tax, 2),
+            get: fn (): string => '$' . number_format($this->tax, 2),
         );
     }
 
@@ -327,7 +314,7 @@ class Cart extends Model
     protected function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->total, 2),
+            get: fn (): string => '$' . number_format($this->total, 2),
         );
     }
 
@@ -335,7 +322,7 @@ class Cart extends Model
     protected function formattedDiscount(): Attribute
     {
         return Attribute::make(
-            get: fn () => '$' . number_format($this->discount, 2),
+            get: fn (): string => '$' . number_format($this->discount, 2),
         );
     }
 
@@ -352,27 +339,27 @@ class Cart extends Model
     }
 
     /** Scope to filter by instance name */
-    public function scopeForInstance($query, string $instanceName)
+    protected function scopeForInstance(mixed $query, string $instanceName)
     {
         return $query->where('instance_name', $instanceName);
     }
 
     /** Scope to filter by user */
-    public function scopeForUser($query, int $userId)
+    protected function scopeForUser(mixed $query, int $userId)
     {
         return $query->where('user_id', $userId);
     }
 
     /** Scope to filter by session */
-    public function scopeForSession($query, string $sessionId)
+    protected function scopeForSession(mixed $query, string $sessionId)
     {
         return $query->where('session_id', $sessionId);
     }
 
     /** Scope to filter non-expired carts */
-    public function scopeActive($query)
+    protected function scopeActive(mixed $query)
     {
-        return $query->where(function ($q) {
+        return $query->where(function ($q): void {
             $q->whereNull('expires_at')
                 ->orWhere('expires_at', '>', now());
         });

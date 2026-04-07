@@ -62,10 +62,11 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quotation whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Quotation extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $casts = [
         'date' => 'date',
     ];
@@ -86,9 +87,9 @@ class Quotation extends Model
         'updated_at',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -118,6 +119,7 @@ class Quotation extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -125,11 +127,17 @@ class Quotation extends Model
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\QuotationDetails, $this>
+     */
     public function quotationDetails(): HasMany
     {
         return $this->hasMany(QuotationDetails::class, 'quotation_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
@@ -138,27 +146,24 @@ class Quotation extends Model
     /**
      * Get ajustement date.
      */
-    public function date(): Attribute
+    protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d M, Y'),
+            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($quotation) {
+        static::creating(function ($quotation): void {
             $prefix = settings()->quotation_prefix;
 
-            $latestQuotation = self::latest()->first();
+            $latestQuotation = self::query()->latest()->first();
 
-            if ($latestQuotation) {
-                $number = intval(substr($latestQuotation->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestQuotation ? intval(substr((string) $latestQuotation->reference, -3)) + 1 : 1;
 
             $quotation->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
@@ -170,7 +175,7 @@ class Quotation extends Model
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -180,7 +185,7 @@ class Quotation extends Model
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -190,7 +195,7 @@ class Quotation extends Model
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -200,7 +205,7 @@ class Quotation extends Model
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -210,7 +215,7 @@ class Quotation extends Model
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -220,7 +225,7 @@ class Quotation extends Model
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 }

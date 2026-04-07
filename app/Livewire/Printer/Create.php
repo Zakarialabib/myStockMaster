@@ -26,7 +26,7 @@ class Create extends Component
         'printer.port' => 'required|string|max:255',
         'printer.path' => 'required|string|max:255',
     ])]
-    public $printer;
+    public mixed $printer;
 
     public array $capability_profiles = [];
 
@@ -37,7 +37,7 @@ class Create extends Component
         $this->printer = $printer;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('printer_create'), 403);
 

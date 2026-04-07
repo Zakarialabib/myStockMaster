@@ -15,17 +15,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adjusted_products', function (Blueprint $table) {
-            $table->id();
+        Schema::create('adjusted_products', function (Blueprint $blueprint): void {
+            $blueprint->id();
 
-            $table->foreignIdFor(Adjustment::class)->constrained()->cascadeOnDelete();
-            $table->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
+            $blueprint->foreignIdFor(Adjustment::class)->constrained()->cascadeOnDelete();
+            $blueprint->foreignUuid('product_id')->nullable()->constrained()->cascadeOnDelete();
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->constrained()->cascadeOnDelete();
 
-            $table->integer('quantity');
-            $table->string('type');
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->integer('quantity');
+            $blueprint->string('type');
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

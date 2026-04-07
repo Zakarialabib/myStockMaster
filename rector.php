@@ -23,7 +23,8 @@ use RectorLaravel\Set\LaravelSetProvider;
  */
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/app/Livewire',
+        __DIR__ . '/app',
+        __DIR__ . '/database',
         // __DIR__ . '/bootstrap',
         // __DIR__ . '/config',
         // __DIR__ . '/database',
@@ -33,6 +34,8 @@ return RectorConfig::configure()
 
     // Keep Rector from touching generated/third-party/artifacts.
     ->withSkip([
+        __DIR__ . '/app/Livewire',
+        __DIR__ . '/app/Models',
         __DIR__ . '/bootstrap/cache',
         __DIR__ . '/public',
         __DIR__ . '/storage',

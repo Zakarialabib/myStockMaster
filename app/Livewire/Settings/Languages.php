@@ -28,15 +28,15 @@ class Languages extends Component
     public function render(): View|Factory
     {
         return view('livewire.translations', [
-            'languages' => Language::paginate(10),
+            'languages' => Language::query()->paginate(10),
         ]);
     }
 
-    public function onSetDefault($id): void
+    public function onSetDefault(mixed $id): void
     {
         try {
-            Language::where('is_default', '=', true)->update(['is_default' => false]);
-            $trans = Language::findOrFail($id);
+            Language::query()->where('is_default', '=', true)->update(['is_default' => false]);
+            $trans = Language::query()->findOrFail($id);
             $trans->is_default = true;
             $trans->updated_at = now();
             $trans->save();
@@ -52,9 +52,9 @@ class Languages extends Component
      *  Sync Translations
      * -------------------------------------------------------------------------------
      */
-    public function sync($id): void
+    public function sync(mixed $id): void
     {
-        $languages = Language::findOrFail($id);
+        $languages = Language::query()->findOrFail($id);
 
         Artisan::call('translatable:export', ['lang' => $languages->code]);
 

@@ -14,20 +14,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('email')->unique()->nullable();
-            $table->string('phone')->unique()->nullable();
-            $table->string('city')->nullable();
-            $table->string('country')->nullable();
-            $table->text('address')->nullable();
-            $table->string('tax_number')->nullable();
-            $table->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+        Schema::create('customers', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->string('name');
+            $blueprint->string('email')->unique()->nullable();
+            $blueprint->string('phone')->unique()->nullable();
+            $blueprint->string('city')->nullable();
+            $blueprint->string('country')->nullable();
+            $blueprint->text('address')->nullable();
+            $blueprint->string('tax_number')->nullable();
+            $blueprint->foreignUuid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             // $table->foreignIdFor(CustomerGroup::class)->nullable()->constrained('customer_groups')->cascadeOnDelete();
-            $table->boolean('status')->default(1);
-            $table->softDeletes();
-            $table->timestamps();
+            $blueprint->boolean('status')->default(1);
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

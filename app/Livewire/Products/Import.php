@@ -27,11 +27,11 @@ class Import extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $file;
+    public mixed $file = null;
 
-    public $sheetLink;
+    public mixed $sheetLink;
 
-    public $importModal = false;
+    public bool $importModal = false;
 
     public function render(): View|Factory
     {
@@ -64,7 +64,7 @@ class Import extends Component
             $filename = time() . '-product.' . $this->file->getClientOriginalExtension();
             $this->file->storeAs('products', $filename);
 
-            ImportJob::dispatch($filename);
+            dispatch(new \App\Jobs\ImportJob($filename));
 
             $this->alert('success', __('Product imported successfully!'));
         } else {
@@ -78,42 +78,33 @@ class Import extends Component
     public function import(): void
     {
         abort_if(Gate::denies('product_access'), 403);
-
-        try {
-            $this->validate([
-                'file' => 'required|mimes:xls,xlsx',
-            ]);
-
-            Excel::import(new ProductImport, $this->file);
-
-            $this->alert('success', __('Product imported successfully!'));
-
-            $this->importModal = false;
-        } catch (Throwable $th) {
-            throw $th;
-            // $this->alert('error', __('File is a '.$this->file->extension().' file.!! Please upload a valid xls/csv file..!!'));
-        }
+        $this->validate([
+            'file' => 'required|mimes:xls,xlsx',
+        ]);
+        Excel::import(new ProductImport, $this->file);
+        $this->alert('success', __('Product imported successfully!'));
+        $this->importModal = false;
     }
 
-    public function googleSheetImport()
+    public function googleSheetImport(): null
     {
         $response = Http::get($this->sheetLink);
 
         $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         foreach ($data as $row) {
-            $product = Product::where('name', $row[0])->first();
+            $product = Product::query()->where('name', $row[0])->first();
 
             $warehouseId = $row['warehouse'];
 
             if ($product === null) {
-                $product = Product::create([
+                $product = Product::query()->create([
                     'name' => $row['name'],
                     'description' => $row['description'],
                     'slug' => Str::slug($row['name'], '-') . '-' . Str::random(5),
                     'code' => $row['code'] ?? Str::random(10),
-                    'category_id' => Category::where('name', $row['category'])->first()->id ?? null,
-                    'brand_id' => Brand::where('name', $row['brand'])->first()->id ?? null,
+                    'category_id' => Category::query()->where('name', $row['category'])->first()->id ?? null,
+                    'brand_id' => Brand::query()->where('name', $row['brand'])->first()->id ?? null,
                     'image' => '',
                     // 'gallery' => getGalleryFromUrl($row[7]) ?? null,
                     'status' => 0,
@@ -140,5 +131,6 @@ class Import extends Component
 
             return null;
         }
+        return null;
     }
 }

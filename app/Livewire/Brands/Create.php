@@ -14,8 +14,8 @@ use Livewire\WithFileUploads;
 
 class Create extends Component
 {
-    use WithAlert, WithFileUploads;
-
+    use WithAlert;
+    use WithFileUploads;
     public bool $createModal = false;
 
     public BrandForm $form;
@@ -32,11 +32,11 @@ class Create extends Component
         $this->createModal = true;
     }
 
-    public function create(BrandService $service): void
+    public function create(BrandService $brandService): void
     {
         $this->form->validate();
 
-        $service->create($this->form->all());
+        $brandService->create($this->form->all());
 
         $this->dispatch('refreshIndex')->to(Index::class);
 
@@ -47,7 +47,7 @@ class Create extends Component
         $this->createModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('brand_create'), 403);
 

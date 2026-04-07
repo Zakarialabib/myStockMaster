@@ -14,7 +14,7 @@ class TransferService
     public function createTransfer(array $data, iterable $products): Transfer
     {
         return DB::transaction(function () use ($data, $products) {
-            $transfer = Transfer::create([
+            $transfer = Transfer::query()->create([
                 'reference' => $data['reference'],
                 'date' => $data['date'],
                 'user_id' => $data['user_id'] ?? auth()->id(),
@@ -34,7 +34,7 @@ class TransferService
             foreach ($products as $product) {
                 $qty = $product['quantities'] ?? $product['quantity'] ?? 1;
 
-                TransferDetails::create([
+                TransferDetails::query()->create([
                     'transfer_id' => $transfer->id,
                     'product_id' => $product['id'] ?? $product['product_id'],
                     'warehouse_id' => $data['to_warehouse_id'],
@@ -42,22 +42,19 @@ class TransferService
                 ]);
 
                 // Decrement the source ProductWarehouse
-                ProductWarehouse::where('product_id', $product['id'] ?? $product['product_id'])
+                ProductWarehouse::query()->where('product_id', $product['id'] ?? $product['product_id'])
                     ->where('warehouse_id', $data['from_warehouse_id'])
                     ->decrement('qty', $qty);
 
                 // Increment the destination ProductWarehouse
-                $destProductWarehouse = ProductWarehouse::firstOrCreate(
-                    [
-                        'product_id' => $product['id'] ?? $product['product_id'],
-                        'warehouse_id' => $data['to_warehouse_id'],
-                    ],
-                    [
-                        'price' => $product['price'] ?? 0,
-                        'cost' => $product['cost'] ?? 0,
-                        'qty' => 0,
-                    ]
-                );
+                $destProductWarehouse = ProductWarehouse::query()->firstOrCreate([
+                    'product_id' => $product['id'] ?? $product['product_id'],
+                    'warehouse_id' => $data['to_warehouse_id'],
+                ], [
+                    'price' => $product['price'] ?? 0,
+                    'cost' => $product['cost'] ?? 0,
+                    'qty' => 0,
+                ]);
 
                 $destProductWarehouse->increment('qty', $qty);
             }
@@ -68,16 +65,16 @@ class TransferService
 
     public function updateTransfer(Transfer $transfer, array $data, iterable $products): Transfer
     {
-        return DB::transaction(function () use ($transfer, $data, $products) {
+        return DB::transaction(function () use ($transfer, $data, $products): \App\Models\Transfer {
             // Revert stock from old transfer
             foreach ($transfer->transferDetails as $detail) {
                 // Re-increment the old source
-                ProductWarehouse::where('product_id', $detail->product_id)
+                ProductWarehouse::query()->where('product_id', $detail->product_id)
                     ->where('warehouse_id', $transfer->from_warehouse_id)
                     ->increment('qty', $detail->quantity);
 
                 // Decrement the old destination
-                ProductWarehouse::where('product_id', $detail->product_id)
+                ProductWarehouse::query()->where('product_id', $detail->product_id)
                     ->where('warehouse_id', $transfer->to_warehouse_id)
                     ->decrement('qty', $detail->quantity);
             }
@@ -108,7 +105,7 @@ class TransferService
                 $qty = $product['quantities'] ?? $product['quantity'] ?? 1;
                 $productId = $product['id'] ?? $product['product_id'];
 
-                TransferDetails::create([
+                TransferDetails::query()->create([
                     'transfer_id' => $transfer->id,
                     'product_id' => $productId,
                     'warehouse_id' => $data['to_warehouse_id'],
@@ -116,22 +113,19 @@ class TransferService
                 ]);
 
                 // Decrement the source ProductWarehouse
-                ProductWarehouse::where('product_id', $productId)
+                ProductWarehouse::query()->where('product_id', $productId)
                     ->where('warehouse_id', $data['from_warehouse_id'])
                     ->decrement('qty', $qty);
 
                 // Increment the destination ProductWarehouse
-                $destProductWarehouse = ProductWarehouse::firstOrCreate(
-                    [
-                        'product_id' => $productId,
-                        'warehouse_id' => $data['to_warehouse_id'],
-                    ],
-                    [
-                        'price' => $product['price'] ?? 0,
-                        'cost' => $product['cost'] ?? 0,
-                        'qty' => 0,
-                    ]
-                );
+                $destProductWarehouse = ProductWarehouse::query()->firstOrCreate([
+                    'product_id' => $productId,
+                    'warehouse_id' => $data['to_warehouse_id'],
+                ], [
+                    'price' => $product['price'] ?? 0,
+                    'cost' => $product['cost'] ?? 0,
+                    'qty' => 0,
+                ]);
 
                 $destProductWarehouse->increment('qty', $qty);
             }

@@ -17,17 +17,17 @@ class Index extends Component
     use Datatable;
 
     /** @var mixed */
-    public $cashRegister;
+    public mixed $cashRegister;
 
-    public $showFilters = false;
+    public bool $showFilters = false;
 
-    public $startDate;
+    public ?string $startDate = null;
 
-    public $endDate;
+    public ?string $endDate = null;
 
-    public $filterType;
+    public mixed $filterType;
 
-    public $model = CashRegister::class;
+    public string $model = CashRegister::class;
 
     public function mount(): void
     {
@@ -35,11 +35,11 @@ class Index extends Component
         $this->endDate = now()->endOfYear()->format('Y-m-d');
     }
 
-    public function filterByType($type): void
+    public function filterByType(mixed $type): void
     {
         switch ($type) {
             case 'day':
-                $this->startDate = now()->startOfDay()->format('Y-m-d');
+                $this->startDate = today()->format('Y-m-d');
                 $this->endDate = now()->endOfDay()->format('Y-m-d');
 
                 break;
@@ -56,7 +56,7 @@ class Index extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         // abort_if(Gate::denies('cashRegister_access'), 403);
 
@@ -77,7 +77,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('cashRegister_delete'), 403);
 
-        CashRegister::whereIn('id', $this->selected)->delete();
+        CashRegister::query()->whereIn('id', $this->selected)->delete();
 
         $this->resetSelected();
     }

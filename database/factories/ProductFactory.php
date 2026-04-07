@@ -24,7 +24,7 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->words(nb: 3, asText: true);
+        $name = fake()->unique()->words(nb: 3, asText: true);
 
         return [
             'id' => Str::uuid(),
@@ -34,7 +34,7 @@ class ProductFactory extends Factory
             'brand_id' => null,
             'slug' => Str::slug($name) . '-' . Str::uuid()->toString(),
             'unit' => 'pcs',
-            'description' => $this->faker->sentence,
+            'description' => fake()->sentence(),
             'image' => null, // uploadImage('images/products', '1000', '1000'),
             'gallery' => null,
             'barcode_symbology' => 'C39',
@@ -57,7 +57,7 @@ class ProductFactory extends Factory
      */
     public function featured(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'featured' => true,
         ]);
     }
@@ -69,18 +69,19 @@ class ProductFactory extends Factory
      */
     public function inactive(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'status' => false,
         ]);
     }
 
+    #[\Override]
     public function configure(): static
     {
-        return $this->afterCreating(function (Product $product) {
-            $warehouses = Warehouse::inRandomOrder()->limit(1)->get();
+        return $this->afterCreating(function (Product $product): void {
+            $warehouses = Warehouse::query()->inRandomOrder()->limit(1)->get();
 
             foreach ($warehouses as $warehouse) {
-                ProductWarehouse::create([
+                ProductWarehouse::query()->create([
                     'product_id' => $product->id,
                     'warehouse_id' => $warehouse->id,
                     'qty' => 20,

@@ -24,7 +24,7 @@ class Edit extends Component
 
     public Product $product;
 
-    public $productWarehouses;
+    public mixed $productWarehouses;
 
     public ProductForm $form;
 
@@ -36,15 +36,15 @@ class Edit extends Component
         ];
     }
 
-    public function removeOption($index): void
+    public function removeOption(mixed $index): void
     {
         unset($this->form->options[$index]);
         $this->form->options = array_values($this->form->options);
     }
 
-    public function mount($id): void
+    public function mount(int|string $id): void
     {
-        $this->product = Product::findOrFail($id);
+        $this->product = Product::query()->findOrFail($id);
         $this->productWarehouses = $this->product->warehouses;
         $this->form->setProduct($this->product);
     }
@@ -63,16 +63,16 @@ class Edit extends Component
     #[Computed]
     public function categories()
     {
-        return Category::pluck('name', 'id')->toArray();
+        return Category::query()->pluck('name', 'id')->toArray();
     }
 
     #[Computed]
     public function brands()
     {
-        return Brand::pluck('name', 'id')->toArray();
+        return Brand::query()->pluck('name', 'id')->toArray();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('product update'), 403);
 

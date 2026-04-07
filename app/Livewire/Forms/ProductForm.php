@@ -56,10 +56,10 @@ class ProductForm extends Form
     public ?string $description = null;
 
     #[Validate('nullable')]
-    public $image = null;
+    public mixed $image;
 
     #[Validate('nullable|array')]
-    public $gallery = [];
+    public mixed $gallery = [];
 
     #[Validate([
         'options.*.type' => '',
@@ -135,7 +135,7 @@ class ProductForm extends Form
             'old_price' => $warehouse->pivot->old_price,
             'stock_alert' => $warehouse->pivot->stock_alert,
             'is_ecommerce' => $warehouse->pivot->is_ecommerce,
-        ]])->toArray();
+        ]])->all();
 
         // Attributes are not defined on Product model
         // $this->selectedAttributes = $product->attributes->mapWithKeys(function ($attr) {

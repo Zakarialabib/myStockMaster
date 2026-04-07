@@ -12,30 +12,30 @@ use Throwable;
 
 class DesktopErrorHandler
 {
-    private const ERROR_CACHE_PREFIX = 'desktop_error_';
+    private const string ERROR_CACHE_PREFIX = 'desktop_error_';
 
-    private const ERROR_CACHE_TTL = 3600; // 1 hour
+    private const int ERROR_CACHE_TTL = 3600; // 1 hour
 
-    private const MAX_ERROR_HISTORY = 50;
+    private const int MAX_ERROR_HISTORY = 50;
 
     /** Handle desktop-specific errors */
-    public function handleError(Throwable $error, array $context = []): array
+    public function handleError(Throwable $throwable, array $context = []): array
     {
         $errorId = $this->generateErrorId();
         $userId = Auth::id();
 
         $errorData = [
             'id' => $errorId,
-            'message' => $error->getMessage(),
-            'code' => $error->getCode(),
-            'file' => $error->getFile(),
-            'line' => $error->getLine(),
-            'trace' => $error->getTraceAsString(),
+            'message' => $throwable->getMessage(),
+            'code' => $throwable->getCode(),
+            'file' => $throwable->getFile(),
+            'line' => $throwable->getLine(),
+            'trace' => $throwable->getTraceAsString(),
             'context' => $context,
             'user_id' => $userId,
             'timestamp' => now()->toISOString(),
-            'severity' => $this->determineSeverity($error),
-            'category' => $this->categorizeError($error),
+            'severity' => $this->determineSeverity($throwable),
+            'category' => $this->categorizeError($throwable),
             'desktop_specific' => true,
         ];
 
@@ -61,25 +61,25 @@ class DesktopErrorHandler
             'user_message' => $notification['message'],
             'show_notification' => $notification['show'],
             'notification_type' => $notification['type'],
-            'recovery_suggestions' => $this->getRecoverySuggestions($error),
-            'should_report' => $this->shouldReportError($error),
+            'recovery_suggestions' => $this->getRecoverySuggestions($throwable),
+            'should_report' => $this->shouldReportError($throwable),
         ];
     }
 
     /** Handle PHP errors */
     public function handlePhpError(int $severity, string $message, string $file, int $line): void
     {
-        $error = new ErrorException($message, 0, $severity, $file, $line);
-        $this->handleError($error, [
+        $errorException = new ErrorException($message, 0, $severity, $file, $line);
+        $this->handleError($errorException, [
             'type' => 'php_error',
             'severity_level' => $severity,
         ]);
     }
 
     /** Handle exceptions */
-    public function handleException(Throwable $exception): void
+    public function handleException(Throwable $throwable): void
     {
-        $this->handleError($exception, [
+        $this->handleError($throwable, [
             'type' => 'exception',
         ]);
     }
@@ -126,7 +126,7 @@ class DesktopErrorHandler
     /** Get error history for user */
     public function getErrorHistory(int|string $userId, int $limit = 20): array
     {
-        $cacheKey = "desktop_error_history_{$userId}";
+        $cacheKey = 'desktop_error_history_' . $userId;
         $history = Cache::get($cacheKey, []);
 
         return array_slice($history, -$limit);
@@ -143,7 +143,7 @@ class DesktopErrorHandler
     /** Clear error history for user */
     public function clearErrorHistory(int|string $userId): bool
     {
-        $cacheKey = "desktop_error_history_{$userId}";
+        $cacheKey = 'desktop_error_history_' . $userId;
 
         return Cache::forget($cacheKey);
     }
@@ -163,13 +163,13 @@ class DesktopErrorHandler
             'most_frequent' => null,
         ];
 
-        $today = now()->startOfDay();
+        $today = today();
         $weekStart = now()->startOfWeek();
         $categoryCount = [];
         $messageCount = [];
 
         foreach ($history as $error) {
-            $errorTime = \Carbon\Carbon::parse($error['timestamp']);
+            $errorTime = \Illuminate\Support\Facades\Date::parse($error['timestamp']);
 
             // Count by time
             if ($errorTime->gte($today)) {
@@ -193,7 +193,7 @@ class DesktopErrorHandler
             $messageCount[$message] = ($messageCount[$message] ?? 0) + 1;
 
             // Most recent
-            if (! $stats['most_recent'] || $errorTime->gt(\Carbon\Carbon::parse($stats['most_recent']['timestamp']))) {
+            if (! $stats['most_recent'] || $errorTime->gt(\Illuminate\Support\Facades\Date::parse($stats['most_recent']['timestamp']))) {
                 $stats['most_recent'] = $error;
             }
         }
@@ -201,7 +201,7 @@ class DesktopErrorHandler
         $stats['by_category'] = $categoryCount;
 
         // Find most frequent error
-        if (! empty($messageCount)) {
+        if ($messageCount !== []) {
             arsort($messageCount);
             $mostFrequentMessage = array_key_first($messageCount);
             $stats['most_frequent'] = [
@@ -220,10 +220,10 @@ class DesktopErrorHandler
     }
 
     /** Determine error severity */
-    private function determineSeverity(Throwable $error): string
+    private function determineSeverity(Throwable $throwable): string
     {
-        $message = strtolower($error->getMessage());
-        $class = get_class($error);
+        $message = strtolower($throwable->getMessage());
+        $class = $throwable::class;
 
         // Critical errors
         if (str_contains($message, 'fatal') ||
@@ -252,10 +252,10 @@ class DesktopErrorHandler
     }
 
     /** Categorize error type */
-    private function categorizeError(Throwable $error): string
+    private function categorizeError(Throwable $throwable): string
     {
-        $message = strtolower($error->getMessage());
-        $class = get_class($error);
+        $message = strtolower($throwable->getMessage());
+        $class = $throwable::class;
 
         if (str_contains($class, 'PDO') || str_contains($message, 'database')) {
             return 'database';
@@ -314,13 +314,13 @@ class DesktopErrorHandler
     private function storeErrorForDesktop(string $errorId, array $errorData): void
     {
         $cacheKey = self::ERROR_CACHE_PREFIX . $errorId;
-        Cache::put($cacheKey, $errorData, self::ERROR_CACHE_TTL);
+        Cache::put($cacheKey, $errorData, self::ERROR_CACHE_TTL * 60);
     }
 
     /** Add error to user's error history */
     private function addToErrorHistory(int|string $userId, array $errorData): void
     {
-        $cacheKey = "desktop_error_history_{$userId}";
+        $cacheKey = 'desktop_error_history_' . $userId;
         $history = Cache::get($cacheKey, []);
 
         $history[] = $errorData;
@@ -337,7 +337,6 @@ class DesktopErrorHandler
     private function createUserNotification(array $errorData): array
     {
         $severity = $errorData['severity'];
-        $category = $errorData['category'];
 
         $showNotification = in_array($severity, ['high', 'critical']);
 
@@ -365,9 +364,9 @@ class DesktopErrorHandler
     }
 
     /** Get recovery suggestions for error */
-    private function getRecoverySuggestions(Throwable $error): array
+    private function getRecoverySuggestions(Throwable $throwable): array
     {
-        $category = $this->categorizeError($error);
+        $category = $this->categorizeError($throwable);
 
         return match ($category) {
             'database' => [
@@ -400,11 +399,11 @@ class DesktopErrorHandler
     }
 
     /** Determine if error should be reported to external service */
-    private function shouldReportError(Throwable $error): bool
+    private function shouldReportError(Throwable $throwable): bool
     {
-        $severity = $this->determineSeverity($error);
+        $severity = $this->determineSeverity($throwable);
 
-        return in_array($severity, ['high', 'critical']);
+        return in_array($severity, ['high', 'critical'], true);
     }
 
     /** Get user-friendly JavaScript error message */

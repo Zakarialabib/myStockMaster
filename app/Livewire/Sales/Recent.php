@@ -18,15 +18,15 @@ class Recent extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public $sale;
+    public mixed $sale;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $recentSalesVisible = false;
+    public bool $recentSalesVisible = false;
 
-    public $model = Sale::class;
+    public string $model = Sale::class;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('sale_access'), 403);
 
@@ -42,7 +42,7 @@ class Recent extends Component
     }
 
     #[On('showModal')]
-    public function showModal($id): void
+    public function showModal(int|string $id): void
     {
         abort_if(Gate::denies('sale_access'), 403);
 

@@ -42,7 +42,7 @@ class ProductAnalytics extends Component
 
     public bool $showComparison = false;
 
-    public function mount($productId = null)
+    public function mount(int|string|null $productId = null): void
     {
         $this->productId = $productId;
         $this->dateFrom = now()->subDays(30)->format('Y-m-d');
@@ -53,13 +53,13 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function updatedProductId()
+    public function updatedProductId(): void
     {
         $this->validateOnly('productId');
         $this->loadProductAnalytics();
     }
 
-    public function updatedDateFrom()
+    public function updatedDateFrom(): void
     {
         $this->validateOnly('dateFrom');
 
@@ -68,7 +68,7 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function updatedDateTo()
+    public function updatedDateTo(): void
     {
         $this->validateOnly('dateTo');
 
@@ -77,38 +77,38 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function loadProductAnalytics()
+    public function loadProductAnalytics(): void
     {
         if (! $this->productId) {
             return;
         }
 
         try {
-            $product = Product::findOrFail($this->productId);
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $product = Product::query()->findOrFail($this->productId);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
             // Generate product analytics
-            $analyticsAction = new GenerateProductAnalyticsAction;
-            $this->analyticsData = $analyticsAction($product, [
+            $generateProductAnalyticsAction = new GenerateProductAnalyticsAction;
+            $this->analyticsData = $generateProductAnalyticsAction($product, [
                 'date_from' => $dateFrom,
                 'date_to' => $dateTo,
             ]);
 
             // Get price trends
-            $priceTrendsAction = new AnalyzePriceTrendsAction;
-            $this->priceTrends = $priceTrendsAction->getPriceHistory($product);
+            $analyzePriceTrendsAction = new AnalyzePriceTrendsAction;
+            $this->priceTrends = $analyzePriceTrendsAction->getPriceHistory($product);
 
             // Load comparison data if products are selected
-            if (! empty($this->comparisonProducts)) {
+            if ($this->comparisonProducts !== []) {
                 $this->loadComparisonData($dateFrom, $dateTo);
             }
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to load product analytics: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to load product analytics: ' . $exception->getMessage());
         }
     }
 
-    public function addComparisonProduct($productId)
+    public function addComparisonProduct(mixed $productId): void
     {
         if (! in_array($productId, $this->comparisonProducts) && count($this->comparisonProducts) < 3) {
             $this->comparisonProducts[] = $productId;
@@ -117,20 +117,18 @@ class ProductAnalytics extends Component
         }
     }
 
-    public function removeComparisonProduct($productId)
+    public function removeComparisonProduct(mixed $productId): void
     {
-        $this->comparisonProducts = array_filter($this->comparisonProducts, function ($id) use ($productId) {
-            return $id != $productId;
-        });
+        $this->comparisonProducts = array_filter($this->comparisonProducts, fn($id) => $id != $productId);
 
-        if (empty($this->comparisonProducts)) {
+        if ($this->comparisonProducts === []) {
             $this->showComparison = false;
         }
 
         $this->loadProductAnalytics();
     }
 
-    public function toggleComparison()
+    public function toggleComparison(): void
     {
         $this->showComparison = ! $this->showComparison;
 
@@ -139,24 +137,24 @@ class ProductAnalytics extends Component
         }
     }
 
-    private function loadComparisonData($dateFrom, $dateTo)
+    private function loadComparisonData(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
     {
-        $analyticsAction = new GenerateProductAnalyticsAction;
-        $priceTrendsAction = new AnalyzePriceTrendsAction;
+        $generateProductAnalyticsAction = new GenerateProductAnalyticsAction;
+        $analyzePriceTrendsAction = new AnalyzePriceTrendsAction;
 
         $this->analyticsData['comparison'] = [];
 
-        foreach ($this->comparisonProducts as $productId) {
-            $product = Product::find($productId);
+        foreach ($this->comparisonProducts as $comparisonProduct) {
+            $product = Product::query()->find($comparisonProduct);
 
             if ($product) {
-                $this->analyticsData['comparison'][$productId] = [
+                $this->analyticsData['comparison'][$comparisonProduct] = [
                     'product' => $product,
-                    'analytics' => $analyticsAction($product, [
+                    'analytics' => $generateProductAnalyticsAction($product, [
                         'date_from' => $dateFrom,
                         'date_to' => $dateTo,
                     ]),
-                    'price_trends' => $priceTrendsAction->getPriceHistory($product),
+                    'price_trends' => $analyzePriceTrendsAction->getPriceHistory($product),
                 ];
             }
         }
@@ -165,10 +163,10 @@ class ProductAnalytics extends Component
     public function exportAnalytics()
     {
         try {
-            $product = Product::find($this->productId);
+            $product = Product::query()->find($this->productId);
             $filename = 'product_analytics_' . $product->code . '_' . now()->format('Y-m-d_H-i-s') . '.json';
 
-            return response()->streamDownload(function () {
+            return response()->streamDownload(function (): void {
                 $exportData = [
                     'product_id' => $this->productId,
                     'date_range' => [
@@ -186,9 +184,11 @@ class ProductAnalytics extends Component
                         if (! $first) {
                             yield ',';
                         }
+
                         yield '"' . $key . '":' . json_encode($value);
                         $first = false;
                     }
+
                     yield '}';
                 };
 
@@ -198,22 +198,22 @@ class ProductAnalytics extends Component
             }, $filename, [
                 'Content-Type' => 'application/json',
             ]);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to export analytics: ' . $e->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to export analytics: ' . $exception->getMessage());
         }
     }
 
     #[Computed]
     public function products()
     {
-        return Product::select('id', 'name', 'code')
+        return Product::query()->select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $selectedProduct = $this->productId ? Product::find($this->productId) : null;
+        $selectedProduct = $this->productId ? Product::query()->find($this->productId) : null;
 
         return view('livewire.analytics.product-analytics', [
             'selectedProduct' => $selectedProduct,

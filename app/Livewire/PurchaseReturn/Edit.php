@@ -23,16 +23,16 @@ class Edit extends Component
 
     public PurchaseReturnForm $form;
 
-    public $purchasereturn;
+    public mixed $purchasereturn;
 
-    public function mount($id, string $cartInstance = 'purchase_return'): void
+    public function mount(mixed $id, string $cartInstance = 'purchase_return'): void
     {
         abort_if(Gate::denies('purchase_update'), 403);
 
         $this->cartInstance = $cartInstance;
         $this->initializeCart($cartInstance);
 
-        $this->purchasereturn = PurchaseReturn::findOrFail($id);
+        $this->purchasereturn = PurchaseReturn::query()->findOrFail($id);
 
         $this->form->supplier_id = $this->purchasereturn->supplier_id;
         $this->form->reference = $this->purchasereturn->reference;
@@ -49,7 +49,7 @@ class Edit extends Component
         $this->clearCart();
 
         foreach ($this->purchasereturn->purchaseReturnDetails as $detail) {
-            $product = Product::findOrFail($detail->product_id);
+            $product = Product::query()->findOrFail($detail->product_id);
             $this->addToCart([
                 'id' => $detail->product_id,
                 'name' => $detail->name,
@@ -93,7 +93,7 @@ class Edit extends Component
 
         $this->form->validate();
 
-        app(PurchaseReturnService::class)->update(
+        resolve(PurchaseReturnService::class)->update(
             $this->purchasereturn,
             [
                 'date' => $this->form->date,
@@ -119,9 +119,9 @@ class Edit extends Component
         $this->redirectRoute('purchase-returns.index', navigate: true);
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $suppliers = Supplier::select(['id', 'name'])->get();
+        $suppliers = Supplier::query()->select(['id', 'name'])->get();
 
         return view('livewire.purchase-return.edit', [
             'cart_items' => $this->cartContent,

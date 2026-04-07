@@ -32,7 +32,7 @@ class NotificationManager extends Component
 
     public $selectedNotifications = [];
 
-    public $selectAll = false;
+    public bool $selectAll = false;
 
     #[Computed]
     public function lowQuantity()
@@ -43,101 +43,96 @@ class NotificationManager extends Component
             ->get();
     }
 
-    public function updatedSearchTerm()
+    public function updatedSearchTerm(): void
     {
         $this->resetPage();
     }
 
-    public function updatedFilterType()
+    public function updatedFilterType(): void
     {
         $this->resetPage();
     }
 
-    public function updatedFilterRead()
+    public function updatedFilterRead(): void
     {
         $this->resetPage();
     }
 
-    public function updatedSelectAll($value)
+    public function updatedSelectAll(mixed $value): void
     {
-        if ($value) {
-            $this->selectedNotifications = $this->getNotificationsQuery()->pluck('id')->toArray();
-        } else {
-            $this->selectedNotifications = [];
-        }
+        $this->selectedNotifications = $value ? $this->getNotificationsQuery()->pluck('id')->toArray() : [];
     }
 
-    public function updatedSelectedNotifications()
+    public function updatedSelectedNotifications(): void
     {
         $this->selectAll = count($this->selectedNotifications) === $this->getNotificationsQuery()->count() && $this->selectedNotifications !== [];
     }
 
     public function getNotificationsQuery()
     {
-        $query = Notification::query()
-            ->where('notifiable_id', auth()->id())
-            ->orderBy('created_at', 'desc');
+        $builder = Notification::query()
+            ->where('notifiable_id', auth()->id())->latest();
 
         if ($this->filterType !== 'all') {
-            $query->where('type', $this->filterType);
+            $builder->where('type', $this->filterType);
         }
 
         if ($this->filterRead === 'read') {
-            $query->whereNotNull('read_at');
+            $builder->whereNotNull('read_at');
         } elseif ($this->filterRead === 'unread') {
-            $query->whereNull('read_at');
+            $builder->whereNull('read_at');
         }
 
         if ($this->searchTerm) {
-            $query->where(function ($q) {
-                $q->where('data', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('type', 'like', '%' . $this->searchTerm . '%');
+            $builder->where(function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+                $builder->whereLike('data', '%' . $this->searchTerm . '%')
+                    ->orWhereLike('type', '%' . $this->searchTerm . '%');
             });
         }
 
-        return $query;
+        return $builder;
     }
 
-    public function markAsRead($id)
+    public function markAsRead(mixed $id): void
     {
-        $notification = Notification::findOrFail($id);
+        $notification = Notification::query()->findOrFail($id);
         $notification->markAsRead();
         $this->success(__('Notification marked as read.'));
     }
 
-    public function markAsUnread($id)
+    public function markAsUnread(mixed $id): void
     {
-        $notification = Notification::findOrFail($id);
+        $notification = Notification::query()->findOrFail($id);
         $notification->read_at = null;
         $notification->save();
         $this->success(__('Notification marked as unread.'));
     }
 
-    public function deleteNotification($id)
+    public function deleteNotification(mixed $id): void
     {
-        Notification::findOrFail($id)->delete();
+        Notification::query()->findOrFail($id)->delete();
         $this->success(__('Notification deleted.'));
     }
 
-    public function markAllAsRead()
+    public function markAllAsRead(): void
     {
         $this->getNotificationsQuery()->whereNull('read_at')->update(['read_at' => now()]);
         $this->success(__('All filtered notifications marked as read.'));
     }
 
-    public function deleteSelected()
+    public function deleteSelected(): void
     {
-        Notification::whereIn('id', $this->selectedNotifications)->delete();
+        Notification::query()->whereIn('id', $this->selectedNotifications)->delete();
         $this->selectedNotifications = [];
         $this->selectAll = false;
         $this->success(__('Selected notifications deleted.'));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $notifications = $this->getNotificationsQuery()->paginate(15);
 
-        $notificationTypes = Notification::where('notifiable_id', auth()->id())
+        $notificationTypes = Notification::query()->where('notifiable_id', auth()->id())
             ->select('type')
             ->distinct()
             ->pluck('type');

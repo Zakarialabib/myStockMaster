@@ -11,22 +11,22 @@ return new class extends Migration
     /** Run the migrations. */
     public function up(): void
     {
-        Schema::create('analytics_reports', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('type'); // 'revenue', 'product_performance', 'sales_trend', etc.
-            $table->json('parameters'); // Store report parameters like date range, filters
-            $table->json('data'); // Store calculated report data
-            $table->json('metadata')->nullable(); // Additional metadata like chart configs
-            $table->string('status')->default('pending'); // 'pending', 'processing', 'completed', 'failed'
-            $table->timestamp('generated_at')->nullable();
-            $table->uuid('created_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create('analytics_reports', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->string('name');
+            $blueprint->string('type'); // 'revenue', 'product_performance', 'sales_trend', etc.
+            $blueprint->json('parameters'); // Store report parameters like date range, filters
+            $blueprint->json('data'); // Store calculated report data
+            $blueprint->json('metadata')->nullable(); // Additional metadata like chart configs
+            $blueprint->string('status')->default('pending'); // 'pending', 'processing', 'completed', 'failed'
+            $blueprint->timestamp('generated_at')->nullable();
+            $blueprint->uuid('created_by')->nullable();
+            $blueprint->timestamps();
+            $blueprint->softDeletes();
 
-            $table->index(['type', 'created_at']);
-            $table->index(['status', 'created_at']);
-            $table->index('created_by');
+            $blueprint->index(['type', 'created_at']);
+            $blueprint->index(['status', 'created_at']);
+            $blueprint->index('created_by');
         });
     }
 

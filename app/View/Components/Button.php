@@ -8,26 +8,22 @@ use Illuminate\View\Component;
 
 class Button extends Component
 {
-    public $type;
-
-    public $href;
-
-    public $icon;
-
-    public $iconPosition;
-
-    public $size;
-
+    /**
+     * @var 'primary'|'secondary'|'info'|'success'|'danger'|'warning'|'alert'
+     */
     public $variant;
 
+    /**
+     * @var bool
+     */
     public $outline;
 
     public function __construct(
-        $type = null,
-        $href = '#',
-        $icon = null,
-        $iconPosition = 'left',
-        $size = 'md',
+        public $type = null,
+        public $href = '#',
+        public $icon = null,
+        public $iconPosition = 'left',
+        public $size = 'md',
         $variant = 'primary',
         $outline = false,
         // Legacy boolean props
@@ -46,12 +42,6 @@ class Button extends Component
         $dangerOutline = false,
         $warningOutline = false
     ) {
-        $this->type = $type;
-        $this->href = $href;
-        $this->icon = $icon;
-        $this->iconPosition = $iconPosition;
-        $this->size = $size;
-
         // Determine outline
         $this->outline = $outline ||
             $primaryOutline || $secondaryOutline || $infoOutline ||
@@ -77,7 +67,7 @@ class Button extends Component
         }
     }
 
-    public function getClasses()
+    public function getClasses(): string
     {
         $sizeClasses = [
             'xs' => 'px-2.5 py-1.5 text-xs',

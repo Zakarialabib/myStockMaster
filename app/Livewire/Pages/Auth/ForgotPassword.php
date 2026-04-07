@@ -34,7 +34,7 @@ class ForgotPassword extends Component
         Session::flash('status', __($status));
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.pages.auth.forgot-password');
     }

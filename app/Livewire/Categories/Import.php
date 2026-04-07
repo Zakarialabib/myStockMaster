@@ -16,10 +16,10 @@ class Import extends Component
 {
     use WithFileUploads;
 
-    public $file;
+    public mixed $file = null;
 
     /** @var bool */
-    public $importModal = false;
+    public bool $importModal = false;
 
     #[On('importModal')]
     public function openImportModal(): void
@@ -49,7 +49,7 @@ class Import extends Component
         $this->importModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.categories.import');
     }

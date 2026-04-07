@@ -41,66 +41,66 @@ class RevenueReports extends Component
 
     public bool $includeTimeBreakdown = true;
 
-    public function placeholder()
+    public function placeholder(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.placeholders.skeleton');
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->dateFrom = now()->subDays(30)->format('Y-m-d');
         $this->dateTo = now()->format('Y-m-d');
         $this->loadRevenueReport();
     }
 
-    public function updatedDateFrom()
+    public function updatedDateFrom(): void
     {
         $this->validateOnly('dateFrom');
         $this->loadRevenueReport();
     }
 
-    public function updatedDateTo()
+    public function updatedDateTo(): void
     {
         $this->validateOnly('dateTo');
         $this->loadRevenueReport();
     }
 
-    public function updatedReportType()
+    public function updatedReportType(): void
     {
         $this->validateOnly('reportType');
         $this->loadRevenueReport();
     }
 
-    public function updatedCategoryFilter()
+    public function updatedCategoryFilter(): void
     {
         $this->loadRevenueReport();
     }
 
-    public function updatedProductFilter()
+    public function updatedProductFilter(): void
     {
         $this->loadRevenueReport();
     }
 
-    public function updatedIncludeProductBreakdown()
+    public function updatedIncludeProductBreakdown(): void
     {
         $this->loadRevenueReport();
     }
 
-    public function updatedIncludeCategoryBreakdown()
+    public function updatedIncludeCategoryBreakdown(): void
     {
         $this->loadRevenueReport();
     }
 
-    public function updatedIncludeTimeBreakdown()
+    public function updatedIncludeTimeBreakdown(): void
     {
         $this->loadRevenueReport();
     }
 
-    public function loadRevenueReport()
+    public function loadRevenueReport(): void
     {
         try {
-            $dateFrom = Carbon::parse($this->dateFrom);
-            $dateTo = Carbon::parse($this->dateTo);
+            $dateFrom = \Illuminate\Support\Facades\Date::parse($this->dateFrom);
+            $dateTo = \Illuminate\Support\Facades\Date::parse($this->dateTo);
 
             $options = [
                 'time_breakdown' => $this->reportType,
@@ -118,19 +118,19 @@ class RevenueReports extends Component
                 $options['product_filter'] = $this->productFilter;
             }
 
-            $revenueAction = new GenerateRevenueReportAction;
+            $generateRevenueReportAction = new GenerateRevenueReportAction;
             $options = array_merge([
                 'date_from' => $dateFrom,
                 'date_to' => $dateTo,
             ], $options);
-            $this->revenueData = $revenueAction($options);
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to load revenue report: ' . $e->getMessage());
+            $this->revenueData = $generateRevenueReportAction($options);
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to load revenue report: ' . $exception->getMessage());
             $this->revenueData = [];
         }
     }
 
-    public function resetFilters()
+    public function resetFilters(): void
     {
         $this->categoryFilter = null;
         $this->productFilter = null;
@@ -140,26 +140,23 @@ class RevenueReports extends Component
         $this->loadRevenueReport();
     }
 
-    public function exportReport($format = 'json')
+    public function exportReport(mixed $format = 'json')
     {
         try {
             $filename = 'revenue_report_' . $this->reportType . '_' . now()->format('Y-m-d_H-i-s');
 
-            switch ($format) {
-                case 'csv':
-                    return $this->exportCSV($filename);
-                case 'json':
-                default:
-                    return $this->exportJSON($filename);
-            }
-        } catch (Exception $e) {
-            session()->flash('error', 'Failed to export report: ' . $e->getMessage());
+            return match ($format) {
+                'csv' => $this->exportCSV($filename),
+                default => $this->exportJSON($filename),
+            };
+        } catch (Exception $exception) {
+            session()->flash('error', 'Failed to export report: ' . $exception->getMessage());
         }
     }
 
-    private function exportJSON($filename)
+    private function exportJSON(string $filename)
     {
-        return response()->streamDownload(function () {
+        return response()->streamDownload(function (): void {
             $exportData = [
                 'report_type' => $this->reportType,
                 'date_range' => [
@@ -186,9 +183,11 @@ class RevenueReports extends Component
                     if (! $first) {
                         yield ',';
                     }
+
                     yield '"' . $key . '":' . json_encode($value);
                     $first = false;
                 }
+
                 yield '}';
             };
 
@@ -200,9 +199,9 @@ class RevenueReports extends Component
         ]);
     }
 
-    private function exportCSV($filename)
+    private function exportCSV(string $filename)
     {
-        return response()->streamDownload(function () {
+        return response()->streamDownload(function (): void {
             $output = fopen('php://output', 'w');
 
             // Write headers
@@ -231,8 +230,11 @@ class RevenueReports extends Component
         ]);
     }
 
+    /**
+     * @return mixed[]|array<'labels', list>
+     */
     #[Computed]
-    public function chartData()
+    public function chartData(): array
     {
         if (! isset($this->revenueData['time_breakdown'])) {
             return [];
@@ -271,7 +273,7 @@ class RevenueReports extends Component
     #[Computed]
     public function categories()
     {
-        return Category::select('id', 'name')
+        return Category::query()->select('id', 'name')
             ->orderBy('name')
             ->get();
     }
@@ -279,12 +281,12 @@ class RevenueReports extends Component
     #[Computed]
     public function products()
     {
-        return Product::select('id', 'name', 'code')
+        return Product::query()->select('id', 'name', 'code')
             ->orderBy('name')
             ->get();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.analytics.revenue-reports');
     }

@@ -54,7 +54,7 @@ final class AnalyzePriceTrendsAction
         $this->validateModel($model);
 
         return $model->priceHistory()
-            ->orderByDesc('effective_date')
+            ->latest('effective_date')
             ->get()
             ->map(fn (PriceHistory $priceHistory): array => [
                 'price' => $priceHistory->price,
@@ -107,7 +107,7 @@ final class AnalyzePriceTrendsAction
         }
 
         // Find extremes
-        if (! empty($volatilities)) {
+        if ($volatilities !== []) {
             $mostVolatileId = array_keys($volatilities, max($volatilities))[0];
             $mostStableId = array_keys($volatilities, min($volatilities))[0];
             $highestIncreaseId = array_keys($priceChanges, max($priceChanges))[0];
@@ -209,7 +209,7 @@ final class AnalyzePriceTrendsAction
         $mean = array_sum($prices) / count($prices);
         $variance = array_reduce(
             $prices,
-            fn ($carry, $price) => $carry + ($price - $mean) ** 2,
+            fn ($carry, $price): float|int => $carry + ($price - $mean) ** 2,
             0,
         ) / (count($prices) - 1);
 
@@ -230,20 +230,14 @@ final class AnalyzePriceTrendsAction
 
     private function validateModel($model): void
     {
-        if (! ($model instanceof Product)) {
-            throw new InvalidArgumentException('Model must be an instance of Product');
-        }
+        throw_unless($model instanceof Product, InvalidArgumentException::class, 'Model must be an instance of Product');
     }
 
     private function validateDays(int $days): void
     {
-        if ($days <= 0) {
-            throw new InvalidArgumentException('Days must be a positive integer');
-        }
+        throw_if($days <= 0, InvalidArgumentException::class, 'Days must be a positive integer');
 
-        if ($days > 365) {
-            throw new InvalidArgumentException('Analysis period cannot exceed 365 days');
-        }
+        throw_if($days > 365, InvalidArgumentException::class, 'Analysis period cannot exceed 365 days');
     }
 
     private function getCacheKey($model, int $days): string

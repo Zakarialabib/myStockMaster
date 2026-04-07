@@ -16,7 +16,7 @@ class SupplierForm extends Form
     public ?string $email = null;
 
     #[Validate('required|numeric', message: 'The phone field is required and must be a numeric value.')]
-    public $phone;
+    public mixed $phone;
 
     #[Validate('nullable|max:255', message: 'The city field must be a string with a maximum of 255 characters.')]
     public ?string $city = null;

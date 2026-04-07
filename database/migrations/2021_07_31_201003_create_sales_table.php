@@ -17,29 +17,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->date('date');
-            $table->string('reference');
-            $table->foreignIdFor(Customer::class)->nullable()->index()->constrained()->nullOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Warehouse::class)->nullable()->index()->constrained()->nullOnDelete();
-            $table->foreignIdFor(CashRegister::class)->nullable()->index()->constrained()->nullOnDelete();
-            $table->integer('tax_percentage')->default(0);
-            $table->decimal('tax_amount', 15, 2)->default(0);
-            $table->integer('discount_percentage')->default(0);
-            $table->decimal('discount_amount', 15, 2)->default(0);
-            $table->decimal('shipping_amount', 15, 2)->default(0);
-            $table->decimal('total_amount', 15, 2);
-            $table->decimal('paid_amount', 15, 2);
-            $table->decimal('due_amount', 15, 2);
-            $table->integer('payment_id')->nullable();
-            $table->string('status');
-            $table->string('shipping_status')->nullable();
-            $table->string('document')->nullable();
-            $table->text('note')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::create('sales', function (Blueprint $blueprint): void {
+            $blueprint->uuid('id')->primary();
+            $blueprint->date('date');
+            $blueprint->string('reference');
+            $blueprint->foreignIdFor(Customer::class)->nullable()->index()->constrained()->nullOnDelete();
+            $blueprint->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $blueprint->foreignIdFor(Warehouse::class)->nullable()->index()->constrained()->nullOnDelete();
+            $blueprint->foreignIdFor(CashRegister::class)->nullable()->index()->constrained()->nullOnDelete();
+            $blueprint->integer('tax_percentage')->default(0);
+            $blueprint->decimal('tax_amount', 15, 2)->default(0);
+            $blueprint->integer('discount_percentage')->default(0);
+            $blueprint->decimal('discount_amount', 15, 2)->default(0);
+            $blueprint->decimal('shipping_amount', 15, 2)->default(0);
+            $blueprint->decimal('total_amount', 15, 2);
+            $blueprint->decimal('paid_amount', 15, 2);
+            $blueprint->decimal('due_amount', 15, 2);
+            $blueprint->integer('payment_id')->nullable();
+            $blueprint->string('status');
+            $blueprint->string('shipping_status')->nullable();
+            $blueprint->string('document')->nullable();
+            $blueprint->text('note')->nullable();
+            $blueprint->softDeletes();
+            $blueprint->timestamps();
         });
     }
 

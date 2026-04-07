@@ -36,7 +36,7 @@ class Edit extends Component
     #[Validate('required')]
     public ?string $message = null;
 
-    public function updatedMessage($value): void
+    public function updatedMessage(?string $value): void
     {
         $this->message = $value;
     }
@@ -49,7 +49,7 @@ class Edit extends Component
     }
 
     #[On('editModal')]
-    public function editModal($id): void
+    public function editModal(mixed $id): void
     {
         $this->resetErrorBag();
         $this->resetValidation();

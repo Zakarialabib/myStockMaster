@@ -48,7 +48,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Supplier withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Supplier withoutTrashed()
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Supplier extends Model
 {
@@ -69,9 +69,9 @@ class Supplier extends Model
         'tax_number',
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -82,20 +82,18 @@ class Supplier extends Model
         'id', 'name', 'email', 'phone', 'address', 'city', 'country', 'tax_number',
     ];
 
-    /** @return HasOne<Purchase> */
+    /** @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Purchase, $this> */
     public function purchases(): HasOne
     {
         return $this->hasOne(Purchase::class);
     }
 
-    public function scopeSearchByName($query, $name)
+    protected function scopeSearchByName(mixed $query, mixed $name)
     {
-        return $query->when(! empty($name), function ($query) use ($name) {
-            return $query->where('name', 'like', '%' . $name . '%');
-        });
+        return $query->when(filled($name), fn($query) => $query->where('name', 'like', '%' . $name . '%'));
     }
 
-    private function supplierSum($column, $model)
+    private function supplierSum(mixed $column, mixed $model)
     {
         return $model::where('supplier_id', $this->id)->sum($column);
     }

@@ -25,7 +25,7 @@ class Edit extends Component
 
     public SupplierForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('supplier update'), 403);
 
@@ -33,7 +33,7 @@ class Edit extends Component
     }
 
     #[On('showModal')]
-    public function openModal($id): void
+    public function openModal(int|string $id): void
     {
         $this->resetErrorBag();
         $this->form->reset();

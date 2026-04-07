@@ -80,10 +80,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Sale whereWarehouseId($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class Sale extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $casts = [
         'date' => 'date',
     ];
@@ -115,9 +116,9 @@ class Sale extends Model
 
     ];
 
-    public $orderable = self::ATTRIBUTES;
+    public array $orderable = self::ATTRIBUTES;
 
-    public $filterable = self::ATTRIBUTES;
+    public array $filterable = self::ATTRIBUTES;
 
     /**
      * The attributes that are mass assignable.
@@ -153,6 +154,7 @@ class Sale extends Model
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -160,30 +162,33 @@ class Sale extends Model
         ];
     }
 
+    #[\Override]
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($sale) {
+        static::creating(function ($sale): void {
             $prefix = settings()->sale_prefix;
 
-            $latestSale = self::latest()->first();
+            $latestSale = self::query()->latest()->first();
 
-            if ($latestSale) {
-                $number = intval(substr($latestSale->reference, -3)) + 1;
-            } else {
-                $number = 1;
-            }
+            $number = $latestSale ? intval(substr((string) $latestSale->reference, -3)) + 1 : 1;
 
             $sale->reference = $prefix . str_pad(strval($number), 3, '0', STR_PAD_LEFT);
         });
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SalePayment, $this>
+     */
     public function salePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class, 'sale_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(
@@ -192,6 +197,9 @@ class Sale extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(
@@ -200,16 +208,25 @@ class Sale extends Model
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleDetails, $this>
+     */
     public function saleDetails(): HasMany
     {
         return $this->hasMany(SaleDetails::class);
@@ -220,12 +237,12 @@ class Sale extends Model
      *
      * @return mixed
      */
-    public function scopeCompleted($query)
+    protected function scopeCompleted(mixed $query)
     {
         return $query->whereStatus(2);
     }
 
-    public function scopeThisMonth($query)
+    protected function scopeThisMonth(mixed $query)
     {
         return $query->whereMonth('date', now()->month);
     }
@@ -236,7 +253,7 @@ class Sale extends Model
     protected function shippingAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -246,7 +263,7 @@ class Sale extends Model
     protected function paidAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -256,7 +273,7 @@ class Sale extends Model
     protected function totalAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -266,7 +283,7 @@ class Sale extends Model
     protected function dueAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -276,7 +293,7 @@ class Sale extends Model
     protected function taxAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -286,13 +303,13 @@ class Sale extends Model
     protected function discountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
-    public function scopeSearchByReference($query, $term)
+    protected function scopeSearchByReference(mixed $query, mixed $term)
     {
-        return $query->when(! empty($term), function ($query) use ($term) {
+        return $query->when(filled($term), function ($query) use ($term): void {
             $query->where('reference', 'like', '%' . $term . '%');
         });
     }

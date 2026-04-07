@@ -31,13 +31,13 @@ class StockAlertReport extends Component
     #[Computed]
     public function stockAlert()
     {
-        $query = Product::belowStockAlert();
+        $query = Product::query()->belowStockAlert();
 
-        if ($this->filterName) {
+        if ($this->filterName !== '' && $this->filterName !== '0') {
             $query->where('name', 'like', '%' . $this->filterName . '%');
         }
 
-        if ($this->filterCode) {
+        if ($this->filterCode !== '' && $this->filterCode !== '0') {
             $query->where('code', 'like', '%' . $this->filterCode . '%');
         }
 
@@ -52,9 +52,9 @@ class StockAlertReport extends Component
         return $query->paginate();
     }
 
-    public function setThreshold($productId, $threshold)
+    public function setThreshold(mixed $productId, mixed $threshold): void
     {
-        $product = Product::find($productId);
+        $product = Product::query()->find($productId);
 
         if ($product) {
             $product->stock_alert = $threshold;
@@ -62,7 +62,7 @@ class StockAlertReport extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.reports.stock-alert-report', [
             'products' => $this->stockAlert(),

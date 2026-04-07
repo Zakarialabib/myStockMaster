@@ -45,7 +45,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsForBusinessLine($selectedBusinessLine, $categories, $brands, $warehouses);
     }
 
-    private function createProductsForBusinessLine($businessLine, $categories, $brands, $warehouses)
+    private function createProductsForBusinessLine(mixed $businessLine, mixed $categories, mixed $brands, mixed $warehouses): void
     {
         switch ($businessLine) {
             case 'electronics':
@@ -100,11 +100,11 @@ class ComprehensiveProductSeeder extends Seeder
         }
     }
 
-    private function ensureBasicData()
+    private function ensureBasicData(): void
     {
         // Ensure we have at least one warehouse
-        if (Warehouse::count() === 0) {
-            Warehouse::create([
+        if (Warehouse::query()->count() === 0) {
+            Warehouse::query()->create([
                 'name' => 'Main Distribution Center',
                 'city' => 'Central City',
                 'address' => '123 Industrial Blvd',
@@ -115,7 +115,7 @@ class ComprehensiveProductSeeder extends Seeder
         }
     }
 
-    private function createProductCategories()
+    private function createProductCategories(): void
     {
         $categories = [
             ['name' => 'Electronics', 'code' => 'ELEC', 'description' => 'Electronic devices and accessories'],
@@ -130,15 +130,12 @@ class ComprehensiveProductSeeder extends Seeder
             ['name' => 'Toys & Games', 'code' => 'TOYS', 'description' => 'Toys and gaming products'],
         ];
 
-        foreach ($categories as $categoryData) {
-            Category::firstOrCreate(
-                ['code' => $categoryData['code']],
-                $categoryData
-            );
+        foreach ($categories as $category) {
+            Category::query()->firstOrCreate(['code' => $category['code']], $category);
         }
     }
 
-    private function createRealisticBrands()
+    private function createRealisticBrands(): void
     {
         $brands = [
             ['name' => 'TechPro', 'description' => 'Professional technology solutions', 'origin' => 'USA'],
@@ -151,15 +148,12 @@ class ComprehensiveProductSeeder extends Seeder
             ['name' => 'OfficeElite', 'description' => 'Professional office solutions', 'origin' => 'USA'],
         ];
 
-        foreach ($brands as $brandData) {
-            Brand::firstOrCreate(
-                ['name' => $brandData['name']],
-                $brandData
-            );
+        foreach ($brands as $brand) {
+            Brand::query()->firstOrCreate(['name' => $brand['name']], $brand);
         }
     }
 
-    private function createElectronicsProducts($categories, $brands, $warehouses)
+    private function createElectronicsProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $electronicsCategory = $categories->where('code', 'ELEC')->first();
         $techBrand = $brands->where('name', 'TechPro')->first();
@@ -182,7 +176,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $electronicsCategory, $techBrand, $warehouses);
     }
 
-    private function createClothingProducts($categories, $brands, $warehouses)
+    private function createClothingProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $clothingCategory = $categories->where('code', 'CLTH')->first();
         $styleBrand = $brands->where('name', 'StyleMax')->first();
@@ -203,7 +197,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $clothingCategory, $styleBrand, $warehouses);
     }
 
-    private function createFoodBeverageProducts($categories, $brands, $warehouses)
+    private function createFoodBeverageProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $foodCategory = $categories->where('code', 'FOOD')->first();
         $freshBrand = $brands->where('name', 'FreshChoice')->first();
@@ -224,7 +218,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $foodCategory, $freshBrand, $warehouses);
     }
 
-    private function createHomeGardenProducts($categories, $brands, $warehouses)
+    private function createHomeGardenProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $homeCategory = $categories->where('code', 'HOME')->first();
         $homeBrand = $brands->where('name', 'HomeComfort')->first();
@@ -245,7 +239,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $homeCategory, $homeBrand, $warehouses);
     }
 
-    private function createSportsOutdoorProducts($categories, $brands, $warehouses)
+    private function createSportsOutdoorProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $sportsCategory = $categories->where('code', 'SPRT')->first();
         $activeBrand = $brands->where('name', 'ActiveLife')->first();
@@ -266,7 +260,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $sportsCategory, $activeBrand, $warehouses);
     }
 
-    private function createHealthBeautyProducts($categories, $brands, $warehouses)
+    private function createHealthBeautyProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $healthCategory = $categories->where('code', 'HLTH')->first();
         $pureBrand = $brands->where('name', 'PureWell')->first();
@@ -287,7 +281,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $healthCategory, $pureBrand, $warehouses);
     }
 
-    private function createAutomotiveProducts($categories, $brands, $warehouses)
+    private function createAutomotiveProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $autoCategory = $categories->where('code', 'AUTO')->first();
         $autoBrand = $brands->where('name', 'AutoMax')->first();
@@ -308,7 +302,7 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $autoCategory, $autoBrand, $warehouses);
     }
 
-    private function createOfficeSuppliesProducts($categories, $brands, $warehouses)
+    private function createOfficeSuppliesProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $officeCategory = $categories->where('code', 'OFFC')->first();
         $officeBrand = $brands->where('name', 'OfficeElite')->first();
@@ -329,13 +323,13 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $officeCategory, $officeBrand, $warehouses);
     }
 
-    private function createJewelryProducts($categories, $brands, $warehouses)
+    private function createJewelryProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $jewelryCategory = $categories->firstWhere('code', 'JWLR') ??
-            Category::create(['name' => 'Jewelry & Accessories', 'code' => 'JWLR', 'description' => 'Jewelry and fashion accessories']);
+            Category::query()->create(['name' => 'Jewelry & Accessories', 'code' => 'JWLR', 'description' => 'Jewelry and fashion accessories']);
 
         $jewelryBrand = $brands->firstWhere('name', 'LuxeGems') ??
-            Brand::create(['name' => 'LuxeGems', 'description' => 'Premium jewelry and accessories', 'origin' => 'Switzerland']);
+            Brand::query()->create(['name' => 'LuxeGems', 'description' => 'Premium jewelry and accessories', 'origin' => 'Switzerland']);
 
         $products = [
             ['name' => 'Sterling Silver Necklace', 'unit' => 'pcs', 'base_price' => 89.99, 'base_cost' => 35.00],
@@ -351,13 +345,13 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $jewelryCategory, $jewelryBrand, $warehouses);
     }
 
-    private function createBooksMediaProducts($categories, $brands, $warehouses)
+    private function createBooksMediaProducts(mixed $categories, mixed $brands, mixed $warehouses): void
     {
         $booksCategory = $categories->firstWhere('code', 'BOOK') ??
-            Category::create(['name' => 'Books & Media', 'code' => 'BOOK', 'description' => 'Books, movies, and media']);
+            Category::query()->create(['name' => 'Books & Media', 'code' => 'BOOK', 'description' => 'Books, movies, and media']);
 
         $booksBrand = $brands->firstWhere('name', 'MediaMax') ??
-            Brand::create(['name' => 'MediaMax', 'description' => 'Books and entertainment media', 'origin' => 'USA']);
+            Brand::query()->create(['name' => 'MediaMax', 'description' => 'Books and entertainment media', 'origin' => 'USA']);
 
         $products = [
             ['name' => 'Business Strategy Handbook', 'unit' => 'pcs', 'base_price' => 29.99, 'base_cost' => 12.00],
@@ -373,11 +367,11 @@ class ComprehensiveProductSeeder extends Seeder
         $this->createProductsWithVariations($products, $booksCategory, $booksBrand, $warehouses);
     }
 
-    private function createProductsWithVariations($products, $category, $brand, $warehouses)
+    private function createProductsWithVariations(array $products, mixed $category, mixed $brand, mixed $warehouses): void
     {
         foreach ($products as $index => $productData) {
             $productId = (string) Str::uuid();
-            $code = strtoupper($category->code) . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
+            $code = strtoupper((string) $category->code) . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
 
             // Create the product
             $product = [
@@ -413,7 +407,7 @@ class ComprehensiveProductSeeder extends Seeder
                 $cost = min($cost / 100, 99999.99); // Convert from cents and limit
                 $oldPrice = min($price * 1.15, 99999.99);
 
-                ProductWarehouse::create([
+                ProductWarehouse::query()->create([
                     'product_id' => $productId,
                     'warehouse_id' => $warehouse->id,
                     'qty' => fake()->numberBetween(20, 150),

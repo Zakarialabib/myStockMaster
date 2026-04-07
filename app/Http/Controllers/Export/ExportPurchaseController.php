@@ -14,7 +14,7 @@ class ExportPurchaseController extends Controller
     public function __invoke(int|string $id): Response
     {
         $purchase = Purchase::with('supplier', 'purchaseDetails')->where('id', $id)->firstOrFail();
-        $supplier = Supplier::where('id', $purchase->supplier->id)->firstOrFail();
+        $supplier = Supplier::query()->where('id', $purchase->supplier->id)->firstOrFail();
 
         $data = [
             'purchase' => $purchase,

@@ -11,7 +11,7 @@ class Meta extends Component
 {
     use WithAlert;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.utils.meta');
     }

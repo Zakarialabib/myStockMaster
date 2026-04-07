@@ -15,9 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CartStorage extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $fillable = ['session_key', 'cart_data'];
 
-    protected $casts = [
-        'cart_data' => 'array',
-    ];
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'cart_data' => 'array',
+        ];
+    }
 }

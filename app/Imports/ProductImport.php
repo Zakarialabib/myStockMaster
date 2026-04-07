@@ -16,17 +16,17 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class ProductImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         foreach ($rows as $row) {
-            Product::create([
+            Product::query()->create([
                 'name' => $row['name'],
                 'description' => $row['description'],
                 'price' => $row['price'],
                 'old_price' => $row['cost'] ?? null,
                 'code' => $row['code'] ?? Str::random(10),
-                'category_id' => Category::where('name', $row['category'])->first()->id ?? Category::create(['name' => $row['category']])->id ?? null,
-                'brand_id' => Brand::where('name', $row['brand'])->first()->id ?? Brand::create(['name' => $row['brand']])->id ?? null,
+                'category_id' => Category::query()->where('name', $row['category'])->first()->id ?? Category::query()->create(['name' => $row['category']])->id ?? null,
+                'brand_id' => Brand::query()->where('name', $row['brand'])->first()->id ?? Brand::query()->create(['name' => $row['brand']])->id ?? null,
                 // 'image' => Helpers::uploadImage($row['image']) ?? 'default.jpg', // upload fromm url
                 'status' => 0,
                 'barcode_symbology' => 'c128',

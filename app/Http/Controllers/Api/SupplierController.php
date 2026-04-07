@@ -41,9 +41,9 @@ class SupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSupplierRequest $request): SupplierResource
+    public function store(StoreSupplierRequest $storeSupplierRequest): SupplierResource
     {
-        $supplier = Supplier::create($request->all());
+        $supplier = Supplier::query()->create($storeSupplierRequest->all());
 
         return new SupplierResource($supplier);
     }
@@ -53,10 +53,10 @@ class SupplierController extends Controller
      */
     public function show(int $id): SupplierResource|JsonResponse
     {
-        $supplier = Supplier::find($id);
+        $supplier = Supplier::query()->find($id);
 
         if ($supplier === null) {
-            return response()->json(['message' => 'Supplier not found'], 404);
+            return new \Illuminate\Http\JsonResponse(['message' => 'Supplier not found'], 404);
         }
 
         return new SupplierResource($supplier);
@@ -65,10 +65,10 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSupplierRequest $request, int $id): SupplierResource
+    public function update(UpdateSupplierRequest $updateSupplierRequest, int $id): SupplierResource
     {
-        $supplier = Supplier::findOrFail($id);
-        $supplier->update($request->all());
+        $supplier = Supplier::query()->findOrFail($id);
+        $supplier->update($updateSupplierRequest->all());
 
         return new SupplierResource($supplier);
     }
@@ -78,9 +78,9 @@ class SupplierController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $supplier = Supplier::findOrFail($id);
+        $supplier = Supplier::query()->findOrFail($id);
         $supplier->delete();
 
-        return response()->json(['message' => 'Supplier deleted successfully']);
+        return new \Illuminate\Http\JsonResponse(['message' => 'Supplier deleted successfully']);
     }
 }

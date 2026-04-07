@@ -23,17 +23,17 @@ class Create extends Component
     use WithFileUploads;
     use WithModels;
 
-    public $createModal = false;
+    public bool $createModal = false;
 
     public Expense $expense;
 
     public ExpenseForm $form;
 
-    public $user_id;
+    public mixed $user_id;
 
-    public $cash_register_id;
+    public mixed $cash_register_id;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('expense_create'), 403);
 
@@ -53,7 +53,7 @@ class Create extends Component
         }
 
         if ($this->user_id && $this->form->warehouse_id) {
-            $cashRegister = CashRegister::where('user_id', $this->user_id)
+            $cashRegister = CashRegister::query()->where('user_id', $this->user_id)
                 ->where('warehouse_id', $this->form->warehouse_id)
                 ->where('status', true)
                 ->first();
@@ -90,6 +90,6 @@ class Create extends Component
     #[Computed]
     public function expenseCategories()
     {
-        return ExpenseCategory::select('name', 'id')->get();
+        return ExpenseCategory::query()->select('name', 'id')->get();
     }
 }

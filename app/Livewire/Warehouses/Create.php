@@ -19,7 +19,7 @@ class Create extends Component
 
     public WarehouseForm $form;
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('warehouse_create'), 403);
 
@@ -36,11 +36,11 @@ class Create extends Component
         $this->createModal = true;
     }
 
-    public function create(WarehouseService $service): void
+    public function create(WarehouseService $warehouseService): void
     {
         $this->form->validate();
 
-        $service->create($this->form->all());
+        $warehouseService->create($this->form->all());
 
         $this->alert('success', __('Warehouse created successfully.'));
 

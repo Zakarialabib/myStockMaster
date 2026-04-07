@@ -37,22 +37,22 @@ class Profile extends Component
 
     public string $password_confirmation = '';
 
-    public $role;
+    public mixed $role;
 
-    public $is_active;
+    public mixed $is_active;
 
     public function mount(): void
     {
         $this->authorize('users.profile');
 
-        $this->user = User::find(Auth::user()->id);
+        $this->user = User::query()->find(Auth::user()->id);
         $this->name = $this->user->name;
         $this->email = $this->user->email;
         $this->phone = $this->user->phone;
         $this->is_active = $this->user->is_active;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.users.profile');
     }

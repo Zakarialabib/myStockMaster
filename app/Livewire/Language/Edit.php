@@ -17,20 +17,20 @@ class Edit extends Component
 
     public array $languages = [];
 
-    public $language;
+    public mixed $language;
 
     #[Validate('required', message: 'The code field is required')]
-    public $name;
+    public mixed $name;
 
     #[Validate('required', message: 'The code field is required')]
-    public $code;
+    public mixed $code;
 
-    public $editModal = false;
+    public bool $editModal = false;
 
     #[On('editModal')]
-    public function openEditModal($id): void
+    public function openEditModal(mixed $id): void
     {
-        $this->language = Language::findOrFail($id);
+        $this->language = Language::query()->findOrFail($id);
 
         $this->name = $this->language->name;
 
@@ -57,7 +57,7 @@ class Edit extends Component
         $this->editModal = false;
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.language.edit');
     }

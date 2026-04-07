@@ -45,17 +45,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationDetails whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuotationDetails whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class QuotationDetails extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $guarded = [];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Quotation, $this>
+     */
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id', 'id');
@@ -67,7 +74,7 @@ class QuotationDetails extends Model
     protected function price(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -77,7 +84,7 @@ class QuotationDetails extends Model
     protected function unitPrice(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -87,7 +94,7 @@ class QuotationDetails extends Model
     protected function subTotal(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -97,7 +104,7 @@ class QuotationDetails extends Model
     protected function productDiscountAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 
@@ -107,7 +114,7 @@ class QuotationDetails extends Model
     protected function productTaxAmountAttribute(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
+            get: fn ($value): int|float => $value / 100,
         );
     }
 }

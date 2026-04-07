@@ -20,30 +20,30 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public $email;
+    public mixed $email;
 
-    public $model = EmailTemplate::class;
+    public string $model = EmailTemplate::class;
 
     public function render(): View|Factory
     {
         abort_if(Gate::denies('email_access'), 403);
 
-        $query = EmailTemplate::advancedFilter([
+        $query = EmailTemplate::query()->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
         ]);
 
-        $emails = $query->paginate($this->perPage);
+        $lengthAwarePaginator = $query->paginate($this->perPage);
 
-        return view('livewire.email.index', ['emails' => $emails]);
+        return view('livewire.email.index', ['emails' => $lengthAwarePaginator]);
     }
 
     // Blog Category  Delete
-    public function delete(EmailTemplate $email): void
+    public function delete(EmailTemplate $emailTemplate): void
     {
         abort_if(Gate::denies('email_delete'), 403);
 
-        $email->delete();
+        $emailTemplate->delete();
     }
 }

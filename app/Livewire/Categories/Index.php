@@ -24,13 +24,13 @@ class Index extends Component
     use WithFileUploads;
 
     /** @var mixed */
-    public $category;
+    public mixed $category;
 
-    public $file;
+    public mixed $file = null;
 
-    public $showModal = false;
+    public bool $showModal = false;
 
-    public $model = Category::class;
+    public string $model = Category::class;
 
     public function mount(): void
     {
@@ -43,7 +43,7 @@ class Index extends Component
     {
         abort_if(Gate::denies('category_access'), 403);
 
-        $query = Category::withCount('products')->advancedFilter([
+        $query = Category::query()->withCount('products')->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
@@ -62,7 +62,7 @@ class Index extends Component
 
         $this->resetValidation();
 
-        $this->category = Category::find($category->id);
+        $this->category = Category::query()->find($category->id);
 
         $this->showModal = true;
     }

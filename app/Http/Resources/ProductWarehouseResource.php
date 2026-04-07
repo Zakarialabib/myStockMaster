@@ -20,6 +20,7 @@ class ProductWarehouseResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      *                                                                        >>>>>>> Api
      */
+    #[\Override]
     public function toArray($request)
     {
         return [

@@ -26,10 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductAttribute whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ProductAttribute whereValue($value)
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 class ProductAttribute extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $fillable = ['name', 'type', 'is_required'];
 
     public function products()

@@ -15,21 +15,21 @@ class PayDue extends Component
 {
     use WithAlert;
 
-    public $amount;
+    public mixed $amount;
 
-    public $supplier_id;
+    public mixed $supplier_id;
 
-    public $payment_method;
+    public mixed $payment_method;
 
-    public $selectedPurchases;
+    public mixed $selectedPurchases;
 
-    public $due_amount;
+    public mixed $due_amount;
 
-    public $paid_amount;
+    public mixed $paid_amount;
 
     public function getPurchasesSupplierDueProperty()
     {
-        return Purchase::where('supplier_id', $this->supplier_id)
+        return Purchase::query()->where('supplier_id', $this->supplier_id)
             ->where('due_amount', '>', 0)
             ->get();
     }
@@ -41,12 +41,12 @@ class PayDue extends Component
             'amount' => 'required|numeric|min:0',
         ]);
 
-        foreach ($this->selectedPurchases as $purchaseId) {
-            $purchase = Purchase::findOrFail($purchaseId);
+        foreach ($this->selectedPurchases as $selectedPurchase) {
+            $purchase = Purchase::query()->findOrFail($selectedPurchase);
             $dueAmount = $purchase->due_amount;
             $paidAmount = min($this->amount, $dueAmount);
 
-            PurchasePayment::create([
+            PurchasePayment::query()->create([
                 'date' => date('Y-m-d'),
                 'amount' => $paidAmount,
                 'purchase_id' => $purchase->id,
@@ -68,7 +68,7 @@ class PayDue extends Component
         }
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         return view('livewire.suppliers.pay-due');
     }

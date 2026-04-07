@@ -17,7 +17,7 @@ class CategoryService
             $data['image'] = $imageName;
         }
 
-        return Category::create($data);
+        return Category::query()->create($data);
     }
 
     public function update(Category $category, array $data): Category
