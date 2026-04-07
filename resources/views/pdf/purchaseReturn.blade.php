@@ -131,7 +131,7 @@
             </table>
         </div>
         <div id="signature">
-            @if (settings()->is_invoice_footer !== null)
+            @if (settings()->invoice_footer !== null)
                 <p>{{ __('Thank you for your business') }}</p>
             @endif
         </div>

@@ -95,7 +95,7 @@
                                         </linearGradient>
                                     </defs>
                                 </svg>
-                                {{ settings('company_adress') }}
+                                {{ settings('company_address') }}
                             </p>
                         </div>
                     </div>
