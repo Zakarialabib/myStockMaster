@@ -23,7 +23,7 @@ class Index extends Component
 
     public mixed $customer_group_id;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     public bool $showModal = false;
 

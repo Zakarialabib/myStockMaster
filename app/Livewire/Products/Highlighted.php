@@ -32,7 +32,7 @@ class Highlighted extends Component
 
     public mixed $trending;
 
-    public mixed $sale;
+    public string $sale = '';
 
     public mixed $is_discount;
 

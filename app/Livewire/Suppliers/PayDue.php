@@ -17,7 +17,7 @@ class PayDue extends Component
 
     public mixed $amount;
 
-    public mixed $supplier_id;
+    public ?int $supplier_id = null;
 
     public mixed $payment_method;
 

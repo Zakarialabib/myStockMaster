@@ -14,7 +14,7 @@ class Show extends Component
 {
     use WithAlert;
 
-    public mixed $sale;
+    public Sale $sale;
 
     public bool $showModal = false;
 

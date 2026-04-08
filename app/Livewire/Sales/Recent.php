@@ -18,7 +18,7 @@ class Recent extends Component
     use WithAlert;
     use WithFileUploads;
 
-    public mixed $sale;
+    public Sale $sale;
 
     public bool $showModal = false;
 

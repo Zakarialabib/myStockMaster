@@ -23,13 +23,13 @@ class Details extends Component
     public string $model = Customer::class;
 
     #[Locked]
-    public mixed $customer_id;
+    public ?int $customer_id = null;
 
     public mixed $customer;
 
     public mixed $sales;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     public function mount(int|string $id): void
     {

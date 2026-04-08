@@ -34,7 +34,7 @@ class ExpenseForm extends Form
     public mixed $frequency = 'none';
 
     #[Validate('nullable|integer')]
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     #[Validate('nullable|file|mimes:pdf,jpg,jpeg,png|max:2048')]
     public mixed $document;

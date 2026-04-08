@@ -29,7 +29,7 @@ class PayDue extends Component
 
     public mixed $payment_id;
 
-    public mixed $customer_id;
+    public ?int $customer_id = null;
 
     public bool $payModal = false;
 

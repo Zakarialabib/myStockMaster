@@ -21,7 +21,7 @@ class Barcode extends Component
     use WithAlert;
     use WithModels;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     #[Validate([
         'products.*.quantity' => 'required|integer|min:1|max:100',

@@ -12,10 +12,10 @@ class QuotationForm extends Form
     public mixed $reference;
 
     #[Validate('required')]
-    public mixed $customer_id;
+    public ?int $customer_id = null;
 
     #[Validate('required')]
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     #[Validate('required|numeric')]
     public mixed $total_amount = 0;

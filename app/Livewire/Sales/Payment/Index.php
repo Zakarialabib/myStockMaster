@@ -19,13 +19,13 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    public mixed $sale;
+    public Sale $sale;
 
     public string $model = SalePayment::class;
 
     public bool $showPayments = false;
 
-    public mixed $sale_id;
+    public ?string $sale_id = null;
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {

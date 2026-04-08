@@ -21,11 +21,11 @@ class Details extends Component
     use WithAlert;
 
     #[Locked]
-    public mixed $supplier_id;
+    public ?int $supplier_id = null;
 
     public string $model = Supplier::class;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     public mixed $supplier;
 

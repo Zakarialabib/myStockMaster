@@ -10,9 +10,9 @@ use Livewire\Form;
 class SaleReturnForm extends Form
 {
     #[Validate('required', message: 'Please provide a customer ID')]
-    public mixed $customer_id;
+    public ?int $customer_id = null;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     #[Validate('required', message: 'Please provide a tax percentage')]
     #[Validate('integer', message: 'The tax percentage must be an integer')]

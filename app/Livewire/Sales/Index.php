@@ -27,8 +27,7 @@ class Index extends Component
     use WithFileUploads;
     use WithModels;
 
-    /** @var Sale|null */
-    public mixed $sale;
+    public ?Sale $sale = null;
 
     public string $model = Sale::class;
 

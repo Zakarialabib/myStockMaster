@@ -19,5 +19,5 @@ class AdjustmentForm extends Form
     public mixed $reference;
 
     #[Validate('required', message: 'Please provide warehouse')]
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 }

@@ -25,7 +25,7 @@ class WarehouseReport extends Component
 
     public mixed $warehouses;
 
-    public mixed $warehouse_id;
+    public ?int $warehouse_id = null;
 
     public mixed $purchases;
 

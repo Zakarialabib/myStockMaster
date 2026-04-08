@@ -34,7 +34,9 @@ class Index extends Component
     {
         abort_if(Gate::denies('purchase payment_access'), 403);
 
-        $query = PurchasePayment::query()->where('purchase_id', $this->purchase->id)->advancedFilter([
+        $query = PurchasePayment::query()->when($this->purchase, function ($query) {
+            $query->where('purchase_id', $this->purchase->id);
+        })->advancedFilter([
             's' => $this->search ?: null,
             'order_column' => $this->sortBy,
             'order_direction' => $this->sortDirection,
