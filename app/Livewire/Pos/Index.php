@@ -161,21 +161,21 @@ class Index extends Component
         $this->alert('success', __('Sale created successfully!'));
         $this->checkoutModal = false;
 
-        dispatch(new \App\Jobs\PaymentNotification($sale));
+        dispatch(new PaymentNotification($sale));
 
-        // Dispatch physical print job if applicable
-        dispatch(new \App\Jobs\PrintReceiptJob($sale->id));
+        $settings = \App\Models\Setting::first();
+        $action = $settings->pos_post_checkout_action ?? 'preview_a4';
 
-        // Tell browser to open PDF receipt
-        $this->dispatch('open-print-window', url: route('sales.pos.pdf', $sale->id));
-
-        $this->redirectRoute('pos.index', navigate: true);
+        $this->dispatch('checkout-completed', [
+            'sale_id' => $sale->id,
+            'action' => $action,
+        ]);
     }
 
     #[On('printReceipt')]
     public function printReceipt(string $saleId): void
     {
-        dispatch(new \App\Jobs\PrintReceiptJob($saleId));
+        dispatch(new PrintReceiptJob($saleId));
         $this->dispatch('open-print-window', url: route('sales.pos.pdf', $saleId));
     }
 
