@@ -224,7 +224,7 @@
 
                                     <div>
                                         <div class="flex items-center space-x-2 mt-6">
-                                            <x-checkbox id="is_ecommerce_active" wire:model="form.is_ecommerce_active" />
+                                            <x-input.checkbox id="is_ecommerce_active" wire:model="form.is_ecommerce_active" />
                                             <x-label for="is_ecommerce_active" :value="__('Enable E-commerce')" />
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1">{{ __('Toggle e-commerce features for your application.') }}</p>

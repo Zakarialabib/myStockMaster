@@ -27,8 +27,7 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    /** @var mixed */
-    public mixed $supplier;
+    public mixed $supplier = null;
 
     public mixed $file = null;
 

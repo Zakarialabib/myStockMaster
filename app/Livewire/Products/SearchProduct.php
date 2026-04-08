@@ -21,9 +21,9 @@ class SearchProduct extends Component
     #[Url(as: 'q')]
     public string $querySearch = '';
 
-    public mixed $category_id;
+    public mixed $category_id = null;
 
-    public mixed $warehouse_id;
+    public mixed $warehouse_id = null;
 
     public int $showCount = 9;
 

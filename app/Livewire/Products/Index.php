@@ -37,23 +37,23 @@ class Index extends Component
         $this->perPage += 25;
     }
 
-    public mixed $productWarehouse;
+    public mixed $productWarehouse = null;
 
-    public mixed $sendTelegram;
+    public mixed $sendTelegram = null;
 
-    public mixed $promoAllProducts;
+    public mixed $promoAllProducts = null;
 
-    public mixed $copyPriceToOldPrice;
+    public mixed $copyPriceToOldPrice = null;
 
-    public mixed $copyOldPriceToPrice;
+    public mixed $copyOldPriceToPrice = null;
 
-    public mixed $percentageMethod;
+    public mixed $percentageMethod = null;
 
-    public mixed $percentage;
+    public mixed $percentage = null;
 
-    public mixed $product;
+    public mixed $product = null;
 
-    public mixed $category_id;
+    public mixed $category_id = null;
 
     public string $model = Product::class;
 
