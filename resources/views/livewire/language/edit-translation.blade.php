@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Update ') . $language->name)
 
     <section class="py-3 px-4">
         <div class="flex flex-wrap items-center justify-between">

@@ -1,5 +1,4 @@
 <div x-data="{ isCartOpen: false }" @keydown.window.ctrl.s.prevent="$wire.store()">
-    @section('title', __('Create Transfer'))
 
     <x-theme.breadcrumb :title="__('Create Transfer')" :parent="route('transfers.index')" :parentName="__('Transfers List')" :childrenName="__('Create Transfer')">
         <div class="flex items-center gap-2">

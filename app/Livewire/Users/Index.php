@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Role;
 use App\Models\User;
@@ -16,6 +18,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Users List')]
 class Index extends Component
 {
     use Datatable;

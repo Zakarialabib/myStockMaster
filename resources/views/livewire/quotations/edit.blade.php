@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Edit Quotation'))
 
     <x-theme.breadcrumb :title="__('Edit Quotation')" :parent="route('quotations.index')" :parentName="__('Quotations List')" :childrenName="__('Edit Quotation')" />
     <div class="flex flex-wrap">

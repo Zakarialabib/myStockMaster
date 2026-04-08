@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Printer;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Printer;
 use App\Traits\WithAlert;
@@ -15,6 +17,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Printers')]
 class Index extends Component
 {
     use Datatable;

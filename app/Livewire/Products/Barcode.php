@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use Livewire\Attributes\Title;
+
 use App\Actions\Products\GenerateBarcodesAction;
 use App\Livewire\Utils\WithModels;
 use App\Models\ProductWarehouse;
@@ -16,6 +18,7 @@ use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
+#[Title('Barcode Generator')]
 class Barcode extends Component
 {
     use WithAlert;

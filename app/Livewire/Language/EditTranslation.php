@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
+use Livewire\Attributes\Title;
+
 use App\Models\Language;
 use App\Traits\WithAlert;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,6 +15,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
+#[Title('Update ')]
 class EditTranslation extends Component
 {
     use WithAlert;

@@ -2,24 +2,36 @@
 
     <x-page-container title="{{ __('Products') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Products'), 'url' => route('products.index')]]" :show-filters="true">
         <x-slot name="actions">
-            @can('product_import')
-                <x-button wire:click="importModal" secondary icon="fas fa-upload">
-                    {{ __('Excel Import') }}
-                </x-button>
-            @endcan
-            @can('product_export')
-                <x-button wire:click="exportAll" secondary icon="fas fa-download">
-                    {{ __('PDF Export') }}
-                </x-button>
-                <x-button wire:click="downloadAll" secondary icon="fas fa-download">
-                    {{ __('Excel Export') }}
-                </x-button>
-            @endcan
-            @can('product_create')
-                <x-button wire:click="$dispatchTo('products.create', 'createModal')" primary icon="fas fa-plus">
-                    {{ __('Create Product') }}
-                </x-button>
-            @endcan
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        @can('product_import')
+                            <x-dropdown-link wire:click="importModal">
+                                <i class="fas fa-upload mr-2"></i> {{ __('Excel Import') }}
+                            </x-dropdown-link>
+                        @endcan
+                        @can('product_export')
+                            <x-dropdown-link wire:click="exportAll">
+                                <i class="fas fa-download mr-2"></i> {{ __('PDF Export') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link wire:click="downloadAll">
+                                <i class="fas fa-download mr-2"></i> {{ __('Excel Export') }}
+                            </x-dropdown-link>
+                        @endcan
+                    </x-slot>
+                </x-dropdown>
+
+                @can('product_create')
+                    <x-button wire:click="$dispatchTo('products.create', 'createModal')" primary icon="fas fa-plus">
+                        {{ __('Create Product') }}
+                    </x-button>
+                @endcan
+            </div>
         </x-slot>
 
         <x-slot name="filters">

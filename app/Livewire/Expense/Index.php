@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Expense;
 
+use Livewire\Attributes\Title;
+
 use App\Exports\ExpenseExport;
 use App\Imports\ExpenseImport;
 use App\Livewire\Utils\Datatable;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 
+#[Title('Expenses')]
 class Index extends Component
 {
     use Datatable;

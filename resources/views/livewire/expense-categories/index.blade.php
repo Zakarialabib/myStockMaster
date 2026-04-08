@@ -1,6 +1,5 @@
 <div>
-    @section('title', __('Expense Category'))
-    
+
     <x-page-container 
         :title="__('Expense Category List')"
         :breadcrumbs="[
@@ -10,30 +9,32 @@
         :show-filters="true">
         
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="$dispatch('importModal')" wire:loading.attr="disabled">
-                        {{ __('Excel Import') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="exportSelected" wire:loading.attr="disabled">
-                        {{ __('Export PDF') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="downloadSelected" wire:loading.attr="disabled">
-                        {{ __('Export Excel') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
-            <x-button 
-                variant="primary" 
-                icon="fas fa-plus" 
-                wire:click="dispatchTo('expense-categories.create', 'createModal')">
-                {{ __('Create Expense Category') }}
-            </x-button>
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="$dispatch('importModal')" wire:loading.attr="disabled">
+                            <i class="fas fa-upload mr-2"></i> {{ __('Excel Import') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="exportSelected" wire:loading.attr="disabled">
+                            <i class="fas fa-download mr-2"></i> {{ __('Export PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="downloadSelected" wire:loading.attr="disabled">
+                            <i class="fas fa-download mr-2"></i> {{ __('Export Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                <x-button 
+                    variant="primary" 
+                    icon="fas fa-plus" 
+                    wire:click="dispatchTo('expense-categories.create', 'createModal')">
+                    {{ __('Create Expense Category') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="filters">
@@ -123,10 +124,29 @@
             </x-table.tbody>
         </x-table>
 
-        <div class="pt-3">
-            {{ $expenseCategories->links() }}
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $expenseCategories->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $expenseCategories->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $expenseCategories->lastItem() ?? 0 }} {{ __('of') }} {{ $expenseCategories->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $expenseCategories->links() }}
+                </div>
+            </div>
         </div>
-
         <!-- Modals -->
         <livewire:expense-categories.edit />
         <livewire:expense-categories.create />

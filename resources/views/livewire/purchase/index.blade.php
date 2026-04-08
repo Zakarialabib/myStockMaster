@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Purchases'))
 
     <x-page-container :title="__('Purchases List')"
         :breadcrumbs="[
@@ -9,20 +8,33 @@
         :show-filters="true">
 
         <x-slot name="actions">
-            @can('purchase_export')
-                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
-                    {{ __('PDF') }}
-                </x-button>
-                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
-                    {{ __('Excel') }}
-                </x-button>
-            @endcan
-            @can('purchase_create')
-                <x-button href="{{ route('purchase.create') }}" primary>
-                    <i class="fas fa-plus mr-2"></i>
-                    {{ __('Create Purchase order') }}
-                </x-button>
-            @endcan
+            <div class="flex justify-end space-x-2">
+                @can('purchase_export')
+                    <x-dropdown align="right" width="56">
+                        <x-slot name="trigger" class="inline-flex">
+                            <x-button primary type="button" class="text-white flex items-center">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </x-button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                                <i class="fas fa-file-pdf"></i>
+                                {{ __('PDF') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                                <i class="fas fa-file-excel"></i>
+                                {{ __('Excel') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                @endcan
+                @can('purchase_create')
+                    <x-button href="{{ route('purchase.create') }}" primary>
+                        <i class="fas fa-plus mr-2"></i>
+                        {{ __('Create Purchase order') }}
+                    </x-button>
+                @endcan
+            </div>
         </x-slot>
         <x-slot name="filters">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -277,25 +289,31 @@
                 @endforelse
             </x-table.tbody>
         </x-table>
-        <x-slot name="pagination">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                <div class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300">
-                    @if ($this->selectedCount)
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                            {{ $this->selectedCount }} {{ __('selected') }}
-                        </span>
-                    @endif
-                    <span>{{ __('Showing') }} {{ $purchases->firstItem() ?? 0 }} {{ __('to') }}
+
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $purchases->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $purchases->firstItem() ?? 0 }} {{ __('to') }}
                         {{ $purchases->lastItem() ?? 0 }} {{ __('of') }} {{ $purchases->total() }}
-                        {{ __('results') }}</span>
-                </div>
-                <div>
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
                     {{ $purchases->links() }}
                 </div>
             </div>
-        </x-slot>
-    </x-page-container>
+        </div>
+        </x-page-container>
 
     @livewire('purchase.show', ['purchase' => $purchase])
 

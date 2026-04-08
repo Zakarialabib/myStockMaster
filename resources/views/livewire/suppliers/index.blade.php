@@ -2,27 +2,32 @@
     <x-page-container title="{{ __('Suppliers') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Suppliers'), 'url' => route('suppliers.index')]]" :show-filters="true">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
-                        {{ __('Excel Import') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
-                        {{ __('Export Excel') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
-                        {{ __('Export PDF') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
-            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
-                {{ __('Create Supplier') }}
-            </x-button>
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
+                            <i class="fas fa-file-import"></i>
+                            {{ __('Excel Import') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                            <i class="fas fa-file-excel"></i>
+                            {{ __('Export Excel') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                            <i class="fas fa-file-pdf"></i>
+                            {{ __('Export PDF') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
+                    {{ __('Create Supplier') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="filters">
@@ -160,14 +165,31 @@
                     @endforelse
                 </x-table.tbody>
             </x-table>
-            
-            @if($suppliers->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $suppliers->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $suppliers->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $suppliers->lastItem() ?? 0 }} {{ __('of') }} {{ $suppliers->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
                     {{ $suppliers->links() }}
                 </div>
-            @endif
+            </div>
         </div>
-    </x-page-container>
+        </x-page-container>
 
     <livewire:suppliers.show :supplier="$supplier" />
 

@@ -1,19 +1,30 @@
 <div>
-    @section('title', __('Categories'))
 
     <x-page-container :title="__('Categories List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Categories List')]]" :show-filters="true">
 
         <x-slot name="actions">
-            @can('category_import')
-                <x-button variant="primary" icon="fas fa-upload" wire:click="dispatchTo('categories.import', 'importModal')">
-                    {{ __('Import Category') }}
-                </x-button>
-            @endcan
-            @can('category_create')
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        @can('category_import')
+                        <x-dropdown-link wire:click="dispatchTo('categories.import', 'importModal')" wire:loading.attr="disabled">
+                            <i class="fas fa-upload"></i>
+                            {{ __('Import Category') }}
+                        </x-dropdown-link>
+                        @endcan
+                    </x-slot>
+                </x-dropdown>
+                @can('category_create')
                 <x-button variant="primary" icon="fas fa-plus" wire:click="dispatchTo('categories.create', 'createModal')">
                     {{ __('Create Category') }}
                 </x-button>
-            @endcan
+                @endcan
+            </div>
         </x-slot>
         <x-slot name="filters">
             <x-datatable.filters :per-page="$perPage" :pagination-options="$paginationOptions" :selected-count="$this->selectedCount" :search="$search"

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Role;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Role;
 use App\Traits\WithAlert;
@@ -11,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
+#[Title('Roles List')]
 class Index extends Component
 {
     use Datatable;

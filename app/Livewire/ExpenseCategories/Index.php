@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\ExpenseCategories;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\ExpenseCategory;
 use App\Traits\WithAlert;
@@ -14,6 +16,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Expense Category')]
 class Index extends Component
 {
     use Datatable;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Adjustment;
 use App\Traits\WithAlert;
@@ -15,6 +17,7 @@ use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 
+#[Title('Stock Adjustments')]
 class Index extends Component
 {
     use Datatable;

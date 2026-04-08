@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
+use Livewire\Attributes\Title;
+
 use App\Enums\SaleStatus;
 use App\Livewire\Forms\SaleForm;
 use App\Livewire\Utils\WithModels;
@@ -17,6 +19,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
+#[Title('Edit Sale')]
 class Edit extends Component
 {
     use LivewireCartTrait;

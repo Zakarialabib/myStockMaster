@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Sales'))
 
     <x-page-container :title="__('Sales List')"
         :breadcrumbs="[
@@ -9,24 +8,28 @@
         :show-filters="true">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
-                        {{ __('PDF') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
-                        {{ __('Excel') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
-            @can('sale_create')
-                <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
-            @endcan
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
+                            <i class="fas fa-file-pdf"></i>
+                            {{ __('PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
+                            <i class="fas fa-file-excel"></i>
+                            {{ __('Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                @can('sale_create')
+                    <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
+                @endcan
+            </div>
         </x-slot>
 
         <x-slot name="filters">
@@ -252,11 +255,30 @@
         </x-table.tbody>
     </x-table>
 
-    <div class="px-6 py-3">
-        {{ $sales->links() }}
-    </div>
-
-    </x-page-container>
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $sales->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $sales->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $sales->lastItem() ?? 0 }} {{ __('of') }} {{ $sales->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $sales->links() }}
+                </div>
+            </div>
+        </div>
+        </x-page-container>
 
     @livewire('sales.show', ['sale' => $sale], key('show' . $sale?->id))
 

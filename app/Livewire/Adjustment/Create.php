@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Forms\AdjustmentForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Product;
@@ -19,6 +21,7 @@ use Livewire\Component;
 use Throwable;
 
 #[Layout('layouts.app')]
+#[Title('Create adjustment')]
 class Create extends Component
 {
     use WithAlert;

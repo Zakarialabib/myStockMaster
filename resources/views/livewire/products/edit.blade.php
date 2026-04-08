@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Edit Product') . ' ' . $product->name)
+
     <x-theme.breadcrumb :title="__('Edit Product')" :parent="route('products.index')" :parentName="__('Product List')" :childrenName="__('Edit Product') . ' ' . $product->name" />
 
     <form wire:submit="update" x-data="{ step: 1 }" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">

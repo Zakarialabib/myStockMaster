@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
+use Livewire\Attributes\Title;
+
 use App\Models\Language;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Artisan;
@@ -14,6 +16,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Languages')]
 class Index extends Component
 {
     use WithAlert;

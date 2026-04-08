@@ -1,31 +1,31 @@
 <div>
-    @section('title', __('Brands List'))
+
     <x-page-container title="{{ __('Brands List') }}" :breadcrumbs="[['name' => __('Brands'), 'url' => route('brands.index')]]">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-3">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button variant="secondary" icon="fas fa-download">
-                        {{ __('Import') }}
-                        <i class="fas fa-chevron-down w-4 h-4 ml-2 -mr-1"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    @can('brand_import')
-                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled"
-                        class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <i class="fas fa-file-import w-4 h-4 mr-3 text-blue-500"></i>
-                        {{ __('Import') }}
-                    </x-dropdown-link>
-                    @endcan
-                </x-slot>
-            </x-dropdown>
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        @can('brand_import')
+                        <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
+                            <i class="fas fa-file-import"></i>
+                            {{ __('Import') }}
+                        </x-dropdown-link>
+                        @endcan
+                    </x-slot>
+                </x-dropdown>
 
-            @can('brand_create')
-            <x-button wire:click="dispatchTo('brands.create', 'createModal')" icon="fas fa-plus">
-                {{ __('Create Brand') }}
-            </x-button>
-            @endcan
+                @can('brand_create')
+                <x-button wire:click="dispatchTo('brands.create', 'createModal')" icon="fas fa-plus">
+                    {{ __('Create Brand') }}
+                </x-button>
+                @endcan
+            </div>
         </x-slot>
         <x-slot name="filters">
             <div class="flex items-center gap-2">
@@ -153,23 +153,30 @@
             </x-table.tbody>
         </x-table>
 
-        <x-slot name="pagination">
-            <div class="text-sm text-gray-700 dark:text-gray-300">
-                @if ($brands->total() > 0)
-                <span>{{ __('Showing') }}</span>
-                <span class="font-medium">{{ $brands->firstItem() }}</span>
-                <span>{{ __('to') }}</span>
-                <span class="font-medium">{{ $brands->lastItem() }}</span>
-                <span>{{ __('of') }}</span>
-                <span class="font-medium">{{ $brands->total() }}</span>
-                <span>{{ __('results') }}</span>
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $brands->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $brands->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $brands->lastItem() ?? 0 }} {{ __('of') }} {{ $brands->total() }}
+                        {{ __('results') }}
+                    </p>
                 @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $brands->links() }}
+                </div>
             </div>
-            <div>
-                {{ $brands->links() }}
-            </div>
-        </x-slot>
-    </x-page-container>
+        </div>
+        </x-page-container>
 
 
     @livewire('brands.show', ['brand' => $brand])

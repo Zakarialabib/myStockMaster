@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Customers;
 
+use Livewire\Attributes\Title;
+
 use App\Exports\CustomerExport;
 use App\Imports\CustomerImport;
 use App\Livewire\Utils\Datatable;
@@ -22,6 +24,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 
+#[Title('Customer')]
 class Index extends Component
 {
     use Datatable;

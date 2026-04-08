@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\CashRegister;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\CashRegister;
 use Illuminate\Support\Facades\Gate;
@@ -12,6 +14,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Cash Register')]
 class Index extends Component
 {
     use Datatable;
