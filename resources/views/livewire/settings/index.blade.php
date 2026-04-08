@@ -254,6 +254,18 @@
                                 </div>
 
                                 <div class="mt-6 pt-6 border-t border-gray-200">
+                                    <h3 class="text-sm font-medium text-gray-900 mb-4">{{ __('POS Settings') }}</h3>
+                                    <div class="w-full md:w-1/2">
+                                        <x-label for="pos_post_checkout_action" :value="__('Post-Checkout Action')" />
+                                        <x-select wire:model.live="form.pos_post_checkout_action" id="pos_post_checkout_action" name="pos_post_checkout_action" class="block w-full mt-1">
+                                            <option value="preview_a4">{{ __('Show A4 Invoice Preview') }}</option>
+                                            <option value="preview_thermal">{{ __('Show Thermal Receipt Preview') }}</option>
+                                            <option value="auto_print_thermal">{{ __('Auto-Print Thermal Receipt') }}</option>
+                                        </x-select>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-6 border-t border-gray-200">
                                     <h3 class="text-sm font-medium text-gray-900 mb-4">
                                         {{ __('Invoice Control Settings') }}
                                     </h3>

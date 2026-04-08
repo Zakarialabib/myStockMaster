@@ -41,6 +41,7 @@ use Override;
  * @property array<array-key, mixed>|null    $mail_styles
  * @property array<array-key, mixed>|null    $app_style
  * @property array<array-key, mixed>|null    $notification_triggers
+ * @property string                          $pos_post_checkout_action
  * @property string                          $receipt_printer_type
  * @property int|null                        $printer_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -102,6 +103,8 @@ use Override;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereInvoiceTemplate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereIsRtl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMultiWarehouseSale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereNotificationTriggers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePosPostCheckoutAction($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePrinterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePurchasePaymentPrefix($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePurchasePrefix($value)
