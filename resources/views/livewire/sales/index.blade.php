@@ -9,24 +9,28 @@
         :show-filters="true">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
-                        {{ __('PDF') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
-                        {{ __('Excel') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
-            @can('sale_create')
-                <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
-            @endcan
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="dispatch('exportAll')" wire:loading.attr="disabled">
+                            <i class="fas fa-file-pdf"></i>
+                            {{ __('PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="dispatch('downloadAll')" wire:loading.attr="disabled">
+                            <i class="fas fa-file-excel"></i>
+                            {{ __('Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                @can('sale_create')
+                    <x-button primary href="{{ route('sale.create') }}">{{ __('Create Invoice') }}</x-button>
+                @endcan
+            </div>
         </x-slot>
 
         <x-slot name="filters">

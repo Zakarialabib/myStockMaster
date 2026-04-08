@@ -4,29 +4,31 @@
     <x-page-container :title="__('Expenses List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Expenses List'), 'url' => route('expenses.index')]]" :show-filters="true">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="$dispatch('importModal')" wire:loading.attr="disabled">
-                        {{ __('Excel Import') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="exportSelected" wire:loading.attr="disabled">
-                        {{ __('Export PDF') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="downloadSelected" wire:loading.attr="disabled">
-                        {{ __('Export Excel') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="$dispatch('importModal')" wire:loading.attr="disabled">
+                            <i class="fas fa-upload mr-2"></i> {{ __('Excel Import') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="exportSelected" wire:loading.attr="disabled">
+                            <i class="fas fa-download mr-2"></i> {{ __('Export PDF') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="downloadSelected" wire:loading.attr="disabled">
+                            <i class="fas fa-download mr-2"></i> {{ __('Export Excel') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
 
-            <x-button primary type="button" wire:click="dispatchTo('expense.create', 'createModal')">
-                <i class="fas fa-plus mr-2"></i>
-                {{ __('Create Expense') }}
-            </x-button>
+                <x-button primary type="button" wire:click="dispatchTo('expense.create', 'createModal')">
+                    <i class="fas fa-plus mr-2"></i>
+                    {{ __('Create Expense') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="filters">

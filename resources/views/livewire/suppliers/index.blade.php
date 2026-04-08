@@ -2,27 +2,32 @@
     <x-page-container title="{{ __('Suppliers') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Suppliers'), 'url' => route('suppliers.index')]]" :show-filters="true">
 
         <x-slot name="actions">
-            <x-dropdown align="right" width="48" class="w-auto mr-2">
-                <x-slot name="trigger" class="inline-flex">
-                    <x-button secondary type="button" class="text-white flex items-center">
-                        <i class="fas fa-angle-double-down w-4 h-4"></i>
-                    </x-button>
-                </x-slot>
-                <x-slot name="content">
-                    <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
-                        {{ __('Excel Import') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
-                        {{ __('Export Excel') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
-                        {{ __('Export PDF') }}
-                    </x-dropdown-link>
-                </x-slot>
-            </x-dropdown>
-            <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
-                {{ __('Create Supplier') }}
-            </x-button>
+            <div class="flex justify-end space-x-2">
+                <x-dropdown align="right" width="56">
+                    <x-slot name="trigger" class="inline-flex">
+                        <x-button primary type="button" class="text-white flex items-center">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </x-button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <x-dropdown-link wire:click="importModal" wire:loading.attr="disabled">
+                            <i class="fas fa-file-import"></i>
+                            {{ __('Excel Import') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                            <i class="fas fa-file-excel"></i>
+                            {{ __('Export Excel') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                            <i class="fas fa-file-pdf"></i>
+                            {{ __('Export PDF') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
+                <x-button primary type="button" wire:click="dispatchTo('suppliers.create', 'showModal')">
+                    {{ __('Create Supplier') }}
+                </x-button>
+            </div>
         </x-slot>
 
         <x-slot name="filters">

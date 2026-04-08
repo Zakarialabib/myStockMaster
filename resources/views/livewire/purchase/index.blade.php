@@ -9,20 +9,33 @@
         :show-filters="true">
 
         <x-slot name="actions">
-            @can('purchase_export')
-                <x-button wire:click="exportAll" secondary icon="fas fa-file-pdf">
-                    {{ __('PDF') }}
-                </x-button>
-                <x-button wire:click="downloadAll" secondary icon="fas fa-file-excel">
-                    {{ __('Excel') }}
-                </x-button>
-            @endcan
-            @can('purchase_create')
-                <x-button href="{{ route('purchase.create') }}" primary>
-                    <i class="fas fa-plus mr-2"></i>
-                    {{ __('Create Purchase order') }}
-                </x-button>
-            @endcan
+            <div class="flex justify-end space-x-2">
+                @can('purchase_export')
+                    <x-dropdown align="right" width="56">
+                        <x-slot name="trigger" class="inline-flex">
+                            <x-button primary type="button" class="text-white flex items-center">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </x-button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link wire:click="exportAll" wire:loading.attr="disabled">
+                                <i class="fas fa-file-pdf"></i>
+                                {{ __('PDF') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link wire:click="downloadAll" wire:loading.attr="disabled">
+                                <i class="fas fa-file-excel"></i>
+                                {{ __('Excel') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                @endcan
+                @can('purchase_create')
+                    <x-button href="{{ route('purchase.create') }}" primary>
+                        <i class="fas fa-plus mr-2"></i>
+                        {{ __('Create Purchase order') }}
+                    </x-button>
+                @endcan
+            </div>
         </x-slot>
         <x-slot name="filters">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
