@@ -18,29 +18,18 @@
                 @endif
             />
 
-            @if ( !empty($image) )
+            @if ( !empty($image) || !empty($preview) )
 
                 <div class="flex items-center space-x-4">
-                    @if ( $image ?? true )
-                        <img src="{{ $image->temporaryUrl() ?? '' }}" class="w-20 h-20">
+                    @if ( $image || $preview )
+                        <img src="{{ $image ? $image->temporaryUrl() : $preview['url'] }}" class="w-20 h-20">
                     @endif
                     <div class="font-light text-zinc-500">
-                        <p>Type: {{ $image?->getClientOriginalExtension() }}</p>
-                        <p>Size: {{ Number::fileSize($image?->getSize(), precision: 2) }} MB</p>
+                        <p>Type: {{ $image ? $image->getClientOriginalExtension() : $preview['extension'] }}</p>
+                        <p>Size: {{ Number::fileSize($image ? $image->getSize() : $preview['size'], precision: 2) }} MB</p>
                         <button type="button" wire:click="$set('{{ $name }}', '')" class="px-2 mt-2 text-xs text-red-400 border border-red-400 rounded-sm">
-                            {{__('Remove')}}
+                            {{__( $image ? 'Remove' : 'Update' )}}
                         </button>
-                    </div>
-                </div>
-
-            @elseif ( !empty($preview) )
-
-                <div class="flex items-center space-x-4">
-                    <img src="{{ $preview }}" class="w-20 h-20">
-                    <div class="font-light text-zinc-500">
-                        <div class="px-2 mt-2 text-xs border rounded-sm text-primary-400 border-primary-400">
-                            {{__('Change')}}
-                        </div>
                     </div>
                 </div>
 

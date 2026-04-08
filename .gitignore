@@ -3,6 +3,7 @@
 /public/hot
 /public/storage
 /public/images/products/*
+/public/images/brands/*
 /public/images/livewire-temp/*
 /storage/*.key
 /vendor

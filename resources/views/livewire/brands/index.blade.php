@@ -125,7 +125,7 @@
                                     </x-dropdown-link>
                                     @endcan
                                     @can('brand_delete')
-                                    <x-dropdown-link wire:click="deleteModal('{{ $brand->id }}')" wire:loading.attr="disabled">
+                                    <x-dropdown-link wire:click="$dispatchTo('brands.delete','deleteModal', { brand: '{{ $brand->id }}' } )">
                                         <i class="fas fa-trash"></i>
                                         {{ __('Delete') }}
                                     </x-dropdown-link>
@@ -181,6 +181,7 @@
 
     @livewire('brands.show', ['brand' => $brand])
     @livewire('brands.edit', ['brand' => $brand])
+    @livewire('brands.delete', ['brand' => $brand])
     <livewire:brands.create />
 
     <!-- Import modal -->

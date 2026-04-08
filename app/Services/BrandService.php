@@ -13,7 +13,7 @@ class BrandService
     {
         if (isset($data['image']) && ! is_string($data['image'])) {
             $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
-            $data['image']->storeAs('brands', $imageName);
+            $data['image']->storeAs('brands', $imageName, 'local_files');
             $data['image'] = $imageName;
         }
 
@@ -24,7 +24,7 @@ class BrandService
     {
         if (isset($data['image']) && ! is_string($data['image'])) {
             $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
-            $data['image']->storeAs('brands', $imageName);
+            $data['image']->storeAs('brands', $imageName, 'local_files');
             $data['image'] = $imageName;
         }
 
