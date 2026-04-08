@@ -355,6 +355,64 @@
         </div>
     </x-modal>
 
+    <!-- Post-Checkout Actions Modal -->
+    <div x-data="{ 
+            showModal: false, 
+            saleId: null, 
+            action: 'preview_a4',
+            iframeUrl: ''
+        }" 
+        @checkout-completed.window="
+            saleId = $event.detail[0].sale_id;
+            action = $event.detail[0].action;
+            iframeUrl = (action === 'preview_a4') 
+                ? '/sales/pdf/' + saleId 
+                : '/sales/pos-receipt/' + saleId;
+                
+            if (action === 'auto_print_thermal') {
+                let printFrame = document.createElement('iframe');
+                printFrame.style.display = 'none';
+                printFrame.src = iframeUrl;
+                document.body.appendChild(printFrame);
+                printFrame.onload = function() {
+                    printFrame.contentWindow.print();
+                };
+            } else {
+                showModal = true;
+            }
+        ">
+        
+        <!-- Modal -->
+        <div x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showModal = false"></div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    {{ __('Invoice Preview') }}
+                                </h3>
+                                <div class="mt-4 h-96">
+                                    <iframe :src="iframeUrl" class="w-full h-full border-0 rounded"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="button" @click="document.querySelector('iframe').contentWindow.print()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">
+                            {{ __('Print') }}
+                        </button>
+                        <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            {{ __('Close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script>
             document.addEventListener('open-print-window', (event) => {
