@@ -114,28 +114,34 @@
                             </div>
                         </x-table.td>
                         <x-table.td>
-                            <div class="flex items-center space-x-2">
-                                @can('user_show')
-                                    <x-button variant="secondary" size="xs"
-                                        wire:click="$dispatch('showModal', { id :'{{ $user->id }}' })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-eye w-4 h-4"></i>
-                                    </x-button>
-                                @endcan
-                                @can('user_edit')
-                                    <x-button variant="primary" size="xs"
-                                        wire:click="$dispatch('editModal', { id : '{{ $user->id }}' })"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit w-4 h-4"></i>
-                                    </x-button>
-                                @endcan
-                                @can('user_delete')
-                                    <x-button variant="danger" size="xs" wire:click="delete({{ $user->id }})"
-                                        wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash w-4 h-4"></i>
-                                    </x-button>
-                                @endcan
+                            <div class="flex justify-start space-x-2">
+                                <x-dropdown align="right" width="56">
+                                    <x-slot name="trigger" class="inline-flex">
+                                        <x-button primary type="button" class="text-white flex items-center">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </x-button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        @can('user_show')
+                                            <x-dropdown-link wire:click="$dispatch('showModal', { id :'{{ $user->id }}' })" wire:loading.attr="disabled">
+                                                <i class="fas fa-eye w-4 h-4"></i>
+                                                {{ __('Show') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('user_edit')
+                                            <x-dropdown-link wire:click="$dispatch('editModal', { id : '{{ $user->id }}' })" wire:loading.attr="disabled">
+                                                <i class="fas fa-edit w-4 h-4"></i>
+                                                {{ __('Edit') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('user_delete')
+                                            <x-dropdown-link wire:click="delete({{ $user->id }})" wire:confirm="{{ __('Are you sure you want to delete this record?') }}" wire:loading.attr="disabled">
+                                                <i class="fas fa-trash w-4 h-4"></i>
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                    </x-slot>
+                                </x-dropdown>
                             </div>
                         </x-table.td>
                     </x-table.tr>

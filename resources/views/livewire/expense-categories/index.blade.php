@@ -88,20 +88,24 @@
                         </p>
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex items-center gap-2">
-                            <x-button 
-                                variant="primary" 
-                                icon="fas fa-edit" 
-                                size="xs"
-                                wire:click="$dispatch('editModal',{ id : {{ $expenseCategory->id }}})" 
-                                wire:loading.attr="disabled" />
-                            <x-button 
-                                variant="danger" 
-                                icon="fas fa-trash" 
-                                size="xs"
-                                wire:click="delete({{ $expenseCategory->id }})" 
-                                wire:confirm="{{ __('Are you sure you want to delete this record?') }}"
-                                wire:loading.attr="disabled" />
+                        <div class="flex justify-start space-x-2">
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="$dispatch('editModal',{ id : {{ $expenseCategory->id }}})" wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="delete({{ $expenseCategory->id }})" wire:confirm="{{ __('Are you sure you want to delete this record?') }}" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
                         </div>
                     </x-table.td>
                 </x-table.tr>

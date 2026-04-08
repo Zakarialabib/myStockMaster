@@ -76,18 +76,29 @@
                         </x-badge>
                     </x-table.td>
                     <x-table.td class="text-right">
-                        <x-button variant="info" type="button" class="w-8 h-8 inline-flex items-center justify-center"
-                            wire:click="openShowModal('{{ $category->id }}')">
-                            <i class="fas fa-eye"></i>
-                        </x-button>
-                        <x-button variant="warning" type="button" class="w-8 h-8 inline-flex items-center justify-center"
-                            wire:click="dispatch('openEditModal', '{{ $category->id }}')">
-                            <i class="fas fa-edit"></i>
-                        </x-button>
-                        <x-button variant="danger" type="button" class="w-8 h-8 inline-flex items-center justify-center"
-                            wire:click="deleteModal('{{ $category->id }}')">
-                            <i class="fas fa-trash-alt"></i>
-                        </x-button>
+                        <div class="flex justify-end space-x-2">
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="openShowModal('{{ $category->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('View') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="dispatch('openEditModal', '{{ $category->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="deleteModal('{{ $category->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash-alt"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
                     </x-table.td>
                 </x-table.tr>
             @empty

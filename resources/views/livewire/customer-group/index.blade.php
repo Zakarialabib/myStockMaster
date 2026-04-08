@@ -70,19 +70,27 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex justify-start space-x-2">
-                            <x-button info type="button" wire:click="openShowModal({ id :'{{ $customergroup->id }}'})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-eye"></i>
-                            </x-button>
-                            <x-button primary type="button"
-                                wire:click="dispatchTo('customer-group.edit','editModal', { id : '{{ $customergroup->id }}'})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-edit"></i>
-                            </x-button>
-                            <x-button danger type="button" wire:click="deleteModal({ id :'{{ $customergroup->id }}'})"
-                                wire:loading.attr="disabled">
-                                <i class="fas fa-trash"></i>
-                            </x-button>
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="openShowModal({ id :'{{ $customergroup->id }}'})" wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('Show') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="dispatchTo('customer-group.edit','editModal', { id : '{{ $customergroup->id }}'})" wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link wire:click="deleteModal({ id :'{{ $customergroup->id }}'})" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
                         </div>
                     </x-table.td>
                 </x-table.tr>

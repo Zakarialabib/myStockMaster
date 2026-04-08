@@ -110,22 +110,28 @@
                                 </span>
                             </x-table.td>
                             <x-table.td class="text-center">
-                                <div class="flex items-center justify-center space-x-2">
-                                    <x-button alert wire:click="showModal({{ $printer->id }})"
-                                        wire:loading.attr="disabled" size="sm">
-                                        <i class="fas fa-eye"></i>
-                                    </x-button>
-
-                                    <x-button primary wire:click="editModal({{ $printer->id }})"
-                                        wire:loading.attr="disabled" size="sm">
-                                        <i class="fas fa-edit"></i>
-                                    </x-button>
-
-                                    <x-button danger wire:click="delete({{ $printer->id }})"
-                                        wire:confirm="{{ __('Are you sure you want to delete this printer?') }}"
-                                        wire:loading.attr="disabled" size="sm">
-                                        <i class="fas fa-trash"></i>
-                                    </x-button>
+                                <div class="flex justify-start space-x-2">
+                                    <x-dropdown align="right" width="56">
+                                        <x-slot name="trigger" class="inline-flex">
+                                            <x-button primary type="button" class="text-white flex items-center">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </x-button>
+                                        </x-slot>
+                                        <x-slot name="content">
+                                            <x-dropdown-link wire:click="showModal({{ $printer->id }})" wire:loading.attr="disabled">
+                                                <i class="fas fa-eye"></i>
+                                                {{ __('Show') }}
+                                            </x-dropdown-link>
+                                            <x-dropdown-link wire:click="editModal({{ $printer->id }})" wire:loading.attr="disabled">
+                                                <i class="fas fa-edit"></i>
+                                                {{ __('Edit') }}
+                                            </x-dropdown-link>
+                                            <x-dropdown-link wire:click="delete({{ $printer->id }})" wire:confirm="{{ __('Are you sure you want to delete this printer?') }}" wire:loading.attr="disabled">
+                                                <i class="fas fa-trash"></i>
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        </x-slot>
+                                    </x-dropdown>
                                 </div>
                             </x-table.td>
                         </x-table.tr>
