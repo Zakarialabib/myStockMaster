@@ -127,26 +127,34 @@
                             </div>
                         </x-table.td>
                         <x-table.td>
-                            <div class="flex items-center space-x-2">
-                                @can('adjustment_show')
-                                    <x-button
-                                        wire:click="$dispatchTo('adjustment.show', 'showModal', { adjustment: {{ $adjustment->id }} })"
-                                        variant="info" size="xs" icon="fas fa-eye">
-                                        <span class="sr-only">{{ __('View') }}</span>
-                                    </x-button>
-                                @endcan
-                                @can('adjustment_update')
-                                    <x-button href="{{ route('adjustments.edit', $adjustment) }}" variant="warning"
-                                        size="xs" icon="fas fa-edit">
-                                        <span class="sr-only">{{ __('Edit') }}</span>
-                                    </x-button>
-                                @endcan
-                                @can('adjustment_delete')
-                                    <x-button wire:click="deleteModal({{ $adjustment->id }})" variant="danger"
-                                        size="xs" icon="fas fa-trash">
-                                        <span class="sr-only">{{ __('Delete') }}</span>
-                                    </x-button>
-                                @endcan
+                            <div class="flex justify-start space-x-2">
+                                <x-dropdown align="right" width="56">
+                                    <x-slot name="trigger" class="inline-flex">
+                                        <x-button primary type="button" class="text-white flex items-center">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </x-button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        @can('adjustment_show')
+                                            <x-dropdown-link wire:click="$dispatchTo('adjustment.show', 'showModal', { adjustment: {{ $adjustment->id }} })" wire:loading.attr="disabled">
+                                                <i class="fas fa-eye"></i>
+                                                {{ __('View') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('adjustment_update')
+                                            <x-dropdown-link href="{{ route('adjustments.edit', $adjustment) }}" wire:loading.attr="disabled">
+                                                <i class="fas fa-edit"></i>
+                                                {{ __('Edit') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('adjustment_delete')
+                                            <x-dropdown-link wire:click="deleteModal({{ $adjustment->id }})" wire:loading.attr="disabled">
+                                                <i class="fas fa-trash"></i>
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                    </x-slot>
+                                </x-dropdown>
                             </div>
                         </x-table.td>
                     </x-table.tr>

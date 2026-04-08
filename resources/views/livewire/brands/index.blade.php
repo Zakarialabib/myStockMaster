@@ -106,26 +106,32 @@
                         </div>
                     </x-table.td>
                     <x-table.td>
-                        <div class="flex items-center space-x-2">
-                            <x-button type="button"
-                                wire:click="$dispatchTo('brands.show','showModal', { id: '{{ $brand->id }}' } )"
-                                variant="primary" size="xs" icon="fas fa-eye">
-                                {{ __('Show') }}
-                            </x-button>
-                            @can('brand_update')
-                            <x-button type="button"
-                                wire:click="$dispatchTo('brands.edit','editModal', { id: '{{ $brand->id }}' } )"
-                                variant="info" size="xs" icon="fas fa-edit">
-                                {{ __('Edit') }}
-                            </x-button>
-                            @endcan
-                            @can('brand_delete')
-                            <x-button type="button"
-                                wire:click="deleteModal('{{ $brand->id }}')"
-                                variant="danger" size="xs" icon="fas fa-trash">
-                                {{ __('Delete') }}
-                            </x-button>
-                            @endcan
+                        <div class="flex justify-start space-x-2">
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    <x-dropdown-link wire:click="$dispatchTo('brands.show','showModal', { id: '{{ $brand->id }}' } )" wire:loading.attr="disabled">
+                                        <i class="fas fa-eye"></i>
+                                        {{ __('Show') }}
+                                    </x-dropdown-link>
+                                    @can('brand_update')
+                                    <x-dropdown-link wire:click="$dispatchTo('brands.edit','editModal', { id: '{{ $brand->id }}' } )" wire:loading.attr="disabled">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
+                                    @endcan
+                                    @can('brand_delete')
+                                    <x-dropdown-link wire:click="deleteModal('{{ $brand->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                    @endcan
+                                </x-slot>
+                            </x-dropdown>
                         </div>
                     </x-table.td>
                 </x-table.tr>

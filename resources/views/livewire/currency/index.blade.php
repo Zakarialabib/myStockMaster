@@ -57,21 +57,32 @@
                             {{ $currency->locale }}
                         </x-table.td>
                         <x-table.td class="text-right">
-                            <div class="flex items-center justify-end space-x-2">
-                                <x-button variant="info" size="xs" icon="fas fa-eye"
-                                    wire:click="dispatchTo('currency.show', 'showModal', {id : '{{ $currency->id }}'})"
-                                    type="button" wire:loading.attr="disabled" />
-                                @can('currency_update')
-                                    <x-button variant="primary" size="xs" icon="fas fa-edit"
-                                        wire:click="dispatchTo('currency.edit', 'editModal',{id : '{{ $currency->id }}'})"
-                                        type="button" wire:loading.attr="disabled" />
-                                @endcan
-
-                                @can('currency_delete')
-                                    <x-button variant="danger" size="xs" icon="fas fa-trash"
-                                        wire:click="deleteModal( {{ $currency->id }})" type="button"
-                                        wire:loading.attr="disabled" />
-                                @endcan
+                            <div class="flex justify-start space-x-2">
+                                <x-dropdown align="right" width="56">
+                                    <x-slot name="trigger" class="inline-flex">
+                                        <x-button primary type="button" class="text-white flex items-center">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </x-button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        <x-dropdown-link wire:click="dispatchTo('currency.show', 'showModal', {id : '{{ $currency->id }}'})" wire:loading.attr="disabled">
+                                            <i class="fas fa-eye"></i>
+                                            {{ __('Show') }}
+                                        </x-dropdown-link>
+                                        @can('currency_update')
+                                            <x-dropdown-link wire:click="dispatchTo('currency.edit', 'editModal',{id : '{{ $currency->id }}'})" wire:loading.attr="disabled">
+                                                <i class="fas fa-edit"></i>
+                                                {{ __('Edit') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('currency_delete')
+                                            <x-dropdown-link wire:click="deleteModal( {{ $currency->id }})" wire:loading.attr="disabled">
+                                                <i class="fas fa-trash"></i>
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                    </x-slot>
+                                </x-dropdown>
                             </div>
                         </x-table.td>
                     </x-table.tr>

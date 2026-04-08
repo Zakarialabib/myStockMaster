@@ -219,25 +219,33 @@
                     </div>
 
                     <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                        @if($isUnread)
-                            <button wire:click="markAsRead('{{ $notification->id }}')" 
-                                    class="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-white dark:hover:bg-gray-900 rounded-xl transition-all shadow-sm border border-transparent hover:border-gray-100 dark:hover:border-gray-800"
-                                    title="{{ __('Mark as Read') }}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        @else
-                            <button wire:click="markAsUnread('{{ $notification->id }}')" 
-                                    class="p-2 text-gray-400 hover:text-warning-600 dark:hover:text-warning-400 hover:bg-white dark:hover:bg-gray-900 rounded-xl transition-all shadow-sm border border-transparent hover:border-gray-100 dark:hover:border-gray-800"
-                                    title="{{ __('Mark as Unread') }}">
-                                <i class="fas fa-eye-slash"></i>
-                            </button>
-                        @endif
-                        
-                        <button wire:click="deleteNotification('{{ $notification->id }}')" 
-                                class="p-2 text-gray-400 hover:text-error-600 dark:hover:text-error-400 hover:bg-white dark:hover:bg-gray-900 rounded-xl transition-all shadow-sm border border-transparent hover:border-gray-100 dark:hover:border-gray-800"
-                                title="{{ __('Delete') }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        <div class="flex justify-start space-x-2">
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger" class="inline-flex">
+                                    <x-button primary type="button" class="text-white flex items-center">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </x-button>
+                                </x-slot>
+                                <x-slot name="content">
+                                    @if($isUnread)
+                                        <x-dropdown-link wire:click="markAsRead('{{ $notification->id }}')" wire:loading.attr="disabled">
+                                            <i class="fas fa-eye"></i>
+                                            {{ __('Mark as Read') }}
+                                        </x-dropdown-link>
+                                    @else
+                                        <x-dropdown-link wire:click="markAsUnread('{{ $notification->id }}')" wire:loading.attr="disabled">
+                                            <i class="fas fa-eye-slash"></i>
+                                            {{ __('Mark as Unread') }}
+                                        </x-dropdown-link>
+                                    @endif
+                                    
+                                    <x-dropdown-link wire:click="deleteNotification('{{ $notification->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash-alt"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
                     </div>
                 </div>
             @empty

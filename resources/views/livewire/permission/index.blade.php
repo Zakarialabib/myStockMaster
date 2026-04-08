@@ -40,20 +40,28 @@
                             {{ $permission->name }}
                         </x-table.td>
                         <x-table.td>
-                            <div class="inline-flex space-x-2">
-                                @can('permission_edit')
-                                    <x-button variant="primary" size="xs" wire:click="$dispatch('editModal', {{ $permission->id }} )" type="button"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-edit"></i>
-                                    </x-button>
-                                @endcan
-                                @can('permission_delete')
-                                    <x-button variant="danger" size="xs" type="button" wire:click="delete({{ $permission->id }})"
-                                        wire:confirm="{{ __('Are you sure you want to delete this permission?') }}"
-                                        wire:loading.attr="disabled">
-                                        <i class="fas fa-trash"></i>
-                                    </x-button>
-                                @endcan
+                            <div class="flex justify-start space-x-2">
+                                <x-dropdown align="right" width="56">
+                                    <x-slot name="trigger" class="inline-flex">
+                                        <x-button primary type="button" class="text-white flex items-center">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </x-button>
+                                    </x-slot>
+                                    <x-slot name="content">
+                                        @can('permission_edit')
+                                            <x-dropdown-link wire:click="$dispatch('editModal', {{ $permission->id }} )" wire:loading.attr="disabled">
+                                                <i class="fas fa-edit"></i>
+                                                {{ __('Edit') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('permission_delete')
+                                            <x-dropdown-link wire:click="delete({{ $permission->id }})" wire:confirm="{{ __('Are you sure you want to delete this permission?') }}" wire:loading.attr="disabled">
+                                                <i class="fas fa-trash"></i>
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                    </x-slot>
+                                </x-dropdown>
                             </div>
                         </x-table.td>
                     </x-table.tr>
