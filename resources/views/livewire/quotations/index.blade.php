@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Quotations'))
 
     <x-page-container title="{{ __('Quotations List') }}">
         <x-slot name="actions">
@@ -165,7 +164,7 @@
             </x-slot>
         </x-table>
 
-        <x-slot name="pagination">
+        <div class="px-6 py-3">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div class="text-sm text-gray-700 dark:text-gray-300">
                     {{ __('Showing') }}
@@ -180,7 +179,7 @@
                     {{ $quotations->links() }}
                 </div>
             </div>
-        </x-slot>
+        </div>
     </x-page-container>
 
     <livewire:quotations.show />

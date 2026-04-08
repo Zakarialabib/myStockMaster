@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Customers;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Customer;
 use App\Models\Sale;
@@ -15,6 +17,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
+#[Title('Customer Detail')]
 class Details extends Component
 {
     use Datatable;

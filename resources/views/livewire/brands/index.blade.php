@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Brands List'))
+
     <x-page-container title="{{ __('Brands List') }}" :breadcrumbs="[['name' => __('Brands'), 'url' => route('brands.index')]]">
 
         <x-slot name="actions">
@@ -153,23 +153,30 @@
             </x-table.tbody>
         </x-table>
 
-        <x-slot name="pagination">
-            <div class="text-sm text-gray-700 dark:text-gray-300">
-                @if ($brands->total() > 0)
-                <span>{{ __('Showing') }}</span>
-                <span class="font-medium">{{ $brands->firstItem() }}</span>
-                <span>{{ __('to') }}</span>
-                <span class="font-medium">{{ $brands->lastItem() }}</span>
-                <span>{{ __('of') }}</span>
-                <span class="font-medium">{{ $brands->total() }}</span>
-                <span>{{ __('results') }}</span>
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $brands->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $brands->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $brands->lastItem() ?? 0 }} {{ __('of') }} {{ $brands->total() }}
+                        {{ __('results') }}
+                    </p>
                 @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $brands->links() }}
+                </div>
             </div>
-            <div>
-                {{ $brands->links() }}
-            </div>
-        </x-slot>
-    </x-page-container>
+        </div>
+        </x-page-container>
 
 
     @livewire('brands.show', ['brand' => $brand])

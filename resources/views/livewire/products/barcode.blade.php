@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Barcode Generator'))
+
     <x-page-container title="{{ __('Barcode Generator') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Barcode Generator')]]" :show-filters="true">
         <x-slot name="actions">
         </x-slot>

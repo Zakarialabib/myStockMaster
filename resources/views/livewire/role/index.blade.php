@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Roles List'))
+
     <x-page-container :title="__('Roles List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Roles List')]]" :show-filters="true">
         
         <x-slot name="actions">
@@ -82,12 +82,30 @@
             </x-table.tbody>
         </x-table>
 
-        <div class="p-4">
-            <div class="pt-3">
-                {{ $roles->links() }}
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $roles->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $roles->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $roles->lastItem() ?? 0 }} {{ __('of') }} {{ $roles->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $roles->links() }}
+                </div>
             </div>
         </div>
-    </x-page-container>
+        </x-page-container>
 
     @livewire('role.create')
 

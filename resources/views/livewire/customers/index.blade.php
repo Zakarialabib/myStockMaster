@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Customer'))
 
     <x-page-container :title="__('Customer List')"
         :breadcrumbs="[
@@ -181,11 +180,30 @@
         </x-table.tbody>
     </x-table>
 
-    <div class="pt-3">
-        {{ $customers->links() }}
-    </div>
-
-    </x-page-container>
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $customers->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $customers->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $customers->lastItem() ?? 0 }} {{ __('of') }} {{ $customers->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $customers->links() }}
+                </div>
+            </div>
+        </div>
+        </x-page-container>
 
     <livewire:customers.show :customer="$customer" />
 

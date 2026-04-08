@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Edit Adjustment'))
 
     <x-theme.breadcrumb :title="__('Edit Adjustment')" :parent="route('adjustments.index')" :parentName="__('Adjustments List')" :childrenName="__('Edit Adjustment')" />
 

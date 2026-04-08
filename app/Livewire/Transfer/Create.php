@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Transfer;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Forms\TransferForm;
 use App\Livewire\Utils\WithModels;
 use App\Services\TransferService;
@@ -16,6 +18,7 @@ use Livewire\Component;
 use Throwable;
 
 #[Layout('layouts.app')]
+#[Title('Create Transfer')]
 class Create extends Component
 {
     use WithAlert;

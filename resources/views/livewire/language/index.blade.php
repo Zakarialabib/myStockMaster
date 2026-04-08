@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Languages'))
 
     <x-page-container :title="__('Languages List')"
         :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Languages List'), 'url' => route('languages.index')]]"

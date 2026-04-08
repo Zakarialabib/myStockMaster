@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Forms\ProductForm;
 use App\Models\Brand;
 use App\Models\Category;
@@ -17,6 +19,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
+#[Title('Edit Product')]
 class Edit extends Component
 {
     use WithAlert;

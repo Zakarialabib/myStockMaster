@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
+use Livewire\Attributes\Title;
+
 use App\Enums\PurchaseStatus;
 use App\Livewire\Forms\PurchaseForm;
 use App\Livewire\Utils\WithModels;
@@ -17,6 +19,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
+#[Title('Edit Purchase')]
 class Edit extends Component
 {
     use LivewireCartTrait;

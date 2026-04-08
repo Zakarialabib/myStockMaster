@@ -1,5 +1,4 @@
 <div x-data="{ isCartOpen: false }">
-    @section('title', __('Edit Sale'))
 
     <x-theme.breadcrumb :title="__('Edit Sale')" :parent="route('sales.index')" :parentName="__('Sales List')" :childrenName="__('Edit Sale')">
         <div class="flex items-center gap-2">

@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Warehouses'))
+
     <x-page-container title="{{ __('Warehouses') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Warehouses')]]" :show-filters="true">
         <x-slot name="actions">
             @can('warehouse_create')
@@ -174,11 +174,30 @@
             </x-table.tbody>
         </x-table>
 
-        <x-slot name="pagination">
-            {{ $warehouses->links() }}
-        </x-slot>
-
-    </x-page-container>
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                @if ($this->selectedCount)
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $warehouses->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $warehouses->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $warehouses->lastItem() ?? 0 }} {{ __('of') }} {{ $warehouses->total() }}
+                        {{ __('results') }}
+                    </p>
+                @endif
+                <div class="flex justify-center sm:justify-end">
+                    {{ $warehouses->links() }}
+                </div>
+            </div>
+        </div>
+        </x-page-container>
 
     <livewire:warehouses.edit :warehouse="$warehouse" />
 

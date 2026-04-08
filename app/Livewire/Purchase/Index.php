@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
+use Livewire\Attributes\Title;
+
 use App\Exports\PurchaseExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
@@ -18,6 +20,7 @@ use Livewire\WithFileUploads;
 
 #[Layout('layouts.app')]
 
+#[Title('Purchases')]
 class Index extends Component
 {
     use Datatable;

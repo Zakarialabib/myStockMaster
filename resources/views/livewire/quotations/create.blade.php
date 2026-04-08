@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Create Quotation'))
 
     <x-theme.breadcrumb :title="__('Create Quotation')" :parent="route('quotations.index')" :parentName="__('Quotations List')" :childrenName="__('Create Quotation')" />
 

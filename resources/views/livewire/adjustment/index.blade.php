@@ -1,5 +1,5 @@
 <div>
-    @section('title', __('Stock Adjustments'))
+
     <x-page-container title="{{ __('Stock Adjustments') }}" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Stock Adjustments')]]" :show-filters="true">
         <x-slot name="actions">
             @can('adjustment_create')
@@ -184,22 +184,30 @@
             </x-table.tbody>
         </x-table>
 
-        <x-slot name="pagination">
-            <div class="flex items-center justify-between">
+        <!-- Pagination Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 @if ($this->selectedCount)
-                    <p class="text-sm leading-5 text-gray-700 dark:text-gray-300">
-                        <span class="font-medium">
-                            {{ $this->selectedCount }}
-                        </span>
-                        {{ __('Entries selected') }}
-                    </p>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                            {{ __('of') }} {{ $adjustments->total() }} {{ __('entries selected') }}
+                        </p>
+                    </div>
                 @else
-                    <div></div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('Showing') }} {{ $adjustments->firstItem() ?? 0 }} {{ __('to') }}
+                        {{ $adjustments->lastItem() ?? 0 }} {{ __('of') }} {{ $adjustments->total() }}
+                        {{ __('results') }}
+                    </p>
                 @endif
-                {{ $adjustments->links() }}
+                <div class="flex justify-center sm:justify-end">
+                    {{ $adjustments->links() }}
+                </div>
             </div>
-        </x-slot>
-    </x-page-container>
+        </div>
+        </x-page-container>
 
     @if ($adjustment)
         @livewire('adjustment.show', ['adjustment' => $adjustment])

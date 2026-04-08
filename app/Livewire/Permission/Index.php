@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Permission;
 
+use Livewire\Attributes\Title;
+
 use App\Livewire\Utils\Datatable;
 use App\Models\Permission;
 use App\Traits\WithAlert;
@@ -16,6 +18,7 @@ use Livewire\Component;
 
 #[Layout('layouts.app')]
 
+#[Title('Permissions List')]
 class Index extends Component
 {
     use Datatable;

@@ -1,6 +1,5 @@
 <div>
-    @section('title', __('Customer Detail') . '-' . $customer?->name)
-    
+
     <x-page-container :title="__('Customer Details')"
         :breadcrumbs="[
             ['label' => __('Dashboard'), 'url' => route('dashboard')],

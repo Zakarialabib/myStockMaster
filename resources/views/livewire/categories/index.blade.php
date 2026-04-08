@@ -1,5 +1,4 @@
 <div>
-    @section('title', __('Categories'))
 
     <x-page-container :title="__('Categories List')" :breadcrumbs="[['label' => __('Dashboard'), 'url' => route('dashboard')], ['label' => __('Categories List')]]" :show-filters="true">
 
