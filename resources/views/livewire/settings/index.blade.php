@@ -663,6 +663,11 @@
                                                 <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
                                                 <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
                                             </label>
+                                            <label class="inline-flex items-center cursor-pointer ml-4">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.sale_created" value="whatsapp" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">WhatsApp</span>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -688,6 +693,11 @@
                                                 <input type="checkbox" wire:model.live="form.notification_triggers.payment_received" value="mail" class="sr-only peer">
                                                 <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
                                                 <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Email') }}</span>
+                                            </label>
+                                            <label class="inline-flex items-center cursor-pointer ml-4">
+                                                <input type="checkbox" wire:model.live="form.notification_triggers.payment_received" value="whatsapp" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">WhatsApp</span>
                                             </label>
                                         </div>
                                     </div>

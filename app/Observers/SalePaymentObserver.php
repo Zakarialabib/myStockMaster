@@ -15,11 +15,17 @@ class SalePaymentObserver
     {
         $settings = Setting::first();
         $triggers = $settings?->notification_triggers ?? [];
+        $activeChannels = $triggers['payment_received'] ?? [];
 
-        if (in_array('mail', $triggers['payment_received'] ?? [])) {
-            if ($payment->sale && $payment->sale->customer && $payment->sale->customer->email) {
+        if ($payment->sale && $payment->sale->customer) {
+            if (in_array('mail', $activeChannels) && ! empty($payment->sale->customer->email)) {
                 Notification::route('mail', $payment->sale->customer->email)
-                    ->notify(new PaymentSaleNotification($payment));
+                    ->notify(new PaymentSaleNotification($payment, 'mail'));
+            }
+
+            if (in_array('whatsapp', $activeChannels) && ! empty($payment->sale->customer->phone)) {
+                Notification::route('whatsapp', $payment->sale->customer->phone)
+                    ->notify(new PaymentSaleNotification($payment, 'whatsapp'));
             }
         }
     }

@@ -15,12 +15,17 @@ class SaleObserver
     {
         $settings = Setting::first();
         $triggers = $settings?->notification_triggers ?? [];
+        $activeChannels = $triggers['sale_created'] ?? [];
 
-        // Check if 'mail' is in the array of active channels for 'sale_created'
-        if (in_array('mail', $triggers['sale_created'] ?? [])) {
-            if ($sale->customer && $sale->customer->email) {
+        if ($sale->customer) {
+            if (in_array('mail', $activeChannels) && ! empty($sale->customer->email)) {
                 Notification::route('mail', $sale->customer->email)
-                    ->notify(new SaleNotification($sale));
+                    ->notify(new SaleNotification($sale, 'mail'));
+            }
+
+            if (in_array('whatsapp', $activeChannels) && ! empty($sale->customer->phone)) {
+                Notification::route('whatsapp', $sale->customer->phone)
+                    ->notify(new SaleNotification($sale, 'whatsapp'));
             }
         }
     }
