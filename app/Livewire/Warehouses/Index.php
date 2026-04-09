@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Warehouses;
 
 use App\Livewire\Utils\Datatable;
+use App\Livewire\Utils\HasDelete;
 use App\Models\Warehouse;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
@@ -19,13 +20,12 @@ use Livewire\WithFileUploads;
 class Index extends Component
 {
     use Datatable;
+    use HasDelete;
     use WithAlert;
     use WithFileUploads;
 
-    /** @var mixed */
     public mixed $warehouse;
 
-    /** @var bool */
     public bool $showModal = false;
 
     public string $model = Warehouse::class;
@@ -53,46 +53,5 @@ class Index extends Component
         $this->warehouse = Warehouse::query()->find($warehouse->id);
 
         $this->showModal = true;
-    }
-
-    public function deleteSelectedModal(): void
-    {
-        $confirmationMessage = __('Are you sure you want to delete the selected warehouses? items can be recovered.');
-
-        $this->confirm($confirmationMessage, [
-            'toast' => false,
-            'position' => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText' => __('Cancel'),
-            'onConfirmed' => 'deleteSelected',
-        ]);
-    }
-
-    #[On('deleteSelected')]
-    public function deleteSelected(): void
-    {
-        abort_if(Gate::denies('warehouse_delete'), 403);
-
-        Warehouse::query()->whereIn('id', $this->selected)->delete();
-
-        $deletedCount = count($this->selected);
-
-        if ($deletedCount > 0) {
-            $this->alert(
-                'success',
-                __(':count selected products and related warehouses deleted successfully! These items can be recovered.', ['count' => $deletedCount])
-            );
-        }
-
-        $this->resetSelected();
-    }
-
-    public function delete(Warehouse $warehouse): void
-    {
-        abort_if(Gate::denies('warehouse_delete'), 403);
-
-        $warehouse->delete();
-
-        $this->alert('success', __('Warehouse deleted successfully!'));
     }
 }
