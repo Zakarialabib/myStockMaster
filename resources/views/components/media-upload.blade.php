@@ -51,8 +51,10 @@
                         <div class="flex items-center space-x-4">
                             @if(is_object($file) && method_exists($file, 'temporaryUrl'))
                                 <img src="{{ $file->temporaryUrl() }}" class="w-20 h-20 object-cover rounded shadow-sm border border-zinc-200">
-                            @elseif(is_string($file))
+                            @elseif(is_string($file) && (str_starts_with($file, 'http') || str_starts_with($file, 'data:')))
                                 <img src="{{ $file }}" class="w-20 h-20 object-cover rounded shadow-sm border border-zinc-200">
+                            @elseif(!empty($preview))
+                                <img src="{{ $preview }}" class="w-20 h-20 object-cover rounded shadow-sm border border-zinc-200">
                             @endif
                             <div class="font-light text-zinc-500">
                                 @if(is_object($file))
@@ -110,8 +112,10 @@
                                 <div class="flex flex-col items-center space-y-2 relative group">
                                     @if(is_object($f) && method_exists($f, 'temporaryUrl'))
                                         <img src="{{ $f->temporaryUrl() }}" class="w-24 h-24 object-cover rounded shadow-sm border border-zinc-200">
-                                    @elseif(is_string($f))
+                                    @elseif(is_string($f) && (str_starts_with($f, 'http') || str_starts_with($f, 'data:')))
                                         <img src="{{ $f }}" class="w-24 h-24 object-cover rounded shadow-sm border border-zinc-200">
+                                    @elseif(!empty($preview) && is_array($preview) && isset($preview[$index]))
+                                        <img src="{{ $preview[$index] }}" class="w-24 h-24 object-cover rounded shadow-sm border border-zinc-200">
                                     @else
                                         <div class="w-24 h-24 bg-zinc-100 border border-zinc-200 rounded shadow-sm flex items-center justify-center text-zinc-400">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
