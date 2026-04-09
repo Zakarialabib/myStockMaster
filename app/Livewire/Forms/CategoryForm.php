@@ -17,5 +17,6 @@ class CategoryForm extends Form
 
     public ?string $code = null;
 
-    public ?string $image = '';
+    #[Validate('nullable')]
+    public mixed $image = '';
 }

@@ -88,9 +88,14 @@
                     </x-table.td>
                     <x-table.td>
                         <div class="flex items-center">
-                            <div
-                                class="shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
-                                <i class="fas fa-tag text-blue-600 dark:text-blue-400 text-sm"></i>
+                            <div class="shrink-0 w-8 h-8 rounded-full overflow-hidden mr-3">
+                                @if($brand->image)
+                                    <img src="{{ asset('images/brands/' . $brand->image) }}" class="w-full h-full object-cover" alt="{{ $brand->name }}">
+                                @else
+                                    <div class="w-full h-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <i class="fas fa-tag text-blue-600 dark:text-blue-400 text-sm"></i>
+                                    </div>
+                                @endif
                             </div>
                             <span class="text-sm font-medium text-blue-700 hover:text-blue-500 cursor-pointer"
                                 wire:click="$dispatchTo('brands.show','showModal', { id: '{{ $brand->id }}' } )">
