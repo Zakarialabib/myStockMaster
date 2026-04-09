@@ -1,29 +1,30 @@
 <div>
     <label class="block mt-4 text-sm">
         <div
-            class="w-full p-4 border-2 border-dashed rounded-md transition-colors duration-200 relative"
-            x-data="{ isUploading: false, progress: 0, isDropping: false }"
-            x-on:livewire-upload-start="isUploading = true"
-            x-on:livewire-upload-finish="isUploading = false"
-            x-on:livewire-upload-error="isUploading = false"
-            x-on:livewire-upload-progress="progress = $event.detail.progress"
-            x-on:dragover.prevent="isDropping = true"
-            x-on:dragleave.prevent="isDropping = false"
-            x-on:drop.prevent="
-                isDropping = false;
-                if ($event.dataTransfer.files.length > 0) {
-                    if ('{{ !$single ? 1 : 0 }}' === '0') {
-                        const dt = new DataTransfer();
-                        dt.items.add($event.dataTransfer.files[0]);
-                        $refs.fileInput.files = dt.files;
-                    } else {
-                        $refs.fileInput.files = $event.dataTransfer.files;
-                    }
-                    $refs.fileInput.dispatchEvent(new Event('change'));
-                }
-            "
-            x-bind:class="{ 'bg-blue-50 border-blue-400': isDropping, 'bg-zinc-50 border-zinc-300': !isDropping }"
-        >
+    class="w-full p-4 border-2 border-dashed rounded-md transition-colors duration-200 relative"
+    x-data="{ isUploading: false, progress: 0, isDropping: false, hasError: false }"
+    x-on:livewire-upload-start="isUploading = true; hasError = false"
+    x-on:livewire-upload-finish="isUploading = false"
+    x-on:livewire-upload-error="isUploading = false; hasError = true"
+    x-on:livewire-upload-progress="progress = $event.detail.progress"
+    x-on:dragover.prevent="isDropping = true"
+    x-on:dragleave.prevent="isDropping = false"
+    x-on:drop.prevent="
+        isDropping = false;
+        hasError = false;
+        if ($event.dataTransfer.files.length > 0) {
+            if ('{{ !$single ? 1 : 0 }}' === '0') {
+                const dt = new DataTransfer();
+                dt.items.add($event.dataTransfer.files[0]);
+                $refs.fileInput.files = dt.files;
+            } else {
+                $refs.fileInput.files = $event.dataTransfer.files;
+            }
+            $refs.fileInput.dispatchEvent(new Event('change'));
+        }
+    "
+    x-bind:class="{ 'bg-blue-50 border-blue-400': isDropping, 'bg-red-50 border-red-300': hasError && !isDropping, 'bg-zinc-50 border-zinc-300': !isDropping && !hasError }"
+>
 
             <div x-show="!isUploading">
 
@@ -164,6 +165,14 @@
             <div x-show="isUploading" class="mt-4 w-full bg-zinc-200 rounded-full h-2.5 dark:bg-zinc-700">
                 <div class="bg-primary-600 h-2.5 rounded-full transition-all duration-300" x-bind:style="'width: ' + progress + '%'"></div>
                 <p class="text-xs text-zinc-500 mt-2 text-center" x-text="'Uploading... ' + progress + '%'"></p>
+            </div>
+
+            <!-- Upload Error Message -->
+            <div x-show="hasError" x-cloak class="mt-3 flex items-center text-red-500 text-sm font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ __('The file failed to upload. Check your PHP upload_tmp_dir or file size limits.') }}</span>
             </div>
         </div>
         @error('file')
