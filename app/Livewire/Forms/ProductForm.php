@@ -56,7 +56,7 @@ class ProductForm extends Form
     public ?string $description = null;
 
     #[Validate('nullable')]
-    public ?string $image = '';
+    public mixed $image = '';
 
     #[Validate('nullable|array')]
     public mixed $gallery = [];
