@@ -124,9 +124,12 @@
                                     class="group text-left hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2 -m-2 transition-colors">
                                     <div class="flex items-start space-x-3">
                                         <div class="shrink-0">
-                                            <div
-                                                class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                                                <i class="fas fa-box text-blue-600 dark:text-blue-400 w-4 h-4"></i>
+                                            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors overflow-hidden">
+                                                @if($product->image)
+                                                    <img src="{{ asset('images/products/' . $product->image) }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
+                                                @else
+                                                    <i class="fas fa-box text-blue-600 dark:text-blue-400 w-4 h-4"></i>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="flex-1 min-w-0">

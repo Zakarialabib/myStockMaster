@@ -16,7 +16,7 @@ class BrandService
                 unset($data['image']);
             } elseif ($data['image']->getRealPath()) {
                 $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
-                $data['image']->storeAs('brands', $imageName);
+                $data['image']->storeAs('brands', $imageName, 'local_files');
                 $data['image'] = $imageName;
             } else {
                 unset($data['image']);
@@ -33,7 +33,7 @@ class BrandService
                 unset($data['image']);
             } elseif ($data['image']->getRealPath()) {
                 $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
-                $data['image']->storeAs('brands', $imageName);
+                $data['image']->storeAs('brands', $imageName, 'local_files');
                 $data['image'] = $imageName;
             } else {
                 unset($data['image']);
