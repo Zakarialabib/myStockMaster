@@ -72,7 +72,20 @@
                     <x-table.td>
                         <button type="button" wire:click="openShowModal('{{ $category->id }}')"
                             class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
-                            {{ $category->name }}
+                            <div class="flex items-center">
+                                <div class="shrink-0 w-8 h-8 rounded-full overflow-hidden mr-3">
+                                    @if($category->image)
+                                    <img src="{{ asset('images/categories/' . $category->image) }}" class="w-full h-full object-cover" alt="{{ $category->name }}">
+                                    @else
+                                    <div class="w-full h-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <i class="fas fa-tag text-blue-600 dark:text-blue-400 text-sm"></i>
+                                    </div>
+                                    @endif
+                                </div>
+                                <span class="text-sm font-medium text-blue-700 hover:text-blue-500 cursor-pointer">
+                                    {{ $category->name }}
+                                </span>
+                            </div>
                         </button>
                     </x-table.td>
                     <x-table.td>
@@ -112,19 +125,21 @@
                         </div>
                     </x-table.td>
                 </x-table.tr>
-            @empty
+                @empty
                 <x-table.tr>
                     <x-table.td colspan="5" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center">
                             <i class="fas fa-inbox text-4xl text-gray-400 dark:text-gray-600 mb-4"></i>
                             <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                {{ __('No categories found') }}</p>
+                                {{ __('No categories found') }}
+                            </p>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                {{ __('Get started by creating your first category') }}</p>
+                                {{ __('Get started by creating your first category') }}
+                            </p>
                         </div>
                     </x-table.td>
                 </x-table.tr>
-            @endforelse
+                @endforelse
             </x-table.tbody>
         </x-table>
 
@@ -133,20 +148,20 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 @if ($this->selectedCount)
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <span
-                                class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
-                            {{ __('of') }} {{ $categories->total() }} {{ __('entries selected') }}
-                        </p>
-                    </div>
-                @else
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Showing') }} {{ $categories->firstItem() ?? 0 }} {{ __('to') }}
-                        {{ $categories->lastItem() ?? 0 }} {{ __('of') }} {{ $categories->total() }}
-                        {{ __('results') }}
+                        <span
+                            class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                        {{ __('of') }} {{ $categories->total() }} {{ __('entries selected') }}
                     </p>
+                </div>
+                @else
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Showing') }} {{ $categories->firstItem() ?? 0 }} {{ __('to') }}
+                    {{ $categories->lastItem() ?? 0 }} {{ __('of') }} {{ $categories->total() }}
+                    {{ __('results') }}
+                </p>
                 @endif
                 <div class="flex justify-center sm:justify-end">
                     {{ $categories->links() }}
@@ -163,7 +178,8 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                            {{ __('Category Details') }}</h3>
+                            {{ __('Category Details') }}
+                        </h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $category?->name }}</p>
                     </div>
                 </div>
@@ -196,18 +212,19 @@
                         </div>
                     </div>
                     @if ($category?->products)
-                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                            <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-boxes text-blue-600 dark:text-blue-400"></i>
-                                <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                    {{ __('Products Information') }}</h4>
-                            </div>
-                            <p class="text-sm text-blue-700 dark:text-blue-300">
-                                {{ __('This category contains') }} <span
-                                    class="font-semibold">{{ $category->products_count }}</span>
-                                {{ __('products') }}
-                            </p>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-boxes text-blue-600 dark:text-blue-400"></i>
+                            <h4 class="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                {{ __('Products Information') }}
+                            </h4>
                         </div>
+                        <p class="text-sm text-blue-700 dark:text-blue-300">
+                            {{ __('This category contains') }} <span
+                                class="font-semibold">{{ $category->products_count }}</span>
+                            {{ __('products') }}
+                        </p>
+                    </div>
                     @endif
                 </div>
             </x-slot>

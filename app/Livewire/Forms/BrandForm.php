@@ -15,7 +15,8 @@ class BrandForm extends Form
 
     public ?string $description = null;
 
-    public ?string $image = '';
+    #[Validate('nullable')]
+    public mixed $image = '';
 
     public ?string $origin = null;
 }

@@ -8,8 +8,14 @@
             <div class="px-4 mx-auto mb-4">
                 <div class="w-full mb-3">
                     <div class="flex justify-center px-3">
-                        <img src="{{ asset('images/brands/' . $brand?->image) }}" alt="{{ $brand?->name }}"
-                            class="w-32 h-32 rounded-full">
+                        @if($brand?->image)
+                            <img src="{{ asset('images/brands/' . $brand->image) }}" alt="{{ $brand->name }}"
+                                class="w-32 h-32 rounded-full object-cover shadow-sm">
+                        @else
+                            <div class="w-32 h-32 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-tag text-blue-600 dark:text-blue-400 text-3xl"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="flex flex-row">

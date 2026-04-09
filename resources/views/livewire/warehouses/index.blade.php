@@ -23,7 +23,7 @@
                 :can-delete="auth()->user()->can('warehouse_delete')" />
         </x-slot>
 
-        <x-table>
+        <x-table class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <x-table.thead class="bg-gray-50 dark:bg-gray-800">
                 <x-table.tr>
                     <x-table.th>
@@ -134,16 +134,16 @@
                                 </x-slot>
                                 <x-slot name="content">
                                     @can('warehouse_update')
-                                        <x-dropdown-link wire:click="dispatchTo('warehouses.edit', 'editModal', { warehouse: {{ $warehouse->id }} })">
-                                            <i class="fas fa-edit"></i>
-                                            {{ __('Edit') }}
-                                        </x-dropdown-link>
+                                    <x-dropdown-link wire:click="dispatchTo('warehouses.edit', 'editModal', { warehouse: {{ $warehouse->id }} })">
+                                        <i class="fas fa-edit"></i>
+                                        {{ __('Edit') }}
+                                    </x-dropdown-link>
                                     @endcan
                                     @can('warehouse_delete')
-                                        <x-dropdown-link wire:click="delete({{ $warehouse->id }})" wire:confirm="{{ __('Are you sure you want to delete this record?') }}">
-                                            <i class="fas fa-trash"></i>
-                                            {{ __('Delete') }}
-                                        </x-dropdown-link>
+                                    <x-dropdown-link wire:click="deleteModal('{{ $warehouse->id }}')" wire:loading.attr="disabled">
+                                        <i class="fas fa-trash"></i>
+                                        {{ __('Delete') }}
+                                    </x-dropdown-link>
                                     @endcan
                                 </x-slot>
                             </x-dropdown>
@@ -178,26 +178,26 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-4 mt-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 @if ($this->selectedCount)
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
-                            {{ __('of') }} {{ $warehouses->total() }} {{ __('entries selected') }}
-                        </p>
-                    </div>
-                @else
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-check-circle text-blue-500 dark:text-blue-400"></i>
                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Showing') }} {{ $warehouses->firstItem() ?? 0 }} {{ __('to') }}
-                        {{ $warehouses->lastItem() ?? 0 }} {{ __('of') }} {{ $warehouses->total() }}
-                        {{ __('results') }}
+                        <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $this->selectedCount }}</span>
+                        {{ __('of') }} {{ $warehouses->total() }} {{ __('entries selected') }}
                     </p>
+                </div>
+                @else
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Showing') }} {{ $warehouses->firstItem() ?? 0 }} {{ __('to') }}
+                    {{ $warehouses->lastItem() ?? 0 }} {{ __('of') }} {{ $warehouses->total() }}
+                    {{ __('results') }}
+                </p>
                 @endif
                 <div class="flex justify-center sm:justify-end">
                     {{ $warehouses->links() }}
                 </div>
             </div>
         </div>
-        </x-page-container>
+    </x-page-container>
 
     <livewire:warehouses.edit :warehouse="$warehouse" />
 

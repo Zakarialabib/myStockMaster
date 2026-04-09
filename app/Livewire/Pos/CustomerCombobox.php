@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Pos;
 
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Modelable;
@@ -72,7 +73,7 @@ class CustomerCombobox extends Component
         $builder = Customer::query()->select(['id', 'name', 'phone']);
 
         if (strlen($this->search) >= 2) {
-            $builder->where(function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+            $builder->where(function (Builder $builder): void {
                 $builder->whereLike('name', '%' . $this->search . '%')
                     ->orWhereLike('phone', '%' . $this->search . '%');
             });

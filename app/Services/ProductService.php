@@ -17,19 +17,27 @@ class ProductService
         $code = $data['code'] ?? \Illuminate\Support\Facades\Date::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
 
         $imageName = null;
-        if (isset($data['image']) && is_object($data['image'])) {
-            $imageName = Str::slug($data['name']) . '-' . $data['image']->extension();
-            $data['image']->storeAs('products', $imageName, 'local_files');
+        if (isset($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
+            if (!method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
+                if ($data['image']->getRealPath()) {
+                    $imageName = Str::slug($data['name']) . '-' . $data['image']->extension();
+                    $data['image']->storeAs('products', $imageName, 'local_files');
+                }
+            }
         }
 
         $galleryData = null;
         if (isset($data['gallery']) && is_array($data['gallery']) && $data['gallery'] !== []) {
             $gallery = [];
             foreach ($data['gallery'] as $value) {
-                if (is_object($value)) {
-                    $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
-                    $value->storeAs('products', $gName, 'local_files');
-                    $gallery[] = $gName;
+                if (is_object($value) && method_exists($value, 'extension')) {
+                    if (!method_exists($value, 'isValid') || $value->isValid()) {
+                        if ($value->getRealPath()) {
+                            $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
+                            $value->storeAs('products', $gName, 'local_files');
+                            $gallery[] = $gName;
+                        }
+                    }
                 } elseif (is_string($value)) {
                     $gallery[] = $value;
                 }
@@ -103,8 +111,12 @@ class ProductService
 
         $imageName = $product->image;
         if (isset($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
-            $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
-            $data['image']->storeAs('products', $imageName, 'local_files');
+            if (!method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
+                if ($data['image']->getRealPath()) {
+                    $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
+                    $data['image']->storeAs('products', $imageName, 'local_files');
+                }
+            }
         } elseif (array_key_exists('image', $data) && $data['image'] === null) {
             $imageName = null;
         }
@@ -113,10 +125,14 @@ class ProductService
         if (isset($data['gallery']) && is_array($data['gallery']) && $data['gallery'] !== []) {
             $gallery = [];
             foreach ($data['gallery'] as $value) {
-                if (is_object($value)) {
-                    $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
-                    $value->storeAs('products', $gName, 'local_files');
-                    $gallery[] = $gName;
+                if (is_object($value) && method_exists($value, 'extension')) {
+                    if (!method_exists($value, 'isValid') || $value->isValid()) {
+                        if ($value->getRealPath()) {
+                            $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
+                            $value->storeAs('products', $gName, 'local_files');
+                            $gallery[] = $gName;
+                        }
+                    }
                 } else {
                     $gallery[] = $value;
                 }
