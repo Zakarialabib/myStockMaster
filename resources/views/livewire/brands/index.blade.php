@@ -130,7 +130,7 @@
                                     </x-dropdown-link>
                                     @endcan
                                     @can('brand_delete')
-                                    <x-dropdown-link wire:click="$dispatchTo('brands.delete','deleteModal', { brand: '{{ $brand->id }}' } )">
+                                    <x-dropdown-link wire:click="deleteModal('{{ $brand->id }}')" wire:loading.attr="disabled">
                                         <i class="fas fa-trash"></i>
                                         {{ __('Delete') }}
                                     </x-dropdown-link>
