@@ -186,7 +186,6 @@
 
     @livewire('brands.show', ['brand' => $brand])
     @livewire('brands.edit', ['brand' => $brand])
-    @livewire('brands.delete', ['brand' => $brand])
     <livewire:brands.create />
 
     <!-- Import modal -->
