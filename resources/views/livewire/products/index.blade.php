@@ -186,7 +186,7 @@
                                         <div class="font-medium">{{ $product->category->name }}</div>
                                         <div
                                             class="text-xs text-orange-600 dark:text-orange-500 group-hover:text-orange-700 dark:group-hover:text-orange-400">
-                                            ({{ $product->ProductsByCategory($product->category->id) }})
+                                            ({{ $product->category->products_count ?? 0 }})
                                             {{ __('products') }}
                                         </div>
                                     </div>

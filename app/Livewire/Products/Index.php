@@ -161,7 +161,7 @@ class Index extends Component
         $query = Product::query()
             ->with([
                 'warehouses',
-                'category',
+                'category' => fn ($q) => $q->withCount('products'),
                 'brand',
                 'movements',
             ])
