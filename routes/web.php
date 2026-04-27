@@ -58,6 +58,7 @@ use App\Livewire\Reports\PurchasesReturnReport;
 use App\Livewire\Reports\SalesReport;
 use App\Livewire\Reports\SalesReturnReport;
 use App\Livewire\Reports\StockAlertReport;
+use App\Livewire\Reports\SuppliersReport;
 use App\Livewire\Role\Index as RolesIndex;
 use App\Livewire\SaleReturn\Create as CreateSaleReturn;
 use App\Livewire\SaleReturn\Edit as EditSaleReturn;
@@ -220,6 +221,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
 
     // Reports
     Route::livewire('/customers-report', CustomersReport::class)->name('customers-report.index');
+    Route::livewire('/suppliers-report', SuppliersReport::class)->name('suppliers-report.index');
     Route::livewire('/profit-loss-report', ProfitLossReport::class)->name('profit-loss-report.index');
     Route::livewire('/sales-report', SalesReport::class)->name('sales-report.index');
     Route::livewire('/sales-return-report', SalesReturnReport::class)->name('sales-return-report.index');

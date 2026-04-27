@@ -56,6 +56,16 @@ if (window.localStorage.getItem('rtl') !== null) {
     Theme.setRtl(Theme.getRtl());
 }
 
+// Livewire Navigation Hooks - Ensure dir attribute stays in sync
+document.addEventListener('livewire:navigated', () => {
+    const isRtl = Theme.getRtl();
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    document.documentElement.classList.toggle('rtl', isRtl);
+    if (window.PerfectScrollbar) {
+        window.dispatchEvent(new CustomEvent('ps-reinitialize'));
+    }
+}, { passive: true });
+
 // Global Alpine Components
 Alpine.data('loadingMask', () => ({
     pageLoaded: false,

@@ -76,12 +76,16 @@
             'purchases-return-report.index',
             'profit-loss-report.index',
             'stock-alert-report.index',
+            'customers-report.index',
+            'suppliers-report.index',
         ])" :icon="'<i class=\'fas fa-chart-line w-5 h-5\'></i>'">
         <x-sidebar.sublink title="{{ __('Purchases Report') }}" href="{{ route('purchases-report.index') }}" :active="request()->routeIs('purchases-report.index')" :icon="'<i class=\'fas fa-file-alt w-4 h-4\'></i>'" />
+        <x-sidebar.sublink title="{{ __('Purchases Return Report') }}" href="{{ route('purchases-return-report.index') }}" :active="request()->routeIs('purchases-return-report.index')" :icon="'<i class=\'fas fa-undo w-4 h-4\'></i>'" />
+        <x-sidebar.sublink title="{{ __('Supplier Report') }}" href="{{ route('suppliers-report.index') }}" :active="request()->routeIs('suppliers-report.index')" :icon="'<i class=\'fas fa-user w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Sale Report') }}" href="{{ route('sales-report.index') }}" :active="request()->routeIs('sales-report.index')" :icon="'<i class=\'fas fa-chart-bar w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Sale Return Report') }}" href="{{ route('sales-return-report.index') }}" :active="request()->routeIs('sales-return-report.index')" :icon="'<i class=\'fas fa-undo-alt w-4 h-4\'></i>'" />
+        <x-sidebar.sublink title="{{ __('Customers Report') }}" href="{{ route('customers-report.index') }}" :active="request()->routeIs('customers-report.index')" :icon="'<i class=\'fas fa-user w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Payment Report') }}" href="{{ route('payments-report.index') }}" :active="request()->routeIs('payments-report.index')" :icon="'<i class=\'fas fa-credit-card w-4 h-4\'></i>'" />
-        <x-sidebar.sublink title="{{ __('Purchases Return Report') }}" href="{{ route('purchases-return-report.index') }}" :active="request()->routeIs('purchases-return-report.index')" :icon="'<i class=\'fas fa-undo w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Profit Report') }}" href="{{ route('profit-loss-report.index') }}" :active="request()->routeIs('profit-loss-report.index')" :icon="'<i class=\'fas fa-chart-pie w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Stock Alert Report') }}" href="{{ route('stock-alert-report.index') }}" :active="request()->routeIs('stock-alert-report.index')" :icon="'<i class=\'fas fa-bell w-4 h-4\'></i>'" />
     </x-sidebar.dropdown>

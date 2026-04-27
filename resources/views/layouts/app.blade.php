@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html x-data="mainState({{ settings('is_rtl', false) ? 'true' : 'false' }})" :class="{ rtl: isRtl, dark: isDarkMode }" class="scroll-smooth"
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ settings('is_rtl', false) ? 'rtl' : 'ltr' }}">
+<html x-data="mainState(false)" :class="{ rtl: isRtl, dark: isDarkMode }" class="scroll-smooth"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-bind:dir="isRtl ? 'rtl' : 'ltr'"
+    x-init="$watch('isRtl', value => document.documentElement.dir = value ? 'rtl' : 'ltr')">
 
 <head>
     <meta charset="utf-8">
@@ -24,16 +25,18 @@
     @include('includes.main-css')
 
     @if ($isDesktop)
-    @vite('resources/css/desktop.css')
+        @vite('resources/css/desktop.css')
     @endif
 
     @stack('styles')
 
     <script>
-        window.themeSettings = <?php echo json_encode(settings('app_style', [
-            'primary_color' => '#0061ff',
-            'font_family' => "'Inter', sans-serif",
-        ]));
+        window.themeSettings = <?php echo json_encode(
+            settings('app_style', [
+                'primary_color' => '#0061ff',
+                'font_family' => "'Inter', sans-serif",
+            ]),
+        );
         ?>;
     </script>
 
@@ -48,7 +51,7 @@
     @livewireStyles
 
     @if ($isDesktop)
-    @vite('resources/js/desktop.js')
+        @vite('resources/js/desktop.js')
     @endif
 
     @stack('scripts')
@@ -76,11 +79,11 @@
 
             <!-- Desktop Indicators & Notifications -->
             @if ($isDesktop)
-            <div class="fixed top-20 right-6 z-40 flex flex-col gap-3 pointer-events-none">
-                <livewire:desktop-mode-indicator />
-                <livewire:desktop-notification />
-                <livewire:sync-status />
-            </div>
+                <div class="fixed top-20 right-6 z-40 flex flex-col gap-3 pointer-events-none">
+                    <livewire:desktop-mode-indicator />
+                    <livewire:desktop-notification />
+                    <livewire:sync-status />
+                </div>
             @endif
 
             <main class="flex-1 p-6 lg:p-8">
@@ -90,9 +93,10 @@
                     @yield('content')
 
                     @isset($slot)
-                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-soft p-6 border border-gray-100 dark:border-gray-800">
-                        {{ $slot }}
-                    </div>
+                        <div
+                            class="bg-white dark:bg-gray-900 rounded-2xl shadow-soft p-6 border border-gray-100 dark:border-gray-800">
+                            {{ $slot }}
+                        </div>
                     @endisset
 
                     {{-- <x-settings-bar /> --}}
@@ -106,7 +110,7 @@
     </div>
 
     @if ($isDesktop)
-    <livewire:native-event-listener />
+        <livewire:native-event-listener />
     @endif
 </body>
 
