@@ -34,6 +34,7 @@ class Index extends Component
     public bool $importModal = false;
 
     public string $model = Brand::class;
+    public string $deleteAbility = 'brand_delete';
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {

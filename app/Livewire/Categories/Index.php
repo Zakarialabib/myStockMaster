@@ -31,6 +31,7 @@ class Index extends Component
     public bool $showModal = false;
 
     public string $model = Category::class;
+    public string $deleteAbility = 'category_delete';
 
     public function mount(): void
     {
