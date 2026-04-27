@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\Role;
 use App\Models\User;
@@ -14,6 +12,8 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -34,6 +34,7 @@ class Index extends Component
 
     public mixed $warehouse_id = null;
 
+    #[Url(history: true)]
     public mixed $filterRole = null;
 
     public function filterRole(mixed $role): void

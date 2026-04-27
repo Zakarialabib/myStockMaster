@@ -17,8 +17,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Component;
 
+#[Isolate]
 #[Lazy(isolate: false)]
 class KpiCards extends Component
 {
@@ -26,7 +28,7 @@ class KpiCards extends Component
 
     public string $endDate = '';
 
-    #[Computed]
+    #[Computed(persist: true)]
     public function categoriesCount(): int
     {
         return Cache::flexible('dashboard_categories_count', [300, 600], static fn (): int => Category::query()->count('id'));
@@ -77,7 +79,7 @@ class KpiCards extends Component
     {
         $key = sprintf('dashboard_best_selling_product_%s_%s', $this->startDate, $this->endDate);
 
-        return Cache::flexible($key, [60, 120], fn(): string => SaleDetails::query()
+        return Cache::flexible($key, [60, 120], fn (): string => SaleDetails::query()
             ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))
             ->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
                 $builder->whereBetween('date', [$this->startDate, $this->endDate]);
@@ -93,7 +95,7 @@ class KpiCards extends Component
     {
         $key = sprintf('dashboard_products_sold_%s_%s', $this->startDate, $this->endDate);
 
-        return Cache::flexible($key, [60, 120], fn(): int => (int) SaleDetails::query()
+        return Cache::flexible($key, [60, 120], fn (): int => (int) SaleDetails::query()
             ->whereHas('sale', function ($query): void {
                 $query->whereBetween('date', [$this->startDate, $this->endDate]);
             })

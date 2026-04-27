@@ -19,6 +19,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Isolate]
 #[Layout('layouts.app')]
 #[Title('Create Sale')]
 class Create extends Component
@@ -211,7 +212,7 @@ class Create extends Component
 
         $this->clearCart();
 
-        dispatch(new \App\Jobs\PaymentNotification($sale));
+        dispatch(new PaymentNotification($sale));
 
         $this->redirectRoute('sales.index', navigate: true);
     }

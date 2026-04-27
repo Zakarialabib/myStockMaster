@@ -7,9 +7,11 @@ namespace App\Livewire\Sales;
 use App\Models\Sale;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+#[Isolate]
 class Show extends Component
 {
     use WithAlert;
