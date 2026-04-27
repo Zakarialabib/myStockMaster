@@ -149,13 +149,40 @@
         </x-card-tooltip>
 
         {{-- Profit --}}
-        <x-card-tooltip class="col-span-full" icon="bi bi-trophy" color="indigo">
+        <x-card-tooltip icon="bi bi-trophy" color="indigo">
             <span class="text-2xl">{{ format_currency($profit_amount) }}</span>
             <p>{{ __('Profit') }}</p>
             <x-slot name="content">
                 <p class="text-sm">
                     {{ __('Profit is the epic result of successful trades and quests - the costs of obtaining treasures.') }}
                 </p>
+            </x-slot>
+        </x-card-tooltip>
+
+        {{-- Net Profit --}}
+        <x-card-tooltip icon="bi bi-cash-coin" color="emerald">
+            <span class="text-2xl">{{ format_currency($net_profit_amount) }}</span>
+            <p>{{ __('Net Profit') }}</p>
+            <x-slot name="content">
+                <p class="text-sm">{{ __('Gross profit minus total expenses.') }}</p>
+            </x-slot>
+        </x-card-tooltip>
+
+        {{-- Gross Profit Margin --}}
+        <x-card-tooltip icon="bi bi-percent" color="teal">
+            <span class="text-2xl">{{ number_format($gross_profit_margin, 2) }}%</span>
+            <p>{{ __('Gross Profit Margin') }}</p>
+            <x-slot name="content">
+                <p class="text-sm">{{ __('(Gross Profit / Net Revenue) * 100') }}</p>
+            </x-slot>
+        </x-card-tooltip>
+
+        {{-- Net Profit Margin --}}
+        <x-card-tooltip icon="bi bi-percent" color="cyan">
+            <span class="text-2xl">{{ number_format($net_profit_margin, 2) }}%</span>
+            <p>{{ __('Net Profit Margin') }}</p>
+            <x-slot name="content">
+                <p class="text-sm">{{ __('(Net Profit / Net Revenue) * 100') }}</p>
             </x-slot>
         </x-card-tooltip>
     </div>
