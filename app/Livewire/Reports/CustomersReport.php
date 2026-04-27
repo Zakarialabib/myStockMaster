@@ -5,46 +5,45 @@ declare(strict_types=1);
 namespace App\Livewire\Reports;
 
 use App\Models\Customer;
-use App\Models\Quotation;
 use App\Models\Sale;
-use App\Models\SaleReturn;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-
 class CustomersReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public ?string $customer_id = null;
-
+    #[Url(history: true)]
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public string $start_date;
+    public ?string $start_date = null;
 
+    #[Url(history: true)]
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public string $end_date;
+    public ?string $end_date = null;
 
+    #[Url(history: true)]
+    public ?string $customer_id = null;
+
+    #[Url(history: true)]
     public ?string $payment_status = null;
-
-    public ?string $purchase_status = null;
 
     public function mount(): void
     {
-        $this->start_date = today()->subDays(30)->format('Y-m-d');
-        $this->end_date = today()->format('Y-m-d');
-        $this->customer_id = '';
-        $this->purchase_status = '';
-        $this->payment_status = '';
+        $this->start_date = $this->start_date ?? today()->subDays(30)->format('Y-m-d');
+        $this->end_date = $this->end_date ?? today()->format('Y-m-d');
+        $this->customer_id = $this->customer_id ?? '';
+        $this->payment_status = $this->payment_status ?? '';
     }
 
     #[Computed]
@@ -53,34 +52,31 @@ class CustomersReport extends Component
         return Customer::query()->select(['id', 'name'])->get();
     }
 
+    protected function baseQuery()
+    {
+        return Sale::query()
+            ->whereDate('date', '>=', $this->start_date)
+            ->whereDate('date', '<=', $this->end_date)
+            ->when($this->customer_id, fn ($q) => $q->where('customer_id', $this->customer_id))
+            ->when($this->payment_status, fn ($q) => $q->where('payment_status', $this->payment_status));
+    }
+
+    #[Computed]
+    public function ltv()
+    {
+        return $this->baseQuery()->where('status', \App\Enums\SaleStatus::COMPLETED)->sum('total_amount');
+    }
+
+    #[Computed]
+    public function totalDueAmount()
+    {
+        return $this->baseQuery()->sum('due_amount');
+    }
+
     #[Computed]
     public function sales()
     {
-        return Sale::query()->whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
-            ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
-            ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
-            ->orderBy('date', 'desc')->paginate(10);
-    }
-
-    #[Computed]
-    public function saleReturns()
-    {
-        return SaleReturn::query()->whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
-            ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
-            ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
-            ->orderBy('date', 'desc')->paginate(10);
-    }
-
-    #[Computed]
-    public function quotations()
-    {
-        return Quotation::query()->whereDate('date', '>=', $this->start_date)
-            ->whereDate('date', '<=', $this->end_date)
-            ->when($this->customer_id, fn ($query) => $query->where('customer_id', $this->customer_id))
-            ->when($this->payment_status, fn ($query) => $query->where('payment_status', $this->payment_status))
-            ->orderBy('date', 'desc')->paginate(10);
+        return $this->baseQuery()->with('customer')->orderBy('date', 'desc')->paginate(10);
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -91,6 +87,5 @@ class CustomersReport extends Component
     public function generateReport(): void
     {
         $this->validate();
-        $this->render();
     }
 }
