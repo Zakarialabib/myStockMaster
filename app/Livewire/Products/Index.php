@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -55,7 +56,11 @@ class Index extends Component
 
     public mixed $category_id = null;
 
+    #[Locked]
     public string $model = Product::class;
+
+    #[Url(history: true)]
+    public string $search = '';
 
     #[Url(history: true)]
     public string $filterAvailability = '';
