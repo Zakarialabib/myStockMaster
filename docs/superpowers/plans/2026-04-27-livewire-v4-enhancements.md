@@ -5,8 +5,8 @@
 **Goal:** Standardize and optimize 161+ Livewire components using v4 features (Attributes, Island architecture, Morphing) while implementing a Trait + Alpine pattern for modals to avoid inheritance traps.
 
 **Architecture:** 
-- Alpine.js handles modal DOM visibility (`x-data="{ open: false }" @open-modal.window="..."`).
-- Livewire components use a `ManagesModal` trait for data hydration, error resetting, and dispatching close events to Alpine.
+- Use the existing `<x-modal>` Blade component and a robust `ManagesModal` Livewire trait to handle modal state, parameters, and form hydration seamlessly.
+- Apply `#[Isolate]` for Island Architecture to isolate independent widgets.
 - Use `#[Locked]` for secure IDs and `#[Url]` for shareable state.
 - Strictly type all properties and fix specific correctness issues identified in the spec.
 
@@ -19,37 +19,53 @@
 **Files:**
 - Create: `app/Livewire/Utils/ManagesModal.php`
 
-- [ ] **Step 1: Write the minimal implementation**
+- [ ] **Step 1: Write the robust trait implementation**
 
 ```php
 <?php
+
+declare(strict_types=1);
 
 namespace App\Livewire\Utils;
 
 trait ManagesModal
 {
+    /** @var array<string, bool> */
+    public array $modals = [];
+
     /**
-     * Reset the modal state, including validation errors and form objects.
+     * Generic method to open a modal by its identifier.
+     * Optionally pass parameters to hydrate the component.
      */
-    public function resetModal(): void
+    public function openModal(string $modalId, array $params = []): void
     {
-        $this->resetErrorBag();
-        $this->resetValidation();
-        
-        // If the component has a specific reset form method, call it.
-        // Usually handled by the component's own lifecycle or #[On] listener,
-        // but this provides a convenient hook.
-        if (method_exists($this, 'resetForm')) {
-            $this->resetForm();
+        $this->modals[$modalId] = true;
+
+        if (method_exists($this, 'hydrateModalParams')) {
+            $this->hydrateModalParams($modalId, $params);
         }
     }
 
     /**
-     * Dispatch an event to Alpine.js to close the modal.
+     * Generic method to close a modal by its identifier.
      */
     public function closeModal(string $modalId): void
     {
-        $this->dispatch('close-modal', id: $modalId);
+        $this->modals[$modalId] = false;
+        $this->resetModal();
+    }
+
+    /**
+     * Reset the modal state, including validation errors and form objects.
+     */
+    protected function resetModal(): void
+    {
+        $this->resetErrorBag();
+        $this->resetValidation();
+        
+        if (method_exists($this, 'resetForm')) {
+            $this->resetForm();
+        }
     }
 }
 ```
@@ -58,7 +74,7 @@ trait ManagesModal
 
 ```bash
 git add app/Livewire/Utils/ManagesModal.php
-git commit -m "feat(livewire): add ManagesModal trait for alpine modal integration"
+git commit -m "feat(livewire): add robust ManagesModal trait for unified modal management"
 ```
 
 ### Task 2: Standardize Utils/HasDelete
@@ -237,10 +253,6 @@ use Livewire\Attributes\Url;
 
     #[Url(history: true)]
     public string $sortDirection = 'desc';
-
-    // If there is any sensitive state like warehouse context:
-    // #[Locked]
-    // public ?int $warehouse_id = null;
 ```
 
 - [ ] **Step 2: Commit**
@@ -248,4 +260,32 @@ use Livewire\Attributes\Url;
 ```bash
 git add app/Livewire/Products/Index.php
 git commit -m "refactor(livewire): apply Url and Locked attributes to Products Index"
+```
+
+### Task 7: Apply Island Architecture `#[Isolate]`
+
+**Files:**
+- Modify: `app/Livewire/Pos/Index.php`
+- Modify: `app/Livewire/Dashboard/KpiCards.php` (if exists, or similar dashboard widgets)
+
+- [x] **Step 1: Isolate independent widgets**
+
+*Note: Since POS index is a heavy container, isolate its sub-components if they exist, or at least isolate the whole page to prevent global resets if nested in a layout.*
+
+```php
+use Livewire\Attributes\Isolate;
+
+// Apply to components like Pos/Index, Dashboard widgets
+#[Isolate]
+class Index extends Component
+{
+    // ...
+}
+```
+
+- [x] **Step 2: Commit**
+
+```bash
+git add app/Livewire/Pos/Index.php
+git commit -m "perf(livewire): apply Isolate attribute to key components for Island Architecture"
 ```
