@@ -19,10 +19,11 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Isolate;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Isolate]
-#[Lazy(isolate: false)]
+#[Lazy]
 class KpiCards extends Component
 {
     public string $startDate = '';

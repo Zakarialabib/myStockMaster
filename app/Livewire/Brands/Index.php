@@ -35,6 +35,8 @@ class Index extends Component
 
     public string $model = Brand::class;
 
+    public string $deleteAbility = 'brand_delete';
+
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('brand_access'), 403);
