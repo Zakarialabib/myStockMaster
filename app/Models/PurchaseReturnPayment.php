@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int         $id
@@ -22,6 +24,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read PurchaseReturn $purchaseReturn
+ * @property-read User|null $user
+ * @property-read CashRegister|null $cashRegister
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment advancedFilter($data)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PurchaseReturnPayment byPurchaseReturn()
@@ -43,9 +47,9 @@ use Illuminate\Support\Carbon;
  */
 class PurchaseReturnPayment extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',
@@ -65,7 +69,7 @@ class PurchaseReturnPayment extends Model
 
     protected $guarded = [];
 
-    #[\Override]
+    #[Override]
     protected static function boot()
     {
         parent::boot();
@@ -80,23 +84,37 @@ class PurchaseReturnPayment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\PurchaseReturn, $this>
+     * @return BelongsTo<PurchaseReturn, $this>
      */
     public function purchaseReturn(): BelongsTo
     {
         return $this->belongsTo(PurchaseReturn::class, 'purchase_return_id', 'id');
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo<CashRegister, $this>
+     */
+    public function cashRegister(): BelongsTo
+    {
+        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
+    }
+
     protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
+            get: fn (DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
     /**
-     * @param mixed $query
-     *
      * @return mixed
      */
     protected function scopeByPurchaseReturn(mixed $query)
@@ -114,7 +132,8 @@ class PurchaseReturnPayment extends Model
             set: fn ($value): int|float => $value * 100,
         );
     }
-    #[\Override]
+
+    #[Override]
     protected function casts(): array
     {
         return [

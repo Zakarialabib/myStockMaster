@@ -51,19 +51,41 @@ class PaymentsReport extends Component
     }
 
     #[Computed]
+    public function cashFlowSummary()
+    {
+        if (! $this->payments) {
+            return collect();
+        }
+
+        $query = match ($this->payments) {
+            'sale' => SalePayment::query(),
+            'sale_return' => SaleReturnPayment::query(),
+            'purchase' => PurchasePayment::query(),
+            'purchase_return' => PurchaseReturnPayment::query(),
+            default => null,
+        };
+
+        if ($query) {
+            return $query->whereDate('date', '>=', $this->start_date)
+                ->whereDate('date', '<=', $this->end_date)
+                ->selectRaw('payment_method, SUM(amount) as total_amount')
+                ->groupBy('payment_method')
+                ->get();
+        }
+
+        return collect();
+    }
+
+    #[Computed]
     public function information()
     {
-        $query = null;
-
-        if ($this->payments === 'sale') {
-            $query = SalePayment::query()->with('sale');
-        } elseif ($this->payments === 'sale_return') {
-            $query = SaleReturnPayment::query()->with('saleReturn');
-        } elseif ($this->payments === 'purchase') {
-            $query = PurchasePayment::query()->with('purchase');
-        } elseif ($this->payments === 'purchase_return') {
-            $query = PurchaseReturnPayment::query()->with('purchaseReturn');
-        }
+        $query = match ($this->payments) {
+            'sale' => SalePayment::query()->with(['sale', 'user', 'cashRegister.warehouse']),
+            'sale_return' => SaleReturnPayment::query()->with(['saleReturn', 'user', 'cashRegister.warehouse']),
+            'purchase' => PurchasePayment::query()->with(['purchase', 'user', 'cashRegister.warehouse']),
+            'purchase_return' => PurchaseReturnPayment::query()->with(['purchaseReturn', 'user', 'cashRegister.warehouse']),
+            default => null,
+        };
 
         if ($query) {
             return $query->whereDate('date', '>=', $this->start_date)

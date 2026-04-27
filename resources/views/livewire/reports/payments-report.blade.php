@@ -60,6 +60,17 @@
             </form>
         </x-slot>
 
+        @if($this->cashFlowSummary->isNotEmpty())
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                @foreach($this->cashFlowSummary as $summary)
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <p class="text-sm text-gray-500 font-medium">{{ $summary->payment_method }}</p>
+                        <p class="text-xl font-bold text-gray-800">{{ format_currency($summary->total_amount) }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         @if($this->information->isNotEmpty())
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden relative">
                 <x-table>
@@ -67,6 +78,8 @@
                         <x-table.th>{{ __('Date') }}</x-table.th>
                         <x-table.th>{{ __('Reference') }}</x-table.th>
                         <x-table.th>{{ ucwords(str_replace('_', ' ', $payments)) }}</x-table.th>
+                        <x-table.th>{{ __('User') }}</x-table.th>
+                        <x-table.th>{{ __('Register') }}</x-table.th>
                         <x-table.th>{{ __('Total') }}</x-table.th>
                         <x-table.th>{{ __('Payment Method') }}</x-table.th>
                     </x-slot>
@@ -86,12 +99,14 @@
                                         {{ $data->purchaseReturn->reference }}
                                     @endif
                                 </x-table.td>
+                                <x-table.td>{{ $data->user?->name ?? '--' }}</x-table.td>
+                                <x-table.td>{{ $data->cashRegister?->warehouse?->name ?? '--' }}</x-table.td>
                                 <x-table.td>{{ format_currency($data->amount) }}</x-table.td>
                                 <x-table.td>{{ $data->payment_method }}</x-table.td>
                             </x-table.tr>
                         @empty
                             <x-table.tr>
-                                <x-table.td colspan="5">
+                                <x-table.td colspan="7">
                                     <span class="text-red-500">{{ __('No Data Available') }}!</span>
                                 </x-table.td>
                             </x-table.tr>
