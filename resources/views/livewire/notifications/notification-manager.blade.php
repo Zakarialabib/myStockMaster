@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">
                 {{ __('Notification Manager') }}
             </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+            <p class="text-sm text-blue-500 dark:text-blue-400 font-medium mt-1">
                 {{ __('View and manage all your system alerts and notifications') }}
             </p>
         </div>
@@ -113,7 +113,7 @@
             <div class="flex items-end">
                 <button type="button" 
                         wire:click="$set('searchTerm', ''); $set('filterType', 'all'); $set('filterRead', 'all');"
-                        class="w-full py-2.5 text-gray-500 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">
+                        class="w-full py-2.5 text-blue-500 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">
                     <i class="fas fa-undo mr-2"></i> {{ __('Reset Filters') }}
                 </button>
             </div>
@@ -162,7 +162,7 @@
                                 <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                             @endif
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-relaxed max-w-2xl">
+                        <p class="text-xs text-blue-500 dark:text-blue-400 font-medium leading-relaxed max-w-2xl">
                             {{ $data['message'] ?? 'New system alert received.' }}
                         </p>
                         <div class="flex items-center gap-4 mt-3">
@@ -170,7 +170,7 @@
                                 <i class="far fa-clock"></i>
                                 {{ $notification->created_at->diffForHumans() }}
                             </span>
-                            <span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest border border-gray-200 dark:border-gray-700">
+                            <span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase tracking-widest border border-gray-200 dark:border-gray-700">
                                 {{ str_replace('_', ' ', $type) }}
                             </span>
                         </div>
@@ -212,7 +212,7 @@
                         <i class="fas fa-bell-slash text-gray-300 dark:text-gray-600 text-4xl"></i>
                     </div>
                     <h5 class="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{{ __('No notifications found') }}</h5>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+                    <p class="text-sm text-blue-500 dark:text-blue-400 font-medium mt-1">
                         {{ __('Try adjusting your filters or check back later.') }}
                     </p>
                 </div>

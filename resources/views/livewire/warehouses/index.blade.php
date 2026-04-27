@@ -96,7 +96,7 @@
                                 @endif
                             </div>
                             @if ($warehouse->address)
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <div class="text-xs text-blue-500 dark:text-blue-400 mt-1">
                                 {{ Str::limit($warehouse->address, 30) }}
                             </div>
                             @endif
@@ -158,7 +158,7 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                                 {{ __('No warehouses found') }}
                             </h3>
-                            <p class="text-gray-500 dark:text-gray-400 mb-4">
+                            <p class="text-blue-500 dark:text-blue-400 mb-4">
                                 {{ __('Get started by creating your first warehouse.') }}
                             </p>
                             @can('warehouse_create')

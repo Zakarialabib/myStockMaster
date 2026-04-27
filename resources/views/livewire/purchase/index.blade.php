@@ -280,7 +280,7 @@
                                 </div>
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                                     {{ __('No results found') }}</h3>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                                <p class="text-blue-500 dark:text-blue-400 text-sm">
                                     {{ __('Try adjusting your search or filter to find what you\'re looking for.') }}
                                 </p>
                             </div>

@@ -97,7 +97,7 @@
                                 {{ format_currency($sale->total_amount) }}
                             </td>
                             <td
-                                class="px-8 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                class="px-8 py-4 whitespace-nowrap text-sm text-blue-500 dark:text-blue-400 font-medium">
                                 {{ $sale->date }}
                             </td>
                             <td class="px-8 py-4 whitespace-nowrap">
@@ -178,7 +178,7 @@
                                 {{ format_currency($purchase->total_amount) }}
                             </td>
                             <td
-                                class="px-8 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                class="px-8 py-4 whitespace-nowrap text-sm text-blue-500 dark:text-blue-400 font-medium">
                                 {{ $purchase->date }}
                             </td>
                             <td class="px-8 py-4 whitespace-nowrap">

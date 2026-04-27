@@ -201,7 +201,7 @@
                                             {{ $warehouse->name }}
                                         </span>
                                     @empty
-                                        <span class="text-sm text-gray-500 dark:text-gray-400 italic">
+                                        <span class="text-sm text-blue-500 dark:text-blue-400 italic">
                                             {{ __('No warehouse assigned') }}
                                         </span>
                                     @endforelse

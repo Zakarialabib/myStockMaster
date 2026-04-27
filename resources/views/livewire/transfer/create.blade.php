@@ -62,7 +62,7 @@
             <!-- Product Search -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 flex-1">
                 @if (!$form->from_warehouse_id)
-                    <div class="h-full flex items-center justify-center text-gray-500 dark:text-gray-400 p-6 text-center">
+                    <div class="h-full flex items-center justify-center text-blue-500 dark:text-blue-400 p-6 text-center">
                         <div>
                             <i class="fas fa-warehouse text-4xl mb-4"></i>
                             <p>{{ __('Please select a source warehouse first to load available products.') }}</p>
@@ -113,7 +113,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="h-full flex items-center justify-center text-gray-500 dark:text-gray-400 p-6 text-center">
+                        <div class="h-full flex items-center justify-center text-blue-500 dark:text-blue-400 p-6 text-center">
                             <div>
                                 <i class="fas fa-box-open text-4xl mb-4"></i>
                                 <p>{{ __('No products added yet. Search and select products to transfer.') }}</p>

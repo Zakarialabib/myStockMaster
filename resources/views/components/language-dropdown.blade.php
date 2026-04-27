@@ -1,7 +1,7 @@
 <div>
     <x-dropdown align="right" width="48">
         <x-slot name="trigger">
-            <button type="button" class="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors font-bold flex items-center focus:outline-none">
+            <button type="button" class="text-blue-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors font-bold flex items-center focus:outline-none">
                 <i class="fas fa-globe mr-2 text-[18px]"></i>
                 <span class="text-sm uppercase">{{ strtoupper(app()->getLocale()) }}</span>
             </button>

@@ -7,7 +7,7 @@
      class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white dark:bg-gray-900">
     <div class="relative flex flex-col items-center">
         <x-loading class="w-16 h-16 text-primary-600" />
-        <div class="mt-4 text-gray-500 dark:text-gray-400 font-medium animate-pulse">
+        <div class="mt-4 text-blue-500 dark:text-blue-400 font-medium animate-pulse">
             {{ __('Loading...') }}
         </div>
     </div>

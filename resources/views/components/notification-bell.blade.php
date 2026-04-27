@@ -88,7 +88,7 @@ new class extends Component
     <div x-data="{ showNotifications: false }" class="relative">
         <!-- Bell Icon Trigger -->
         <button type="button"
-            class="relative p-2.5 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all focus:outline-none"
+            class="relative p-2.5 rounded-xl text-blue-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all focus:outline-none"
             @click="showNotifications = true">
             <i class="fas fa-bell text-xl" aria-hidden="true"></i>
             @if($this->totalUnreadCount > 0)
@@ -141,7 +141,7 @@ new class extends Component
                                     <h2 class="text-lg font-bold text-gray-900 dark:text-white" id="slide-over-title">
                                         {{ __('Notifications') }}
                                     </h2>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                                    <p class="text-xs text-blue-500 dark:text-blue-400 font-medium">
                                         {{ $this->totalUnreadCount }} {{ __('unread items') }}
                                     </p>
                                 </div>
@@ -228,7 +228,7 @@ new class extends Component
                                             <p class="font-bold text-gray-900 dark:text-white text-sm">
                                                 {{ $notification->data['title'] ?? __('System Alert') }}
                                             </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                                            <p class="text-xs text-blue-500 dark:text-blue-400 mt-1 line-clamp-2">
                                                 {{ $notification->data['message'] ?? 'New notification received' }}
                                             </p>
                                             <span class="text-[10px] text-gray-400 mt-2 block font-medium">
@@ -254,7 +254,7 @@ new class extends Component
                                 @if($this->totalUnreadCount > $this->how_many)
                                 <button type="button"
                                     wire:click="loadMore"
-                                    class="w-full mt-4 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all uppercase tracking-widest">
+                                    class="w-full mt-4 py-3 text-xs font-bold text-blue-500 dark:text-blue-400 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all uppercase tracking-widest">
                                     {{ __('Load More Items') }}
                                 </button>
                                 @endif

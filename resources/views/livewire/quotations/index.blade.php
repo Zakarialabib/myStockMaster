@@ -155,7 +155,7 @@
                                 </div>
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                                     {{ __('No quotations found') }}</h3>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
+                                <p class="text-sm text-blue-500 dark:text-blue-400 max-w-sm">
                                     {{ __('Get started by creating your first quotation.') }}</p>
                             </div>
                         </td>

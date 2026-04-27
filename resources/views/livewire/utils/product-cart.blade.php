@@ -29,7 +29,7 @@
                             <td colspan="5" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
                                     <i class="fas fa-shopping-cart text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
-                                    <span class="text-gray-500 dark:text-gray-400 font-medium">{{ __('Your cart is empty') }}</span>
+                                    <span class="text-blue-500 dark:text-blue-400 font-medium">{{ __('Your cart is empty') }}</span>
                                     <span
                                         class="text-xs mt-1">{{ __('Search and select products to add them to the cart.') }}</span>
                                 </div>

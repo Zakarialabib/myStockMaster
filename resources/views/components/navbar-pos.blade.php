@@ -26,7 +26,7 @@
 
             <x-dropdown align="right" width="56">
                 <x-slot name="trigger">
-                    <button type="button" class="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                    <button type="button" class="text-blue-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
                         <span class="sr-only">Open POS menu</span>
                         <x-icons.menu class="w-6 h-6" />
                     </button>
