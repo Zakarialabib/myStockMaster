@@ -39,7 +39,7 @@ class Index extends Component
 
     public mixed $productWarehouse = null;
 
-    public mixed $sendTelegram = null;
+    public mixed $sendTelegramProductId = null;
 
     public mixed $promoAllProducts = null;
 
@@ -189,9 +189,15 @@ class Index extends Component
     }
 
     #[On('sendTelegram')]
-    public function sendToTelegram(mixed $product): void
+    public function sendToTelegram(int $productId): void
     {
-        $this->productWarehouse = ProductWarehouse::query()->find($product->id);
+        $this->productWarehouse = ProductWarehouse::where('product_id', $productId)->first();
+
+        if (! $this->productWarehouse) {
+            $this->alert('error', __('Product warehouse not found.'));
+
+            return;
+        }
 
         // Specify Telegram channel
         $telegramChannel = settings()->telegram_channel;
@@ -200,7 +206,7 @@ class Index extends Component
         $productName = $this->productWarehouse->product->name;
         $productPrice = $this->productWarehouse->price;
 
-        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
+        $this->productWarehouse->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
     }
 
     #[On('downloadAll')]

@@ -40,6 +40,7 @@ class NotificationManager extends Component
         return ProductWarehouse::with('product')
             ->select('product_id', 'qty', 'stock_alert')
             ->whereColumn('qty', '<=', 'stock_alert')
+            ->limit(50)
             ->get();
     }
 

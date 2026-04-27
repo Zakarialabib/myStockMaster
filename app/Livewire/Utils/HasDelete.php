@@ -72,6 +72,6 @@ trait HasDelete
     {
         $model = strtolower(class_basename($this->model));
 
-        return $model . ' delete';
+        return $model . '_delete';
     }
 }

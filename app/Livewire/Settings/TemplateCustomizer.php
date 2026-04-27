@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Settings;
 
-use Livewire\Component;
 use App\Models\Setting;
+use Livewire\Component;
 
 class TemplateCustomizer extends Component
 {
     public $primary_color;
+
     public $secondary_color;
+
     public $font_family;
+
     public $pattern_style;
 
     public function mount()
@@ -22,7 +27,27 @@ class TemplateCustomizer extends Component
         $this->pattern_style = $styles['pattern_style'] ?? 'none';
     }
 
-    public function updated()
+    public function updatedPrimaryColor(): void
+    {
+        $this->persistTemplateStyles();
+    }
+
+    public function updatedSecondaryColor(): void
+    {
+        $this->persistTemplateStyles();
+    }
+
+    public function updatedFontFamily(): void
+    {
+        $this->persistTemplateStyles();
+    }
+
+    public function updatedPatternStyle(): void
+    {
+        $this->persistTemplateStyles();
+    }
+
+    private function persistTemplateStyles(): void
     {
         Setting::set('template_styles', [
             'primary_color' => $this->primary_color,

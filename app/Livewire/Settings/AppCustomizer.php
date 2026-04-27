@@ -21,7 +21,17 @@ class AppCustomizer extends Component
         $this->font_family = $style['font_family'] ?? "'Inter', sans-serif";
     }
 
-    public function updated()
+    public function updatedPrimaryColor(): void
+    {
+        $this->persistAppStyle();
+    }
+
+    public function updatedFontFamily(): void
+    {
+        $this->persistAppStyle();
+    }
+
+    private function persistAppStyle(): void
     {
         $settings = [
             'primary_color' => $this->primary_color,
