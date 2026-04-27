@@ -50,7 +50,6 @@ enum SaleReturnStatus: int
             self::SHIPPED => 'primary',
             self::RETURNED => 'alert',
             self::CANCELED => 'danger',
-            default => 'secondary',
         };
     }
 }

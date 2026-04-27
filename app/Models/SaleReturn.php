@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property int                             $id
@@ -72,8 +73,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SaleReturn extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $casts = [
         'date' => 'date',
+        'status' => SaleReturnStatus::class,
+        'payment_status' => \App\Enums\PaymentStatus::class,
     ];
 
     use HasAdvancedFilter;
@@ -132,7 +136,7 @@ class SaleReturn extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -141,20 +145,20 @@ class SaleReturn extends Model
         ];
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleReturnDetail, $this> */
+    /** @return HasMany<SaleReturnDetail, $this> */
     public function saleReturnDetails(): HasMany
     {
         return $this->hasMany(SaleReturnDetail::class, 'sale_return_id', 'id');
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleReturnPayment, $this> */
+    /** @return HasMany<SaleReturnPayment, $this> */
     public function saleReturnPayments(): HasMany
     {
         return $this->hasMany(SaleReturnPayment::class, 'sale_return_id', 'id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     * @return BelongsTo<Customer, $this>
      */
     public function customer(): BelongsTo
     {
@@ -162,14 +166,14 @@ class SaleReturn extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     * @return BelongsTo<CashRegister, $this>
      */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
-    #[\Override]
+    #[Override]
     protected static function boot(): void
     {
         parent::boot();
@@ -181,8 +185,6 @@ class SaleReturn extends Model
     }
 
     /**
-     * @param mixed $query
-     *
      * @return mixed
      */
     protected function scopeCompleted(mixed $query)

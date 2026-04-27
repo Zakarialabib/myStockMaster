@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property string                          $id
@@ -85,8 +86,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sale extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $casts = [
         'date' => 'date',
+        'status' => SaleStatus::class,
+        'payment_status' => \App\Enums\PaymentStatus::class,
     ];
 
     use HasAdvancedFilter;
@@ -154,7 +158,7 @@ class Sale extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -162,7 +166,7 @@ class Sale extends Model
         ];
     }
 
-    #[\Override]
+    #[Override]
     protected static function boot()
     {
         parent::boot();
@@ -174,7 +178,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SalePayment, $this>
+     * @return HasMany<SalePayment, $this>
      */
     public function salePayments(): HasMany
     {
@@ -182,7 +186,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     * @return BelongsTo<Customer, $this>
      */
     public function customer(): BelongsTo
     {
@@ -193,7 +197,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -204,7 +208,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     * @return BelongsTo<CashRegister, $this>
      */
     public function cashRegister(): BelongsTo
     {
@@ -212,7 +216,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {
@@ -220,7 +224,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\SaleDetails, $this>
+     * @return HasMany<SaleDetails, $this>
      */
     public function saleDetails(): HasMany
     {
@@ -228,8 +232,6 @@ class Sale extends Model
     }
 
     /**
-     * @param mixed $query
-     *
      * @return mixed
      */
     protected function scopeCompleted(mixed $query)

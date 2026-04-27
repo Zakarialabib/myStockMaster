@@ -43,7 +43,7 @@ enum PaymentStatus: int
             self::PENDING => 'warning',
             self::PARTIAL => 'info',
             self::PAID => 'success',
-            default => 'secondary',
+            self::DUE => 'danger',
         };
     }
 }
