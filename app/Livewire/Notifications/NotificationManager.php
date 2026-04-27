@@ -34,13 +34,10 @@ class NotificationManager extends Component
 
     public bool $selectAll = false;
 
-    #[Computed]
-    public function lowQuantity()
+    #[Computed(persist: true)]
+    public function lowQuantityCount(): int
     {
-        return ProductWarehouse::with('product')
-            ->select('product_id', 'qty', 'stock_alert')
-            ->whereColumn('qty', '<=', 'stock_alert')
-            ->get();
+        return ProductWarehouse::whereColumn('qty', '<=', 'stock_alert')->count();
     }
 
     public function updatedSearchTerm(): void
