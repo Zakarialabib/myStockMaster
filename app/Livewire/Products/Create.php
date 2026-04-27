@@ -14,12 +14,10 @@ use App\Services\ProductService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-#[Isolate]
 class Create extends Component
 {
     use WithAlert;
@@ -35,7 +33,7 @@ class Create extends Component
     #[Computed]
     public function productAttributes()
     {
-        return ProductAttribute::all()->mapWithKeys(fn($attr) => [$attr->id => ''])->all();
+        return ProductAttribute::all()->mapWithKeys(fn ($attr) => [$attr->id => ''])->all();
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View

@@ -15,12 +15,10 @@ use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Isolate]
 #[Layout('layouts.app')]
 #[Title('Create Sale')]
 class Create extends Component

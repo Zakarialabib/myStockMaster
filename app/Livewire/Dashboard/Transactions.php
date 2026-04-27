@@ -19,10 +19,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Isolate;
 use Livewire\Component;
 
-#[Isolate]
 class Transactions extends Component
 {
     use WithAlert;

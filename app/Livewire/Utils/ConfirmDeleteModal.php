@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Utils;
 
-use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-#[Isolate]
 class ConfirmDeleteModal extends Component
 {
     public bool $show = false;

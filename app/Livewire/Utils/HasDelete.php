@@ -67,7 +67,7 @@ trait HasDelete
     }
 
     #[On('delete')]
-    public function delete(?int $id = null): void
+    public function delete(?int $id = null)
     {
         Gate::authorize($this->getDeleteAbility());
 
