@@ -12,9 +12,11 @@ use App\Services\CustomerService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Isolate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+#[Isolate]
 class Create extends Component
 {
     use WithAlert;
