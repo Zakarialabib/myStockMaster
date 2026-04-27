@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class Edit extends Component
 {
@@ -23,6 +24,7 @@ class Edit extends Component
     public Brand $brand;
 
     public BrandForm $form;
+    public $preview;
 
     #[On('editModal')]
     public function openEditModal(mixed $id): void
@@ -37,7 +39,8 @@ class Edit extends Component
 
         $this->form->name = $this->brand->name;
         $this->form->description = $this->brand->description;
-        $this->form->image = $this->brand->image;
+        $path = 'brands/' . $this->brand->image;
+        $this->preview = $this->generatepreview($path);
         $this->form->origin = $this->brand->origin ?? '';
 
         $this->editModal = true;
@@ -47,8 +50,11 @@ class Edit extends Component
     {
         $this->form->validate();
 
-        $brandService->update($this->brand, $this->form->all());
+        $brand = $brandService->update($this->brand, $this->form->all());
 
+        $path = 'brands/' . $brand->image;
+        $this->preview = $this->generatepreview($path);
+        
         $this->dispatch('refreshIndex')->to(Index::class);
 
         $this->alert('success', __('Brand updated successfully.'));
@@ -56,6 +62,15 @@ class Edit extends Component
         $this->form->reset();
 
         $this->editModal = false;
+    }
+
+    private function generatepreview($path)
+    {
+        return [
+            'url' => Storage::disk('local_files')->url($path),
+            'extension' => pathinfo($path, PATHINFO_EXTENSION),
+            'size' => Storage::disk('local_files')->size($path),
+        ];
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
