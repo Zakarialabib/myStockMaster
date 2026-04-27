@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    @if($information->isNotEmpty())
+    @if($this->information->isNotEmpty())
         <div class="flex flex-row">
             <div class="w-full">
                 <div class="card border-0 shadow-sm">
@@ -80,7 +80,7 @@
                                 <x-table.th>{{__('Payment Method')}}</x-table.th>
                             </x-slot>
                             <x-table.tbody>
-                            @forelse($information as $data)
+                            @forelse($this->information as $data)
                                 <x-table.tr>
                                     <x-table.td>{{ format_date($data->date) }}</x-table.td>
                                     <x-table.td>{{ $data->reference }}</x-table.td>
@@ -107,8 +107,8 @@
                             @endforelse
                             </x-table.tbody>
                         </x-table.table>
-                        <div @class(['mt-3' => $information->hasPages()])>
-                            {{ $information->links() }}
+                        <div @class(['mt-3' => $this->information->hasPages()])>
+                            {{ $this->information->links() }}
                         </div>
                     </div>
                 </div>
