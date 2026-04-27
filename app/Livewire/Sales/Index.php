@@ -21,7 +21,6 @@ use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
-
 #[Title('Sales')]
 class Index extends Component
 {
@@ -189,6 +188,7 @@ class Index extends Component
             'cancelButtonText' => __('Cancel'),
             'onConfirmed' => 'delete',
         ]);
+
         $this->sale = $id;
     }
 

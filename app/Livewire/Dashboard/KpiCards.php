@@ -14,6 +14,7 @@ use App\Models\SaleDetails;
 use App\Models\Supplier;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
@@ -81,7 +82,7 @@ class KpiCards extends Component
 
         return Cache::flexible($key, [60, 120], fn (): string => SaleDetails::query()
             ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))
-            ->whereHas('sale', function (\Illuminate\Contracts\Database\Query\Builder $builder): void {
+            ->whereHas('sale', function (Builder $builder): void {
                 $builder->whereBetween('date', [$this->startDate, $this->endDate]);
             })
             ->groupBy('product_id')
