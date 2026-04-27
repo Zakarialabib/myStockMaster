@@ -9,13 +9,13 @@ This design specification outlines the standardization and optimization of the 1
 
 ## 2. Architecture & Patterns
 
-### 2.1 Modal Management (Alpine + Traits)
-To avoid Livewire inheritance traps (Base Components) and reduce unnecessary server calls for UI state:
-- **UI State (Alpine.js)**: Modal visibility will be managed purely by Alpine.js. We will implement a global or reusable Alpine component/listener for modals (e.g., `x-data="{ open: false }" @open-modal.window="if ($event.detail.id === modalId) open = true"`).
-- **Data Hydration (Livewire Trait)**: A new trait `App\Livewire\Utils\ManagesModal` will be created to handle backend operations:
-  - Dispatches to Alpine to close/open (`$this->dispatch('close-modal', id: '...');`)
-  - Provides a standardized `resetModal()` method to clear validation errors and reset Form objects.
-- **Component Implementation**: Components explicitly use the trait and define their own `#[On('domain.action')]` listeners for hydration.
+### 2.1 Modal Management (Trait + Existing Component)
+To avoid Livewire inheritance traps (Base Components) and streamline the use of the existing `<x-modal>` component:
+- **Unified State (Livewire Trait)**: A new robust trait `App\Livewire\Utils\ManagesModal` will be created to handle backend operations and visibility:
+  - Consolidates boolean flags (`$showModal`, `$createModal`, `$editModal`, etc.) into standardized state management.
+  - Provides generic `openModal($name, $params = [])` and `closeModal($name)` methods to manage parameters uniformly.
+  - Includes a standardized `resetModal()` lifecycle hook to clear validation errors and reset Form objects automatically on close.
+- **Component Implementation**: Components explicitly use the trait. Modals in blade views bind to the trait's state (`wire:model="showModal"`).
 
 ### 2.2 Event Contracts
 - **Naming Convention**: `domain.action` (e.g., `product.deleted`, `cart.item-added`).
@@ -37,9 +37,9 @@ Before applying the broad architectural patterns, the following specific issues 
 3. **Settings Customizers**: Replace generic `updated()` with specific `updatedXxx()` methods or use `wire:model.blur`.
 4. **NotificationManager**: Scope the `lowQuantity()` computed property so it doesn't run a global query for every paginated request.
 
-## 4. SPA Navigation
-- Enforce `wire:navigate` on all internal links (sidebar/navbar).
-- Use `->redirectRoute(..., navigate: true)` for programmatic Livewire redirects.
+## 4. Island Architecture & Event Improvements
+- **`#[Isolate]`**: Apply Island Architecture to independent widgets (e.g., POS cart, Dashboard KPI Cards) to prevent global re-renders and isolate their execution lifecycle.
+- **Event Scoping**: Refactor generic global events to be targeted (`$dispatchTo` or scoped listener paths) to prevent unnecessary re-rendering across siblings.
 
 ## 5. Type Strictness
 - Eliminate `public mixed` properties.
