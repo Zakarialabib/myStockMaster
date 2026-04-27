@@ -1,86 +1,72 @@
 <div>
-    <div class="flex flex-row">
-        <div class="w-full">
+    <x-page-container title="{{ __('Purchases Report') }}" :breadcrumbs="[
+        ['label' => __('Dashboard'), 'url' => route('dashboard')],
+        ['label' => __('Reports'), 'url' => '#'],
+        ['label' => __('Purchases Report'), 'url' => '#']
+    ]" :show-filters="true">
+
+        <x-slot name="filters">
+            <div class="mb-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md dark:bg-gray-800 dark:border-blue-500">
+                <div class="flex items-start">
+                    <div class="shrink-0">
+                        <i class="fas fa-info-circle text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700 dark:text-blue-300">
+                            <strong>{{ __('How to get the most from this report:') }}</strong> 
+                            {{ __('Use the date filters to narrow down your purchases. Filter by specific suppliers or payment statuses to easily track outstanding balances and order progress.') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <form wire:submit="generateReport">
-                <div class="flex flex-wrap mb-3">
-                    <div class="w-full md:w-1/3 px-2 mb-2">
-                        <div class="mb-4">
-                            <label>{{ __('Start Date') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="start_date" type="date" name="start_date" />
-                            @error('start_date')
-                                <span class="text-danger mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                    <div>
+                        <x-label for="start_date" :value="__('Start Date')" />
+                        <x-input wire:model="start_date" type="date" id="start_date" />
+                        <x-input-error :messages="$errors->get('start_date')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/3 px-2 mb-2">
-                        <div class="mb-4">
-                            <label>{{ __('End Date') }} <span class="text-red-500">*</span></label>
-                            <x-input wire:model="end_date" type="date" name="end_date" />
-                            @error('end_date')
-                                <span class="text-danger mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div>
+                        <x-label for="end_date" :value="__('End Date')" />
+                        <x-input wire:model="end_date" type="date" id="end_date" />
+                        <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
                     </div>
-                    <div class="w-full md:w-1/3 px-2 mb-2">
-                        <div class="mb-4">
-                            <label>{{ __('Supplier') }}</label>
-                            <x-select wire:model="supplier_id"
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                name="supplier_id">
-                                <option value="">{{ __('Select Supplier') }}</option>
-                                @foreach ($this->suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </x-select>
-                        </div>
+                    <div>
+                        <x-label for="supplier_id" :value="__('Supplier')" />
+                        <x-select wire:model="supplier_id" id="supplier_id" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            <option value="">{{ __('Select Supplier') }}</option>
+                            @foreach ($this->suppliers as $supplier)
+                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </x-select>
                     </div>
-                </div>
-                <div class="flex flex-wrap mb-3">
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <div class="mb-4">
-                            <label>{{ __('Status') }}</label>
-                            <x-select wire:model="purchase_status"
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                name="purchase_status">
-                                @foreach (\App\Enums\PurchaseStatus::cases() as $status)
-                                    <option value="{{ $status->value }}">
-                                        {{ __($status->name) }}
-                                    </option>
-                                @endforeach
-                            </x-select>
-                        </div>
+                    <div>
+                        <x-label for="purchase_status" :value="__('Status')" />
+                        <x-select wire:model="purchase_status" id="purchase_status" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            <option value="">{{ __('All Statuses') }}</option>
+                            @foreach (\App\Enums\PurchaseStatus::cases() as $status)
+                                <option value="{{ $status->value }}">{{ __($status->name) }}</option>
+                            @endforeach
+                        </x-select>
                     </div>
-                    <div class="xl:w-1/3 lg:w-1/2 sm:w-full px-3">
-                        <div class="mb-4">
-                            <label>{{ __('Payment Status') }}</label>
-                            <x-select wire:model="payment_status"
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1"
-                                name="payment_status">
-                                <option value="">{{ __('Select Payment Status') }}</option>
-                                @foreach (\App\Enums\PaymentStatus::cases() as $status)
-                                    <option value="{{ $status->value }}">
-                                        {{ __($status->name) }}
-                                    </option>
-                                @endforeach
-                            </x-select>
-                        </div>
+                    <div>
+                        <x-label for="payment_status" :value="__('Payment Status')" />
+                        <x-select wire:model="payment_status" id="payment_status" class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md mt-1">
+                            <option value="">{{ __('All Payment Statuses') }}</option>
+                            @foreach (\App\Enums\PaymentStatus::cases() as $status)
+                                <option value="{{ $status->value }}">{{ __($status->name) }}</option>
+                            @endforeach
+                        </x-select>
                     </div>
                 </div>
-                <div class="mb-4 md:mb-0">
-                    <button type="submit"
-                        class="block uppercase mx-auto shadow bg-indigo-800 hover:bg-indigo-700 focus:shadow-outline focus:outline-hidden text-white text-xs py-3 px-10 rounded-sm">
-                        <span wire:target="generateReport" wire:loading class="spinner-border spinner-border-sm"
-                            role="status" aria-hidden="true"></span>
-                        <i wire:target="generateReport" wire:loading.remove class="bi bi-shuffle"></i>
-                        {{ __('Filter Report') }}
-                    </button>
+                <div class="flex justify-end">
+                    <x-button type="submit" primary>{{ __('Filter Report') }}</x-button>
                 </div>
             </form>
-        </div>
-    </div>
+        </x-slot>
 
-    <div class="flex flex-row pt-3">
-        <div class="w-full">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden relative">
             <x-table>
                 <x-slot name="thead">
                     <x-table.th>{{ __('Date') }}</x-table.th>
@@ -137,9 +123,9 @@
                 </x-table.tbody>
             </x-table>
 
-            <div @class(['mt-3' => $this->purchases->hasPages()])>
+            <div @class(['p-4' => $this->purchases->hasPages()])>
                 {{ $this->purchases->links() }}
             </div>
         </div>
-    </div>
+    </x-page-container>
 </div>
