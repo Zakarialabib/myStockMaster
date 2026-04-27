@@ -188,19 +188,23 @@ class Index extends Component
         return view('livewire.products.index', ['products' => $products]);
     }
 
-    #[On('sendTelegram')]
-    public function sendToTelegram(mixed $product): void
+    #[On('product.send-telegram')]
+    public function sendToTelegram(int $productId): void
     {
-        $this->productWarehouse = ProductWarehouse::query()->find($product->id);
+        $product = Product::findOrFail($productId);
+        $productWarehouse = ProductWarehouse::where('product_id', $productId)->first();
 
         // Specify Telegram channel
         $telegramChannel = settings()->telegram_channel;
 
-        // Pass in product details
-        $productName = $this->productWarehouse->product->name;
-        $productPrice = $this->productWarehouse->price;
+        if ($productWarehouse) {
+            $productName = $product->name;
+            $productPrice = $productWarehouse->price;
 
-        $this->product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
+            $product->notify(new ProductTelegram($telegramChannel, $productName, $productPrice));
+
+            $this->dispatch('success', __('Telegram notification sent.'));
+        }
     }
 
     #[On('downloadAll')]
