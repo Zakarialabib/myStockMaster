@@ -12,6 +12,13 @@ class TemplateCustomizer extends Component
     public $font_family;
     public $pattern_style;
 
+    protected array $rules = [
+        'primary_color' => 'nullable|string',
+        'secondary_color' => 'nullable|string',
+        'font_family' => 'nullable|string',
+        'pattern_style' => 'nullable|string',
+    ];
+
     public function mount()
     {
         $styles = settings('template_styles') ?? [];
@@ -22,14 +29,23 @@ class TemplateCustomizer extends Component
         $this->pattern_style = $styles['pattern_style'] ?? 'none';
     }
 
-    public function updated()
+    public function updated($property): void
     {
+        $this->validateOnly($property);
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
         Setting::set('template_styles', [
             'primary_color' => $this->primary_color,
             'secondary_color' => $this->secondary_color,
             'font_family' => $this->font_family,
             'pattern_style' => $this->pattern_style,
         ]);
+
+        $this->dispatch('success', 'Template settings updated');
     }
 
     public function render()
