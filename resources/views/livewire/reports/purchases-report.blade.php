@@ -93,7 +93,7 @@
                     <x-table.th>{{ __('Payment Status') }}</x-table.th>
                 </x-slot>
                 <x-table.tbody>
-                    @forelse($purchases as $purchase)
+                    @forelse($this->purchases as $purchase)
                         <x-table.tr>
                             <x-table.td>{{ format_date($purchase->date) }}
                             </x-table.td>
@@ -137,8 +137,8 @@
                 </x-table.tbody>
             </x-table>
 
-            <div @class(['mt-3' => $purchases->hasPages()])>
-                {{ $purchases->links() }}
+            <div @class(['mt-3' => $this->purchases->hasPages()])>
+                {{ $this->purchases->links() }}
             </div>
         </div>
     </div>
