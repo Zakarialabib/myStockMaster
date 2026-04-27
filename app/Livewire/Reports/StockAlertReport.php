@@ -4,68 +4,57 @@ declare(strict_types=1);
 
 namespace App\Livewire\Reports;
 
-use App\Models\Product;
+use App\Models\ProductWarehouse;
+use App\Models\Warehouse;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
-
 class StockAlertReport extends Component
 {
     use WithAlert;
     use WithPagination;
 
-    public array $thresholds = [];
+    #[Url(history: true)]
+    public ?string $warehouse_id = null;
 
-    public string $filterName = '';
+    #[Url(history: true)]
+    public int $perPage = 10;
 
-    public string $filterCode = '';
+    public function mount(): void
+    {
+        $this->warehouse_id = $this->warehouse_id ?? '';
+    }
 
-    public ?int $filterQuantityMin = null;
-
-    public ?int $filterQuantityMax = null;
+    #[Computed]
+    public function warehouses()
+    {
+        return Warehouse::query()->select(['id', 'name'])->get();
+    }
 
     #[Computed]
     public function stockAlert()
     {
-        $query = Product::query()->belowStockAlert();
-
-        if ($this->filterName !== '' && $this->filterName !== '0') {
-            $query->where('name', 'like', '%' . $this->filterName . '%');
-        }
-
-        if ($this->filterCode !== '' && $this->filterCode !== '0') {
-            $query->where('code', 'like', '%' . $this->filterCode . '%');
-        }
-
-        if ($this->filterQuantityMin !== null) {
-            $query->where('quantity', '>=', $this->filterQuantityMin);
-        }
-
-        if ($this->filterQuantityMax !== null) {
-            $query->where('quantity', '<=', $this->filterQuantityMax);
-        }
-
-        return $query->paginate();
+        return ProductWarehouse::with(['product', 'warehouse'])
+            ->when($this->warehouse_id, fn ($q) => $q->where('warehouse_id', $this->warehouse_id))
+            ->whereColumn('qty', '<=', 'stock_alert')
+            ->paginate($this->perPage);
     }
 
-    public function setThreshold(mixed $productId, mixed $threshold): void
+    public function setThreshold(int $id, int $stockAlert): void
     {
-        $product = Product::query()->find($productId);
+        $productWarehouse = ProductWarehouse::findOrFail($id);
+        $productWarehouse->update(['stock_alert' => $stockAlert]);
 
-        if ($product) {
-            $product->stock_alert = $threshold;
-            $product->save();
-        }
+        $this->alert('success', __('Stock Alert Updated Successfully!'));
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        return view('livewire.reports.stock-alert-report', [
-            'products' => $this->stockAlert(),
-        ]);
+        return view('livewire.reports.stock-alert-report');
     }
 }
