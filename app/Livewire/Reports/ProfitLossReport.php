@@ -180,7 +180,7 @@ class ProfitLossReport extends Component
         // Calculate product costs in a single query by joining product_warehouse
         $productCosts = \App\Models\SaleDetails::query()
             ->whereHas('sale', function ($query): void {
-                $query->completed()
+                $query->where('status', \App\Enums\SaleStatus::COMPLETED)
                     ->whereBetween('date', [$this->start_date, $this->end_date]);
             })
             ->join('product_warehouse', function ($join): void {
