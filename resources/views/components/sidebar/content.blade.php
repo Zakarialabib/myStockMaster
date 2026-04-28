@@ -86,6 +86,7 @@
         <x-sidebar.sublink title="{{ __('Sale Return Report') }}" href="{{ route('sales-return-report.index') }}" :active="request()->routeIs('sales-return-report.index')" :icon="'<i class=\'fas fa-undo-alt w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Customers Report') }}" href="{{ route('customers-report.index') }}" :active="request()->routeIs('customers-report.index')" :icon="'<i class=\'fas fa-user w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Payment Report') }}" href="{{ route('payments-report.index') }}" :active="request()->routeIs('payments-report.index')" :icon="'<i class=\'fas fa-credit-card w-4 h-4\'></i>'" />
+        <x-sidebar.sublink title="{{ __('Warehouses Report') }}" href="{{ route('warehouses-report.index') }}" :active="request()->routeIs('warehouses-report.index')" :icon="'<i class=\'fas fa-boxwarehouse w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Profit Report') }}" href="{{ route('profit-loss-report.index') }}" :active="request()->routeIs('profit-loss-report.index')" :icon="'<i class=\'fas fa-chart-pie w-4 h-4\'></i>'" />
         <x-sidebar.sublink title="{{ __('Stock Alert Report') }}" href="{{ route('stock-alert-report.index') }}" :active="request()->routeIs('stock-alert-report.index')" :icon="'<i class=\'fas fa-bell w-4 h-4\'></i>'" />
     </x-sidebar.dropdown>

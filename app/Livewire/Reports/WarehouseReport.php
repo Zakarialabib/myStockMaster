@@ -31,13 +31,13 @@ class WarehouseReport extends Component
     #[Validate('required', message: 'The start date field is required.')]
     #[Validate('date', message: 'The start date field must be a valid date.')]
     #[Validate('before:end_date', message: 'The start date field must be before the end date field.')]
-    public mixed $start_date;
+    public $start_date;
 
     #[Url(history: true)]
     #[Validate('required', message: 'The end date field is required.')]
     #[Validate('date', message: 'The end date field must be a valid date.')]
     #[Validate('after:start_date', message: 'The end date field must be after the start date field.')]
-    public mixed $end_date;
+    public $end_date;
 
     public function mount(): void
     {
