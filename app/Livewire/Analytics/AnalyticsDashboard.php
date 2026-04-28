@@ -9,7 +9,6 @@ use App\Actions\Analytics\GenerateProductAnalyticsAction;
 use App\Actions\Analytics\GenerateRevenueReportAction;
 use App\Models\Product;
 use App\Traits\WithAlert;
-use Carbon\Carbon;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -38,7 +37,7 @@ class AnalyticsDashboard extends Component
 
     public array $revenueData = [];
 
-    public array $priceTrends = [];
+    public \Illuminate\Support\Collection|array $priceTrends = [];
 
     public string $search = '';
 
@@ -84,7 +83,10 @@ class AnalyticsDashboard extends Component
                 $product = Product::query()->find($this->selectedProduct);
 
                 if ($product) {
-                    $this->analyticsData = resolve(GenerateProductAnalyticsAction::class)($product, $dateFrom, $dateTo);
+                    $this->analyticsData = resolve(GenerateProductAnalyticsAction::class)(
+                        $product,
+                        ['start' => $dateFrom, 'end' => $dateTo]
+                    );
 
                     $this->priceTrends = resolve(AnalyzePriceTrendsAction::class)->getPriceHistory($product);
                 }

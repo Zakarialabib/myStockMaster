@@ -32,7 +32,7 @@ class ProductAnalytics extends Component
 
     public array $analyticsData = [];
 
-    public array $priceTrends = [];
+    public \Illuminate\Support\Collection|array $priceTrends = [];
 
     #[Validate([
         'comparisonProducts' => 'array|max:3',
@@ -119,7 +119,7 @@ class ProductAnalytics extends Component
 
     public function removeComparisonProduct(mixed $productId): void
     {
-        $this->comparisonProducts = array_filter($this->comparisonProducts, fn($id) => $id != $productId);
+        $this->comparisonProducts = array_filter($this->comparisonProducts, fn ($id) => $id != $productId);
 
         if ($this->comparisonProducts === []) {
             $this->showComparison = false;
@@ -137,7 +137,7 @@ class ProductAnalytics extends Component
         }
     }
 
-    private function loadComparisonData(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
+    private function loadComparisonData(Carbon $dateFrom, Carbon $dateTo): void
     {
         $generateProductAnalyticsAction = new GenerateProductAnalyticsAction;
         $analyzePriceTrendsAction = new AnalyzePriceTrendsAction;
