@@ -154,7 +154,7 @@ final class GenerateRevenueReportAction
             ->groupBy('period')
             ->orderBy('period')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'period' => $item->period,
                 'order_count' => (int) $item->order_count,
                 'revenue' => (float) $item->revenue,
@@ -188,7 +188,7 @@ final class GenerateRevenueReportAction
             ->groupBy('payment_method')
             ->orderByDesc('revenue')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'payment_method' => $item->payment_method,
                 'order_count' => (int) $item->order_count,
                 'revenue' => (float) $item->revenue,
@@ -220,7 +220,7 @@ final class GenerateRevenueReportAction
             ->groupBy('status')
             ->orderByDesc('order_count')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'status' => $item->status,
                 'order_count' => (int) $item->order_count,
                 'revenue' => (float) $item->revenue,
@@ -256,9 +256,9 @@ final class GenerateRevenueReportAction
             ->orderByDesc('revenue')
             ->limit(20) // Top 20 products
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'product_id' => $item->product_id,
-                'product_name' => $item->product?->name ?? 'Unknown Product',
+                'product_name' => $item->product->name ?? 'Unknown Product',
                 'total_quantity' => (int) $item->total_quantity,
                 'revenue' => (float) $item->revenue,
                 'order_count' => (int) $item->order_count,
@@ -290,7 +290,7 @@ final class GenerateRevenueReportAction
             ->groupBy('categories.id', 'categories.name')
             ->orderByDesc('revenue')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'category_id' => $item->category_id,
                 'category_name' => $item->category_name,
                 'total_quantity' => (int) $item->total_quantity,

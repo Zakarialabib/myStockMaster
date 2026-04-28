@@ -78,7 +78,7 @@ final class GenerateProductAnalyticsAction
         ];
     }
 
-    private function getSalesStatistics($baseQuery): array
+    private function getSalesStatistics(\Illuminate\Database\Eloquent\Builder $baseQuery): array
     {
         $stats = $baseQuery->selectRaw('
             COUNT(*) as total_orders,
@@ -99,7 +99,7 @@ final class GenerateProductAnalyticsAction
         ];
     }
 
-    private function getPerformanceMetrics(Product $product, $baseQuery, Carbon $dateFrom, Carbon $dateTo): array
+    private function getPerformanceMetrics(Product $product, \Illuminate\Database\Eloquent\Builder $baseQuery, Carbon $dateFrom, Carbon $dateTo): array
     {
         $daysDiff = $dateTo->diffInDays($dateFrom) ?: 1;
         $totalQuantity = $baseQuery->sum('quantity') ?? 0;
@@ -150,7 +150,7 @@ final class GenerateProductAnalyticsAction
         ];
     }
 
-    private function getProfitabilityAnalysis($baseQuery, Product $product): array
+    private function getProfitabilityAnalysis(\Illuminate\Database\Eloquent\Builder $baseQuery, Product $product): array
     {
         $items = $baseQuery->get();
 
@@ -229,9 +229,9 @@ final class GenerateProductAnalyticsAction
         return (int) ceil($currentStock / $dailyAverageSales);
     }
 
-    private function generateCacheKey(int $productId, Carbon $dateFrom, Carbon $dateTo): string
+    private function generateCacheKey(int|string $productId, Carbon $dateFrom, Carbon $dateTo): string
     {
-        return sprintf('product_analytics:%d:%s:%s', $productId, $dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'));
+        return sprintf('product_analytics:%s:%s:%s', $productId, $dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'));
     }
 }
 

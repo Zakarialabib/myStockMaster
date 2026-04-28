@@ -131,7 +131,7 @@ final class AnalyzePriceTrendsAction
         ];
     }
 
-    private function performAnalysis($model, int $days): array
+    private function performAnalysis(\Illuminate\Database\Eloquent\Model $model, int $days): array
     {
         $prices = $model->priceHistory()
             ->where('effective_date', '>=', now()->subDays($days))
@@ -228,7 +228,7 @@ final class AnalyzePriceTrendsAction
         return $priceChange > 0 ? 'increasing' : 'decreasing';
     }
 
-    private function validateModel($model): void
+    private function validateModel(mixed $model): void
     {
         throw_unless($model instanceof Product, InvalidArgumentException::class, 'Model must be an instance of Product');
     }
@@ -240,7 +240,7 @@ final class AnalyzePriceTrendsAction
         throw_if($days > 365, InvalidArgumentException::class, 'Analysis period cannot exceed 365 days');
     }
 
-    private function getCacheKey($model, int $days): string
+    private function getCacheKey(\Illuminate\Database\Eloquent\Model $model, int $days): string
     {
         return sprintf(
             'price_trends_%s_%d_%d',
