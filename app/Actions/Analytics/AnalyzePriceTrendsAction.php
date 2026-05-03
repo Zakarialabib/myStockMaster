@@ -24,6 +24,7 @@ final class AnalyzePriceTrendsAction
      */
     public function __invoke(Product $model, int $days = 30, bool $useCache = true): array
     {
+        $this->validateModel($model);
         $this->validateDays($days);
 
         $cacheKey = $this->getCacheKey($model, $days);

@@ -9,11 +9,8 @@ use Illuminate\Support\Str;
 enum PaymentStatus: int
 {
     case PENDING = 0;
-
     case PAID = 1;
-
     case PARTIAL = 2;
-
     case DUE = 3;
 
     public function getName(): string
@@ -44,6 +41,7 @@ enum PaymentStatus: int
             self::PARTIAL => 'info',
             self::PAID => 'success',
             self::DUE => 'danger',
+            default => 'primary',
         };
     }
 }
