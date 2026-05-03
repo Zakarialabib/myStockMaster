@@ -22,13 +22,15 @@ it('tests the update customer component', function () {
 
     $customer = Customer::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $customer->id])
-        ->set('customer.name', $customer->name)
-        ->set('customer.phone', $customer->phone)
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $customer->id)
+        ->set('form.name', 'John doe')
+        ->set('form.phone', '00000000000')
         ->call('update')
         ->assertHasNoErrors();
 
     assertDatabaseHas('customers', [
+        'id' => $customer->id,
         'name' => 'John doe',
         'phone' => '00000000000',
     ]);
@@ -40,12 +42,10 @@ it('tests the edit customer component validation', function () {
 
     $customer = Customer::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $customer->id])
-        ->set('customer.name', '')
-        ->set('customer.phone', '')
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $customer->id)
+        ->set('form.name', '')
+        ->set('form.phone', '')
         ->call('update')
-        ->assertHasErrors(
-            ['customer.name' => 'required'],
-            ['customer.phone' => 'required'],
-        );
+        ->assertHasErrors(['form.name', 'form.phone']);
 });

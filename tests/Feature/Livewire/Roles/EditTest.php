@@ -3,19 +3,19 @@
 declare(strict_types=1);
 
 use App\Livewire\Role\Edit;
+use App\Models\Role;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-use Spatie\Permission\Models\Role;
-
 test('a new role can be update', function () {
     $this->loginAsAdmin();
 
-    $role = Role::create(['name' => 'Test Role']);
+    $role = Role::query()->create(['name' => 'Test Role']);
 
-    Livewire::test(Edit::class, ['role' => $role->id])
-        ->set('role.name', 'Test Role Updated')
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $role->id)
+        ->set('form.name', 'Test Role Updated')
         ->call('update')
         ->assertHasNoErrors();
 
@@ -26,20 +26,23 @@ test('a new role can be update', function () {
 
 test('a name is required', function () {
     $this->loginAsAdmin();
-    $role = Role::create(['name' => 'Test Role']);
+    $role = Role::query()->create(['name' => 'Test Role']);
 
-    Livewire::test(Edit::class, ['role' => $role->id])
-        ->set('role.name', '')
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $role->id)
+        ->set('form.name', '')
         ->call('update')
-        ->assertHasErrors(['name' => 'required']);
+        ->assertHasErrors(['form.name']);
 });
 
 test('a name is unique', function () {
     $this->loginAsAdmin();
-    $role = Role::create(['name' => 'Test Role']);
 
-    Livewire::test(Edit::class, ['role' => $role->id])
-        ->set('role.name', 'admin')
+    $role = Role::query()->create(['name' => 'Role To Rename']);
+
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $role->id)
+        ->set('form.name', 'admin')
         ->call('update')
-        ->assertHasErrors(['name' => 'unique']);
+        ->assertHasErrors(['form.name']);
 });

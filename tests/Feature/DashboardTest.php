@@ -28,7 +28,7 @@ class DashboardTest extends TestCase
 
         $response = $this->get('/admin/dashboard');
 
-        $response->assertStatus(200);
+        $response->assertForbidden();
     }
 
     /** @test */

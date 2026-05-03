@@ -13,6 +13,7 @@ use App\Services\ExpenseService;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -25,13 +26,15 @@ class Create extends Component
 
     public bool $createModal = false;
 
-    public Expense $expense;
+    public ?Expense $expense = null;
 
     public ExpenseForm $form;
 
-    public mixed $user_id;
+    #[Locked]
+    public int|string|null $user_id = null;
 
-    public mixed $cash_register_id;
+    #[Locked]
+    public int|string|null $cash_register_id = null;
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {

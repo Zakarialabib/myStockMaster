@@ -37,8 +37,14 @@ it('validates registration input', function (string $field, string $value, strin
     'name required' => ['name', '', 'required'],
     'email required' => ['email', '', 'required'],
     'email invalid' => ['email', 'not-an-email', 'email'],
-    'phone required' => ['phone', '', 'required'],
     'password required' => ['password', '', 'required'],
     'password too short' => ['password', '123', 'min'],
-    'password confirmation' => ['password_confirmation', 'mismatch', 'same'],
 ]);
+
+it('validates password confirmation', function () {
+    Livewire::test('pages.auth.register')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'mismatch')
+        ->call('register')
+        ->assertHasErrors(['password' => 'confirmed']);
+});

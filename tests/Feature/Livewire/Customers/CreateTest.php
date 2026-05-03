@@ -21,8 +21,9 @@ it('tests the create customer validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('customer.name', 'John doe')
-        ->set('customer.phone', '00000000000')
+        ->call('openCreateModal')
+        ->set('form.name', 'John doe')
+        ->set('form.phone', '00000000000')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -37,11 +38,9 @@ it('tests the create customer component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('customer.name', '')
-        ->set('customer.phone', '')
+        ->call('openCreateModal')
+        ->set('form.name', '')
+        ->set('form.phone', '')
         ->call('create')
-        ->assertHasErrors(
-            ['customer.name' => 'required'],
-            ['customer.phone' => 'required'],
-        );
+        ->assertHasErrors(['form.name', 'form.phone']);
 });

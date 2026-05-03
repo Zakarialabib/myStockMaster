@@ -21,10 +21,11 @@ it('tests the create supplier component', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('supplier.name', 'John doe')
-        ->set('supplier.phone', '00000000000')
-        ->set('supplier.email', 'supplier@gmail.com')
-        ->set('supplier.city', 'casablanca')
+        ->call('openModal')
+        ->set('form.name', 'John doe')
+        ->set('form.phone', '00000000000')
+        ->set('form.email', 'supplier@gmail.com')
+        ->set('form.city', 'casablanca')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -41,13 +42,9 @@ it('tests the create supplier component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('supplier.name', '')
-        ->set('supplier.phone', '')
-        ->set('supplier.email', '')
-        ->set('supplier.city', '')
+        ->call('openModal')
+        ->set('form.name', '')
+        ->set('form.phone', '')
         ->call('create')
-        ->assertHasErrors(
-            ['supplier.name' => 'required'],
-            ['supplier.phonne' => 'required']
-        );
+        ->assertHasErrors(['form.name', 'form.phone']);
 });

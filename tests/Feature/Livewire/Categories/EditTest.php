@@ -22,9 +22,10 @@ it('tests the update category component', function () {
 
     $category = Category::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $category->id])
-        ->set('category.name', 'Electronics')
-        ->set('category.code', '123456')
+    Livewire::test(Edit::class)
+        ->call('openModal', $category->id)
+        ->set('form.name', 'Electronics')
+        ->set('form.code', '123456')
         ->call('update');
 
     assertDatabaseHas('categories', [
@@ -39,12 +40,9 @@ it('tests the category update component validation', function () {
 
     $category = Category::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $category->id])
-        ->set('category.name', '')
-        ->set('category.code', '')
+    Livewire::test(Edit::class)
+        ->call('openModal', $category->id)
+        ->set('form.name', '')
         ->call('update')
-        ->assertHasErrors(
-            ['category.name' => 'required'],
-            ['category.code' => 'required']
-        );
+        ->assertHasErrors(['form.name']);
 });

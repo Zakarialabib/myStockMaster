@@ -22,6 +22,6 @@ class RoleForm extends Form
     {
         $this->role = $role;
         $this->name = $role->name;
-        $this->permissions = $role->permissions->pluck('id')->map(fn ($id): string => (string) $id)->all();
+        $this->permissions = $role->permissions->pluck('id')->all();
     }
 }

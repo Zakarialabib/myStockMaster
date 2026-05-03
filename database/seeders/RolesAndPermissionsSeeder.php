@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Throwable;
@@ -18,12 +19,18 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         try {
-            // Force clear tables to avoid UNIQUE constraint issues in SQLite
-            DB::connection('nativephp')->statement('DELETE FROM role_has_permissions');
-            DB::connection('nativephp')->statement('DELETE FROM model_has_roles');
-            DB::connection('nativephp')->statement('DELETE FROM model_has_permissions');
-            DB::connection('nativephp')->statement('DELETE FROM roles');
-            DB::connection('nativephp')->statement('DELETE FROM permissions');
+            // Clear Spatie tables on the same connection models use (tests use sqlite; nativephp was wrong).
+            $connectionName = config('database.default');
+            $schema = Schema::connection($connectionName);
+            $db = DB::connection($connectionName);
+            $tables = ['role_has_permissions', 'model_has_roles', 'model_has_permissions', 'roles', 'permissions'];
+            $schema->disableForeignKeyConstraints();
+            foreach ($tables as $table) {
+                if ($schema->hasTable($table)) {
+                    $db->table($table)->delete();
+                }
+            }
+            $schema->enableForeignKeyConstraints();
 
             // Reset cached roles and permissions
             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();

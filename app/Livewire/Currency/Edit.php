@@ -17,7 +17,6 @@ class Edit extends Component
 
     public bool $editModal = false;
 
-    /** @var mixed */
     public mixed $currency;
 
     #[Validate('required', message: 'The name field cannot be empty.')]
@@ -43,7 +42,7 @@ class Edit extends Component
     #[On('editModal')]
     public function openEditModal(mixed $id): void
     {
-        abort_if(Gate::denies('currency_create'), 403);
+        abort_if(Gate::denies('currency_update'), 403);
 
         $this->resetErrorBag();
 

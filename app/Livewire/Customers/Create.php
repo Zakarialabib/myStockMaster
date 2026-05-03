@@ -21,7 +21,7 @@ class Create extends Component
 
     public bool $showModal = false;
 
-    public Customer $customer;
+    public ?Customer $customer = null;
 
     public CustomerForm $form;
 

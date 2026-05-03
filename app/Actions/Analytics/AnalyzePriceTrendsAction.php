@@ -22,9 +22,8 @@ final class AnalyzePriceTrendsAction
      *
      * @return array Price trend analysis
      */
-    public function __invoke($model, int $days = 30, bool $useCache = true): array
+    public function __invoke(Product $model, int $days = 30, bool $useCache = true): array
     {
-        $this->validateModel($model);
         $this->validateDays($days);
 
         $cacheKey = $this->getCacheKey($model, $days);
@@ -49,10 +48,8 @@ final class AnalyzePriceTrendsAction
      *
      * @return Collection Price history collection
      */
-    public function getPriceHistory($model): Collection
+    public function getPriceHistory(Product $model): Collection
     {
-        $this->validateModel($model);
-
         return $model->priceHistory()
             ->latest('effective_date')
             ->get()
@@ -131,7 +128,7 @@ final class AnalyzePriceTrendsAction
         ];
     }
 
-    private function performAnalysis(\Illuminate\Database\Eloquent\Model $model, int $days): array
+    private function performAnalysis(Product $model, int $days): array
     {
         $prices = $model->priceHistory()
             ->where('effective_date', '>=', now()->subDays($days))
@@ -240,7 +237,7 @@ final class AnalyzePriceTrendsAction
         throw_if($days > 365, InvalidArgumentException::class, 'Analysis period cannot exceed 365 days');
     }
 
-    private function getCacheKey(\Illuminate\Database\Eloquent\Model $model, int $days): string
+    private function getCacheKey(Product $model, int $days): string
     {
         return sprintf(
             'price_trends_%s_%d_%d',

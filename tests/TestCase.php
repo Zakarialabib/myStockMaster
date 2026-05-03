@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Models\User;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use RuntimeException;
 use Spatie\Permission\Models\Role;
 
 abstract class TestCase extends BaseTestCase
@@ -22,11 +22,7 @@ abstract class TestCase extends BaseTestCase
 
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        try {
-            Artisan::call('db:seed');
-        } catch (Exception $e) {
-            // Ignore seeding errors in tests if already seeded
-        }
+        Artisan::call('db:seed');
     }
 
     protected function getAdminRole()
@@ -34,9 +30,15 @@ abstract class TestCase extends BaseTestCase
         return Role::find(1);
     }
 
-    protected function getMasterAdmin()
+    protected function getMasterAdmin(): User
     {
-        return User::find(1);
+        $user = User::query()->where('email', 'admin@gmail.com')->first();
+
+        if ($user === null) {
+            throw new RuntimeException('Master admin not found. Ensure DatabaseSeeder runs (SuperUserSeeder).');
+        }
+
+        return $user;
     }
 
     protected function loginAsAdmin($admin = false)
