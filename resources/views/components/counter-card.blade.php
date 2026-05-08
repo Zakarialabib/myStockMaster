@@ -50,7 +50,7 @@
                 {{ $slot }}
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest truncate mb-1">
+                <p class="text-sm font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest truncate mb-1">
                     {{ $title }}
                 </p>
                 <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">

@@ -25,10 +25,10 @@ class ExpenseForm extends Form
     public mixed $description;
 
     #[Validate('nullable|date')]
-    public mixed $start_date;
+    public $start_date;
 
     #[Validate('nullable|date')]
-    public mixed $end_date;
+    public $end_date;
 
     #[Validate('required|in:none,daily,weekly,monthly,yearly')]
     public mixed $frequency = 'none';

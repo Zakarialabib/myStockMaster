@@ -23,7 +23,6 @@ class Index extends Component
     use WithAlert;
     use WithFileUploads;
 
-    /** @var mixed */
     public mixed $category;
 
     public mixed $file = null;
@@ -31,6 +30,8 @@ class Index extends Component
     public bool $showModal = false;
 
     public string $model = Category::class;
+
+    public string $deleteAbility = 'category_delete';
 
     public function mount(): void
     {

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property string                          $id
@@ -87,8 +88,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Purchase extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $casts = [
         'date' => 'date',
+        'status' => PurchaseStatus::class,
+        'payment_status' => \App\Enums\PaymentStatus::class,
     ];
 
     use HasAdvancedFilter;
@@ -152,7 +156,7 @@ class Purchase extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -161,7 +165,7 @@ class Purchase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchaseDetail, $this>
+     * @return HasMany<PurchaseDetail, $this>
      */
     public function purchaseDetails(): HasMany
     {
@@ -169,7 +173,7 @@ class Purchase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PurchasePayment, $this>
+     * @return HasMany<PurchasePayment, $this>
      */
     public function purchasePayments(): HasMany
     {
@@ -177,7 +181,7 @@ class Purchase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Supplier, $this>
+     * @return BelongsTo<Supplier, $this>
      */
     public function supplier(): BelongsTo
     {
@@ -188,7 +192,7 @@ class Purchase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -199,14 +203,14 @@ class Purchase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     * @return BelongsTo<CashRegister, $this>
      */
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
     }
 
-    #[\Override]
+    #[Override]
     protected static function boot(): void
     {
         parent::boot();
@@ -217,13 +221,11 @@ class Purchase extends Model
         });
     }
 
-    /** @param mixed $query */
     protected function scopePending(mixed $query)
     {
         return $query->whereStatus(PurchaseStatus::PENDING);
     }
 
-    /** @param mixed $query */
     protected function scopeCompleted(mixed $query)
     {
         return $query->whereStatus(PurchaseStatus::COMPLETED);

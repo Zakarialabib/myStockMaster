@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Livewire\Permission\Index;
+use Livewire\Livewire;
 
 test('the livewire permission component can be viewed', function () {
     $this->withoutExceptionHandling();

@@ -17,7 +17,7 @@ class Create extends Component
 
     public bool $createModal = false;
 
-    public Currency $currency;
+    public ?Currency $currency = null;
 
     #[Validate('required', message: 'The name field cannot be empty.')]
     #[Validate('min:3', message: 'The name must be at least 3 characters.')]

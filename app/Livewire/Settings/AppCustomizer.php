@@ -13,6 +13,11 @@ class AppCustomizer extends Component
 
     public $font_family;
 
+    protected array $rules = [
+        'primary_color' => 'nullable|string',
+        'font_family' => 'nullable|string',
+    ];
+
     public function mount()
     {
         $style = settings('app_style') ?? [];
@@ -21,8 +26,25 @@ class AppCustomizer extends Component
         $this->font_family = $style['font_family'] ?? "'Inter', sans-serif";
     }
 
-    public function updated()
+    public function updatedPrimaryColor(): void
     {
+        $this->persistAppStyle();
+    }
+
+    public function updatedFontFamily(): void
+    {
+        $this->persistAppStyle();
+    }
+
+    private function persistAppStyle(): void
+    {
+        $this->validateOnly($property);
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
         $settings = [
             'primary_color' => $this->primary_color,
             'font_family' => $this->font_family,

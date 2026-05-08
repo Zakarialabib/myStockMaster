@@ -62,7 +62,7 @@
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center border border-gray-200 dark:border-gray-700">
                                 <i class="fas fa-warehouse text-5xl text-blue-400 mb-3" aria-hidden="true"></i>
                                 <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200">{{ __('Warehouse Required') }}</h4>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                                <p class="text-blue-500 dark:text-blue-400 text-sm mt-2">
                                     {{ __('Please select a warehouse first to load available products.') }}</p>
                             </div>
                         </div>

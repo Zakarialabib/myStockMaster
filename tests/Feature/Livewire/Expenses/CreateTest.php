@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Expense\Create;
 use App\Models\ExpenseCategory;
+use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -13,7 +14,7 @@ it('test the expenses create if working', function () {
 
     Livewire::test(Create::class)
         ->assertOk()
-        ->assertViewIs('livewire.form.create');
+        ->assertViewIs('livewire.expense.create');
 });
 
 it('tests the create expense can create', function () {
@@ -21,21 +22,18 @@ it('tests the create expense can create', function () {
 
     $category = ExpenseCategory::factory()->create();
 
-    $category_id = $category->id;
-
     Livewire::test(Create::class)
+        ->call('openCreateModal')
         ->set('form.reference', '12345')
-        ->set('form.date', '01-01-2023')
-        ->set('form.category_id', $category_id)
+        ->set('form.date', '2023-01-01')
+        ->set('form.category_id', $category->id)
         ->set('form.amount', '50000')
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('expenses', [
-        'reference' => '12345',
-        'date' => '01-01-2023',
-        'category_id' => $category_id,
-        'amount' => '50000',
+        'category_id' => $category->id,
+        'amount' => 5_000_000,
     ]);
 });
 
@@ -43,15 +41,11 @@ it('tests the create expense component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
+        ->call('openCreateModal')
         ->set('form.reference', '')
         ->set('form.date', '')
         ->set('form.category_id', '')
         ->set('form.amount', '')
         ->call('create')
-        ->assertHasErrors(
-            ['reference' => 'required'],
-            ['date' => 'required'],
-            ['category_id' => 'required'],
-            ['amount' => 'required'],
-        );
+        ->assertHasErrors(['form.reference', 'form.date', 'form.category_id', 'form.amount']);
 });

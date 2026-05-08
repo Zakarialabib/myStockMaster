@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -14,7 +16,7 @@ return [
     |
     */
 
-    'skip' => env('SKIP_INSTALLATION', false),
+    'skip' => filter_var(env('SKIP_INSTALLATION', false), FILTER_VALIDATE_BOOLEAN),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +29,7 @@ return [
     |
     */
 
-    'completed' => env('INSTALLATION_COMPLETED', false),
+    'completed' => filter_var(env('INSTALLATION_COMPLETED', false), FILTER_VALIDATE_BOOLEAN),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,6 +42,6 @@ return [
     |
     */
 
-    'force' => env('FORCE_INSTALLATION', false),
+    'force' => filter_var(env('FORCE_INSTALLATION', false), FILTER_VALIDATE_BOOLEAN),
 
 ];

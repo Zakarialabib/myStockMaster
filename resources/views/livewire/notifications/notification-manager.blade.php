@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">
                 {{ __('Notification Manager') }}
             </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+            <p class="text-sm text-blue-500 dark:text-blue-400 font-medium mt-1">
                 {{ __('View and manage all your system alerts and notifications') }}
             </p>
         </div>
@@ -47,7 +47,7 @@
             <div>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('Stock Alerts') }}</p>
                 <p class="text-2xl font-black text-gray-900 dark:text-white leading-none mt-1">
-                    {{ $this->lowQuantity->count() }}
+                    {{ $this->lowQuantityCount }}
                 </p>
             </div>
         </div>
@@ -76,48 +76,6 @@
             </div>
         </div>
     </div>
-
-    @if($this->lowQuantity->count() > 0)
-        <!-- Stock Alerts Section -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-soft border border-error-100 dark:border-error-900/30 overflow-hidden">
-            <div class="px-6 py-4 border-b border-error-50 dark:border-error-900/20 flex items-center justify-between bg-error-50/30 dark:bg-error-900/10">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-error-100 dark:bg-error-900/40 flex items-center justify-center">
-                        <i class="fas fa-exclamation-triangle text-error-600 dark:text-error-400"></i>
-                    </div>
-                    <h3 class="font-bold text-error-900 dark:text-error-200 tracking-tight">{{ __('Urgent Stock Alerts') }}</h3>
-                </div>
-                <span class="text-[10px] font-black text-error-600 dark:text-error-400 uppercase tracking-widest">
-                    {{ $this->lowQuantity->count() }} {{ __('Items require attention') }}
-                </span>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($this->lowQuantity as $productWarehouse)
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-800 group hover:border-error-200 dark:hover:border-error-800 transition-all">
-                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-gray-900 flex items-center justify-center shadow-sm shrink-0">
-                                <i class="fas fa-package text-gray-400 group-hover:text-error-500 transition-colors"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ $productWarehouse->product->name }}</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase">{{ __('Stock') }}:</span>
-                                    <span class="text-xs font-black text-error-600 dark:text-error-400">{{ $productWarehouse->qty }}</span>
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase ml-2">{{ __('Limit') }}:</span>
-                                    <span class="text-xs font-bold text-gray-600 dark:text-gray-300">{{ $productWarehouse->stock_alert }}</span>
-                                </div>
-                            </div>
-                            {{--<a href="{{ route('products.edit', $productWarehouse->product->id) }}" 
-                               wire:navigate
-                               class="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                                <i class="fas fa-external-link-alt text-xs"></i>
-                            </a>--}}
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
 
     <!-- Filter Bar -->
     <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-800">
@@ -155,7 +113,7 @@
             <div class="flex items-end">
                 <button type="button" 
                         wire:click="$set('searchTerm', ''); $set('filterType', 'all'); $set('filterRead', 'all');"
-                        class="w-full py-2.5 text-gray-500 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">
+                        class="w-full py-2.5 text-blue-500 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">
                     <i class="fas fa-undo mr-2"></i> {{ __('Reset Filters') }}
                 </button>
             </div>
@@ -204,7 +162,7 @@
                                 <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                             @endif
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium leading-relaxed max-w-2xl">
+                        <p class="text-xs text-blue-500 dark:text-blue-400 font-medium leading-relaxed max-w-2xl">
                             {{ $data['message'] ?? 'New system alert received.' }}
                         </p>
                         <div class="flex items-center gap-4 mt-3">
@@ -212,7 +170,7 @@
                                 <i class="far fa-clock"></i>
                                 {{ $notification->created_at->diffForHumans() }}
                             </span>
-                            <span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest border border-gray-200 dark:border-gray-700">
+                            <span class="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase tracking-widest border border-gray-200 dark:border-gray-700">
                                 {{ str_replace('_', ' ', $type) }}
                             </span>
                         </div>
@@ -254,7 +212,7 @@
                         <i class="fas fa-bell-slash text-gray-300 dark:text-gray-600 text-4xl"></i>
                     </div>
                     <h5 class="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{{ __('No notifications found') }}</h5>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
+                    <p class="text-sm text-blue-500 dark:text-blue-400 font-medium mt-1">
                         {{ __('Try adjusting your filters or check back later.') }}
                     </p>
                 </div>

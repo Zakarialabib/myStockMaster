@@ -30,6 +30,8 @@ class Index extends Component
 
     public string $model = Warehouse::class;
 
+    public string $deleteAbility = 'warehouse_delete';
+
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         abort_if(Gate::denies('warehouse_access'), 403);

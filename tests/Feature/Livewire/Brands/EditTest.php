@@ -20,13 +20,14 @@ it('tests the brand edit component', function () {
 
     $brand = Brand::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $brand->id])
-        ->set('brand.name', 'apple')
-        ->set('brand.description', 'some description')
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $brand->id)
+        ->set('form.name', 'apple')
+        ->set('form.description', 'some description')
         ->call('update')
         ->assertHasNoErrors();
 
-    $brand = Brand::find(1);
+    $brand->refresh();
     expect($brand->name)->toBe('apple');
     expect($brand->description)->toBe('some description');
 });
@@ -37,11 +38,9 @@ it('tests the update brand component validation', function () {
 
     $brand = Brand::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $brand->id])
-        ->set('brand.name', '')
-        ->set('brand.description', '')
+    Livewire::test(Edit::class)
+        ->call('openEditModal', $brand->id)
+        ->set('form.name', '')
         ->call('update')
-        ->assertHasErrors(
-            ['brand.name' => 'required'],
-        );
+        ->assertHasErrors(['form.name']);
 });

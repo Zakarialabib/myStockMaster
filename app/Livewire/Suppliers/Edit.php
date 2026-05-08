@@ -20,14 +20,13 @@ class Edit extends Component
 
     public bool $showModal = false;
 
-    /** @var mixed */
-    public Supplier $supplier;
+    public ?Supplier $supplier = null;
 
     public SupplierForm $form;
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        abort_if(Gate::denies('supplier update'), 403);
+        abort_if(Gate::denies('supplier_update'), 403);
 
         return view('livewire.suppliers.edit');
     }

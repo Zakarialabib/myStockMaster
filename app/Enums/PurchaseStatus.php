@@ -47,7 +47,6 @@ enum PurchaseStatus: int
             self::COMPLETED => 'success',
             self::RETURNED => 'info',
             self::CANCELED => 'danger',
-            default => 'dark',
         };
     }
 }

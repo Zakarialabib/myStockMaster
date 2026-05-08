@@ -20,15 +20,15 @@ it('tests the create currency can create', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('currency.name', 'Us Dollar')
-        ->set('currency.code', 'USD')
-        ->set('currency.locale', '$')
+        ->set('name', 'Us Dollar')
+        ->set('code', 'USD')
+        ->set('locale', '$')
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('currencies', [
         'name' => 'Us Dollar',
-        'code' => 'MA',
+        'code' => 'USD',
         'locale' => '$',
     ]);
 });
@@ -38,13 +38,9 @@ it('tests the create user component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('currency.name', '')
-        ->set('currency.code', '')
-        ->set('currency.locale', '')
+        ->set('name', '')
+        ->set('code', '')
+        ->set('locale', '')
         ->call('create')
-        ->assertHasErrors(
-            ['currency.name' => 'required'],
-            ['currency.code' => 'required'],
-            ['currency.locale' => 'required'],
-        );
+        ->assertHasErrors(['name', 'code', 'locale']);
 });

@@ -21,14 +21,14 @@ it('tests the brand create component', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('brand.name', 'apple')
-        ->set('brand.description', 'Apple description')
+        ->set('form.name', 'apple')
+        ->set('form.description', 'Apple description')
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('brands', [
         'name' => 'apple',
-        'description' => 'some description',
+        'description' => 'Apple description',
     ]);
 });
 
@@ -37,24 +37,20 @@ it('tests the create brand component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('brand.name', '')
+        ->set('form.name', '')
         ->call('create')
-        ->assertHasErrors(
-            ['brand.name' => 'required'],
-        );
+        ->assertHasErrors(['form.name']);
 });
 
 it('throws an error if the brand name is duplicated', function () {
     $this->loginAsAdmin();
 
-    Brand::create([
+    Brand::query()->create([
         'name' => 'apple',
     ]);
 
     Livewire::test(Create::class)
-        ->set('brand.name', 'apple')
+        ->set('form.name', 'apple')
         ->call('create')
-        ->assertHasErrors(
-            ['name' => 'The brand name has already been taken.'],
-        );
+        ->assertHasErrors(['form.name']);
 });

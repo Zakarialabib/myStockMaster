@@ -15,15 +15,15 @@
                 <div>
                     <x-label for="primary_color" :value="__('Primary Color')" />
                     <div class="mt-1 flex items-center gap-3">
-                        <input type="color" id="primary_color" wire:model.live="primary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
-                        <x-input type="text" wire:model.live="primary_color" class="flex-1" />
+                        <input type="color" id="primary_color" wire:model.blur="primary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
+                        <x-input type="text" wire:model.blur="primary_color" class="flex-1" />
                     </div>
                     <p class="text-xs text-gray-500 mt-1">{{ __('Set the primary color used for buttons, highlights, and active states across the application.') }}</p>
                 </div>
 
                 <div>
                     <x-label for="font_family" :value="__('Font Family')" />
-                    <x-select id="font_family" wire:model.live="font_family" class="mt-1 w-full">
+                    <x-select id="font_family" wire:model.blur="font_family" class="mt-1 w-full">
                         <option value="'Inter', sans-serif">Inter</option>
                         <option value="'Arial', sans-serif">Arial</option>
                         <option value="'Georgia', serif">Georgia</option>
@@ -50,6 +50,12 @@
                         Primary Button
                     </button>
                 </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-button type="button" wire:click="save" primary>
+                    {{ __('Save Changes') }}
+                </x-button>
             </div>
         </div>
     </x-card>

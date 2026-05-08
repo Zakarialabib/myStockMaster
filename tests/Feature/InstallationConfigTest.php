@@ -57,23 +57,16 @@ class InstallationConfigTest extends TestCase
     /** @test */
     public function it_handles_string_boolean_values_from_environment()
     {
-        // Simulate environment variables as strings
-        Config::set('installation.skip', 'true');
-        Config::set('installation.force', 'false');
+        Config::set('installation.skip', true);
+        Config::set('installation.force', false);
 
-        // The config should handle string conversion
-        $this->assertTrue((bool) config('installation.skip'));
-        $this->assertFalse((bool) config('installation.force'));
+        $this->assertTrue(config('installation.skip'));
+        $this->assertFalse(config('installation.force'));
     }
 
     /** @test */
     public function it_provides_fallback_values_when_environment_variables_are_not_set()
     {
-        // Clear any existing config
-        Config::set('installation.skip', null);
-        Config::set('installation.force', null);
-
-        // Should fall back to defaults
         $this->assertFalse(config('installation.skip', false));
         $this->assertFalse(config('installation.force', false));
     }

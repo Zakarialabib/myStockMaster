@@ -14,8 +14,8 @@
         <div>
             <x-label for="primary_color" :value="__('Primary Color')" />
             <div class="mt-1 flex items-center gap-3">
-                <input type="color" id="primary_color" wire:model.live="primary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
-                <x-input type="text" wire:model.live="primary_color" class="flex-1" />
+                <input type="color" id="primary_color" wire:model.blur="primary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
+                <x-input type="text" wire:model.blur="primary_color" class="flex-1" />
             </div>
             <p class="text-xs text-gray-500 mt-1">{{ __('Choose the main brand color used for headings, borders, and total amounts.') }}</p>
         </div>
@@ -23,15 +23,15 @@
         <div>
             <x-label for="secondary_color" :value="__('Secondary Color')" />
             <div class="mt-1 flex items-center gap-3">
-                <input type="color" id="secondary_color" wire:model.live="secondary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
-                <x-input type="text" wire:model.live="secondary_color" class="flex-1" />
+                <input type="color" id="secondary_color" wire:model.blur="secondary_color" class="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
+                <x-input type="text" wire:model.blur="secondary_color" class="flex-1" />
             </div>
             <p class="text-xs text-gray-500 mt-1">{{ __('Select a complementary color used for backgrounds and subtle highlights.') }}</p>
         </div>
 
         <div>
             <x-label for="font_family" :value="__('Font Family')" />
-            <x-select id="font_family" wire:model.live="font_family" class="mt-1">
+            <x-select id="font_family" wire:model.blur="font_family" class="mt-1">
                 <option value="Inter, sans-serif">Inter</option>
                 <option value="Arial, sans-serif">Arial</option>
                 <option value="Georgia, serif">Georgia</option>
@@ -43,13 +43,19 @@
 
         <div>
             <x-label for="pattern_style" :value="__('Background Pattern')" />
-            <x-select id="pattern_style" wire:model.live="pattern_style" class="mt-1">
+            <x-select id="pattern_style" wire:model.blur="pattern_style" class="mt-1">
                 <option value="none">None</option>
                 <option value="dots">Dots</option>
                 <option value="stripes">Stripes</option>
                 <option value="grid">Grid</option>
             </x-select>
             <p class="text-xs text-gray-500 mt-1">{{ __('Add a subtle background texture to your documents.') }}</p>
+        </div>
+
+        <div class="pt-4 border-t border-gray-200 mt-6 flex justify-end">
+            <x-button type="button" wire:click="save" primary>
+                {{ __('Save Changes') }}
+            </x-button>
         </div>
     </div>
 

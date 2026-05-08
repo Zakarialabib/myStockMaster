@@ -41,9 +41,9 @@ enum PurchaseReturnStatus: int
     {
         return match ($this) {
             self::PENDING => 'warning',
+            self::ORDERED => 'primary',
             self::RETURNED => 'info',
             self::COMPLETED => 'success',
-            default => 'secondary',
         };
     }
 }

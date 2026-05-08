@@ -7,7 +7,7 @@
     x-cloak>
 
     <div class="flex items-center gap-3">
-        <button type="button" class="p-2 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="isSidebarOpen = !isSidebarOpen">
+        <button type="button" class="p-2 rounded-xl text-blue-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="isSidebarOpen = !isSidebarOpen">
             <span class="sr-only">Open main menu</span>
             <x-icons.menu x-show="!isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
             <x-icons.x x-show="isSidebarOpen" aria-hidden="true" class="w-6 h-6" />
@@ -20,7 +20,7 @@
         </div>
 
         <div class="hidden md:flex items-center gap-2">
-            <button type="button" class="p-2 rounded-xl text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="toggleTheme()">
+            <button type="button" class="p-2 rounded-xl text-blue-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all" @click="toggleTheme()">
                 <i x-show="!isDarkMode" class="fas fa-moon text-lg"></i>
                 <i x-show="isDarkMode" class="fas fa-sun text-lg"></i>
             </button>

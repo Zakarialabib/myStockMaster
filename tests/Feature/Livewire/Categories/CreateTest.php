@@ -21,7 +21,7 @@ it('tests the create category validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('category.name', 'apple')
+        ->set('form.name', 'apple')
         ->call('create')
         ->assertHasNoErrors();
 
@@ -35,9 +35,7 @@ it('tests the create category component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('category.name', '')
+        ->set('form.name', '')
         ->call('create')
-        ->assertHasErrors(
-            ['category.name' => 'required'],
-        );
+        ->assertHasErrors(['form.name']);
 });

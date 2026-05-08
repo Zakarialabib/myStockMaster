@@ -34,7 +34,6 @@ enum SaleStatus: int
             self::SHIPPED => 'info',
             self::RETURNED => 'danger',
             self::CANCELED => 'secondary',
-            default => 'secondary',
         };
     }
 

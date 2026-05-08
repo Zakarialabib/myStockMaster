@@ -13,14 +13,12 @@ use App\Models\CashRegister;
 use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Isolate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Isolate]
 #[Layout('layouts.pos')]
 #[Title('Point of Sale')]
 class Index extends Component

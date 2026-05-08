@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Sales;
 
-use Livewire\Attributes\Title;
-
 use App\Exports\SaleExport;
 use App\Livewire\Utils\Datatable;
 use App\Livewire\Utils\WithModels;
@@ -16,12 +14,13 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
-
 #[Title('Sales')]
 class Index extends Component
 {
@@ -34,8 +33,10 @@ class Index extends Component
 
     public string $model = Sale::class;
 
+    #[Url(history: true)]
     public ?string $startDate = null;
 
+    #[Url(history: true)]
     public ?string $endDate = null;
 
     public bool $importModal = false;
@@ -187,6 +188,7 @@ class Index extends Component
             'cancelButtonText' => __('Cancel'),
             'onConfirmed' => 'delete',
         ]);
+
         $this->sale = $id;
     }
 

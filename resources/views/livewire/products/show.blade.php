@@ -10,7 +10,7 @@
                 @if ($product)
                     @if (settings()->telegram_channel)
                         <div class="flex justify-center w-full my-5 px-3">
-                            <x-button success type="button" class="w-full text-center" wire:click="$dispatch('sendTelegram',{{ $product?->id }})"
+                            <x-button success type="button" class="w-full text-center" wire:click="$dispatch('product.send-telegram', {{ $product?->id }})"
                                 wire:loading.attr="disabled">
                                 <i class="fas fa-edit"></i>
                                 {{ __('Send to telegram') }}

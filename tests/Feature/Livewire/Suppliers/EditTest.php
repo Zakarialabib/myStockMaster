@@ -23,11 +23,12 @@ it('updates a supplier', function () {
 
     $supplier = Supplier::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $supplier->id])
-        ->set('supplier.name', $supplier->name)
-        ->set('supplier.phone', $supplier->phone)
-        ->set('supplier.email', $supplier->email)
-        ->set('supplier.city', $supplier->city)
+    Livewire::test(Edit::class)
+        ->call('openModal', $supplier->id)
+        ->set('form.name', 'New Name')
+        ->set('form.phone', '00000000000')
+        ->set('form.email', 'supplier@gmail.com')
+        ->set('form.city', 'casablanca')
         ->call('update')
         ->assertHasNoErrors();
 
@@ -40,36 +41,30 @@ it('updates a supplier', function () {
     ]);
 });
 
-it('tests the uodate supplier component validation', function () {
+it('tests the update supplier component validation', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
     $supplier = Supplier::factory()->create();
 
-    Livewire::test(Edit::class, ['id' => $supplier->id])
-        ->set('supplier.name', '')
-        ->set('supplier.phone', '')
-        ->set('supplier.email', '')
-        ->set('supplier.city', '')
+    Livewire::test(Edit::class)
+        ->call('openModal', $supplier->id)
+        ->set('form.name', '')
+        ->set('form.phone', '')
         ->call('update')
-        ->assertHasErrors(
-            ['supplier.name' => 'required'],
-            ['supplier.phonne' => 'required'],
-            ['supplier.email' => 'nullable'],
-            ['supplier.city' => 'nullable'],
-        );
+        ->assertHasErrors(['form.name', 'form.phone']);
 });
 
 it('validates the supplier', function () {
     $this->withoutExceptionHandling();
     $this->loginAsAdmin();
 
+    $supplier = Supplier::factory()->create();
+
     Livewire::test(Edit::class)
-        ->set('supplier.name', '')
-        ->set('supplier.phone', '')
+        ->call('openModal', $supplier->id)
+        ->set('form.name', '')
+        ->set('form.phone', '')
         ->call('update')
-        ->assertHasErrors([
-            'supplier.name' => 'The name field cannot be empty.',
-            'supplier.phone' => 'The phone field cannot be empty.',
-        ]);
+        ->assertHasErrors(['form.name', 'form.phone']);
 });

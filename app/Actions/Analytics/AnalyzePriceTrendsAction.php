@@ -22,7 +22,7 @@ final class AnalyzePriceTrendsAction
      *
      * @return array Price trend analysis
      */
-    public function __invoke($model, int $days = 30, bool $useCache = true): array
+    public function __invoke(Product $model, int $days = 30, bool $useCache = true): array
     {
         $this->validateModel($model);
         $this->validateDays($days);
@@ -49,10 +49,8 @@ final class AnalyzePriceTrendsAction
      *
      * @return Collection Price history collection
      */
-    public function getPriceHistory($model): Collection
+    public function getPriceHistory(Product $model): Collection
     {
-        $this->validateModel($model);
-
         return $model->priceHistory()
             ->latest('effective_date')
             ->get()
@@ -131,7 +129,7 @@ final class AnalyzePriceTrendsAction
         ];
     }
 
-    private function performAnalysis($model, int $days): array
+    private function performAnalysis(Product $model, int $days): array
     {
         $prices = $model->priceHistory()
             ->where('effective_date', '>=', now()->subDays($days))
@@ -228,7 +226,7 @@ final class AnalyzePriceTrendsAction
         return $priceChange > 0 ? 'increasing' : 'decreasing';
     }
 
-    private function validateModel($model): void
+    private function validateModel(mixed $model): void
     {
         throw_unless($model instanceof Product, InvalidArgumentException::class, 'Model must be an instance of Product');
     }
@@ -240,7 +238,7 @@ final class AnalyzePriceTrendsAction
         throw_if($days > 365, InvalidArgumentException::class, 'Analysis period cannot exceed 365 days');
     }
 
-    private function getCacheKey($model, int $days): string
+    private function getCacheKey(Product $model, int $days): string
     {
         return sprintf(
             'price_trends_%s_%d_%d',

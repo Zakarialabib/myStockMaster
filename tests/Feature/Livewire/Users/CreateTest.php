@@ -21,18 +21,18 @@ it('tests the create user component', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('user.name', 'John Doe')
-        ->set('user.phone', '00000000000')
-        ->set('user.email', 'admin@admin.com')
-        ->set('user.password', 'password')
+        ->call('openCreateModal')
+        ->set('form.name', 'John Doe')
+        ->set('form.phone', '00000000000')
+        ->set('form.email', 'user_create_test@example.com')
+        ->set('form.password', 'password')
         ->call('create')
         ->assertHasNoErrors();
 
     assertDatabaseHas('users', [
         'name' => 'John Doe',
         'phone' => '00000000000',
-        'email' => 'admin@admin.com',
-        'password' => 'password',
+        'email' => 'user_create_test@example.com',
     ]);
 });
 
@@ -41,15 +41,11 @@ it('tests the create user component validation', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('user.name', '')
-        ->set('user.phone', '')
-        ->set('user.email', '')
-        ->set('user.password', '')
+        ->call('openCreateModal')
+        ->set('form.name', '')
+        ->set('form.phone', '')
+        ->set('form.email', '')
+        ->set('form.password', '')
         ->call('create')
-        ->assertHasErrors(
-            ['user.name' => 'required'],
-            ['user.phone' => 'required'],
-            ['user.email' => 'required'],
-            ['user.password' => 'required']
-        );
+        ->assertHasErrors(['form.name', 'form.phone', 'form.email', 'form.password']);
 });

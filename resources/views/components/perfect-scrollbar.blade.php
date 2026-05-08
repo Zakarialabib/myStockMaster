@@ -21,6 +21,11 @@
                         wheelPropagation: false,
                         minScrollbarLength: 20
                     });
+                    window.addEventListener('ps-reinitialize', () => {
+                        if (ps) {
+                            ps.update();
+                        }
+                    });
                 },
                 update
             }

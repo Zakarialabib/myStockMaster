@@ -49,6 +49,12 @@ class ProfitLossReport extends Component
 
     public float|int $profit_amount = 0;
 
+    public float|int $net_profit_amount = 0;
+
+    public float|int $gross_profit_margin = 0;
+
+    public float|int $net_profit_margin = 0;
+
     public float|int $payments_received_amount = 0;
 
     public float|int $payments_sent_amount = 0;
@@ -155,6 +161,13 @@ class ProfitLossReport extends Component
             ->count();
 
         $this->profit_amount = $this->calculateProfit();
+        $this->net_profit_amount = $this->profit_amount - $this->expenses_amount;
+
+        $revenue = $this->sales_amount - $this->sale_returns_amount;
+
+        $this->gross_profit_margin = $revenue > 0 ? ($this->profit_amount / $revenue) * 100 : 0;
+        $this->net_profit_margin = $revenue > 0 ? ($this->net_profit_amount / $revenue) * 100 : 0;
+
         $this->payments_received_amount = $this->calculatePaymentsReceived();
         $this->payments_sent_amount = $this->calculatePaymentsSent();
         $this->payments_net_amount = $this->payments_received_amount - $this->payments_sent_amount;
@@ -167,7 +180,7 @@ class ProfitLossReport extends Component
         // Calculate product costs in a single query by joining product_warehouse
         $productCosts = \App\Models\SaleDetails::query()
             ->whereHas('sale', function ($query): void {
-                $query->completed()
+                $query->where('status', \App\Enums\SaleStatus::COMPLETED)
                     ->whereBetween('date', [$this->start_date, $this->end_date]);
             })
             ->join('product_warehouse', function ($join): void {

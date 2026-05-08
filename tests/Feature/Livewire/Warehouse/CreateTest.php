@@ -20,8 +20,9 @@ it('tests the create warehouse validation rules', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('warehouse.name', 'apple')
-        ->set('warehouse.phone', '00000000000')
+        ->call('openModal')
+        ->set('form.name', 'apple')
+        ->set('form.phone', '00000000000')
         ->call('create');
 
     assertDatabaseHas('warehouses', [

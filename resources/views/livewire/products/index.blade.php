@@ -201,7 +201,7 @@
                                             {{ $warehouse->name }}
                                         </span>
                                     @empty
-                                        <span class="text-sm text-gray-500 dark:text-gray-400 italic">
+                                        <span class="text-sm text-blue-500 dark:text-blue-400 italic">
                                             {{ __('No warehouse assigned') }}
                                         </span>
                                     @endforelse
@@ -227,7 +227,7 @@
                                             </x-dropdown-link>
                                         @endcan
                                         @if (settings()->telegram_channel)
-                                            <x-dropdown-link wire:click="sendTelegram({{ $product->id }})"
+                                            <x-dropdown-link wire:click="$dispatch('product.send-telegram', {{ $product->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                                                 <i class="fas fa-paper-plane w-4 h-4 mr-3 text-green-500"></i>

@@ -46,12 +46,13 @@ class Index extends Component
     }
 
     #[On('delete')]
-    public function delete(\App\Services\QuotationService $quotationService): void
+    public function delete(\App\Services\QuotationService $quotationService, ?int $id = null): void
     {
-        abort_if(Gate::denies($this->getGateDelete()), 403);
+        abort_if(Gate::denies($this->getDeleteAbility()), 403);
 
         try {
-            $quotation = Quotation::query()->findOrFail($this->value);
+            $idToDelete = $id ?? $this->value;
+            $quotation = Quotation::query()->findOrFail($idToDelete);
             $quotationService->delete($quotation);
             $this->alert('success', __('Item deleted successfully.'));
         } catch (\Illuminate\Database\QueryException $queryException) {
@@ -65,7 +66,7 @@ class Index extends Component
 
     public function deleteSelected(\App\Services\QuotationService $quotationService): void
     {
-        abort_if(Gate::denies($this->getGateDelete()), 403);
+        abort_if(Gate::denies($this->getDeleteAbility()), 403);
 
         try {
             $quotations = Quotation::query()->whereIn('id', $this->selected)->get();
@@ -84,7 +85,7 @@ class Index extends Component
         }
     }
 
-    protected function getGateDelete(): string
+    protected function getDeleteAbility(): string
     {
         return 'quotation_delete';
     }

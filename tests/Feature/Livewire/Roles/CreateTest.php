@@ -1,13 +1,15 @@
 <?php
 
 declare(strict_types=1);
+
 use App\Livewire\Role\Create;
+use App\Models\Role;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 test('the livewire form can be viewed', function () {
     $this->loginAsAdmin();
@@ -15,18 +17,16 @@ test('the livewire form can be viewed', function () {
     $this->get(route('roles.index'))
         ->assertStatus(200);
 
-    // assert livewire component is rendered
-    Livewire::test(Create::class);
+    Livewire::test(Create::class)->assertOk();
 });
 
 test('a new role can be created', function () {
     $this->loginAsAdmin();
 
     Livewire::test(Create::class)
-        ->set('role.name', 'test role')
-        ->call('create');
+        ->set('form.name', 'test role')
+        ->call('store');
 
-    // assert role exists
     assertDatabaseHas('roles', [
         'name' => 'test role',
     ]);
@@ -34,27 +34,28 @@ test('a new role can be created', function () {
 
 test('a role can have multiple permissions attached', function () {
     $this->loginAsAdmin();
-    // assert role does not exist
+
     assertDatabaseMissing('roles', [
         'name' => 'test role',
     ]);
 
-    // create role
+    $permissions = Permission::query()->limit(4)->get();
+    $permissionIds = $permissions->pluck('id')->all();
+
     Livewire::test(Create::class)
-        ->set('name', 'test role')
-        ->set('rolePermissions', ['view users', 'edit users', 'delete users', 'create users'])
-        ->call('create')
+        ->set('form.name', 'test role')
+        ->set('form.permissions', $permissionIds)
+        ->call('store')
         ->assertHasNoErrors();
 
-    // assert role exists
     assertDatabaseHas('roles', [
         'name' => 'test role',
     ]);
 
-    // assert role has permissions
-    $role = Role::findByName('test role');
-    $this->assertTrue($role->hasPermissionTo('view users'));
-    $this->assertTrue($role->hasPermissionTo('edit users'));
-    $this->assertTrue($role->hasPermissionTo('delete users'));
-    $this->assertTrue($role->hasPermissionTo('create users'));
+    $role = Role::query()->where('name', 'test role')->first();
+    expect($role)->not->toBeNull();
+
+    foreach ($permissions as $permission) {
+        expect($role->hasPermissionTo($permission))->toBeTrue();
+    }
 });
