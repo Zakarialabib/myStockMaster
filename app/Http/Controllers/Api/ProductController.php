@@ -12,9 +12,12 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class ProductController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of products with optional filters and pagination.
      */
@@ -22,23 +25,20 @@ class ProductController extends Controller
     {
 
         if ($request->get('_end') !== null) {
-            $limit = $request->get('_end') ?: 10;
-            $offset = $request->get('_start') ?: 0;
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
 
-            $order = $request->get('_order') ?: 'asc';
-            $sort = $request->get('_sort') ?: 'id';
-            // Filters
-            $where_raw = ' 1=1 ';
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'code', 'status', 'featured', 'created_at', 'updated_at']);
 
-            // capture brand_id filter
-            $brand_id = $request->get('brand_id') ?: '';
+            $query = Product::query()->with(['category', 'brand']);
 
-            if ($brand_id !== '') {
-                $where_raw .= sprintf(' AND (brand_id =  %s)', $brand_id);
+            // Capture brand_id filter — cast to int so injection is impossible.
+            if ($request->filled('brand_id')) {
+                $query->where('brand_id', $request->integer('brand_id'));
             }
 
-            $products = Product::with(['category', 'brand'])
-                ->whereRaw($where_raw)
+            $products = $query
                 ->orderBy($sort, $order)
                 ->offset($offset)
                 ->limit($limit)
@@ -56,7 +56,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $storeProductRequest): ProductResource
     {
-        $product = Product::query()->create($storeProductRequest->all());
+        $product = Product::query()->create($storeProductRequest->validated());
 
         return new ProductResource($product);
     }
@@ -81,7 +81,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $updateProductRequest, int $id): ProductResource
     {
         $product = Product::query()->findOrFail($id);
-        $product->update($updateProductRequest->all());
+        $product->update($updateProductRequest->validated());
 
         return new ProductResource($product);
     }

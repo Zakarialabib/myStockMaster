@@ -12,9 +12,12 @@ use App\Models\Warehouse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class WarehouseController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of Warehouse with optional filters and pagination.
      */
@@ -23,8 +26,8 @@ class WarehouseController extends Controller
         if ($request->get('_end') !== null) {
             $limit = (int) ($request->input('_end') ?? 10);
             $offset = (int) ($request->input('_start') ?? 0);
-            $order = (string) ($request->input('_order') ?? 'asc');
-            $sort = (string) ($request->input('_sort') ?? 'id');
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'created_at', 'updated_at']);
 
             $warehouses = Warehouse::query()
                 ->orderBy($sort, $order)
@@ -43,7 +46,7 @@ class WarehouseController extends Controller
      */
     public function store(StoreWarehouseRequest $storeWarehouseRequest): WarehouseResource
     {
-        $warehouse = Warehouse::query()->create($storeWarehouseRequest->all());
+        $warehouse = Warehouse::query()->create($storeWarehouseRequest->validated());
 
         return new WarehouseResource($warehouse);
     }
@@ -68,7 +71,7 @@ class WarehouseController extends Controller
     public function update(UpdateWarehouseRequest $updateWarehouseRequest, int $id): WarehouseResource
     {
         $warehouse = Warehouse::query()->findOrFail($id);
-        $warehouse->update($updateWarehouseRequest->all());
+        $warehouse->update($updateWarehouseRequest->validated());
 
         return new WarehouseResource($warehouse);
     }
