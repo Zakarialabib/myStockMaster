@@ -42,3 +42,4 @@ storage/framework/views/bdee64aa7a915087a5a3a7d13bf3f782.php
 storage/framework/views/cfbf8b9fc549088ab489cfca96ce209d.php
 storage/framework/views/livewire/.gitignore
 .aider*
+.phpunit.cache/test-results
