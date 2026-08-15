@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "doctrine/dbal": "^4.4",
         "guzzlehttp/guzzle": "^7.2",
         "laravel-notification-channels/telegram": "^7.0",
