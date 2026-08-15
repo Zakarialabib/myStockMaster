@@ -8,10 +8,6 @@ use Illuminate\Support\Number;
 if (! function_exists('settings')) {
     function settings($key = null, $default = null)
     {
-        // Cache the model's serializable attributes (NOT the Eloquent instance).
-        // Caching a whole model caused "incomplete object" errors under
-        // Laravel 13's stricter cache unserialization when the class wasn't
-        // loaded yet. We rehydrate a fresh Setting so relationships still lazy-load.
         $settings = cache()->rememberForever('settings', function () {
             if (! Schema::hasTable('settings')) {
                 return null;
@@ -19,8 +15,27 @@ if (! function_exists('settings')) {
 
             $model = App\Models\Setting::with('currency')->first();
 
+            // Cache only the scalar attributes, never the Eloquent instance.
             return $model ? $model->attributesToArray() : null;
         });
+
+        // Self-heal a stale/invalid entry. Older releases cached the whole
+        // Setting model; Laravel 13's safer cache unserializer turns that into
+        // a __PHP_Incomplete_Class, which then breaks `new Setting(...)`. If the
+        // stored payload isn't a plain array, drop it and recompute.
+        if ($settings !== null && ! is_array($settings)) {
+            cache()->forget('settings');
+
+            $settings = cache()->rememberForever('settings', function () {
+                if (! Schema::hasTable('settings')) {
+                    return null;
+                }
+
+                $model = App\Models\Setting::with('currency')->first();
+
+                return $model ? $model->attributesToArray() : null;
+            });
+        }
 
         if ($settings === null) {
             return $key === null ? null : $default;
