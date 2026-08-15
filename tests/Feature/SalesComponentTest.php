@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SalesComponentTest extends TestCase
 {
@@ -43,7 +44,7 @@ class SalesComponentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function sales_index_component_can_be_rendered()
     {
         $this->actingAs($this->user);
@@ -53,7 +54,7 @@ class SalesComponentTest extends TestCase
         $component->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function sales_create_component_can_be_rendered()
     {
         $this->actingAs($this->user);
@@ -63,7 +64,7 @@ class SalesComponentTest extends TestCase
         $component->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function sales_edit_component_can_be_rendered()
     {
         $this->actingAs($this->user);
@@ -73,7 +74,7 @@ class SalesComponentTest extends TestCase
         $component->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function sales_create_component_initializes_cart_properly()
     {
         $this->actingAs($this->user);
@@ -86,7 +87,7 @@ class SalesComponentTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function sales_edit_component_initializes_cart_properly()
     {
         $this->actingAs($this->user);
@@ -99,7 +100,7 @@ class SalesComponentTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function sales_index_displays_sales_data()
     {
         $this->actingAs($this->user);
@@ -113,7 +114,7 @@ class SalesComponentTest extends TestCase
         $this->assertNotNull($component->instance());
     }
 
-    /** @test */
+    #[Test]
     public function sales_create_component_has_required_properties()
     {
         $this->actingAs($this->user);
@@ -125,7 +126,7 @@ class SalesComponentTest extends TestCase
                          method_exists($component->instance(), 'getCustomerIdProperty'));
     }
 
-    /** @test */
+    #[Test]
     public function sales_edit_component_loads_sale_data()
     {
         $this->actingAs($this->user);
@@ -141,7 +142,7 @@ class SalesComponentTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function sales_components_handle_validation_properly()
     {
         $this->actingAs($this->user);

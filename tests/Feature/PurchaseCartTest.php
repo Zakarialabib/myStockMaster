@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PurchaseCartTest extends TestCase
 {
@@ -39,7 +40,7 @@ class PurchaseCartTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_product_to_purchase_cart_in_create_component()
     {
         Livewire::test(Create::class)
@@ -53,7 +54,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 80.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_update_cart_item_in_purchase_create()
     {
         Livewire::test(Create::class)
@@ -68,7 +69,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 120.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_remove_item_from_purchase_cart()
     {
         Livewire::test(Create::class)
@@ -81,7 +82,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 0.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_calculates_tax_correctly_in_purchases()
     {
         Livewire::test(Create::class)
@@ -95,7 +96,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 92.00); // $80 + $12 tax
     }
 
-    /** @test */
+    #[Test]
     public function it_applies_discount_correctly_in_purchases()
     {
         Livewire::test(Create::class)
@@ -109,7 +110,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 76.00); // $80 - $4 discount
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_purchase_with_cart_items()
     {
         Livewire::test(Create::class)
@@ -136,7 +137,7 @@ class PurchaseCartTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_required_fields_in_purchase_create()
     {
         Livewire::test(Create::class)
@@ -147,7 +148,7 @@ class PurchaseCartTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_prevents_creating_purchase_with_empty_cart()
     {
         Livewire::test(Create::class)
@@ -157,7 +158,7 @@ class PurchaseCartTest extends TestCase
             ->assertHasErrors(['cart' => 'Cart cannot be empty']);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_edit_existing_purchase_cart()
     {
         $purchase = Purchase::factory()->create([
@@ -181,7 +182,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 80.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_update_existing_purchase_cart_items()
     {
         $purchase = Purchase::factory()->create([
@@ -206,7 +207,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 160.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_new_items_to_existing_purchase()
     {
         $product2 = Product::factory()->create([
@@ -240,7 +241,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 155.00); // $80 + $75
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_product_quantity_after_purchase_creation()
     {
         $initialQuantity = $this->product->quantity;
@@ -258,7 +259,7 @@ class PurchaseCartTest extends TestCase
         $this->assertEquals($initialQuantity + 15, $this->product->quantity);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_different_payment_statuses()
     {
         $testCases = [
@@ -283,7 +284,7 @@ class PurchaseCartTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_calculates_shipping_costs_correctly()
     {
         Livewire::test(Create::class)
@@ -296,7 +297,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 95.00); // $80 + $15 shipping
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_bulk_purchase_discounts()
     {
         Livewire::test(Create::class)
@@ -310,7 +311,7 @@ class PurchaseCartTest extends TestCase
             ->assertSet('total_amount', 720.00); // $800 - $80 discount
     }
 
-    /** @test */
+    #[Test]
     public function it_prevents_negative_quantities_in_purchase()
     {
         Livewire::test(Create::class)
@@ -321,7 +322,7 @@ class PurchaseCartTest extends TestCase
             ->assertHasErrors(['quantity' => 'Quantity must be greater than zero']);
     }
 
-    /** @test */
+    #[Test]
     public function it_prevents_zero_or_negative_unit_costs()
     {
         Livewire::test(Create::class)
@@ -339,7 +340,7 @@ class PurchaseCartTest extends TestCase
             ->assertHasErrors(['unit_cost' => 'Unit cost must be greater than zero']);
     }
 
-    /** @test */
+    #[Test]
     public function it_clears_cart_after_successful_purchase_creation()
     {
         $component = Livewire::test(Create::class)
@@ -364,7 +365,7 @@ class PurchaseCartTest extends TestCase
         $newComponent->assertSet('cart_items', []);
     }
 
-    /** @test */
+    #[Test]
     public function it_maintains_cart_state_during_component_updates()
     {
         $component = Livewire::test(Create::class)

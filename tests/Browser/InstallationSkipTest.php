@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Tests\Browser;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -21,7 +22,7 @@ class InstallationSkipTest extends DuskTestCase
         cache()->forget('settings');
     }
 
-    /** @test */
+    #[Test]
     public function it_shows_skip_message_when_installation_is_configured_to_skip()
     {
         Config::set('installation.skip', true);
@@ -35,7 +36,7 @@ class InstallationSkipTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_shows_already_installed_message_when_installation_is_completed()
     {
         Config::set('installation.skip', false);
@@ -63,7 +64,7 @@ class InstallationSkipTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_shows_installation_process_when_needed()
     {
         Config::set('installation.skip', false);
@@ -92,7 +93,7 @@ class InstallationSkipTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_can_navigate_through_installation_steps_without_page_refresh()
     {
         Config::set('installation.skip', false);
@@ -134,7 +135,7 @@ class InstallationSkipTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_validation_errors_without_page_refresh()
     {
         Config::set('installation.skip', false);
@@ -171,7 +172,7 @@ class InstallationSkipTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_forces_installation_when_configured_even_if_completed()
     {
         Config::set('installation.skip', false);

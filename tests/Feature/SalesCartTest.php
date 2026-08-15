@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SalesCartTest extends TestCase
 {
@@ -40,7 +41,7 @@ class SalesCartTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_product_to_sales_cart_in_create_component()
     {
         Livewire::test(Create::class)
@@ -54,7 +55,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 30.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_update_cart_item_in_sales_create()
     {
         Livewire::test(Create::class)
@@ -69,7 +70,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 75.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_remove_item_from_sales_cart()
     {
         Livewire::test(Create::class)
@@ -82,7 +83,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 0.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_calculates_tax_correctly_in_sales()
     {
         Livewire::test(Create::class)
@@ -96,7 +97,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 33.00); // $30 + $3 tax
     }
 
-    /** @test */
+    #[Test]
     public function it_applies_discount_correctly_in_sales()
     {
         Livewire::test(Create::class)
@@ -110,7 +111,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 27.00); // $30 - $3 discount
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_sale_with_cart_items()
     {
         Livewire::test(Create::class)
@@ -137,7 +138,7 @@ class SalesCartTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_required_fields_in_sales_create()
     {
         Livewire::test(Create::class)
@@ -148,7 +149,7 @@ class SalesCartTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_prevents_creating_sale_with_empty_cart()
     {
         Livewire::test(Create::class)
@@ -158,7 +159,7 @@ class SalesCartTest extends TestCase
             ->assertHasErrors(['cart' => 'Cart cannot be empty']);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_edit_existing_sale_cart()
     {
         $sale = Sale::factory()->create([
@@ -182,7 +183,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 30.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_update_existing_sale_cart_items()
     {
         $sale = Sale::factory()->create([
@@ -207,7 +208,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 60.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_new_items_to_existing_sale()
     {
         $product2 = Product::factory()->create([
@@ -241,7 +242,7 @@ class SalesCartTest extends TestCase
             ->assertSet('total_amount', 50.00);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_product_quantity_after_sale_creation()
     {
         $initialQuantity = $this->product->quantity;
@@ -259,7 +260,7 @@ class SalesCartTest extends TestCase
         $this->assertEquals($initialQuantity - 5, $this->product->quantity);
     }
 
-    /** @test */
+    #[Test]
     public function it_prevents_overselling_products()
     {
         $lowStockProduct = Product::factory()->create([
@@ -276,7 +277,7 @@ class SalesCartTest extends TestCase
             ->assertHasErrors(['quantity' => 'Insufficient stock available']);
     }
 
-    /** @test */
+    #[Test]
     public function it_clears_cart_after_successful_sale_creation()
     {
         $component = Livewire::test(Create::class)

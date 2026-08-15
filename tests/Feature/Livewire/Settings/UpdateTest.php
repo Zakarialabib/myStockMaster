@@ -7,10 +7,11 @@ namespace Tests\Feature\Livewire\Settings;
 use App\Livewire\Settings\Update;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UpdateTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_component_can_render(): void
     {
         $this->withoutExceptionHandling();
@@ -20,7 +21,7 @@ class UpdateTest extends TestCase
             ->assertViewIs('livewire.settings.update');
     }
 
-    /** @test */
+    #[Test]
     public function can_check_for_updates(): void
     {
         Livewire::test(Update::class)

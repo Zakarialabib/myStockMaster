@@ -11,17 +11,18 @@ use Tests\TestCase;
 /**
  * Class DashboardTest.
  */
+use PHPUnit\Framework\Attributes\Test;
 class DashboardTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function unauthenticated_users_cant_access_admin_dashboard()
     {
         $this->get('/admin/dashboard')->assertRedirect('/login');
     }
 
-    /** @test */
+    #[Test]
     public function not_authorized_users_cant_access_admin_dashboard()
     {
         $this->actingAs(User::factory()->create());
@@ -31,7 +32,7 @@ class DashboardTest extends TestCase
         $response->assertForbidden();
     }
 
-    /** @test */
+    #[Test]
     public function admin_can_access_admin_dashboard()
     {
         $this->loginAsAdmin();

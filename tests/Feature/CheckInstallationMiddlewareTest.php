@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CheckInstallationMiddlewareTest extends TestCase
 {
@@ -25,7 +26,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         Cache::flush();
     }
 
-    /** @test */
+    #[Test]
     public function it_allows_installation_routes_to_pass_through()
     {
         $middleware = new CheckInstallation;
@@ -38,7 +39,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertEquals('OK', $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function it_allows_api_routes_to_pass_through()
     {
         $middleware = new CheckInstallation;
@@ -51,7 +52,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertEquals('OK', $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function it_skips_installation_check_when_skip_installation_is_true()
     {
         Config::set('installation.skip', true);
@@ -66,7 +67,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertEquals('Dashboard', $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function it_forces_installation_when_force_installation_is_true()
     {
         Config::set('installation.force', true);
@@ -82,7 +83,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertStringContainsString('install', $response->headers->get('Location'));
     }
 
-    /** @test */
+    #[Test]
     public function it_redirects_to_installation_when_settings_table_does_not_exist()
     {
         // Mock Schema to return false for settings table
@@ -101,7 +102,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertStringContainsString('install', $response->headers->get('Location'));
     }
 
-    /** @test */
+    #[Test]
     public function it_redirects_to_installation_when_installation_is_not_completed()
     {
         // Create settings table and data
@@ -127,7 +128,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertStringContainsString('install', $response->headers->get('Location'));
     }
 
-    /** @test */
+    #[Test]
     public function it_allows_access_when_installation_is_completed()
     {
         // Create settings table and record
@@ -163,7 +164,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertEquals('Dashboard', $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function it_prioritizes_skip_installation_over_other_settings()
     {
         Config::set('installation.skip', true);
@@ -191,7 +192,7 @@ class CheckInstallationMiddlewareTest extends TestCase
         $this->assertEquals('Dashboard', $response->getContent());
     }
 
-    /** @test */
+    #[Test]
     public function it_forces_installation_even_when_completed_if_force_installation_is_true()
     {
         Config::set('installation.force', true);

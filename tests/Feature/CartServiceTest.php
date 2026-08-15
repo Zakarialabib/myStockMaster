@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Services\CartService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CartServiceTest extends TestCase
 {
@@ -22,7 +23,7 @@ class CartServiceTest extends TestCase
         $this->cartService->clear();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_items_to_cart()
     {
         $item = [
@@ -40,7 +41,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(2, $this->cartService->count());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_update_cart_items()
     {
         $item = [
@@ -57,7 +58,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(5, $this->cartService->count());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_remove_cart_items()
     {
         $item = [
@@ -75,7 +76,7 @@ class CartServiceTest extends TestCase
         $this->assertTrue($this->cartService->isEmpty());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_calculate_subtotal()
     {
         $item1 = [
@@ -98,7 +99,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(35.00, $this->cartService->subtotal());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_calculate_tax()
     {
         $this->cartService->setTaxRate(10); // 10% tax
@@ -116,7 +117,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(110.00, $this->cartService->total());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_calculate_discount()
     {
         $item = [
@@ -137,7 +138,7 @@ class CartServiceTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $this->cartService->discount());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_clear_cart()
     {
         $item = [
@@ -154,7 +155,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(0, $this->cartService->count());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_destroy_cart()
     {
         $item = [
@@ -171,7 +172,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals(0, $this->cartService->count());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_search_cart_items()
     {
         $item1 = [
@@ -199,7 +200,7 @@ class CartServiceTest extends TestCase
         $this->assertEquals('Red Product', $redItems->first()->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_duplicate_items_correctly()
     {
         $item = [

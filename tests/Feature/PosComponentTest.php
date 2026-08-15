@@ -12,6 +12,7 @@ use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PosComponentTest extends TestCase
 {
@@ -40,7 +41,7 @@ class PosComponentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_can_be_rendered()
     {
         $this->actingAs($this->user);
@@ -50,7 +51,7 @@ class PosComponentTest extends TestCase
         $component->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_initializes_cart_properly()
     {
         $this->actingAs($this->user);
@@ -64,7 +65,7 @@ class PosComponentTest extends TestCase
         $this->assertTrue($component->instance()->cart->isEmpty());
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_sets_default_values_on_mount()
     {
         $this->actingAs($this->user);
@@ -80,7 +81,7 @@ class PosComponentTest extends TestCase
             ->assertSet('payment_method', 'cash');
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_can_calculate_total()
     {
         $this->actingAs($this->user);
@@ -94,7 +95,7 @@ class PosComponentTest extends TestCase
         $this->assertIsNumeric($total);
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_can_clear_cart()
     {
         $this->actingAs($this->user);
@@ -106,7 +107,7 @@ class PosComponentTest extends TestCase
         $this->assertTrue($component->instance()->cart->isEmpty());
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_requires_customer_for_checkout()
     {
         $this->actingAs($this->user);
@@ -120,7 +121,7 @@ class PosComponentTest extends TestCase
         $component->assertDispatched('alert');
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_opens_checkout_modal_with_valid_customer()
     {
         $this->actingAs($this->user);
