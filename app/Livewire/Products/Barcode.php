@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
-use Livewire\Attributes\Title;
-
 use App\Actions\Products\GenerateBarcodesAction;
 use App\Livewire\Utils\WithModels;
+use App\Models\Product;
 use App\Models\ProductWarehouse;
 use App\Traits\WithAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 #[Layout('layouts.app')]
 #[Title('Barcode Generator')]
@@ -43,23 +42,25 @@ class Barcode extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected(mixed $id): void
+    public function productSelected(mixed $productId, ?int $warehouseId = null): void
     {
-        $productWarehouse = ProductWarehouse::query()->where('product_id', $id)
+        $this->warehouse_id = $warehouseId ?? $this->warehouse_id;
+
+        $product = Product::query()->findOrFail($productId);
+
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
             ->where('warehouse_id', $this->warehouse_id)
             ->first();
 
-        if ($productWarehouse) {
-            $this->products[] = [
-                'id' => $productWarehouse->product_id,
-                'name' => $productWarehouse->product->name,
-                'code' => $productWarehouse->product->code,
-                'price' => $productWarehouse->price,
-                'quantity' => 1,
-                'barcode_symbology' => $productWarehouse->product->barcode_symbology,
-                'barcodeSize' => 'medium',
-            ];
-        }
+        $this->products[] = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'code' => $product->code,
+            'price' => $productWarehouse instanceof ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0),
+            'quantity' => 1,
+            'barcode_symbology' => $product->barcode_symbology,
+            'barcodeSize' => 'medium',
+        ];
     }
 
     public function generateBarcodes(): void
@@ -75,7 +76,7 @@ class Barcode extends Component
         $this->barcodes = resolve(GenerateBarcodesAction::class)($this->products);
     }
 
-    public function downloadBarcodes(): StreamedResponse
+    public function downloadBarcodes()
     {
         $data = [
             'barcodes' => $this->barcodes,
