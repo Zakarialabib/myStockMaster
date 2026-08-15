@@ -19,6 +19,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | Laravel 13 hardens cache unserialization to help prevent PHP object
+    | injection / deserialization gadget-chain attacks if APP_KEY leaks.
+    | When false (the default), only scalar/array payloads are unserialized.
+    | If you intentionally cache PHP objects, allow-list their classes here.
+    |
+    */
+
+    'serializable_classes' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Stores
     |--------------------------------------------------------------------------
     |

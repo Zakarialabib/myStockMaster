@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DesktopFunctionalityTest extends TestCase
 {
@@ -31,7 +32,7 @@ class DesktopFunctionalityTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_detect_desktop_mode()
     {
         // Test with desktop header
@@ -41,7 +42,7 @@ class DesktopFunctionalityTest extends TestCase
         $response->assertStatus(302);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_desktop_shortcuts()
     {
         $shortcutService = new DesktopShortcutService;
@@ -57,7 +58,7 @@ class DesktopFunctionalityTest extends TestCase
         $this->assertArrayHasKey('success', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_desktop_errors()
     {
         $errorHandler = new DesktopErrorHandler;
@@ -71,7 +72,7 @@ class DesktopFunctionalityTest extends TestCase
         $this->assertArrayHasKey('notification', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_access_desktop_routes()
     {
         // Test desktop status route
@@ -86,7 +87,7 @@ class DesktopFunctionalityTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_execute_shortcuts_via_api()
     {
         $response = $this->withHeaders(['X-Desktop-App' => 'true'])
@@ -103,7 +104,7 @@ class DesktopFunctionalityTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_javascript_errors()
     {
         $errorData = [
@@ -127,7 +128,7 @@ class DesktopFunctionalityTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_desktop_shortcuts()
     {
         $response = $this->withHeaders(['X-Desktop-App' => 'true'])
@@ -146,7 +147,7 @@ class DesktopFunctionalityTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_desktop_actions()
     {
         $actionData = [
@@ -167,7 +168,7 @@ class DesktopFunctionalityTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_access_error_log_page()
     {
         // Test that the error log page is accessible
@@ -177,7 +178,7 @@ class DesktopFunctionalityTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_error_history_for_authenticated_users()
     {
         $errorHandler = new DesktopErrorHandler;
@@ -195,7 +196,7 @@ class DesktopFunctionalityTest extends TestCase
         $this->assertEquals('Test error for history', $history[0]['message']);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_errors_gracefully_for_unauthenticated_users()
     {
         Auth::logout();

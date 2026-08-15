@@ -7,10 +7,11 @@ namespace Tests\Feature\Livewire\Products;
 use App\Livewire\Products\Index;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class IndexTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_component_can_render()
     {
         $this->withoutExceptionHandling();

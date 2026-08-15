@@ -7,10 +7,11 @@ namespace Tests\Feature\Livewire\Settings;
 use App\Livewire\Settings\Smtp;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SmtpTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_component_can_render(): void
     {
         $this->withoutExceptionHandling();
@@ -20,7 +21,7 @@ class SmtpTest extends TestCase
             ->assertViewIs('livewire.settings.smtp');
     }
 
-    /** @test */
+    #[Test]
     public function component_loads_mail_config(): void
     {
         Livewire::test(Smtp::class)

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Tests\Browser;
+use PHPUnit\Framework\Attributes\Test;
 
 use Exception;
 use Laravel\Dusk\Browser;
@@ -10,7 +11,7 @@ use Tests\DuskTestCase;
 
 class DebugInstallationTest extends DuskTestCase
 {
-    /** @test */
+    #[Test]
     public function it_shows_what_is_rendered_on_install_page()
     {
         $this->browse(function (Browser $browser) {

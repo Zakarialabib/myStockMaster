@@ -7,10 +7,11 @@ namespace Tests\Feature\Livewire\Settings;
 use App\Livewire\Settings\Messaging;
 use Livewire\Livewire;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class MessagingTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function the_component_can_render(): void
     {
         $this->withoutExceptionHandling();
@@ -20,14 +21,14 @@ class MessagingTest extends TestCase
             ->assertViewIs('livewire.settings.messaging');
     }
 
-    /** @test */
+    #[Test]
     public function component_loads_telegram_channel(): void
     {
         Livewire::test(Messaging::class)
             ->assertSet('botToken', settings()?->telegram_channel);
     }
 
-    /** @test */
+    #[Test]
     public function can_toggle_modals(): void
     {
         Livewire::test(Messaging::class)
@@ -37,7 +38,7 @@ class MessagingTest extends TestCase
             ->assertSet('openTemplate', true);
     }
 
-    /** @test */
+    #[Test]
     public function updated_type_resets_chat_id(): void
     {
         Livewire::test(Messaging::class)

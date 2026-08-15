@@ -17,6 +17,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use ReflectionClass;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PosUxEnhancementTest extends TestCase
 {
@@ -47,7 +48,7 @@ class PosUxEnhancementTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_can_search_customers_by_name()
     {
         Customer::factory()->create(['name' => 'Alice Smith', 'phone' => '1111111111']);
@@ -60,7 +61,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_can_search_customers_by_phone()
     {
         Customer::factory()->create(['name' => 'Alice Smith', 'phone' => '1234567890']);
@@ -73,7 +74,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_limits_results_to_10()
     {
         Customer::factory()->count(15)->create();
@@ -85,7 +86,7 @@ class PosUxEnhancementTest extends TestCase
         $this->assertLessThanOrEqual(10, $customers->count());
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_can_select_customer()
     {
         Livewire::test(CustomerCombobox::class)
@@ -94,7 +95,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('customer-selected');
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_can_clear_selection()
     {
         Livewire::test(CustomerCombobox::class)
@@ -104,7 +105,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('customer-selected');
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_opens_on_search_input()
     {
         Livewire::test(CustomerCombobox::class)
@@ -112,7 +113,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertSet('isOpen', true);
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_auto_creates_cash_register_if_none_exists()
     {
         $cashRegisterCount = CashRegister::count();
@@ -124,7 +125,7 @@ class PosUxEnhancementTest extends TestCase
         $this->assertGreaterThan($cashRegisterCount, CashRegister::count());
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_dispatches_cash_register_opened_event()
     {
         Livewire::test(PosIndex::class)
@@ -132,7 +133,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('cash-register-opened');
     }
 
-    /** @test */
+    #[Test]
     public function search_product_dispatches_success_event_on_barcode_scan()
     {
         Livewire::test(SearchProduct::class, ['warehouseId' => $this->warehouse->id])
@@ -140,7 +141,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('barcode-scanned-success');
     }
 
-    /** @test */
+    #[Test]
     public function search_product_dispatches_error_event_on_invalid_barcode()
     {
         Livewire::test(SearchProduct::class, ['warehouseId' => $this->warehouse->id])
@@ -148,7 +149,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('barcode-scanned-error');
     }
 
-    /** @test */
+    #[Test]
     public function product_cart_uses_debounce_for_quantity_updates()
     {
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
@@ -158,7 +159,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function product_cart_uses_debounce_for_price_updates()
     {
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
@@ -168,7 +169,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function smart_cash_buttons_render_in_checkout_modal()
     {
         Livewire::test(PosIndex::class)
@@ -177,7 +178,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertSeeHtml('smart-cash-buttons');
     }
 
-    /** @test */
+    #[Test]
     public function pos_component_is_isolated_for_performance()
     {
         $reflection = new ReflectionClass(PosIndex::class);
@@ -194,7 +195,7 @@ class PosUxEnhancementTest extends TestCase
         $this->assertTrue($hasIsolate, 'POS Index component should have #[Isolate] attribute for performance');
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_handles_keyboard_navigation()
     {
         Customer::factory()->count(3)->create();
@@ -210,7 +211,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function customer_combobox_selects_highlighted_customer()
     {
         $customer = Customer::factory()->create(['name' => 'Test Customer']);
@@ -224,7 +225,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('customer-selected');
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_has_proper_validation_rules()
     {
         $component = Livewire::test(PosIndex::class);
@@ -246,7 +247,7 @@ class PosUxEnhancementTest extends TestCase
         $this->assertTrue($hasValidatedProperties, 'POS Index should have validated properties');
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_has_locked_properties_for_security()
     {
         $component = Livewire::test(PosIndex::class);
@@ -268,7 +269,7 @@ class PosUxEnhancementTest extends TestCase
         $this->assertTrue($hasLockedProperties, 'POS Index should have locked properties for security');
     }
 
-    /** @test */
+    #[Test]
     public function cart_item_row_component_renders_correctly()
     {
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
@@ -279,7 +280,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_supports_keyboard_shortcuts()
     {
         Livewire::test(PosIndex::class)
@@ -288,7 +289,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_handles_warehouse_selection()
     {
         Livewire::test(PosIndex::class)
@@ -296,7 +297,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertDispatched('warehouseSelected');
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_calculates_total_with_shipping()
     {
         Livewire::test(PosIndex::class)
@@ -306,7 +307,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertSet('total_with_shipping', 60.00);
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_updates_paid_amount_on_payment_method_change()
     {
         Livewire::test(PosIndex::class)
@@ -316,7 +317,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertSet('paid_amount', 50.00);
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_can_reset_cart()
     {
         Livewire::test(PosIndex::class)
@@ -325,7 +326,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_prevents_checkout_without_customer()
     {
         Livewire::test(PosIndex::class)
@@ -334,7 +335,7 @@ class PosUxEnhancementTest extends TestCase
             ->assertHasNoErrors();
     }
 
-    /** @test */
+    #[Test]
     public function pos_index_allows_checkout_with_customer()
     {
         Livewire::test(PosIndex::class)

@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class InstallationConfigTest extends TestCase
 {
@@ -20,7 +21,7 @@ class InstallationConfigTest extends TestCase
         cache()->forget('settings');
     }
 
-    /** @test */
+    #[Test]
     public function it_loads_default_configuration_values()
     {
         $this->assertFalse(config('installation.skip', false));
@@ -28,7 +29,7 @@ class InstallationConfigTest extends TestCase
         $this->assertFalse(config('installation.completed', false));
     }
 
-    /** @test */
+    #[Test]
     public function it_respects_skip_installation_environment_variable()
     {
         Config::set('installation.skip', true);
@@ -36,7 +37,7 @@ class InstallationConfigTest extends TestCase
         $this->assertTrue(config('installation.skip'));
     }
 
-    /** @test */
+    #[Test]
     public function it_respects_force_installation_environment_variable()
     {
         Config::set('installation.force', true);
@@ -44,7 +45,7 @@ class InstallationConfigTest extends TestCase
         $this->assertTrue(config('installation.force'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_override_multiple_configuration_values()
     {
         Config::set('installation.skip', true);
@@ -54,7 +55,7 @@ class InstallationConfigTest extends TestCase
         $this->assertTrue(config('installation.force'));
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_string_boolean_values_from_environment()
     {
         Config::set('installation.skip', true);
@@ -64,7 +65,7 @@ class InstallationConfigTest extends TestCase
         $this->assertFalse(config('installation.force'));
     }
 
-    /** @test */
+    #[Test]
     public function it_provides_fallback_values_when_environment_variables_are_not_set()
     {
         $this->assertFalse(config('installation.skip', false));
