@@ -72,7 +72,7 @@ class ProductCart extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected(mixed $productId, int $warehouseId): void
+    public function productSelected(mixed $productId, ?int $warehouseId = null): void
     {
         $this->warehouse_id = $warehouseId;
 
@@ -212,7 +212,7 @@ class ProductCart extends Component
         $this->discountModal = true;
     }
 
-    public function updateQuantity(string $rowId, int|string $productId): void
+    public function updateQuantity(?string $rowId, int|string $productId): void
     {
         if ($rowId === null) {
             $cartItem = $this->getCart()->search(fn ($item): bool => $item->id == $productId)->first();

@@ -48,7 +48,7 @@ class PosCartTest extends TestCase
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $this->product->id)
             ->set('quantity.' . $this->product->id, 3)
-            ->call('updateQuantity', $this->product->id)
+            ->call('updateQuantity', null, $this->product->id)
             ->assertHasNoErrors();
     }
 
@@ -88,7 +88,7 @@ class PosCartTest extends TestCase
             ->call('productSelected', $this->product->id)
             ->call('productSelected', $product2->id)
             ->set('quantity.' . $this->product->id, 2)
-            ->call('updateQuantity', $this->product->id)
+            ->call('updateQuantity', null, $this->product->id)
             ->assertHasNoErrors();
     }
 
@@ -134,7 +134,7 @@ class PosCartTest extends TestCase
         Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $limitedProduct->id)
             ->set('quantity.' . $limitedProduct->id, 10)
-            ->call('updateQuantity', $limitedProduct->id)
+            ->call('updateQuantity', null, $limitedProduct->id)
             ->assertHasNoErrors(); // Component should handle quantity limits gracefully
     }
 
@@ -178,7 +178,7 @@ class PosCartTest extends TestCase
         $component = Livewire::test(ProductCart::class, ['cartInstance' => 'pos'])
             ->call('productSelected', $this->product->id)
             ->set('quantity.' . $this->product->id, 3)
-            ->call('updateQuantity', $this->product->id);
+            ->call('updateQuantity', null, $this->product->id);
 
         // Simulate component refresh/update
         $component->call('$refresh')
