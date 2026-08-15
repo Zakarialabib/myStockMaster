@@ -14,11 +14,15 @@ final class GenerateBarcodesAction
 
         foreach ($products as $product) {
             $quantity = (int) $product['quantity'];
+            // Products without a configured symbology (nullable column) must not
+            // crash milon/barcode, which treats a false/empty type as "unknown"
+            // and then fails accessing the (false) barcode array. Default to C39.
+            $symbology = ! empty($product['barcode_symbology']) ? $product['barcode_symbology'] : 'C39';
 
             for ($i = 0; $i < $quantity; $i++) {
                 $barcode = DNS1DFacade::getBarCodeSVG(
                     $product['code'],
-                    $product['barcode_symbology'],
+                    $symbology,
                     $this->barcodeScale($product['barcodeSize']),
                     60,
                     'black',
