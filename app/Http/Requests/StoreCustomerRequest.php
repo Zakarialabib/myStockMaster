@@ -25,7 +25,17 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:customers,email'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string'],
+            'tax_number' => ['nullable', 'string', 'max:255'],
+            'password' => ['nullable', 'string', 'min:8'],
+            'status' => ['nullable', 'boolean'],
+            'customer_group_id' => ['nullable', 'integer'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
         ];
     }
 }

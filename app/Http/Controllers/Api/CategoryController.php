@@ -12,9 +12,12 @@ use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class CategoryController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of categories with optional filters and pagination.
      */
@@ -22,20 +25,15 @@ class CategoryController extends Controller
     {
 
         if ($request->get('_end') !== null) {
-            $limit = $request->get('_end') ?: 10;
-            $offset = $request->get('_start') ?: 0;
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
 
-            $order = $request->get('_order') ?: 'asc';
-            $sort = $request->get('_sort') ?: 'id';
-            // Filters
-            $where_raw = ' 1=1 ';
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'code', 'name', 'status', 'created_at', 'updated_at']);
 
-            // capture brand_id filter
-            // $brand_id = $request->get('brand_id') ? $request->get('brand_id')  : '';
-            // if ($brand_id !== '') {
-            //     $where_raw .= " AND (brand_id =  $brand_id)";
-            // }
-            $categories = Category::query()->whereRaw($where_raw)
+            // The previous implementation built a raw SQL fragment
+            // ("WHERE 1=1 AND ...") via whereRaw(); that path is removed.
+            $categories = Category::query()
                 ->orderBy($sort, $order)
                 ->offset($offset)
                 ->limit($limit)
@@ -53,7 +51,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $storeCategoryRequest): CategoryResource
     {
-        $category = Category::query()->create($storeCategoryRequest->all());
+        $category = Category::query()->create($storeCategoryRequest->validated());
 
         return new CategoryResource($category);
     }
@@ -78,7 +76,7 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $updateCategoryRequest, int $id): CategoryResource
     {
         $category = Category::query()->findOrFail($id);
-        $category->update($updateCategoryRequest->all());
+        $category->update($updateCategoryRequest->validated());
 
         return new CategoryResource($category);
     }

@@ -12,9 +12,12 @@ use App\Models\Supplier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class SupplierController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of suppliers with optional filters and pagination.
      */
@@ -23,8 +26,8 @@ class SupplierController extends Controller
         if ($request->get('_end') !== null) {
             $limit = (int) ($request->input('_end') ?? 10);
             $offset = (int) ($request->input('_start') ?? 0);
-            $order = (string) ($request->input('_order') ?? 'asc');
-            $sort = (string) ($request->input('_sort') ?? 'id');
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'email', 'phone', 'created_at', 'updated_at']);
 
             $suppliers = Supplier::query()
                 ->orderBy($sort, $order)
@@ -43,7 +46,7 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $storeSupplierRequest): SupplierResource
     {
-        $supplier = Supplier::query()->create($storeSupplierRequest->all());
+        $supplier = Supplier::query()->create($storeSupplierRequest->validated());
 
         return new SupplierResource($supplier);
     }
@@ -68,7 +71,7 @@ class SupplierController extends Controller
     public function update(UpdateSupplierRequest $updateSupplierRequest, int $id): SupplierResource
     {
         $supplier = Supplier::query()->findOrFail($id);
-        $supplier->update($updateSupplierRequest->all());
+        $supplier->update($updateSupplierRequest->validated());
 
         return new SupplierResource($supplier);
     }

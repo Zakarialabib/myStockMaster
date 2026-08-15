@@ -25,7 +25,18 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'category_id' => ['sometimes', 'required', 'integer', 'exists:expense_categories,id'],
+            'warehouse_id' => ['nullable', 'integer', 'exists:warehouses,id'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'date' => ['nullable', 'date'],
+            'reference' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'amount' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'cash_register_id' => ['nullable', 'integer'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date'],
+            'frequency' => ['nullable', 'string', 'max:50'],
+            'document' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

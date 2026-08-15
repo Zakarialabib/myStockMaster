@@ -12,9 +12,12 @@ use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class CustomerController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of customers with optional filters and pagination.
      */
@@ -23,8 +26,8 @@ class CustomerController extends Controller
         if ($request->get('_end') !== null) {
             $limit = (int) ($request->input('_end') ?? 10);
             $offset = (int) ($request->input('_start') ?? 0);
-            $order = (string) ($request->input('_order') ?? 'asc');
-            $sort = (string) ($request->input('_sort') ?? 'id');
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'email', 'phone', 'created_at', 'updated_at']);
 
             $customers = Customer::query()
                 ->orderBy($sort, $order)
@@ -43,7 +46,7 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $storeCustomerRequest): CustomerResource
     {
-        $customer = Customer::query()->create($storeCustomerRequest->all());
+        $customer = Customer::query()->create($storeCustomerRequest->validated());
 
         return new CustomerResource($customer);
     }
@@ -68,7 +71,7 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $updateCustomerRequest, int $id): CustomerResource
     {
         $customer = Customer::query()->findOrFail($id);
-        $customer->update($updateCustomerRequest->all());
+        $customer->update($updateCustomerRequest->validated());
 
         return new CustomerResource($customer);
     }

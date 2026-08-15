@@ -6,6 +6,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSupplierRequest extends FormRequest
 {
@@ -24,8 +25,22 @@ class UpdateSupplierRequest extends FormRequest
      */
     public function rules(): array
     {
+        $supplierId = $this->route('supplier');
+
         return [
-            //
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'email' => [
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('suppliers', 'email')->ignore($supplierId),
+            ],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'tax_number' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

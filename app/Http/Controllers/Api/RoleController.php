@@ -12,9 +12,12 @@ use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class RoleController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of roles with optional filters and pagination.
      */
@@ -23,8 +26,8 @@ class RoleController extends Controller
         if ($request->get('_end') !== null) {
             $limit = (int) ($request->input('_end') ?? 10);
             $offset = (int) ($request->input('_start') ?? 0);
-            $order = (string) ($request->input('_order') ?? 'asc');
-            $sort = (string) ($request->input('_sort') ?? 'id');
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'created_at', 'updated_at']);
 
             $roles = Role::query()
                 ->orderBy($sort, $order)
@@ -43,7 +46,7 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $storeRoleRequest): RoleResource
     {
-        $role = Role::create($storeRoleRequest->all());
+        $role = Role::create($storeRoleRequest->validated());
 
         return new RoleResource($role);
     }
@@ -68,7 +71,7 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $updateRoleRequest, int $id): RoleResource
     {
         $role = Role::query()->findOrFail($id);
-        $role->update($updateRoleRequest->all());
+        $role->update($updateRoleRequest->validated());
 
         return new RoleResource($role);
     }

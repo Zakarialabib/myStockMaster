@@ -25,7 +25,12 @@ class StoreWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -29,15 +29,20 @@ Route::name('api.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('login', [AuthController::class, 'login'])->name('login');
 
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('customers', CustomerController::class);
-    Route::apiResource('expenses', ExpenseController::class);
-    Route::apiResource('products', ProductController::class);
-    Route::apiResource('roles', RoleController::class);
-    Route::apiResource('suppliers', SupplierController::class);
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('warehouses', WarehouseController::class);
+    // All resource endpoints and the sync endpoints require a valid
+    // Passport (auth:api) token. See GitHub issue #284 — previously these
+    // routes were fully unauthenticated, exposing full CRUD + db dump.
+    Route::middleware('auth:api')->group(function () {
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('customers', CustomerController::class);
+        Route::apiResource('expenses', ExpenseController::class);
+        Route::apiResource('products', ProductController::class);
+        Route::apiResource('roles', RoleController::class);
+        Route::apiResource('suppliers', SupplierController::class);
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('warehouses', WarehouseController::class);
 
-    Route::get('sync/pull', [SyncController::class, 'pull'])->name('sync.pull');
-    Route::post('sync/push', [SyncController::class, 'push'])->name('sync.push');
+        Route::get('sync/pull', [SyncController::class, 'pull'])->name('sync.pull');
+        Route::post('sync/push', [SyncController::class, 'push'])->name('sync.push');
+    });
 });

@@ -12,9 +12,12 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class UserController extends Controller
 {
+    use SafeApiQuery;
+
     /**
      * Retrieve a list of users with optional filters and pagination.
      */
@@ -23,8 +26,8 @@ class UserController extends Controller
         if ($request->get('_end') !== null) {
             $limit = (int) ($request->input('_end') ?? 10);
             $offset = (int) ($request->input('_start') ?? 0);
-            $order = (string) ($request->input('_order') ?? 'asc');
-            $sort = (string) ($request->input('_sort') ?? 'id');
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'name', 'email', 'created_at', 'updated_at']);
 
             $users = User::query()
                 ->orderBy($sort, $order)
@@ -43,7 +46,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $storeUserRequest): UserResource
     {
-        $user = User::query()->create($storeUserRequest->all());
+        $user = User::query()->create($storeUserRequest->validated());
 
         return new UserResource($user);
     }
@@ -68,7 +71,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $updateUserRequest, int $id): UserResource
     {
         $user = User::query()->findOrFail($id);
-        $user->update($updateUserRequest->all());
+        $user->update($updateUserRequest->validated());
 
         return new UserResource($user);
     }
