@@ -309,7 +309,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     });
 
     // Transfers
-    Route::livewire('/transfers', TransferIndex::class)->name('tranfers.index');
+    Route::livewire('/transfers', TransferIndex::class)->name('transfers.index');
 
     // Language Settings
     Route::livewire('/languages', LanguageIndex::class)->name('languages.index');
