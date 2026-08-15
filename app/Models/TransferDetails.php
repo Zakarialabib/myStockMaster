@@ -39,13 +39,14 @@ class TransferDetails extends Model
     public array $filterable = self::ATTRIBUTES;
 
     protected $fillable = [
+        'transfer_id',
         'product_id',
         'warehouse_id',
         'quantity',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -53,7 +54,7 @@ class TransferDetails extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {

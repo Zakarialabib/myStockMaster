@@ -19,10 +19,10 @@ class TransferForm extends Form
     public mixed $user_id;
 
     #[Validate('required|integer')]
-    public mixed $from_warehouse_id;
+    public mixed $from_warehouse_id = null;
 
     #[Validate('required|integer')]
-    public mixed $to_warehouse_id;
+    public mixed $to_warehouse_id = null;
 
     #[Validate('required|numeric')]
     public mixed $total_qty = 0;

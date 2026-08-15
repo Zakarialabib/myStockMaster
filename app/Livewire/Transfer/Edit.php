@@ -6,6 +6,8 @@ namespace App\Livewire\Transfer;
 
 use App\Livewire\Forms\TransferForm;
 use App\Livewire\Utils\WithModels;
+use App\Models\Product;
+use App\Models\ProductWarehouse;
 use App\Models\Transfer;
 use App\Services\TransferService;
 use App\Traits\WithAlert;
@@ -68,17 +70,31 @@ class Edit extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected(array $product): void
+    public function productSelected(mixed $productId, ?int $warehouseId = null): void
     {
-        $product['quantities'] = 1;
+        $product = Product::query()->findOrFail($productId);
 
-        if (in_array($product['id'], array_column($this->products, 'id'))) {
+        $productWarehouse = ProductWarehouse::query()->where('product_id', $productId)
+            ->where('warehouse_id', $warehouseId ?? $this->form->from_warehouse_id)
+            ->first();
+
+        $productData = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'code' => $product->code,
+            'price' => $productWarehouse instanceof ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0),
+            'cost' => $product->cost ?? 0,
+            'barcode_symbology' => $product->barcode_symbology,
+            'quantities' => 1,
+        ];
+
+        if (in_array($productData['id'], array_column($this->products, 'id'))) {
             $this->alert('error', __('Already exists in the product list!'));
 
             return;
         }
 
-        $this->products[] = $product;
+        $this->products[] = $productData;
         $this->calculateTotal();
     }
 
