@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -21,16 +22,15 @@ use Tests\TestCase;
  * The project authenticates the API with Laravel Passport (auth:api guard),
  * so protected endpoints must reject unauthenticated callers with 401 and
  * resolve authenticated callers via a Passport token.
+ *
+ * Note: PHPUnit 12 removed the docblock test annotation, so tests use the
+ * PHP attribute form instead.
  */
 class ApiSecurityTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     * Every API resource and the sync endpoints must reject unauthenticated
-     * requests with HTTP 401 (no silent unauthenticated data access).
-     */
+    #[Test]
     public function api_resources_require_authentication(): void
     {
         $protected = [
@@ -54,9 +54,7 @@ class ApiSecurityTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function authenticated_request_can_list_products(): void
     {
         Passport::actingAs(User::factory()->create());
@@ -66,12 +64,7 @@ class ApiSecurityTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @test
-     * A SQL injection payload in the brand_id filter must be neutralised.
-     * With vulnerable whereRaw() concatenation the payload "1 OR 1=1" returns
-     * every row; a fixed implementation casts to int and matches exactly one.
-     */
+    #[Test]
     public function product_brand_id_filter_is_not_sql_injectable(): void
     {
         Passport::actingAs(User::factory()->create());
@@ -95,10 +88,7 @@ class ApiSecurityTest extends TestCase
         $this->assertCount(1, $list);
     }
 
-    /**
-     * @test
-     * An injection payload in the _sort parameter must not produce a SQL error.
-     */
+    #[Test]
     public function order_by_column_injection_is_neutralized(): void
     {
         Passport::actingAs(User::factory()->create());
@@ -109,11 +99,7 @@ class ApiSecurityTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @test
-     * Mass assignment guard: an arbitrary "id" on create must be ignored,
-     * proving only validated fields reach the model.
-     */
+    #[Test]
     public function user_create_ignores_unvalidated_id_field(): void
     {
         Passport::actingAs(User::factory()->create());
@@ -130,10 +116,7 @@ class ApiSecurityTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => 999999]);
     }
 
-    /**
-     * @test
-     * Validation is now enforced: a too-short password is rejected with 422.
-     */
+    #[Test]
     public function user_create_rejects_invalid_input(): void
     {
         Passport::actingAs(User::factory()->create());
@@ -147,10 +130,7 @@ class ApiSecurityTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /**
-     * @test
-     * Product create requires a name (validation active, not blind mass assign).
-     */
+    #[Test]
     public function product_create_rejects_missing_required_fields(): void
     {
         Passport::actingAs(User::factory()->create());
