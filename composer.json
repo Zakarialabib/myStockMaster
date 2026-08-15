@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "doctrine/dbal": "^4.4",
         "guzzlehttp/guzzle": "^7.2",
         "laravel-notification-channels/telegram": "^7.0",
@@ -19,6 +20,7 @@
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.4",
         "maatwebsite/excel": "^4.0",
+        "milon/barcode": "^13.1",
         "nativephp/desktop": "^2.2",
         "nxp/math-executor": "^2.3",
         "psr/simple-cache": "^1.0|^2.0|^3.0",

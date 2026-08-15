@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Override;
 
 /**
  * @property string                          $id
@@ -154,7 +155,7 @@ class Product extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -179,7 +180,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Category, $this>
+     * @return BelongsTo<Category, $this>
      */
     public function category(): BelongsTo
     {
@@ -187,7 +188,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Brand, $this>
+     * @return BelongsTo<Brand, $this>
      */
     public function brand(): BelongsTo
     {
@@ -195,7 +196,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<\App\Models\Movement, $this>
+     * @return MorphMany<Movement, $this>
      */
     public function movements(): MorphMany
     {
@@ -203,7 +204,7 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\PriceHistory, $this>
+     * @return HasMany<PriceHistory, $this>
      */
     public function priceHistory(): HasMany
     {
@@ -249,7 +250,7 @@ class Product extends Model
         );
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
+    /** @return BelongsToMany<Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function warehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class)
@@ -334,6 +335,12 @@ class Product extends Model
     public function isBelowStockAlert(): bool
     {
         return $this->total_quantity <= ($this->stock_alert ?? 0);
+    }
+
+    // Scope to search by barcode (code field, supports EAN-13, CODE-128, etc.)
+    protected function scopeWhereBarcode(mixed $query, mixed $barcode)
+    {
+        return $query->where('code', $barcode);
     }
 
     protected function scopeSearchByNameOrCode(mixed $query, mixed $term)

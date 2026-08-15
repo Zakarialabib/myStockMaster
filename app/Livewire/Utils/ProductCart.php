@@ -47,10 +47,12 @@ class ProductCart extends Component
 
         if ($data) {
             $this->data = $data;
-            $this->global_discount = $data->discount_percentage;
-            $this->global_tax = $data->tax_percentage;
-            $this->shipping_amount = $data->shipping_amount;
-            $this->warehouse_id = $data->warehouse_id;
+            // $data may be an Eloquent model (production) or a plain array (tests/API),
+            // so read attributes via data_get() rather than object access.
+            $this->global_discount = data_get($data, 'discount_percentage', 0);
+            $this->global_tax = data_get($data, 'tax_percentage', 0);
+            $this->shipping_amount = data_get($data, 'shipping_amount', 0);
+            $this->warehouse_id = data_get($data, 'warehouse_id');
 
             $this->updatedGlobalTax();
             $this->updatedGlobalDiscount();
@@ -72,7 +74,7 @@ class ProductCart extends Component
     }
 
     #[On('productSelected')]
-    public function productSelected(mixed $productId, int $warehouseId): void
+    public function productSelected(mixed $productId, ?int $warehouseId = null): void
     {
         $this->warehouse_id = $warehouseId;
 
@@ -209,10 +211,19 @@ class ProductCart extends Component
     public function discountModal(int|string $productId, string $rowId): void
     {
         $this->updateQuantity($rowId, $productId);
+
+        // Pre-fill the modal inputs from the cart item's stored discount so the
+        // user sees the current value. These are user-input state (not derived from
+        // the cart on every render) so productDiscount can apply a real change.
+        $cartItem = $this->getCart()->get($rowId);
+        $attributes = $cartItem['attributes'] ?? [];
+        $this->discount_type[$productId] = $attributes['product_discount_type'] ?? 'fixed';
+        $this->item_discount[$productId] = $attributes['product_discount'] ?? 0;
+
         $this->discountModal = true;
     }
 
-    public function updateQuantity(string $rowId, int|string $productId): void
+    public function updateQuantity(?string $rowId, int|string $productId): void
     {
         if ($rowId === null) {
             $cartItem = $this->getCart()->search(fn ($item): bool => $item->id == $productId)->first();
@@ -335,21 +346,6 @@ class ProductCart extends Component
     public function render(): \Illuminate\View\View
     {
         $cart_items = $this->getCart()->content();
-
-        foreach ($cart_items as $cart_item) {
-            $attributes = $cart_item->attributes;
-            $discount_type = $attributes['product_discount_type'] ?? 'fixed';
-
-            $this->discount_type[$cart_item->id] = $discount_type;
-
-            if ($discount_type === 'fixed') {
-                $this->item_discount[$cart_item->id] = $attributes['product_discount'] ?? 0;
-            } else {
-                $price = $cart_item->price ?? 0;
-                $discount = $attributes['product_discount'] ?? 0;
-                $this->item_discount[$cart_item->id] = $price > 0 ? round(100 * $discount / $price) : 0;
-            }
-        }
 
         return view('livewire.utils.product-cart', [
             'cart_items' => $cart_items,

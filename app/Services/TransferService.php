@@ -13,7 +13,7 @@ class TransferService
 {
     public function createTransfer(array $data, iterable $products): Transfer
     {
-        return DB::transaction(function () use ($data, $products) {
+        return DB::transaction(function () use ($data, $products): Transfer {
             $transfer = Transfer::query()->create([
                 'reference' => $data['reference'],
                 'date' => $data['date'],
@@ -28,7 +28,6 @@ class TransferService
                 'shipping' => $data['shipping_amount'] ?? 0,
                 'document' => $data['document'] ?? null,
                 'status' => $data['status'] ?? 1,
-                'note' => $data['note'] ?? null,
             ]);
 
             foreach ($products as $product) {
@@ -65,7 +64,7 @@ class TransferService
 
     public function updateTransfer(Transfer $transfer, array $data, iterable $products): Transfer
     {
-        return DB::transaction(function () use ($transfer, $data, $products): \App\Models\Transfer {
+        return DB::transaction(function () use ($transfer, $data, $products): Transfer {
             // Revert stock from old transfer
             foreach ($transfer->transferDetails as $detail) {
                 // Re-increment the old source

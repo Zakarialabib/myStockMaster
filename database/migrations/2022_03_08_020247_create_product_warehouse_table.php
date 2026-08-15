@@ -23,7 +23,7 @@ return new class extends Migration
             $blueprint->decimal('cost', 8, 2)->nullable();
             $blueprint->decimal('old_price', 8, 2)->nullable();
             $blueprint->integer('qty');
-            $blueprint->integer('stock_alert');
+            $blueprint->integer('stock_alert')->default(0);
             $blueprint->boolean('is_ecommerce')->default(false);
             $blueprint->tinyInteger('is_discount')->default(false);
             $blueprint->date('discount_date')->nullable();

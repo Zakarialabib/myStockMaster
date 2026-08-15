@@ -43,13 +43,13 @@
             <div class="w-full">
                 <div class="w-full py-2 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @if (settings()->show_order_tax == true)
+                        @if (settings()?->show_order_tax == true)
                             <div class="flex justify-between items-center px-4 py-3 text-sm">
                                 <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Order Tax') }} (<span x-text="globalTax"></span>%)</span>
                                 <span class="font-bold text-gray-900 dark:text-gray-100" x-text="'(+) ' + formatCurrency(cartTax)">(+) {{ format_currency($this->cartTax) }}</span>
                             </div>
                         @endif
-                        @if (settings()->show_discount == true)
+                        @if (settings()?->show_discount == true)
                             <div class="flex justify-between items-center px-4 py-3 text-sm">
                                 <span class="font-medium text-gray-600 dark:text-gray-400">{{ __('Discount') }} (<span x-text="globalDiscount"></span>%)</span>
                                 <span class="font-bold text-gray-900 dark:text-gray-100" x-text="'(-) ' + formatCurrency(cartDiscount)">(-) {{ format_currency($this->cartDiscount) }}</span>
