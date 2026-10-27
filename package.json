@@ -53,7 +53,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "alpinejs": "^3.5.0",
     "apexcharts": "^3.44.0",
-    "flatpickr": "^4.6.13",
+    "flatpickr": "npm:flatpickr-ce@^4.7.0",
     "perfect-scrollbar": "^1.5.5",
     "sortablejs": "^1.15.0",
     "sweetalert2": "^11.26.24",
