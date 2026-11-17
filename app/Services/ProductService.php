@@ -11,8 +11,43 @@ use Illuminate\Support\Str;
 
 class ProductService
 {
+    /**
+     * Reject uploaded image/gallery files whose type is not an allowed raster image.
+     * Files are stored under the public web root (public/images) and served from the
+     * application origin, so active content such as SVG would enable stored XSS.
+     */
+    private function assertSafeImageUploads(array $data): void
+    {
+        $allowed = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
+        $files = [];
+        if (isset($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
+            $files[] = $data['image'];
+        }
+        if (isset($data['gallery']) && is_array($data['gallery'])) {
+            foreach ($data['gallery'] as $value) {
+                if (is_object($value) && method_exists($value, 'extension')) {
+                    $files[] = $value;
+                }
+            }
+        }
+
+        foreach ($files as $file) {
+            if (method_exists($file, 'isValid') && ! $file->isValid()) {
+                continue;
+            }
+            if (! in_array(strtolower((string) $file->extension()), $allowed, true)) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'image' => 'Only PNG, JPG, GIF or WEBP image files are allowed.',
+                ]);
+            }
+        }
+    }
+
     public function create(array $data): Product
     {
+        $this->assertSafeImageUploads($data);
+
         $slug = Str::slug($data['name']);
         $code = $data['code'] ?? \Illuminate\Support\Facades\Date::now()->format('Y-m-d') . mt_rand(10000000, 99999999);
 
@@ -99,6 +134,8 @@ class ProductService
 
     public function update(Product $product, array $data): Product
     {
+        $this->assertSafeImageUploads($data);
+
         $slug = $data['slug'] ?? $product->slug;
         if ($slug !== $product->slug || Str::slug($data['name']) !== $product->slug) {
             $slug = Str::slug($data['name']);
