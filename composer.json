@@ -34,6 +34,7 @@
     },
 
     "require-dev": {
+        "baer-software/larabeacon": "^3.6",
         "barryvdh/laravel-debugbar": "^4.2",
         "barryvdh/laravel-ide-helper": "^3.7",
         "driftingly/rector-laravel": "^2.2",

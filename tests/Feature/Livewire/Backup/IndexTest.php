@@ -37,3 +37,17 @@ it('can delete a backup', function () {
 
     expect(Storage::exists('backup.zip'))->toBeFalse();
 });
+
+it('only lists files from the configured backup directory', function () {
+    $this->withoutExceptionHandling();
+    $this->loginAsAdmin();
+
+    config(['backup.backup.name' => 'stock-backups']);
+
+    Storage::fake();
+    Storage::put('stock-backups/2026-01-01.zip', 'test backup body');
+    Storage::put('unrelated/file.txt', 'not a backup');
+
+    Livewire::test(Index::class)
+        ->assertViewHas('backups', ['stock-backups/2026-01-01.zip']);
+});
