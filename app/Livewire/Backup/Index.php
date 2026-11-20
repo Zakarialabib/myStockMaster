@@ -92,7 +92,7 @@ class Index extends Component
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        $files = Storage::allFiles(env('APP_NAME'));
+        $files = Storage::allFiles(config('backup.backup.name'));
 
         return view('livewire.backup.index', [
             'backups' => $files,
